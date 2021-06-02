@@ -1,15 +1,18 @@
 import { h, FunctionComponent } from 'preact';
 
+import Template from '@src/components/template';
+
 import { useStore } from '@src/components/hooks/store';
 import { pick } from '@src/util/utils';
 import { cls } from '@src/util/cssHelper';
+import TZDate from '@src/time/date';
+import { toFormat } from '@src/time/datetime';
 
 interface MoreTitleProps {
-  date: number;
-  day: string;
+  date: TZDate;
 }
 
-const SeeMoreTitle: FunctionComponent<MoreTitleProps> = ({ date, day }) => {
+const SeeMoreTitle: FunctionComponent<MoreTitleProps> = ({ date }) => {
   const { state } = useStore('theme');
   const style = pick(
     state.month.moreViewTitle,
@@ -20,10 +23,15 @@ const SeeMoreTitle: FunctionComponent<MoreTitleProps> = ({ date, day }) => {
     'padding'
   );
 
+  const moreTitle = {
+    ymd: toFormat(date, 'YYYY-MM-DD'),
+    day: date.getDay(),
+    date: date.getDate(),
+  };
+
   return (
     <div className={cls('more-title')} style={style}>
-      <span className={cls('more-title-date')}>{date}</span>{' '}
-      <span className={cls('more-title-day')}>{day}</span>
+      <Template template="monthMoreTitleDate" model={moreTitle} />
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import { FunctionComponent, h } from 'preact';
 
 import { cls } from '@src/util/cssHelper';
-import { Template } from '@src/components/template';
+import Template from '@src/components/template';
 import { TemplateName } from '@src/template/default';
 
 type PanelTitleTemplate = Extract<TemplateName, 'milestoneTitle' | 'taskTitle' | 'alldayTitle'>;

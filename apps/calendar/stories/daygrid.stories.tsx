@@ -15,7 +15,7 @@ import Panel from '@src/components/panel';
 export default { title: 'DayGrid' };
 
 export const cell = () => {
-  const date = new Date();
+  const date = new TZDate();
 
   return (
     <ProviderWrapper>

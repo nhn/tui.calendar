@@ -19,7 +19,6 @@
 
 .daygrid-cell {
   position: absolute;
-  padding: 3px;
   border-right: 1px solid #e5e5e5;
   height: 100%;
   min-height: inherit;
@@ -57,11 +56,9 @@
   height: 100%;
 }
 
-.guide-creation {
+.weekday .guide-creation {
   position: absolute;
   right: 10px;
-  left: 1px;
-  padding: 3px;
   background-color: rgba(81, 92, 230, 0.05);
   border: 1px solid #515ce6;
 }

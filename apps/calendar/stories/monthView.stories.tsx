@@ -3,6 +3,7 @@ import { ProviderWrapper } from '@stories/util/providerWrapper';
 import MonthView from '@src/components/view/monthView';
 import { Story } from '@storybook/preact';
 import { generateRandomScheduleViewModelsForMonth } from './util/randomEvents';
+import Schedule from '@src/model/schedule';
 
 export default { title: 'MonthView' };
 

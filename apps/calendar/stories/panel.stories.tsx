@@ -8,6 +8,7 @@ import { Layout } from '@src/components/layout';
 import Panel from '@src/components/panel';
 import Schedule from '@src/model/schedule';
 import { PanelTitle } from '@src/components/panelgrid/panelTitle';
+import { ProviderWrapper } from '@stories/util/providerWrapper';
 
 import type { MilestoneEvent } from '@t/events';
 
@@ -41,11 +42,13 @@ const data = [
 ] as MilestoneEvent[];
 
 const Template: Story = (args) => (
-  <Layout height={500}>
-    <Panel name="milestone" resizable minHeight={20} maxHeight={args.maxHeight}>
-      <Milestone events={args.events} />
-    </Panel>
-  </Layout>
+  <ProviderWrapper>
+    <Layout height={500}>
+      <Panel name="milestone" resizable minHeight={20} maxHeight={args.maxHeight}>
+        <Milestone events={args.events} />
+      </Panel>
+    </Layout>
+  </ProviderWrapper>
 );
 
 export const milestone = Template.bind({});
@@ -78,7 +81,11 @@ scrollMilestone.storyName = 'events milestone with scroll';
 export const title: Story = () => {
   const type = 'milestone';
 
-  return <PanelTitle width={120} template={type} model={type} />;
+  return (
+    <ProviderWrapper>
+      <PanelTitle width={120} template={type} model={type} />
+    </ProviderWrapper>
+  );
 };
 
 title.storyName = 'panel title';

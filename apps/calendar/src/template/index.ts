@@ -1,4 +1,4 @@
-import { templates } from '@src/template/default';
+import { templates } from '@src/template/default.tsx';
 import { Template, TemplateConfig, GridViewModel } from '@src/model';
 import { cls } from '@src/util/cssHelper';
 import isNumber from 'tui-code-snippet/type/isNumber';

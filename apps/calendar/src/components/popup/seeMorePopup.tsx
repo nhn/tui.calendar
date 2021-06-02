@@ -28,12 +28,9 @@ const SeeMorePopup: FunctionComponent<SeeMorePopupParam> = (props) => {
   };
   const eventHeight = EVENT_HEIGHT;
 
-  // @TODO: 요일 템플릿 적용
-  const dayName = capitalizeDayName(getDayName(date.getDay()));
-
   return (
     <div className={cls('see-more')} style={style}>
-      <SeeMoreHeader date={date.getDate()} day={dayName} />
+      <SeeMoreHeader date={date} />
       <div className={cls('month-more-list')} style={moreListStyle}>
         {events.map((viewModel) => (
           <GridEvent
