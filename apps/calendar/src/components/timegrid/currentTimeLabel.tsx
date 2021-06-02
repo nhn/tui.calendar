@@ -1,5 +1,6 @@
-import { h } from 'preact';
+import { FunctionComponent, h } from 'preact';
 import { useState, useEffect, useRef } from 'preact/hooks';
+
 import TZDate from '@src/time/date';
 import { TimeUnit } from '@src/model';
 import { toPercent } from '@src/util/units';
@@ -14,15 +15,18 @@ const classNames = {
 interface CurrentTimeLabelProps {
   unit: TimeUnit;
   top: number;
-  time: TZDate;
-  dateDifference: number;
+  time?: TZDate;
+  dateDifference?: number;
 }
 
-export function CurrentTimeLabel(props: CurrentTimeLabelProps) {
-  const { unit, dateDifference } = props;
-  const top = toPercent(props.top);
-  const time = props.time || new TZDate();
-  const [topValue, setTop] = useState(top);
+export const CurrentTimeLabel: FunctionComponent<CurrentTimeLabelProps> = ({
+  unit,
+  dateDifference = 0,
+  top,
+  time = new TZDate(),
+}) => {
+  const defaultTop = toPercent(top);
+  const [topValue, setTop] = useState(defaultTop);
   const ref = useRef<HTMLDivElement>(null);
   const signRef = useRef<HTMLDivElement>(null);
 
@@ -36,11 +40,11 @@ export function CurrentTimeLabel(props: CurrentTimeLabelProps) {
         half += signHeight;
       }
 
-      setTop(`calc(${top} - ${half}px)`);
+      setTop(`calc(${defaultTop} - ${half}px)`);
     }
   };
 
-  useEffect(adjustTopForCentering, [top]);
+  useEffect(adjustTopForCentering, [defaultTop]);
 
   const model = {
     unit,
@@ -56,9 +60,4 @@ export function CurrentTimeLabel(props: CurrentTimeLabelProps) {
       </div>
     </div>
   );
-}
-
-CurrentTimeLabel.displayName = 'CurrentTimeLabel';
-CurrentTimeLabel.defaultProps = {
-  dateDifference: 0,
 };

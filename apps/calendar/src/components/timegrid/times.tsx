@@ -1,9 +1,10 @@
-import { h } from 'preact';
+import { FunctionComponent, h } from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
 import range from 'tui-code-snippet/array/range';
 import toArray from 'tui-code-snippet/collection/toArray';
 import addClass from 'tui-code-snippet/domUtil/addClass';
 import removeClass from 'tui-code-snippet/domUtil/removeClass';
+
 import TZDate from '@src/time/date';
 import { TimeUnit } from '@src/model';
 import { toFormat, isSameDate, isSameMonth, isSameYear } from '@src/time/datetime';
@@ -34,12 +35,12 @@ export interface TimeProps {
 }
 
 interface Props {
-  unit: TimeUnit;
-  times: TimeProps[];
-  width: string;
-  showFirst: boolean;
-  showLast: boolean;
-  showCurrentTime: boolean;
+  unit?: TimeUnit;
+  times?: TimeProps[];
+  width?: string;
+  showFirst?: boolean;
+  showLast?: boolean;
+  showCurrentTime?: boolean;
   currentTime?: TZDate;
   dateDifference?: number;
   start?: number;
@@ -79,21 +80,31 @@ function hideOverlappedTime(timesElement: HTMLElement) {
   });
 }
 
-export function Times(props: Props) {
-  const {
-    unit,
-    width = '72px',
-    showFirst,
-    showLast,
-    showCurrentTime,
-    currentTime = new TZDate(),
-    dateDifference,
-    start = 0,
-    end = props.times.length - 1,
-    timeTemplate,
-  } = props;
-  const times = props.times.slice(start, end + 1);
-  const top = getTopPercentByTime(currentTime, first(times).date, last(times).date);
+export const Times: FunctionComponent<Props> = ({
+  unit = 'hour',
+  width = '72px',
+  showFirst = false,
+  showLast = false,
+  showCurrentTime = false,
+  currentTime = new TZDate(),
+  dateDifference,
+  times = range(0, 25).map((hour) => {
+    const date = new TZDate();
+    date.setHours(hour, 0, 0, 0);
+
+    const display = toFormat(date, 'HH:mm');
+
+    return {
+      date,
+      display,
+    };
+  }),
+  start = 0,
+  end = times.length - 1,
+  timeTemplate,
+}) => {
+  const filteredTimes = times.slice(start, end + 1);
+  const top = getTopPercentByTime(currentTime, first(filteredTimes).date, last(filteredTimes).date);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -104,10 +115,10 @@ export function Times(props: Props) {
 
   return (
     <div ref={ref} className={classNames.times} style={{ width }}>
-      {times.map((slot, index) => {
+      {filteredTimes.map((slot, index) => {
         const isPast = isPastByUnit(slot.date, currentTime, unit);
         const isFirst = index === 0;
-        const isLast = index === times.length - 1;
+        const isLast = index === filteredTimes.length - 1;
         const className = classnames(classNames.time, {
           [classNames.past]: isPast,
           [classNames.first]: isFirst,
@@ -138,24 +149,4 @@ export function Times(props: Props) {
       ) : null}
     </div>
   );
-}
-
-Times.displayName = 'Times';
-Times.defaultProps = {
-  unit: 'hour',
-  times: range(0, 25).map((hour) => {
-    const date = new TZDate();
-    date.setHours(hour, 0, 0, 0);
-
-    const display = toFormat(date, 'HH:mm');
-
-    return {
-      date,
-      display,
-    };
-  }),
-  width: '72px',
-  showCurrentTime: false,
-  showFirst: false,
-  showLast: false,
 };

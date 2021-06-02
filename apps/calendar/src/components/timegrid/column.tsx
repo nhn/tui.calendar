@@ -1,9 +1,9 @@
-import { h, VNode } from 'preact';
+import { FunctionComponent, h, VNode } from 'preact';
 import range from 'tui-code-snippet/array/range';
 import { TimeUnit } from '@src/model';
 import { first, last } from '@src/util/array';
 import TZDate from '@src/time/date';
-import Schedule, { isBackgroundEvent } from '@src/model/schedule';
+import { isBackgroundEvent } from '@src/model/schedule';
 import { CreationGuideInfo } from '@src/components/timegrid';
 import { BackgroundEvent } from '@src/components/events/backgroundEvent';
 import { TimeEvent } from '@src/components/events/timeEvent';
@@ -24,16 +24,16 @@ const classNames = {
 };
 
 interface Props {
-  unit: TimeUnit;
-  slot: number;
-  times: TZDate[];
-  width: string;
-  backgroundColor: string;
+  unit?: TimeUnit;
+  slot?: number;
+  times?: TZDate[];
+  width?: string;
+  backgroundColor?: string;
   start?: number;
   end?: number;
-  events: ScheduleViewModel[];
-  creationGuide: CreationGuideInfo | null;
-  index: number;
+  events?: ScheduleViewModel[];
+  creationGuide?: CreationGuideInfo | null;
+  index?: number;
   readOnly?: boolean;
   renderGridlineChild?: (time: TZDate) => VNode;
 }
@@ -41,14 +41,12 @@ interface Props {
 function renderGridlines(times: TZDate[], renderGridlineChild?: (time: TZDate) => VNode) {
   return (
     <div className={classNames.grid}>
-      {times.map((time, index) => {
-        return (
-          <div className={classNames.gridline} key={`gridline-${index}`}>
-            <div className={classNames.gridlineHalf}></div>
-            {renderGridlineChild ? renderGridlineChild(time) : null}
-          </div>
-        );
-      })}
+      {times.map((time, index) => (
+        <div className={classNames.gridline} key={`gridline-${index}`}>
+          <div className={classNames.gridlineHalf} />
+          {renderGridlineChild ? renderGridlineChild(time) : null}
+        </div>
+      ))}
     </div>
   );
 }
@@ -81,9 +79,7 @@ function renderBackgroundEvents(events: ScheduleViewModel[], startTime: TZDate, 
 
 function renderEvents(events: ScheduleViewModel[], startTime: TZDate, endTime: TZDate) {
   const marginRight = 8;
-  const style = {
-    marginRight,
-  };
+  const style = { marginRight };
   const viewModels = getViewModels(events, startTime, endTime);
 
   return (
@@ -114,22 +110,30 @@ function renderCreationGuide(
   return <CreationGuide {...creationGuide} top={top} height={height} />;
 }
 
-export function Column(props: Props) {
-  const {
-    start = 0,
-    end = props.times.length,
-    width,
-    backgroundColor,
-    creationGuide,
-    readOnly,
-    index,
-    renderGridlineChild,
-  } = props;
-  const times = props.times.slice(start, end + 1);
-  const startTime = first(times);
-  const endTime = last(times);
-  const events = props.events.filter(isBetween(startTime, endTime));
-  const renderedTimes = times.slice(0, times.length - 1);
+export const Column: FunctionComponent<Props> = ({
+  times = range(0, 25).map((hour) => {
+    const time = new TZDate();
+    time.setHours(hour, 0, 0, 0);
+
+    return time;
+  }),
+  events = [],
+  unit = 'minute',
+  slot = 30,
+  start = 0,
+  end = times.length,
+  width = '72px',
+  backgroundColor = '',
+  creationGuide = null,
+  readOnly = false,
+  index = 0,
+  renderGridlineChild,
+}) => {
+  const filteredTimes = times.slice(start, end + 1);
+  const startTime = first(filteredTimes);
+  const endTime = last(filteredTimes);
+  const filteredEvents = events.filter(isBetween(startTime, endTime));
+  const renderedTimes = filteredTimes.slice(0, filteredTimes.length - 1);
   const style = {
     width,
     backgroundColor,
@@ -138,27 +142,9 @@ export function Column(props: Props) {
   return (
     <div className={classNames.column} style={style} data-index={index}>
       {renderGridlines(renderedTimes, renderGridlineChild)}
-      {renderBackgroundEvents(events, startTime, endTime)}
-      {renderEvents(events, startTime, endTime)}
+      {renderBackgroundEvents(filteredEvents, startTime, endTime)}
+      {renderEvents(filteredEvents, startTime, endTime)}
       {!readOnly ? renderCreationGuide(creationGuide, startTime, endTime) : null}
     </div>
   );
-}
-
-Column.displayName = 'Column';
-Column.defaultProps = {
-  unit: 'minute',
-  slot: 30,
-  times: range(0, 25).map((hour) => {
-    const time = new TZDate();
-    time.setHours(hour, 0, 0, 0);
-
-    return time;
-  }),
-  width: '72px',
-  backgroundColor: '',
-  events: [],
-  creationGuide: null,
-  readOnly: false,
-  index: 0,
-} as Props;
+};

@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { FunctionComponent, h } from 'preact';
 
 import { prefixer } from '@src/components/timegrid';
 import { toPercent } from '@src/util/units';
@@ -18,10 +18,12 @@ interface Props {
   columnIndex: number;
 }
 
-export function CurrentTimeLine(props: Props) {
-  const { columnWidth, columnCount, columnIndex } = props;
-
-  const top = toPercent(props.top);
+export const CurrentTimeLine: FunctionComponent<Props> = ({
+  top,
+  columnWidth,
+  columnCount,
+  columnIndex,
+}) => {
   const leftLine = {
     left: toPercent(columnWidth * columnIndex),
     width: toPercent(columnWidth * columnIndex),
@@ -36,7 +38,7 @@ export function CurrentTimeLine(props: Props) {
   const currentTimeRightBorderTop = 'none';
 
   return (
-    <div className={classNames.line} style={{ top }}>
+    <div className={classNames.line} style={{ top: toPercent(top) }}>
       <div
         className={classNames.left}
         style={{ width: leftLine.width, borderTop: currentTimeLeftBorderTop }}
@@ -62,6 +64,4 @@ export function CurrentTimeLine(props: Props) {
       />
     </div>
   );
-}
-CurrentTimeLine.displayName = 'CurrentTimeLine';
-CurrentTimeLine.defaultProps = {} as Props;
+};
