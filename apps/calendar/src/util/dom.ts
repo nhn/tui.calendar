@@ -112,7 +112,10 @@ export function isOverlapped(el1: Element, el2: Element) {
   return !(r1.top > r2.bottom || r1.right < r2.left || r1.bottom < r2.top || r1.left > r2.right);
 }
 
-const elProto = Element.prototype;
+// for ssr
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+const ElementClass = typeof Element === 'undefined' ? function () {} : Element;
+const elProto = ElementClass.prototype;
 const matchSelector =
   elProto.matches ||
   elProto.webkitMatchesSelector ||

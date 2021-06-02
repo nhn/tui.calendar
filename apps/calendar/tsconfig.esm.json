@@ -24,6 +24,7 @@
     "types": ["webpack-env"],
     "listEmittedFiles": true,
     "declaration": true,
+    "lib": ["esnext"]
   },
   "include": [
     "src/**/*.ts",

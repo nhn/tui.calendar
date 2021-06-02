@@ -8,7 +8,7 @@
 .icon.ic-location { background: url("./image/ic-location.png") no-repeat; }
 .icon.ic-date { background: url("./image/ic-date.png") no-repeat; }
 .icon.ic-state { background: url("./image/ic-state.png") no-repeat; }
-.icon.ic-private { background: url("/image/ic-lock.png") no-repeat; }
+.icon.ic-private { background: url("./image/ic-lock.png") no-repeat; }
 .icon.ic-public { background: url("./image/ic-unlock.png") no-repeat; }
 .icon.ic-close { background: url("./image/ic-close.png") no-repeat; }
 .icon.ic-user-b { background-image: url("./image/ic-user-b.png"); }

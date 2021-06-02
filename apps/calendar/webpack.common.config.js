@@ -24,6 +24,7 @@ module.exports = (env) => {
       path: path.join(__dirname, 'dist'),
       filename,
       publicPath: '/dist',
+      globalObject: 'this',
     },
     externals: {
       'tui-date-picker': {

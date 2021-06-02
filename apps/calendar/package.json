@@ -2,13 +2,15 @@
   "name": "@toast-ui/calendar",
   "author": "NHN FE Development Lab <dl_javascript@nhn.com>",
   "version": "1.13.0-next",
-  "main": "dist/tui-calendar.js",
+  "main": "dist/toastui-calendar.js",
   "types": "types/index.d.ts",
   "sideEffects": [
     "*.css"
   ],
   "module": "dist/esm/",
-  "exports": {},
+  "exports": {
+    "./": "./"
+  },
   "license": "MIT",
   "description": "TOAST UI Calendar",
   "repository": {
