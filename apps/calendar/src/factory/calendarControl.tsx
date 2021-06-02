@@ -32,6 +32,7 @@ import {
   options as OptionsModule,
   layerPopup,
   dataStore,
+  layout,
 } from '@src/modules';
 
 export default abstract class CalendarControl extends EventHandler<ExternalEventName> {
@@ -103,7 +104,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
 
     this.store = new Store({
       initStoreData: { options: this._options },
-      modules: [OptionsModule, templateModule, themeModule, dataStore, layerPopup],
+      modules: [OptionsModule, templateModule, themeModule, dataStore, layerPopup, layout],
     });
   }
 
