@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { Story } from '@storybook/preact';
 
 import { ProviderWrapper } from '@stories/util/providerWrapper';
-import { SpecialEvents } from '@src/components/panelgrid/specialEvents';
+import { DayGridEvents } from '@src/components/panelgrid/dayGridEvents';
 import { addDate } from '@src/time/datetime';
 import TZDate from '@src/time/date';
 import { Layout } from '@src/components/layout';
@@ -10,10 +10,9 @@ import Panel from '@src/components/panel';
 import Schedule from '@src/model/schedule';
 import { PanelTitle } from '@src/components/panelgrid/panelTitle';
 import { generateRandomScheduleViewModelsForMonth } from '@stories/util/randomEvents';
-import { getSpecialEvents } from '@src/event/panelEvent';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 
-export default { title: 'Panel', component: SpecialEvents, args: { primary: true } };
+export default { title: 'Panel', component: DayGridEvents, args: { primary: true } };
 
 const now = new TZDate();
 
@@ -53,7 +52,7 @@ const Template: Story = (args) => (
   <ProviderWrapper>
     <Layout height={500}>
       <Panel name="milestone" resizable minHeight={20} maxHeight={args.maxHeight}>
-        <SpecialEvents events={milestoneEvents} type="milestone" />
+        <DayGridEvents events={milestoneEvents} type="milestone" />
       </Panel>
     </Layout>
   </ProviderWrapper>

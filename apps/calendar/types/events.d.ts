@@ -1,7 +1,7 @@
 import TZDate from '@src/time/date';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 
-import type { PanelName, SpecialEventType } from '@t/panel';
+import type { PanelName, DayGridEventType } from '@t/panel';
 
 export interface BaseEvent {
   start: TZDate;
@@ -20,7 +20,7 @@ export type EventGroupMap = Record<PanelName, DayGridEventMatrix | TimeGridEvent
 export type EventModelMap =
   | Record<string, DayGridEventMatrix | ScheduleViewModel[]>
   | ({
-      [key in SpecialEventType]: DayGridEventMatrix;
+      [key in DayGridEventType]: DayGridEventMatrix;
     } & {
       time: ScheduleViewModel[];
     });

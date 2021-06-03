@@ -57,7 +57,7 @@ const getTimeGridEventModels = (
   return result;
 };
 
-export const getSpecialEvents = (
+export const getDayGridEvents = (
   cells: Cells,
   dataStore: DataStore,
   narrowWeekend: boolean

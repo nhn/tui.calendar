@@ -8,7 +8,7 @@ import { PanelEvents } from '@src/components/panelgrid/panelEvents';
 import { PanelTitle } from '@src/components/panelgrid/panelTitle';
 import TZDate from '@src/time/date';
 
-import type { Cells, SpecialEventType } from '@t/panel';
+import type { Cells, DayGridEventType } from '@t/panel';
 import type { DayGridEventMatrix } from '@t/events';
 
 const DEFAULT_PANEL_HEIGHT = 20;
@@ -19,7 +19,7 @@ const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
 });
 
 interface Props {
-  type: SpecialEventType;
+  type: DayGridEventType;
   events: DayGridEventMatrix;
   cells?: Cells;
   timesWidth?: number;
@@ -27,7 +27,7 @@ interface Props {
   panelHeight?: number;
 }
 
-export const SpecialEvents: FunctionComponent<Props> = ({
+export const DayGridEvents: FunctionComponent<Props> = ({
   type = 'milestone',
   events,
   cells = defaultPanelInfoList,
