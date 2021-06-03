@@ -10,7 +10,7 @@ import {
   TOTAL_WIDTH,
 } from '@src/util/gridHelper';
 import { useStore } from '@src/components/hooks/store';
-import { getViewModels } from '@src/util/panelEvent';
+import { getViewModels, isInCell } from '@src/util/panelEvent';
 
 import type { Cells } from '@t/panel';
 import type { CalendarWeekOption } from '@t/store';
@@ -85,10 +85,10 @@ export const PanelGrid: FunctionComponent<Props> = ({
   const { updatePanelHeight } = actions;
 
   let maxTop = 0;
-  if (!events.length) {
+  if (events.length) {
     events.forEach((matrix) => {
       matrix.forEach((row) => {
-        maxTop = Math.max(maxTop, ...row.map(({ top }) => top));
+        maxTop = Math.max(maxTop, ...row.filter((model) => !!model).map(({ top }) => top));
       });
     });
   }
@@ -115,12 +115,14 @@ export const PanelGrid: FunctionComponent<Props> = ({
     TOTAL_WIDTH
   );
 
+  const viewModels = getViewModels(events);
+
   const gridCells = cells.map((cell, index) => {
     const width = toPercent(widthList[index]);
     const left = toPercent(leftList[index]);
 
-    const viewModels = getViewModels(events);
-    const exceedCount = getExceedCount(viewModels, height, EVENT_HEIGHT);
+    const viewModelsInCell = viewModels.filter(isInCell(cell));
+    const exceedCount = getExceedCount(viewModelsInCell, height, EVENT_HEIGHT);
     const isClickedIndex = index === clickedIndex;
 
     return (

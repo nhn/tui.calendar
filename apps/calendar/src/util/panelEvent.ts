@@ -3,9 +3,19 @@ import { DataStore } from '@src/model';
 import { findByDateRange } from '@src/controller/week';
 import { toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { getEventLeftAndWidth } from '@src/util/gridHelper';
+import TZDate from '@src/time/date';
 
 import type { Cells, Panel } from '@t/panel';
 import type { DayGridEventMatrix, EventModelMap, TimeGridEventMatrix } from '@t/events';
+
+export function isInCell(cell: TZDate) {
+  return (viewModel: ScheduleViewModel) => {
+    const eventStart = viewModel.getStarts();
+    const eventEnd = viewModel.getEnds();
+
+    return eventStart <= cell && cell <= eventEnd;
+  };
+}
 
 export const getViewModels = (events: DayGridEventMatrix) => {
   if (!events.length) {
