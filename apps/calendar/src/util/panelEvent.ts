@@ -11,7 +11,13 @@ export const getViewModels = (events: DayGridEventMatrix) => {
   if (!events.length) {
     return [];
   }
-  const [[viewModels]] = events;
+  const viewModels: ScheduleViewModel[] = [];
+
+  events.forEach((matrix) => {
+    matrix.forEach((row) => {
+      viewModels.push(...row.filter((model) => !!model));
+    });
+  });
 
   return viewModels;
 };

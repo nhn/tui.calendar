@@ -1,8 +1,13 @@
-import { h } from 'preact';
-import ContextComponent from '@src/components/contextComponent';
+import { Fragment, FunctionComponent, h } from 'preact';
 
-export default class Week extends ContextComponent {
-  render() {
-    return <h2>Week View</h2>;
-  }
-}
+import Week from '@src/components/view/week';
+import FloatingLayer from '@src/components/floatingLayer';
+
+const WeekView: FunctionComponent = () => (
+  <Fragment>
+    <Week />
+    <FloatingLayer />
+  </Fragment>
+);
+
+export default WeekView;
