@@ -13,7 +13,6 @@
     "paths": {
       "@src/*": ["./src/*"],
       "@t/*": ["./types/*"],
-      "preact-markup": ["./types/preact-markup.d.ts"]
     },
     "plugins": [
       {
@@ -23,7 +22,7 @@
     "typeRoots": ["types"],
     "types": ["webpack-env"],
     "listEmittedFiles": true,
-    "declaration": true,
+    "declaration": true
   },
   "include": [
     "src/**/*.ts",

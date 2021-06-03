@@ -47,7 +47,6 @@
     "@types/chance": "^1.1.0",
     "chance": "^1.1.6",
     "preact": "^10.3.2",
-    "preact-markup": "^2.1.1",
     "preact-render-to-string": "^5.1.0",
     "storybook": "^6.2.8",
     "stylelint": "^13.12.0",

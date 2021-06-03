@@ -1,5 +1,4 @@
 import { FunctionComponent, h } from 'preact';
-import Markup from 'preact-markup';
 
 import { useStore } from '@src/components/hooks/store';
 
