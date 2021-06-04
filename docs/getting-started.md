@@ -290,7 +290,7 @@ var calendar = new Calendar('#calendar', {
         },
         grid: {
             header: {
-                header: 34
+                height: 34
             },
             footer: {
                 height: 10
