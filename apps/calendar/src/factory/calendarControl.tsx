@@ -210,8 +210,8 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    *     }
    * ]);
    */
-  createSchedules(schedules: ScheduleData[], silent = false) {
-    // console.log('createSchedules', schedules, silent);
+  createSchedules(events: ScheduleData[]) {
+    this.store.dispatch('dataStore/createSchedules', { events });
   }
 
   /**
@@ -308,7 +308,10 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * @returns HTML string
    */
   renderToString(): string {
-    return renderToString(<Fragment>{this.getComponent()}</Fragment>, this._context);
+    return renderToString(
+      <Provider store={this.store}>{this.getComponent()}</Provider>,
+      this._context
+    );
   }
 
   /**
@@ -320,7 +323,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * calendar.render();
    */
   clear() {
-    // console.log('clear');
+    this.store.dispatch('dataStore/clearSchedules');
   }
 
   /**

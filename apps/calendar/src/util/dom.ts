@@ -7,6 +7,7 @@ import getTarget from 'tui-code-snippet/domEvent/getTarget';
 import getMousePosition from 'tui-code-snippet/domEvent/getMousePosition';
 import isString from 'tui-code-snippet/type/isString';
 import { includes, toArray } from './utils';
+import { noop } from '.';
 
 const CSS_AUTO_REGEX = /^auto$|^$|%/;
 
@@ -112,7 +113,10 @@ export function isOverlapped(el1: Element, el2: Element) {
   return !(r1.top > r2.bottom || r1.right < r2.left || r1.bottom < r2.top || r1.left > r2.right);
 }
 
-const elProto = Element.prototype;
+// for ssr
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+const ElementClass = typeof Element === 'undefined' ? noop : Element;
+const elProto = ElementClass.prototype;
 const matchSelector =
   elProto.matches ||
   elProto.webkitMatchesSelector ||
