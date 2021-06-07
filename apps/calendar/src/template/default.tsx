@@ -1,3 +1,4 @@
+import { h } from 'preact';
 import pick from 'tui-code-snippet/object/pick';
 import isUndefined from 'tui-code-snippet/type/isUndefined';
 
@@ -12,8 +13,10 @@ import {
   Template,
   TemplateCurrentTime,
   TemplateTimezone,
+  TemplateMoreTitleDate,
 } from '@src/model';
 import TZDate from '@src/time/date';
+import { capitalizeDayName, getDayName } from '@src/util/dayName';
 
 const SIXTY_MINUTES = 60;
 
@@ -22,12 +25,13 @@ export const templates: Template = {
     const icon = cls('icon');
     const iconName = cls('ic-milestone');
 
-    return `<span class="${icon} ${iconName}"></span>
-      <span style="background-color: ${model.bgColor}">${stripTags(model.title)}</span>`;
+    return `<span class="${icon} ${iconName}"></span><span style="background-color: ${
+      model.bgColor
+    }">${stripTags(model.title)}</span>`;
   },
 
   milestoneTitle() {
-    return `<span class="${cls('left-content')}">Milestone</span>`;
+    return <span className={cls('left-content')}>Milestone</span>;
   },
 
   task(model: Schedule) {
@@ -35,11 +39,11 @@ export const templates: Template = {
   },
 
   taskTitle() {
-    return `<span class="${cls('left-content')}">Task</span>`;
+    return <span className={cls('left-content')}>Task</span>;
   },
 
   alldayTitle() {
-    return `<span class="${cls('left-content')}">All Day</span>`;
+    return <span className={cls('left-content')}>All Day</span>;
   },
 
   allday(model: Schedule) {
@@ -50,9 +54,11 @@ export const templates: Template = {
     const { start, title } = model;
 
     if (start) {
-      return `<span><strong>${toFormat(start, 'HH:mm')}</strong>&nbsp;<span>${stripTags(
-        title
-      )}</span></span>`;
+      return (
+        <span>
+          <strong>{toFormat(start, 'HH:mm')}</strong>&nbsp;<span>{stripTags(title)}</span>
+        </span>
+      );
     }
 
     return stripTags(title);
@@ -74,12 +80,14 @@ export const templates: Template = {
     return `ComingTime ${leadingZero(hour, 2)}:${leadingZero(minutes, 2)}`;
   },
 
-  monthMoreTitleDate(date: string, dayname: string) {
-    const classNameDay = cls('month-more-title-day');
-    const classNameDayLabel = cls('month-more-title-day-label');
-    const day = pick(date.split('.'), 2);
+  monthMoreTitleDate(moreTitle: TemplateMoreTitleDate) {
+    const { date, day } = moreTitle;
 
-    return `<span class="${classNameDay}">${day}</span><span class="${classNameDayLabel}">${dayname}</span>`;
+    const classNameDay = cls('more-title-date');
+    const classNameDayLabel = cls('more-title-day');
+    const dayName = capitalizeDayName(getDayName(day));
+
+    return `<span class="${classNameDay}">${date}</span><span class="${classNameDayLabel}">${dayName}</span>`;
   },
 
   monthMoreClose() {
@@ -94,21 +102,19 @@ export const templates: Template = {
       classNames.push(cls('weekday-grid-date-decorator'));
     }
 
-    return `<span class="${classNames.join(' ')}">${date}</span>`;
+    return <span className={classNames.join(' ')}>{date}</span>;
   },
 
   monthGridHeaderExceed(hiddenSchedules: number) {
     const className = cls('weekday-grid-more-schedules');
 
-    return `<span class="${className}">${hiddenSchedules} more</span>`;
+    return <span className={className}>{hiddenSchedules} more</span>;
   },
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   monthGridFooter(model: TemplateMonthGrid) {
     return '';
   },
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   monthGridFooterExceed(hiddenSchedules: number) {
     return '';
   },
@@ -169,7 +175,7 @@ export const templates: Template = {
     const iconName = cls('icon');
     const closeIconName = cls('ic-arrow-solid-top');
 
-    return `<span class="${iconName} ${closeIconName}"></span>`;
+    return <span className={`${iconName} ${closeIconName}`}></span>;
   },
 
   timezoneDisplayLabel(props: TemplateTimezone) {

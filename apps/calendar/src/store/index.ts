@@ -6,7 +6,7 @@ import {
   PayloadActions,
   StoreModule,
 } from '@t/store';
-import { deepCopy, forEach } from '@src/util/utils';
+import { deepCopy, forEach, includes } from '@src/util/utils';
 import { StateUpdater } from 'preact/hooks';
 
 interface StoreProps {
@@ -71,7 +71,7 @@ class Store<State extends Record<string, any> = any> {
   }
 
   dispatch(actionType: keyof FlattenActions, payload?: any) {
-    if (!Object.keys(this.flattenActionMap).includes(actionType)) {
+    if (!includes(Object.keys(this.flattenActionMap), actionType)) {
       throw new TypeError(`Action type '${actionType}' is not valid.`);
     }
 

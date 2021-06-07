@@ -15,8 +15,7 @@
       "@src/*": ["./src/*"],
       "@t/*": ["./types/*"],
       "@stories/*": ["./stories/*"],
-      "@test/*": ["./test/*"],
-      "preact-markup": ["./types/preact-markup.d.ts"]
+      "@test/*": ["./test/*"]
     },
     "sourceMap": true,
     "lib": ["esnext", "dom"],

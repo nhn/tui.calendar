@@ -1,6 +1,7 @@
 import { h, FunctionComponent } from 'preact';
 
 import ResizeIcon from '@src/components/events/resizeIcon';
+import Template from '@src/components/template';
 
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { toPercent, toPx } from '@src/util/units';
@@ -112,16 +113,15 @@ const GridEvent: FunctionComponent<GridEventProps> = (props) => {
 
   const {
     flat = false,
-    viewModel: {
-      model: { title },
-    },
+    viewModel: { model },
   } = props;
 
-  // @TODO: 일정 타이틀 템플릿 적용
   return (
     <div className={dayEventBlockClassName} style={blockStyle}>
       <div className={cls('weekday-event')} style={eventItemStyle}>
-        <span className={cls('weekday-schedule-title')}>{title}</span>
+        <span className={cls('weekday-schedule-title')}>
+          <Template template="time" model={model} />
+        </span>
         {flat ? null : <ResizeIcon style={resizeIconStyle} />}
       </div>
     </div>
