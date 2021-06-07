@@ -9,6 +9,8 @@
   ],
   "module": "dist/esm/",
   "exports": {
+    "./toastui-calendar.css": "./dist/toastui-calendar.css",
+    "./toastui-calendar.min.css": "./dist/toastui-calendar.min.css",
     "./": "./"
   },
   "license": "MIT",
