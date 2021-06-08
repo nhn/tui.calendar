@@ -603,31 +603,26 @@ TimeGrid.prototype.attachEvent = function () {
  * Scroll time grid to current hourmarker.
  */
 TimeGrid.prototype.scrollToNow = function () {
-    var container = this.container;
-    var offsetTop, viewBound, scrollTop, scrollAmount, scrollBy, scrollFn;
-
-    if (!this.hourmarkers || !this.hourmarkers.length) {
-        return;
-    }
-
-    offsetTop = this.hourmarkers[0].offsetTop;
-    viewBound = this.getViewBound();
-    scrollTop = offsetTop;
-    scrollAmount = viewBound.height / 4;
-    scrollBy = 10;
-
-    scrollFn = function () {
-        if (scrollTop > offsetTop - scrollAmount) {
-            scrollTop -= scrollBy;
-            container.scrollTop = scrollTop;
-
-            reqAnimFrame.requestAnimFrame(scrollFn);
-        } else {
-            container.scrollTop = offsetTop - scrollAmount;
-        }
-    };
-
-    reqAnimFrame.requestAnimFrame(scrollFn);
+    // var container = this.container;
+    // var offsetTop, viewBound, scrollTop, scrollAmount, scrollBy, scrollFn;
+    // if (!this.hourmarkers || !this.hourmarkers.length) {
+    //     return;
+    // }
+    // offsetTop = this.hourmarkers[0].offsetTop;
+    // viewBound = this.getViewBound();
+    // scrollTop = offsetTop;
+    // scrollAmount = viewBound.height / 4;
+    // scrollBy = 10;
+    // scrollFn = function () {
+    //     if (scrollTop > offsetTop - scrollAmount) {
+    //         scrollTop -= scrollBy;
+    //         container.scrollTop = scrollTop;
+    //         reqAnimFrame.requestAnimFrame(scrollFn);
+    //     } else {
+    //         container.scrollTop = offsetTop - scrollAmount;
+    //     }
+    // };
+    // reqAnimFrame.requestAnimFrame(scrollFn);
 };
 
 /**********
