@@ -1,7 +1,11 @@
 import { h, FunctionComponent } from 'preact';
 
+import Template from '@src/components/template';
+
 import { cls } from '@src/util/cssHelper';
 import ExceedCountButton from '@src/components/daygrid/exceedCountButton';
+import TZDate from '@src/time/date';
+import { toFormat } from '@src/time/datetime';
 
 enum CellBarType {
   header = 'header',
@@ -11,7 +15,7 @@ enum CellBarType {
 interface CellBarProps {
   type?: CellBarType;
   exceedCount?: number;
-  date: number;
+  date: TZDate;
   onClickExceedCount: () => void;
 }
 
@@ -21,10 +25,23 @@ const CellBar: FunctionComponent<CellBarProps> = ({
   date,
   onClickExceedCount,
 }) => {
-  // @TODO: date 템플릿 적용 필요 / 오늘 표시
+  const ymd = toFormat(date, 'YYYYMMDD');
+  const todayYmd = toFormat(new TZDate(), 'YYYYMMDD');
+  const model = {
+    date: toFormat(date, 'YYYY-MM-DD'),
+    day: date.getDay(),
+    hiddenEventCount: exceedCount,
+    isOtherMonth: true, // @TODO: 현재 렌더링된 월간뷰와 셀 날짜의 월을 비교
+    isToday: ymd === todayYmd,
+    month: date.getMonth(),
+    ymd,
+  };
+
   return (
     <div className={cls(`grid-cell-${type}`)}>
-      <span className={cls('grid-cell-date')}>{date}</span>
+      <span className={cls('grid-cell-date')}>
+        <Template template="monthGridHeader" model={model} />
+      </span>
       {exceedCount ? (
         <ExceedCountButton
           number={exceedCount}

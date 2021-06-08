@@ -1,4 +1,5 @@
 import { h, FunctionComponent } from 'preact';
+import Template from '@src/components/template';
 
 interface ExceedCountButtonProps {
   number: number;
@@ -15,10 +16,9 @@ const ExceedCountButton: FunctionComponent<ExceedCountButtonProps> = ({
     return null;
   }
 
-  // @TODO: 템플릿 적용 필요
   return (
     <button type="button" onClick={clickHandler} className={className}>
-      {number} More
+      <Template template="monthGridHeaderExceed" model={number} />
     </button>
   );
 };

@@ -9,6 +9,7 @@ import Theme from '@src/theme';
 import { ThemeKeyValue } from '@src/theme/themeProps';
 import { IDS_OF_DAY } from '@src/controller/base';
 import Collection from '@src/util/collection';
+import { VNode } from 'preact';
 
 export type DateType = Date | string | number | TZDate;
 
@@ -79,11 +80,17 @@ export interface TemplateCurrentTime {
 export interface TemplateMonthGrid {
   date: string;
   day: number;
-  hiddenSchedules: number;
+  hiddenEventCount: number;
   isOtherMonth: boolean;
   isToday: boolean;
   month: number;
   ymd: string;
+}
+
+export interface TemplateMoreTitleDate {
+  ymd: string;
+  date: number;
+  day: number;
 }
 
 export interface TemplateWeekDay {
@@ -103,49 +110,51 @@ export interface TemplateTimezone extends TimezoneConfig {
   timezoneOffset: number;
 }
 
+export type TemplateReturnType = string | VNode;
+
 export interface Template {
-  milestoneTitle: () => string;
-  milestone: (schedule: Schedule) => string;
-  taskTitle: () => string;
-  task: (schedule: Schedule) => string;
-  alldayTitle: () => string;
-  allday: (schedule: Schedule) => string;
-  time: (schedule: Schedule) => string;
-  goingDuration: (schedule: Schedule) => string;
-  comingDuration: (schedule: Schedule) => string;
-  monthMoreTitleDate: (date: string, dayname: string) => string;
-  monthMoreClose: () => string;
-  monthGridHeader: (model: TemplateMonthGrid) => string;
-  monthGridHeaderExceed: (hiddenSchedules: number) => string;
-  monthGridFooter: (model: TemplateMonthGrid) => string;
-  monthGridFooterExceed: (hiddenSchedules: number) => string;
-  monthDayname: (model: TemplateMonthDayName) => string;
-  weekDayname: (model: TemplateWeekDay) => string;
-  weekGridFooterExceed: (hiddenSchedules: number) => string;
-  dayGridTitle: (viewName: ScheduleCategory) => string;
-  schedule: (schedule: Schedule) => string;
-  collapseBtnTitle: () => string;
-  timezoneDisplayLabel: (props: TemplateTimezone) => string;
-  timegridDisplayPrimaryTime: (props: TemplateCurrentTime) => string;
-  timegridDisplayTime: (props: TemplateCurrentTime) => string;
-  timegridCurrentTime: (props: TemplateCurrentTime) => string;
-  popupIsAllDay: () => string;
-  popupStateFree: () => string;
-  popupStateBusy: () => string;
-  titlePlaceholder: () => string;
-  locationPlaceholder: () => string;
-  startDatePlaceholder: () => string;
-  endDatePlaceholder: () => string;
-  popupSave: () => string;
-  popupUpdate: () => string;
-  popupDetailDate: (isAllDay: boolean, start: TZDate, end: TZDate) => string;
-  popupDetailLocation: (schedule: Schedule) => string;
-  popupDetailUser: (schedule: Schedule) => string;
-  popupDetailState: (schedule: Schedule) => string;
-  popupDetailRepeat: (schedule: Schedule) => string;
-  popupDetailBody: (schedule: Schedule) => string;
-  popupEdit: () => string;
-  popupDelete: () => string;
+  milestoneTitle: () => TemplateReturnType;
+  milestone: (schedule: Schedule) => TemplateReturnType;
+  taskTitle: () => TemplateReturnType;
+  task: (schedule: Schedule) => TemplateReturnType;
+  alldayTitle: () => TemplateReturnType;
+  allday: (schedule: Schedule) => TemplateReturnType;
+  time: (schedule: Schedule) => TemplateReturnType;
+  goingDuration: (schedule: Schedule) => TemplateReturnType;
+  comingDuration: (schedule: Schedule) => TemplateReturnType;
+  monthMoreTitleDate: (moreTitle: TemplateMoreTitleDate) => TemplateReturnType;
+  monthMoreClose: () => TemplateReturnType;
+  monthGridHeader: (model: TemplateMonthGrid) => TemplateReturnType;
+  monthGridHeaderExceed: (hiddenSchedules: number) => TemplateReturnType;
+  monthGridFooter: (model: TemplateMonthGrid) => TemplateReturnType;
+  monthGridFooterExceed: (hiddenSchedules: number) => TemplateReturnType;
+  monthDayname: (model: TemplateMonthDayName) => TemplateReturnType;
+  weekDayname: (model: TemplateWeekDay) => TemplateReturnType;
+  weekGridFooterExceed: (hiddenSchedules: number) => TemplateReturnType;
+  dayGridTitle: (viewName: ScheduleCategory) => TemplateReturnType;
+  schedule: (schedule: Schedule) => TemplateReturnType;
+  collapseBtnTitle: () => TemplateReturnType;
+  timezoneDisplayLabel: (props: TemplateTimezone) => TemplateReturnType;
+  timegridDisplayPrimaryTime: (props: TemplateCurrentTime) => TemplateReturnType;
+  timegridDisplayTime: (props: TemplateCurrentTime) => TemplateReturnType;
+  timegridCurrentTime: (props: TemplateCurrentTime) => TemplateReturnType;
+  popupIsAllDay: () => TemplateReturnType;
+  popupStateFree: () => TemplateReturnType;
+  popupStateBusy: () => TemplateReturnType;
+  titlePlaceholder: () => TemplateReturnType;
+  locationPlaceholder: () => TemplateReturnType;
+  startDatePlaceholder: () => TemplateReturnType;
+  endDatePlaceholder: () => TemplateReturnType;
+  popupSave: () => TemplateReturnType;
+  popupUpdate: () => TemplateReturnType;
+  popupDetailDate: (isAllDay: boolean, start: TZDate, end: TZDate) => TemplateReturnType;
+  popupDetailLocation: (schedule: Schedule) => TemplateReturnType;
+  popupDetailUser: (schedule: Schedule) => TemplateReturnType;
+  popupDetailState: (schedule: Schedule) => TemplateReturnType;
+  popupDetailRepeat: (schedule: Schedule) => TemplateReturnType;
+  popupDetailBody: (schedule: Schedule) => TemplateReturnType;
+  popupEdit: () => TemplateReturnType;
+  popupDelete: () => TemplateReturnType;
 }
 
 export type TemplateConfig = Partial<Template>;

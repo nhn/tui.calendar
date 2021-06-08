@@ -1,6 +1,6 @@
 import { FunctionComponent, h } from 'preact';
 
-import { Template } from '@src/components/template';
+import Template from '@src/components/template';
 import { cls } from '@src/util/cssHelper';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { toPercent } from '@src/util/units';

@@ -132,7 +132,7 @@ type PopupParamMap = {
 };
 
 interface SeeMorePopupParam extends BasePopupParam {
-  date: TZDate | Date;
+  date: TZDate;
   events: ScheduleViewModel[];
 }
 

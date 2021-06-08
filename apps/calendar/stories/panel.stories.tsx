@@ -1,7 +1,6 @@
 import { h } from 'preact';
 import { Story } from '@storybook/preact';
 
-import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { DayGridEvents } from '@src/components/panelgrid/dayGridEvents';
 import { addDate } from '@src/time/datetime';
 import TZDate from '@src/time/date';
@@ -11,6 +10,7 @@ import Schedule from '@src/model/schedule';
 import { PanelTitle } from '@src/components/panelgrid/panelTitle';
 import { createRandomEventModelsForMonth } from '@stories/util/randomEvents';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
+import { ProviderWrapper } from '@stories/util/providerWrapper';
 
 export default { title: 'Panel', component: DayGridEvents, args: { primary: true } };
 
@@ -83,7 +83,11 @@ scrollMilestone.storyName = 'events milestone with scroll';
 export const title: Story = () => {
   const type = 'milestone';
 
-  return <PanelTitle width={120} template={type} model={type} />;
+  return (
+    <ProviderWrapper>
+      <PanelTitle width={120} template={type} model={type} />
+    </ProviderWrapper>
+  );
 };
 
 title.storyName = 'panel title';

@@ -1,4 +1,5 @@
 import { ModuleKeys, PayloadActions } from '@t/store';
+import { includes } from './utils';
 
 export function filterActions(actions: PayloadActions, name?: string) {
   return Object.keys(actions).reduce(
@@ -13,7 +14,7 @@ export function getState(state: Record<string, any>, names?: ModuleKeys | Module
   }
 
   if (typeof names === 'string') {
-    if (!Object.keys(state).includes(names)) {
+    if (!includes(Object.keys(state), names)) {
       throw new Error(
         `It is not a registered ${names} module. Please register the module to be used when using 'useCreateStore'.`
       );
@@ -41,7 +42,7 @@ export function getActions(actions: PayloadActions, names?: ModuleKeys | ModuleK
   }
 
   if (typeof names === 'string') {
-    if (!Object.keys(actions).includes(names)) {
+    if (!includes(Object.keys(actions), names)) {
       throw new Error(
         `It is not a registered ${names} module. Please register the module to be used when using 'useCreateStore'.`
       );

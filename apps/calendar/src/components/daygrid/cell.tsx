@@ -28,7 +28,7 @@ const OUT_PADDING = 5;
 const VIEW_MIN_WIDTH = 280;
 
 interface CellProps {
-  date: TZDate | Date;
+  date: TZDate;
   dayIndex: Day;
   style?: {
     width?: CSSValue;
@@ -255,11 +255,7 @@ export const Cell: FunctionComponent<CellProps> = (props) => {
       style={{ ...style, color: getDateColor(dayIndex, commonTheme) }}
       ref={container}
     >
-      <CellBar
-        exceedCount={exceedCount}
-        date={date.getDate()}
-        onClickExceedCount={onOpenSeeMorePopup}
-      />
+      <CellBar exceedCount={exceedCount} date={date} onClickExceedCount={onOpenSeeMorePopup} />
     </div>
   );
 };

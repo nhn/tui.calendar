@@ -1,8 +1,9 @@
 import { h } from 'preact';
+
+import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { TimeEvent } from '@src/components/events/timeEvent';
 import Schedule from '@src/model/schedule';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
-import { InstanceContext, getNewAppContext } from '@src/model/context';
 import { BackgroundEvent } from '@src/components/events/backgroundEvent';
 
 export default { title: 'Various Event Blocks' };
@@ -15,9 +16,9 @@ export const timeEvent = () => {
   const eventModels = ScheduleViewModel.create(schedule);
 
   return (
-    <InstanceContext.Provider value={getNewAppContext()}>
+    <ProviderWrapper>
       <TimeEvent eventModels={eventModels} />
-    </InstanceContext.Provider>
+    </ProviderWrapper>
   );
 };
 

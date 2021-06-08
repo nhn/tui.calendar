@@ -14,17 +14,21 @@ import { TimeGrid } from '@src/components/timegrid/timegrid';
 import { ColumnInfo } from '@src/components/timegrid/columns';
 
 import type { OptionData } from '@t/store';
-import type { DayNameItem } from '@t/components/daygrid/dayNames';
 
-function getDayNames(template: (model: TemplateWeekDay) => string, options: OptionData) {
-  const dayNames: DayNameItem[] = [];
+function getDayNames(options: OptionData) {
+  const dayNames: TemplateWeekDay[] = [];
 
-  // @TODO: apply template daynames
   const today = new Date();
-  const dayIndex = today.getDay();
-  const name = getDayName(dayIndex);
+  const day = today.getDay();
+  const dayName = capitalizeDayName(getDayName(day));
 
-  dayNames.push({ name: capitalizeDayName(name), dayIndex });
+  dayNames.push({
+    date: today.getUTCDate(),
+    day: today.getDay(),
+    dayName,
+    isToday: false,
+    renderDate: 'date',
+  });
 
   return dayNames;
 }
@@ -40,7 +44,7 @@ const Day: FunctionComponent = () => {
     return null;
   }
 
-  const dayNames = getDayNames(template.weekDayname, options);
+  const dayNames = getDayNames(options);
   const { narrowWeekend } = options.week;
   const cells = [new TZDate()]; // @TODO: 오늘 기준으로 계산(prev, next 사용 시 날짜 계산 필요)
   const { milestone, task, allday, time } = getDayGridEvents(cells, dataStore, narrowWeekend);
@@ -54,7 +58,7 @@ const Day: FunctionComponent = () => {
   return (
     <Layout>
       <Panel name="day-daynames" height={dayNameHeight}>
-        <DayNames dayNames={dayNames} marginLeft={120} />
+        <DayNames dayNames={dayNames} marginLeft={120} templateType="weekDayname" />
       </Panel>
       <Panel name="milestone" resizable>
         <DayGridEvents

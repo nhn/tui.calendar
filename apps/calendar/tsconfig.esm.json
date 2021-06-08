@@ -13,7 +13,6 @@
     "paths": {
       "@src/*": ["./src/*"],
       "@t/*": ["./types/*"],
-      "preact-markup": ["./types/preact-markup.d.ts"]
     },
     "plugins": [
       {
@@ -24,6 +23,7 @@
     "types": ["webpack-env"],
     "listEmittedFiles": true,
     "declaration": true,
+    "lib": ["esnext"]
   },
   "include": [
     "src/**/*.ts",

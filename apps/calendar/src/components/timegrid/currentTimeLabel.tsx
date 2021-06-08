@@ -5,7 +5,7 @@ import TZDate from '@src/time/date';
 import { TimeUnit } from '@src/model';
 import { toPercent } from '@src/util/units';
 import { getSize } from '@src/util/dom';
-import { Template } from '@src/components/template';
+import Template from '@src/components/template';
 import { addTimeGridPrefix, timeFormats } from '@src/components/timegrid';
 
 const classNames = {

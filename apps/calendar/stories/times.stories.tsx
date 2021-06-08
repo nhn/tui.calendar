@@ -1,4 +1,4 @@
-import { h, RenderableProps } from 'preact';
+import { h } from 'preact';
 import range from 'tui-code-snippet/array/range';
 
 import { Times } from '@src/components/timegrid/times';
@@ -12,30 +12,10 @@ import {
   addYear,
   addMinutes,
 } from '@src/time/datetime';
-import { cls } from '@src/util/cssHelper';
-import extend from 'tui-code-snippet/object/extend';
 import { MultipleTimezones } from '@src/components/timegrid/multipleTimezones';
+import { ProviderWrapper } from '@stories/util/providerWrapper';
 
 export default { title: 'Times' };
-
-interface WrapperProps {
-  style?: Record<string, any>;
-  width: number;
-  position: string;
-}
-
-function Wrapper({ children, style, width, position }: RenderableProps<WrapperProps>) {
-  return (
-    <div className={cls('layout')} style={extend({ width, position }, style)}>
-      {children}
-    </div>
-  );
-}
-
-Wrapper.defaultProps = {
-  position: 'relative',
-  width: 200,
-};
 
 export const minutesInAnHour = () => {
   const now = new TZDate();
@@ -52,7 +32,7 @@ export const minutesInAnHour = () => {
   });
 
   return (
-    <Wrapper>
+    <ProviderWrapper>
       <Times
         unit="minute"
         times={times}
@@ -61,7 +41,7 @@ export const minutesInAnHour = () => {
         showFirst
         showLast
       />
-    </Wrapper>
+    </ProviderWrapper>
   );
 };
 minutesInAnHour.story = {
@@ -69,18 +49,18 @@ minutesInAnHour.story = {
 };
 
 export const hoursInADay = () => (
-  <Wrapper>
+  <ProviderWrapper>
     <Times showCurrentTime currentTime={new TZDate()} />
-  </Wrapper>
+  </ProviderWrapper>
 );
 hoursInADay.story = {
   name: '24 hours',
 };
 
 export const hoursInOfficeHour = () => (
-  <Wrapper>
+  <ProviderWrapper>
     <Times start={9} end={18} showFirst showLast showCurrentTime />
-  </Wrapper>
+  </ProviderWrapper>
 );
 hoursInOfficeHour.story = {
   name: 'From 9 to 18 hour',
@@ -99,7 +79,7 @@ export const datesInAWeek = () => {
   });
 
   return (
-    <Wrapper>
+    <ProviderWrapper>
       <Times
         unit="date"
         times={times}
@@ -108,7 +88,7 @@ export const datesInAWeek = () => {
         showFirst
         showLast
       />
-    </Wrapper>
+    </ProviderWrapper>
   );
 };
 datesInAWeek.story = {
@@ -128,7 +108,7 @@ export const datesInAMonth = () => {
   });
 
   return (
-    <Wrapper>
+    <ProviderWrapper>
       <Times
         unit="date"
         times={times}
@@ -137,7 +117,7 @@ export const datesInAMonth = () => {
         showFirst
         showLast
       />
-    </Wrapper>
+    </ProviderWrapper>
   );
 };
 
@@ -158,9 +138,9 @@ export const monthsInAnYear = () => {
   });
 
   return (
-    <Wrapper>
+    <ProviderWrapper>
       <Times unit="month" times={times} showCurrentTime currentTime={new TZDate()} showFirst />
-    </Wrapper>
+    </ProviderWrapper>
   );
 };
 monthsInAnYear.story = {
@@ -182,7 +162,7 @@ export const yearsInDecade = () => {
   const currentTime = new TZDate('2022-03-24T10:10:10');
 
   return (
-    <Wrapper>
+    <ProviderWrapper>
       <Times
         unit="year"
         times={times}
@@ -191,7 +171,7 @@ export const yearsInDecade = () => {
         showFirst
         showLast
       />
-    </Wrapper>
+    </ProviderWrapper>
   );
 };
 yearsInDecade.story = {
@@ -222,9 +202,9 @@ export const multipleTimezones = () => {
   ];
 
   return (
-    <Wrapper style={{ height: '500px', width: '300px' }}>
+    <ProviderWrapper>
       <MultipleTimezones timezones={timezones} showTimezoneLabel={timezones.length > 1} />
-    </Wrapper>
+    </ProviderWrapper>
   );
 };
 multipleTimezones.story = {

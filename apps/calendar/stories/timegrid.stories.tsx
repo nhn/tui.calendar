@@ -1,24 +1,16 @@
-import { h, RenderableProps } from 'preact';
+import { h } from 'preact';
 import range from 'tui-code-snippet/array/range';
 
 import { TimeGrid } from '@src/components/timegrid/timegrid';
-import { cls } from '@src/util/cssHelper';
 import { ScheduleData } from '@src/model';
 import { addHours, toStartOfDay, addDate } from '@src/time/datetime';
 import TZDate from '@src/time/date';
 import normalEvents from '@stories/data/events.json';
 import { createRandomEvents } from '@stories/util/randomEvents';
 import { createEventModels } from '@stories/helper/event';
+import { ProviderWrapper } from '@stories/util/providerWrapper';
 
 export default { title: 'TimeGrid' };
-
-function Wrapper({ children }: RenderableProps<any>) {
-  return (
-    <div className={cls('layout')} style={{ overflow: 'hidden', height: '100%' }}>
-      {children}
-    </div>
-  );
-}
 
 function toThisWeek(date: TZDate) {
   const today = toStartOfDay(new TZDate());
@@ -89,9 +81,9 @@ export const basic = () => {
   const events = getEvents();
 
   return (
-    <Wrapper>
+    <ProviderWrapper>
       <TimeGrid events={events} />
-    </Wrapper>
+    </ProviderWrapper>
   );
 };
 
@@ -103,9 +95,9 @@ export const randomEvents = () => {
   const eventModels = createEventModels(data);
 
   return (
-    <Wrapper>
+    <ProviderWrapper>
       <TimeGrid events={eventModels} />
-    </Wrapper>
+    </ProviderWrapper>
   );
 };
 
@@ -130,9 +122,9 @@ export const multipleTimezones = () => {
   const eventModels = getEvents();
 
   return (
-    <Wrapper>
+    <ProviderWrapper>
       <TimeGrid timezones={timezones} timesWidth={60} events={eventModels} />
-    </Wrapper>
+    </ProviderWrapper>
   );
 };
 multipleTimezones.story = {
