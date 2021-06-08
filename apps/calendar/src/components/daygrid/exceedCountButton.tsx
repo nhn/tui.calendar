@@ -1,5 +1,4 @@
 import { h, FunctionComponent } from 'preact';
-import React from 'preact/compat';
 import Template from '@src/components/template';
 
 interface ExceedCountButtonProps {

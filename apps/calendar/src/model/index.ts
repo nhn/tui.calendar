@@ -9,7 +9,7 @@ import Theme from '@src/theme';
 import { ThemeKeyValue } from '@src/theme/themeProps';
 import { IDS_OF_DAY } from '@src/controller/base';
 import Collection from '@src/util/collection';
-import { JSXInternal } from 'preact/src/jsx';
+import { VNode } from 'preact';
 
 export type DateType = Date | string | number | TZDate;
 
@@ -110,8 +110,7 @@ export interface TemplateTimezone extends TimezoneConfig {
   timezoneOffset: number;
 }
 
-type ValueOf<T> = T[keyof T];
-type TemplateReturnType = string | ValueOf<JSXInternal.IntrinsicAttributes>;
+type TemplateReturnType = string | VNode;
 
 export interface Template {
   milestoneTitle: () => TemplateReturnType;

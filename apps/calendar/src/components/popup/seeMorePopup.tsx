@@ -3,7 +3,6 @@ import { h, FunctionComponent } from 'preact';
 import { useStore } from '@src/components/hooks/store';
 import { cls } from '@src/util/cssHelper';
 import { pick } from '@src/util/utils';
-import { capitalizeDayName, getDayName } from '@src/util/dayName';
 import { SeeMorePopupParam } from '@t/store';
 import SeeMoreHeader from '@src/components/popup/seeMoreHeader';
 import GridEvent from '@src/components/events/gridEvent';
