@@ -7,13 +7,14 @@ import { isNumber } from '@src/util/utils';
 import DayName from '@src/components/daygrid/dayName';
 
 import type { CalendarMonthOption, CalendarWeekOption } from '@t/store';
-import type { DayNameItem } from '@t/components/daygrid/dayNames';
+import { Template, TemplateMonthDayName } from '@src/model';
 
 export interface DayNamesProps {
-  dayNames: DayNameItem[];
+  dayNames: TemplateMonthDayName[];
   theme?: DayNameTheme;
   options?: CalendarMonthOption | CalendarWeekOption;
   marginLeft?: number;
+  templateType: keyof Template;
 }
 
 const defaultDayNameOption = {
@@ -39,6 +40,7 @@ const DayNames: FunctionComponent<DayNamesProps> = ({
   theme = defaultDayNameTheme,
   options = defaultDayNameOption,
   marginLeft = defaultMarginLeft,
+  templateType,
 }) => {
   const { narrowWeekend = false, startDayOfWeek = 0, workweek = false } = options;
 
@@ -73,11 +75,12 @@ const DayNames: FunctionComponent<DayNamesProps> = ({
 
   return (
     <div className={cls('daynames')} style={style}>
-      {dayNames.map(({ name, dayIndex }, index) => (
+      {dayNames.map((dayName, index) => (
         <DayName
-          dayname={name}
-          dayIndex={dayIndex}
-          key={`dayNames-${name}-${dayIndex}`}
+          templateType={templateType}
+          dayname={dayName}
+          dayIndex={dayName.day}
+          key={`dayNames-${dayName.label}-${dayName.day}`}
           style={{
             ...dayNameStyle,
             width: toPercent(grids[index].width),

@@ -3,40 +3,40 @@ import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { Story } from '@storybook/preact';
 
 import DayNames from '@src/components/daygrid/dayNames';
-import { DayNameItem } from '@t/components/daygrid/dayNames';
+import { TemplateMonthDayName } from '@src/model';
 
 export default { title: 'DayNames' };
 
 interface DayNamesStory {
-  dayNames: DayNameItem[];
+  dayNames: TemplateMonthDayName[];
   marginLeft?: number;
 }
 
 const Template: Story<DayNamesStory> = ({ dayNames, marginLeft }) => (
   <ProviderWrapper>
-    <DayNames dayNames={dayNames} marginLeft={marginLeft} />
+    <DayNames templateType="monthDayname" dayNames={dayNames} marginLeft={marginLeft} />
   </ProviderWrapper>
 );
 
 const oneDayName = [
   {
-    name: 'Mon',
-    dayIndex: 1,
+    label: 'Mon',
+    day: 1,
   },
 ];
 
 const threeDayNames = [
   {
-    name: 'Mon',
-    dayIndex: 1,
+    label: 'Mon',
+    day: 1,
   },
   {
-    name: 'Wed',
-    dayIndex: 3,
+    label: 'Wed',
+    day: 3,
   },
   {
-    name: 'Fri',
-    dayIndex: 5,
+    label: 'Fri',
+    day: 5,
   },
 ];
 
