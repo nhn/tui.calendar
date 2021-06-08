@@ -1,14 +1,14 @@
-import { h } from 'preact';
+import { FunctionComponent, h } from 'preact';
 
-import { prefixer } from '@src/components/timegrid';
+import { addTimeGridPrefix } from '@src/components/timegrid';
 import { toPercent } from '@src/util/units';
 
 const classNames = {
-  line: prefixer('current-time-line'),
-  left: prefixer('current-time-line-left'),
-  marker: prefixer('current-time-line-marker'),
-  today: prefixer('current-time-line-today'),
-  right: prefixer('current-time-line-right'),
+  line: addTimeGridPrefix('current-time-line'),
+  left: addTimeGridPrefix('current-time-line-left'),
+  marker: addTimeGridPrefix('current-time-line-marker'),
+  today: addTimeGridPrefix('current-time-line-today'),
+  right: addTimeGridPrefix('current-time-line-right'),
 };
 
 interface Props {
@@ -18,10 +18,12 @@ interface Props {
   columnIndex: number;
 }
 
-export function CurrentTimeLine(props: Props) {
-  const { columnWidth, columnCount, columnIndex } = props;
-
-  const top = toPercent(props.top);
+export const CurrentTimeLine: FunctionComponent<Props> = ({
+  top,
+  columnWidth,
+  columnCount,
+  columnIndex,
+}) => {
   const leftLine = {
     left: toPercent(columnWidth * columnIndex),
     width: toPercent(columnWidth * columnIndex),
@@ -36,7 +38,7 @@ export function CurrentTimeLine(props: Props) {
   const currentTimeRightBorderTop = 'none';
 
   return (
-    <div className={classNames.line} style={{ top }}>
+    <div className={classNames.line} style={{ top: toPercent(top) }}>
       <div
         className={classNames.left}
         style={{ width: leftLine.width, borderTop: currentTimeLeftBorderTop }}
@@ -62,6 +64,4 @@ export function CurrentTimeLine(props: Props) {
       />
     </div>
   );
-}
-CurrentTimeLine.displayName = 'CurrentTimeLine';
-CurrentTimeLine.defaultProps = {} as Props;
+};

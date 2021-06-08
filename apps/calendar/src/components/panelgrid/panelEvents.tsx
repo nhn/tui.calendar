@@ -1,32 +1,35 @@
 import { FunctionComponent, h } from 'preact';
 
 import { cls } from '@src/util/cssHelper';
-import Schedule from '@src/model/schedule';
 import { DayEvent } from '@src/components/events/dayEvent';
-import { getViewModels } from '@src/event/panelEvent';
-import { setViewModelsInfo } from '@src/event/gridEvent';
+import { EVENT_HEIGHT } from '@src/util/gridHelper';
+import { useStore } from '@src/components/hooks/store';
+import { getViewModels } from '@src/util/panelEvent';
 
 import type { Cells } from '@t/panel';
-import type { PanelState } from '@src/components/layout';
-import { EVENT_HEIGHT, isWithinHeight } from '@src/util/gridHelper';
+import type { CalendarWeekOption } from '@t/store';
+import type { DayGridEventMatrix } from '@t/events';
 
 interface Props {
   name: string;
   cells: Cells;
-  events: Schedule[];
-  options?: PanelState;
+  events: DayGridEventMatrix;
+  options?: CalendarWeekOption;
 }
 
-export const PanelEvents: FunctionComponent<Props> = ({ name, cells, events, options = {} }) => {
-  const { narrowWeekend = false, panelHeight = EVENT_HEIGHT } = options;
-  const viewModels = getViewModels(events, cells);
-  setViewModelsInfo(viewModels, cells, { narrowWeekend });
+export const PanelEvents: FunctionComponent<Props> = ({ name, events }) => {
+  const { state } = useStore('layout');
+  const height = state[name]?.height ?? EVENT_HEIGHT;
 
-  const filteredViewModels = viewModels.filter(isWithinHeight(panelHeight, EVENT_HEIGHT));
+  const viewModels = getViewModels(events);
 
-  const dayEvents = filteredViewModels.map((viewModel, index) => (
+  const dayEvents = viewModels.map((viewModel, index) => (
     <DayEvent viewModel={viewModel} key={`${name}-DayEvent-${index}`} />
   ));
 
-  return <div className={cls('panel-event-wrapper')}>{dayEvents}</div>;
+  return (
+    <div className={cls('panel-event-wrapper')} style={{ height }}>
+      {dayEvents}
+    </div>
+  );
 };

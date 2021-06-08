@@ -5,12 +5,12 @@ import { getGridLeftAndWidth } from '@src/time/datetime';
 import { toPercent, toPx } from '@src/util/units';
 import { isNumber } from '@src/util/utils';
 import DayName from '@src/components/daygrid/dayName';
+import { Template, TemplateMonthDayName, TemplateWeekDay } from '@src/model';
 
 import type { CalendarMonthOption, CalendarWeekOption } from '@t/store';
-import { Template, TemplateMonthDayName } from '@src/model';
 
 export interface DayNamesProps {
-  dayNames: TemplateMonthDayName[];
+  dayNames: TemplateWeekDay[] | TemplateMonthDayName[];
   theme?: DayNameTheme;
   options?: CalendarMonthOption | CalendarWeekOption;
   marginLeft?: number;
@@ -75,12 +75,12 @@ const DayNames: FunctionComponent<DayNamesProps> = ({
 
   return (
     <div className={cls('daynames')} style={style}>
-      {dayNames.map((dayName, index) => (
+      {(dayNames as Array<TemplateWeekDay | TemplateMonthDayName>).map((dayName, index) => (
         <DayName
           templateType={templateType}
           dayname={dayName}
           dayIndex={dayName.day}
-          key={`dayNames-${dayName.label}-${dayName.day}`}
+          key={`dayNames-${dayName.day}-${'label' in dayName ? dayName.label : dayName.dayName}`}
           style={{
             ...dayNameStyle,
             width: toPercent(grids[index].width),

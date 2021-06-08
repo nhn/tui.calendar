@@ -1,4 +1,5 @@
 import { h } from 'preact';
+
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { TimeEvent } from '@src/components/events/timeEvent';
 import Schedule from '@src/model/schedule';
@@ -12,19 +13,21 @@ export const timeEvent = () => {
     title: 'Time Event 2',
     bgColor: 'green',
   });
-  const scheduleViewModel = ScheduleViewModel.create(schedule);
+  const eventModels = ScheduleViewModel.create(schedule);
 
   return (
     <ProviderWrapper>
-      <TimeEvent viewModel={scheduleViewModel} />
+      <TimeEvent eventModels={eventModels} />
     </ProviderWrapper>
   );
 };
 
 export const backgroundEvent = () => {
-  const event = Schedule.create({
-    bgColor: 'rgba(100, 100, 100, .3)',
-  });
+  const eventModels = ScheduleViewModel.create(
+    Schedule.create({
+      bgColor: 'rgba(100, 100, 100, .3)',
+    })
+  );
 
-  return <BackgroundEvent model={event} />;
+  return <BackgroundEvent eventModels={eventModels} />;
 };

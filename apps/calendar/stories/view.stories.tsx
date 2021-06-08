@@ -7,7 +7,7 @@ import DayView from '@src/components/view/dayView';
 import { cls } from '@src/util/cssHelper';
 import { ViewListMap } from '@t/option';
 import { createStore } from '@stories/util/providerWrapper';
-import { generateRandomScheduleViewModelsForMonth } from './util/randomEvents';
+import { createRandomEventModelsForMonth } from './util/randomEvents';
 
 export default { title: 'View' };
 
@@ -50,7 +50,7 @@ const timeGridDay = {
 };
 
 function createEvents() {
-  const events = generateRandomScheduleViewModelsForMonth();
+  const events = createRandomEventModelsForMonth();
 
   store.dispatch('dataStore/clearSchedules');
 

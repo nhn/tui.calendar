@@ -4,42 +4,40 @@
  */
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import inArray from 'tui-code-snippet/array/inArray';
-import isUndefined from 'tui-code-snippet/type/isUndefined';
 
 import Collection, { Filter } from '@src/util/collection';
 import Schedule from '@src/model/schedule';
 import TZDate from '@src/time/date';
 import { makeDateRange, MS_PER_DAY, toFormat, toStartOfDay, toEndOfDay } from '@src/time/datetime';
+import { isUndefined } from '@src/util/utils';
 
-export type CollisionGroup = Array<number[]>;
-export type Matrix<T> = Array<Array<T[]>>;
-export type ScheduleMatrix<T> = Matrix<T>;
-export type ScheduleMatrix2d<T> = Array<T[]>;
+import { CollisionGroup, Matrix3d, Matrix } from '@t/events';
 
 /**
  * Calculate collision group.
  * @param {Array<Schedule|ScheduleViewModel>} schedules List of viewmodels.
+ * @param {boolean} [usingTravelTime = true]
  * @returns {Array<number[]>} Collision Group.
  */
-export function getCollisionGroup(
-  schedules: Schedule[] | ScheduleViewModel[],
+export function getCollisionGroup<Events extends Schedule | ScheduleViewModel>(
+  schedules: Events[],
   usingTravelTime = true
 ) {
   const collisionGroups: CollisionGroup = [];
-  let previousScheduleList: Array<Schedule | ScheduleViewModel>;
+  let previousScheduleList: Array<Events>;
 
   if (!schedules.length) {
     return collisionGroups;
   }
 
   collisionGroups[0] = [schedules[0].cid()];
-  schedules.slice(1).forEach((schedule: Schedule | ScheduleViewModel, index: number) => {
+  schedules.slice(1).forEach((schedule: Events, index: number) => {
     previousScheduleList = schedules.slice(0, index + 1).reverse();
 
     // If overlapping previous schedules, find a Collision Group of overlapping schedules and add this schedules
-    const found = previousScheduleList.find((previous: Schedule | ScheduleViewModel) => {
-      return schedule.collidesWith(previous, usingTravelTime);
-    });
+    const found = previousScheduleList.find((previous: Events) =>
+      schedule.collidesWith(previous, usingTravelTime)
+    );
 
     if (!found) {
       // This schedule is a schedule that does not overlap with the previous schedule, so a new Collision Group is constructed.
@@ -66,16 +64,16 @@ export function getCollisionGroup(
 
 /**
  * Get row length by column index in 2d matrix.
- * @param {array[]} arr2d Matrix
+ * @param {array[]} matrix Matrix
  * @param {number} col Column index.
  * @returns {number} Last row number in column or -1
  */
-export function getLastRowInColumn(arr2d: Array<any[]>, col: number) {
-  let row = arr2d.length;
+export function getLastRowInColumn(matrix: Array<any[]>, col: number) {
+  let { length: row } = matrix;
 
   while (row > 0) {
     row -= 1;
-    if (!isUndefined(arr2d[row][col])) {
+    if (!isUndefined(matrix[row][col])) {
       return row;
     }
   }
@@ -87,17 +85,18 @@ export function getLastRowInColumn(arr2d: Array<any[]>, col: number) {
  * Calculate matrix for appointment block element placing.
  * @param {Collection} collection model collection.
  * @param {Array<number[]>} collisionGroups Collision groups for schedule set.
+ * @param {boolean} [usingTravelTime = true]
  * @returns {array} matrices
  */
 export function getMatrices<T extends Schedule | ScheduleViewModel>(
   collection: Collection<T>,
   collisionGroups: CollisionGroup,
   usingTravelTime = true
-): ScheduleMatrix<T> {
-  const result: ScheduleMatrix<T> = [];
+): Matrix3d<T> {
+  const result: Matrix3d<T> = [];
 
   collisionGroups.forEach((group) => {
-    const matrix: Array<T[]> = [[]];
+    const matrix: Matrix<T> = [[]];
 
     group.forEach((scheduleID) => {
       const schedule: T = collection.items[scheduleID];
@@ -158,18 +157,18 @@ export function getScheduleInDateRangeFilter(
  * Position each view model for placing into container
  * @param {TZDate} start - start date to render
  * @param {TZDate} end - end date to render
- * @param {ScheduleMatrix} matrices - matrices from controller
+ * @param {Matrix3d} matrices - matrices from controller
  * @param {function} [iteratee] - iteratee function invoke each view models
  */
 export function positionViewModels(
   start: TZDate,
   end: TZDate,
-  matrices: ScheduleMatrix<ScheduleViewModel>,
+  matrices: Matrix3d<ScheduleViewModel>,
   iteratee?: (viewModel: ScheduleViewModel) => void
 ) {
-  const ymdListToRender = makeDateRange(start, end, MS_PER_DAY).map((date) => {
-    return toFormat(date, 'YYYYMMDD');
-  });
+  const ymdListToRender = makeDateRange(start, end, MS_PER_DAY).map((date) =>
+    toFormat(date, 'YYYYMMDD')
+  );
 
   matrices.forEach((matrix) => {
     matrix.forEach((column) => {
@@ -189,9 +188,7 @@ export function positionViewModels(
         viewModel.left = inArray(ymd, ymdListToRender);
         viewModel.width = dateLength;
 
-        if (iteratee) {
-          iteratee(viewModel);
-        }
+        iteratee?.(viewModel);
       });
     });
   });
@@ -199,6 +196,8 @@ export function positionViewModels(
 
 /**
  * Limit render range for view models
+ * @param {TZDate} start
+ * @param {TZDate} end
  * @param {ScheduleViewModel} viewModel - view model instance
  * @returns {ScheduleViewModel} view model that limited render range
  */

@@ -1,8 +1,13 @@
-import { h } from 'preact';
-import ContextComponent from '@src/components/contextComponent';
+import { Fragment, FunctionComponent, h } from 'preact';
 
-export default class Day extends ContextComponent {
-  render() {
-    return <span>Day Render</span>;
-  }
-}
+import Day from '@src/components/view/day';
+import FloatingLayer from '@src/components/floatingLayer';
+
+const DayView: FunctionComponent = () => (
+  <Fragment>
+    <Day />
+    <FloatingLayer />
+  </Fragment>
+);
+
+export default DayView;

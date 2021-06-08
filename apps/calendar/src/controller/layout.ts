@@ -6,6 +6,7 @@ import {
   getResizeInfoByGrowth,
 } from '@src/controller/panel';
 import { DragPositionInfo } from '@src/components/draggable';
+import { toPercent } from '@src/util/units';
 
 export type Styles = Record<string, string | number>;
 export enum Direction {
@@ -192,7 +193,7 @@ export function layoutPanels(panels: PanelInfo[], constraint: LayoutConstraints)
 }
 
 export function getLayoutStylesFromInfo(width?: number, height?: number) {
-  const styles: Styles = {};
+  const styles: Styles = { height: toPercent(100) };
 
   if (width) {
     styles.width = width;

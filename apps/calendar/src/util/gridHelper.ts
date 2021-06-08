@@ -26,12 +26,9 @@ const isExceededHeight = (containerHeight: number, eventHeight: number) => {
 export function getExceedCount(
   viewModels: ScheduleViewModel[],
   containerHeight: number,
-  eventHeight: number,
-  gridDate: TZDate
+  eventHeight: number
 ) {
-  return viewModels
-    .filter(isExceededHeight(containerHeight, eventHeight))
-    .filter(isInGrid(gridDate)).length;
+  return viewModels.filter(isExceededHeight(containerHeight, eventHeight)).length;
 }
 
 const getWeekendCount = (cells: Cells) => cells.filter((cell) => isWeekend(cell.getDay())).length;
@@ -113,7 +110,12 @@ export const getLeftAndWidth = (
   };
 };
 
-const getEventLeftAndWidth = (start: TZDate, end: TZDate, cells: Cells, narrowWeekend: boolean) => {
+export const getEventLeftAndWidth = (
+  start: TZDate,
+  end: TZDate,
+  cells: Cells,
+  narrowWeekend: boolean
+) => {
   const { widthList } = getGridWidthAndLeftPercentValues(cells, narrowWeekend, TOTAL_WIDTH);
 
   let gridStartIndex = 0;

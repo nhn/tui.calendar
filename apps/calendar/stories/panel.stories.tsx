@@ -1,18 +1,18 @@
 import { h } from 'preact';
 import { Story } from '@storybook/preact';
 
-import { Milestone } from '@src/components/panelgrid/milestone';
+import { DayGridEvents } from '@src/components/panelgrid/dayGridEvents';
 import { addDate } from '@src/time/datetime';
 import TZDate from '@src/time/date';
 import { Layout } from '@src/components/layout';
 import Panel from '@src/components/panel';
 import Schedule from '@src/model/schedule';
 import { PanelTitle } from '@src/components/panelgrid/panelTitle';
+import { createRandomEventModelsForMonth } from '@stories/util/randomEvents';
+import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 
-import type { MilestoneEvent } from '@t/events';
-
-export default { title: 'Panel', component: Milestone, args: { primary: true } };
+export default { title: 'Panel', component: DayGridEvents, args: { primary: true } };
 
 const now = new TZDate();
 
@@ -39,13 +39,20 @@ const data = [
   { start: thu, end: fri },
   { start: thu, end: fri },
   { start: thu, end: fri },
-] as MilestoneEvent[];
+];
+
+const events = createRandomEventModelsForMonth(40).map((schedule) =>
+  ScheduleViewModel.create(schedule)
+);
+
+// @TODO: 주간뷰 이벤트 데이터 생성
+const milestoneEvents = [[events.filter((event) => event.model.category === 'milestone')]];
 
 const Template: Story = (args) => (
   <ProviderWrapper>
     <Layout height={500}>
       <Panel name="milestone" resizable minHeight={20} maxHeight={args.maxHeight}>
-        <Milestone events={args.events} />
+        <DayGridEvents events={milestoneEvents} type="milestone" />
       </Panel>
     </Layout>
   </ProviderWrapper>
@@ -54,12 +61,7 @@ const Template: Story = (args) => (
 export const milestone = Template.bind({});
 
 milestone.args = {
-  events: data.map((e) => {
-    const event = Schedule.create(e);
-    event.isAllDay = true;
-
-    return event;
-  }),
+  events: createRandomEventModelsForMonth(40),
 };
 
 milestone.storyName = 'events milestone';

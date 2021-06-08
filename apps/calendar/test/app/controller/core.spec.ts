@@ -6,12 +6,13 @@ import array from '@src/util/array';
 import {
   getCollisionGroup,
   getLastRowInColumn,
-  CollisionGroup,
   getMatrices,
   limitRenderRange,
   getScheduleInDateRangeFilter,
 } from '@src/controller/core';
 import Collection from '@src/util/collection';
+
+import type { CollisionGroup } from '@t/events';
 
 describe('Base.Core', () => {
   let mockData: ScheduleData[];

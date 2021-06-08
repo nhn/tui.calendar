@@ -404,10 +404,12 @@ export default class Schedule {
   }
 }
 
-export function isBackgroundEvent({ category }: Schedule) {
-  return category === 'background';
+export function isBackgroundEvent({ model }: ScheduleViewModel) {
+  return model.category === 'background';
 }
 
-export function isTimeEvent({ category, isAllDay, hasMultiDates }: Schedule) {
+export function isTimeEvent({ model }: ScheduleViewModel) {
+  const { category, isAllDay, hasMultiDates } = model;
+
   return category === 'time' && isAllDay === false && hasMultiDates === false;
 }

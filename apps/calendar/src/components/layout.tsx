@@ -1,13 +1,5 @@
-import {
-  cloneElement,
-  createContext,
-  FunctionComponent,
-  h,
-  isValidElement,
-  toChildArray,
-  VNode,
-} from 'preact';
-import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'preact/hooks';
+import { cloneElement, FunctionComponent, h, isValidElement, toChildArray, VNode } from 'preact';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
 
 import Panel, { filterPanels, getPanelPropsList, Props as PanelProps } from '@src/components/panel';
 import {
@@ -23,7 +15,7 @@ import { DragPositionInfo } from '@src/components/draggable';
 import { getSize } from '@src/util/dom';
 import { PanelElementRectMap, PanelInfo, PanelRect } from '@src/controller/panel';
 import { cls } from '@src/util/cssHelper';
-import { noop } from '@src/util';
+import { useStore } from '@src/components/hooks/store';
 
 interface Props {
   children: VNode<typeof Panel> | VNode<typeof Panel>[];
@@ -34,61 +26,12 @@ interface Props {
 }
 
 type Child = VNode<any> | string | number;
-type SizeType = 'width' | 'height' | 'resizerWidth' | 'resizerHeight';
 
-// @TODO: remove after store module merged
-interface PanelAction {
-  type: PanelActionType;
-  panelType: string;
-  state: Partial<PanelState>;
-}
+type SizeType = 'width' | 'height' | 'resizerWidth' | 'resizerHeight';
 
 const sizeKeys: Array<SizeType> = ['width', 'height', 'resizerWidth', 'resizerHeight'];
 
-// @TODO: remove after store module merged
-export interface PanelState {
-  panelHeight?: number;
-  narrowWeekend?: boolean;
-  maxPanelHeight?: number;
-}
-
-export enum PanelActionType {
-  UPDATE_PANEL_HEIGHT = 'updatePanelHeight',
-}
-
-interface PanelAction {
-  type: PanelActionType;
-  panelType: string;
-  state: Partial<PanelState>;
-}
-
-export type LayoutState = Record<string, PanelState>;
-
-export type Dispatch = (action: PanelAction) => void;
-
-const defaultLayoutState: LayoutState = {} as LayoutState;
-
-export function reducer(prevState: LayoutState, action: PanelAction) {
-  const { type, panelType, state } = action;
-
-  switch (type) {
-    case PanelActionType.UPDATE_PANEL_HEIGHT:
-      return {
-        ...prevState,
-        [panelType]: {
-          ...prevState[panelType],
-          ...state,
-        },
-      };
-    default:
-      return prevState;
-  }
-}
-
-export const PanelStore = createContext<{ state: LayoutState; dispatch: Dispatch }>({
-  state: defaultLayoutState,
-  dispatch: noop,
-});
+const defaultLayoutHeight = 500;
 
 export const Layout: FunctionComponent<Props> = ({
   direction = Direction.COLUMN,
@@ -102,7 +45,9 @@ export const Layout: FunctionComponent<Props> = ({
     return {};
   }, []);
   const ref = useRef<HTMLDivElement>(null);
-  const [state, dispatch] = useReducer(reducer, defaultLayoutState);
+  const {
+    actions: { updateLayoutHeight },
+  } = useStore('layout');
 
   const getClassNames = () => {
     const classNames = [cls('layout')];
@@ -184,13 +129,15 @@ export const Layout: FunctionComponent<Props> = ({
     updatePanels();
   }, [updatePanels]);
 
+  useEffect(() => {
+    updateLayoutHeight({ height: height ?? defaultLayoutHeight });
+  }, [height, updateLayoutHeight]);
+
   const filteredPanels = filterPanels(toChildArray(children));
 
   return (
-    <PanelStore.Provider value={{ state, dispatch }}>
-      <div ref={ref} className={getClassNames()} style={getLayoutStylesFromInfo(width, height)}>
-        {filteredPanels.map((panel, index) => renderPanel(panel, panels[index]))}
-      </div>
-    </PanelStore.Provider>
+    <div ref={ref} className={getClassNames()} style={getLayoutStylesFromInfo(width, height)}>
+      {filteredPanels.map((panel, index) => renderPanel(panel, panels[index]))}
+    </div>
   );
 };

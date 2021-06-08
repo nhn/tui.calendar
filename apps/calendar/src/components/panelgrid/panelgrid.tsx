@@ -1,32 +1,31 @@
 import { FunctionComponent, h } from 'preact';
-import { useContext, useState } from 'preact/hooks';
+import { useState } from 'preact/hooks';
 
 import { cls } from '@src/util/cssHelper';
 import { toPercent } from '@src/util/units';
-import { getViewModels } from '@src/event/panelEvent';
-import { setViewModelsInfo } from '@src/event/gridEvent';
-import Schedule from '@src/model/schedule';
-import { toStartOfDay } from '@src/time/datetime';
-import { PanelActionType, PanelState, PanelStore } from '@src/components/layout';
-
-import type { Cells } from '@t/panel';
 import {
   EVENT_HEIGHT,
   getExceedCount,
   getGridWidthAndLeftPercentValues,
   TOTAL_WIDTH,
 } from '@src/util/gridHelper';
+import { useStore } from '@src/components/hooks/store';
+import { getViewModels } from '@src/util/panelEvent';
+
+import type { Cells } from '@t/panel';
+import type { CalendarWeekOption } from '@t/store';
+import type { DayGridEventMatrix } from '@t/events';
 
 const DEFAULT_GRID_STYLE = {
-  borderRight: '1px solid #ddd',
+  borderLeft: '1px solid #ddd',
 };
 
 interface Props {
   name: string;
   cells: Cells;
-  events: Schedule[];
+  events: DayGridEventMatrix;
   defaultPanelHeight: number;
-  options?: PanelState;
+  options?: CalendarWeekOption;
 }
 
 interface ExceedCountProps {
@@ -80,32 +79,33 @@ export const PanelGrid: FunctionComponent<Props> = ({
 }) => {
   const [clickedIndex, setClickedIndex] = useState(0);
   const [isClickedCount, setClickedCount] = useState(false);
-  const { dispatch } = useContext(PanelStore);
-  const { narrowWeekend = false, panelHeight = EVENT_HEIGHT } = options;
+  const { narrowWeekend = false } = options;
+  const { state, actions } = useStore('layout');
+  const height = state[name]?.height ?? EVENT_HEIGHT;
+  const { updatePanelHeight } = actions;
 
-  const viewModels = getViewModels(events, cells);
-  setViewModelsInfo(viewModels, cells, {});
-  const maxTop = Math.max(0, ...viewModels.map(({ top }) => top));
+  let maxTop = 0;
+  if (!events.length) {
+    events.forEach((matrix) => {
+      matrix.forEach((row) => {
+        maxTop = Math.max(maxTop, ...row.map(({ top }) => top));
+      });
+    });
+  }
 
   const onClickExceedCount = (index: number) => {
     setClickedCount(true);
     setClickedIndex(index);
-    dispatch({
-      type: PanelActionType.UPDATE_PANEL_HEIGHT,
-      panelType: name,
-      state: {
-        panelHeight: (maxTop + 1) * EVENT_HEIGHT,
-      },
+    updatePanelHeight({
+      type: name,
+      height: (maxTop + 1) * EVENT_HEIGHT,
     });
   };
   const onClickCollapseButton = () => {
     setClickedCount(false);
-    dispatch({
-      type: PanelActionType.UPDATE_PANEL_HEIGHT,
-      panelType: name,
-      state: {
-        panelHeight: defaultPanelHeight,
-      },
+    updatePanelHeight({
+      type: name,
+      height: defaultPanelHeight,
     });
   };
 
@@ -119,9 +119,8 @@ export const PanelGrid: FunctionComponent<Props> = ({
     const width = toPercent(widthList[index]);
     const left = toPercent(leftList[index]);
 
-    const gridDate = toStartOfDay(cell);
-
-    const exceedCount = getExceedCount(viewModels, panelHeight, EVENT_HEIGHT, gridDate);
+    const viewModels = getViewModels(events);
+    const exceedCount = getExceedCount(viewModels, height, EVENT_HEIGHT);
     const isClickedIndex = index === clickedIndex;
 
     return (

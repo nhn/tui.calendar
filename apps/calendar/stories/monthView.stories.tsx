@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 import MonthView from '@src/components/view/monthView';
 import { Story } from '@storybook/preact';
-import { generateRandomScheduleViewModelsForMonth } from './util/randomEvents';
+import { createRandomEventModelsForMonth } from './util/randomEvents';
 
 export default { title: 'MonthView' };
 
@@ -46,5 +46,5 @@ twoWeeks.args = {
 export const randomEvents = Template.bind({});
 randomEvents.args = {
   options: { month: { narrowWeekend: true } },
-  events: generateRandomScheduleViewModelsForMonth(40),
+  events: createRandomEventModelsForMonth(40),
 };

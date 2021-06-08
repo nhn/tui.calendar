@@ -1,4 +1,5 @@
-import { h } from 'preact';
+import { FunctionComponent, h } from 'preact';
+
 import { CreationGuideInfo, timeFormats } from '@src/components/timegrid';
 import { toFormat } from '@src/time/datetime';
 import { toPercent } from '@src/util/units';
@@ -15,8 +16,14 @@ interface Props extends CreationGuideInfo {
   height: number;
 }
 
-export function CreationGuide(props: Props) {
-  const { start, end, unit, top, height, textPosition } = props;
+export const CreationGuide: FunctionComponent<Props> = ({
+  start,
+  end,
+  unit,
+  top,
+  height,
+  textPosition,
+}) => {
   const format = timeFormats[unit];
   const text = `${toFormat(start, format)} - ${toFormat(end, format)}`;
   const style = {
@@ -32,5 +39,4 @@ export function CreationGuide(props: Props) {
       <span className={labelClassName}>{text}</span>
     </div>
   );
-}
-CreationGuide.displayName = 'CreationGuide';
+};

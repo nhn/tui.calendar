@@ -37,7 +37,7 @@ describe('gridHelper', () => {
         return ScheduleViewModel.create(event);
       });
 
-      expect(getExceedCount(viewModels, 200, 30, new TZDate(2021, 5, 2))).toBe(0);
+      expect(getExceedCount(viewModels, 200, 30)).toBe(0);
     });
   });
 

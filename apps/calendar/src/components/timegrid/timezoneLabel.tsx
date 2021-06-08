@@ -1,31 +1,26 @@
-import { h, VNode } from 'preact';
-import { prefixer } from '@src/components/timegrid';
+import { FunctionComponent, h, VNode } from 'preact';
+
+import { addTimeGridPrefix } from '@src/components/timegrid';
 import Template from '@src/components/template';
 import { TimezoneConfig } from '@src/model';
 
-const classNames = {
-  timezoneLabel: prefixer('timezone-label'),
-};
-
-interface TimezoneLabelProps {
+interface Props {
   timezone: TimezoneConfig;
-  width: string;
+  width?: string;
   renderCollapseButton?: () => VNode;
 }
 
-export function TimezoneLabel(props: TimezoneLabelProps) {
-  const { width, timezone, renderCollapseButton } = props;
+export const TimezoneLabel: FunctionComponent<Props> = ({
+  width = '72px',
+  timezone,
+  renderCollapseButton,
+}) => {
   const { tooltip = '' } = timezone;
 
   return (
-    <div title={tooltip} className={classNames.timezoneLabel} style={{ width }}>
+    <div title={tooltip} className={addTimeGridPrefix('timezone-label')} style={{ width }}>
       <Template template="timezoneDisplayLabel" model={timezone} />
       {renderCollapseButton ? renderCollapseButton() : null}
     </div>
   );
-}
-
-TimezoneLabel.displayName = 'TimezoneLabel';
-TimezoneLabel.defaultProps = {
-  width: '72px',
 };

@@ -247,7 +247,7 @@ export const Cell: FunctionComponent<CellProps> = (props) => {
     }
   }, [date, events, popupRect, show]);
 
-  const exceedCount = getExceedCount(events, height, eventHeight, toStartOfDay(date));
+  const exceedCount = getExceedCount(events, height, eventHeight);
 
   return (
     <div

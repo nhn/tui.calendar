@@ -8,7 +8,7 @@ import DayGrid from '@src/components/daygrid/dayGrid';
 import { CalendarMonthOption } from '@t/store';
 import { getWeekDates, getWeekendDates } from '@stories/util/mockCalendarDates';
 import Schedule from '@src/model/schedule';
-import { generateRandomEvents } from './util/randomEvents';
+import { createRandomEvents } from './util/randomEvents';
 import { ScheduleData } from '@src/model';
 import Panel from '@src/components/panel';
 
@@ -112,7 +112,7 @@ export const randomEvents = () => {
     scheduleFilter: () => true,
   };
 
-  const data = generateRandomEvents('month', calendar[0], calendar[6], 10);
+  const data = createRandomEvents('month', calendar[0], calendar[6], 10);
   const events = data.map((event: ScheduleData) => Schedule.create(event));
 
   return (

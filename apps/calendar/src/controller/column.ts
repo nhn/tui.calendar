@@ -1,5 +1,5 @@
 import ScheduleViewModel from '@src/model/scheduleViewModel';
-import Schedule, { isTimeEvent } from '@src/model/schedule';
+import { isTimeEvent } from '@src/model/schedule';
 import TZDate from '@src/time/date';
 import array from '@src/util/array';
 import { createScheduleCollection } from '@src/controller/base';
@@ -31,10 +31,10 @@ interface RenderInfoOption {
  * @returns {function} schedule filter function
  */
 export function isBetween(startColumnTime: TZDate, endColumnTime: TZDate) {
-  return (model: Schedule) => {
-    const { start, end, goingDuration = 0, comingDuration = 0 } = model;
-    const ownStarts = addMinutes(start, -goingDuration);
-    const ownEnds = addMinutes(end, comingDuration);
+  return (viewModel: ScheduleViewModel) => {
+    const { goingDuration = 0, comingDuration = 0 } = viewModel.model;
+    const ownStarts = addMinutes(viewModel.getStarts(), -goingDuration);
+    const ownEnds = addMinutes(viewModel.getEnds(), comingDuration);
 
     return !(ownEnds <= startColumnTime || ownStarts >= endColumnTime);
   };
@@ -151,12 +151,15 @@ function setRenderInfo(
  * @param {TZDate} startColumnTime - start date
  * @param {TZDate} endColumnTime - end date
  */
-export function getViewModels(events: Schedule[], startColumnTime: TZDate, endColumnTime: TZDate) {
+export function getViewModels(
+  events: ScheduleViewModel[],
+  startColumnTime: TZDate,
+  endColumnTime: TZDate
+) {
   const viewModels: ScheduleViewModel[] = events
     .filter(isTimeEvent)
     .filter(isBetween(startColumnTime, endColumnTime))
-    .sort(array.compare.schedule.asc)
-    .map(ScheduleViewModel.create);
+    .sort(array.compare.schedule.asc);
   const viewModelColl = createScheduleCollection(...viewModels);
   const usingTravelTime = true;
   const collisionGroups = getCollisionGroup(viewModels, usingTravelTime);

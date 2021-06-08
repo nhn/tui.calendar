@@ -7,34 +7,32 @@ import forEach from 'tui-code-snippet/collection/forEach';
 import pluck from 'tui-code-snippet/collection/pluck';
 
 import {
-  MS_SCHEDULE_MIN_DURATION,
+  makeDateRange,
   millisecondsFrom,
-  toStartOfDay,
+  MS_PER_DAY,
+  MS_SCHEDULE_MIN_DURATION,
   toEndOfDay,
   toFormat,
-  makeDateRange,
-  MS_PER_DAY,
+  toStartOfDay,
 } from '@src/time/datetime';
 import {
-  ScheduleMatrix,
-  ScheduleMatrix2d,
+  convertToViewModel,
   getCollisionGroup,
   getMatrices,
-  positionViewModels,
-  limitRenderRange,
   getScheduleInDateRangeFilter,
-  convertToViewModel,
-  Matrix,
+  limitRenderRange,
+  positionViewModels,
 } from '@src/controller/core';
-import { getDateRange, IDS_OF_DAY, filterByCategory } from '@src/controller/base';
+import { filterByCategory, getDateRange, IDS_OF_DAY } from '@src/controller/base';
 import Schedule from '@src/model/schedule';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import Collection, { Filter } from '@src/util/collection';
 import TZDate from '@src/time/date';
-import { WeekOption, DataStore } from '@src/model';
+import { DataStore, WeekOption } from '@src/model';
 import array from '@src/util/array';
 
 import type { Panel } from '@t/panel';
+import type { Matrix3d, Matrix, EventGroupMap, DayGridEventMatrix } from '@t/events';
 
 const SCHEDULE_MIN_DURATION = MS_SCHEDULE_MIN_DURATION;
 
@@ -44,11 +42,11 @@ const SCHEDULE_MIN_DURATION = MS_SCHEDULE_MIN_DURATION;
 
 /**
  * Make array with start and end times on schedules.
- * @param {ScheduleMatrix2d} matrix - matrix from controller.
- * @returns {Matrix} starttime, endtime array (exclude first row's schedules)
+ * @param {Matrix} matrix - matrix from controller.
+ * @returns {Matrix3d} starttime, endtime array (exclude first row's schedules)
  */
-export function generateTimeArrayInRow<T>(matrix: ScheduleMatrix2d<T>) {
-  const map: Matrix<number> = [];
+export function generateTimeArrayInRow<T>(matrix: Matrix<T>) {
+  const map: Matrix3d<number> = [];
   const maxColLen = Math.max(...matrix.map((col) => col.length));
   let cursor = [];
   let row;
@@ -105,9 +103,8 @@ export function hasCollision(arr: Array<number[]>, start: number, end: number) {
   const startEnd = Math.abs(array.bsearch(arr, start, searchFunc(1), compare));
   const endStart = Math.abs(array.bsearch(arr, end, searchFunc(0), compare));
   const endEnd = Math.abs(array.bsearch(arr, end, searchFunc(1), compare));
-  const collided = !(startStart === startEnd && startEnd === endStart && endStart === endEnd);
 
-  return collided;
+  return !(startStart === startEnd && startEnd === endStart && endStart === endEnd);
 }
 
 /**
@@ -115,7 +112,7 @@ export function hasCollision(arr: Array<number[]>, start: number, end: number) {
  * @param {array[]} matrices - Matrix data.
  * @returns {array[]} matrices - Matrix data with collision information
  */
-export function getCollides(matrices: ScheduleMatrix<ScheduleViewModel>) {
+export function getCollides(matrices: Matrix3d<ScheduleViewModel>) {
   matrices.forEach((matrix) => {
     const binaryMap = generateTimeArrayInRow<ScheduleViewModel>(matrix);
     const maxRowLength = Math.max(...matrix.map((row) => row.length));
@@ -268,7 +265,7 @@ export function getViewModelForTimeView(
 ) {
   const { start, end, viewModelTimeColl, hourStart, hourEnd } = condition;
   const ymdSplitted = splitScheduleByDateRange(idsOfDay, start, end, viewModelTimeColl);
-  const result: Record<string, ScheduleMatrix<ScheduleViewModel>> = {};
+  const result: Record<string, Matrix3d<ScheduleViewModel>> = {};
 
   const _getViewModel = _makeGetViewModelFuncForTimeView(hourStart, hourEnd);
   const usingTravelTime = true;
@@ -313,7 +310,7 @@ export function getViewModelForAlldayView(
   start: TZDate,
   end: TZDate,
   viewModelColl: Collection<ScheduleViewModel>
-) {
+): DayGridEventMatrix {
   if (!viewModelColl || !viewModelColl.length) {
     return [];
   }
@@ -337,7 +334,7 @@ export function getViewModelForAlldayView(
 
 /**
  * Populate schedules in date range.
- * @param {Collection<Schedule>} schedules - model controller
+ * @param {DataStore} dataStore - data store
  * @param {object} condition - find option
  *  @param {IDS_OF_DAY} condition.idsOfDay - model controller
  *  @param {TZDate} condition.start start date.
@@ -369,31 +366,32 @@ export function findByDateRange(
     scheduleTypes,
     filterByCategory
   );
-  const resutGroup: Record<
-    string,
-    ScheduleMatrix<ScheduleViewModel> | Record<string, ScheduleMatrix<ScheduleViewModel>>
-  > = {
-    milestone: [],
-    task: [],
-    allday: [],
-    time: [],
-  };
 
-  panels.forEach(({ name, type }) => {
-    if (type === 'daygrid') {
-      resutGroup[name] = getViewModelForAlldayView(start, end, group[name]);
-    } else if (type === 'timegrid') {
-      resutGroup[name] = getViewModelForTimeView(idsOfDay, {
-        start,
-        end,
-        viewModelTimeColl: group[name],
-        hourStart,
-        hourEnd,
-      });
+  return panels.reduce<EventGroupMap>(
+    (acc, cur) => {
+      const { name, type } = cur;
+
+      return {
+        ...acc,
+        [name]:
+          type === 'daygrid'
+            ? getViewModelForAlldayView(start, end, group[name])
+            : getViewModelForTimeView(idsOfDay, {
+                start,
+                end,
+                viewModelTimeColl: group[name],
+                hourStart,
+                hourEnd,
+              }),
+      };
+    },
+    {
+      milestone: [],
+      task: [],
+      allday: [],
+      time: {},
     }
-  });
-
-  return resutGroup;
+  );
 }
 
 function getYMD(date: TZDate, format = 'YYYYMMDD') {
@@ -404,13 +402,13 @@ function getYMD(date: TZDate, format = 'YYYYMMDD') {
 /**
  * Make exceed date information
  * @param {number} maxCount - exceed schedule count
- * @param {ScheduleMatrix} eventsInDateRange  - matrix of ScheduleViewModel
+ * @param {Matrix3d} eventsInDateRange  - matrix of ScheduleViewModel
  * @param {Array.<TZDate>} range - date range of one week
  * @returns {object} exceedDate
  */
 export function getExceedDate(
   maxCount: number,
-  eventsInDateRange: ScheduleMatrix<ScheduleViewModel>,
+  eventsInDateRange: Matrix3d<ScheduleViewModel>,
   range: TZDate[]
 ) {
   const exceedDate: Record<string, number> = {};
@@ -442,12 +440,12 @@ export function getExceedDate(
 
 /**
  * Exclude overflow schedules from matrices
- * @param {ScheduleMatrix} matrices - The matrices for schedule placing.
+ * @param {Matrix3d} matrices - The matrices for schedule placing.
  * @param {number} visibleScheduleCount - maximum visible count on panel
  * @returns {array} - The matrices for schedule placing except overflowed schedules.
  */
 export function excludeExceedSchedules(
-  matrices: ScheduleMatrix<ScheduleViewModel>,
+  matrices: Matrix3d<ScheduleViewModel>,
   visibleScheduleCount: number
 ) {
   return matrices.map((matrix) => {

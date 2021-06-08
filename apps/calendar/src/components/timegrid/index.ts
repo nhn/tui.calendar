@@ -3,7 +3,7 @@ import TZDate from '@src/time/date';
 import { TimeUnit } from '@src/model';
 
 export const className = 'timegrid';
-export const prefixer = (selector: string) => cls(selector, `${className}-`);
+export const addTimeGridPrefix = (selector: string) => cls(selector, `${className}-`);
 
 export const timeFormats: Record<TimeUnit, string> = {
   second: 'HH:mm:ss',

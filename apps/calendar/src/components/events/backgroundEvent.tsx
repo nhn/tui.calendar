@@ -1,25 +1,33 @@
-import { h } from 'preact';
-import Schedule from '@src/model/schedule';
+import { FunctionComponent, h } from 'preact';
+
 import { cls } from '@src/util/cssHelper';
+import ScheduleViewModel from '@src/model/scheduleViewModel';
 
 const classNames = {
   background: cls('event-background'),
 };
 
 interface Props {
-  model: Schedule;
-  width: string;
-  height: string;
-  top: string;
-  right: string;
-  bottom: string;
-  left: string;
+  eventModels: ScheduleViewModel;
+  width?: string;
+  height?: string;
+  top?: string;
+  right?: string;
+  bottom?: string;
+  left?: string;
 }
 
-export function BackgroundEvent(props: Props) {
-  const { model, width, height, top, right, bottom, left } = props;
+export const BackgroundEvent: FunctionComponent<Props> = ({
+  eventModels,
+  width = '100%',
+  height = '100px',
+  top = '',
+  right = '',
+  bottom = '',
+  left = '',
+}) => {
   const style = {
-    backgroundColor: model.bgColor,
+    backgroundColor: eventModels.model.bgColor,
     width,
     height,
     top,
@@ -28,14 +36,5 @@ export function BackgroundEvent(props: Props) {
     left,
   };
 
-  return <span className={classNames.background} style={style}></span>;
-}
-BackgroundEvent.displayName = 'BackgroundEvent';
-BackgroundEvent.defaultProps = {
-  width: '100%',
-  height: '100px',
-  top: '',
-  right: '',
-  bottom: '',
-  left: '',
+  return <span className={classNames.background} style={style} />;
 };

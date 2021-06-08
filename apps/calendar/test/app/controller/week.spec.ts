@@ -10,11 +10,11 @@ import {
   _makeHourRangeFilter,
   splitScheduleByDateRange,
 } from '@src/controller/week';
-import { ScheduleMatrix } from '@src/controller/core';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import Collection from '@src/util/collection';
 
 import type { Panel } from '@t/panel';
+import type { Matrix3d, TimeGridEventMatrix } from '@t/events';
 
 const SCHEDULE_MIN_DURATION = MS_SCHEDULE_MIN_DURATION;
 
@@ -210,10 +210,10 @@ describe('Base.Week', () => {
           hourStart: 0,
           hourEnd: 24,
         },
-      }) as Record<string, Record<string, ScheduleMatrix<ScheduleViewModel>>>;
+      });
 
       // There are 5 collision blocks on 5/1.
-      expect(result.time['20150501'].length).toBe(5);
+      expect((result.time as TimeGridEventMatrix)['20150501'].length).toBe(5);
     });
 
     it('Can add more AND clause filter function by third parameter', () => {
@@ -227,7 +227,7 @@ describe('Base.Week', () => {
         panels,
         andFilters: [(model: Schedule | ScheduleViewModel) => (model as Schedule).title === 'J'],
         options: { hourStart: 0, hourEnd: 24 },
-      }) as Record<string, Record<string, ScheduleMatrix<ScheduleViewModel>>>;
+      }) as Record<string, Record<string, Matrix3d<ScheduleViewModel>>>;
 
       // One collision block in the timeline group
       expect(result.time['20150501'].length).toBe(1);

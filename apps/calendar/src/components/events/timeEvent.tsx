@@ -1,4 +1,5 @@
-import { h } from 'preact';
+import { FunctionComponent, h } from 'preact';
+
 import Template from '@src/components/template';
 import { cls } from '@src/util/cssHelper';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
@@ -12,7 +13,7 @@ const classNames = {
 };
 
 interface Props {
-  viewModel: ScheduleViewModel;
+  eventModels: ScheduleViewModel;
 }
 
 function getStyles(viewModel: ScheduleViewModel) {
@@ -77,18 +78,17 @@ function getStyles(viewModel: ScheduleViewModel) {
   };
 }
 
-export function TimeEvent(props: Props) {
-  const { viewModel } = props;
+export const TimeEvent: FunctionComponent<Props> = ({ eventModels }) => {
   const {
     model,
     goingDurationHeight,
     modelDurationHeight,
     comingDurationHeight,
     croppedEnd,
-  } = viewModel;
+  } = eventModels;
   const { isReadOnly } = model;
   const { containerStyle, goingDurationStyle, modelDurationStyle, comingDurationStyle } = getStyles(
-    viewModel
+    eventModels
   );
 
   return (
@@ -111,6 +111,4 @@ export function TimeEvent(props: Props) {
       {!croppedEnd && !isReadOnly ? <div className={classNames.resizeHandleX} /> : null}
     </div>
   );
-}
-TimeEvent.displayName = 'TimeEvent';
-TimeEvent.defaultProps = {};
+};

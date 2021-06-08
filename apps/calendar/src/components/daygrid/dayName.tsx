@@ -6,10 +6,10 @@ import { Day, isWeekend } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
 import { getDayName } from '@src/util/dayName';
 import { CSSValue } from '@t/components/daygrid/cell';
-import { Template as TemplateType, TemplateMonthDayName } from '@src/model';
+import { Template as TemplateType, TemplateMonthDayName, TemplateWeekDay } from '@src/model';
 
 interface DayNameProps {
-  dayname: TemplateMonthDayName;
+  dayname: TemplateWeekDay | TemplateMonthDayName;
   dayIndex: Day;
   style: Pick<
     DayNameTheme,

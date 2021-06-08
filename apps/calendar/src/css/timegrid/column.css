@@ -1,6 +1,6 @@
 .column {
   position: relative;
-  border-right: 1px solid #e5e5e5;
+  border-left: 1px solid #e5e5e5;
 }
 .column .gridline {
   position: relative;
