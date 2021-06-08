@@ -12,21 +12,21 @@ export const timeEvent = () => {
     title: 'Time Event 2',
     bgColor: 'green',
   });
-  const scheduleViewModel = ScheduleViewModel.create(schedule);
+  const eventModels = ScheduleViewModel.create(schedule);
 
   return (
     <InstanceContext.Provider value={getNewAppContext()}>
-      <TimeEvent viewModel={scheduleViewModel} />
+      <TimeEvent eventModels={eventModels} />
     </InstanceContext.Provider>
   );
 };
 
 export const backgroundEvent = () => {
-  const event = ScheduleViewModel.create(
+  const eventModels = ScheduleViewModel.create(
     Schedule.create({
       bgColor: 'rgba(100, 100, 100, .3)',
     })
   );
 
-  return <BackgroundEvent viewModel={event} />;
+  return <BackgroundEvent eventModels={eventModels} />;
 };

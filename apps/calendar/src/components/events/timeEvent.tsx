@@ -13,7 +13,7 @@ const classNames = {
 };
 
 interface Props {
-  viewModel: ScheduleViewModel;
+  eventModels: ScheduleViewModel;
 }
 
 function getStyles(viewModel: ScheduleViewModel) {
@@ -78,17 +78,17 @@ function getStyles(viewModel: ScheduleViewModel) {
   };
 }
 
-export const TimeEvent: FunctionComponent<Props> = ({ viewModel }) => {
+export const TimeEvent: FunctionComponent<Props> = ({ eventModels }) => {
   const {
     model,
     goingDurationHeight,
     modelDurationHeight,
     comingDurationHeight,
     croppedEnd,
-  } = viewModel;
+  } = eventModels;
   const { isReadOnly } = model;
   const { containerStyle, goingDurationStyle, modelDurationStyle, comingDurationStyle } = getStyles(
-    viewModel
+    eventModels
   );
 
   return (

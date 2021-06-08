@@ -13,20 +13,20 @@ import { first, last } from '@src/util/array';
 import { isOverlapped } from '@src/util/dom';
 import { Template } from '@src/components/template';
 import { TemplateName } from '@src/template/default';
-import { prefixer } from '@src/components/timegrid';
+import { addTimeGridPrefix } from '@src/components/timegrid';
 import { CurrentTimeLabel } from '@src/components/timegrid/currentTimeLabel';
 import { classnames } from '@src/util/cssHelper';
 
 const classNames = {
-  times: prefixer('times'),
-  time: prefixer('time'),
-  timeLabel: prefixer('time-label'),
-  past: prefixer('time-past'),
-  first: prefixer('time-first'),
-  last: prefixer('time-last'),
-  hidden: prefixer('time-hidden'),
-  collapseButton: prefixer('collapse-button'),
-  currentTime: prefixer('current-time'),
+  times: addTimeGridPrefix('times'),
+  time: addTimeGridPrefix('time'),
+  timeLabel: addTimeGridPrefix('time-label'),
+  past: addTimeGridPrefix('time-past'),
+  first: addTimeGridPrefix('time-first'),
+  last: addTimeGridPrefix('time-last'),
+  hidden: addTimeGridPrefix('time-hidden'),
+  collapseButton: addTimeGridPrefix('collapse-button'),
+  currentTime: addTimeGridPrefix('current-time'),
 };
 
 export interface TimeProps {
@@ -104,6 +104,7 @@ export const Times: FunctionComponent<Props> = ({
   timeTemplate,
 }) => {
   const filteredTimes = times.slice(start, end + 1);
+  const timesLength = filteredTimes.length - 1;
   const top = getTopPercentByTime(currentTime, first(filteredTimes).date, last(filteredTimes).date);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -118,7 +119,7 @@ export const Times: FunctionComponent<Props> = ({
       {filteredTimes.map((slot, index) => {
         const isPast = isPastByUnit(slot.date, currentTime, unit);
         const isFirst = index === 0;
-        const isLast = index === filteredTimes.length - 1;
+        const isLast = index === timesLength;
         const className = classnames(classNames.time, {
           [classNames.past]: isPast,
           [classNames.first]: isFirst,

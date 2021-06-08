@@ -15,6 +15,7 @@ import { DragPositionInfo } from '@src/components/draggable';
 import { getSize } from '@src/util/dom';
 import { PanelElementRectMap, PanelInfo, PanelRect } from '@src/controller/panel';
 import { cls } from '@src/util/cssHelper';
+import { useStore } from '@src/components/hooks/store';
 
 interface Props {
   children: VNode<typeof Panel> | VNode<typeof Panel>[];
@@ -30,6 +31,8 @@ type SizeType = 'width' | 'height' | 'resizerWidth' | 'resizerHeight';
 
 const sizeKeys: Array<SizeType> = ['width', 'height', 'resizerWidth', 'resizerHeight'];
 
+const defaultLayoutHeight = 500;
+
 export const Layout: FunctionComponent<Props> = ({
   direction = Direction.COLUMN,
   resizeMode = ResizeMode.RELATIVE,
@@ -42,6 +45,9 @@ export const Layout: FunctionComponent<Props> = ({
     return {};
   }, []);
   const ref = useRef<HTMLDivElement>(null);
+  const {
+    actions: { updateLayoutHeight },
+  } = useStore('layout');
 
   const getClassNames = () => {
     const classNames = [cls('layout')];
@@ -122,6 +128,10 @@ export const Layout: FunctionComponent<Props> = ({
   useEffect(() => {
     updatePanels();
   }, [updatePanels]);
+
+  useEffect(() => {
+    updateLayoutHeight({ height: height ?? defaultLayoutHeight });
+  }, [height, updateLayoutHeight]);
 
   const filteredPanels = filterPanels(toChildArray(children));
 

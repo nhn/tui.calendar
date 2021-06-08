@@ -2,7 +2,6 @@ import { h, RenderableProps } from 'preact';
 import range from 'tui-code-snippet/array/range';
 import { Column } from '@src/components/timegrid/column';
 import { cls } from '@src/util/cssHelper';
-import Schedule from '@src/model/schedule';
 import TZDate from '@src/time/date';
 import {
   addHours,
@@ -14,7 +13,7 @@ import {
 } from '@src/time/datetime';
 import { ScheduleData } from '@src/model';
 import { CreationGuideInfo } from '@src/components/timegrid';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
+import { createEventModels } from '@stories/helper/event';
 
 export default { title: 'Column' };
 
@@ -69,9 +68,7 @@ export const backgroundEvents = () => {
       bgColor: 'rgba(100, 200, 100, .3)',
     },
   ];
-  const events = data.map((event: ScheduleData) =>
-    ScheduleViewModel.create(Schedule.create(event))
-  );
+  const events = createEventModels(data);
 
   return (
     <Wrapper>
@@ -93,9 +90,7 @@ export const showOnlyBusinessHours = () => {
     },
   ];
 
-  const events = data.map((event: ScheduleData) =>
-    ScheduleViewModel.create(Schedule.create(event))
-  );
+  const events = createEventModels(data);
 
   return (
     <Wrapper>
@@ -120,9 +115,7 @@ export const highlightBusinessHours = () => {
     },
   ];
 
-  const events = data.map((event: ScheduleData) =>
-    ScheduleViewModel.create(Schedule.create(event))
-  );
+  const events = createEventModels(data);
 
   return (
     <Wrapper>
@@ -151,9 +144,7 @@ export const highlightOffHours = () => {
     },
   ];
 
-  const events = data.map((event: ScheduleData) =>
-    ScheduleViewModel.create(Schedule.create(event))
-  );
+  const events = createEventModels(data);
 
   return (
     <Wrapper>
@@ -202,9 +193,7 @@ export const monthsInAnYear = () => {
     },
   ];
 
-  const events = data.map((event: ScheduleData) =>
-    ScheduleViewModel.create(Schedule.create(event))
-  );
+  const events = createEventModels(data);
 
   return (
     <Wrapper>

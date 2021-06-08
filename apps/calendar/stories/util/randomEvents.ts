@@ -10,7 +10,7 @@ const chance = new Chance();
 const EVENT_CATEGORY: ScheduleCategory[] = ['milestone', 'task'];
 
 // eslint-disable-next-line complexity
-function generateTime(event: ScheduleData, renderStart: TZDate, renderEnd: TZDate) {
+function createTime(event: ScheduleData, renderStart: TZDate, renderEnd: TZDate) {
   const startDate = moment(renderStart.getTime());
   let endDate = moment(renderEnd.getTime());
   const diffDate = endDate.diff(startDate, 'days');
@@ -49,7 +49,7 @@ function generateTime(event: ScheduleData, renderStart: TZDate, renderEnd: TZDat
   }
 }
 
-function generateNames() {
+function createNames() {
   const names = [];
   const length = chance.integer({ min: 1, max: 10 });
 
@@ -60,7 +60,7 @@ function generateNames() {
   return names;
 }
 
-function generateRandomEvent(calendar: CalendarData, renderStart: TZDate, renderEnd: TZDate) {
+function createRandomEvent(calendar: CalendarData, renderStart: TZDate, renderEnd: TZDate) {
   const event: ScheduleData = {
     raw: {
       creator: {},
@@ -73,11 +73,11 @@ function generateRandomEvent(calendar: CalendarData, renderStart: TZDate, render
   event.title = chance.sentence({ words: 3 });
   event.body = chance.bool({ likelihood: 20 }) ? chance.sentence({ words: 10 }) : '';
   event.isReadOnly = chance.bool({ likelihood: 20 });
-  generateTime(event, renderStart, renderEnd);
+  createTime(event, renderStart, renderEnd);
 
   event.isPrivate = chance.bool({ likelihood: 10 });
   event.location = chance.address();
-  event.attendees = chance.bool({ likelihood: 70 }) ? generateNames() : [];
+  event.attendees = chance.bool({ likelihood: 70 }) ? createNames() : [];
   event.recurrenceRule = chance.bool({ likelihood: 20 }) ? 'repeated events' : '';
 
   event.color = calendar.color;
@@ -110,7 +110,7 @@ function generateRandomEvent(calendar: CalendarData, renderStart: TZDate, render
 
 const defaultEventCount = { month: 3, week: 10, day: 4 };
 
-export function generateRandomEvents(
+export function createRandomEvents(
   viewName: ViewType,
   renderStart: TZDate,
   renderEnd: TZDate,
@@ -122,7 +122,7 @@ export function generateRandomEvents(
 
   calendars.forEach((calendar) => {
     for (let i = 0; i < count; i += 1) {
-      const event = generateRandomEvent(calendar, renderStart, renderEnd);
+      const event = createRandomEvent(calendar, renderStart, renderEnd);
       events.push(event);
     }
   });
@@ -130,9 +130,9 @@ export function generateRandomEvents(
   return events;
 }
 
-export function generateRandomScheduleViewModelsForMonth(length = defaultEventCount.month) {
+export function createRandomEventModelsForMonth(length = defaultEventCount.month) {
   const calendar = getMonthCalendar(new Date(), {});
-  const data = generateRandomEvents(
+  const data = createRandomEvents(
     'month',
     calendar[0][0],
     calendar[calendar.length - 1][6],

@@ -9,7 +9,7 @@ import { Layout } from '@src/components/layout';
 import Panel from '@src/components/panel';
 import Schedule from '@src/model/schedule';
 import { PanelTitle } from '@src/components/panelgrid/panelTitle';
-import { generateRandomScheduleViewModelsForMonth } from '@stories/util/randomEvents';
+import { createRandomEventModelsForMonth } from '@stories/util/randomEvents';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 
 export default { title: 'Panel', component: DayGridEvents, args: { primary: true } };
@@ -41,7 +41,7 @@ const data = [
   { start: thu, end: fri },
 ];
 
-const events = generateRandomScheduleViewModelsForMonth(40).map((schedule) =>
+const events = createRandomEventModelsForMonth(40).map((schedule) =>
   ScheduleViewModel.create(schedule)
 );
 
@@ -61,7 +61,7 @@ const Template: Story = (args) => (
 export const milestone = Template.bind({});
 
 milestone.args = {
-  events: generateRandomScheduleViewModelsForMonth(40),
+  events: createRandomEventModelsForMonth(40),
 };
 
 milestone.storyName = 'events milestone';

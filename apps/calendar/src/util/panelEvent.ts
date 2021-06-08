@@ -94,15 +94,23 @@ export const getDayGridEvents = (
       hourEnd: 24,
     },
   });
-  const eventModelMap: EventModelMap = {};
 
-  Object.entries(eventModels).forEach(([name, events]) => {
-    if (Array.isArray(events)) {
-      eventModelMap[name] = getDayGridEventModels(events, cells, narrowWeekend);
-    } else {
-      eventModelMap[name] = getTimeGridEventModels(events, cells, narrowWeekend);
+  return Object.keys(eventModels).reduce<EventModelMap>(
+    (acc, cur) => {
+      const events = eventModels[cur as keyof EventModelMap];
+
+      return {
+        ...acc,
+        [cur]: Array.isArray(events)
+          ? getDayGridEventModels(events, cells, narrowWeekend)
+          : getTimeGridEventModels(events, cells, narrowWeekend),
+      };
+    },
+    {
+      milestone: [],
+      allday: [],
+      task: [],
+      time: [],
     }
-  });
-
-  return eventModelMap;
+  );
 };

@@ -8,15 +8,13 @@ import { capitalizeDayName, getDayName } from '@src/util/dayName';
 import { DayGridEvents } from '@src/components/panelgrid/dayGridEvents';
 import TZDate from '@src/time/date';
 import { Layout } from '@src/components/layout';
-import { getDayGridEvents } from '@src/event/panelEvent';
+import { getDayGridEvents } from '@src/util/panelEvent';
 import { toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { TimeGrid } from '@src/components/timegrid/timegrid';
 import { ColumnInfo } from '@src/components/timegrid/columns';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
 
 import type { OptionData } from '@t/store';
 import type { DayNameItem } from '@t/components/daygrid/dayNames';
-import type { DayGridEventMatrix } from '@t/events';
 
 function getDayNames(template: (model: TemplateWeekDay) => string, options: OptionData) {
   const dayNames: DayNameItem[] = [];
@@ -35,10 +33,10 @@ const dayNameHeight = 42;
 
 const Day: FunctionComponent = () => {
   const {
-    state: { template, theme, options, dataStore },
-  } = useStore(['template', 'theme', 'options', 'dataStore']);
+    state: { template, theme, options, dataStore, layout },
+  } = useStore(['template', 'theme', 'options', 'dataStore', 'layout']);
 
-  if (!template || !theme || !options || !dataStore) {
+  if (!template || !theme || !options || !dataStore || !layout) {
     return null;
   }
 
@@ -58,17 +56,27 @@ const Day: FunctionComponent = () => {
       <Panel name="day-daynames" height={dayNameHeight}>
         <DayNames dayNames={dayNames} marginLeft={120} />
       </Panel>
-      <Panel name="milestone" resizable minHeight={20} maxHeight={120}>
-        <DayGridEvents events={milestone as DayGridEventMatrix} cells={cells} type="milestone" />
+      <Panel name="milestone" resizable>
+        <DayGridEvents
+          events={milestone}
+          cells={cells}
+          type="milestone"
+          panelHeight={layout.milestone?.height}
+        />
       </Panel>
       <Panel name="task" resizable>
-        <DayGridEvents events={task as DayGridEventMatrix} cells={cells} type="task" />
+        <DayGridEvents events={task} cells={cells} type="task" panelHeight={layout.task?.height} />
       </Panel>
       <Panel name="allday" resizable>
-        <DayGridEvents events={allday as DayGridEventMatrix} cells={cells} type="allday" />
+        <DayGridEvents
+          events={allday}
+          cells={cells}
+          type="allday"
+          panelHeight={layout.allday?.height}
+        />
       </Panel>
-      <Panel name="time" resizable>
-        <TimeGrid events={time as ScheduleViewModel[]} columnInfoList={columnInfoList} />
+      <Panel name="time" height={layout.layout?.height - layout.milestone?.height}>
+        <TimeGrid events={time} columnInfoList={columnInfoList} />
       </Panel>
     </Layout>
   );

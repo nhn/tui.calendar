@@ -10,7 +10,7 @@ import {
   TOTAL_WIDTH,
 } from '@src/util/gridHelper';
 import { useStore } from '@src/components/hooks/store';
-import { getViewModels } from '@src/event/panelEvent';
+import { getViewModels } from '@src/util/panelEvent';
 
 import type { Cells } from '@t/panel';
 import type { CalendarWeekOption } from '@t/store';

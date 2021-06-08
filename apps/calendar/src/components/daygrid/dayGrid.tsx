@@ -163,6 +163,8 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
   const { schedule: monthScheduleTheme } = theme.month;
   const eventHeight = parseFloat(monthScheduleTheme.height);
   const gridInfoList = getGridInfoList(calendar);
+  // @TODO: 테마에서 값 가져와서 설정
+  const headerHeight = 31;
 
   return (
     <GridWithMouse
@@ -207,6 +209,7 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
                 narrowWeekend={narrowWeekend}
                 eventHeight={eventHeight}
                 className={cls('weekday-schedules')}
+                headerHeight={headerHeight}
               />
               {creationGuide ? renderCreationGuide(creationGuide, week, narrowWeekend) : null}
             </div>

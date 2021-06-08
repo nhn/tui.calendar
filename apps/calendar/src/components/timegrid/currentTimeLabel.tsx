@@ -6,10 +6,10 @@ import { TimeUnit } from '@src/model';
 import { toPercent } from '@src/util/units';
 import { getSize } from '@src/util/dom';
 import { Template } from '@src/components/template';
-import { prefixer, timeFormats } from '@src/components/timegrid';
+import { addTimeGridPrefix, timeFormats } from '@src/components/timegrid';
 
 const classNames = {
-  currentTime: prefixer('current-time'),
+  currentTime: addTimeGridPrefix('current-time'),
 };
 
 interface CurrentTimeLabelProps {

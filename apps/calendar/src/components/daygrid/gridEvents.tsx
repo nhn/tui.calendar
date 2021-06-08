@@ -14,6 +14,7 @@ interface Props {
   events: ScheduleViewModel[];
   narrowWeekend: boolean;
   className: string;
+  headerHeight: number;
 }
 
 const GridEvents: FunctionComponent<Props> = ({
@@ -22,9 +23,9 @@ const GridEvents: FunctionComponent<Props> = ({
   events,
   name,
   className,
+  headerHeight,
 }) => {
   // @TODO: 테마에서 값 가져와서 설정
-  const headerHeight = 31;
   const eventTopMargin = 2;
   const filteredViewModels = events.filter(
     isWithinHeight(height - headerHeight, eventHeight + eventTopMargin)

@@ -20,7 +20,7 @@ import { MultipleTimezones } from '@src/components/timegrid/multipleTimezones';
 import { Column } from '@src/components/timegrid/column';
 import {
   className as timegridClassName,
-  prefixer,
+  addTimeGridPrefix,
   CreationGuideInfo,
 } from '@src/components/timegrid';
 import { CurrentTimeLine } from '@src/components/timegrid/currentTimeLine';
@@ -33,7 +33,7 @@ const REFRESH_INTERVAL = 1000 * SIXTY_SECONDS;
 
 const classNames = {
   timegrid: cls(timegridClassName),
-  scrollArea: prefixer('scroll-area'),
+  scrollArea: addTimeGridPrefix('scroll-area'),
 };
 
 interface Props {

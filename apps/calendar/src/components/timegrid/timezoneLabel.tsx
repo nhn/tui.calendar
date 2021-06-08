@@ -1,6 +1,6 @@
 import { FunctionComponent, h, VNode } from 'preact';
 
-import { prefixer } from '@src/components/timegrid';
+import { addTimeGridPrefix } from '@src/components/timegrid';
 import { Template } from '@src/components/template';
 import { TimezoneConfig } from '@src/model';
 
@@ -18,7 +18,7 @@ export const TimezoneLabel: FunctionComponent<Props> = ({
   const { tooltip = '' } = timezone;
 
   return (
-    <div title={tooltip} className={prefixer('timezone-label')} style={{ width }}>
+    <div title={tooltip} className={addTimeGridPrefix('timezone-label')} style={{ width }}>
       <Template template="timezoneDisplayLabel" model={timezone} />
       {renderCollapseButton ? renderCollapseButton() : null}
     </div>

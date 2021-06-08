@@ -1,7 +1,7 @@
 import { FunctionComponent, h } from 'preact';
 import { useCallback } from 'preact/hooks';
 
-import { prefixer } from '@src/components/timegrid';
+import { addTimeGridPrefix } from '@src/components/timegrid';
 import { cls, classnames } from '@src/util/cssHelper';
 import { noop } from '@src/util';
 
@@ -18,7 +18,7 @@ export const CollapseButton: FunctionComponent<Props> = ({ collapsed = false, on
   const memoizedOnClick = useCallback(() => onClick(collapsed), [collapsed, onClick]);
 
   return (
-    <div className={prefixer('collapse-button')} onClick={memoizedOnClick}>
+    <div className={addTimeGridPrefix('collapse-button')} onClick={memoizedOnClick}>
       <span className={iconClassName} />
     </div>
   );

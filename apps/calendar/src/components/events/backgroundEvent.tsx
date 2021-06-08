@@ -8,7 +8,7 @@ const classNames = {
 };
 
 interface Props {
-  viewModel: ScheduleViewModel;
+  eventModels: ScheduleViewModel;
   width?: string;
   height?: string;
   top?: string;
@@ -18,7 +18,7 @@ interface Props {
 }
 
 export const BackgroundEvent: FunctionComponent<Props> = ({
-  viewModel,
+  eventModels,
   width = '100%',
   height = '100px',
   top = '',
@@ -27,7 +27,7 @@ export const BackgroundEvent: FunctionComponent<Props> = ({
   left = '',
 }) => {
   const style = {
-    backgroundColor: viewModel.model.bgColor,
+    backgroundColor: eventModels.model.bgColor,
     width,
     height,
     top,

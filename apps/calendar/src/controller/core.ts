@@ -11,7 +11,7 @@ import TZDate from '@src/time/date';
 import { makeDateRange, MS_PER_DAY, toFormat, toStartOfDay, toEndOfDay } from '@src/time/datetime';
 import { isUndefined } from '@src/util/utils';
 
-import { CollisionGroup, Matrix, ScheduleMatrix2d } from '@t/events';
+import { CollisionGroup, Matrix3d, Matrix } from '@t/events';
 
 /**
  * Calculate collision group.
@@ -92,11 +92,11 @@ export function getMatrices<T extends Schedule | ScheduleViewModel>(
   collection: Collection<T>,
   collisionGroups: CollisionGroup,
   usingTravelTime = true
-): Matrix<T> {
-  const result: Matrix<T> = [];
+): Matrix3d<T> {
+  const result: Matrix3d<T> = [];
 
   collisionGroups.forEach((group) => {
-    const matrix: ScheduleMatrix2d<T> = [[]];
+    const matrix: Matrix<T> = [[]];
 
     group.forEach((scheduleID) => {
       const schedule: T = collection.items[scheduleID];
@@ -157,13 +157,13 @@ export function getScheduleInDateRangeFilter(
  * Position each view model for placing into container
  * @param {TZDate} start - start date to render
  * @param {TZDate} end - end date to render
- * @param {Matrix} matrices - matrices from controller
+ * @param {Matrix3d} matrices - matrices from controller
  * @param {function} [iteratee] - iteratee function invoke each view models
  */
 export function positionViewModels(
   start: TZDate,
   end: TZDate,
-  matrices: Matrix<ScheduleViewModel>,
+  matrices: Matrix3d<ScheduleViewModel>,
   iteratee?: (viewModel: ScheduleViewModel) => void
 ) {
   const ymdListToRender = makeDateRange(start, end, MS_PER_DAY).map((date) =>

@@ -27,7 +27,7 @@ export interface Props extends PanelInfo {
 
 type Child = VNode<any> | string | number;
 
-const defaultPanelHeight = 20;
+const defaultPanelHeight = 42;
 
 const Panel: FunctionComponent<Props> = (props) => {
   const {
@@ -45,7 +45,10 @@ const Panel: FunctionComponent<Props> = (props) => {
   const panelRef = useRef<HTMLDivElement>(null);
   const resizerRef = useRef<{ base: HTMLDivElement }>(null);
   const [resizerRect, setResizerRect] = useState<Size>({ width: 0, height: 0 });
-  const { state, actions } = useStore('layout');
+  const {
+    state,
+    actions: { updatePanelHeight },
+  } = useStore('layout');
 
   const panelResizeEnd = (resizeInfo: DragPositionInfo) => {
     onResizeEnd(name, resizeInfo);
@@ -54,7 +57,7 @@ const Panel: FunctionComponent<Props> = (props) => {
       props.minHeight ?? defaultPanelHeight,
       getElementRect(panelRef.current).height + resizeInfo.endY - resizeInfo.startY
     );
-    actions.updatePanelHeight({
+    updatePanelHeight({
       type: name,
       height: panelHeight,
     });
@@ -123,7 +126,7 @@ const Panel: FunctionComponent<Props> = (props) => {
 
   return (
     <Fragment>
-      <div ref={panelRef} className={`${cls('panel')} ${name}`} style={styles}>
+      <div ref={panelRef} className={`${cls('panel')} ${cls(name)}`} style={styles}>
         {children}
       </div>
       {resizable ? getPanelResizer() : null}

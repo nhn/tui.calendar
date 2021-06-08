@@ -67,7 +67,7 @@ function renderBackgroundEvents(events: ScheduleViewModel[], startTime: TZDate, 
 
         return (
           <BackgroundEvent
-            viewModel={event}
+            eventModels={event}
             top={toPercent(top)}
             height={toPercent(height)}
             key={`backgroundEvent-${index}`}
@@ -86,7 +86,7 @@ function renderEvents(events: ScheduleViewModel[], startTime: TZDate, endTime: T
   return (
     <div className={classNames.events} style={style}>
       {viewModels.map((viewModel, index) => {
-        return <TimeEvent viewModel={viewModel} key={index} />;
+        return <TimeEvent eventModels={viewModel} key={index} />;
       })}
     </div>
   );

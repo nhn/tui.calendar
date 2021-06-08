@@ -2,7 +2,7 @@ import { h, Component, Fragment } from 'preact';
 import { createPortal } from 'preact/compat';
 import isNumber from 'tui-code-snippet/type/isNumber';
 import range from 'tui-code-snippet/array/range';
-import { className as timegridClassName, prefixer } from '@src/components/timegrid';
+import { className as timegridClassName, addTimeGridPrefix } from '@src/components/timegrid';
 import { Times, TimeProps } from '@src/components/timegrid/times';
 import { CollapseButton } from '@src/components/timegrid/collapseButton';
 import { TimezoneLabel } from '@src/components/timegrid/timezoneLabel';
@@ -23,7 +23,7 @@ import { noop } from '@src/util';
 
 const classNames = {
   timegrid: cls(timegridClassName),
-  sticky: prefixer('sticky'),
+  sticky: addTimeGridPrefix('sticky'),
 };
 
 interface Props {

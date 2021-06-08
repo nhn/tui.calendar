@@ -4,7 +4,7 @@ import { theme, template, options, dataStore, layout } from '@src/modules';
 import layerPopup, { PopupType } from '@src/modules/layerPopup';
 import Store from '@src/store';
 import TZDate from '@src/time/date';
-import { Options } from '@t/option';
+import { Options } from './option';
 
 type InitStoreData = {
   options: Options;

@@ -1,14 +1,14 @@
 import { FunctionComponent, h } from 'preact';
 
-import { prefixer } from '@src/components/timegrid';
+import { addTimeGridPrefix } from '@src/components/timegrid';
 import { toPercent } from '@src/util/units';
 
 const classNames = {
-  line: prefixer('current-time-line'),
-  left: prefixer('current-time-line-left'),
-  marker: prefixer('current-time-line-marker'),
-  today: prefixer('current-time-line-today'),
-  right: prefixer('current-time-line-right'),
+  line: addTimeGridPrefix('current-time-line'),
+  left: addTimeGridPrefix('current-time-line-left'),
+  marker: addTimeGridPrefix('current-time-line-marker'),
+  today: addTimeGridPrefix('current-time-line-today'),
+  right: addTimeGridPrefix('current-time-line-right'),
 };
 
 interface Props {

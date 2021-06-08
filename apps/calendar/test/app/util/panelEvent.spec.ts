@@ -1,9 +1,7 @@
-import { getViewModels } from '@src/event/panelEvent';
+import { getViewModels } from '@src/util/panelEvent';
 import Schedule from '@src/model/schedule';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { createDate } from '@test/helper';
-
-import type { Cells } from '@t/panel';
 
 describe('getViewModels', () => {
   const data = [
@@ -14,10 +12,10 @@ describe('getViewModels', () => {
 
   it('should return sorted viewModels', () => {
     // Sun ~ Sat
-    const events = data.map((e) => ScheduleViewModel.create(Schedule.create(e)));
+    const eventModels = data.map((e) => ScheduleViewModel.create(Schedule.create(e)));
 
-    const result = getViewModels([[events]]);
+    const result = getViewModels([[eventModels]]);
 
-    expect(result).toEqual(events);
+    expect(result).toEqual(eventModels);
   });
 });
