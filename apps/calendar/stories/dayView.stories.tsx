@@ -10,7 +10,7 @@ import Schedule from '@src/model/schedule';
 
 export default { title: 'DayView' };
 
-function generateTimeGridEvents() {
+function createTimeGridEvents() {
   const today = new TZDate();
   const start = addDate(new TZDate(), -today.getDay());
   const end = addDate(start, 6);
@@ -28,5 +28,5 @@ export const basic = Template.bind({});
 
 export const randomEvents = Template.bind({});
 randomEvents.args = {
-  events: [...createRandomEventModelsForMonth(40), ...generateTimeGridEvents()],
+  events: [...createRandomEventModelsForMonth(40), ...createTimeGridEvents()],
 };

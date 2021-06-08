@@ -53,7 +53,7 @@ const getDayGridEventModels = (
   return eventModels;
 };
 
-const getModels = (models: ScheduleViewModel[]) => models.filter((model) => !!model);
+export const getModels = (models: ScheduleViewModel[]) => models.filter((model) => !!model);
 
 const getTimeGridEventModels = (
   eventModels: TimeGridEventMatrix,

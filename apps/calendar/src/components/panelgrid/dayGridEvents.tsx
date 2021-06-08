@@ -11,6 +11,7 @@ import ScheduleViewModel from '@src/model/scheduleViewModel';
 
 import type { Cells, DayGridEventType } from '@t/panel';
 import type { DayGridEventMatrix } from '@t/events';
+import { getModels } from '@src/util/panelEvent';
 
 const DEFAULT_PANEL_HEIGHT = 44;
 const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
@@ -42,7 +43,7 @@ export const DayGridEvents: FunctionComponent<Props> = ({
 
   events.forEach((matrix) => {
     matrix.forEach((models) => {
-      eventModels.push(...models);
+      eventModels.push(...getModels(models));
     });
   });
 
