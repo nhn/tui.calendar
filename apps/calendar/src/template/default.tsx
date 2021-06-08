@@ -1,5 +1,4 @@
 import { h } from 'preact';
-import pick from 'tui-code-snippet/object/pick';
 import isUndefined from 'tui-code-snippet/type/isUndefined';
 
 import { cls } from '@src/util/cssHelper';

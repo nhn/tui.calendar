@@ -1,6 +1,5 @@
 import { h } from 'preact';
 import renderToString from 'preact-render-to-string';
-import browser from 'tui-code-snippet/browser/browser';
 
 import {
   registerTemplateConfig,
