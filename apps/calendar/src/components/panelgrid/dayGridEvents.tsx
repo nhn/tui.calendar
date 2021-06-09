@@ -10,9 +10,9 @@ import GridEvents from '@src/components/daygrid/gridEvents';
 
 import type { Cells, DayGridEventType } from '@t/panel';
 import type { DayGridEventMatrix } from '@t/events';
-import { flattenMatrix, getModels, setDayGridEventModels } from '@src/util/gridEvent';
+import { flattenMatrix, setDayGridEventModels } from '@src/util/gridEvent';
 
-const DEFAULT_PANEL_HEIGHT = 66;
+const DEFAULT_PANEL_HEIGHT = 72;
 const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
   const now = new TZDate();
 

@@ -25,7 +25,7 @@ export const getViewModels = (events: DayGridEventMatrix) => {
 
   events.forEach((matrix) => {
     matrix.forEach((row) => {
-      viewModels.push(...row.filter((model) => !!model));
+      viewModels.push(...getModels(row));
     });
   });
 

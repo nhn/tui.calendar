@@ -10,18 +10,18 @@ import {
   withinRangeDate,
 } from '@src/time/datetime';
 import { Cells } from '@t/panel';
-import { findIndex, isNil } from './utils';
+import { findIndex, isNil } from '@src/util/utils';
 
-export const EVENT_HEIGHT = 20;
+export const EVENT_HEIGHT = 22;
 export const TOTAL_WIDTH = 100;
 
 export function isWithinHeight(containerHeight: number, eventHeight: number) {
   return ({ top }: ScheduleViewModel) => containerHeight >= top * eventHeight;
 }
 
-const isExceededHeight = (containerHeight: number, eventHeight: number) => {
-  return ({ top }: ScheduleViewModel) => containerHeight < (top + 1) * eventHeight;
-};
+export function isExceededHeight(containerHeight: number, eventHeight: number) {
+  return ({ top }: ScheduleViewModel) => containerHeight < top * eventHeight;
+}
 
 export function getExceedCount(
   viewModels: ScheduleViewModel[],

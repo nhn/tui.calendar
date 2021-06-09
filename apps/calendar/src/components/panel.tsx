@@ -27,7 +27,7 @@ export interface Props extends PanelInfo {
 
 type Child = VNode<any> | string | number;
 
-const defaultPanelHeight = 42;
+const defaultPanelHeight = 72;
 
 const Panel: FunctionComponent<Props> = (props) => {
   const {

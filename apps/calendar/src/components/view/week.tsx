@@ -69,6 +69,8 @@ const Week: FunctionComponent = () => {
       slot: 30,
     } as ColumnInfo;
   });
+  const timePanelHeight =
+    layout.layout?.height - layout.milestone?.height - layout.task?.height - layout.allday?.height;
 
   return (
     <Layout>
@@ -94,7 +96,7 @@ const Week: FunctionComponent = () => {
           panelHeight={layout.allday?.height}
         />
       </Panel>
-      <Panel name="time" height={layout.layout?.height - layout.milestone?.height}>
+      <Panel name="time" height={timePanelHeight}>
         <TimeGrid events={time} columnInfoList={columnInfoList} />
       </Panel>
     </Layout>
