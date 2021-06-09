@@ -7,6 +7,7 @@
   position: absolute;
 }
 
-.day-daynames {
+.day-daynames,
+.week-daynames {
   border-bottom: 1px solid #e5e5e5;
 }

@@ -9,8 +9,8 @@ import {
   getGridWidthAndLeftPercentValues,
   TOTAL_WIDTH,
 } from '@src/util/gridHelper';
-import { useStore } from '@src/components/hooks/store';
-import { getViewModels, isInCell } from '@src/util/panelEvent';
+import { useActions } from '@src/components/hooks/store';
+import { getViewModels, isInCell } from '@src/util/gridEvent';
 
 import type { Cells } from '@t/panel';
 import type { CalendarWeekOption } from '@t/store';
@@ -24,7 +24,7 @@ interface Props {
   name: string;
   cells: Cells;
   events: DayGridEventMatrix;
-  defaultPanelHeight: number;
+  height: number;
   options?: CalendarWeekOption;
 }
 
@@ -40,6 +40,8 @@ interface CollapseButtonProps {
   isClickedIndex: boolean;
   onClick: () => void;
 }
+
+const DEFAULT_PANEL_HEIGHT = 66;
 
 const ExceedCount: FunctionComponent<ExceedCountProps> = ({
   index,
@@ -74,15 +76,13 @@ export const PanelGrid: FunctionComponent<Props> = ({
   name,
   cells,
   events,
-  defaultPanelHeight,
+  height,
   options = {},
 }) => {
   const [clickedIndex, setClickedIndex] = useState(0);
   const [isClickedCount, setClickedCount] = useState(false);
   const { narrowWeekend = false } = options;
-  const { state, actions } = useStore('layout');
-  const height = state[name]?.height ?? EVENT_HEIGHT;
-  const { updatePanelHeight } = actions;
+  const { updatePanelHeight } = useActions('layout');
 
   let maxTop = 0;
   if (events.length) {
@@ -105,7 +105,7 @@ export const PanelGrid: FunctionComponent<Props> = ({
     setClickedCount(false);
     updatePanelHeight({
       type: name,
-      height: defaultPanelHeight,
+      height: DEFAULT_PANEL_HEIGHT,
     });
   };
 

@@ -7,13 +7,12 @@ import { PanelGrid } from '@src/components/panelgrid/panelgrid';
 import { PanelTitle } from '@src/components/panelgrid/panelTitle';
 import TZDate from '@src/time/date';
 import GridEvents from '@src/components/daygrid/gridEvents';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
 
 import type { Cells, DayGridEventType } from '@t/panel';
 import type { DayGridEventMatrix } from '@t/events';
-import { getModels } from '@src/util/panelEvent';
+import { flattenMatrix, getModels, setDayGridEventModels } from '@src/util/gridEvent';
 
-const DEFAULT_PANEL_HEIGHT = 44;
+const DEFAULT_PANEL_HEIGHT = 66;
 const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
   const now = new TZDate();
 
@@ -39,23 +38,14 @@ export const DayGridEvents: FunctionComponent<Props> = ({
 }) => {
   const columnWidth = timesWidth * timezonesCount;
 
-  const eventModels: ScheduleViewModel[] = [];
-
-  events.forEach((matrix) => {
-    matrix.forEach((models) => {
-      eventModels.push(...getModels(models));
-    });
-  });
-
-  eventModels.forEach((model) => {
-    model.top += 1;
-  });
+  const eventModels = flattenMatrix(events);
+  setDayGridEventModels(eventModels);
 
   return (
     <Fragment>
       <PanelTitle width={columnWidth} template={type} model={type} />
       <div className={cls(`panel-${type}`)}>
-        <PanelGrid name={type} cells={cells} events={events} defaultPanelHeight={panelHeight} />
+        <PanelGrid name={type} cells={cells} events={events} height={panelHeight} />
         <GridEvents
           name={type}
           cells={cells}

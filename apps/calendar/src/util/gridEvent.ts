@@ -55,6 +55,26 @@ const getDayGridEventModels = (
 
 export const getModels = (models: ScheduleViewModel[]) => models.filter((model) => !!model);
 
+export const flattenMatrix = (matrices: DayGridEventMatrix): ScheduleViewModel[] => {
+  const eventModels: ScheduleViewModel[] = [];
+
+  matrices.forEach((matrix) => {
+    matrix.forEach((models) => {
+      eventModels.push(...getModels(models));
+    });
+  });
+
+  return eventModels;
+};
+
+export const setDayGridEventModels = (models: ScheduleViewModel[]): ScheduleViewModel[] => {
+  models.forEach((model) => {
+    model.top += 1;
+  });
+
+  return models;
+};
+
 const getTimeGridEventModels = (
   eventModels: TimeGridEventMatrix,
   cells: Cells,

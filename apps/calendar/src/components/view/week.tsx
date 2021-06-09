@@ -8,7 +8,7 @@ import { TemplateWeekDay } from '@src/model';
 import { capitalizeDayName, getDayName } from '@src/util/dayName';
 import TZDate from '@src/time/date';
 import { Layout } from '@src/components/layout';
-import { getDayGridEvents } from '@src/util/panelEvent';
+import { getDayGridEvents } from '@src/util/gridEvent';
 import { addDate, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { TimeGrid } from '@src/components/timegrid/timegrid';
 import { DayGridEvents } from '@src/components/panelgrid/dayGridEvents';

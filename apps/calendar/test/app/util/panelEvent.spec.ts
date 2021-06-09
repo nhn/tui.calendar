@@ -1,4 +1,4 @@
-import { getViewModels } from '@src/util/panelEvent';
+import { getViewModels } from '@src/util/gridEvent';
 import Schedule from '@src/model/schedule';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { createDate } from '@test/helper';
