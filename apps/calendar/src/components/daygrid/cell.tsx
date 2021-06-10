@@ -10,7 +10,7 @@ import TZDate from '@src/time/date';
 import { getPosition, getSize } from '@src/util/dom';
 import { ratio } from '@src/util/math';
 import { Size } from '@src/controller/panel';
-import { Day, toStartOfDay } from '@src/time/datetime';
+import { Day } from '@src/time/datetime';
 import { toPercent } from '@src/util/units';
 import { getMousePosition } from '@src/util/domEvent';
 import ScheduleViewModel from '@src/model/scheduleViewModel';

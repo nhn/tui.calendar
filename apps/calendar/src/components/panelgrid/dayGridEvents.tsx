@@ -7,12 +7,12 @@ import { PanelGrid } from '@src/components/panelgrid/panelgrid';
 import { PanelTitle } from '@src/components/panelgrid/panelTitle';
 import TZDate from '@src/time/date';
 import GridEvents from '@src/components/daygrid/gridEvents';
+import { flattenMatrix, setDayGridEventModels } from '@src/util/gridHelper';
+import { DEFAULT_PANEL_HEIGHT } from '@src/controller/panel';
 
 import type { Cells, DayGridEventType } from '@t/panel';
 import type { DayGridEventMatrix } from '@t/events';
-import { flattenMatrix, setDayGridEventModels } from '@src/util/gridEvent';
 
-const DEFAULT_PANEL_HEIGHT = 72;
 const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
   const now = new TZDate();
 

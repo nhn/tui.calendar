@@ -10,7 +10,7 @@ import Panel from '@src/components/panel';
 import { PanelTitle } from '@src/components/panelgrid/panelTitle';
 import { createRandomEventModelsForMonth } from '@stories/util/randomEvents';
 import { ProviderWrapper } from '@stories/util/providerWrapper';
-import { getDayGridEvents } from '@src/util/gridEvent';
+import { getDayGridEvents } from '@src/util/gridHelper';
 import { createScheduleCollection } from '@src/controller/base';
 import { DataStore } from '@src/model';
 

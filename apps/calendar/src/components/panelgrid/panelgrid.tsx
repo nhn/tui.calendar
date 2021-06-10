@@ -7,10 +7,12 @@ import {
   EVENT_HEIGHT,
   getExceedCount,
   getGridWidthAndLeftPercentValues,
+  isInGrid,
   TOTAL_WIDTH,
+  flattenMatrix,
 } from '@src/util/gridHelper';
 import { useActions } from '@src/components/hooks/store';
-import { getModels, getViewModels, isInCell } from '@src/util/gridEvent';
+import { DEFAULT_PANEL_HEIGHT } from '@src/controller/panel';
 
 import type { Cells } from '@t/panel';
 import type { CalendarWeekOption } from '@t/store';
@@ -40,8 +42,6 @@ interface CollapseButtonProps {
   isClickedIndex: boolean;
   onClick: () => void;
 }
-
-const DEFAULT_PANEL_HEIGHT = 72;
 
 const ExceedCount: FunctionComponent<ExceedCountProps> = ({
   index,
@@ -86,14 +86,8 @@ export const PanelGrid: FunctionComponent<Props> = ({
   // @TODO: 테마에서 값 가져와서 설정
   const eventTopMargin = 2;
 
-  let maxTop = 0;
-  if (events.length) {
-    events.forEach((matrix) => {
-      matrix.forEach((row) => {
-        maxTop = Math.max(maxTop, ...getModels(row).map(({ top }) => top));
-      });
-    });
-  }
+  const eventModels = flattenMatrix(events);
+  const maxTop = Math.max(0, ...eventModels.map(({ top }) => top));
 
   const onClickExceedCount = (index: number) => {
     setClickedCount(true);
@@ -117,13 +111,11 @@ export const PanelGrid: FunctionComponent<Props> = ({
     TOTAL_WIDTH
   );
 
-  const viewModels = getViewModels(events);
-
   const gridCells = cells.map((cell, index) => {
     const width = toPercent(widthList[index]);
     const left = toPercent(leftList[index]);
 
-    const eventModelsInCell = viewModels.filter(isInCell(cell));
+    const eventModelsInCell = eventModels.filter(isInGrid(cell));
     const exceedCount = getExceedCount(eventModelsInCell, height, EVENT_HEIGHT + eventTopMargin);
     const isClickedIndex = index === clickedIndex;
 
