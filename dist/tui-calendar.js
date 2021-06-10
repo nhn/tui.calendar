@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.13.0 | Tue Jun 08 2021
+ * @version 1.13.0 | Thu Jun 10 2021
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -23754,13 +23754,13 @@ module.exports = (Handlebars['default'] || Handlebars).template({"1":function(co
     + alias4(((helper = (helper = lookupProperty(helpers,"CSS_PREFIX") || (depth0 != null ? lookupProperty(depth0,"CSS_PREFIX") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data,"loc":{"start":{"line":49,"column":32},"end":{"line":49,"column":46}}}) : helper)))
     + "time-flex-row-start\">\r\n                        <div>\r\n                            "
     + ((stack1 = ((helper = (helper = lookupProperty(helpers,"title-tmpl") || (depth0 != null ? lookupProperty(depth0,"title-tmpl") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"title-tmpl","hash":{},"data":data,"loc":{"start":{"line":51,"column":28},"end":{"line":51,"column":44}}}) : helper))) != null ? stack1 : "")
-    + "\r\n                        </div>\r\n                        <div class=\"blank-space\"></div>\r\n                        <div>\r\n                            <span\r\n                                style=\"font-size: 13px;font-weight: normal;font-stretch: normal;font-style: normal;line-height: 1.38;letter-spacing: normal;text-align: left;color: #000000;\">"
+    + "\r\n                        </div>\r\n                        <div class=\"blank-space\"></div>\r\n                        <div style=\"text-align: left\">\r\n                            <span\r\n                                style=\"font-size: 13px;font-weight: normal;font-stretch: normal;font-style: normal;line-height: 1.38;letter-spacing: normal;text-align: left;color: #000000;\">"
     + ((stack1 = alias5(((stack1 = (depth0 != null ? lookupProperty(depth0,"model") : depth0)) != null ? lookupProperty(stack1,"title") : stack1), depth0)) != null ? stack1 : "")
     + "</span>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\""
     + alias4(((helper = (helper = lookupProperty(helpers,"CSS_PREFIX") || (depth0 != null ? lookupProperty(depth0,"CSS_PREFIX") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data,"loc":{"start":{"line":59,"column":32},"end":{"line":59,"column":46}}}) : helper)))
     + "time-flex-row-start\">\r\n                        <div>\r\n                            "
     + ((stack1 = ((helper = (helper = lookupProperty(helpers,"location-tmpl") || (depth0 != null ? lookupProperty(depth0,"location-tmpl") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"location-tmpl","hash":{},"data":data,"loc":{"start":{"line":61,"column":28},"end":{"line":61,"column":47}}}) : helper))) != null ? stack1 : "")
-    + "\r\n                        </div>\r\n                        <div class=\"blank-space\"></div>\r\n                        <div>\r\n                            <span\r\n                                style=\"font-size: 13px;font-weight: normal;font-stretch: normal;font-style: normal;line-height: 1.38;letter-spacing: normal;text-align: left;color: #000000;\">"
+    + "\r\n                        </div>\r\n                        <div class=\"blank-space\"></div>\r\n                        <div style=\"text-align: left\">\r\n                            <span\r\n                                style=\"font-size: 13px;font-weight: normal;font-stretch: normal;font-style: normal;line-height: 1.38;letter-spacing: normal;text-align: left;color: #000000;\">"
     + ((stack1 = alias5(((stack1 = (depth0 != null ? lookupProperty(depth0,"model") : depth0)) != null ? lookupProperty(stack1,"location") : stack1), depth0)) != null ? stack1 : "")
     + "</span>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\""
     + alias4(((helper = (helper = lookupProperty(helpers,"CSS_PREFIX") || (depth0 != null ? lookupProperty(depth0,"CSS_PREFIX") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data,"loc":{"start":{"line":69,"column":32},"end":{"line":69,"column":46}}}) : helper)))
