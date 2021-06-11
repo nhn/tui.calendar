@@ -11,6 +11,8 @@ import ScheduleViewModel from '@src/model/scheduleViewModel';
 
 import type { Cells, DayGridEventType } from '@t/panel';
 import type { DayGridEventMatrix } from '@t/events';
+import { useStore } from '@src/components/hooks/store';
+import { convertPxToNum } from '@src/util/units';
 
 const DEFAULT_PANEL_HEIGHT = 44;
 const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
@@ -36,6 +38,11 @@ export const DayGridEvents: FunctionComponent<Props> = ({
   timezonesCount = 1,
   panelHeight = DEFAULT_PANEL_HEIGHT,
 }) => {
+  const {
+    state: {
+      week: { dayGridSchedule },
+    },
+  } = useStore('theme');
   const columnWidth = timesWidth * timezonesCount;
 
   const eventModels: ScheduleViewModel[] = [];
@@ -63,6 +70,7 @@ export const DayGridEvents: FunctionComponent<Props> = ({
           narrowWeekend={false}
           className={cls(`panel-${type}-events`)}
           headerHeight={0}
+          eventTopMargin={convertPxToNum(dayGridSchedule.marginTop)}
         />
       </div>
     </Fragment>

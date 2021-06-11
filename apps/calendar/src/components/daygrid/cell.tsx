@@ -10,7 +10,7 @@ import TZDate from '@src/time/date';
 import { getPosition, getSize } from '@src/util/dom';
 import { ratio } from '@src/util/math';
 import { Size } from '@src/controller/panel';
-import { Day, toStartOfDay } from '@src/time/datetime';
+import { Day } from '@src/time/datetime';
 import { convertPxToNum, toPercent } from '@src/util/units';
 import { getMousePosition } from '@src/util/domEvent';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
@@ -219,7 +219,14 @@ export const Cell: FunctionComponent<CellProps> = (props) => {
   const { show } = useActions('layerPopup');
   const { state } = useStore('theme');
 
-  const { common: commonTheme } = state;
+  const {
+    common: commonTheme,
+    month: {
+      daygrid: {
+        cell: { paddingBottom, paddingTop },
+      },
+    },
+  } = state;
   const {
     date,
     dayIndex,
@@ -251,7 +258,7 @@ export const Cell: FunctionComponent<CellProps> = (props) => {
   return (
     <div
       className={cls('daygrid-cell')}
-      style={{ ...style, color: getDateColor(dayIndex, commonTheme) }}
+      style={{ ...style, color: getDateColor(dayIndex, commonTheme), paddingBottom, paddingTop }}
       ref={container}
     >
       <CellBar exceedCount={exceedCount} date={date} onClickExceedCount={onOpenSeeMorePopup} />
