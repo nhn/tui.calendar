@@ -6,26 +6,22 @@ import { pick } from '@src/util/utils';
 import { SeeMorePopupParam } from '@t/store';
 import SeeMoreHeader from '@src/components/popup/seeMoreHeader';
 import GridEvent from '@src/components/events/gridEvent';
-import { EVENT_HEIGHT } from '@src/util/gridHelper';
 
 const SeeMorePopup: FunctionComponent<SeeMorePopupParam> = (props) => {
   const { date, events = [] } = props;
 
-  const { state } = useStore('theme');
-  const style = pick(
-    state.month.moreView,
-    'backgroundColor',
-    'border',
-    'boxShadow',
-    'paddingBottom'
-  );
-  // @TODO: 테마 적용
-  const headerHeight = 56;
+  const {
+    state: {
+      month: { moreView, moreViewTitle, moreViewList, schedule },
+    },
+  } = useStore('theme');
+  const style = pick(moreView, 'backgroundColor', 'border', 'boxShadow', 'paddingBottom');
+  const headerHeight = parseFloat(moreViewTitle.height) + parseFloat(moreViewTitle.marginBottom);
   const moreListStyle = {
-    padding: '0 17px',
+    padding: moreViewList.padding,
     height: `calc(100% - ${headerHeight}px)`,
   };
-  const eventHeight = EVENT_HEIGHT;
+  const eventHeight = parseFloat(schedule.height);
 
   return (
     <div className={cls('see-more')} style={style}>

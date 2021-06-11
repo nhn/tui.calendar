@@ -53,4 +53,8 @@ type MonthTheme = {
     marginTop: string;
   };
   weekend: { backgroundColor: string };
+  daygrid: {
+    cell: { paddingTop: string; paddingBottom: string };
+    cellBar: { height: string };
+  };
 };

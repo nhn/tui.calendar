@@ -160,11 +160,14 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
     return null;
   }
 
-  const { schedule: monthScheduleTheme } = theme.month;
+  const {
+    schedule: monthScheduleTheme,
+    daygrid: { cell, cellBar },
+  } = theme.month;
   const eventHeight = parseFloat(monthScheduleTheme.height);
+  const eventTopMargin = parseFloat(monthScheduleTheme.marginTop);
+  const headerHeight = parseFloat(cell.paddingTop) + parseFloat(cellBar.height);
   const gridInfoList = getGridInfoList(calendar);
-  // @TODO: 테마에서 값 가져와서 설정
-  const headerHeight = 31;
 
   return (
     <GridWithMouse
@@ -210,6 +213,7 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
                 eventHeight={eventHeight}
                 className={cls('weekday-schedules')}
                 headerHeight={headerHeight}
+                eventTopMargin={eventTopMargin}
               />
               {creationGuide ? renderCreationGuide(creationGuide, week, narrowWeekend) : null}
             </div>

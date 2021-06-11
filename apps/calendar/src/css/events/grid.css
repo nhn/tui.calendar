@@ -18,11 +18,7 @@
   cursor: col-resize;
 }
 
-.grid-cell-header {
-  padding-top: 3px;
-}
-
-.grid-cell-date .weekday-grid-date.weekday-grid-date-decorator{
+.grid-cell-date .weekday-grid-date.weekday-grid-date-decorator {
   display: inline-block;
   width: 26px;
   height: 26px;
