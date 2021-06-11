@@ -8,7 +8,7 @@ import GridEvents from '@src/components/daygrid/gridEvents';
 import GridWithMouse from '@src/components/daygrid/gridWithMouse';
 import CreationGuide from '@src/components/daygrid/creationGuide';
 
-import { toPercent } from '@src/util/units';
+import { convertPxToNum, toPercent } from '@src/util/units';
 import Schedule from '@src/model/schedule';
 import TZDate from '@src/time/date';
 import { CalendarMonthOption } from '@t/store';
@@ -164,9 +164,9 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
     schedule: monthScheduleTheme,
     daygrid: { cell, cellBar },
   } = theme.month;
-  const eventHeight = parseFloat(monthScheduleTheme.height);
-  const eventTopMargin = parseFloat(monthScheduleTheme.marginTop);
-  const headerHeight = parseFloat(cell.paddingTop) + parseFloat(cellBar.height);
+  const eventHeight = convertPxToNum(monthScheduleTheme.height);
+  const eventTopMargin = convertPxToNum(monthScheduleTheme.marginTop);
+  const headerHeight = convertPxToNum(cell.paddingTop, cellBar.height);
   const gridInfoList = getGridInfoList(calendar);
 
   return (

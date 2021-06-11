@@ -6,6 +6,7 @@ import { pick } from '@src/util/utils';
 import { SeeMorePopupParam } from '@t/store';
 import SeeMoreHeader from '@src/components/popup/seeMoreHeader';
 import GridEvent from '@src/components/events/gridEvent';
+import { convertPxToNum } from '@src/util/units';
 
 const SeeMorePopup: FunctionComponent<SeeMorePopupParam> = (props) => {
   const { date, events = [] } = props;
@@ -16,12 +17,12 @@ const SeeMorePopup: FunctionComponent<SeeMorePopupParam> = (props) => {
     },
   } = useStore('theme');
   const style = pick(moreView, 'backgroundColor', 'border', 'boxShadow', 'paddingBottom');
-  const headerHeight = parseFloat(moreViewTitle.height) + parseFloat(moreViewTitle.marginBottom);
+  const headerHeight = convertPxToNum(moreViewTitle.height, moreViewTitle.marginBottom);
   const moreListStyle = {
     padding: moreViewList.padding,
     height: `calc(100% - ${headerHeight}px)`,
   };
-  const eventHeight = parseFloat(schedule.height);
+  const eventHeight = convertPxToNum(schedule.height);
 
   return (
     <div className={cls('see-more')} style={style}>

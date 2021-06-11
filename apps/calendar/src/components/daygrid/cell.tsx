@@ -11,7 +11,7 @@ import { getPosition, getSize } from '@src/util/dom';
 import { ratio } from '@src/util/math';
 import { Size } from '@src/controller/panel';
 import { Day, toStartOfDay } from '@src/time/datetime';
-import { toPercent } from '@src/util/units';
+import { convertPxToNum, toPercent } from '@src/util/units';
 import { getMousePosition } from '@src/util/domEvent';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { EVENT_HEIGHT, getExceedCount } from '@src/util/gridHelper';
@@ -62,15 +62,14 @@ function getSeeMorePopupSize(
   const { titleHeight, titleMarginBottom, paddingBottom } = styles;
 
   width = Math.max(width, VIEW_MIN_WIDTH);
-  height = parseFloat(titleHeight);
-  height += parseFloat(titleMarginBottom);
+  height = convertPxToNum(titleHeight, titleMarginBottom);
 
   if (events.length <= maxVisibleSchedulesInLayer) {
     height += (scheduleGutter + scheduleHeight) * events.length;
   } else {
     height += (scheduleGutter + scheduleHeight) * maxVisibleSchedulesInLayer;
   }
-  height += parseFloat(paddingBottom);
+  height += convertPxToNum(paddingBottom);
   height += OUT_PADDING;
 
   if (layerWidth) {
@@ -195,8 +194,8 @@ function usePopupRect(
 
     const options: SeeMoreOptions = {
       moreLayerSize: { width: null, height: null },
-      scheduleGutter: parseFloat(scheduleTheme.height),
-      scheduleHeight: parseFloat(scheduleTheme.marginTop),
+      scheduleGutter: convertPxToNum(scheduleTheme.height),
+      scheduleHeight: convertPxToNum(scheduleTheme.marginTop),
     };
 
     if (appContainer && parentContainer) {
