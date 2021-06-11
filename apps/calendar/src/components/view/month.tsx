@@ -59,7 +59,7 @@ function usePanelContainer(container: Ref<HTMLDivElement>) {
   useEffect(() => {
     if (container.current) {
       const panelContainer: HTMLElement | null = container.current.querySelector(
-        `${cls('.panel')}.month-daygrid`
+        `${cls('.panel')}${cls('.month-daygrid')}`
       );
 
       if (panelContainer) {
