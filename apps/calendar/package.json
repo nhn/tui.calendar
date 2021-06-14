@@ -62,7 +62,7 @@
     "tui-time-picker": "^2.0.1"
   },
   "lint-staged": {
-    "**/*.{js,ts,tsx}": "eslint --fix --max-warnings=0",
+    "**/*.{js,ts,tsx}": "eslint --fix",
     "**/*.css": "stylelint"
   },
   "scripts": {
