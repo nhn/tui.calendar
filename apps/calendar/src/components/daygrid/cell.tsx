@@ -255,12 +255,15 @@ export const Cell: FunctionComponent<CellProps> = (props) => {
 
   const exceedCount = getExceedCount(events, height, eventHeight);
 
+  const cellStyle = {
+    ...style,
+    color: getDateColor(dayIndex, commonTheme),
+    paddingBottom,
+    paddingTop,
+  };
+
   return (
-    <div
-      className={cls('daygrid-cell')}
-      style={{ ...style, color: getDateColor(dayIndex, commonTheme), paddingBottom, paddingTop }}
-      ref={container}
-    >
+    <div className={cls('daygrid-cell')} style={cellStyle} ref={container}>
       <CellBar exceedCount={exceedCount} date={date} onClickExceedCount={onOpenSeeMorePopup} />
     </div>
   );
