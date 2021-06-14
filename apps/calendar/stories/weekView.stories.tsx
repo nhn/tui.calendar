@@ -5,7 +5,7 @@ import { ProviderWrapper } from '@stories/util/providerWrapper';
 import WeekView from '@src/components/view/weekView';
 import { createRandomEvents, createRandomEventModelsForMonth } from '@stories/util/randomEvents';
 import TZDate from '@src/time/date';
-import { addDate } from '@src/time/datetime';
+import { addDate, Day } from '@src/time/datetime';
 import Schedule from '@src/model/schedule';
 
 export default { title: 'WeekView' };
@@ -25,6 +25,15 @@ const Template: Story = (args) => (
 );
 
 export const basic = Template.bind({});
+
+export const MondayStart = Template.bind({});
+MondayStart.args = {
+  options: {
+    week: {
+      startDayOfWeek: Day.MON,
+    },
+  },
+};
 
 export const randomEvents = Template.bind({});
 randomEvents.args = {

@@ -34,7 +34,7 @@ const Template: Story = (args) => (
   <ProviderWrapper options={args.options} events={events}>
     <Layout height={500}>
       <Panel name="milestone" resizable minHeight={20} maxHeight={args.maxHeight}>
-        <DayGridEvents events={dayGridEvents.milestone} type="milestone" />
+        <DayGridEvents events={dayGridEvents.milestone} type="milestone" narrowWeekend={false} />
       </Panel>
     </Layout>
   </ProviderWrapper>

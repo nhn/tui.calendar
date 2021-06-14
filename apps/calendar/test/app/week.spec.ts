@@ -5,6 +5,6 @@ describe('View/Week', () => {
     // import test
     const week = new Week(document.createElement('div'));
 
-    expect(week.render() instanceof Week).toBe(true);
+    expect(week.render()).toBeInstanceOf(Week);
   });
 });

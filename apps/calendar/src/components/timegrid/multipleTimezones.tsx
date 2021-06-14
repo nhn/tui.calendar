@@ -1,7 +1,6 @@
 import { h, Component, Fragment } from 'preact';
 import { createPortal } from 'preact/compat';
-import isNumber from 'tui-code-snippet/type/isNumber';
-import range from 'tui-code-snippet/array/range';
+
 import { className as timegridClassName, addTimeGridPrefix } from '@src/components/timegrid';
 import { Times, TimeProps } from '@src/components/timegrid/times';
 import { CollapseButton } from '@src/components/timegrid/collapseButton';
@@ -20,6 +19,7 @@ import { TimezoneConfig } from '@src/model';
 import TZDate from '@src/time/date';
 import { cls } from '@src/util/cssHelper';
 import { noop } from '@src/util';
+import { range, isNumber } from '@src/util/utils';
 
 const classNames = {
   timegrid: cls(timegridClassName),

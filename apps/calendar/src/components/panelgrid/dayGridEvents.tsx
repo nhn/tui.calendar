@@ -7,11 +7,10 @@ import { PanelGrid } from '@src/components/panelgrid/panelgrid';
 import { PanelTitle } from '@src/components/panelgrid/panelTitle';
 import TZDate from '@src/time/date';
 import GridEvents from '@src/components/daygrid/gridEvents';
-import { flattenMatrix, setDayGridEventModels } from '@src/util/gridHelper';
 import { DEFAULT_PANEL_HEIGHT } from '@src/controller/panel';
+import ScheduleViewModel from '@src/model/scheduleViewModel';
 
 import type { Cells, DayGridEventType } from '@t/panel';
-import type { DayGridEventMatrix } from '@t/events';
 
 const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
   const now = new TZDate();
@@ -21,11 +20,12 @@ const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
 
 interface Props {
   type: DayGridEventType;
-  events: DayGridEventMatrix;
+  events: ScheduleViewModel[];
   cells?: Cells;
   timesWidth?: number;
   timezonesCount?: number;
-  panelHeight?: number;
+  height?: number;
+  narrowWeekend: boolean;
 }
 
 export const DayGridEvents: FunctionComponent<Props> = ({
@@ -34,24 +34,28 @@ export const DayGridEvents: FunctionComponent<Props> = ({
   cells = defaultPanelInfoList,
   timesWidth = 120,
   timezonesCount = 1,
-  panelHeight = DEFAULT_PANEL_HEIGHT,
+  height = DEFAULT_PANEL_HEIGHT,
+  narrowWeekend,
 }) => {
   const columnWidth = timesWidth * timezonesCount;
-
-  const eventModels = flattenMatrix(events);
-  setDayGridEventModels(eventModels);
 
   return (
     <Fragment>
       <PanelTitle width={columnWidth} template={type} model={type} />
       <div className={cls(`panel-${type}`)}>
-        <PanelGrid name={type} cells={cells} events={events} height={panelHeight} />
+        <PanelGrid
+          name={type}
+          cells={cells}
+          events={events}
+          height={height}
+          options={{ narrowWeekend }}
+        />
         <GridEvents
           name={type}
           cells={cells}
-          height={panelHeight}
-          events={eventModels}
-          narrowWeekend={false}
+          height={height}
+          events={events}
+          narrowWeekend={narrowWeekend}
           className={cls(`panel-${type}-events`)}
           headerHeight={0}
         />

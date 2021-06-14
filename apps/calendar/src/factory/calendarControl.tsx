@@ -1,4 +1,4 @@
-import { h, render, AnyComponent, ComponentChild, Fragment } from 'preact';
+import { h, render, AnyComponent, ComponentChild } from 'preact';
 import renderToString from 'preact-render-to-string';
 import isString from 'tui-code-snippet/type/isString';
 
@@ -32,7 +32,7 @@ import {
   options as OptionsModule,
   layerPopup,
   dataStore,
-  layout,
+  grid,
 } from '@src/modules';
 
 export default abstract class CalendarControl extends EventHandler<ExternalEventName> {
@@ -104,7 +104,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
 
     this.store = new Store({
       initStoreData: { options: this._options },
-      modules: [OptionsModule, templateModule, themeModule, dataStore, layerPopup, layout],
+      modules: [OptionsModule, templateModule, themeModule, dataStore, layerPopup, grid],
     });
   }
 

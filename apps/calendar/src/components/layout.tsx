@@ -47,7 +47,7 @@ export const Layout: FunctionComponent<Props> = ({
   const ref = useRef<HTMLDivElement>(null);
   const {
     actions: { updateLayoutHeight },
-  } = useStore('layout');
+  } = useStore('grid');
 
   const getClassNames = () => {
     const classNames = [cls('layout')];

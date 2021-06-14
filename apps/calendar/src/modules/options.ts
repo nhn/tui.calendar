@@ -14,7 +14,7 @@ function initializeDayNames(startDayOfWeek = 0) {
 
 function initializeWeekOption(optionsData: Options = {}): CalendarWeekOption {
   return {
-    startDayOfWeek: 0,
+    startDayOfWeek: Day.SUN,
     daynames: [],
     narrowWeekend: false,
     workweek: false,

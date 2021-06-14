@@ -9,14 +9,13 @@ import {
   getGridWidthAndLeftPercentValues,
   isInGrid,
   TOTAL_WIDTH,
-  flattenMatrix,
 } from '@src/util/gridHelper';
 import { useActions } from '@src/components/hooks/store';
 import { DEFAULT_PANEL_HEIGHT } from '@src/controller/panel';
+import ScheduleViewModel from '@src/model/scheduleViewModel';
+import { WeekOption } from '@src/model';
 
 import type { Cells } from '@t/panel';
-import type { CalendarWeekOption } from '@t/store';
-import type { DayGridEventMatrix } from '@t/events';
 
 const DEFAULT_GRID_STYLE = {
   borderLeft: '1px solid #ddd',
@@ -25,9 +24,9 @@ const DEFAULT_GRID_STYLE = {
 interface Props {
   name: string;
   cells: Cells;
-  events: DayGridEventMatrix;
+  events: ScheduleViewModel[];
   height: number;
-  options?: CalendarWeekOption;
+  options?: WeekOption;
 }
 
 interface ExceedCountProps {
@@ -82,12 +81,10 @@ export const PanelGrid: FunctionComponent<Props> = ({
   const [clickedIndex, setClickedIndex] = useState(0);
   const [isClickedCount, setClickedCount] = useState(false);
   const { narrowWeekend = false } = options;
-  const { updatePanelHeight } = useActions('layout');
-  // @TODO: 테마에서 값 가져와서 설정
+  const { updatePanelHeight } = useActions('grid');
+  // @TODO: set margin value from theme in store
   const eventTopMargin = 2;
-
-  const eventModels = flattenMatrix(events);
-  const maxTop = Math.max(0, ...eventModels.map(({ top }) => top));
+  const maxTop = Math.max(0, ...events.map(({ top }) => top));
 
   const onClickExceedCount = (index: number) => {
     setClickedCount(true);
@@ -115,7 +112,7 @@ export const PanelGrid: FunctionComponent<Props> = ({
     const width = toPercent(widthList[index]);
     const left = toPercent(leftList[index]);
 
-    const eventModelsInCell = eventModels.filter(isInGrid(cell));
+    const eventModelsInCell = events.filter(isInGrid(cell));
     const exceedCount = getExceedCount(eventModelsInCell, height, EVENT_HEIGHT + eventTopMargin);
     const isClickedIndex = index === clickedIndex;
 

@@ -47,7 +47,7 @@ const Panel: FunctionComponent<Props> = (props) => {
   const {
     state,
     actions: { updatePanelHeight },
-  } = useStore('layout');
+  } = useStore('grid');
 
   const panelResizeEnd = (resizeInfo: DragPositionInfo) => {
     onResizeEnd(name, resizeInfo);

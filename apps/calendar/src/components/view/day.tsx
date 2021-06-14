@@ -37,10 +37,10 @@ const dayNameHeight = 42;
 
 const Day: FunctionComponent = () => {
   const {
-    state: { template, theme, options, dataStore, layout },
-  } = useStore(['template', 'theme', 'options', 'dataStore', 'layout']);
+    state: { template, theme, options, dataStore, grid },
+  } = useStore();
 
-  if (!template || !theme || !options || !dataStore || !layout) {
+  if (!template || !theme || !options || !dataStore || !grid) {
     return null;
   }
 
@@ -54,6 +54,13 @@ const Day: FunctionComponent = () => {
   const columnInfoList: ColumnInfo[] = cells.map(() => {
     return { start, end, unit: 'minute', slot: 30 } as ColumnInfo;
   });
+  const {
+    layout: { height: layoutHeight },
+    milestone: { height: milestoneHeight },
+    task: { height: taskHeight },
+    allday: { height: alldayHeight },
+  } = grid;
+  const timePanelHeight = layoutHeight - milestoneHeight - taskHeight - alldayHeight;
 
   return (
     <Layout>
@@ -65,21 +72,29 @@ const Day: FunctionComponent = () => {
           events={milestone}
           cells={cells}
           type="milestone"
-          panelHeight={layout.milestone?.height}
+          height={milestoneHeight}
+          narrowWeekend={narrowWeekend}
         />
       </Panel>
       <Panel name="task" resizable>
-        <DayGridEvents events={task} cells={cells} type="task" panelHeight={layout.task?.height} />
+        <DayGridEvents
+          events={task}
+          cells={cells}
+          type="task"
+          height={taskHeight}
+          narrowWeekend={narrowWeekend}
+        />
       </Panel>
       <Panel name="allday" resizable>
         <DayGridEvents
           events={allday}
           cells={cells}
           type="allday"
-          panelHeight={layout.allday?.height}
+          height={alldayHeight}
+          narrowWeekend={narrowWeekend}
         />
       </Panel>
-      <Panel name="time" height={layout.layout?.height - layout.milestone?.height}>
+      <Panel name="time" height={grid.layout?.height - grid.milestone?.height}>
         <TimeGrid events={time} columnInfoList={columnInfoList} />
       </Panel>
     </Layout>

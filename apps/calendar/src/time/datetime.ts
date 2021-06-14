@@ -19,6 +19,8 @@ export enum Day {
   SAT,
 }
 
+export const WEEK_DAYS = 7;
+
 interface ReduceIteratee {
   (previousValue: number, currentValue: number, currentIndex: number, array: number[]): number;
 }
