@@ -8,7 +8,7 @@ import GridEvents from '@src/components/daygrid/gridEvents';
 import GridWithMouse from '@src/components/daygrid/gridWithMouse';
 import CreationGuide from '@src/components/daygrid/creationGuide';
 
-import { toPercent } from '@src/util/units';
+import { convertPxToNum, toPercent } from '@src/util/units';
 import Schedule from '@src/model/schedule';
 import TZDate from '@src/time/date';
 import { CalendarMonthOption } from '@t/store';
@@ -160,11 +160,14 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
     return null;
   }
 
-  const { schedule: monthScheduleTheme } = theme.month;
-  const eventHeight = parseFloat(monthScheduleTheme.height);
+  const {
+    schedule: monthScheduleTheme,
+    daygrid: { cell, cellBar },
+  } = theme.month;
+  const eventHeight = convertPxToNum(monthScheduleTheme.height);
+  const eventTopMargin = convertPxToNum(monthScheduleTheme.marginTop);
+  const headerHeight = convertPxToNum(cell.paddingTop) + convertPxToNum(cellBar.height);
   const gridInfoList = getGridInfoList(calendar);
-  // @TODO: 테마에서 값 가져와서 설정
-  const headerHeight = 31;
 
   return (
     <GridWithMouse
@@ -210,6 +213,7 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
                 eventHeight={eventHeight}
                 className={cls('weekday-schedules')}
                 headerHeight={headerHeight}
+                eventTopMargin={eventTopMargin}
               />
               {creationGuide ? renderCreationGuide(creationGuide, week, narrowWeekend) : null}
             </div>

@@ -11,6 +11,14 @@ type CommonTheme = {
   today: { color: string };
 };
 
+type ScheduleTheme = {
+  borderRadius: string;
+  height: string;
+  marginLeft: string;
+  marginRight: string;
+  marginTop: string;
+};
+
 type DayNameTheme = {
   height: number | string;
   borderLeft: number;
@@ -24,6 +32,7 @@ type DayNameTheme = {
 
 type WeekTheme = {
   dayname: DayNameTheme;
+  dayGridSchedule: ScheduleTheme;
 };
 
 type MonthTheme = {
@@ -45,12 +54,10 @@ type MonthTheme = {
     marginBottom: string;
     padding: string;
   };
-  schedule: {
-    borderRadius: string;
-    height: string;
-    marginLeft: string;
-    marginRight: string;
-    marginTop: string;
-  };
+  schedule: ScheduleTheme;
   weekend: { backgroundColor: string };
+  daygrid: {
+    cell: { paddingTop: string; paddingBottom: string };
+    cellBar: { height: string };
+  };
 };

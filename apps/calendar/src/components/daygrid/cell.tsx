@@ -10,8 +10,8 @@ import TZDate from '@src/time/date';
 import { getPosition, getSize } from '@src/util/dom';
 import { ratio } from '@src/util/math';
 import { Size } from '@src/controller/panel';
-import { Day, toStartOfDay } from '@src/time/datetime';
-import { toPercent } from '@src/util/units';
+import { Day } from '@src/time/datetime';
+import { convertPxToNum, toPercent } from '@src/util/units';
 import { getMousePosition } from '@src/util/domEvent';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { EVENT_HEIGHT, getExceedCount } from '@src/util/gridHelper';
@@ -57,20 +57,18 @@ function getSeeMorePopupSize(
   const { moreLayerSize, scheduleGutter, scheduleHeight } = options;
   const { width: layerWidth, height: layerHeight } = moreLayerSize;
 
-  let height;
   const maxVisibleSchedulesInLayer = 10;
   const { titleHeight, titleMarginBottom, paddingBottom } = styles;
 
   width = Math.max(width, VIEW_MIN_WIDTH);
-  height = parseFloat(titleHeight);
-  height += parseFloat(titleMarginBottom);
+  let height = convertPxToNum(titleHeight) + convertPxToNum(titleMarginBottom);
 
   if (events.length <= maxVisibleSchedulesInLayer) {
     height += (scheduleGutter + scheduleHeight) * events.length;
   } else {
     height += (scheduleGutter + scheduleHeight) * maxVisibleSchedulesInLayer;
   }
-  height += parseFloat(paddingBottom);
+  height += convertPxToNum(paddingBottom);
   height += OUT_PADDING;
 
   if (layerWidth) {
@@ -195,8 +193,8 @@ function usePopupRect(
 
     const options: SeeMoreOptions = {
       moreLayerSize: { width: null, height: null },
-      scheduleGutter: parseFloat(scheduleTheme.height),
-      scheduleHeight: parseFloat(scheduleTheme.marginTop),
+      scheduleGutter: convertPxToNum(scheduleTheme.height),
+      scheduleHeight: convertPxToNum(scheduleTheme.marginTop),
     };
 
     if (appContainer && parentContainer) {
@@ -220,7 +218,14 @@ export const Cell: FunctionComponent<CellProps> = (props) => {
   const { show } = useActions('layerPopup');
   const { state } = useStore('theme');
 
-  const { common: commonTheme } = state;
+  const {
+    common: commonTheme,
+    month: {
+      daygrid: {
+        cell: { paddingBottom, paddingTop },
+      },
+    },
+  } = state;
   const {
     date,
     dayIndex,
@@ -249,12 +254,15 @@ export const Cell: FunctionComponent<CellProps> = (props) => {
 
   const exceedCount = getExceedCount(events, height, eventHeight);
 
+  const cellStyle = {
+    ...style,
+    color: getDateColor(dayIndex, commonTheme),
+    paddingBottom,
+    paddingTop,
+  };
+
   return (
-    <div
-      className={cls('daygrid-cell')}
-      style={{ ...style, color: getDateColor(dayIndex, commonTheme) }}
-      ref={container}
-    >
+    <div className={cls('daygrid-cell')} style={cellStyle} ref={container}>
       <CellBar exceedCount={exceedCount} date={date} onClickExceedCount={onOpenSeeMorePopup} />
     </div>
   );
