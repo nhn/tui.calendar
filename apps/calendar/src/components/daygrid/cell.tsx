@@ -57,12 +57,11 @@ function getSeeMorePopupSize(
   const { moreLayerSize, scheduleGutter, scheduleHeight } = options;
   const { width: layerWidth, height: layerHeight } = moreLayerSize;
 
-  let height;
   const maxVisibleSchedulesInLayer = 10;
   const { titleHeight, titleMarginBottom, paddingBottom } = styles;
 
   width = Math.max(width, VIEW_MIN_WIDTH);
-  height = convertPxToNum(titleHeight, titleMarginBottom);
+  let height = convertPxToNum(titleHeight) + convertPxToNum(titleMarginBottom);
 
   if (events.length <= maxVisibleSchedulesInLayer) {
     height += (scheduleGutter + scheduleHeight) * events.length;

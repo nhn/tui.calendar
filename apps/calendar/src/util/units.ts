@@ -6,14 +6,13 @@ export function toPx(value: number) {
   return `${value}px`;
 }
 
-export function convertPxToNum(...values: string[]) {
-  const PIXEL_REGEX = /(.*)px$/;
-  const isAllValueIsPx = values.every((v) => PIXEL_REGEX.test(v));
-  if (!isAllValueIsPx) {
+export function convertPxToNum(pxString: string) {
+  const isPxString = /(.*)px$/.test(pxString);
+  if (!isPxString) {
     throw new Error(
-      '[convertPxToNum] you should pass pixel string values as arguments - i.e., "18px"'
+      '[convertPxToNum] you should pass a pixel string value as argument - i.e., "18px"'
     );
   }
 
-  return values.reduce((acc, v) => acc + parseFloat(v), 0);
+  return parseFloat(pxString);
 }

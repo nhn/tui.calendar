@@ -15,7 +15,8 @@ const SeeMorePopup: FunctionComponent<SeeMorePopupParam> = (props) => {
       month: { moreView, moreViewTitle, moreViewList, schedule },
     },
   } = useStore('theme');
-  const headerHeight = convertPxToNum(moreViewTitle.height, moreViewTitle.marginBottom);
+  const headerHeight =
+    convertPxToNum(moreViewTitle.height) + convertPxToNum(moreViewTitle.marginBottom);
   const moreListStyle = {
     padding: moreViewList.padding,
     height: `calc(100% - ${headerHeight}px)`,
