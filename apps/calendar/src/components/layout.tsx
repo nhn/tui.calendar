@@ -16,6 +16,7 @@ import { getSize } from '@src/util/dom';
 import { PanelElementRectMap, PanelInfo, PanelRect } from '@src/controller/panel';
 import { cls } from '@src/util/cssHelper';
 import { useStore } from '@src/components/hooks/store';
+import { noop } from '@src/util';
 
 interface Props {
   children: VNode<typeof Panel> | VNode<typeof Panel>[];
@@ -23,6 +24,7 @@ interface Props {
   height?: number;
   width?: number;
   resizeMode?: ResizeMode;
+  refCallback?: (element: HTMLElement) => void;
 }
 
 type Child = VNode<any> | string | number;
@@ -39,6 +41,7 @@ export const Layout: FunctionComponent<Props> = ({
   children,
   width,
   height,
+  refCallback = noop,
 }) => {
   const [panels, setPanels] = useState<PanelSize[]>([]);
   const panelElementRectMap: PanelElementRectMap = useMemo(() => {
@@ -112,6 +115,12 @@ export const Layout: FunctionComponent<Props> = ({
     panelElementRectMap[panelName] = panelRect;
   };
   const handlers = { onResizeEnd, onPanelRectUpdated };
+  const layoutRefCallback = (layoutRef: HTMLDivElement | null) => {
+    if (layoutRef) {
+      ref.current = layoutRef;
+      refCallback(layoutRef);
+    }
+  };
 
   const renderPanel = (child: Child, size: PanelSize) => {
     if (isValidElement(child)) {
@@ -136,7 +145,11 @@ export const Layout: FunctionComponent<Props> = ({
   const filteredPanels = filterPanels(toChildArray(children));
 
   return (
-    <div ref={ref} className={getClassNames()} style={getLayoutStylesFromInfo(width, height)}>
+    <div
+      ref={layoutRefCallback}
+      className={getClassNames()}
+      style={getLayoutStylesFromInfo(width, height)}
+    >
       {filteredPanels.map((panel, index) => renderPanel(panel, panels[index]))}
     </div>
   );
