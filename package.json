@@ -27,9 +27,11 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-vue": "^7.8.0",
     "eslint-webpack-plugin": "^2.5.3",
+    "husky": "^6.0.0",
     "jest": "^26.6.3",
     "jest-date-mock": "^1.0.8",
     "lerna": "^3.22.1",
+    "lint-staged": "^11.0.0",
     "mini-css-extract-plugin": "^0.9.0",
     "moment-timezone": "^0.5.33",
     "optimize-css-assets-webpack-plugin": "^5.0.4",
@@ -62,7 +64,8 @@
     "install:date": "cd libs/date && npm install",
     "setup:date": "npm run install:date && npm run build:date",
     "test": "jest --detectOpenHandles --forceExit",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "prepare": "husky install"
   },
   "workspaces": [
     "apps/calendar",
