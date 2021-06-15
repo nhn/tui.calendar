@@ -8,11 +8,22 @@ import { capitalizeDayName, getDayName } from '@src/util/dayName';
 import TZDate from '@src/time/date';
 import { Layout } from '@src/components/layout';
 import { getDayGridEvents } from '@src/util/gridHelper';
-import { addDate, isWeekend, toEndOfDay, toStartOfDay, WEEK_DAYS } from '@src/time/datetime';
+import {
+  addDate,
+  getGridLeftAndWidth,
+  isWeekend,
+  toEndOfDay,
+  toStartOfDay,
+  WEEK_DAYS,
+} from '@src/time/datetime';
 import { TimeGrid } from '@src/components/timegrid/timegrid';
 import { DayGridEvents } from '@src/components/panelgrid/dayGridEvents';
 import { ColumnInfo } from '@src/components/timegrid/columns';
 import { range } from '@src/util/utils';
+import { usePanel } from '@src/components/hooks/panelContainer';
+import { cls } from '@src/util/cssHelper';
+import { getMousePositionData } from '@src/util/weekViewHelper';
+import { nullFn } from '@src/util';
 
 import type { Cells } from '@t/panel';
 
@@ -63,7 +74,8 @@ const Week: FunctionComponent = () => {
     return null;
   }
 
-  const { narrowWeekend } = options.week;
+  const { panel, containerRefCallback } = usePanel(cls('.allday'));
+  const { narrowWeekend, startDayOfWeek, workweek } = options.week;
   // @TODO: 이번주 기준으로 계산(prev, next 사용 시 날짜 계산 필요)
   const renderWeekDate = new TZDate();
   const cells = getCells(renderWeekDate, options.week);
@@ -77,6 +89,9 @@ const Week: FunctionComponent = () => {
       slot: 30,
     } as ColumnInfo;
   });
+
+  const grids = getGridLeftAndWidth(cells.length, narrowWeekend, startDayOfWeek, workweek);
+  const getMouseDataOnWeek = panel ? getMousePositionData(cells, grids, panel) : nullFn;
   const {
     layout: { height: layoutHeight },
     milestone: { height: milestoneHeight },
@@ -86,7 +101,7 @@ const Week: FunctionComponent = () => {
   const timePanelHeight = layoutHeight - milestoneHeight - taskHeight - alldayHeight;
 
   return (
-    <Layout height={layoutHeight}>
+    <Layout height={layoutHeight} refCallback={containerRefCallback}>
       <Panel name="week-daynames" height={dayNameHeight}>
         <DayNames
           dayNames={dayNames}
@@ -120,6 +135,7 @@ const Week: FunctionComponent = () => {
           type="allday"
           height={alldayHeight}
           narrowWeekend={narrowWeekend}
+          getMousePositionData={getMouseDataOnWeek}
         />
       </Panel>
       <Panel name="time" height={timePanelHeight}>

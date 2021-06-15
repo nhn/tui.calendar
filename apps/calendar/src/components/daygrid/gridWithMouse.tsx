@@ -1,24 +1,25 @@
 import { h, FunctionComponent } from 'preact';
 
 import { useDrag } from '@src/components/hooks/drag';
-
 import { isSame } from '@src/time/datetime';
 import TZDate from '@src/time/date';
-import { GridGuideInfo } from '@t/components/daygrid/creationGuide';
 import { toPercent } from '@src/util/units';
+import { CreationGuide } from '@src/components/hooks/creationGuide';
+
+import { GridGuideInfo } from '@t/components/daygrid/creationGuide';
 import { GridGuideCreationInfo } from '@t/components/daygrid/gridWithMouse';
 
 interface Props {
   gridInfoList: GridGuideInfo[][];
-  onGuideStart: (guide: GridGuideCreationInfo | null) => void;
-  onGuideEnd: (guide: GridGuideCreationInfo | null) => void;
+  onGuideStart: (guide: CreationGuide) => void;
+  onGuideEnd: (guide: CreationGuide) => void;
   onGuideChange: (guide: GridGuideCreationInfo) => void;
   onGuideCancel: () => void;
   getMousePositionData: (e: MouseEvent) => MousePositionData | null;
 }
 
 function getGuideTime(
-  guideStartData: GridGuideCreationInfo | null,
+  guideStartData: CreationGuide,
   { start, end }: { start: TZDate; end: TZDate }
 ) {
   let guideStartTime = start;
@@ -51,8 +52,8 @@ const GridWithMouse: FunctionComponent<Props> = (props) => {
     onGuideCancel,
     getMousePositionData,
   } = props;
-  let guideStartData: GridGuideCreationInfo | null = null;
-  let guidePrevDragData: GridGuideCreationInfo | null = null;
+  let guideStartData: CreationGuide = null;
+  let guidePrevDragData: CreationGuide = null;
 
   const onDragStart = (e: MouseEvent) => {
     const mousePositionData = getMousePositionData(e);

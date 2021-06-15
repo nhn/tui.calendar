@@ -1,10 +1,14 @@
 import { useState } from 'preact/hooks';
-import { GridGuideCreationInfo } from '@t/components/daygrid/gridWithMouse';
+
 import { useActions } from '@src/components/hooks/store';
 import { PopupType } from '@src/modules/layerPopup';
 
+import { GridGuideCreationInfo } from '@t/components/daygrid/gridWithMouse';
+
+export type CreationGuide = GridGuideCreationInfo | null;
+
 export function useCreationGuide(useCreationPopup = false) {
-  const [creationGuide, setCreationGuide] = useState<GridGuideCreationInfo | null>(null);
+  const [creationGuide, setCreationGuide] = useState<CreationGuide>(null);
   const [popupFlag, setPopupFlag] = useState(false);
 
   const { show, hide } = useActions('layerPopup');
@@ -39,10 +43,8 @@ export function useCreationGuide(useCreationPopup = false) {
     }
   };
 
-  const onGuideStart = (guide: GridGuideCreationInfo | null) => {
-    setCreationGuide(guide);
-  };
-  const onGuideEnd = (guide: GridGuideCreationInfo | null) => {
+  const onGuideStart = (guide: CreationGuide) => setCreationGuide(guide);
+  const onGuideEnd = (guide: CreationGuide) => {
     setCreationGuide(guide);
 
     if (guide) {
@@ -51,9 +53,7 @@ export function useCreationGuide(useCreationPopup = false) {
       hide();
     }
   };
-  const onGuideChange = (guide: GridGuideCreationInfo) => {
-    setCreationGuide(guide);
-  };
+  const onGuideChange = (guide: GridGuideCreationInfo) => setCreationGuide(guide);
   const onGuideCancel = () => setCreationGuide(null);
 
   return {

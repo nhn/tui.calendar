@@ -63,6 +63,10 @@ export function hasStamp(obj: StampObj): boolean {
 // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
 export function noop(..._args: any[]) {}
 
+export function nullFn() {
+  return null;
+}
+
 export function identity(value: any) {
   return value;
 }
