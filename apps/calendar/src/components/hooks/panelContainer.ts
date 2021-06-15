@@ -27,7 +27,7 @@ export function usePanel(selector: string) {
   const containerRefCallback = useCallback(
     (ref: HTMLElement) => {
       if (ref) {
-        const panelContainer: HTMLElement | null = ref.querySelector(`${cls('.panel')}${selector}`);
+        const panelContainer: HTMLElement | null = ref.querySelector(`${selector}`);
 
         if (panelContainer) {
           setPanel(panelContainer);
