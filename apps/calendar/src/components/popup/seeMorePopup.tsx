@@ -2,7 +2,6 @@ import { h, FunctionComponent } from 'preact';
 
 import { useStore } from '@src/components/hooks/store';
 import { cls } from '@src/util/cssHelper';
-import { pick } from '@src/util/utils';
 import { SeeMorePopupParam } from '@t/store';
 import SeeMoreHeader from '@src/components/popup/seeMoreHeader';
 import GridEvent from '@src/components/events/gridEvent';
@@ -16,7 +15,6 @@ const SeeMorePopup: FunctionComponent<SeeMorePopupParam> = (props) => {
       month: { moreView, moreViewTitle, moreViewList, schedule },
     },
   } = useStore('theme');
-  const style = pick(moreView, 'backgroundColor', 'border', 'boxShadow', 'paddingBottom');
   const headerHeight = convertPxToNum(moreViewTitle.height, moreViewTitle.marginBottom);
   const moreListStyle = {
     padding: moreViewList.padding,
@@ -25,7 +23,7 @@ const SeeMorePopup: FunctionComponent<SeeMorePopupParam> = (props) => {
   const eventHeight = convertPxToNum(schedule.height);
 
   return (
-    <div className={cls('see-more')} style={style}>
+    <div className={cls('see-more')} style={moreView}>
       <SeeMoreHeader date={date} />
       <div className={cls('month-more-list')} style={moreListStyle}>
         {events.map((viewModel) => (
