@@ -5,6 +5,7 @@ import { toFormat } from '@src/time/datetime';
 import { toPercent } from '@src/util/units';
 import { classnames, cls } from '@src/util/cssHelper';
 
+// @TODO: change classname & selector to 'timegrid-creation-guide'
 const classNames = {
   guide: cls('guide-creation'),
   label: cls('creation-label'),

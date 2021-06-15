@@ -22,6 +22,17 @@
   overflow-y: hidden;
 }
 
+/* @TODO: extract background-color & border to theme */
+.panel-allday .daygrid-creation-guide {
+  position: absolute;
+  right: 10px;
+  background-color: rgba(81, 92, 230, 0.05);
+  border: 1px solid #515ce6;
+
+  z-index: 1;
+  top: 0;
+}
+
 .panel-grid {
   height: 100%;
   position: absolute;
