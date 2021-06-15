@@ -166,7 +166,7 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
   } = theme.month;
   const eventHeight = convertPxToNum(monthScheduleTheme.height);
   const eventTopMargin = convertPxToNum(monthScheduleTheme.marginTop);
-  const headerHeight = convertPxToNum(cell.paddingTop, cellBar.height);
+  const headerHeight = convertPxToNum(cell.paddingTop) + convertPxToNum(cellBar.height);
   const gridInfoList = getGridInfoList(calendar);
 
   return (
