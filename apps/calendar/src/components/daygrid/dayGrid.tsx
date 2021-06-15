@@ -1,25 +1,23 @@
 import { h, FunctionComponent } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 
-import { useActions, useStore } from '@src/components/hooks/store';
-
+import { useStore } from '@src/components/hooks/store';
 import Grid from '@src/components/daygrid/grid';
 import GridEvents from '@src/components/daygrid/gridEvents';
 import GridWithMouse from '@src/components/daygrid/gridWithMouse';
-import CreationGuide from '@src/components/daygrid/creationGuide';
-
+import { renderCreationGuide } from '@src/components/daygrid/creationGuide';
 import { toPercent } from '@src/util/units';
 import Schedule from '@src/model/schedule';
 import TZDate from '@src/time/date';
-import { CalendarMonthOption } from '@t/store';
 import { getSize } from '@src/util/dom';
 import { cls } from '@src/util/cssHelper';
-import { getLeftAndWidth, getRenderedEventViewModels } from '@src/util/gridHelper';
+import { getRenderedEventViewModels } from '@src/util/gridHelper';
 import { toEndOfDay, toStartOfDay } from '@src/time/datetime';
-import { PopupType } from '@src/modules/layerPopup';
-import { GridGuideInfo } from '@t/components/daygrid/creationGuide';
-import { GridGuideCreationInfo } from '@t/components/daygrid/gridWithMouse';
 import { useCreationGuide } from '@src/components/hooks/creationGuide';
+import { nullFn } from '@src/util';
+
+import { CalendarMonthOption } from '@t/store';
+import { GridGuideInfo } from '@t/components/daygrid/creationGuide';
 
 const TOTAL_PERCENT_HEIGHT = 100;
 
@@ -43,17 +41,6 @@ function useGridHeight() {
   return { ref, height };
 }
 
-function renderCreationGuide(
-  creationGuide: GridGuideCreationInfo,
-  cells: TZDate[],
-  narrowWeekend: boolean
-) {
-  const { start, end } = creationGuide;
-  const { left, width } = getLeftAndWidth(start, end, cells, narrowWeekend);
-
-  return width > 0 ? <CreationGuide {...creationGuide} left={left} width={width} /> : null;
-}
-
 function getGridInfoList(calendar: TZDate[][]): GridGuideInfo[][] {
   return calendar.map<GridGuideInfo[]>((week) =>
     week.map<GridGuideInfo>((day) => {
@@ -74,7 +61,7 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
     calendar = [],
     appContainer,
     useCreationPopup = false,
-    getMousePositionData = () => null,
+    getMousePositionData = nullFn,
   } = props;
   const { visibleWeeksCount, workweek, startDayOfWeek, narrowWeekend } = options;
 

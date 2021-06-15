@@ -1,34 +1,10 @@
-import { findIndex } from '@src/util/utils';
 import { limit, ratio } from '@src/util/math';
-import TZDate from '@src/time/date';
+import { getMousePosition, getX } from '@src/util/mouse';
 
-type ContainerPosition = {
-  containerLeft: number;
-  containerTop: number;
-  containerClientLeft: number;
-  containerClientTop: number;
-};
-
-function getX(grids: GridInfo[], left: number) {
-  return (
-    findIndex<GridInfo>(grids, (item) => item.left <= left && left <= item.left + item.width) ?? -1
-  );
-}
-
-function getMousePosition(
-  position: MouseEvent,
-  { containerLeft, containerTop, containerClientLeft, containerClientTop }: ContainerPosition
-) {
-  const { clientX, clientY } = position;
-
-  return [
-    clientX - containerLeft - containerClientLeft,
-    clientY - containerTop - containerClientTop,
-  ];
-}
+import type { Cells } from '@t/panel';
 
 export function getMousePositionData(
-  calendar: TZDate[][],
+  calendar: Cells[],
   grids: GridInfo[],
   container: HTMLElement
 ): (mouseEvent: MouseEvent) => MousePositionData | null {
