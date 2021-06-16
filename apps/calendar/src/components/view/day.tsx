@@ -9,11 +9,15 @@ import { DayGridEvents } from '@src/components/panelgrid/dayGridEvents';
 import TZDate from '@src/time/date';
 import { Layout } from '@src/components/layout';
 import { getDayGridEvents } from '@src/util/gridHelper';
-import { toEndOfDay, toStartOfDay } from '@src/time/datetime';
+import { getGridLeftAndWidth, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { TimeGrid } from '@src/components/timegrid/timegrid';
 import { ColumnInfo } from '@src/components/timegrid/columns';
 
 import type { OptionData } from '@t/store';
+import { usePanel } from '@src/components/hooks/panelContainer';
+import { cls } from '@src/util/cssHelper';
+import { getMousePositionData } from '@src/util/weekViewHelper';
+import { nullFn } from '@src/util';
 
 function getDayNames(options: OptionData) {
   const dayNames: TemplateWeekDay[] = [];
@@ -44,8 +48,9 @@ const Day: FunctionComponent = () => {
     return null;
   }
 
+  const { panel, containerRefCallback } = usePanel(cls('.panel-allday'));
   const dayNames = getDayNames(options);
-  const { narrowWeekend } = options.week;
+  const { narrowWeekend, startDayOfWeek, workweek } = options.week;
   const cells = [new TZDate()]; // @TODO: 오늘 기준으로 계산(prev, next 사용 시 날짜 계산 필요)
   const { milestone, task, allday, time } = getDayGridEvents(cells, dataStore, narrowWeekend);
   const now = new TZDate();
@@ -54,6 +59,9 @@ const Day: FunctionComponent = () => {
   const columnInfoList: ColumnInfo[] = cells.map(() => {
     return { start, end, unit: 'minute', slot: 30 } as ColumnInfo;
   });
+
+  const grids = getGridLeftAndWidth(cells.length, narrowWeekend, startDayOfWeek, workweek);
+  const getMouseDataOnWeek = panel ? getMousePositionData(cells, grids, panel) : nullFn;
   const {
     layout: { height: layoutHeight },
     milestone: { height: milestoneHeight },
@@ -63,7 +71,7 @@ const Day: FunctionComponent = () => {
   const timePanelHeight = layoutHeight - milestoneHeight - taskHeight - alldayHeight;
 
   return (
-    <Layout>
+    <Layout refCallback={containerRefCallback}>
       <Panel name="day-daynames" height={dayNameHeight}>
         <DayNames dayNames={dayNames} marginLeft={120} templateType="weekDayname" />
       </Panel>
@@ -92,6 +100,7 @@ const Day: FunctionComponent = () => {
           type="allday"
           height={alldayHeight}
           narrowWeekend={narrowWeekend}
+          getMousePositionData={getMouseDataOnWeek}
         />
       </Panel>
       <Panel name="time" height={grid.layout?.height - grid.milestone?.height}>
