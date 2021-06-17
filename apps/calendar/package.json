@@ -61,6 +61,10 @@
     "tui-date-picker": "^4.0.1",
     "tui-time-picker": "^2.0.1"
   },
+  "lint-staged": {
+    "**/*.{js,ts,tsx}": "eslint --fix",
+    "**/*.css": "stylelint"
+  },
   "scripts": {
     "check-types": "tsc --project ./tsconfig.json",
     "validate": "npm run check-types && npm run lint",
@@ -77,6 +81,7 @@
     "build-storybook": "build-storybook",
     "ts2js": "tsc --outDir tmpdoc --sourceMap false --target ES2015 --noEmit false",
     "doc:dev": "npm run build:prod && npm run ts2js && tuidoc --serv",
-    "doc": "npm run ts2js && tuidoc"
+    "doc": "npm run ts2js && tuidoc",
+    "precommit": "lint-staged"
   }
 }

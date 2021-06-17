@@ -37,6 +37,13 @@ const theme: ThemeKeyValue = {
   'month.weekend.backgroundColor': 'inherit',
   'month.day.fontSize': '14px',
 
+  // month day grid cell
+  'month.daygrid.cell.paddingTop': '3px',
+  'month.daygrid.cell.paddingBottom': '3px',
+
+  // month day grid cellBar
+  'month.daygrid.cellBar.height': '27px',
+
   // month schedule style
   'month.schedule.borderRadius': '2px',
   'month.schedule.height': '24px',
