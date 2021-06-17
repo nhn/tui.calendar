@@ -34,6 +34,7 @@ import {
   dataStore,
   grid,
 } from '@src/modules';
+import { ThemeProvider } from '@src/components/provider/theme';
 
 export default abstract class CalendarControl extends EventHandler<ExternalEventName> {
   protected _container: Element | null;
@@ -65,6 +66,8 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
     end: TZDate;
   };
 
+  protected theme: Theme;
+
   protected store: Store;
 
   private _mainApp?: AnyComponent<any, any>;
@@ -90,7 +93,6 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
         schedules: createScheduleCollection(),
         idsOfDay: {},
       },
-      theme: new Theme(option.theme),
       templates: registerTemplateConfig(option.template),
       internalEvent: this._internalEvent,
       externalEvent: this._externalEvent,
@@ -101,6 +103,8 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
       start: toStartOfDay(),
       end: toStartOfDay(),
     };
+
+    this.theme = new Theme(option.theme);
 
     this.store = new Store({
       initStoreData: { options: this._options },
@@ -298,7 +302,12 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
 
   render() {
     if (this._container) {
-      render(<Provider store={this.store}>{this.getComponent()}</Provider>, this._container);
+      render(
+        <ThemeProvider theme={this.theme}>
+          <Provider store={this.store}>{this.getComponent()}</Provider>
+        </ThemeProvider>,
+        this._container
+      );
     }
 
     return this;
@@ -310,7 +319,9 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    */
   renderToString(): string {
     return renderToString(
-      <Provider store={this.store}>{this.getComponent()}</Provider>,
+      <ThemeProvider theme={this.theme}>
+        <Provider store={this.store}>{this.getComponent()}</Provider>
+      </ThemeProvider>,
       this._context
     );
   }
@@ -540,7 +551,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
  * });
  */
   setTheme(theme: ThemeKeyValue) {
-    const result = this._context.theme.setStyles(theme);
+    const result = this.theme.setStyles(theme);
     this.render();
 
     return result;

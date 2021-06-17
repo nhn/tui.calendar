@@ -51,7 +51,6 @@ export interface DataStore {
 export interface AppContext {
   options: Option;
   dataStore: DataStore;
-  theme: Theme;
   templates: Template;
   internalEvent: EventHandler<InternalEventName>;
   externalEvent: EventHandler<ExternalEventName>;
