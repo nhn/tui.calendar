@@ -8,10 +8,8 @@ interface Props {
   store: Store<CalendarState>;
 }
 
-const Provider: FunctionComponent<Props> = ({ children, store }) => {
+export const StoreProvider: FunctionComponent<Props> = ({ children, store }) => {
   const state = useCalendarState(store);
 
   return <StoreContext.Provider value={state}>{children}</StoreContext.Provider>;
 };
-
-export default Provider;

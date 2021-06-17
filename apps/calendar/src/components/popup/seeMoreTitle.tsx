@@ -6,7 +6,7 @@ import { pick } from '@src/util/utils';
 import { cls } from '@src/util/cssHelper';
 import TZDate from '@src/time/date';
 import { toFormat } from '@src/time/datetime';
-import { useTheme } from '@src/components/provider/theme';
+import { useTheme } from '@src/components/hooks/theme';
 
 interface MoreTitleProps {
   date: TZDate;

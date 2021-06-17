@@ -11,7 +11,7 @@ import { getDayGridEvents } from '@src/util/gridHelper';
 import { toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { TimeGrid } from '@src/components/timegrid/timegrid';
 import { ColumnInfo } from '@src/components/timegrid/columns';
-import { useTheme } from '@src/components/provider/theme';
+import { useTheme } from '@src/components/hooks/theme';
 
 const dayNameHeight = 42;
 

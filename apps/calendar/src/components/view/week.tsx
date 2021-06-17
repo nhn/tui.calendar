@@ -15,7 +15,7 @@ import { ColumnInfo } from '@src/components/timegrid/columns';
 import { range } from '@src/util/utils';
 
 import type { Cells, DayGridEventType } from '@t/panel';
-import { useTheme } from '@src/components/provider/theme';
+import { useTheme } from '@src/components/hooks/theme';
 
 function getCells(renderDate: TZDate, { startDayOfWeek = 0, workweek }: WeekOption): Cells {
   const renderDay = renderDate.getDay();

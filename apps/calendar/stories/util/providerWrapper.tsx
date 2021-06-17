@@ -1,5 +1,5 @@
 import { h, RenderableProps } from 'preact';
-import Provider from '@src/components/provider';
+import { StoreProvider } from '@src/components/provider/store';
 import Store from '@src/store';
 import { CalendarState } from '@t/store';
 import { cls } from '@src/util/cssHelper';
@@ -38,7 +38,7 @@ export function ProviderWrapper({
   return (
     <ThemeProvider theme={theme}>
       <div className={cls('layout')} style={style}>
-        <Provider store={store}>{children}</Provider>
+        <StoreProvider store={store}>{children}</StoreProvider>
       </div>
     </ThemeProvider>
   );

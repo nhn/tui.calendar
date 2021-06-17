@@ -23,7 +23,7 @@ import {
   SeeMorePopupTheme,
   SeeMoreRectParam,
 } from '@t/components/daygrid/cell';
-import { useTheme } from '@src/components/provider/theme';
+import { useTheme } from '@src/components/hooks/theme';
 
 const OUT_PADDING = 5;
 const VIEW_MIN_WIDTH = 280;

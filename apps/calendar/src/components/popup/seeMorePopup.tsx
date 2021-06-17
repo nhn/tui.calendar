@@ -5,7 +5,7 @@ import { SeeMorePopupParam } from '@t/store';
 import SeeMoreHeader from '@src/components/popup/seeMoreHeader';
 import GridEvent from '@src/components/events/gridEvent';
 import { convertPxToNum } from '@src/util/units';
-import { useTheme } from '@src/components/provider/theme';
+import { useTheme } from '@src/components/hooks/theme';
 
 const SeeMorePopup: FunctionComponent<SeeMorePopupParam> = (props) => {
   const { date, events = [] } = props;

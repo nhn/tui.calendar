@@ -14,7 +14,7 @@ import { getMousePositionData } from '@src/util/monthViewHelper';
 
 import { OptionData } from '@t/store';
 import { TemplateMonthDayName } from '@src/model';
-import { useTheme } from '@src/components/provider/theme';
+import { useTheme } from '@src/components/hooks/theme';
 
 const nullFn = () => null;
 

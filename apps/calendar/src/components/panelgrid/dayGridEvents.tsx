@@ -12,7 +12,7 @@ import ScheduleViewModel from '@src/model/scheduleViewModel';
 
 import type { Cells, DayGridEventType } from '@t/panel';
 import { convertPxToNum } from '@src/util/units';
-import { useTheme } from '@src/components/provider/theme';
+import { useTheme } from '@src/components/hooks/theme';
 
 const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
   const now = new TZDate();

@@ -9,7 +9,7 @@ import { useRef } from 'preact/hooks';
 import { CSSValue } from '@t/components/daygrid/cell';
 import { EVENT_HEIGHT } from '@src/util/gridHelper';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
-import { useTheme } from '@src/components/provider/theme';
+import { useTheme } from '@src/components/hooks/theme';
 
 interface GridProps {
   cssHeight?: CSSValue;

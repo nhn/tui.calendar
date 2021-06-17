@@ -19,7 +19,7 @@ import { toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { PopupType } from '@src/modules/layerPopup';
 import { GridGuideInfo } from '@t/components/daygrid/creationGuide';
 import { GridGuideCreationInfo } from '@t/components/daygrid/gridWithMouse';
-import { useTheme } from '@src/components/provider/theme';
+import { useTheme } from '@src/components/hooks/theme';
 
 const TOTAL_PERCENT_HEIGHT = 100;
 

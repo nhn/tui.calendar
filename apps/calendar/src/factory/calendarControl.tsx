@@ -24,7 +24,7 @@ import TZDate from '@src/time/date';
 import { LocalDate, DateInterface } from '@toast-ui/date';
 import isNumber from 'tui-code-snippet/type/isNumber';
 
-import Provider from '@src/components/provider';
+import { StoreProvider } from '@src/components/provider/store';
 import Store from '@src/store';
 import {
   template as templateModule,
@@ -303,7 +303,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
     if (this._container) {
       render(
         <ThemeProvider theme={this.theme}>
-          <Provider store={this.store}>{this.getComponent()}</Provider>
+          <StoreProvider store={this.store}>{this.getComponent()}</StoreProvider>
         </ThemeProvider>,
         this._container
       );
@@ -319,7 +319,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
   renderToString(): string {
     return renderToString(
       <ThemeProvider theme={this.theme}>
-        <Provider store={this.store}>{this.getComponent()}</Provider>
+        <StoreProvider store={this.store}>{this.getComponent()}</StoreProvider>
       </ThemeProvider>,
       this._context
     );
