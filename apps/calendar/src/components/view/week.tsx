@@ -3,8 +3,8 @@ import { FunctionComponent, h } from 'preact';
 import { useStore } from '@src/components/hooks/store';
 import Panel from '@src/components/panel';
 import DayNames from '@src/components/daygrid/dayNames';
-import { TemplateWeekDay, WeekOption } from '@src/model';
-import { capitalizeDayName, getDayName } from '@src/util/dayName';
+import { WeekOption } from '@src/model';
+import { getDayNames } from '@src/util/dayName';
 import TZDate from '@src/time/date';
 import { Layout } from '@src/components/layout';
 import { getDayGridEvents } from '@src/util/gridHelper';
@@ -16,33 +16,12 @@ import { range } from '@src/util/utils';
 
 import type { Cells } from '@t/panel';
 
-function getDayNames(cells: Cells) {
-  const dayNames: TemplateWeekDay[] = [];
-
-  // @TODO: apply template daynames
-  cells.forEach((day) => {
-    const dayIndex = day.getDay();
-    const dayName = capitalizeDayName(getDayName(dayIndex));
-
-    dayNames.push({
-      date: day.getDate(),
-      day: day.getDay(),
-      dayName,
-      isToday: false,
-      renderDate: 'date',
-    });
-  });
-
-  return dayNames;
-}
-
 function getCells(renderDate: TZDate, { startDayOfWeek = 0, workweek }: WeekOption): Cells {
   const renderDay = renderDate.getDay();
   const now = toStartOfDay(renderDate);
-  const nowDay = now.getDay();
   const prevWeekCount = startDayOfWeek - WEEK_DAYS;
   const cells = range(startDayOfWeek, WEEK_DAYS + startDayOfWeek).map((day) =>
-    addDate(now, day - nowDay + (startDayOfWeek > renderDay ? prevWeekCount : 0))
+    addDate(now, day - renderDay + (startDayOfWeek > renderDay ? prevWeekCount : 0))
   );
 
   if (workweek) {
@@ -64,29 +43,23 @@ const Week: FunctionComponent = () => {
   }
 
   const { narrowWeekend } = options.week;
-  // @TODO: 이번주 기준으로 계산(prev, next 사용 시 날짜 계산 필요)
+  // @TODO: calculate based on this week(need to calculate date when prev & next used)
   const renderWeekDate = new TZDate();
   const cells = getCells(renderWeekDate, options.week);
   const dayNames = getDayNames(cells);
   const { milestone, task, allday, time } = getDayGridEvents(cells, dataStore, narrowWeekend);
-  const columnInfoList: ColumnInfo[] = cells.map((cell) => {
-    return {
-      start: toStartOfDay(cell),
-      end: toEndOfDay(cell),
-      unit: 'minute',
-      slot: 30,
-    } as ColumnInfo;
-  });
+  const columnInfoList = cells.map(
+    (cell) =>
+      ({ start: toStartOfDay(cell), end: toEndOfDay(cell), unit: 'minute', slot: 30 } as ColumnInfo)
+  );
   const {
-    layout: { height: layoutHeight },
     milestone: { height: milestoneHeight },
     task: { height: taskHeight },
     allday: { height: alldayHeight },
   } = grid;
-  const timePanelHeight = layoutHeight - milestoneHeight - taskHeight - alldayHeight;
 
   return (
-    <Layout height={layoutHeight}>
+    <Layout>
       <Panel name="week-daynames" height={dayNameHeight}>
         <DayNames
           dayNames={dayNames}
@@ -122,7 +95,7 @@ const Week: FunctionComponent = () => {
           narrowWeekend={narrowWeekend}
         />
       </Panel>
-      <Panel name="time" height={timePanelHeight}>
+      <Panel name="time" autoSize={1}>
         <TimeGrid events={time} columnInfoList={columnInfoList} />
       </Panel>
     </Layout>

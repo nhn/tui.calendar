@@ -1,9 +1,6 @@
 import type { LayoutState } from '@t/store';
 
 const initialLayout: LayoutState = {
-  layout: {
-    height: 500,
-  },
   milestone: {
     height: 72,
   },
@@ -15,7 +12,7 @@ const initialLayout: LayoutState = {
   },
 };
 
-const grid = {
+export const grid = {
   name: 'grid',
   state: initialLayout,
   actions: {
@@ -33,5 +30,3 @@ const grid = {
     },
   },
 };
-
-export default grid;

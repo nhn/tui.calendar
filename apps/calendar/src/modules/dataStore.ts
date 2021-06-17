@@ -8,7 +8,7 @@ const initialDataStore: DataStore = {
   idsOfDay: {},
 };
 
-const dataStore = {
+export const dataStore = {
   name: 'dataStore',
   state: initialDataStore,
   actions: {
@@ -24,5 +24,3 @@ const dataStore = {
     },
   },
 };
-
-export default dataStore;
