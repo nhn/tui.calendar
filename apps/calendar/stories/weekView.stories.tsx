@@ -2,13 +2,13 @@ import { h } from 'preact';
 import { Story } from '@storybook/preact';
 
 import { ProviderWrapper } from '@stories/util/providerWrapper';
-import DayView from '@src/components/view/dayView';
+import WeekView from '@src/components/view/weekView';
 import { createRandomEvents, createRandomEventModelsForMonth } from '@stories/util/randomEvents';
 import TZDate from '@src/time/date';
-import { addDate } from '@src/time/datetime';
+import { addDate, Day } from '@src/time/datetime';
 import Schedule from '@src/model/schedule';
 
-export default { title: 'DayView' };
+export default { title: 'WeekView' };
 
 function createTimeGridEvents() {
   const today = new TZDate();
@@ -20,11 +20,20 @@ function createTimeGridEvents() {
 
 const Template: Story = (args) => (
   <ProviderWrapper options={args.options} events={args.events}>
-    <DayView />
+    <WeekView />
   </ProviderWrapper>
 );
 
 export const basic = Template.bind({});
+
+export const MondayStart = Template.bind({});
+MondayStart.args = {
+  options: {
+    week: {
+      startDayOfWeek: Day.MON,
+    },
+  },
+};
 
 export const randomEvents = Template.bind({});
 randomEvents.args = {

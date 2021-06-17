@@ -1,6 +1,5 @@
 import { FunctionComponent, h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import range from 'tui-code-snippet/array/range';
 import pick from 'tui-code-snippet/object/pick';
 
 import TZDate from '@src/time/date';
@@ -28,6 +27,7 @@ import { getTopPercentByTime } from '@src/controller/times';
 import { findIndex } from '@src/util/array';
 import { ColumnsWithMouse, ColumnInfo } from '@src/components/timegrid/columns';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
+import { range } from '@src/util/utils';
 
 const REFRESH_INTERVAL = 1000 * SIXTY_SECONDS;
 

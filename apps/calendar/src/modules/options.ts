@@ -14,7 +14,7 @@ function initializeDayNames(startDayOfWeek = 0) {
 
 function initializeWeekOption(optionsData: Options = {}): CalendarWeekOption {
   return {
-    startDayOfWeek: 0,
+    startDayOfWeek: Day.SUN,
     daynames: [],
     narrowWeekend: false,
     workweek: false,
@@ -68,9 +68,7 @@ function getInitialOptions(optionsData: Options = {}): OptionData {
   };
 }
 
-const options = {
+export const options = {
   name: 'options',
   state: (initStoreData: InitStoreData) => getInitialOptions(initStoreData.options),
 };
-
-export default options;

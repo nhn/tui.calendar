@@ -9,6 +9,7 @@ import { PanelResizer } from '@src/components/panelResizer';
 import { DragPositionInfo } from '@src/components/draggable';
 import { Direction } from '@src/controller/layout';
 import {
+  DEFAULT_PANEL_HEIGHT,
   getElementRect,
   getPanelStylesFromInfo,
   isPanelShown,
@@ -26,8 +27,6 @@ export interface Props extends PanelInfo {
 }
 
 type Child = VNode<any> | string | number;
-
-const defaultPanelHeight = 42;
 
 const Panel: FunctionComponent<Props> = (props) => {
   const {
@@ -48,13 +47,13 @@ const Panel: FunctionComponent<Props> = (props) => {
   const {
     state,
     actions: { updatePanelHeight },
-  } = useStore('layout');
+  } = useStore('grid');
 
   const panelResizeEnd = (resizeInfo: DragPositionInfo) => {
     onResizeEnd(name, resizeInfo);
 
     const panelHeight = Math.max(
-      props.minHeight ?? defaultPanelHeight,
+      props.minHeight ?? DEFAULT_PANEL_HEIGHT,
       getElementRect(panelRef.current).height + resizeInfo.endY - resizeInfo.startY
     );
     updatePanelHeight({
@@ -118,8 +117,8 @@ const Panel: FunctionComponent<Props> = (props) => {
     updateElementRect();
   }, [updateElementRect]);
 
-  const panelHeight = state[name]?.height ?? props.height ?? defaultPanelHeight;
-  const panelWidth = state[name]?.height ?? props.width ?? defaultPanelHeight;
+  const panelHeight = state[name]?.height ?? props.height ?? DEFAULT_PANEL_HEIGHT;
+  const panelWidth = state[name]?.height ?? props.width ?? DEFAULT_PANEL_HEIGHT;
   const styleWithDirection =
     direction === Direction.COLUMN ? { height: panelHeight } : { width: panelWidth };
   const styles = getPanelStylesFromInfo({ ...props, ...styleWithDirection });

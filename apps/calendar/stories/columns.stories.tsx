@@ -1,5 +1,6 @@
 import { h, RenderableProps } from 'preact';
-import range from 'tui-code-snippet/array/range';
+
+import { range } from '@src/util/utils';
 import { Column } from '@src/components/timegrid/column';
 import { cls } from '@src/util/cssHelper';
 import TZDate from '@src/time/date';

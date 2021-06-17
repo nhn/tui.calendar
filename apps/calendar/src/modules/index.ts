@@ -1,6 +1,6 @@
-export { default as dataStore } from '@src/modules/dataStore';
-export { default as options } from '@src/modules/options';
-export { default as theme } from '@src/modules/theme';
-export { default as template } from '@src/modules/template';
-export { default as layerPopup } from '@src/modules/layerPopup';
-export { default as layout } from '@src/modules/layout';
+export { dataStore } from '@src/modules/dataStore';
+export { options } from '@src/modules/options';
+export { theme } from '@src/modules/theme';
+export { template } from '@src/modules/template';
+export { layerPopup } from '@src/modules/layerPopup';
+export { grid } from '@src/modules/grid';

@@ -14,9 +14,9 @@ export type DayGridEventMatrix = Matrix3d<ScheduleViewModel>;
 export type TimeGridEventMatrix = Record<string, Matrix3d<ScheduleViewModel>>;
 
 export type EventModelMap = {
-  milestone: DayGridEventMatrix;
-  allday: DayGridEventMatrix;
-  task: DayGridEventMatrix;
+  milestone: ScheduleViewModel[];
+  allday: ScheduleViewModel[];
+  task: ScheduleViewModel[];
   time: ScheduleViewModel[];
 };
 

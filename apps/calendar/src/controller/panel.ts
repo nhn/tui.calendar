@@ -59,6 +59,8 @@ export const panelInfoKeys: Array<keyof PanelInfo> = [
   'resizerWidth',
 ];
 
+export const DEFAULT_PANEL_HEIGHT = 72;
+
 const styleKeys: Array<keyof PanelInfo> = ['minHeight', 'maxHeight', 'minWidth', 'maxWidth'];
 
 export function getElementRect(element: HTMLElement) {

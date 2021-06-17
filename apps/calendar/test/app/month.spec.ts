@@ -5,6 +5,6 @@ describe('View/Month', () => {
     // import test
     const month = new Month(document.createElement('div'));
 
-    expect(month.render() instanceof Month).toBe(true);
+    expect(month.render()).toBeInstanceOf(Month);
   });
 });

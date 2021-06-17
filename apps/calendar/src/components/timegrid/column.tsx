@@ -1,8 +1,8 @@
 import { FunctionComponent, h, VNode } from 'preact';
-import range from 'tui-code-snippet/array/range';
 
 import { TimeUnit } from '@src/model';
 import { first, last } from '@src/util/array';
+import { range } from '@src/util/utils';
 import TZDate from '@src/time/date';
 import { isBackgroundEvent } from '@src/model/schedule';
 import { CreationGuideInfo } from '@src/components/timegrid';
