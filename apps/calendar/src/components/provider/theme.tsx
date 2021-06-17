@@ -2,16 +2,17 @@ import { h, createContext, FunctionComponent } from 'preact';
 import Theme from '@src/theme';
 import { useContext } from 'preact/hooks';
 
-export const ThemeContext = createContext<Theme | null>(null);
+// eslint-disable-next-line no-undefined
+export const ThemeContext = createContext<Theme | undefined>(undefined);
 
-export const useTheme = () => {
+export const useTheme = (): Theme => {
   const ctx = useContext(ThemeContext);
 
   if (typeof ctx === 'undefined') {
-    throw new Error('ThemeProvider is not found');
+    throw new Error('Theme is not found');
   }
 
-  return ctx;
+  return ctx as Theme;
 };
 
 export const ThemeProvider: FunctionComponent<{ theme: Theme }> = ({ theme, children }) => (

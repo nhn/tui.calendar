@@ -19,6 +19,7 @@ import { toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { PopupType } from '@src/modules/layerPopup';
 import { GridGuideInfo } from '@t/components/daygrid/creationGuide';
 import { GridGuideCreationInfo } from '@t/components/daygrid/gridWithMouse';
+import { useTheme } from '@src/components/provider/theme';
 
 const TOTAL_PERCENT_HEIGHT = 100;
 
@@ -152,9 +153,8 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
   const rowHeight =
     TOTAL_PERCENT_HEIGHT / Math.max(visibleWeeksCount === 0 ? 6 : visibleWeeksCount, 1);
 
-  const {
-    state: { dataStore, theme },
-  } = useStore(['dataStore', 'theme']);
+  const { state: dataStore } = useStore('dataStore');
+  const theme = useTheme();
 
   if (!theme || !dataStore) {
     return null;

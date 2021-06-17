@@ -1,20 +1,18 @@
 import { h, FunctionComponent } from 'preact';
 
-import { useStore } from '@src/components/hooks/store';
 import { cls } from '@src/util/cssHelper';
 import { SeeMorePopupParam } from '@t/store';
 import SeeMoreHeader from '@src/components/popup/seeMoreHeader';
 import GridEvent from '@src/components/events/gridEvent';
 import { convertPxToNum } from '@src/util/units';
+import { useTheme } from '@src/components/provider/theme';
 
 const SeeMorePopup: FunctionComponent<SeeMorePopupParam> = (props) => {
   const { date, events = [] } = props;
 
   const {
-    state: {
-      month: { moreView, moreViewTitle, moreViewList, schedule },
-    },
-  } = useStore('theme');
+    month: { moreView, moreViewTitle, moreViewList, schedule },
+  } = useTheme();
   const headerHeight =
     convertPxToNum(moreViewTitle.height) + convertPxToNum(moreViewTitle.marginBottom);
   const moreListStyle = {

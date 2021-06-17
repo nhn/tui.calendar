@@ -28,7 +28,6 @@ import Provider from '@src/components/provider';
 import Store from '@src/store';
 import {
   template as templateModule,
-  theme as themeModule,
   options as OptionsModule,
   layerPopup,
   dataStore,
@@ -108,7 +107,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
 
     this.store = new Store({
       initStoreData: { options: this._options },
-      modules: [OptionsModule, templateModule, themeModule, dataStore, layerPopup, grid],
+      modules: [OptionsModule, templateModule, dataStore, layerPopup, grid],
     });
   }
 

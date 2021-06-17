@@ -14,6 +14,7 @@ import { getMousePositionData } from '@src/util/monthViewHelper';
 
 import { OptionData } from '@t/store';
 import { TemplateMonthDayName } from '@src/model';
+import { useTheme } from '@src/components/provider/theme';
 
 const nullFn = () => null;
 
@@ -74,8 +75,8 @@ function usePanelContainer(container: Ref<HTMLDivElement>) {
 const Month: FunctionComponent = () => {
   const container = useRef<HTMLDivElement>(null);
 
-  const { state } = useStore(['theme', 'options']);
-  const { theme, options } = state;
+  const { state: options } = useStore('options');
+  const theme = useTheme();
 
   const dayNameHeight = getDayNameHeight(theme?.month.dayname.height);
   const gridPanelHeight = useContainerHeight(container, dayNameHeight);

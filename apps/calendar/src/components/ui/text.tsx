@@ -32,11 +32,12 @@ export class Text extends ContextComponent<Props, State> {
   }
 
   render(props: Props, state: State, context: AppContext) {
-    const { theme } = context;
+    // const { theme } = context;
     const { count } = state;
 
     return (
-      <span style={{ color: theme.getStyle('common.holiday.color') }} onClick={this.onClick}>
+      // @TODO: use theme value for font color - theme.common.holiday.color
+      <span style={{ color: '#fff' }} onClick={this.onClick}>
         {props.children}
         :&nbsp;{count}
       </span>

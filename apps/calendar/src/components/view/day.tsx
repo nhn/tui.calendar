@@ -11,13 +11,15 @@ import { getDayGridEvents } from '@src/util/gridHelper';
 import { toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { TimeGrid } from '@src/components/timegrid/timegrid';
 import { ColumnInfo } from '@src/components/timegrid/columns';
+import { useTheme } from '@src/components/provider/theme';
 
 const dayNameHeight = 42;
 
 const Day: FunctionComponent = () => {
   const {
-    state: { template, theme, options, dataStore, grid },
+    state: { template, options, dataStore, grid },
   } = useStore();
+  const theme = useTheme();
 
   if (!template || !theme || !options || !dataStore || !grid) {
     return null;
