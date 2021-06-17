@@ -66,6 +66,7 @@ function getCells(renderDate: TZDate, { startDayOfWeek = 0, workweek }: WeekOpti
 const dayNameHeight = 42;
 
 const Week: FunctionComponent = () => {
+  const { panel, containerRefCallback } = usePanel(cls('.panel-allday'));
   const {
     state: { template, theme, options, dataStore, grid },
   } = useStore();
@@ -74,7 +75,6 @@ const Week: FunctionComponent = () => {
     return null;
   }
 
-  const { panel, containerRefCallback } = usePanel(cls('.panel-allday'));
   const { narrowWeekend, startDayOfWeek, workweek } = options.week;
   // @TODO: 이번주 기준으로 계산(prev, next 사용 시 날짜 계산 필요)
   const renderWeekDate = new TZDate();

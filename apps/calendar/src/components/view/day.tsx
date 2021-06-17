@@ -40,6 +40,7 @@ function getDayNames(options: OptionData) {
 const dayNameHeight = 42;
 
 const Day: FunctionComponent = () => {
+  const { panel, containerRefCallback } = usePanel(cls('.panel-allday'));
   const {
     state: { template, theme, options, dataStore, grid },
   } = useStore();
@@ -48,7 +49,6 @@ const Day: FunctionComponent = () => {
     return null;
   }
 
-  const { panel, containerRefCallback } = usePanel(cls('.panel-allday'));
   const dayNames = getDayNames(options);
   const { narrowWeekend, startDayOfWeek, workweek } = options.week;
   const cells = [new TZDate()]; // @TODO: 오늘 기준으로 계산(prev, next 사용 시 날짜 계산 필요)
