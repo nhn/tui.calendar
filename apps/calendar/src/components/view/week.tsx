@@ -14,7 +14,7 @@ import { DayGridEvents } from '@src/components/panelgrid/dayGridEvents';
 import { ColumnInfo } from '@src/components/timegrid/columns';
 import { range } from '@src/util/utils';
 
-import type { Cells } from '@t/panel';
+import type { Cells, DayGridEventType } from '@t/panel';
 
 function getCells(renderDate: TZDate, { startDayOfWeek = 0, workweek }: WeekOption): Cells {
   const renderDay = renderDate.getDay();
@@ -31,7 +31,7 @@ function getCells(renderDate: TZDate, { startDayOfWeek = 0, workweek }: WeekOpti
   return cells;
 }
 
-const dayNameHeight = 42;
+const DAY_NAME_HEIGHT = 42;
 
 const Week: FunctionComponent = () => {
   const {
@@ -47,20 +47,30 @@ const Week: FunctionComponent = () => {
   const renderWeekDate = new TZDate();
   const cells = getCells(renderWeekDate, options.week);
   const dayNames = getDayNames(cells);
-  const { milestone, task, allday, time } = getDayGridEvents(cells, dataStore, narrowWeekend);
+  const dayGridEvents = getDayGridEvents(cells, dataStore, narrowWeekend);
   const columnInfoList = cells.map(
     (cell) =>
       ({ start: toStartOfDay(cell), end: toEndOfDay(cell), unit: 'minute', slot: 30 } as ColumnInfo)
   );
-  const {
-    milestone: { height: milestoneHeight },
-    task: { height: taskHeight },
-    allday: { height: alldayHeight },
-  } = grid;
+  const allDayPanels = Object.entries(grid).map(([key, value]) => {
+    const panelType = key as DayGridEventType;
+
+    return (
+      <Panel key={panelType} name={panelType} resizable>
+        <DayGridEvents
+          events={dayGridEvents[panelType]}
+          cells={cells}
+          type={panelType}
+          height={value.height}
+          narrowWeekend={narrowWeekend}
+        />
+      </Panel>
+    );
+  });
 
   return (
     <Layout>
-      <Panel name="week-daynames" height={dayNameHeight}>
+      <Panel name="week-daynames" height={DAY_NAME_HEIGHT}>
         <DayNames
           dayNames={dayNames}
           marginLeft={120}
@@ -68,35 +78,9 @@ const Week: FunctionComponent = () => {
           options={options.week}
         />
       </Panel>
-      <Panel name="milestone" resizable>
-        <DayGridEvents
-          events={milestone}
-          cells={cells}
-          type="milestone"
-          height={milestoneHeight}
-          narrowWeekend={narrowWeekend}
-        />
-      </Panel>
-      <Panel name="task" resizable>
-        <DayGridEvents
-          events={task}
-          cells={cells}
-          type="task"
-          height={taskHeight}
-          narrowWeekend={narrowWeekend}
-        />
-      </Panel>
-      <Panel name="allday" resizable>
-        <DayGridEvents
-          events={allday}
-          cells={cells}
-          type="allday"
-          height={alldayHeight}
-          narrowWeekend={narrowWeekend}
-        />
-      </Panel>
+      {allDayPanels}
       <Panel name="time" autoSize={1}>
-        <TimeGrid events={time} columnInfoList={columnInfoList} />
+        <TimeGrid events={dayGridEvents.time} columnInfoList={columnInfoList} />
       </Panel>
     </Layout>
   );
