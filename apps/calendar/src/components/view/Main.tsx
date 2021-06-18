@@ -21,14 +21,14 @@ const Main: FunctionComponent<Props> = ({ initialView, components, store }) => {
   const theme = new Theme();
 
   return (
-    <RouterContext.Provider value={router}>
-      <ToolbarContainer />
-      <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
+      <RouterContext.Provider value={router}>
+        <ToolbarContainer />
         <StoreProvider store={store}>
           <ViewContainer />
         </StoreProvider>
-      </ThemeProvider>
-    </RouterContext.Provider>
+      </RouterContext.Provider>
+    </ThemeProvider>
   );
 };
 
