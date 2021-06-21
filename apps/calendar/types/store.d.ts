@@ -149,8 +149,6 @@ interface DetailPopupParam extends BasePopupParam {
 }
 
 type PopupRect = {
-  width: number;
-  height: number;
   top?: number | string;
   bottom?: number | string;
   left?: number | string;
@@ -161,6 +159,6 @@ interface PanelState {
   height: number;
 }
 
-interface LayoutState {
-  [key: string]: PanelState;
-}
+type LayoutState<PanelTypes extends string> = {
+  [key in PanelTypes]: PanelState;
+};

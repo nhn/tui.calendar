@@ -10,12 +10,25 @@ import {
   toStartOfDay,
   withinRangeDate,
 } from '@src/time/datetime';
-import { Cells, Panel } from '@t/panel';
 import { findIndex, isNil } from '@src/util/utils';
-import { DayGridEventMatrix, EventModelMap, Matrix3d, TimeGridEventMatrix } from '@t/events';
+
+import type { Cells, Panel } from '@t/panel';
+import type { DayGridEventMatrix, EventModelMap, Matrix3d, TimeGridEventMatrix } from '@t/events';
+import type { LayoutState } from '@t/store';
 
 export const EVENT_HEIGHT = 22;
 export const TOTAL_WIDTH = 100;
+
+export function getPanelHeight(grid: LayoutState) {
+  const {
+    layout: { height: layoutHeight },
+    milestone: { height: milestoneHeight },
+    task: { height: taskHeight },
+    allday: { height: alldayHeight },
+  } = grid;
+
+  return { layoutHeight, milestoneHeight, taskHeight, alldayHeight };
+}
 
 function forEachMatrix3d<T>(matrices: Matrix3d<T>, iteratee: (target: T, index?: number) => void) {
   matrices.forEach((matrix) => {

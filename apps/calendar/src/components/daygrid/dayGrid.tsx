@@ -5,7 +5,7 @@ import { useStore } from '@src/components/hooks/store';
 import Grid from '@src/components/daygrid/grid';
 import GridEvents from '@src/components/daygrid/gridEvents';
 import GridWithMouse from '@src/components/daygrid/gridWithMouse';
-import { renderCreationGuide } from '@src/components/daygrid/creationGuide';
+import { CreationGuide } from '@src/components/daygrid/creationGuide';
 import { toPercent } from '@src/util/units';
 import Schedule from '@src/model/schedule';
 import TZDate from '@src/time/date';
@@ -14,7 +14,6 @@ import { cls } from '@src/util/cssHelper';
 import { getRenderedEventViewModels } from '@src/util/gridHelper';
 import { toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { useCreationGuide } from '@src/components/hooks/creationGuide';
-import { nullFn } from '@src/util';
 
 import { CalendarMonthOption } from '@t/store';
 import { GridGuideInfo } from '@t/components/daygrid/creationGuide';
@@ -26,7 +25,7 @@ interface DayGridProps {
   calendar: TZDate[][];
   appContainer: { current: HTMLDivElement };
   events?: Schedule[];
-  useCreationPopup?: boolean;
+  shouldRenderDefaultPopup?: boolean;
   getMousePositionData?: (e: MouseEvent) => MousePositionData | null;
 }
 
@@ -60,8 +59,8 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
     options,
     calendar = [],
     appContainer,
-    useCreationPopup = false,
-    getMousePositionData = nullFn,
+    shouldRenderDefaultPopup = false,
+    getMousePositionData = () => null,
   } = props;
   const { visibleWeeksCount, workweek, startDayOfWeek, narrowWeekend } = options;
 
@@ -73,7 +72,7 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
     onGuideChange,
     onGuideEnd,
     onGuideCancel,
-  } = useCreationGuide(useCreationPopup);
+  } = useCreationGuide(shouldRenderDefaultPopup);
 
   const rowHeight =
     TOTAL_PERCENT_HEIGHT / Math.max(visibleWeeksCount === 0 ? 6 : visibleWeeksCount, 1);
@@ -137,7 +136,11 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
                 className={cls('weekday-schedules')}
                 headerHeight={headerHeight}
               />
-              {creationGuide ? renderCreationGuide(creationGuide, week, narrowWeekend) : null}
+              <CreationGuide
+                creationGuide={creationGuide}
+                cells={week}
+                narrowWeekend={narrowWeekend}
+              />
             </div>
           </div>
         );

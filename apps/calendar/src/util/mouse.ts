@@ -1,10 +1,10 @@
 import { findIndex } from '@src/util/utils';
 
 export type ContainerPosition = {
-  containerLeft: number;
-  containerTop: number;
-  containerClientLeft: number;
-  containerClientTop: number;
+  left: number;
+  top: number;
+  clientLeft: number;
+  clientTop: number;
 };
 
 export function getX(grids: GridInfo[], left: number) {
@@ -14,13 +14,8 @@ export function getX(grids: GridInfo[], left: number) {
 }
 
 export function getMousePosition(
-  position: MouseEvent,
-  { containerLeft, containerTop, containerClientLeft, containerClientTop }: ContainerPosition
+  { clientX, clientY }: MouseEvent,
+  { left, top, clientLeft, clientTop }: ContainerPosition
 ) {
-  const { clientX, clientY } = position;
-
-  return [
-    clientX - containerLeft - containerClientLeft,
-    clientY - containerTop - containerClientTop,
-  ];
+  return [clientX - left - clientLeft, clientY - top - clientTop];
 }

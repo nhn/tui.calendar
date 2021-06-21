@@ -1,9 +1,10 @@
 import type { LayoutState } from '@t/store';
 
-const initialLayout: LayoutState = {
-  layout: {
-    height: 500,
-  },
+type PanelType = 'milestone' | 'task' | 'allday';
+
+type GridLayoutState = LayoutState<PanelType>;
+
+const initialLayout: GridLayoutState = {
   milestone: {
     height: 72,
   },
@@ -19,10 +20,10 @@ const grid = {
   name: 'grid',
   state: initialLayout,
   actions: {
-    updateLayoutHeight(state: LayoutState, { height }: { height: number }) {
-      return { ...state, layout: { ...state.layout, height } };
-    },
-    updatePanelHeight(state: LayoutState, { type, height }: { type: string; height: number }) {
+    updatePanelHeight(
+      state: GridLayoutState,
+      { type, height }: { type: PanelType; height: number }
+    ) {
       return {
         ...state,
         [type]: {

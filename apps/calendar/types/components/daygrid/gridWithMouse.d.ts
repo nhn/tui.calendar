@@ -1,8 +1,10 @@
 import TZDate from '@src/time/date';
 
-interface GridGuideCreationInfo {
+interface GridCreationGuide {
   start: TZDate;
   end: TZDate;
+  x: number;
+  y: number;
   rowIndex: number;
   columnIndex: number;
 }

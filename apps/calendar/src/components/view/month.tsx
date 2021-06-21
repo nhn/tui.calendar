@@ -10,10 +10,9 @@ import { getSize } from '@src/util/dom';
 import { getGridLeftAndWidth, getMonthCalendar, isWeekend } from '@src/time/datetime';
 import { capitalizeDayName } from '@src/util/dayName';
 import { isNumber } from '@src/util/utils';
-import { getMousePositionData } from '@src/util/monthViewHelper';
+import { createMousePositionDataGrabber } from '@src/util/monthViewHelper';
 import { TemplateMonthDayName } from '@src/model';
 import { usePanelContainer } from '@src/components/hooks/panelContainer';
-import { nullFn } from '@src/util';
 
 import { OptionData } from '@t/store';
 
@@ -75,8 +74,8 @@ const Month: FunctionComponent = () => {
   const grids = getGridLeftAndWidth(dayNames.length, narrowWeekend, startDayOfWeek, workweek);
 
   const getMouseDataOnMonth = panelContainer
-    ? getMousePositionData(calendar, grids, panelContainer)
-    : nullFn;
+    ? createMousePositionDataGrabber(calendar, grids, panelContainer)
+    : () => null;
 
   return (
     // @TODO: change to layout component
@@ -94,7 +93,7 @@ const Month: FunctionComponent = () => {
           options={monthOptions}
           calendar={calendar}
           appContainer={containerRef}
-          useCreationPopup={options.useCreationPopup}
+          shouldRenderDefaultPopup={options.useCreationPopup}
           getMousePositionData={getMouseDataOnMonth}
         />
       </Panel>

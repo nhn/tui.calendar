@@ -7,7 +7,7 @@ import { TemplateWeekDay, WeekOption } from '@src/model';
 import { capitalizeDayName, getDayName } from '@src/util/dayName';
 import TZDate from '@src/time/date';
 import { Layout } from '@src/components/layout';
-import { getDayGridEvents } from '@src/util/gridHelper';
+import { getDayGridEvents, getPanelHeight } from '@src/util/gridHelper';
 import {
   addDate,
   getGridLeftAndWidth,
@@ -22,8 +22,7 @@ import { ColumnInfo } from '@src/components/timegrid/columns';
 import { range } from '@src/util/utils';
 import { usePanel } from '@src/components/hooks/panelContainer';
 import { cls } from '@src/util/cssHelper';
-import { getMousePositionData } from '@src/util/weekViewHelper';
-import { nullFn } from '@src/util';
+import { createMousePositionDataGrabber } from '@src/util/weekViewHelper';
 
 import type { Cells } from '@t/panel';
 
@@ -91,13 +90,8 @@ const Week: FunctionComponent = () => {
   });
 
   const grids = getGridLeftAndWidth(cells.length, narrowWeekend, startDayOfWeek, workweek);
-  const getMouseDataOnWeek = panel ? getMousePositionData(cells, grids, panel) : nullFn;
-  const {
-    layout: { height: layoutHeight },
-    milestone: { height: milestoneHeight },
-    task: { height: taskHeight },
-    allday: { height: alldayHeight },
-  } = grid;
+  const getMouseDataOnWeek = panel ? createMousePositionDataGrabber(cells, grids, panel) : () => null;
+  const { layoutHeight, milestoneHeight, taskHeight, alldayHeight } = getPanelHeight(grid);
   const timePanelHeight = layoutHeight - milestoneHeight - taskHeight - alldayHeight;
 
   return (

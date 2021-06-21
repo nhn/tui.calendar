@@ -11,13 +11,10 @@ import { DEFAULT_PANEL_HEIGHT } from '@src/controller/panel';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { useCreationGuide } from '@src/components/hooks/creationGuide';
 import GridWithMouse from '@src/components/daygrid/gridWithMouse';
-import { nullFn } from '@src/util';
-import { getLeftAndWidth } from '@src/util/gridHelper';
-import CreationGuide from '@src/components/daygrid/creationGuide';
+import { CreationGuide } from '@src/components/daygrid/creationGuide';
 
 import type { Cells, DayGridEventType } from '@t/panel';
 import type { GridGuideInfo } from '@t/components/daygrid/creationGuide';
-import type { GridGuideCreationInfo } from '@t/components/daygrid/gridWithMouse';
 
 const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
   const now = new TZDate();
@@ -34,7 +31,7 @@ interface Props {
   height?: number;
   narrowWeekend: boolean;
   getMousePositionData?: (e: MouseEvent) => MousePositionData | null;
-  useCreationPopup?: boolean;
+  shouldRenderDefaultPopup?: boolean;
 }
 
 function getGridInfoList(cells: Cells): GridGuideInfo[][] {
@@ -48,17 +45,6 @@ function getGridInfoList(cells: Cells): GridGuideInfo[][] {
   ];
 }
 
-function renderCreationGuide(
-  creationGuide: GridGuideCreationInfo,
-  cells: Cells,
-  narrowWeekend: boolean
-) {
-  const { start, end } = creationGuide;
-  const { left, width } = getLeftAndWidth(start, end, cells, narrowWeekend);
-
-  return width > 0 ? <CreationGuide {...creationGuide} left={left} width={width} /> : null;
-}
-
 export const DayGridEvents: FunctionComponent<Props> = ({
   type = 'milestone',
   events,
@@ -67,8 +53,8 @@ export const DayGridEvents: FunctionComponent<Props> = ({
   timezonesCount = 1,
   height = DEFAULT_PANEL_HEIGHT,
   narrowWeekend,
-  useCreationPopup = false,
-  getMousePositionData = nullFn,
+  shouldRenderDefaultPopup = false,
+  getMousePositionData = () => null,
 }) => {
   const columnWidth = timesWidth * timezonesCount;
 
@@ -78,7 +64,7 @@ export const DayGridEvents: FunctionComponent<Props> = ({
     onGuideChange,
     onGuideEnd,
     onGuideCancel,
-  } = useCreationGuide(useCreationPopup);
+  } = useCreationGuide(shouldRenderDefaultPopup);
   const gridInfoList = getGridInfoList(cells);
 
   return (
@@ -109,7 +95,11 @@ export const DayGridEvents: FunctionComponent<Props> = ({
             className={cls(`panel-${type}-events`)}
             headerHeight={0}
           />
-          {creationGuide ? renderCreationGuide(creationGuide, cells, narrowWeekend) : null}
+          <CreationGuide
+            creationGuide={creationGuide}
+            cells={cells}
+            narrowWeekend={narrowWeekend}
+          />
         </div>
       </GridWithMouse>
     </Fragment>

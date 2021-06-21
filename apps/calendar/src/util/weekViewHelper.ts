@@ -3,33 +3,37 @@ import { getMousePosition, getX } from '@src/util/mouse';
 
 import { Cells } from '@t/panel';
 
-export function getMousePositionData(
+export function createMousePositionDataGrabber(
   cells: Cells,
   grids: GridInfo[],
   container: HTMLElement
 ): (mouseEvent: MouseEvent) => MousePositionData | null {
-  return function getGridPosData(mouseEvent: MouseEvent) {
+  return function getGridPositionData(mouseEvent: MouseEvent) {
     const { left: containerLeft, top: containerTop, width } = container.getBoundingClientRect();
     const [left] = getMousePosition(mouseEvent, {
-      containerLeft,
-      containerTop,
-      containerClientLeft: container.clientLeft,
-      containerClientTop: container.clientTop,
+      left: containerLeft,
+      top: containerTop,
+      clientLeft: container.clientLeft,
+      clientTop: container.clientTop,
     });
-    let x = getX(grids, ratio(width, 100, left));
-    const y = 0;
+    let gridX = getX(grids, ratio(width, 100, left));
+    const gridY = 0;
 
-    x = limit(x, [0], [cells.length - 1]);
+    gridX = limit(gridX, [0], [cells.length - 1]);
 
-    const date = cells[x];
+    const date = cells[gridX];
 
     if (!date) {
       return null;
     }
 
+    const { clientX, clientY } = mouseEvent;
+
     return {
-      x,
-      y,
+      gridX,
+      gridY,
+      x: clientX,
+      y: clientY,
       triggerEvent: mouseEvent.type,
     };
   };

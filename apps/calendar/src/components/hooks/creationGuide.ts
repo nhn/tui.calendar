@@ -3,21 +3,19 @@ import { useState } from 'preact/hooks';
 import { useActions } from '@src/components/hooks/store';
 import { PopupType } from '@src/modules/layerPopup';
 
-import { GridGuideCreationInfo } from '@t/components/daygrid/gridWithMouse';
+import { GridCreationGuide } from '@t/components/daygrid/gridWithMouse';
 
-export type CreationGuide = GridGuideCreationInfo | null;
-
-export function useCreationGuide(useCreationPopup = false) {
-  const [creationGuide, setCreationGuide] = useState<CreationGuide>(null);
-  const [popupFlag, setPopupFlag] = useState(false);
+export function useCreationGuide(shouldRenderDefaultPopup = false) {
+  const [creationGuide, setCreationGuide] = useState<GridCreationGuide | null>(null);
+  const [isOpenedPopup, setOpenedPopup] = useState(false);
 
   const { show, hide } = useActions('layerPopup');
 
-  const onOpenCreationPopup = (guide: GridGuideCreationInfo) => {
-    if (useCreationPopup) {
-      const { start, end } = guide;
+  const onOpenCreationPopup = (guide: GridCreationGuide) => {
+    if (shouldRenderDefaultPopup) {
+      const { start, end, x, y } = guide;
 
-      // @TODO: popupRect 계산 필요
+      // @TODO: need to calculate accurate coord of popupRect
       show({
         type: PopupType.creation,
         param: {
@@ -25,42 +23,39 @@ export function useCreationGuide(useCreationPopup = false) {
           end,
           isAllDay: true,
           popupRect: {
-            width: 474,
-            height: 272,
-            left: 102.695,
-            top: 257,
+            left: x,
+            top: y,
           },
           close: () => {
-            onGuideCancel();
-            setPopupFlag(false);
+            clearCreationGuide();
+            setOpenedPopup(false);
           },
         },
       });
 
-      if (!popupFlag) {
-        setPopupFlag(true);
+      if (!isOpenedPopup) {
+        setOpenedPopup(true);
       }
     }
   };
 
-  const onGuideStart = (guide: CreationGuide) => setCreationGuide(guide);
-  const onGuideEnd = (guide: CreationGuide) => {
+  const changeCreationGuide = (guide: GridCreationGuide | null) => setCreationGuide(guide);
+  const onGuideEnd = (guide: GridCreationGuide | null) => {
     setCreationGuide(guide);
 
     if (guide) {
       onOpenCreationPopup(guide);
-    } else if (!guide && popupFlag) {
+    } else if (isOpenedPopup) {
       hide();
     }
   };
-  const onGuideChange = (guide: GridGuideCreationInfo) => setCreationGuide(guide);
-  const onGuideCancel = () => setCreationGuide(null);
+  const clearCreationGuide = () => setCreationGuide(null);
 
   return {
     creationGuide,
-    onGuideStart,
+    onGuideStart: changeCreationGuide,
     onGuideEnd,
-    onGuideChange,
-    onGuideCancel,
+    onGuideChange: changeCreationGuide,
+    onGuideCancel: clearCreationGuide,
   };
 }

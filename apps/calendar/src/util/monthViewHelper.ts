@@ -3,14 +3,14 @@ import { getMousePosition, getX } from '@src/util/mouse';
 
 import type { Cells } from '@t/panel';
 
-export function getMousePositionData(
+export function createMousePositionDataGrabber(
   calendar: Cells[],
   grids: GridInfo[],
   container: HTMLElement
 ): (mouseEvent: MouseEvent) => MousePositionData | null {
   const weekCount = calendar.length;
 
-  return function getGridPosData(mouseEvent: MouseEvent) {
+  return function getGridPositionData(mouseEvent: MouseEvent) {
     const {
       left: containerLeft,
       top: containerTop,
@@ -18,33 +18,37 @@ export function getMousePositionData(
       height,
     } = container.getBoundingClientRect();
     const [left, top] = getMousePosition(mouseEvent, {
-      containerLeft,
-      containerTop,
-      containerClientLeft: container.clientLeft,
-      containerClientTop: container.clientTop,
+      left: containerLeft,
+      top: containerTop,
+      clientLeft: container.clientLeft,
+      clientTop: container.clientTop,
     });
-    let x = getX(grids, ratio(width, 100, left));
-    let y = Math.floor(ratio(height, weekCount, top));
+    let gridX = getX(grids, ratio(width, 100, left));
+    let gridY = Math.floor(ratio(height, weekCount, top));
 
-    y = limit(y, [0], [calendar.length - 1]);
+    gridY = limit(gridY, [0], [calendar.length - 1]);
 
-    const dateRange = calendar[y];
+    const dateRange = calendar[gridY];
 
     if (!dateRange) {
       return null;
     }
 
-    x = limit(x, [0], [dateRange.length - 1]);
+    gridX = limit(gridX, [0], [dateRange.length - 1]);
 
-    const date = dateRange[x];
+    const date = dateRange[gridX];
 
     if (!date) {
       return null;
     }
 
+    const { clientX, clientY } = mouseEvent;
+
     return {
-      x,
-      y,
+      gridX,
+      gridY,
+      x: clientX,
+      y: clientY,
       triggerEvent: mouseEvent.type,
     };
   };

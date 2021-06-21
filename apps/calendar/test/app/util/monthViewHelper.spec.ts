@@ -1,6 +1,6 @@
 import TZDate from '@src/time/date';
 import { getGridLeftAndWidth } from '@src/time/datetime';
-import { getMousePositionData } from '@src/util/monthViewHelper';
+import { createMousePositionDataGrabber } from '@src/util/monthViewHelper';
 
 describe('monthView Helper', function () {
   let container: HTMLElement;
@@ -48,7 +48,7 @@ describe('monthView Helper', function () {
     );
     container.getBoundingClientRect = getBoundingClientRectSpy;
 
-    const func = getMousePositionData(calendar, grids, container);
+    const func = createMousePositionDataGrabber(calendar, grids, container);
 
     let mockMouseEvent = {
       clientX: 9,
