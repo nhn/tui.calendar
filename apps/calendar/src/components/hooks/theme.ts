@@ -1,14 +1,14 @@
 import { createContext } from 'preact';
 import Theme from '@src/theme';
 import { useContext } from 'preact/hooks';
+import { isNil } from '@src/util/utils';
 
-// eslint-disable-next-line no-undefined
-export const ThemeContext = createContext<Theme | undefined>(undefined);
+export const ThemeContext = createContext<Theme | null>(null);
 
 export const useTheme = (): Theme => {
   const ctx = useContext(ThemeContext);
 
-  if (typeof ctx === 'undefined') {
+  if (isNil(ctx)) {
     throw new Error('Theme is not found');
   }
 
