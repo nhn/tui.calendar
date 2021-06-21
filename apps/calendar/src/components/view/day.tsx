@@ -48,21 +48,18 @@ const Day: FunctionComponent = () => {
     return null;
   }
 
+  // @TODO: calculate based on today(need to calculate date when prev & next used)
+  const cells = [new TZDate()];
   const dayNames = getDayNames(options);
   const { narrowWeekend, startDayOfWeek, workweek } = options.week;
-  const cells = [new TZDate()]; // @TODO: 오늘 기준으로 계산(prev, next 사용 시 날짜 계산 필요)
   const { milestone, task, allday, time } = getDayGridEvents(cells, dataStore, narrowWeekend);
-  const now = new TZDate();
-  const start = toStartOfDay(now);
-  const end = toEndOfDay(start);
-  const columnInfoList: ColumnInfo[] = cells.map(() => {
-    return { start, end, unit: 'minute', slot: 30 } as ColumnInfo;
-  });
-
+  const columnInfoList = cells.map(
+    (cell) =>
+      ({ start: toStartOfDay(cell), end: toEndOfDay(cell), unit: 'minute', slot: 30 } as ColumnInfo)
+  );
   const grids = getGridLeftAndWidth(cells.length, narrowWeekend, startDayOfWeek, workweek);
   const getMouseDataOnWeek = panel ? createMousePositionDataGrabber(cells, grids, panel) : () => null;
   const { layoutHeight, milestoneHeight, taskHeight, alldayHeight } = getPanelHeight(grid);
-  const timePanelHeight = layoutHeight - milestoneHeight - taskHeight - alldayHeight;
 
   return (
     <Layout refCallback={containerRefCallback}>
@@ -97,7 +94,7 @@ const Day: FunctionComponent = () => {
           getMousePositionData={getMouseDataOnWeek}
         />
       </Panel>
-      <Panel name="time" height={grid.layout?.height - grid.milestone?.height}>
+      <Panel name="time" autoSize={1}>
         <TimeGrid events={time} columnInfoList={columnInfoList} />
       </Panel>
     </Layout>

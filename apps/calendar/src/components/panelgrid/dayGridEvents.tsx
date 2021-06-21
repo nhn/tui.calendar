@@ -12,6 +12,8 @@ import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { useCreationGuide } from '@src/components/hooks/creationGuide';
 import GridWithMouse from '@src/components/daygrid/gridWithMouse';
 import { CreationGuide } from '@src/components/daygrid/creationGuide';
+import { useStore } from '@src/components/hooks/store';
+import { convertPxToNum } from '@src/util/units';
 
 import type { Cells, DayGridEventType } from '@t/panel';
 import type { GridGuideInfo } from '@t/components/daygrid/creationGuide';
@@ -56,6 +58,11 @@ export const DayGridEvents: FunctionComponent<Props> = ({
   shouldRenderDefaultPopup = false,
   getMousePositionData = () => null,
 }) => {
+  const {
+    state: {
+      week: { dayGridSchedule },
+    },
+  } = useStore('theme');
   const columnWidth = timesWidth * timezonesCount;
 
   const {
@@ -94,6 +101,7 @@ export const DayGridEvents: FunctionComponent<Props> = ({
             narrowWeekend={narrowWeekend}
             className={cls(`panel-${type}-events`)}
             headerHeight={0}
+            eventTopMargin={convertPxToNum(dayGridSchedule.marginTop)}
           />
           <CreationGuide
             creationGuide={creationGuide}

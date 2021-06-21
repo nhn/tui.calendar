@@ -68,9 +68,7 @@ function getInitialOptions(optionsData: Options = {}): OptionData {
   };
 }
 
-const options = {
+export const options = {
   name: 'options',
   state: (initStoreData: InitStoreData) => getInitialOptions(initStoreData.options),
 };
-
-export default options;
