@@ -3,11 +3,10 @@ import { FunctionComponent, h } from 'preact';
 import { useStore } from '@src/components/hooks/store';
 import Panel from '@src/components/panel';
 import DayNames from '@src/components/daygrid/dayNames';
-import { TemplateWeekDay, WeekOption } from '@src/model';
-import { capitalizeDayName, getDayName } from '@src/util/dayName';
+import { WeekOption } from '@src/model';
 import TZDate from '@src/time/date';
 import { Layout } from '@src/components/layout';
-import { getDayGridEvents, getPanelHeight } from '@src/util/gridHelper';
+import { getDayGridEvents } from '@src/util/gridHelper';
 import {
   addDate,
   getGridLeftAndWidth,
@@ -23,28 +22,9 @@ import { range } from '@src/util/utils';
 import { usePanel } from '@src/components/hooks/panelContainer';
 import { cls } from '@src/util/cssHelper';
 import { createMousePositionDataGrabber } from '@src/util/weekViewHelper';
+import { getDayNames } from '@src/util/dayName';
 
-import type { Cells } from '@t/panel';
-
-function getDayNames(cells: Cells) {
-  const dayNames: TemplateWeekDay[] = [];
-
-  // @TODO: apply template daynames
-  cells.forEach((day) => {
-    const dayIndex = day.getDay();
-    const dayName = capitalizeDayName(getDayName(dayIndex));
-
-    dayNames.push({
-      date: day.getDate(),
-      day: day.getDay(),
-      dayName,
-      isToday: false,
-      renderDate: 'date',
-    });
-  });
-
-  return dayNames;
-}
+import type { Cells, DayGridEventType } from '@t/panel';
 
 function getCells(renderDate: TZDate, { startDayOfWeek = 0, workweek }: WeekOption): Cells {
   const renderDay = renderDate.getDay();
@@ -74,28 +54,39 @@ const Week: FunctionComponent = () => {
     return null;
   }
 
-  const { narrowWeekend, startDayOfWeek, workweek } = options.week;
-  // @TODO: 이번주 기준으로 계산(prev, next 사용 시 날짜 계산 필요)
+  const { narrowWeekend, startDayOfWeek, workweek, hourStart, hourEnd } = options.week;
+  // @TODO: calculate based on today(need to calculate date when prev & next used)
   const renderWeekDate = new TZDate();
   const cells = getCells(renderWeekDate, options.week);
   const dayNames = getDayNames(cells);
-  const { milestone, task, allday, time } = getDayGridEvents(cells, dataStore, narrowWeekend);
-  const columnInfoList: ColumnInfo[] = cells.map((cell) => {
-    return {
-      start: toStartOfDay(cell),
-      end: toEndOfDay(cell),
-      unit: 'minute',
-      slot: 30,
-    } as ColumnInfo;
+  const dayGridEvents = getDayGridEvents(cells, dataStore, { narrowWeekend, hourStart, hourEnd });
+  const columnInfoList = cells.map(
+    (cell) =>
+      ({ start: toStartOfDay(cell), end: toEndOfDay(cell), unit: 'minute', slot: 30 } as ColumnInfo)
+  );
+  const grids = getGridLeftAndWidth(cells.length, narrowWeekend, startDayOfWeek, workweek);
+  const getMouseDataOnWeek = panel
+    ? createMousePositionDataGrabber(cells, grids, panel)
+    : () => null;
+  const allDayPanels = Object.entries(grid).map(([key, value]) => {
+    const panelType = key as DayGridEventType;
+
+    return (
+      <Panel key={panelType} name={panelType} resizable>
+        <DayGridEvents
+          events={dayGridEvents[panelType]}
+          cells={cells}
+          type={panelType}
+          height={value.height}
+          narrowWeekend={narrowWeekend}
+          getMousePositionData={getMouseDataOnWeek}
+        />
+      </Panel>
+    );
   });
 
-  const grids = getGridLeftAndWidth(cells.length, narrowWeekend, startDayOfWeek, workweek);
-  const getMouseDataOnWeek = panel ? createMousePositionDataGrabber(cells, grids, panel) : () => null;
-  const { layoutHeight, milestoneHeight, taskHeight, alldayHeight } = getPanelHeight(grid);
-  const timePanelHeight = layoutHeight - milestoneHeight - taskHeight - alldayHeight;
-
   return (
-    <Layout height={layoutHeight} refCallback={containerRefCallback}>
+    <Layout refCallback={containerRefCallback}>
       <Panel name="week-daynames" height={dayNameHeight}>
         <DayNames
           dayNames={dayNames}
@@ -104,36 +95,9 @@ const Week: FunctionComponent = () => {
           options={options.week}
         />
       </Panel>
-      <Panel name="milestone" resizable>
-        <DayGridEvents
-          events={milestone}
-          cells={cells}
-          type="milestone"
-          height={milestoneHeight}
-          narrowWeekend={narrowWeekend}
-        />
-      </Panel>
-      <Panel name="task" resizable>
-        <DayGridEvents
-          events={task}
-          cells={cells}
-          type="task"
-          height={taskHeight}
-          narrowWeekend={narrowWeekend}
-        />
-      </Panel>
-      <Panel name="allday" resizable>
-        <DayGridEvents
-          events={allday}
-          cells={cells}
-          type="allday"
-          height={alldayHeight}
-          narrowWeekend={narrowWeekend}
-          getMousePositionData={getMouseDataOnWeek}
-        />
-      </Panel>
-      <Panel name="time" height={timePanelHeight}>
-        <TimeGrid events={time} columnInfoList={columnInfoList} />
+      {allDayPanels}
+      <Panel name="time" autoSize={1}>
+        <TimeGrid events={dayGridEvents.time} columnInfoList={columnInfoList} />
       </Panel>
     </Layout>
   );

@@ -57,8 +57,10 @@ describe('monthView Helper', function () {
     } as MouseEvent;
 
     expect(func(mockMouseEvent)).toEqual({
-      x: 0,
-      y: 0,
+      gridX: 0,
+      gridY: 0,
+      x: 9,
+      y: 20,
       triggerEvent: 'click',
     });
 
@@ -69,8 +71,10 @@ describe('monthView Helper', function () {
     } as MouseEvent;
 
     expect(func(mockMouseEvent)).toEqual({
-      x: 5,
-      y: 1,
+      gridX: 5,
+      gridY: 1,
+      x: 55,
+      y: 60,
       triggerEvent: 'click',
     });
   });

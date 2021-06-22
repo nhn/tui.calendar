@@ -1,7 +1,7 @@
 import { MonthOption, WeekOption } from '@src/model';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { theme, template, options, dataStore, grid } from '@src/modules';
-import layerPopup, { PopupType } from '@src/modules/layerPopup';
+import { layerPopup, PopupType } from '@src/modules/layerPopup';
 import Store from '@src/store';
 import TZDate from '@src/time/date';
 import { Options } from './option';
@@ -159,6 +159,6 @@ interface PanelState {
   height: number;
 }
 
-type LayoutState<PanelTypes extends string> = {
-  [key in PanelTypes]: PanelState;
-};
+interface LayoutState {
+  [key: string]: PanelState;
+}

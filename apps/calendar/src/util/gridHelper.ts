@@ -1,6 +1,6 @@
 import { findByDateRange } from '@src/controller/month';
 import { findByDateRange as findByDateRangeForWeek } from '@src/controller/week';
-import { DataStore } from '@src/model';
+import { DataStore, WeekOption } from '@src/model';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import TZDate from '@src/time/date';
 import {
@@ -14,21 +14,9 @@ import { findIndex, isNil } from '@src/util/utils';
 
 import type { Cells, Panel } from '@t/panel';
 import type { DayGridEventMatrix, EventModelMap, Matrix3d, TimeGridEventMatrix } from '@t/events';
-import type { LayoutState } from '@t/store';
 
 export const EVENT_HEIGHT = 22;
 export const TOTAL_WIDTH = 100;
-
-export function getPanelHeight(grid: LayoutState) {
-  const {
-    layout: { height: layoutHeight },
-    milestone: { height: milestoneHeight },
-    task: { height: taskHeight },
-    allday: { height: alldayHeight },
-  } = grid;
-
-  return { layoutHeight, milestoneHeight, taskHeight, alldayHeight };
-}
 
 function forEachMatrix3d<T>(matrices: Matrix3d<T>, iteratee: (target: T, index?: number) => void) {
   matrices.forEach((matrix) => {
@@ -255,7 +243,7 @@ const getTimeGridEventModels = (
 export const getDayGridEvents = (
   cells: Cells,
   dataStore: DataStore,
-  narrowWeekend: boolean
+  { narrowWeekend, hourStart, hourEnd }: WeekOption
 ): EventModelMap => {
   const panels: Panel[] = [
     {
@@ -285,8 +273,8 @@ export const getDayGridEvents = (
     panels,
     andFilters: [],
     options: {
-      hourStart: 0,
-      hourEnd: 24,
+      hourStart,
+      hourEnd,
     },
   });
 
