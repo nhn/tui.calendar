@@ -10,9 +10,8 @@ import { GridCreationGuide } from '@t/components/daygrid/gridWithMouse';
 
 interface Props {
   gridInfoList: GridGuideInfo[][];
-  onGuideStart: (guide: GridCreationGuide | null) => void;
   onGuideEnd: (guide: GridCreationGuide | null) => void;
-  onGuideChange: (guide: GridCreationGuide) => void;
+  onGuideChange: (guide: GridCreationGuide | null) => void;
   onGuideCancel: () => void;
   getMousePositionData: (e: MouseEvent) => MousePositionData | null;
 }
@@ -44,7 +43,6 @@ function getCreationGuideData(
 
 const GridWithMouse: FunctionComponent<Props> = ({
   gridInfoList,
-  onGuideStart,
   onGuideEnd,
   onGuideChange,
   onGuideCancel,
@@ -63,7 +61,7 @@ const GridWithMouse: FunctionComponent<Props> = ({
 
     guideStartData = getCreationGuideData(mousePositionData, gridInfoList);
 
-    if (guideStartData && onGuideChange) {
+    if (guideStartData) {
       onGuideChange(guideStartData);
     }
   };
@@ -103,13 +101,11 @@ const GridWithMouse: FunctionComponent<Props> = ({
     }
 
     guidePrevDragData = guideInfo;
-    if (onGuideChange) {
-      onGuideChange(guideInfo);
-    }
+    onGuideChange(guideInfo);
   };
 
   const onDragEnd = () => {
-    if (guidePrevDragData && onGuideEnd) {
+    if (guidePrevDragData) {
       onGuideEnd(guidePrevDragData);
     }
   };
@@ -120,21 +116,11 @@ const GridWithMouse: FunctionComponent<Props> = ({
       ? getCreationGuideData(mousePositionData, gridInfoList)
       : null;
 
-    if (onGuideStart) {
-      onGuideStart(guideData);
-    }
-
-    if (onGuideEnd) {
-      onGuideEnd(guideData);
-    }
+    onGuideChange(guideData);
+    onGuideEnd(guideData);
   };
 
-  const onCancel = () => {
-    if (onGuideCancel) {
-      onGuideCancel();
-    }
-  };
-
+  const onCancel = () => onGuideCancel();
   const { onMouseDown } = useDrag({
     onDragStart,
     onDrag,

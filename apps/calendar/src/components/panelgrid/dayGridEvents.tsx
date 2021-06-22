@@ -73,13 +73,9 @@ export const DayGridEvents: FunctionComponent<Props> = ({
       ? createMousePositionDataGrabber(cells, grids, panelContainer)
       : () => null;
 
-  const {
-    creationGuide,
-    onGuideStart,
-    onGuideChange,
-    onGuideEnd,
-    onGuideCancel,
-  } = useCreationGuide(shouldRenderDefaultPopup);
+  const { creationGuide, onGuideChange, onGuideEnd, onGuideCancel } = useCreationGuide(
+    shouldRenderDefaultPopup
+  );
   const gridInfoList = getGridInfoList(cells);
 
   return (
@@ -87,7 +83,6 @@ export const DayGridEvents: FunctionComponent<Props> = ({
       <PanelTitle width={columnWidth} template={type} model={type} />
       <GridWithMouse
         gridInfoList={gridInfoList}
-        onGuideStart={onGuideStart}
         onGuideEnd={onGuideEnd}
         onGuideChange={onGuideChange}
         onGuideCancel={onGuideCancel}

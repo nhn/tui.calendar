@@ -66,13 +66,9 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
 
   const { ref, height } = useGridHeight();
 
-  const {
-    creationGuide,
-    onGuideStart,
-    onGuideChange,
-    onGuideEnd,
-    onGuideCancel,
-  } = useCreationGuide(shouldRenderDefaultPopup);
+  const { creationGuide, onGuideChange, onGuideEnd, onGuideCancel } = useCreationGuide(
+    shouldRenderDefaultPopup
+  );
 
   const rowHeight =
     TOTAL_PERCENT_HEIGHT / Math.max(visibleWeeksCount === 0 ? 6 : visibleWeeksCount, 1);
@@ -96,7 +92,6 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
 
   return (
     <GridWithMouse
-      onGuideStart={onGuideStart}
       onGuideChange={onGuideChange}
       onGuideEnd={onGuideEnd}
       onGuideCancel={onGuideCancel}

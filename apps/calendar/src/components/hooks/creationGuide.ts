@@ -53,7 +53,6 @@ export function useCreationGuide(shouldRenderDefaultPopup = false) {
 
   return {
     creationGuide,
-    onGuideStart: changeCreationGuide,
     onGuideEnd,
     onGuideChange: changeCreationGuide,
     onGuideCancel: clearCreationGuide,
