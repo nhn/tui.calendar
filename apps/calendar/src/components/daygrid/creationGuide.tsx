@@ -2,21 +2,33 @@ import { h, FunctionComponent } from 'preact';
 
 import { toPercent } from '@src/util/units';
 import { cls } from '@src/util/cssHelper';
+import { getLeftAndWidth } from '@src/util/gridHelper';
 
-interface CreationGuideProps {
-  left: number;
-  width: number;
+import { GridCreationGuide } from '@t/components/daygrid/gridWithMouse';
+import { Cells } from '@t/panel';
+
+interface Props {
+  creationGuide: GridCreationGuide | null;
+  cells: Cells;
+  narrowWeekend: boolean;
 }
 
-const CreationGuide: FunctionComponent<CreationGuideProps> = (props) => {
-  const { left, width } = props;
+export const CreationGuide: FunctionComponent<Props> = ({
+  creationGuide,
+  cells,
+  narrowWeekend,
+}) => {
+  if (!creationGuide) {
+    return null;
+  }
+
+  const { start, end } = creationGuide;
+  const { left, width } = getLeftAndWidth(start, end, cells, narrowWeekend);
   const style = {
     left: toPercent(left),
     width: toPercent(width),
     height: toPercent(100),
   };
 
-  return <div className={cls('guide-creation')} style={style}></div>;
+  return width > 0 ? <div className={cls('daygrid-creation-guide')} style={style} /> : null;
 };
-
-export default CreationGuide;

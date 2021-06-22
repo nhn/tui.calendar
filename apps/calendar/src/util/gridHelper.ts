@@ -1,6 +1,6 @@
 import { findByDateRange } from '@src/controller/month';
 import { findByDateRange as findByDateRangeForWeek } from '@src/controller/week';
-import { DataStore } from '@src/model';
+import { DataStore, WeekOption } from '@src/model';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import TZDate from '@src/time/date';
 import {
@@ -10,9 +10,10 @@ import {
   toStartOfDay,
   withinRangeDate,
 } from '@src/time/datetime';
-import { Cells, Panel } from '@t/panel';
 import { findIndex, isNil } from '@src/util/utils';
-import { DayGridEventMatrix, EventModelMap, Matrix3d, TimeGridEventMatrix } from '@t/events';
+
+import type { Cells, Panel } from '@t/panel';
+import type { DayGridEventMatrix, EventModelMap, Matrix3d, TimeGridEventMatrix } from '@t/events';
 
 export const EVENT_HEIGHT = 22;
 export const TOTAL_WIDTH = 100;
@@ -242,7 +243,7 @@ const getTimeGridEventModels = (
 export const getDayGridEvents = (
   cells: Cells,
   dataStore: DataStore,
-  narrowWeekend: boolean
+  { narrowWeekend, hourStart, hourEnd }: WeekOption
 ): EventModelMap => {
   const panels: Panel[] = [
     {
@@ -272,8 +273,8 @@ export const getDayGridEvents = (
     panels,
     andFilters: [],
     options: {
-      hourStart: 0,
-      hourEnd: 24,
+      hourStart,
+      hourEnd,
     },
   });
 

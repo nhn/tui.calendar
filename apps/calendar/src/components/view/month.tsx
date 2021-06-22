@@ -1,5 +1,5 @@
 import { h, FunctionComponent } from 'preact';
-import { Ref, useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
+import { Ref, useLayoutEffect, useRef, useState } from 'preact/hooks';
 
 import { cls } from '@src/util/cssHelper';
 import DayNames from '@src/components/daygrid/dayNames';
@@ -10,12 +10,11 @@ import { getSize } from '@src/util/dom';
 import { getGridLeftAndWidth, getMonthCalendar, isWeekend } from '@src/time/datetime';
 import { capitalizeDayName } from '@src/util/dayName';
 import { isNumber } from '@src/util/utils';
-import { getMousePositionData } from '@src/util/monthViewHelper';
+import { createMousePositionDataGrabber } from '@src/util/monthViewHelper';
+import { TemplateMonthDayName } from '@src/model';
+import { usePanelContainer } from '@src/components/hooks/panelContainer';
 
 import { OptionData } from '@t/store';
-import { TemplateMonthDayName } from '@src/model';
-
-const nullFn = () => null;
 
 function getDayNames(options: OptionData) {
   const { daynames, workweek } = options.month;
@@ -53,33 +52,15 @@ function useContainerHeight(container: Ref<HTMLDivElement>, dayNameHeight: numbe
   return gridPanelHeight;
 }
 
-function usePanelContainer(container: Ref<HTMLDivElement>) {
-  const [gridPanel, setGridPanel] = useState<HTMLElement | null>(null);
-
-  useEffect(() => {
-    if (container.current) {
-      const panelContainer: HTMLElement | null = container.current.querySelector(
-        `${cls('.panel')}${cls('.month-daygrid')}`
-      );
-
-      if (panelContainer) {
-        setGridPanel(panelContainer);
-      }
-    }
-  }, [container]);
-
-  return gridPanel;
-}
-
 const Month: FunctionComponent = () => {
-  const container = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const { state } = useStore(['theme', 'options']);
   const { theme, options } = state;
 
   const dayNameHeight = getDayNameHeight(theme?.month.dayname.height);
-  const gridPanelHeight = useContainerHeight(container, dayNameHeight);
-  const panelContainer = usePanelContainer(container);
+  const gridPanelHeight = useContainerHeight(containerRef, dayNameHeight);
+  const panelContainer = usePanelContainer(containerRef, cls('.month-daygrid'));
 
   if (!theme || !options) {
     return null;
@@ -93,11 +74,12 @@ const Month: FunctionComponent = () => {
   const grids = getGridLeftAndWidth(dayNames.length, narrowWeekend, startDayOfWeek, workweek);
 
   const getMouseDataOnMonth = panelContainer
-    ? getMousePositionData(calendar, grids, panelContainer)
-    : nullFn;
+    ? createMousePositionDataGrabber(calendar, grids, panelContainer)
+    : () => null;
 
   return (
-    <div className={cls('month')} ref={container}>
+    // @TODO: change to layout component
+    <div className={cls('month')} ref={containerRef}>
       <Panel name="month-daynames" height={dayNameHeight}>
         <DayNames
           templateType="monthDayname"
@@ -110,8 +92,8 @@ const Month: FunctionComponent = () => {
         <DayGrid
           options={monthOptions}
           calendar={calendar}
-          appContainer={container}
-          useCreationPopup={options.useCreationPopup}
+          appContainer={containerRef}
+          shouldRenderDefaultPopup={options.useCreationPopup}
           getMousePositionData={getMouseDataOnMonth}
         />
       </Panel>
