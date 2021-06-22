@@ -21,15 +21,16 @@ function getCells(renderDate: TZDate, { startDayOfWeek = 0, workweek }: WeekOpti
   const now = toStartOfDay(renderDate);
   const nowDay = now.getDay();
   const prevWeekCount = startDayOfWeek - WEEK_DAYS;
-  const cells = range(startDayOfWeek, WEEK_DAYS + startDayOfWeek).map((day) =>
-    addDate(now, day - nowDay + (startDayOfWeek > renderDay ? prevWeekCount : 0))
-  );
 
-  if (workweek) {
-    return cells.filter((date) => !isWeekend(date.getDay()));
-  }
+  return range(startDayOfWeek, WEEK_DAYS + startDayOfWeek).reduce<Cells>((acc, day) => {
+    const date = addDate(now, day - nowDay + (startDayOfWeek > renderDay ? prevWeekCount : 0));
+    if (workweek && isWeekend(date.getDay())) {
+      return acc;
+    }
+    acc.push(date);
 
-  return cells;
+    return acc;
+  }, []);
 }
 
 const dayNameHeight = 42;
