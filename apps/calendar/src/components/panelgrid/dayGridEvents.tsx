@@ -2,7 +2,7 @@ import { Fragment, FunctionComponent, h } from 'preact';
 import range from 'tui-code-snippet/array/range';
 
 import { cls } from '@src/util/cssHelper';
-import { addDate, toEndOfDay, toStartOfDay } from '@src/time/datetime';
+import { addDate, getGridLeftAndWidth, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { PanelGrid } from '@src/components/panelgrid/panelgrid';
 import { PanelTitle } from '@src/components/panelgrid/panelTitle';
 import TZDate from '@src/time/date';
@@ -14,6 +14,9 @@ import GridWithMouse from '@src/components/daygrid/gridWithMouse';
 import { CreationGuide } from '@src/components/daygrid/creationGuide';
 import { useStore } from '@src/components/hooks/store';
 import { convertPxToNum } from '@src/util/units';
+import { WeekOption } from '@src/model';
+import { createMousePositionDataGrabber } from '@src/util/weekViewHelper';
+import { useDOMNode } from '@src/components/hooks/domNode';
 
 import type { Cells, DayGridEventType } from '@t/panel';
 import type { GridGuideInfo } from '@t/components/daygrid/creationGuide';
@@ -31,8 +34,7 @@ interface Props {
   timesWidth?: number;
   timezonesCount?: number;
   height?: number;
-  narrowWeekend: boolean;
-  getMousePositionData?: (e: MouseEvent) => MousePositionData | null;
+  options?: WeekOption;
   shouldRenderDefaultPopup?: boolean;
 }
 
@@ -54,16 +56,22 @@ export const DayGridEvents: FunctionComponent<Props> = ({
   timesWidth = 120,
   timezonesCount = 1,
   height = DEFAULT_PANEL_HEIGHT,
-  narrowWeekend,
+  options = {},
   shouldRenderDefaultPopup = false,
-  getMousePositionData = () => null,
 }) => {
   const {
     state: {
       week: { dayGridSchedule },
     },
   } = useStore('theme');
+  const [panelContainer, setPanelContainerRef] = useDOMNode<HTMLDivElement>();
   const columnWidth = timesWidth * timezonesCount;
+  const { narrowWeekend = false, startDayOfWeek = 0, workweek = false } = options;
+  const grids = getGridLeftAndWidth(cells.length, narrowWeekend, startDayOfWeek, workweek);
+  const getMousePositionData =
+    type === 'allday' && panelContainer
+      ? createMousePositionDataGrabber(cells, grids, panelContainer)
+      : () => null;
 
   const {
     creationGuide,
@@ -85,7 +93,7 @@ export const DayGridEvents: FunctionComponent<Props> = ({
         onGuideCancel={onGuideCancel}
         getMousePositionData={getMousePositionData}
       >
-        <div className={cls(`panel-${type}`)}>
+        <div className={cls('allday-panel')} ref={setPanelContainerRef}>
           <PanelGrid
             name={type}
             cells={cells}

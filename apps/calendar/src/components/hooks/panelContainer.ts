@@ -1,4 +1,4 @@
-import { Ref, useCallback, useEffect, useState } from 'preact/hooks';
+import { Ref, useEffect, useState } from 'preact/hooks';
 
 import { cls } from '@src/util/cssHelper';
 
@@ -19,23 +19,4 @@ export function usePanelContainer(containerRef: Ref<HTMLDivElement>, selector: s
   }, [containerRef, selector]);
 
   return panel;
-}
-
-export function usePanel(selector: string) {
-  const [panel, setPanel] = useState<HTMLElement | null>(null);
-
-  const containerRefCallback = useCallback(
-    (ref: HTMLElement) => {
-      if (ref) {
-        const panelContainer: HTMLElement | null = ref.querySelector(`${selector}`);
-
-        if (panelContainer) {
-          setPanel(panelContainer);
-        }
-      }
-    },
-    [selector]
-  );
-
-  return { panel, containerRefCallback };
 }

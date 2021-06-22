@@ -13,7 +13,7 @@ export function getX(grids: GridInfo[], left: number) {
   );
 }
 
-export function getMousePosition(
+export function getRelativeMousePosition(
   { clientX, clientY }: MouseEvent,
   { left, top, clientLeft, clientTop }: ContainerPosition
 ) {

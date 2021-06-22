@@ -7,21 +7,11 @@ import { WeekOption } from '@src/model';
 import TZDate from '@src/time/date';
 import { Layout } from '@src/components/layout';
 import { getDayGridEvents } from '@src/util/gridHelper';
-import {
-  addDate,
-  getGridLeftAndWidth,
-  isWeekend,
-  toEndOfDay,
-  toStartOfDay,
-  WEEK_DAYS,
-} from '@src/time/datetime';
+import { addDate, isWeekend, toEndOfDay, toStartOfDay, WEEK_DAYS } from '@src/time/datetime';
 import { TimeGrid } from '@src/components/timegrid/timegrid';
 import { DayGridEvents } from '@src/components/panelgrid/dayGridEvents';
 import { ColumnInfo } from '@src/components/timegrid/columns';
 import { range } from '@src/util/utils';
-import { usePanel } from '@src/components/hooks/panelContainer';
-import { cls } from '@src/util/cssHelper';
-import { createMousePositionDataGrabber } from '@src/util/weekViewHelper';
 import { getDayNames } from '@src/util/dayName';
 
 import type { Cells, DayGridEventType } from '@t/panel';
@@ -45,7 +35,6 @@ function getCells(renderDate: TZDate, { startDayOfWeek = 0, workweek }: WeekOpti
 const dayNameHeight = 42;
 
 const Week: FunctionComponent = () => {
-  const { panel, containerRefCallback } = usePanel(cls('.panel-allday'));
   const {
     state: { template, theme, options, dataStore, grid },
   } = useStore();
@@ -54,7 +43,7 @@ const Week: FunctionComponent = () => {
     return null;
   }
 
-  const { narrowWeekend, startDayOfWeek, workweek, hourStart, hourEnd } = options.week;
+  const { narrowWeekend, hourStart, hourEnd } = options.week;
   // @TODO: calculate based on today(need to calculate date when prev & next used)
   const renderWeekDate = new TZDate();
   const cells = getCells(renderWeekDate, options.week);
@@ -64,10 +53,6 @@ const Week: FunctionComponent = () => {
     (cell) =>
       ({ start: toStartOfDay(cell), end: toEndOfDay(cell), unit: 'minute', slot: 30 } as ColumnInfo)
   );
-  const grids = getGridLeftAndWidth(cells.length, narrowWeekend, startDayOfWeek, workweek);
-  const getMouseDataOnWeek = panel
-    ? createMousePositionDataGrabber(cells, grids, panel)
-    : () => null;
   const allDayPanels = Object.entries(grid).map(([key, value]) => {
     const panelType = key as DayGridEventType;
 
@@ -78,15 +63,14 @@ const Week: FunctionComponent = () => {
           cells={cells}
           type={panelType}
           height={value.height}
-          narrowWeekend={narrowWeekend}
-          getMousePositionData={getMouseDataOnWeek}
+          options={options.week}
         />
       </Panel>
     );
   });
 
   return (
-    <Layout refCallback={containerRefCallback}>
+    <Layout>
       <Panel name="week-daynames" height={dayNameHeight}>
         <DayNames
           dayNames={dayNames}

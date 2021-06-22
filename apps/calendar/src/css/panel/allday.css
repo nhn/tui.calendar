@@ -14,16 +14,14 @@
   height: 100%;
 }
 
-.panel-milestone,
-.panel-task,
-.panel-allday {
+.allday-panel {
   position: relative;
   height: 100%;
   overflow-y: hidden;
 }
 
 /* @TODO: extract background-color & border to theme */
-.panel-allday .daygrid-creation-guide {
+.allday-panel .daygrid-creation-guide {
   position: absolute;
   right: 10px;
   background-color: rgba(81, 92, 230, 0.05);

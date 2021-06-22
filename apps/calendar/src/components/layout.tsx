@@ -15,14 +15,13 @@ import { DragPositionInfo } from '@src/components/draggable';
 import { getSize } from '@src/util/dom';
 import { PanelElementRectMap, PanelInfo, PanelRect } from '@src/controller/panel';
 import { cls } from '@src/util/cssHelper';
-import { noop } from '@src/util';
 
 interface Props {
   direction?: Direction;
   height?: number;
   width?: number;
   resizeMode?: ResizeMode;
-  refCallback?: (element: HTMLElement) => void;
+  classNames?: string[];
 }
 
 type Child = VNode<any> | string | number;
@@ -37,7 +36,7 @@ export const Layout: FunctionComponent<Props> = ({
   children,
   width,
   height,
-  refCallback = noop,
+  classNames = [],
 }) => {
   const [panels, setPanels] = useState<PanelSize[]>([]);
   const panelElementRectMap: PanelElementRectMap = useMemo(() => {
@@ -47,12 +46,12 @@ export const Layout: FunctionComponent<Props> = ({
   const filteredPanels = filterPanels(toChildArray(children));
 
   const getClassNames = () => {
-    const classNames = [cls('layout')];
+    const layoutClassNames = [cls('layout')];
     if (direction === Direction.ROW) {
-      classNames.push(cls('horizontal'));
+      layoutClassNames.push(cls('horizontal'));
     }
 
-    return classNames.join(' ');
+    return layoutClassNames.concat(classNames).join(' ');
   };
   const updatePanels = useCallback(
     (isResizeMode = false) => {
@@ -106,12 +105,6 @@ export const Layout: FunctionComponent<Props> = ({
   const onPanelRectUpdated = (panelName: string, panelRect: PanelRect) => {
     panelElementRectMap[panelName] = panelRect;
   };
-  const layoutRefCallback = (layoutRef: HTMLDivElement | null) => {
-    if (layoutRef) {
-      ref.current = layoutRef;
-      refCallback(layoutRef);
-    }
-  };
 
   const renderPanel = (child: Child, size: PanelSize) => {
     if (isValidElement(child)) {
@@ -131,11 +124,7 @@ export const Layout: FunctionComponent<Props> = ({
   }, [updatePanels]);
 
   return (
-    <div
-      ref={layoutRefCallback}
-      className={getClassNames()}
-      style={getLayoutStylesFromInfo(width, height)}
-    >
+    <div ref={ref} className={getClassNames()} style={getLayoutStylesFromInfo(width, height)}>
       {filteredPanels.map((panel, index) => renderPanel(panel, panels[index]))}
     </div>
   );

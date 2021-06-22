@@ -1,5 +1,5 @@
 import { limit, ratio } from '@src/util/math';
-import { getMousePosition, getX } from '@src/util/mouse';
+import { getRelativeMousePosition, getX } from '@src/util/mouse';
 
 import { Cells } from '@t/panel';
 
@@ -10,7 +10,7 @@ export function createMousePositionDataGrabber(
 ): (mouseEvent: MouseEvent) => MousePositionData | null {
   return function getGridPositionData(mouseEvent: MouseEvent) {
     const { left: containerLeft, top: containerTop, width } = container.getBoundingClientRect();
-    const [left] = getMousePosition(mouseEvent, {
+    const [left] = getRelativeMousePosition(mouseEvent, {
       left: containerLeft,
       top: containerTop,
       clientLeft: container.clientLeft,
