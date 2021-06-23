@@ -56,7 +56,7 @@
   height: 100%;
 }
 
-.weekday .guide-creation {
+.weekday .daygrid-creation-guide {
   position: absolute;
   right: 10px;
   background-color: rgba(81, 92, 230, 0.05);

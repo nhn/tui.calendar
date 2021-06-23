@@ -35,7 +35,16 @@ MondayStart.args = {
   },
 };
 
-export const randomEvents = Template.bind({});
-randomEvents.args = {
+export const WorkWeek = Template.bind({});
+WorkWeek.args = {
+  options: {
+    week: {
+      workweek: true,
+    },
+  },
+};
+
+export const RandomEvents = Template.bind({});
+RandomEvents.args = {
   events: [...createRandomEventModelsForMonth(40), ...createTimeGridEvents()],
 };

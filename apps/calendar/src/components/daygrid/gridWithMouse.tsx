@@ -1,24 +1,23 @@
 import { h, FunctionComponent } from 'preact';
 
 import { useDrag } from '@src/components/hooks/drag';
-
 import { isSame } from '@src/time/datetime';
 import TZDate from '@src/time/date';
-import { GridGuideInfo } from '@t/components/daygrid/creationGuide';
 import { toPercent } from '@src/util/units';
-import { GridGuideCreationInfo } from '@t/components/daygrid/gridWithMouse';
+
+import { GridGuideInfo } from '@t/components/daygrid/creationGuide';
+import { GridCreationGuide } from '@t/components/daygrid/gridWithMouse';
 
 interface Props {
   gridInfoList: GridGuideInfo[][];
-  onGuideStart: (guide: GridGuideCreationInfo | null) => void;
-  onGuideEnd: (guide: GridGuideCreationInfo | null) => void;
-  onGuideChange: (guide: GridGuideCreationInfo) => void;
+  onGuideEnd: (guide: GridCreationGuide | null) => void;
+  onGuideChange: (guide: GridCreationGuide | null) => void;
   onGuideCancel: () => void;
   getMousePositionData: (e: MouseEvent) => MousePositionData | null;
 }
 
 function getGuideTime(
-  guideStartData: GridGuideCreationInfo | null,
+  guideStartData: GridCreationGuide | null,
   { start, end }: { start: TZDate; end: TZDate }
 ) {
   let guideStartTime = start;
@@ -35,24 +34,23 @@ function getGuideTime(
 function getCreationGuideData(
   mouseData: MousePositionData,
   gridInfoList: GridGuideInfo[][]
-): GridGuideCreationInfo {
-  const { x: columnIndex, y: rowIndex } = mouseData;
+): GridCreationGuide {
+  const { gridX: columnIndex, gridY: rowIndex, x, y } = mouseData;
   const { start, end } = gridInfoList[rowIndex][columnIndex];
 
-  return { start, end, rowIndex, columnIndex };
+  return { start, end, rowIndex, columnIndex, x, y };
 }
 
-const GridWithMouse: FunctionComponent<Props> = (props) => {
-  const {
-    gridInfoList,
-    onGuideStart,
-    onGuideEnd,
-    onGuideChange,
-    onGuideCancel,
-    getMousePositionData,
-  } = props;
-  let guideStartData: GridGuideCreationInfo | null = null;
-  let guidePrevDragData: GridGuideCreationInfo | null = null;
+const GridWithMouse: FunctionComponent<Props> = ({
+  gridInfoList,
+  onGuideEnd,
+  onGuideChange,
+  onGuideCancel,
+  getMousePositionData,
+  children,
+}) => {
+  let guideStartData: GridCreationGuide | null = null;
+  let guidePrevDragData: GridCreationGuide | null = null;
 
   const onDragStart = (e: MouseEvent) => {
     const mousePositionData = getMousePositionData(e);
@@ -63,8 +61,8 @@ const GridWithMouse: FunctionComponent<Props> = (props) => {
 
     guideStartData = getCreationGuideData(mousePositionData, gridInfoList);
 
-    if (guideStartData && onGuideStart) {
-      onGuideStart(guideStartData);
+    if (guideStartData) {
+      onGuideChange(guideStartData);
     }
   };
 
@@ -80,7 +78,7 @@ const GridWithMouse: FunctionComponent<Props> = (props) => {
     const { start, end } = guideData;
     const { guideStartTime, guideEndTime } = getGuideTime(guideStartData, { start, end });
 
-    let guideInfo: GridGuideCreationInfo;
+    let guideInfo: GridCreationGuide;
 
     if (start < guideStartTime) {
       guideInfo = {
@@ -103,14 +101,12 @@ const GridWithMouse: FunctionComponent<Props> = (props) => {
     }
 
     guidePrevDragData = guideInfo;
-    if (onGuideChange) {
-      onGuideChange(guideInfo);
-    }
+    onGuideChange(guideInfo);
   };
 
   const onDragEnd = () => {
-    if (guidePrevDragData && props.onGuideEnd) {
-      props.onGuideEnd(guidePrevDragData);
+    if (guidePrevDragData) {
+      onGuideEnd(guidePrevDragData);
     }
   };
 
@@ -120,21 +116,11 @@ const GridWithMouse: FunctionComponent<Props> = (props) => {
       ? getCreationGuideData(mousePositionData, gridInfoList)
       : null;
 
-    if (onGuideStart) {
-      onGuideStart(guideData);
-    }
-
-    if (onGuideEnd) {
-      onGuideEnd(guideData);
-    }
+    onGuideChange(guideData);
+    onGuideEnd(guideData);
   };
 
-  const onCancel = () => {
-    if (onGuideCancel) {
-      onGuideCancel();
-    }
-  };
-
+  const onCancel = () => onGuideCancel();
   const { onMouseDown } = useDrag({
     onDragStart,
     onDrag,
@@ -145,7 +131,7 @@ const GridWithMouse: FunctionComponent<Props> = (props) => {
 
   return (
     <div style={{ height: toPercent(100) }} onMouseDown={onMouseDown}>
-      {props.children}
+      {children}
     </div>
   );
 };

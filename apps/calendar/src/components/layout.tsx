@@ -21,6 +21,7 @@ interface Props {
   height?: number;
   width?: number;
   resizeMode?: ResizeMode;
+  classNames?: string[];
 }
 
 type Child = VNode<any> | string | number;
@@ -35,6 +36,7 @@ export const Layout: FunctionComponent<Props> = ({
   children,
   width,
   height,
+  classNames = [],
 }) => {
   const [panels, setPanels] = useState<PanelSize[]>([]);
   const panelElementRectMap: PanelElementRectMap = useMemo(() => {
@@ -44,12 +46,12 @@ export const Layout: FunctionComponent<Props> = ({
   const filteredPanels = filterPanels(toChildArray(children));
 
   const getClassNames = () => {
-    const classNames = [cls('layout')];
+    const layoutClassNames = [cls('layout')];
     if (direction === Direction.ROW) {
-      classNames.push(cls('horizontal'));
+      layoutClassNames.push(cls('horizontal'));
     }
 
-    return classNames.join(' ');
+    return layoutClassNames.concat(classNames).join(' ');
   };
   const updatePanels = useCallback(
     (isResizeMode = false) => {

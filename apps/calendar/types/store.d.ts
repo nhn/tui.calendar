@@ -148,8 +148,6 @@ interface DetailPopupParam extends BasePopupParam {
 }
 
 type PopupRect = {
-  width: number;
-  height: number;
   top?: number | string;
   bottom?: number | string;
   left?: number | string;

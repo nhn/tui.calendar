@@ -4,10 +4,10 @@ const initialLayout: LayoutState = {
   milestone: {
     height: 72,
   },
-  allday: {
+  task: {
     height: 72,
   },
-  task: {
+  allday: {
     height: 72,
   },
 };

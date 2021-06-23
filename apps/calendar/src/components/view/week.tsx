@@ -4,7 +4,6 @@ import { useStore } from '@src/components/hooks/store';
 import Panel from '@src/components/panel';
 import DayNames from '@src/components/daygrid/dayNames';
 import { WeekOption } from '@src/model';
-import { getDayNames } from '@src/util/dayName';
 import TZDate from '@src/time/date';
 import { Layout } from '@src/components/layout';
 import { getDayGridEvents } from '@src/util/gridHelper';
@@ -13,6 +12,7 @@ import { TimeGrid } from '@src/components/timegrid/timegrid';
 import { DayGridEvents } from '@src/components/panelgrid/dayGridEvents';
 import { ColumnInfo } from '@src/components/timegrid/columns';
 import { range } from '@src/util/utils';
+import { getDayNames } from '@src/util/dayName';
 
 import type { Cells, DayGridEventType } from '@t/panel';
 import { useTheme } from '@src/components/hooks/theme';
@@ -20,19 +20,21 @@ import { useTheme } from '@src/components/hooks/theme';
 function getCells(renderDate: TZDate, { startDayOfWeek = 0, workweek }: WeekOption): Cells {
   const renderDay = renderDate.getDay();
   const now = toStartOfDay(renderDate);
+  const nowDay = now.getDay();
   const prevWeekCount = startDayOfWeek - WEEK_DAYS;
-  const cells = range(startDayOfWeek, WEEK_DAYS + startDayOfWeek).map((day) =>
-    addDate(now, day - renderDay + (startDayOfWeek > renderDay ? prevWeekCount : 0))
-  );
 
-  if (workweek) {
-    return cells.filter((date) => !isWeekend(date.getDay()));
-  }
+  return range(startDayOfWeek, WEEK_DAYS + startDayOfWeek).reduce<Cells>((acc, day) => {
+    const date = addDate(now, day - nowDay + (startDayOfWeek > renderDay ? prevWeekCount : 0));
+    if (workweek && isWeekend(date.getDay())) {
+      return acc;
+    }
+    acc.push(date);
 
-  return cells;
+    return acc;
+  }, []);
 }
 
-const DAY_NAME_HEIGHT = 42;
+const dayNameHeight = 42;
 
 const Week: FunctionComponent = () => {
   const {
@@ -44,12 +46,12 @@ const Week: FunctionComponent = () => {
     return null;
   }
 
-  const { narrowWeekend } = options.week;
-  // @TODO: calculate based on this week(need to calculate date when prev & next used)
+  const { narrowWeekend, hourStart, hourEnd } = options.week;
+  // @TODO: calculate based on today(need to calculate date when prev & next used)
   const renderWeekDate = new TZDate();
   const cells = getCells(renderWeekDate, options.week);
   const dayNames = getDayNames(cells);
-  const dayGridEvents = getDayGridEvents(cells, dataStore, narrowWeekend);
+  const dayGridEvents = getDayGridEvents(cells, dataStore, { narrowWeekend, hourStart, hourEnd });
   const columnInfoList = cells.map(
     (cell) =>
       ({ start: toStartOfDay(cell), end: toEndOfDay(cell), unit: 'minute', slot: 30 } as ColumnInfo)
@@ -64,7 +66,7 @@ const Week: FunctionComponent = () => {
           cells={cells}
           type={panelType}
           height={value.height}
-          narrowWeekend={narrowWeekend}
+          options={options.week}
         />
       </Panel>
     );
@@ -72,7 +74,7 @@ const Week: FunctionComponent = () => {
 
   return (
     <Layout>
-      <Panel name="week-daynames" height={DAY_NAME_HEIGHT}>
+      <Panel name="week-daynames" height={dayNameHeight}>
         <DayNames
           dayNames={dayNames}
           marginLeft={120}
