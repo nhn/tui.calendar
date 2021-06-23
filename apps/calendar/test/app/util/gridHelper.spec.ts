@@ -6,11 +6,12 @@ import TZDate from '@src/time/date';
 import {
   getExceedCount,
   getGridWidthAndLeftPercentValues,
+  getLeftAndWidth,
   getRenderedEventViewModels,
   getWidth,
   isWithinHeight,
-  getLeftAndWidth,
 } from '@src/util/gridHelper';
+
 import { Cells } from '@t/panel';
 import { createDate } from '@test/helper';
 

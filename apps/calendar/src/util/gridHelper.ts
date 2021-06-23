@@ -12,8 +12,8 @@ import {
 } from '@src/time/datetime';
 import { findIndex, isNil } from '@src/util/utils';
 
-import type { Cells, Panel } from '@t/panel';
 import type { DayGridEventMatrix, EventModelMap, Matrix3d, TimeGridEventMatrix } from '@t/events';
+import type { Cells, Panel } from '@t/panel';
 
 export const EVENT_HEIGHT = 22;
 export const TOTAL_WIDTH = 100;

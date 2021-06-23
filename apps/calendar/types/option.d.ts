@@ -1,4 +1,5 @@
 import { ComponentType } from 'preact';
+
 import { Option } from '@src/model';
 
 type Options = Option; // @TODO: Option 정의 필요

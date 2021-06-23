@@ -2,8 +2,9 @@
  * @fileoverview timezone
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
-import { DateInterface } from '@toast-ui/date';
 import { date as newDate, getTimezoneFactory, setDateConstructor } from '@src/time/timezone';
+
+import { DateInterface } from '@toast-ui/date';
 
 let createDate = newDate;
 

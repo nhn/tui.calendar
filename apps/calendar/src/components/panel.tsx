@@ -1,12 +1,12 @@
 import { Fragment, FunctionComponent, h, VNode } from 'preact';
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
-import isString from 'tui-code-snippet/type/isString';
 import isNumber from 'tui-code-snippet/type/isNumber';
-import { cls } from '@src/util/cssHelper';
-import { noop } from '@src/util';
-import { PanelResizer } from '@src/components/panelResizer';
+import isString from 'tui-code-snippet/type/isString';
+
 import { DragPositionInfo } from '@src/components/draggable';
+import { useStore } from '@src/components/hooks/store';
+import { PanelResizer } from '@src/components/panelResizer';
 import { Direction } from '@src/controller/layout';
 import {
   DEFAULT_PANEL_HEIGHT,
@@ -18,7 +18,8 @@ import {
   PanelRect,
   Size,
 } from '@src/controller/panel';
-import { useStore } from '@src/components/hooks/store';
+import { noop } from '@src/util';
+import { cls } from '@src/util/cssHelper';
 
 export interface Props extends PanelInfo {
   onResizeStart?: (panelName: string) => void;

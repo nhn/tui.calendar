@@ -1,6 +1,7 @@
-import { ViewListMap } from '@t/option';
-import { createContext, ComponentType } from 'preact';
+import { ComponentType, createContext } from 'preact';
 import { useContext, useState } from 'preact/hooks';
+
+import { ViewListMap } from '@t/option';
 
 type Props = {
   initialView: string;

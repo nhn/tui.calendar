@@ -1,7 +1,8 @@
+import { advanceTo } from 'jest-date-mock';
+
+import { ScheduleData } from '@src/model';
 import Schedule from '@src/model/schedule';
 import TZDate from '@src/time/date';
-import { ScheduleData } from '@src/model';
-import { advanceTo } from 'jest-date-mock';
 
 describe('model/schedule basic', () => {
   let schedule: Schedule;

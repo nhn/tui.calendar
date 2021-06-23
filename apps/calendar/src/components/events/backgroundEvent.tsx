@@ -1,7 +1,7 @@
 import { FunctionComponent, h } from 'preact';
 
-import { cls } from '@src/util/cssHelper';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
+import { cls } from '@src/util/cssHelper';
 
 const classNames = {
   background: cls('event-background'),

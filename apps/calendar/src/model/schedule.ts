@@ -2,14 +2,15 @@
  * @fileoverview Model of schedule.
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
-import isString from 'tui-code-snippet/type/isString';
-import isExisty from 'tui-code-snippet/type/isExisty';
 import extend from 'tui-code-snippet/object/extend';
-import TZDate from '@src/time/date';
+import isExisty from 'tui-code-snippet/type/isExisty';
+import isString from 'tui-code-snippet/type/isString';
+
 import { DateType, ScheduleData } from '@src/model';
-import { stamp } from '@src/util';
-import { parse, toEndOfDay, toStartOfDay, compare, MS_PER_DAY } from '@src/time/datetime';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
+import TZDate from '@src/time/date';
+import { compare, MS_PER_DAY, parse, toEndOfDay, toStartOfDay } from '@src/time/datetime';
+import { stamp } from '@src/util';
 import { collidesWith } from '@src/util/events';
 /**
  * Schedule category

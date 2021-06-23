@@ -1,7 +1,10 @@
 import { h } from 'preact';
-import { ProviderWrapper } from '@stories/util/providerWrapper';
+
 import MonthView from '@src/components/view/monthView';
+
+import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { Story } from '@storybook/preact';
+
 import { createRandomEventModelsForMonth } from './util/randomEvents';
 
 export default { title: 'MonthView' };

@@ -1,5 +1,7 @@
-import { h, FunctionComponent, ComponentType } from 'preact';
+import { ComponentType, FunctionComponent, h } from 'preact';
+
 import { useRouter } from '@src/components/hooks/router';
+
 import { ToolbarProps } from '@t/toolbar';
 
 interface Props {

@@ -2,16 +2,16 @@
  * @fileoverview Core methods for schedule block placing
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
-import ScheduleViewModel from '@src/model/scheduleViewModel';
 import inArray from 'tui-code-snippet/array/inArray';
 
-import Collection, { Filter } from '@src/util/collection';
 import Schedule from '@src/model/schedule';
+import ScheduleViewModel from '@src/model/scheduleViewModel';
 import TZDate from '@src/time/date';
-import { makeDateRange, MS_PER_DAY, toFormat, toStartOfDay, toEndOfDay } from '@src/time/datetime';
+import { makeDateRange, MS_PER_DAY, toEndOfDay, toFormat, toStartOfDay } from '@src/time/datetime';
+import Collection, { Filter } from '@src/util/collection';
 import { isUndefined } from '@src/util/utils';
 
-import { CollisionGroup, Matrix3d, Matrix } from '@t/events';
+import { CollisionGroup, Matrix, Matrix3d } from '@t/events';
 
 /**
  * Calculate collision group.

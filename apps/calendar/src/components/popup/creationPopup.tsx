@@ -1,10 +1,10 @@
-import { h, FunctionComponent } from 'preact';
+import { FunctionComponent, h } from 'preact';
 
 import CloseButton from '@src/components/popup/closeButton';
+import { toFormat } from '@src/time/datetime';
+import { cls } from '@src/util/cssHelper';
 
 import { CreationPopupParam } from '@t/store';
-import { cls } from '@src/util/cssHelper';
-import { toFormat } from '@src/time/datetime';
 
 const CreationPopup: FunctionComponent<CreationPopupParam> = ({
   start,

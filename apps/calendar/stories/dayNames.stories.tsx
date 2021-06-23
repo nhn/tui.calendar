@@ -1,9 +1,10 @@
 import { h } from 'preact';
-import { ProviderWrapper } from '@stories/util/providerWrapper';
-import { Story } from '@storybook/preact';
 
 import DayNames from '@src/components/daygrid/dayNames';
 import { TemplateMonthDayName } from '@src/model';
+
+import { ProviderWrapper } from '@stories/util/providerWrapper';
+import { Story } from '@storybook/preact';
 
 export default { title: 'DayNames' };
 

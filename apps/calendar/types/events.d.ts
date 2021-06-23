@@ -1,5 +1,5 @@
-import TZDate from '@src/time/date';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
+import TZDate from '@src/time/date';
 
 export interface BaseEvent {
   start: TZDate;

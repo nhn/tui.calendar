@@ -1,5 +1,5 @@
-import * as dt from '@src/time/datetime';
 import TZDate from '@src/time/date';
+import * as dt from '@src/time/datetime';
 
 function createDate(y: number, M: number, d: number): TZDate {
   const year = String(y);

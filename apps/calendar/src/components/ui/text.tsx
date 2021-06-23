@@ -1,6 +1,7 @@
 import { h, JSX } from 'preact';
-import { AppContext } from '@src/model';
+
 import ContextComponent from '@src/components/contextComponent';
+import { AppContext } from '@src/model';
 
 export interface Props {
   children?: string | string[] | JSX.Element[];

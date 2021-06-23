@@ -2,8 +2,8 @@ import { FunctionComponent, h } from 'preact';
 import { useCallback } from 'preact/hooks';
 
 import { addTimeGridPrefix } from '@src/components/timegrid';
-import { cls, classnames } from '@src/util/cssHelper';
 import { noop } from '@src/util';
+import { classnames, cls } from '@src/util/cssHelper';
 
 interface Props {
   collapsed: boolean;

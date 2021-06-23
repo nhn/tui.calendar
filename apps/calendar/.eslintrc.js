@@ -6,7 +6,7 @@ module.exports = {
     node: true,
   },
   parser: '@typescript-eslint/parser',
-  plugins: ['prettier', 'react', 'react-hooks', '@typescript-eslint', 'jest'],
+  plugins: ['simple-import-sort', 'prettier', 'react', 'react-hooks', '@typescript-eslint', 'jest'],
   extends: [
     'tui/es6',
     'prettier',
@@ -42,6 +42,30 @@ module.exports = {
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'error',
     'jest/no-conditional-expect': 0,
+    'simple-import-sort/imports': [
+      'warn',
+      {
+        groups: [
+          // Side effect imports.
+          ['^\\u0000'],
+          // Preact.
+          ['^preact'],
+          // Any other packages.
+          ['^\\w'],
+          // Source files.
+          ['^@src'],
+          // Types.
+          ['^@t'],
+          // Absolute imports and other imports such as Vue-style `@/foo`.
+          // Anything not matched in another group.
+          ['^'],
+          // Relative imports.
+          // Anything that starts with a dot.
+          ['^\\.'],
+        ],
+      },
+    ],
+    'simple-import-sort/exports': 'warn',
     complexity: ['error', { max: 8 }],
   },
   overrides: [

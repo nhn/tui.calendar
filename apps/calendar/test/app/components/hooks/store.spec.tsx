@@ -1,10 +1,12 @@
 import { FunctionComponent, h } from 'preact';
+
+import { useActions, useCalendarState, useStore } from '@src/components/hooks/store';
 import Store from '@src/store';
+
 import { CalendarState } from '@t/store';
-import { renderHook, act } from '@testing-library/preact-hooks';
-import { useCalendarState, useStore, useActions } from '@src/components/hooks/store';
-import { counter, todos } from '@test/module/modules';
 import { getStoreWrapper } from '@test/helper/storeProvider';
+import { counter, todos } from '@test/module/modules';
+import { act, renderHook } from '@testing-library/preact-hooks';
 
 describe('Store Provider', () => {
   let store: Store<CalendarState>;

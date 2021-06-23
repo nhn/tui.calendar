@@ -62,11 +62,14 @@
     "tui-time-picker": "^2.0.1"
   },
   "lint-staged": {
-    "**/*.{js,ts,tsx}": "eslint --fix",
+    "**/*.{js,ts,tsx}": [
+      "bash -c tsc --noEmit",
+      "eslint --fix"
+    ],
     "**/*.css": "stylelint"
   },
   "scripts": {
-    "check-types": "tsc --project ./tsconfig.json",
+    "check-types": "tsc --project ./tsconfig.json --noEmit",
     "validate": "npm run check-types && npm run lint",
     "lint": "eslint .",
     "serve": "webpack serve --config webpack.dev.config.js",

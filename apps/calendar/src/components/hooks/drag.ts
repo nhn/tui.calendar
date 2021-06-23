@@ -1,5 +1,5 @@
 import { noop } from '@src/util';
-import { isKey, ESCAPE } from '@src/util/keycode';
+import { ESCAPE, isKey } from '@src/util/keycode';
 
 export type MouseEventListener = (e: MouseEvent) => void;
 

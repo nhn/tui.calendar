@@ -1,7 +1,7 @@
-import { h, FunctionComponent, Fragment } from 'preact';
+import { Fragment, FunctionComponent, h } from 'preact';
 
-import Month from '@src/components/view/month';
 import FloatingLayer from '@src/components/floatingLayer';
+import Month from '@src/components/view/month';
 
 const MonthView: FunctionComponent = () => {
   return (

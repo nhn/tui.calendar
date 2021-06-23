@@ -1,19 +1,20 @@
 import { h } from 'preact';
 import renderToString from 'preact-render-to-string';
 
+import Template from '@src/components/template';
+import Schedule from '@src/model/schedule';
+import ScheduleViewModel from '@src/model/scheduleViewModel';
+import { template as TemplateModule } from '@src/modules';
+import Store from '@src/store';
 import {
-  registerTemplateConfig,
   getCommonWidth,
-  getTimeScheduleBlock,
   getMonthScheduleBlock,
+  getTimeScheduleBlock,
+  registerTemplateConfig,
 } from '@src/template';
 import { templates } from '@src/template/default';
-import Template from '@src/components/template';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
-import Schedule from '@src/model/schedule';
+
 import { getStoreWrapper } from '@test/helper/storeProvider';
-import Store from '@src/store';
-import { template as TemplateModule } from '@src/modules';
 
 describe('Render Template', () => {
   it('registerTemplateConfig() returns Template instance with given config and defaults.', () => {

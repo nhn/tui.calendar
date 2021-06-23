@@ -1,9 +1,9 @@
-import { createScheduleCollection, addSchedule } from '@src/controller/base';
-import { ScheduleData, DataStore } from '@src/model';
+import { addSchedule, createScheduleCollection } from '@src/controller/base';
+import { findByDateRange } from '@src/controller/month';
+import { DataStore, ScheduleData } from '@src/model';
 import Schedule from '@src/model/schedule';
 import TZDate from '@src/time/date';
 import array from '@src/util/array';
-import { findByDateRange } from '@src/controller/month';
 
 describe('Base.Month', () => {
   // eslint-disable-next-line no-undefined

@@ -1,25 +1,25 @@
-import { h, Component, Fragment } from 'preact';
+import { Component, Fragment, h } from 'preact';
 import { createPortal } from 'preact/compat';
 
-import { className as timegridClassName, addTimeGridPrefix } from '@src/components/timegrid';
-import { Times, TimeProps } from '@src/components/timegrid/times';
+import { addTimeGridPrefix, className as timegridClassName } from '@src/components/timegrid';
 import { CollapseButton } from '@src/components/timegrid/collapseButton';
+import { TimeProps, Times } from '@src/components/timegrid/times';
 import { TimezoneLabel } from '@src/components/timegrid/timezoneLabel';
+import { TimezoneConfig } from '@src/model';
+import TZDate from '@src/time/date';
 import {
   addHours,
   addMinutes,
-  toFormat,
-  getTimezoneDifference,
-  isSameDate,
   clone,
   getDateDifference,
+  getTimezoneDifference,
+  isSameDate,
+  toFormat,
   toStartOfDay,
 } from '@src/time/datetime';
-import { TimezoneConfig } from '@src/model';
-import TZDate from '@src/time/date';
-import { cls } from '@src/util/cssHelper';
 import { noop } from '@src/util';
-import { range, isNumber } from '@src/util/utils';
+import { cls } from '@src/util/cssHelper';
+import { isNumber, range } from '@src/util/utils';
 
 const classNames = {
   timegrid: cls(timegridClassName),

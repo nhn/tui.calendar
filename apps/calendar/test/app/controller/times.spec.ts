@@ -1,12 +1,13 @@
 import {
-  getTopPercentByTime,
-  getPrevGridTimeFromMouseEvent,
   getNextGridTime,
   getPrevGridTime,
+  getPrevGridTimeFromMouseEvent,
+  getTopPercentByTime,
 } from '@src/controller/times';
+import { TimeUnit } from '@src/model';
 import TZDate from '@src/time/date';
 import { cls } from '@src/util/cssHelper';
-import { TimeUnit } from '@src/model';
+
 import { createMouseEvent } from '@test/helper';
 
 interface TestData {

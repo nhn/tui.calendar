@@ -1,11 +1,12 @@
 import getMousePosition from 'tui-code-snippet/domEvent/getMousePosition';
 import getTarget from 'tui-code-snippet/domEvent/getTarget';
-import TZDate from '@src/time/date';
-import { ratio, limit } from '@src/util/math';
-import { millisecondsTo, clone, addSeconds, addMilliseconds } from '@src/time/datetime';
-import { closest, getSize } from '@src/util/dom';
-import { TimeUnit } from '@src/model';
+
 import { ColumnInfo } from '@src/components/timegrid/columns';
+import { TimeUnit } from '@src/model';
+import TZDate from '@src/time/date';
+import { addMilliseconds, addSeconds, clone, millisecondsTo } from '@src/time/datetime';
+import { closest, getSize } from '@src/util/dom';
+import { limit, ratio } from '@src/util/math';
 
 const DEFAULT_SLOT = 30;
 

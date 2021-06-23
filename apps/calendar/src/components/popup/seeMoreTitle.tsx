@@ -1,12 +1,11 @@
-import { h, FunctionComponent } from 'preact';
+import { FunctionComponent, h } from 'preact';
 
+import { useTheme } from '@src/components/hooks/theme';
 import Template from '@src/components/template';
-
-import { pick } from '@src/util/utils';
-import { cls } from '@src/util/cssHelper';
 import TZDate from '@src/time/date';
 import { toFormat } from '@src/time/datetime';
-import { useTheme } from '@src/components/hooks/theme';
+import { cls } from '@src/util/cssHelper';
+import { pick } from '@src/util/utils';
 
 interface MoreTitleProps {
   date: TZDate;

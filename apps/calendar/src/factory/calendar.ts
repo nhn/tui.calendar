@@ -1,7 +1,7 @@
 import CalendarControl from '@src/factory/calendarControl';
+import Day from '@src/factory/day';
 import Month from '@src/factory/month';
 import Week from '@src/factory/week';
-import Day from '@src/factory/day';
 import { Option } from '@src/model';
 
 export default class Calendar extends CalendarControl {

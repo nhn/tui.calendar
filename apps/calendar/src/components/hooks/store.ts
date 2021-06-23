@@ -3,6 +3,7 @@ import { useContext, useMemo, useState } from 'preact/hooks';
 
 import Store from '@src/store';
 import { getActions, getState } from '@src/util/storeHelper';
+
 import {
   CalendarActions,
   CalendarState,

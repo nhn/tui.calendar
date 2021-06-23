@@ -1,11 +1,13 @@
 import { createContext } from 'preact';
-import { AppContext } from '.';
+
 import { createScheduleCollection } from '@src/controller/base';
-import Theme from '@src/theme';
-import { registerTemplateConfig } from '@src/template';
 import { EventHandler } from '@src/event';
-import { InternalEventName } from '@src/event/internalEventType';
 import { ExternalEventName } from '@src/event/externalEventType';
+import { InternalEventName } from '@src/event/internalEventType';
+import { registerTemplateConfig } from '@src/template';
+import Theme from '@src/theme';
+
+import { AppContext } from '.';
 
 export function getNewAppContext() {
   const appContext: AppContext = {

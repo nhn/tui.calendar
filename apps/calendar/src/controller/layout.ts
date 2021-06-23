@@ -1,11 +1,11 @@
-import { limit } from '@src/util/math';
+import { DragPositionInfo } from '@src/components/draggable';
 import {
-  PanelInfo,
+  getResizeInfoByGrowth,
   isPanelShown,
   PanelElementRectMap,
-  getResizeInfoByGrowth,
+  PanelInfo,
 } from '@src/controller/panel';
-import { DragPositionInfo } from '@src/components/draggable';
+import { limit } from '@src/util/math';
 import { toPercent } from '@src/util/units';
 
 export type Styles = Record<string, string | number>;

@@ -2,12 +2,13 @@
  * @fileoverview Utility module for manipulating DOM
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
-import isNull from 'tui-code-snippet/type/isNull';
-import getTarget from 'tui-code-snippet/domEvent/getTarget';
 import getMousePosition from 'tui-code-snippet/domEvent/getMousePosition';
+import getTarget from 'tui-code-snippet/domEvent/getTarget';
+import isNull from 'tui-code-snippet/type/isNull';
 import isString from 'tui-code-snippet/type/isString';
-import { includes, toArray } from './utils';
+
 import { noop } from '.';
+import { includes, toArray } from './utils';
 
 const CSS_AUTO_REGEX = /^auto$|^$|%/;
 

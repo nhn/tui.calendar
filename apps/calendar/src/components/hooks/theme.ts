@@ -1,6 +1,7 @@
 import { createContext } from 'preact';
-import Theme from '@src/theme';
 import { useContext } from 'preact/hooks';
+
+import Theme from '@src/theme';
 import { isNil } from '@src/util/utils';
 
 export const ThemeContext = createContext<Theme | null>(null);

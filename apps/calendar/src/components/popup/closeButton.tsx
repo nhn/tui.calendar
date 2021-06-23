@@ -1,8 +1,9 @@
-import { h, FunctionComponent } from 'preact';
+import { FunctionComponent, h } from 'preact';
 
-import { useActions } from '../hooks/store';
 import { cls } from '@src/util/cssHelper';
 import { isFunction } from '@src/util/utils';
+
+import { useActions } from '../hooks/store';
 
 interface Props {
   close?: () => void;

@@ -1,10 +1,11 @@
 import { h } from 'preact';
 
-import { ProviderWrapper } from '@stories/util/providerWrapper';
+import { BackgroundEvent } from '@src/components/events/backgroundEvent';
 import { TimeEvent } from '@src/components/events/timeEvent';
 import Schedule from '@src/model/schedule';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
-import { BackgroundEvent } from '@src/components/events/backgroundEvent';
+
+import { ProviderWrapper } from '@stories/util/providerWrapper';
 
 export default { title: 'Various Event Blocks' };
 

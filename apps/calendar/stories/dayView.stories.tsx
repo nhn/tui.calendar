@@ -1,12 +1,13 @@
 import { h } from 'preact';
-import { Story } from '@storybook/preact';
 
-import { ProviderWrapper } from '@stories/util/providerWrapper';
 import DayView from '@src/components/view/dayView';
-import { createRandomEvents, createRandomEventModelsForMonth } from '@stories/util/randomEvents';
+import Schedule from '@src/model/schedule';
 import TZDate from '@src/time/date';
 import { addDate } from '@src/time/datetime';
-import Schedule from '@src/model/schedule';
+
+import { ProviderWrapper } from '@stories/util/providerWrapper';
+import { createRandomEventModelsForMonth, createRandomEvents } from '@stories/util/randomEvents';
+import { Story } from '@storybook/preact';
 
 export default { title: 'DayView' };
 

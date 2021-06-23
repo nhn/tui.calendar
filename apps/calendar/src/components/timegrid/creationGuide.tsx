@@ -2,8 +2,8 @@ import { FunctionComponent, h } from 'preact';
 
 import { CreationGuideInfo, timeFormats } from '@src/components/timegrid';
 import { toFormat } from '@src/time/datetime';
-import { toPercent } from '@src/util/units';
 import { classnames, cls } from '@src/util/cssHelper';
+import { toPercent } from '@src/util/units';
 
 // @TODO: change classname & selector to 'timegrid-creation-guide'
 const classNames = {

@@ -1,12 +1,16 @@
 import { h, RenderableProps } from 'preact';
-import Main from '@src/components/view/Main';
+
 import Toolbar from '@src/components/toolbar/toolbar';
+import DayView from '@src/components/view/dayView';
+import Main from '@src/components/view/Main';
 import MonthView from '@src/components/view/monthView';
 import WeekView from '@src/components/view/weekView';
-import DayView from '@src/components/view/dayView';
 import { cls } from '@src/util/cssHelper';
+
 import { ViewListMap } from '@t/option';
+
 import { createStore } from '@stories/util/providerWrapper';
+
 import { createRandomEventModelsForMonth } from './util/randomEvents';
 
 export default { title: 'View' };

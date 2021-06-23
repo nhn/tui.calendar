@@ -1,6 +1,7 @@
-import { h, FunctionComponent } from 'preact';
-import Store from '@src/store';
+import { FunctionComponent, h } from 'preact';
+
 import { StoreProvider } from '@src/components/provider/store';
+import Store from '@src/store';
 
 export function getStoreWrapper(store: Store): FunctionComponent {
   return function wrapper({ children }) {

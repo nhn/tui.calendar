@@ -3,18 +3,19 @@
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 import {
-  h,
-  Component,
-  Fragment,
-  ComponentChild,
   cloneElement,
+  Component,
+  ComponentChild,
+  Fragment,
+  h,
   isValidElement,
-  VNode,
   toChildArray,
+  VNode,
 } from 'preact';
+
+import { Direction } from '@src/controller/layout';
 import { getOffsetParentPos, getOffsetParentRect } from '@src/util/dom';
 import { limit } from '@src/util/math';
-import { Direction } from '@src/controller/layout';
 
 const DISTANCE = 10;
 

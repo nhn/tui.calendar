@@ -2,10 +2,11 @@
  * @fileoverview Utility module for array sort, binary search.
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
+import forEach from 'tui-code-snippet/collection/forEach';
+
 import Schedule from '@src/model/schedule';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { compare } from '@src/time/datetime';
-import forEach from 'tui-code-snippet/collection/forEach';
 
 /**
  * A module for sorting array.
