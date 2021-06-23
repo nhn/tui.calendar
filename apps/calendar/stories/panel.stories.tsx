@@ -28,13 +28,17 @@ const dataStore: DataStore = {
   schedules: createScheduleCollection(...events),
   idsOfDay: {},
 };
-const dayGridEvents = getDayGridEvents(cells, dataStore, false);
+const dayGridEvents = getDayGridEvents(cells, dataStore, { narrowWeekend: false });
 
 const Template: Story = (args) => (
   <ProviderWrapper options={args.options} events={events}>
     <Layout height={500}>
       <Panel name="milestone" resizable minHeight={20} maxHeight={args.maxHeight}>
-        <DayGridEvents events={dayGridEvents.milestone} type="milestone" narrowWeekend={false} />
+        <DayGridEvents
+          events={dayGridEvents.milestone}
+          type="milestone"
+          options={{ narrowWeekend: false }}
+        />
       </Panel>
     </Layout>
   </ProviderWrapper>
