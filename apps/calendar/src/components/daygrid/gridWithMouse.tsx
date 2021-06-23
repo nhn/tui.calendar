@@ -1,8 +1,8 @@
-import { h, FunctionComponent } from 'preact';
+import { FunctionComponent, h } from 'preact';
 
 import { useDrag } from '@src/components/hooks/drag';
-import { isSame } from '@src/time/datetime';
 import TZDate from '@src/time/date';
+import { isSame } from '@src/time/datetime';
 import { toPercent } from '@src/util/units';
 
 import { GridGuideInfo } from '@t/components/daygrid/creationGuide';

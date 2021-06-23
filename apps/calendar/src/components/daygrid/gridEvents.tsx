@@ -1,10 +1,9 @@
-import { h, FunctionComponent } from 'preact';
+import { FunctionComponent, h } from 'preact';
 
 import GridEvent from '@src/components/events/gridEvent';
-
+import ScheduleViewModel from '@src/model/scheduleViewModel';
 import TZDate from '@src/time/date';
 import { EVENT_HEIGHT, isWithinHeight } from '@src/util/gridHelper';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
 
 interface Props {
   name: string;

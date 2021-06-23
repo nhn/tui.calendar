@@ -1,20 +1,21 @@
 import { h } from 'preact';
+
 import isUndefined from 'tui-code-snippet/type/isUndefined';
 
-import { cls } from '@src/util/cssHelper';
-import { stripTags } from '@src/util';
-import { leadingZero, toFormat, isSameDate } from '@src/time/datetime';
-import Schedule, { ScheduleCategory } from '@src/model/schedule';
 import {
-  TemplateMonthGrid,
-  TemplateMonthDayName,
-  TemplateWeekDay,
   Template,
   TemplateCurrentTime,
-  TemplateTimezone,
+  TemplateMonthDayName,
+  TemplateMonthGrid,
   TemplateMoreTitleDate,
+  TemplateTimezone,
+  TemplateWeekDay,
 } from '@src/model';
+import Schedule, { ScheduleCategory } from '@src/model/schedule';
 import TZDate from '@src/time/date';
+import { isSameDate, leadingZero, toFormat } from '@src/time/datetime';
+import { stripTags } from '@src/util';
+import { cls } from '@src/util/cssHelper';
 import { capitalizeDayName, getDayName } from '@src/util/dayName';
 
 const SIXTY_MINUTES = 60;

@@ -1,11 +1,10 @@
-import { h, FunctionComponent } from 'preact';
+import { FunctionComponent, h } from 'preact';
 
 import ResizeIcon from '@src/components/events/resizeIcon';
 import Template from '@src/components/template';
-
 import ScheduleViewModel from '@src/model/scheduleViewModel';
-import { toPercent, toPx } from '@src/util/units';
 import { cls } from '@src/util/cssHelper';
+import { toPercent, toPx } from '@src/util/units';
 
 interface GridEventProps {
   viewModel: ScheduleViewModel;

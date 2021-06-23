@@ -1,13 +1,15 @@
 import { h, RenderableProps } from 'preact';
+
 import { StoreProvider } from '@src/components/provider/store';
-import Store from '@src/store';
-import { CalendarState } from '@t/store';
-import { cls } from '@src/util/cssHelper';
-import { Options } from '@t/option';
-import { template, layerPopup, options, dataStore, grid } from '@src/modules';
-import Schedule from '@src/model/schedule';
-import Theme from '@src/theme';
 import { ThemeProvider } from '@src/components/provider/theme';
+import Schedule from '@src/model/schedule';
+import { dataStore, grid, layerPopup, options, template } from '@src/modules';
+import Store from '@src/store';
+import Theme from '@src/theme';
+import { cls } from '@src/util/cssHelper';
+
+import { Options } from '@t/option';
+import { CalendarState } from '@t/store';
 
 const style = {
   position: 'absolute',

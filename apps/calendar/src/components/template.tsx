@@ -1,10 +1,10 @@
 import { FunctionComponent, h } from 'preact';
 
-import { useStore } from '@src/components/hooks/store';
-
 import isString from 'tui-code-snippet/type/isString';
-import { identity } from '@src/util';
+
+import { useStore } from '@src/components/hooks/store';
 import { TemplateName } from '@src/template/default';
+import { identity } from '@src/util';
 
 interface Props {
   template: TemplateName;

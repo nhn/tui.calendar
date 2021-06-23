@@ -1,6 +1,7 @@
 import { cloneElement, FunctionComponent, h, isValidElement, toChildArray, VNode } from 'preact';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
 
+import { DragPositionInfo } from '@src/components/draggable';
 import { filterPanels, getPanelPropsList, Props as PanelProps } from '@src/components/panel';
 import {
   Direction,
@@ -11,10 +12,9 @@ import {
   resizeByRelativeMode,
   ResizeMode,
 } from '@src/controller/layout';
-import { DragPositionInfo } from '@src/components/draggable';
-import { getSize } from '@src/util/dom';
 import { PanelElementRectMap, PanelInfo, PanelRect } from '@src/controller/panel';
 import { cls } from '@src/util/cssHelper';
+import { getSize } from '@src/util/dom';
 
 interface Props {
   direction?: Direction;

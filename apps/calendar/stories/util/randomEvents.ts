@@ -1,10 +1,12 @@
 import Chance from 'chance';
 import moment from 'moment-timezone';
-import TZDate from '@src/time/date';
-import { ScheduleData, ViewType, CalendarData } from '@src/model';
-import { calendars } from '@stories/util/mockCalendars';
+
+import { CalendarData, ScheduleData, ViewType } from '@src/model';
 import Schedule, { ScheduleCategory } from '@src/model/schedule';
+import TZDate from '@src/time/date';
 import { getMonthCalendar } from '@src/time/datetime';
+
+import { calendars } from '@stories/util/mockCalendars';
 
 const chance = new Chance();
 const EVENT_CATEGORY: ScheduleCategory[] = ['milestone', 'task'];

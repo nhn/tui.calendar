@@ -1,4 +1,5 @@
-import { h, FunctionComponent } from 'preact';
+import { FunctionComponent, h } from 'preact';
+
 import { useRouter } from '@src/components/hooks/router';
 
 export const ViewContainer: FunctionComponent = () => {

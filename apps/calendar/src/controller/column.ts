@@ -1,12 +1,12 @@
-import ScheduleViewModel from '@src/model/scheduleViewModel';
-import { isTimeEvent } from '@src/model/schedule';
-import TZDate from '@src/time/date';
-import array from '@src/util/array';
 import { createScheduleCollection } from '@src/controller/base';
 import { getCollisionGroup, getMatrices } from '@src/controller/core';
-import { getCollides } from '@src/controller/week';
 import { getTopHeightByTime } from '@src/controller/times';
+import { getCollides } from '@src/controller/week';
+import { isTimeEvent } from '@src/model/schedule';
+import ScheduleViewModel from '@src/model/scheduleViewModel';
+import TZDate from '@src/time/date';
 import { addMinutes, max, min } from '@src/time/datetime';
+import array from '@src/util/array';
 
 const MIN_HEIGHT_PERCENT = 1;
 const MIN_MODEL_HEIGHT_PERCENT = 20;

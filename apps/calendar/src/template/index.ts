@@ -1,10 +1,11 @@
-import { templates } from '@src/template/default';
-import { Template, TemplateConfig, GridViewModel } from '@src/model';
-import { cls } from '@src/util/cssHelper';
 import isNumber from 'tui-code-snippet/type/isNumber';
+
+import { GridViewModel, Template, TemplateConfig } from '@src/model';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
-import { toFormat } from '@src/time/datetime';
+import { templates } from '@src/template/default';
 import TZDate from '@src/time/date';
+import { toFormat } from '@src/time/datetime';
+import { cls } from '@src/util/cssHelper';
 
 export function registerTemplateConfig(templateConfig: TemplateConfig = {}): Template {
   return {

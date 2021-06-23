@@ -1,18 +1,20 @@
 import { h } from 'preact';
+
 import range from 'tui-code-snippet/array/range';
 
+import { MultipleTimezones } from '@src/components/timegrid/multipleTimezones';
 import { Times } from '@src/components/timegrid/times';
 import TZDate from '@src/time/date';
 import {
-  toFormat,
   addDate,
+  addMinutes,
   addMonth,
+  addYear,
+  toFormat,
   toStartOfMonth,
   toStartOfYear,
-  addYear,
-  addMinutes,
 } from '@src/time/datetime';
-import { MultipleTimezones } from '@src/components/timegrid/multipleTimezones';
+
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 
 export default { title: 'Times' };

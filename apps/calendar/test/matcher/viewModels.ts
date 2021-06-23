@@ -1,4 +1,5 @@
 import forEach from 'tui-code-snippet/collection/forEach';
+
 import Schedule from '@src/model/schedule';
 
 expect.extend({

@@ -1,21 +1,21 @@
 import { FunctionComponent, h } from 'preact';
 
-import { useStore } from '@src/components/hooks/store';
-import Panel from '@src/components/panel';
 import DayNames from '@src/components/daygrid/dayNames';
-import { WeekOption } from '@src/model';
-import TZDate from '@src/time/date';
+import { useStore } from '@src/components/hooks/store';
+import { useTheme } from '@src/components/hooks/theme';
 import { Layout } from '@src/components/layout';
-import { getDayGridEvents } from '@src/util/gridHelper';
-import { addDate, isWeekend, toEndOfDay, toStartOfDay, WEEK_DAYS } from '@src/time/datetime';
-import { TimeGrid } from '@src/components/timegrid/timegrid';
+import Panel from '@src/components/panel';
 import { DayGridEvents } from '@src/components/panelgrid/dayGridEvents';
 import { ColumnInfo } from '@src/components/timegrid/columns';
-import { range } from '@src/util/utils';
+import { TimeGrid } from '@src/components/timegrid/timegrid';
+import { WeekOption } from '@src/model';
+import TZDate from '@src/time/date';
+import { addDate, isWeekend, toEndOfDay, toStartOfDay, WEEK_DAYS } from '@src/time/datetime';
 import { getDayNames } from '@src/util/dayName';
+import { getDayGridEvents } from '@src/util/gridHelper';
+import { range } from '@src/util/utils';
 
 import type { Cells, DayGridEventType } from '@t/panel';
-import { useTheme } from '@src/components/hooks/theme';
 
 function getCells(renderDate: TZDate, { startDayOfWeek = 0, workweek }: WeekOption): Cells {
   const renderDay = renderDate.getDay();

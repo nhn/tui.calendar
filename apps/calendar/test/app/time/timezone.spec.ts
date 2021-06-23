@@ -1,8 +1,10 @@
-import moment from 'moment-timezone';
-import { UTCDate, LocalDate, MomentDate } from '@toast-ui/date';
-import { register, unregister, TimeZone } from 'timezone-mock';
-import { date, setDateConstructor, getTimezoneFactory } from '@src/time/timezone';
 import { advanceTo } from 'jest-date-mock';
+import moment from 'moment-timezone';
+import { register, TimeZone, unregister } from 'timezone-mock';
+
+import { date, getTimezoneFactory, setDateConstructor } from '@src/time/timezone';
+
+import { LocalDate, MomentDate, UTCDate } from '@toast-ui/date';
 
 MomentDate.setMoment(moment);
 

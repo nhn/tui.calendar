@@ -1,8 +1,11 @@
 import { FunctionComponent, h } from 'preact';
 import { useState } from 'preact/hooks';
 
+import { useActions } from '@src/components/hooks/store';
+import { DEFAULT_PANEL_HEIGHT } from '@src/controller/panel';
+import { WeekOption } from '@src/model';
+import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { cls } from '@src/util/cssHelper';
-import { toPercent } from '@src/util/units';
 import {
   EVENT_HEIGHT,
   getExceedCount,
@@ -10,10 +13,7 @@ import {
   isInGrid,
   TOTAL_WIDTH,
 } from '@src/util/gridHelper';
-import { useActions } from '@src/components/hooks/store';
-import { DEFAULT_PANEL_HEIGHT } from '@src/controller/panel';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
-import { WeekOption } from '@src/model';
+import { toPercent } from '@src/util/units';
 
 import type { Cells } from '@t/panel';
 

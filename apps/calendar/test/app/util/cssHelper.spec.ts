@@ -1,4 +1,4 @@
-import { CSS_PREFIX, cls, matchViewIDRegExp } from '@src/util/cssHelper';
+import { cls, CSS_PREFIX, matchViewIDRegExp } from '@src/util/cssHelper';
 
 describe('cssHelper', () => {
   it('cls() returns css selector with prefix "tui-calendar"', () => {

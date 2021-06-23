@@ -1,9 +1,10 @@
 /* eslint-disable no-undefined */
-import pluck from 'tui-code-snippet/collection/pluck';
 import inArray from 'tui-code-snippet/array/inArray';
-import array from '@src/util/array';
+import pluck from 'tui-code-snippet/collection/pluck';
+
 import { ScheduleData } from '@src/model';
 import Schedule from '@src/model/schedule';
+import array from '@src/util/array';
 
 describe('common/array', () => {
   describe('common compare methods', () => {

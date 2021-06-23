@@ -2,12 +2,13 @@
  * @fileoverview datetime utility module
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
-import forEachOwnProperties from 'tui-code-snippet/collection/forEachOwnProperties';
-import range from 'tui-code-snippet/array/range';
 import inArray from 'tui-code-snippet/array/inArray';
+import range from 'tui-code-snippet/array/range';
 import forEachArray from 'tui-code-snippet/collection/forEachArray';
-import TZDate from '@src/time/date';
+import forEachOwnProperties from 'tui-code-snippet/collection/forEachOwnProperties';
+
 import { MonthOption, TimeUnit } from '@src/model';
+import TZDate from '@src/time/date';
 
 export enum Day {
   SUN,

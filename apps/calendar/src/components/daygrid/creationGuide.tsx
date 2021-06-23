@@ -1,8 +1,8 @@
-import { h, FunctionComponent } from 'preact';
+import { FunctionComponent, h } from 'preact';
 
-import { toPercent } from '@src/util/units';
 import { cls } from '@src/util/cssHelper';
 import { getLeftAndWidth } from '@src/util/gridHelper';
+import { toPercent } from '@src/util/units';
 
 import { GridCreationGuide } from '@t/components/daygrid/gridWithMouse';
 import { Cells } from '@t/panel';

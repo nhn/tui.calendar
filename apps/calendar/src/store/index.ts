@@ -1,3 +1,7 @@
+import { StateUpdater } from 'preact/hooks';
+
+import { deepCopy, forEach, includes } from '@src/util/utils';
+
 import {
   Action,
   ActionFunc,
@@ -6,8 +10,6 @@ import {
   PayloadActions,
   StoreModule,
 } from '@t/store';
-import { deepCopy, forEach, includes } from '@src/util/utils';
-import { StateUpdater } from 'preact/hooks';
 
 interface StoreProps {
   modules: StoreModule[];

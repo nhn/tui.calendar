@@ -4,9 +4,10 @@
  */
 import forEach from 'tui-code-snippet/collection/forEach';
 import isUndefined from 'tui-code-snippet/type/isUndefined';
-import { set } from '@src/util';
-import { defaultProps, ThemeKeyValue, ThemePropKeys } from '@src/theme/themeProps';
+
 import preset from '@src/theme/preset';
+import { defaultProps, ThemeKeyValue, ThemePropKeys } from '@src/theme/themeProps';
+import { set } from '@src/util';
 
 /**
  * Theme model class

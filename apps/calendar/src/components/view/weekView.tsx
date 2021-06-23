@@ -1,7 +1,7 @@
 import { Fragment, FunctionComponent, h } from 'preact';
 
-import Week from '@src/components/view/week';
 import FloatingLayer from '@src/components/floatingLayer';
+import Week from '@src/components/view/week';
 
 const WeekView: FunctionComponent = () => (
   <Fragment>

@@ -1,23 +1,23 @@
-import { h, FunctionComponent } from 'preact';
+import { FunctionComponent, h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 
-import { useStore } from '@src/components/hooks/store';
+import { CreationGuide } from '@src/components/daygrid/creationGuide';
 import Grid from '@src/components/daygrid/grid';
 import GridEvents from '@src/components/daygrid/gridEvents';
 import GridWithMouse from '@src/components/daygrid/gridWithMouse';
-import { CreationGuide } from '@src/components/daygrid/creationGuide';
-import { convertPxToNum, toPercent } from '@src/util/units';
+import { useCreationGuide } from '@src/components/hooks/creationGuide';
+import { useStore } from '@src/components/hooks/store';
+import { useTheme } from '@src/components/hooks/theme';
 import Schedule from '@src/model/schedule';
 import TZDate from '@src/time/date';
-import { getSize } from '@src/util/dom';
-import { cls } from '@src/util/cssHelper';
-import { getRenderedEventViewModels } from '@src/util/gridHelper';
 import { toEndOfDay, toStartOfDay } from '@src/time/datetime';
-import { useCreationGuide } from '@src/components/hooks/creationGuide';
+import { cls } from '@src/util/cssHelper';
+import { getSize } from '@src/util/dom';
+import { getRenderedEventViewModels } from '@src/util/gridHelper';
+import { convertPxToNum, toPercent } from '@src/util/units';
 
-import { CalendarMonthOption } from '@t/store';
 import { GridGuideInfo } from '@t/components/daygrid/creationGuide';
-import { useTheme } from '@src/components/hooks/theme';
+import { CalendarMonthOption } from '@t/store';
 
 const TOTAL_PERCENT_HEIGHT = 100;
 

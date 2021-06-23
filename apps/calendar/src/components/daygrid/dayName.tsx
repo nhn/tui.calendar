@@ -1,12 +1,12 @@
-import { h, FunctionComponent } from 'preact';
+import { FunctionComponent, h } from 'preact';
 
 import Template from '@src/components/template';
-
+import { Template as TemplateType, TemplateMonthDayName, TemplateWeekDay } from '@src/model';
 import { Day, isWeekend } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
 import { getDayName } from '@src/util/dayName';
+
 import { CSSValue } from '@t/components/daygrid/cell';
-import { Template as TemplateType, TemplateMonthDayName, TemplateWeekDay } from '@src/model';
 
 interface DayNameProps {
   dayname: TemplateWeekDay | TemplateMonthDayName;

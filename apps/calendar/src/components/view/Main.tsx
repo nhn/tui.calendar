@@ -1,13 +1,14 @@
-import { h, FunctionComponent } from 'preact';
+import { FunctionComponent, h } from 'preact';
 
-import { StoreProvider } from '@src/components/provider/store';
-import Store from '@src/store';
 import { RouterContext, useCreateRouter } from '@src/components/hooks/router';
+import { StoreProvider } from '@src/components/provider/store';
+import { ThemeProvider } from '@src/components/provider/theme';
 import ToolbarContainer from '@src/components/toolbar/toolbarContainer';
 import ViewContainer from '@src/components/view/viewContainer';
-import { ViewListMap } from '@t/option';
-import { ThemeProvider } from '@src/components/provider/theme';
+import Store from '@src/store';
 import Theme from '@src/theme';
+
+import { ViewListMap } from '@t/option';
 
 type Props = {
   initialView: string;

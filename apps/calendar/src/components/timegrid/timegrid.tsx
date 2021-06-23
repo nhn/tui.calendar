@@ -1,32 +1,33 @@
 import { FunctionComponent, h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
+
 import pick from 'tui-code-snippet/object/pick';
 
+import {
+  addTimeGridPrefix,
+  className as timegridClassName,
+  CreationGuideInfo,
+} from '@src/components/timegrid';
+import { Column } from '@src/components/timegrid/column';
+import { ColumnInfo, ColumnsWithMouse } from '@src/components/timegrid/columns';
+import { CurrentTimeLine } from '@src/components/timegrid/currentTimeLine';
+import { MultipleTimezones } from '@src/components/timegrid/multipleTimezones';
+import { getTopPercentByTime } from '@src/controller/times';
+import { TimeUnit, TimezoneConfig } from '@src/model';
+import ScheduleViewModel from '@src/model/scheduleViewModel';
 import TZDate from '@src/time/date';
 import {
   addDate,
   clone,
+  isBetweenWithDate,
   isSameDate,
   SIXTY_SECONDS,
-  toStartOfDay,
   toEndOfDay,
-  isBetweenWithDate,
+  toStartOfDay,
 } from '@src/time/datetime';
-import { TimeUnit, TimezoneConfig } from '@src/model';
-import { cls } from '@src/util/cssHelper';
-import { toPx, toPercent } from '@src/util/units';
-import { MultipleTimezones } from '@src/components/timegrid/multipleTimezones';
-import { Column } from '@src/components/timegrid/column';
-import {
-  className as timegridClassName,
-  addTimeGridPrefix,
-  CreationGuideInfo,
-} from '@src/components/timegrid';
-import { CurrentTimeLine } from '@src/components/timegrid/currentTimeLine';
-import { getTopPercentByTime } from '@src/controller/times';
 import { findIndex } from '@src/util/array';
-import { ColumnsWithMouse, ColumnInfo } from '@src/components/timegrid/columns';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
+import { cls } from '@src/util/cssHelper';
+import { toPercent, toPx } from '@src/util/units';
 import { range } from '@src/util/utils';
 
 const REFRESH_INTERVAL = 1000 * SIXTY_SECONDS;

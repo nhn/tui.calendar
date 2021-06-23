@@ -1,20 +1,20 @@
-import { createScheduleCollection, createSchedule, addToMatrix } from '@src/controller/base';
-import { ScheduleData, DataStore } from '@src/model';
-import Schedule from '@src/model/schedule';
-import TZDate from '@src/time/date';
-import { MS_SCHEDULE_MIN_DURATION } from '@src/time/datetime';
+import { addToMatrix, createSchedule, createScheduleCollection } from '@src/controller/base';
 import {
-  hasCollision,
-  generateTimeArrayInRow,
-  findByDateRange,
   _makeHourRangeFilter,
+  findByDateRange,
+  generateTimeArrayInRow,
+  hasCollision,
   splitScheduleByDateRange,
 } from '@src/controller/week';
+import { DataStore, ScheduleData } from '@src/model';
+import Schedule from '@src/model/schedule';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
+import TZDate from '@src/time/date';
+import { MS_SCHEDULE_MIN_DURATION } from '@src/time/datetime';
 import Collection from '@src/util/collection';
 
-import type { Panel } from '@t/panel';
 import type { Matrix3d, TimeGridEventMatrix } from '@t/events';
+import type { Panel } from '@t/panel';
 
 const SCHEDULE_MIN_DURATION = MS_SCHEDULE_MIN_DURATION;
 

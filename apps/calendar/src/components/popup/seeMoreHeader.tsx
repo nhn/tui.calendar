@@ -1,10 +1,9 @@
-import { h, FunctionComponent } from 'preact';
+import { FunctionComponent, h } from 'preact';
 
-import SeeMoreTitle from '@src/components/popup/seeMoreTitle';
 import CloseButton from '@src/components/popup/closeButton';
-
-import { cls } from '@src/util/cssHelper';
+import SeeMoreTitle from '@src/components/popup/seeMoreTitle';
 import TZDate from '@src/time/date';
+import { cls } from '@src/util/cssHelper';
 
 interface MoreHeaderProps {
   date: TZDate;

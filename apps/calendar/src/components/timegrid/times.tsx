@@ -1,21 +1,22 @@
 import { FunctionComponent, h } from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
+
 import range from 'tui-code-snippet/array/range';
 import toArray from 'tui-code-snippet/collection/toArray';
 import addClass from 'tui-code-snippet/domUtil/addClass';
 import removeClass from 'tui-code-snippet/domUtil/removeClass';
 
-import TZDate from '@src/time/date';
-import { TimeUnit } from '@src/model';
-import { toFormat, isSameDate, isSameMonth, isSameYear } from '@src/time/datetime';
-import { getTopPercentByTime } from '@src/controller/times';
-import { first, last } from '@src/util/array';
-import { isOverlapped } from '@src/util/dom';
 import Template from '@src/components/template';
-import { TemplateName } from '@src/template/default';
 import { addTimeGridPrefix } from '@src/components/timegrid';
 import { CurrentTimeLabel } from '@src/components/timegrid/currentTimeLabel';
+import { getTopPercentByTime } from '@src/controller/times';
+import { TimeUnit } from '@src/model';
+import { TemplateName } from '@src/template/default';
+import TZDate from '@src/time/date';
+import { isSameDate, isSameMonth, isSameYear, toFormat } from '@src/time/datetime';
+import { first, last } from '@src/util/array';
 import { classnames } from '@src/util/cssHelper';
+import { isOverlapped } from '@src/util/dom';
 
 const classNames = {
   times: addTimeGridPrefix('times'),

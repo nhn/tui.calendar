@@ -1,19 +1,19 @@
 import { FunctionComponent, h, VNode } from 'preact';
 
-import { TimeUnit } from '@src/model';
-import { first, last } from '@src/util/array';
-import { range } from '@src/util/utils';
-import TZDate from '@src/time/date';
-import { isBackgroundEvent } from '@src/model/schedule';
-import { CreationGuideInfo } from '@src/components/timegrid';
 import { BackgroundEvent } from '@src/components/events/backgroundEvent';
 import { TimeEvent } from '@src/components/events/timeEvent';
-import { getTopHeightByTime } from '@src/controller/times';
-import { toPercent } from '@src/util/units';
+import { CreationGuideInfo } from '@src/components/timegrid';
 import { CreationGuide } from '@src/components/timegrid/creationGuide';
-import { cls } from '@src/util/cssHelper';
 import { getViewModels, isBetween } from '@src/controller/column';
+import { getTopHeightByTime } from '@src/controller/times';
+import { TimeUnit } from '@src/model';
+import { isBackgroundEvent } from '@src/model/schedule';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
+import TZDate from '@src/time/date';
+import { first, last } from '@src/util/array';
+import { cls } from '@src/util/cssHelper';
+import { toPercent } from '@src/util/units';
+import { range } from '@src/util/utils';
 
 const classNames = {
   column: cls('column'),

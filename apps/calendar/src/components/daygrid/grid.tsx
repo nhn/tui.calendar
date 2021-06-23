@@ -1,15 +1,16 @@
-import { h, FunctionComponent } from 'preact';
+import { FunctionComponent, h } from 'preact';
+import { useRef } from 'preact/hooks';
 
 import { Cell } from '@src/components/daygrid/cell';
-import { cls } from '@src/util/cssHelper';
-import { getGridLeftAndWidth, toFormat, toStartOfDay } from '@src/time/datetime';
-import { toPercent, toPx } from '@src/util/units';
-import TZDate from '@src/time/date';
-import { useRef } from 'preact/hooks';
-import { CSSValue } from '@t/components/daygrid/cell';
-import { EVENT_HEIGHT } from '@src/util/gridHelper';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { useTheme } from '@src/components/hooks/theme';
+import ScheduleViewModel from '@src/model/scheduleViewModel';
+import TZDate from '@src/time/date';
+import { getGridLeftAndWidth, toFormat, toStartOfDay } from '@src/time/datetime';
+import { cls } from '@src/util/cssHelper';
+import { EVENT_HEIGHT } from '@src/util/gridHelper';
+import { toPercent, toPx } from '@src/util/units';
+
+import { CSSValue } from '@t/components/daygrid/cell';
 
 interface GridProps {
   cssHeight?: CSSValue;

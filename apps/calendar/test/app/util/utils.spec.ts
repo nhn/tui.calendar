@@ -1,16 +1,16 @@
 import {
-  isObject,
-  isUndefined,
+  deepCopy,
   deepCopyArray,
   deepMergedCopy,
-  deepCopy,
-  range,
+  findIndex,
   includes,
-  pick,
-  isNumber,
   isFunction,
   isNil,
-  findIndex,
+  isNumber,
+  isObject,
+  isUndefined,
+  pick,
+  range,
 } from '@src/util/utils';
 
 describe('utils', () => {

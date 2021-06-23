@@ -1,29 +1,28 @@
 import { FunctionComponent, h } from 'preact';
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
-import { useActions } from '@src/components/hooks/store';
 import CellBar from '@src/components/daygrid/cellBar';
-
-import { cls } from '@src/util/cssHelper';
+import { useActions } from '@src/components/hooks/store';
+import { useTheme } from '@src/components/hooks/theme';
+import { Size } from '@src/controller/panel';
+import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { PopupType } from '@src/modules/layerPopup';
 import TZDate from '@src/time/date';
-import { getPosition, getSize } from '@src/util/dom';
-import { ratio } from '@src/util/math';
-import { Size } from '@src/controller/panel';
 import { Day } from '@src/time/datetime';
-import { convertPxToNum, toPercent } from '@src/util/units';
+import { cls } from '@src/util/cssHelper';
+import { getPosition, getSize } from '@src/util/dom';
 import { getMousePosition } from '@src/util/domEvent';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { EVENT_HEIGHT, getExceedCount } from '@src/util/gridHelper';
+import { ratio } from '@src/util/math';
+import { convertPxToNum, toPercent } from '@src/util/units';
 
-import { PopupRect } from '@t/store';
 import {
   CSSValue,
   SeeMoreOptions,
   SeeMorePopupTheme,
   SeeMoreRectParam,
 } from '@t/components/daygrid/cell';
-import { useTheme } from '@src/components/hooks/theme';
+import { PopupRect } from '@t/store';
 
 const OUT_PADDING = 5;
 const VIEW_MIN_WIDTH = 280;

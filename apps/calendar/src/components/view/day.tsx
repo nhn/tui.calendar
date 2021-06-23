@@ -1,19 +1,19 @@
 import { FunctionComponent, h } from 'preact';
 
-import { useStore } from '@src/components/hooks/store';
-import Panel from '@src/components/panel';
 import DayNames from '@src/components/daygrid/dayNames';
-import { DayGridEvents } from '@src/components/panelgrid/dayGridEvents';
-import TZDate from '@src/time/date';
+import { useStore } from '@src/components/hooks/store';
+import { useTheme } from '@src/components/hooks/theme';
 import { Layout } from '@src/components/layout';
-import { getDayGridEvents } from '@src/util/gridHelper';
-import { toEndOfDay, toStartOfDay } from '@src/time/datetime';
-import { TimeGrid } from '@src/components/timegrid/timegrid';
+import Panel from '@src/components/panel';
+import { DayGridEvents } from '@src/components/panelgrid/dayGridEvents';
 import { ColumnInfo } from '@src/components/timegrid/columns';
+import { TimeGrid } from '@src/components/timegrid/timegrid';
+import TZDate from '@src/time/date';
+import { toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { getDayNames } from '@src/util/dayName';
+import { getDayGridEvents } from '@src/util/gridHelper';
 
 import type { DayGridEventType } from '@t/panel';
-import { useTheme } from '@src/components/hooks/theme';
 
 const dayNameHeight = 42;
 

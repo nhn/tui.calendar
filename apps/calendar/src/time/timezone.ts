@@ -1,5 +1,6 @@
-import { TuiDateConstructor, LocalDate, UTCDate } from '@toast-ui/date';
 import isNumber from 'tui-code-snippet/type/isNumber';
+
+import { LocalDate, TuiDateConstructor, UTCDate } from '@toast-ui/date';
 
 let Constructor: TuiDateConstructor = LocalDate;
 

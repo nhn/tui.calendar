@@ -2,14 +2,14 @@
  * @fileoverview Common collections.
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
-import isFunction from 'tui-code-snippet/type/isFunction';
-import isString from 'tui-code-snippet/type/isString';
-import isNumber from 'tui-code-snippet/type/isNumber';
-import forEachOwnProperties from 'tui-code-snippet/collection/forEachOwnProperties';
-import isExisty from 'tui-code-snippet/type/isExisty';
-import isObject from 'tui-code-snippet/type/isObject';
 import forEachArray from 'tui-code-snippet/collection/forEachArray';
+import forEachOwnProperties from 'tui-code-snippet/collection/forEachOwnProperties';
 import isArray from 'tui-code-snippet/type/isArray';
+import isExisty from 'tui-code-snippet/type/isExisty';
+import isFunction from 'tui-code-snippet/type/isFunction';
+import isNumber from 'tui-code-snippet/type/isNumber';
+import isObject from 'tui-code-snippet/type/isObject';
+import isString from 'tui-code-snippet/type/isString';
 
 export type Filter<T> = (item: T) => boolean;
 

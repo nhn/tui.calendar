@@ -1,12 +1,12 @@
 import { FunctionComponent, h } from 'preact';
-import { useState, useEffect, useRef } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 
-import TZDate from '@src/time/date';
-import { TimeUnit } from '@src/model';
-import { toPercent } from '@src/util/units';
-import { getSize } from '@src/util/dom';
 import Template from '@src/components/template';
 import { addTimeGridPrefix, timeFormats } from '@src/components/timegrid';
+import { TimeUnit } from '@src/model';
+import TZDate from '@src/time/date';
+import { getSize } from '@src/util/dom';
+import { toPercent } from '@src/util/units';
 
 const classNames = {
   currentTime: addTimeGridPrefix('current-time'),
