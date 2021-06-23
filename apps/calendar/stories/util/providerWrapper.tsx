@@ -1,11 +1,13 @@
 import { h, RenderableProps } from 'preact';
-import Provider from '@src/components/provider';
+import { StoreProvider } from '@src/components/provider/store';
 import Store from '@src/store';
 import { CalendarState } from '@t/store';
 import { cls } from '@src/util/cssHelper';
 import { Options } from '@t/option';
-import { template, theme, layerPopup, options, dataStore, grid } from '@src/modules';
+import { template, layerPopup, options, dataStore, grid } from '@src/modules';
 import Schedule from '@src/model/schedule';
+import Theme from '@src/theme';
+import { ThemeProvider } from '@src/components/provider/theme';
 
 const style = {
   position: 'absolute',
@@ -25,6 +27,7 @@ export function ProviderWrapper({
   options: optionsUserInput = {},
   events = [],
 }: RenderableProps<Props>) {
+  const theme = new Theme();
   const store = createStore(optionsUserInput);
   store.dispatch('dataStore/clearSchedules', { events });
 
@@ -33,15 +36,17 @@ export function ProviderWrapper({
   }
 
   return (
-    <div className={cls('layout')} style={style}>
-      <Provider store={store}>{children}</Provider>
-    </div>
+    <ThemeProvider theme={theme}>
+      <div className={cls('layout')} style={style}>
+        <StoreProvider store={store}>{children}</StoreProvider>
+      </div>
+    </ThemeProvider>
   );
 }
 
 export function createStore(optionsUseInput: Options) {
   return new Store<CalendarState>({
     initStoreData: { options: optionsUseInput },
-    modules: [template, theme, options, dataStore, layerPopup, grid],
+    modules: [template, options, dataStore, layerPopup, grid],
   });
 }

@@ -15,7 +15,6 @@ export function getNewAppContext() {
       schedules: createScheduleCollection(),
       idsOfDay: {},
     },
-    theme: new Theme(),
     templates: registerTemplateConfig(),
     internalEvent: new EventHandler<InternalEventName>(),
     externalEvent: new EventHandler<ExternalEventName>(),

@@ -13,6 +13,7 @@ import { isNumber } from '@src/util/utils';
 import { createMousePositionDataGrabber } from '@src/util/monthViewHelper';
 import { TemplateMonthDayName } from '@src/model';
 import { usePanelContainer } from '@src/components/hooks/panelContainer';
+import { useTheme } from '@src/components/hooks/theme';
 
 import { OptionData } from '@t/store';
 
@@ -55,8 +56,8 @@ function useContainerHeight(container: Ref<HTMLDivElement>, dayNameHeight: numbe
 const Month: FunctionComponent = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const { state } = useStore(['theme', 'options']);
-  const { theme, options } = state;
+  const { state: options } = useStore('options');
+  const theme = useTheme();
 
   const dayNameHeight = getDayNameHeight(theme?.month.dayname.height);
   const gridPanelHeight = useContainerHeight(containerRef, dayNameHeight);

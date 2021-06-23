@@ -17,6 +17,7 @@ import { useCreationGuide } from '@src/components/hooks/creationGuide';
 
 import { CalendarMonthOption } from '@t/store';
 import { GridGuideInfo } from '@t/components/daygrid/creationGuide';
+import { useTheme } from '@src/components/hooks/theme';
 
 const TOTAL_PERCENT_HEIGHT = 100;
 
@@ -73,9 +74,8 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
   const rowHeight =
     TOTAL_PERCENT_HEIGHT / Math.max(visibleWeeksCount === 0 ? 6 : visibleWeeksCount, 1);
 
-  const {
-    state: { dataStore, theme },
-  } = useStore(['dataStore', 'theme']);
+  const { state: dataStore } = useStore('dataStore');
+  const theme = useTheme();
 
   if (!theme || !dataStore) {
     return null;

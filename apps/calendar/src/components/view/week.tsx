@@ -15,6 +15,7 @@ import { range } from '@src/util/utils';
 import { getDayNames } from '@src/util/dayName';
 
 import type { Cells, DayGridEventType } from '@t/panel';
+import { useTheme } from '@src/components/hooks/theme';
 
 function getCells(renderDate: TZDate, { startDayOfWeek = 0, workweek }: WeekOption): Cells {
   const renderDay = renderDate.getDay();
@@ -37,8 +38,9 @@ const dayNameHeight = 42;
 
 const Week: FunctionComponent = () => {
   const {
-    state: { template, theme, options, dataStore, grid },
+    state: { template, options, dataStore, grid },
   } = useStore();
+  const theme = useTheme();
 
   if (!template || !theme || !options || !dataStore || !grid) {
     return null;

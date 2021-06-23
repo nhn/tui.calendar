@@ -9,7 +9,7 @@ import { useRef } from 'preact/hooks';
 import { CSSValue } from '@t/components/daygrid/cell';
 import { EVENT_HEIGHT } from '@src/util/gridHelper';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
-import { useStore } from '@src/components/hooks/store';
+import { useTheme } from '@src/components/hooks/theme';
 
 interface GridProps {
   cssHeight?: CSSValue;
@@ -36,9 +36,7 @@ const Grid: FunctionComponent<GridProps> = (props) => {
     eventHeight = EVENT_HEIGHT,
     height = 0,
   } = props;
-  const {
-    state: { common },
-  } = useStore('theme');
+  const { common } = useTheme();
 
   const style = {
     height: cssHeight ?? toPx(height),

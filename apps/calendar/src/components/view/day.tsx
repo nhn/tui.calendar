@@ -13,13 +13,15 @@ import { ColumnInfo } from '@src/components/timegrid/columns';
 import { getDayNames } from '@src/util/dayName';
 
 import type { DayGridEventType } from '@t/panel';
+import { useTheme } from '@src/components/hooks/theme';
 
 const dayNameHeight = 42;
 
 const Day: FunctionComponent = () => {
   const {
-    state: { template, theme, options, dataStore, grid },
+    state: { template, options, dataStore, grid },
   } = useStore();
+  const theme = useTheme();
 
   if (!template || !theme || !options || !dataStore || !grid) {
     return null;

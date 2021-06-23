@@ -1,7 +1,7 @@
-import { h, FunctionComponent } from 'preact';
+import { FunctionComponent, h } from 'preact';
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
-import { useActions, useStore } from '@src/components/hooks/store';
+import { useActions } from '@src/components/hooks/store';
 import CellBar from '@src/components/daygrid/cellBar';
 
 import { cls } from '@src/util/cssHelper';
@@ -23,6 +23,7 @@ import {
   SeeMorePopupTheme,
   SeeMoreRectParam,
 } from '@t/components/daygrid/cell';
+import { useTheme } from '@src/components/hooks/theme';
 
 const OUT_PADDING = 5;
 const VIEW_MIN_WIDTH = 280;
@@ -216,7 +217,7 @@ function usePopupRect(
 
 export const Cell: FunctionComponent<CellProps> = (props) => {
   const { show } = useActions('layerPopup');
-  const { state } = useStore('theme');
+  const theme = useTheme();
 
   const {
     common: commonTheme,
@@ -225,7 +226,7 @@ export const Cell: FunctionComponent<CellProps> = (props) => {
         cell: { paddingBottom, paddingTop },
       },
     },
-  } = state;
+  } = theme;
   const {
     date,
     dayIndex,
@@ -237,7 +238,7 @@ export const Cell: FunctionComponent<CellProps> = (props) => {
     height,
   } = props;
 
-  const { popupRect, container } = usePopupRect(state.month, events, parentContainer, appContainer);
+  const { popupRect, container } = usePopupRect(theme.month, events, parentContainer, appContainer);
 
   const onOpenSeeMorePopup = useCallback(() => {
     if (popupRect) {
