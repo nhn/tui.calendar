@@ -9,6 +9,7 @@ module.exports = {
   },
   globals: { 'ts-jest': { babelConfig: true } },
   watchPathIgnorePatterns: ['<rootDir>/.storybook', '<rootDir>/.stories', '/node_modules/'],
+  testPathIgnorePatterns: ['/node_modules/', '/dist/'],
   setupFilesAfterEnv: [
     '<rootDir>/test/matcher/matrices.ts',
     '<rootDir>/test/matcher/viewModels.ts',
