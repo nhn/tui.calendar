@@ -80,14 +80,14 @@ export const DayGridEvents: FunctionComponent<Props> = ({
   return (
     <Fragment>
       <PanelTitle width={columnWidth} template={type} model={type} />
-      <GridWithMouse
-        gridInfoList={gridInfoList}
-        onGuideEnd={onGuideEnd}
-        onGuideChange={onGuideChange}
-        onGuideCancel={onGuideCancel}
-        getMousePositionData={getMousePositionData}
-      >
-        <div className={cls('allday-panel')} ref={setPanelContainerRef}>
+      <div className={cls('allday-panel')} ref={setPanelContainerRef}>
+        <GridWithMouse
+          gridInfoList={gridInfoList}
+          onGuideEnd={onGuideEnd}
+          onGuideChange={onGuideChange}
+          onGuideCancel={onGuideCancel}
+          getMousePositionData={getMousePositionData}
+        >
           <PanelGrid
             name={type}
             cells={cells}
@@ -95,23 +95,23 @@ export const DayGridEvents: FunctionComponent<Props> = ({
             height={height}
             options={{ narrowWeekend }}
           />
-          <GridEvents
-            name={type}
-            cells={cells}
-            height={height}
-            events={events}
-            narrowWeekend={narrowWeekend}
-            className={cls(`panel-${type}-events`)}
-            headerHeight={0}
-            eventTopMargin={convertPxToNum(dayGridSchedule.marginTop)}
-          />
           <CreationGuide
             creationGuide={creationGuide}
             cells={cells}
             narrowWeekend={narrowWeekend}
           />
-        </div>
-      </GridWithMouse>
+        </GridWithMouse>
+        <GridEvents
+          name={type}
+          cells={cells}
+          height={height}
+          events={events}
+          narrowWeekend={narrowWeekend}
+          className={cls(`panel-${type}-events`)}
+          headerHeight={0}
+          eventTopMargin={convertPxToNum(dayGridSchedule.marginTop)}
+        />
+      </div>
     </Fragment>
   );
 };
