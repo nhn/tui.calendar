@@ -1,6 +1,8 @@
 import { FunctionComponent, h } from 'preact';
+import { useState } from 'preact/hooks';
 
 import ResizeIcon from '@src/components/events/resizeIcon';
+import { useDrag } from '@src/components/hooks/drag';
 import Template from '@src/components/template';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { cls } from '@src/util/cssHelper';
@@ -107,8 +109,32 @@ function getStyles({ viewModel, eventHeight, headerHeight, flat = false }: GridE
   return { dayEventBlockClassName, blockStyle, eventItemStyle, resizeIconStyle };
 }
 
+const ResizingGuide: FunctionComponent<{
+  eventItemStyle: ReturnType<typeof getStyles>['eventItemStyle'];
+}> = ({ eventItemStyle }) => (
+  <div
+    className={cls('weekday-event')}
+    style={{
+      ...eventItemStyle,
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+    }}
+  />
+);
+
 const GridEvent: FunctionComponent<GridEventProps> = (props) => {
+  const [isResizing, setResizing] = useState(false);
   const { dayEventBlockClassName, blockStyle, eventItemStyle, resizeIconStyle } = getStyles(props);
+  const { onMouseDown } = useDrag({
+    onDragStart: (e) => {
+      setResizing(true);
+    },
+    onDrag: (e) => {
+      console.log('dragging', e.pageX);
+    },
+  });
 
   const {
     flat = false,
@@ -121,8 +147,9 @@ const GridEvent: FunctionComponent<GridEventProps> = (props) => {
         <span className={cls('weekday-schedule-title')}>
           <Template template="time" model={model} />
         </span>
-        {flat ? null : <ResizeIcon style={resizeIconStyle} />}
+        {flat ? null : <ResizeIcon style={resizeIconStyle} onMouseDown={onMouseDown} />}
       </div>
+      {isResizing ? <ResizingGuide eventItemStyle={eventItemStyle} /> : null}
     </div>
   );
 };
