@@ -1,6 +1,7 @@
-import { FunctionComponent, h } from 'preact';
-import { useState } from 'preact/hooks';
+import { ComponentProps, Fragment, FunctionComponent, h } from 'preact';
+import { useRef, useState } from 'preact/hooks';
 
+import GridWithMouse from '@src/components/daygrid/gridWithMouse';
 import ResizeIcon from '@src/components/events/resizeIcon';
 import { useDrag } from '@src/components/hooks/drag';
 import Template from '@src/components/template';
@@ -13,6 +14,8 @@ interface GridEventProps {
   eventHeight: number;
   headerHeight: number;
   flat?: boolean;
+  grids?: GridInfo[];
+  getMousePositionData?: ComponentProps<typeof GridWithMouse>['getMousePositionData'];
 }
 
 function getMargin(flat: boolean) {
@@ -109,30 +112,43 @@ function getStyles({ viewModel, eventHeight, headerHeight, flat = false }: GridE
   return { dayEventBlockClassName, blockStyle, eventItemStyle, resizeIconStyle };
 }
 
-const ResizingGuide: FunctionComponent<{
-  eventItemStyle: ReturnType<typeof getStyles>['eventItemStyle'];
-}> = ({ eventItemStyle }) => (
-  <div
-    className={cls('weekday-event')}
-    style={{
-      ...eventItemStyle,
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-    }}
-  />
-);
-
 const GridEvent: FunctionComponent<GridEventProps> = (props) => {
   const [isResizing, setResizing] = useState(false);
+  const [resizeGuidStyle, setResizeGuideStyle] = useState({});
+
+  const resizeStartData = useRef<any>(null);
   const { dayEventBlockClassName, blockStyle, eventItemStyle, resizeIconStyle } = getStyles(props);
+
+  const { grids, getMousePositionData } = props;
   const { onMouseDown } = useDrag({
     onDragStart: (e) => {
+      const mousePositionData = getMousePositionData?.(e);
+      if (!mousePositionData) {
+        return;
+      }
+
+      resizeStartData.current = mousePositionData;
       setResizing(true);
     },
     onDrag: (e) => {
-      console.log('dragging', e.pageX);
+      const mousePositionData = getMousePositionData?.(e);
+      if (!grids || !mousePositionData) {
+        return;
+      }
+
+      const { gridX: startGridX } = resizeStartData.current;
+      const { gridX } = mousePositionData;
+
+      const nextGridInfo = grids[gridX];
+      /**
+       * TODO: should handle shrinking
+       * maybe TZDate and cells are required
+       */
+      if (startGridX <= gridX) {
+        setResizeGuideStyle({
+          width: toPercent(nextGridInfo.left + nextGridInfo.width),
+        });
+      }
     },
   });
 
@@ -142,15 +158,21 @@ const GridEvent: FunctionComponent<GridEventProps> = (props) => {
   } = props;
 
   return (
-    <div className={dayEventBlockClassName} style={blockStyle}>
-      <div className={cls('weekday-event')} style={eventItemStyle}>
-        <span className={cls('weekday-schedule-title')}>
-          <Template template="time" model={model} />
-        </span>
-        {flat ? null : <ResizeIcon style={resizeIconStyle} onMouseDown={onMouseDown} />}
+    <Fragment>
+      <div className={dayEventBlockClassName} style={blockStyle}>
+        <div className={cls('weekday-event')} style={eventItemStyle}>
+          <span className={cls('weekday-schedule-title')}>
+            <Template template="time" model={model} />
+          </span>
+          {flat ? null : <ResizeIcon style={resizeIconStyle} onMouseDown={onMouseDown} />}
+        </div>
       </div>
-      {isResizing ? <ResizingGuide eventItemStyle={eventItemStyle} /> : null}
-    </div>
+      {isResizing ? (
+        <div className={dayEventBlockClassName} style={{ ...blockStyle, ...resizeGuidStyle }}>
+          <div className={cls('weekday-event')} style={eventItemStyle} />
+        </div>
+      ) : null}
+    </Fragment>
   );
 };
 

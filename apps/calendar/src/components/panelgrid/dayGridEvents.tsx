@@ -112,6 +112,8 @@ export const DayGridEvents: FunctionComponent<Props> = ({
               key={`${type}-DayEvent-${viewModel.cid()}`}
               eventHeight={EVENT_HEIGHT}
               headerHeight={0}
+              getMousePositionData={getMousePositionData}
+              grids={grids}
             />
           ))}
         </div>
