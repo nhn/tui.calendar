@@ -3,8 +3,8 @@ import { Fragment, FunctionComponent, h } from 'preact';
 import range from 'tui-code-snippet/array/range';
 
 import { CreationGuide } from '@src/components/daygrid/creationGuide';
-import GridEvents from '@src/components/daygrid/gridEvents';
 import GridWithMouse from '@src/components/daygrid/gridWithMouse';
+import GridEvent from '@src/components/events/gridEvent';
 import { useCreationGuide } from '@src/components/hooks/creationGuide';
 import { useDOMNode } from '@src/components/hooks/domNode';
 import { useTheme } from '@src/components/hooks/theme';
@@ -16,6 +16,7 @@ import ScheduleViewModel from '@src/model/scheduleViewModel';
 import TZDate from '@src/time/date';
 import { addDate, getGridLeftAndWidth, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
+import { EVENT_HEIGHT, isWithinHeight } from '@src/util/gridHelper';
 import { convertPxToNum } from '@src/util/units';
 import { createMousePositionDataGrabber } from '@src/util/weekViewHelper';
 
@@ -76,6 +77,9 @@ export const DayGridEvents: FunctionComponent<Props> = ({
     shouldRenderDefaultPopup
   );
   const gridInfoList = getGridInfoList(cells);
+  const filteredViewModels = events.filter(
+    isWithinHeight(height, EVENT_HEIGHT + convertPxToNum(dayGridSchedule.marginTop))
+  );
 
   return (
     <Fragment>
@@ -101,16 +105,16 @@ export const DayGridEvents: FunctionComponent<Props> = ({
             narrowWeekend={narrowWeekend}
           />
         </GridWithMouse>
-        <GridEvents
-          name={type}
-          cells={cells}
-          height={height}
-          events={events}
-          narrowWeekend={narrowWeekend}
-          className={cls(`panel-${type}-events`)}
-          headerHeight={0}
-          eventTopMargin={convertPxToNum(dayGridSchedule.marginTop)}
-        />
+        <div className={cls(`panel-${type}-events`)}>
+          {filteredViewModels.map((viewModel) => (
+            <GridEvent
+              viewModel={viewModel}
+              key={`${type}-DayEvent-${viewModel.cid()}`}
+              eventHeight={EVENT_HEIGHT}
+              headerHeight={0}
+            />
+          ))}
+        </div>
       </div>
     </Fragment>
   );
