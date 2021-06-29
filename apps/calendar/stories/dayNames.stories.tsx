@@ -15,7 +15,7 @@ interface DayNamesStory {
 }
 
 const Template: Story<DayNamesStory> = ({ dayNames, marginLeft }) => {
-  const gridInfo = getGridInfo(dayNames.length, true, 0, true);
+  const { gridInfo } = getGridInfo(dayNames.length, true, 0, true);
 
   return (
     <ProviderWrapper>

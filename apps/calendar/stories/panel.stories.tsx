@@ -33,7 +33,7 @@ const dataStore: DataStore = {
 const dayGridEvents = getDayGridEvents(cells, dataStore, { narrowWeekend: false });
 
 const Template: Story = (args) => {
-  const gridInfo = getGridInfo(cells.length, true, 0, true);
+  const { gridInfo } = getGridInfo(cells.length, true, 0, true);
 
   return (
     <ProviderWrapper options={args.options} events={events}>

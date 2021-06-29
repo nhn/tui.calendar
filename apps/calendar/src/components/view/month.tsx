@@ -72,7 +72,7 @@ const Month: FunctionComponent = () => {
   const monthOptions = options.month;
   const calendar = getMonthCalendar(renderMonthDate, monthOptions);
   const { narrowWeekend, startDayOfWeek, workweek } = options.month;
-  const gridInfo = getGridInfo(dayNames.length, narrowWeekend, startDayOfWeek, workweek);
+  const { gridInfo } = getGridInfo(dayNames.length, narrowWeekend, startDayOfWeek, workweek);
 
   const getMouseDataOnMonth = panelContainer
     ? createMousePositionDataGrabber(calendar, gridInfo, panelContainer)

@@ -9,6 +9,8 @@ import forEachOwnProperties from 'tui-code-snippet/collection/forEachOwnProperti
 
 import { MonthOption, TimeUnit } from '@src/model';
 import TZDate from '@src/time/date';
+import { toPercent } from '@src/util/units';
+import { fill } from '@src/util/utils';
 
 export enum Day {
   SUN,
@@ -675,7 +677,7 @@ export function getGridInfo(
   narrowWeekend: boolean,
   startDayOfWeek: number,
   workweek: boolean
-): GridInfo[] {
+): { gridInfo: GridInfo[]; gridColWidthMap: string[][] } {
   const limitDaysToApplyNarrowWeekend = 5;
   const uniformWidth = 100 / days;
   const wideWidth = days > limitDaysToApplyNarrowWeekend ? 100 / (days - 1) : uniformWidth;
@@ -690,7 +692,7 @@ export function getGridInfo(
 
   narrowWeekend = workweek ? false : narrowWeekend;
 
-  return dates.map((day: number) => {
+  const gridInfo = dates.map((day: number) => {
     let width = narrowWeekend ? wideWidth : uniformWidth;
     if (days > limitDaysToApplyNarrowWeekend && narrowWeekend && isWeekend(day)) {
       width = wideWidth / 2;
@@ -706,6 +708,23 @@ export function getGridInfo(
 
     return model;
   });
+
+  const { length } = gridInfo;
+  const gridColWidthMap = gridInfo.map((_) => fill<number>(length, 0));
+  gridInfo.forEach(({ width }, index) => {
+    for (let i = 0; i <= index; i += 1) {
+      for (let j = index; j < length; j += 1) {
+        gridColWidthMap[i][j] += width;
+      }
+    }
+  });
+
+  gridColWidthMap[0][length - 1] = 100;
+
+  return {
+    gridInfo,
+    gridColWidthMap: gridColWidthMap.map((widthList) => widthList.map((width) => toPercent(width))),
+  };
 }
 
 export function addMilliseconds(d: TZDate, step: number) {

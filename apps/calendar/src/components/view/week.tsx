@@ -58,7 +58,7 @@ const Week: FunctionComponent = () => {
   const renderWeekDate = new TZDate();
   const cells = getCells(renderWeekDate, options.week);
   const dayNames = getDayNames(cells);
-  const gridInfo = getGridInfo(cells.length, narrowWeekend, startDayOfWeek, workweek);
+  const { gridInfo } = getGridInfo(cells.length, narrowWeekend, startDayOfWeek, workweek);
   const dayGridEvents = getDayGridEvents(cells, dataStore, { narrowWeekend, hourStart, hourEnd });
   const columnInfoList = cells.map(
     (cell) =>

@@ -33,7 +33,7 @@ describe('monthView Helper', function () {
       ],
     ];
 
-    grids = getGridInfo(7, false, 0, false);
+    grids = getGridInfo(7, false, 0, false).gridInfo;
   });
 
   it('should calc date by mouse event.', () => {

@@ -167,3 +167,17 @@ export function forEachArray<T>(
     }
   }
 }
+
+export function fill<T>(size: number, value: T): Array<T> {
+  const result: T[] = [];
+
+  if (size < 0) {
+    return result;
+  }
+
+  for (let i = 0; i < size; i += 1) {
+    result.push(value);
+  }
+
+  return result;
+}

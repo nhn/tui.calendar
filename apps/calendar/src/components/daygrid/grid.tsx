@@ -43,7 +43,7 @@ const Grid: FunctionComponent<Props> = ({
     borderTop: common.border,
   };
 
-  const gridInfo = getGridInfo(calendar.length, narrowWeekend, startDayOfWeek, workweek);
+  const { gridInfo } = getGridInfo(calendar.length, narrowWeekend, startDayOfWeek, workweek);
 
   return (
     <div className={cls('weekday-grid')} style={style} ref={container}>
