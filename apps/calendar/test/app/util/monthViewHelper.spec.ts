@@ -1,5 +1,5 @@
 import TZDate from '@src/time/date';
-import { getGridLeftAndWidth } from '@src/time/datetime';
+import { getGridInfo } from '@src/time/datetime';
 import { createMousePositionDataGrabber } from '@src/util/monthViewHelper';
 
 describe('monthView Helper', function () {
@@ -33,7 +33,7 @@ describe('monthView Helper', function () {
       ],
     ];
 
-    grids = getGridLeftAndWidth(7, false, 0, false);
+    grids = getGridInfo(7, false, 0, false);
   });
 
   it('should calc date by mouse event.', () => {

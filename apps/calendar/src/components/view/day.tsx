@@ -9,7 +9,7 @@ import { DayGridEvents } from '@src/components/panelgrid/dayGridEvents';
 import { ColumnInfo } from '@src/components/timegrid/columns';
 import { TimeGrid } from '@src/components/timegrid/timegrid';
 import TZDate from '@src/time/date';
-import { toEndOfDay, toStartOfDay } from '@src/time/datetime';
+import { getGridInfo, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { getDayNames } from '@src/util/dayName';
 import { getDayGridEvents } from '@src/util/gridHelper';
 
@@ -27,10 +27,11 @@ const Day: FunctionComponent = () => {
     return null;
   }
 
-  const { narrowWeekend, hourStart, hourEnd } = options.week;
+  const { narrowWeekend, startDayOfWeek, workweek, hourStart, hourEnd } = options.week;
   // @TODO: calculate based on today(need to calculate date when prev & next used)
   const cells = [new TZDate()];
   const dayNames = getDayNames(cells);
+  const gridInfo = getGridInfo(cells.length, narrowWeekend, startDayOfWeek, workweek);
   const dayGridEvents = getDayGridEvents(cells, dataStore, { narrowWeekend, hourStart, hourEnd });
   const columnInfoList = cells.map(
     (cell) =>
@@ -47,6 +48,7 @@ const Day: FunctionComponent = () => {
           type={panelType}
           height={value.height}
           options={options.week}
+          gridInfo={gridInfo}
         />
       </Panel>
     );
@@ -55,7 +57,12 @@ const Day: FunctionComponent = () => {
   return (
     <Layout>
       <Panel name="day-daynames" height={dayNameHeight}>
-        <DayNames dayNames={dayNames} marginLeft={120} templateType="weekDayname" />
+        <DayNames
+          dayNames={dayNames}
+          marginLeft={120}
+          templateType="weekDayname"
+          gridInfo={gridInfo}
+        />
       </Panel>
       {allDayPanels}
       <Panel name="time" autoSize={1}>

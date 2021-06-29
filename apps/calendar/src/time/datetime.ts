@@ -302,8 +302,8 @@ export function toStartOfDay(date?: number | TZDate | Date): TZDate {
 
 /**
  * Make date array from supplied paramters.
- * @param {TZDate} start Start date.
- * @param {TZDate} end End date.
+ * @param {TZDate} startDate Start date.
+ * @param {TZDate} endDate End date.
  * @param {number} step The number of milliseconds to use increment.
  * @returns {TZDate[]} TZDate array.
  */
@@ -670,7 +670,7 @@ export function arr2dCalendar(
  * @param {boolean} workweek - only show work week
  * @returns {Array} day, left, width
  */
-export function getGridLeftAndWidth(
+export function getGridInfo(
   days: number,
   narrowWeekend: boolean,
   startDayOfWeek: number,

@@ -14,7 +14,7 @@ import { DEFAULT_PANEL_HEIGHT } from '@src/controller/panel';
 import { WeekOption } from '@src/model';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import TZDate from '@src/time/date';
-import { addDate, getGridLeftAndWidth, toEndOfDay, toStartOfDay } from '@src/time/datetime';
+import { addDate, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
 import { EVENT_HEIGHT, isWithinHeight } from '@src/util/gridHelper';
 import { convertPxToNum } from '@src/util/units';
@@ -38,6 +38,7 @@ interface Props {
   height?: number;
   options?: WeekOption;
   shouldRenderDefaultPopup?: boolean;
+  gridInfo: GridInfo[];
 }
 
 function getGridInfoList(cells: Cells): GridGuideInfo[][] {
@@ -60,17 +61,17 @@ export const DayGridEvents: FunctionComponent<Props> = ({
   height = DEFAULT_PANEL_HEIGHT,
   options = {},
   shouldRenderDefaultPopup = false,
+  gridInfo,
 }) => {
   const {
     week: { dayGridSchedule },
   } = useTheme();
   const [panelContainer, setPanelContainerRef] = useDOMNode<HTMLDivElement>();
   const columnWidth = timesWidth * timezonesCount;
-  const { narrowWeekend = false, startDayOfWeek = 0, workweek = false } = options;
-  const grids = getGridLeftAndWidth(cells.length, narrowWeekend, startDayOfWeek, workweek);
+  const { narrowWeekend = false } = options;
   const getMousePositionData =
     type === 'allday' && panelContainer
-      ? createMousePositionDataGrabber(cells, grids, panelContainer)
+      ? createMousePositionDataGrabber(cells, gridInfo, panelContainer)
       : () => null;
 
   const { creationGuide, onGuideChange, onGuideEnd, onGuideCancel } = useCreationGuide(
@@ -113,7 +114,7 @@ export const DayGridEvents: FunctionComponent<Props> = ({
               eventHeight={EVENT_HEIGHT}
               headerHeight={0}
               getMousePositionData={getMousePositionData}
-              grids={grids}
+              grids={gridInfo}
             />
           ))}
         </div>
