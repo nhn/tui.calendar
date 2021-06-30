@@ -39,6 +39,7 @@ interface Props {
   options?: WeekOption;
   shouldRenderDefaultPopup?: boolean;
   gridInfo: GridInfo[];
+  gridColWidthMap: string[][];
 }
 
 function getGridInfoList(cells: Cells): GridGuideInfo[][] {
@@ -62,6 +63,7 @@ export const DayGridEvents: FunctionComponent<Props> = ({
   options = {},
   shouldRenderDefaultPopup = false,
   gridInfo,
+  gridColWidthMap,
 }) => {
   const {
     week: { dayGridSchedule },
@@ -114,7 +116,8 @@ export const DayGridEvents: FunctionComponent<Props> = ({
               eventHeight={EVENT_HEIGHT}
               headerHeight={0}
               getMousePositionData={getMousePositionData}
-              grids={gridInfo}
+              gridColWidthMap={gridColWidthMap}
+              cells={cells}
             />
           ))}
         </div>

@@ -31,7 +31,12 @@ const Day: FunctionComponent = () => {
   // @TODO: calculate based on today(need to calculate date when prev & next used)
   const cells = [new TZDate()];
   const dayNames = getDayNames(cells);
-  const { gridInfo } = getGridInfo(cells.length, narrowWeekend, startDayOfWeek, workweek);
+  const { gridInfo, gridColWidthMap } = getGridInfo(
+    cells.length,
+    narrowWeekend,
+    startDayOfWeek,
+    workweek
+  );
   const dayGridEvents = getDayGridEvents(cells, dataStore, { narrowWeekend, hourStart, hourEnd });
   const columnInfoList = cells.map(
     (cell) =>
@@ -49,6 +54,7 @@ const Day: FunctionComponent = () => {
           height={value.height}
           options={options.week}
           gridInfo={gridInfo}
+          gridColWidthMap={gridColWidthMap}
         />
       </Panel>
     );

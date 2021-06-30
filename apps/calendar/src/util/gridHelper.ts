@@ -98,7 +98,7 @@ export const isInGrid = (gridDate: TZDate) => {
   };
 };
 
-function getGridDateIndex(date: TZDate, cells: TZDate[]) {
+export function getGridDateIndex(date: TZDate, cells: TZDate[]) {
   return findIndex(cells, (item) => date >= toStartOfDay(item) && date <= toEndOfDay(item));
 }
 

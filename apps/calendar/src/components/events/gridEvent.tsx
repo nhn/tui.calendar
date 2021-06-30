@@ -1,5 +1,5 @@
 import { ComponentProps, Fragment, FunctionComponent, h } from 'preact';
-import { useRef, useState } from 'preact/hooks';
+import { useState } from 'preact/hooks';
 
 import GridWithMouse from '@src/components/daygrid/gridWithMouse';
 import ResizeIcon from '@src/components/events/resizeIcon';
@@ -7,15 +7,27 @@ import { useDrag } from '@src/components/hooks/drag';
 import Template from '@src/components/template';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { cls } from '@src/util/cssHelper';
+import { getGridDateIndex } from '@src/util/gridHelper';
 import { toPercent, toPx } from '@src/util/units';
+import { isNil } from '@src/util/utils';
 
-interface GridEventProps {
+import { Cells } from '@t/panel';
+
+interface Props {
   viewModel: ScheduleViewModel;
   eventHeight: number;
   headerHeight: number;
   flat?: boolean;
-  grids?: GridInfo[];
   getMousePositionData?: ComponentProps<typeof GridWithMouse>['getMousePositionData'];
+  gridColWidthMap?: string[][];
+  cells?: Cells;
+}
+
+interface StyleProps {
+  viewModel: ScheduleViewModel;
+  eventHeight: number;
+  headerHeight: number;
+  flat: boolean;
 }
 
 function getMargin(flat: boolean) {
@@ -70,7 +82,7 @@ function getEventItemStyle({
       };
 }
 
-function getStyles({ viewModel, eventHeight, headerHeight, flat = false }: GridEventProps) {
+function getStyles({ viewModel, eventHeight, headerHeight, flat }: StyleProps) {
   const {
     width,
     left,
@@ -112,14 +124,34 @@ function getStyles({ viewModel, eventHeight, headerHeight, flat = false }: GridE
   return { dayEventBlockClassName, blockStyle, eventItemStyle, resizeIconStyle };
 }
 
-const GridEvent: FunctionComponent<GridEventProps> = (props) => {
+function getEventColIndex(viewModel: ScheduleViewModel, cells: Cells) {
+  const start = getGridDateIndex(viewModel.getStarts(), cells);
+  const end = getGridDateIndex(viewModel.getEnds(), cells);
+
+  return { start, end };
+}
+
+const GridEvent: FunctionComponent<Props> = ({
+  flat = false,
+  viewModel,
+  eventHeight,
+  headerHeight,
+  getMousePositionData,
+  gridColWidthMap,
+  cells = [],
+}) => {
   const [isResizing, setResizing] = useState(false);
-  const [resizeGuidStyle, setResizeGuideStyle] = useState({});
+  const [resizeGuidStyle, setResizeGuideStyle] = useState<h.JSX.CSSProperties>({});
 
-  const resizeStartData = useRef<any>(null);
-  const { dayEventBlockClassName, blockStyle, eventItemStyle, resizeIconStyle } = getStyles(props);
+  const { dayEventBlockClassName, blockStyle, eventItemStyle, resizeIconStyle } = getStyles({
+    viewModel,
+    eventHeight,
+    headerHeight,
+    flat,
+  });
 
-  const { grids, getMousePositionData } = props;
+  const { start } = getEventColIndex(viewModel, cells);
+
   const { onMouseDown } = useDrag({
     onDragStart: (e) => {
       const mousePositionData = getMousePositionData?.(e);
@@ -127,42 +159,34 @@ const GridEvent: FunctionComponent<GridEventProps> = (props) => {
         return;
       }
 
-      resizeStartData.current = mousePositionData;
       setResizing(true);
     },
     onDrag: (e) => {
       const mousePositionData = getMousePositionData?.(e);
-      if (!grids || !mousePositionData) {
+      if (!mousePositionData || !gridColWidthMap || isNil(start)) {
         return;
       }
 
-      const { gridX: startGridX } = resizeStartData.current;
       const { gridX } = mousePositionData;
 
-      const nextGridInfo = grids[gridX];
-      /**
-       * TODO: should handle shrinking
-       * maybe TZDate and cells are required
-       */
-      if (startGridX <= gridX) {
+      if (start <= gridX) {
         setResizeGuideStyle({
-          width: toPercent(nextGridInfo.left + nextGridInfo.width),
+          width: gridColWidthMap[start][gridX],
         });
       }
     },
+    onDragEnd: () => {
+      setResizing(false);
+      setResizeGuideStyle({});
+    },
   });
-
-  const {
-    flat = false,
-    viewModel: { model },
-  } = props;
 
   return (
     <Fragment>
       <div className={dayEventBlockClassName} style={blockStyle}>
         <div className={cls('weekday-event')} style={eventItemStyle}>
           <span className={cls('weekday-schedule-title')}>
-            <Template template="time" model={model} />
+            <Template template="time" model={viewModel.model} />
           </span>
           {flat ? null : <ResizeIcon style={resizeIconStyle} onMouseDown={onMouseDown} />}
         </div>
