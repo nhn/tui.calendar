@@ -16,7 +16,7 @@ export function isFunction(value: unknown): value is Function {
   return typeof value === 'function';
 }
 
-export function isNil(value: unknown): boolean {
+export function isNil(value: unknown): value is null | undefined {
   return isUndefined(value) || value === null;
 }
 
