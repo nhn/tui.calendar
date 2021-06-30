@@ -95,7 +95,7 @@ function getStyles({ viewModel, eventHeight, headerHeight, flat }: StyleProps) {
 
   const margin = getMargin(flat);
 
-  const blockStyle = flat
+  const containerStyle = flat
     ? {}
     : {
         width: toPercent(width),
@@ -122,7 +122,7 @@ function getStyles({ viewModel, eventHeight, headerHeight, flat }: StyleProps) {
     exceedRight
   )}`;
 
-  return { dayEventBlockClassName, blockStyle, eventItemStyle, resizeIconStyle };
+  return { dayEventBlockClassName, containerStyle, eventItemStyle, resizeIconStyle };
 }
 
 function getEventColIndex(viewModel: ScheduleViewModel, cells: Cells) {
@@ -131,6 +131,18 @@ function getEventColIndex(viewModel: ScheduleViewModel, cells: Cells) {
 
   return { start, end };
 }
+
+const EventItem: FunctionComponent<{
+  containerStyle: h.JSX.CSSProperties;
+  eventItemStyle: h.JSX.CSSProperties;
+  className: string;
+}> = ({ containerStyle, eventItemStyle, className, children }) => (
+  <div className={className} style={containerStyle}>
+    <div className={cls('weekday-event')} style={eventItemStyle}>
+      {children}
+    </div>
+  </div>
+);
 
 const GridEvent: FunctionComponent<Props> = ({
   flat = false,
@@ -147,7 +159,7 @@ const GridEvent: FunctionComponent<Props> = ({
   const [resizeGuidStyle, setResizeGuideStyle] = useState<h.JSX.CSSProperties>({});
   const lastGridX = useRef<number | null>(null);
 
-  const { dayEventBlockClassName, blockStyle, eventItemStyle, resizeIconStyle } = getStyles({
+  const { dayEventBlockClassName, containerStyle, eventItemStyle, resizeIconStyle } = getStyles({
     viewModel,
     eventHeight,
     headerHeight,
@@ -192,18 +204,22 @@ const GridEvent: FunctionComponent<Props> = ({
 
   return (
     <Fragment>
-      <div className={dayEventBlockClassName} style={blockStyle}>
-        <div className={cls('weekday-event')} style={eventItemStyle}>
-          <span className={cls('weekday-schedule-title')}>
-            <Template template="time" model={viewModel.model} />
-          </span>
-          {flat ? null : <ResizeIcon style={resizeIconStyle} onMouseDown={onMouseDown} />}
-        </div>
-      </div>
+      <EventItem
+        containerStyle={containerStyle}
+        eventItemStyle={eventItemStyle}
+        className={dayEventBlockClassName}
+      >
+        <span className={cls('weekday-schedule-title')}>
+          <Template template="time" model={viewModel.model} />
+        </span>
+        {flat ? null : <ResizeIcon style={resizeIconStyle} onMouseDown={onMouseDown} />}
+      </EventItem>
       {isResizing ? (
-        <div className={dayEventBlockClassName} style={{ ...blockStyle, ...resizeGuidStyle }}>
-          <div className={cls('weekday-event')} style={eventItemStyle} />
-        </div>
+        <EventItem
+          containerStyle={{ ...containerStyle, ...resizeGuidStyle }}
+          eventItemStyle={eventItemStyle}
+          className={dayEventBlockClassName}
+        />
       ) : null}
     </Fragment>
   );
