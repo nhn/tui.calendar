@@ -5,7 +5,6 @@ import { EventHandler } from '@src/event';
 import { ExternalEventName } from '@src/event/externalEventType';
 import { InternalEventName } from '@src/event/internalEventType';
 import Schedule, { ScheduleCategory } from '@src/model/schedule';
-import Theme from '@src/theme';
 import { ThemeKeyValue } from '@src/theme/themeProps';
 import TZDate from '@src/time/date';
 import Collection from '@src/util/collection';
