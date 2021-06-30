@@ -138,7 +138,7 @@ export function createSchedules(dataStore: DataStore, schedules: ScheduleData[] 
  * @param {string} scheduleId - schedule id
  * @param {string} calendarId - calendar id
  * @param {ScheduleData} scheduleData - schedule data
- * @returns {boolean} success of failture
+ * @returns {boolean} success or failure
  */
 export function updateSchedule(
   dataStore: DataStore,
@@ -155,7 +155,7 @@ export function updateSchedule(
     return false;
   }
 
-  schedule.init(scheduleData);
+  schedule.init({ ...schedule, ...scheduleData });
 
   removeFromMatrix(idsOfDay, schedule);
   addToMatrix(idsOfDay, schedule);

@@ -1,9 +1,10 @@
 import { ComponentProps, Fragment, FunctionComponent, h } from 'preact';
-import { useState } from 'preact/hooks';
+import { useRef, useState } from 'preact/hooks';
 
 import GridWithMouse from '@src/components/daygrid/gridWithMouse';
 import ResizeIcon from '@src/components/events/resizeIcon';
 import { useDrag } from '@src/components/hooks/drag';
+import { useActions } from '@src/components/hooks/store';
 import Template from '@src/components/template';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { cls } from '@src/util/cssHelper';
@@ -140,8 +141,11 @@ const GridEvent: FunctionComponent<Props> = ({
   gridColWidthMap,
   cells = [],
 }) => {
+  const { updateSchedule } = useActions('dataStore');
+
   const [isResizing, setResizing] = useState(false);
   const [resizeGuidStyle, setResizeGuideStyle] = useState<h.JSX.CSSProperties>({});
+  const lastGridX = useRef<number | null>(null);
 
   const { dayEventBlockClassName, blockStyle, eventItemStyle, resizeIconStyle } = getStyles({
     viewModel,
@@ -149,16 +153,11 @@ const GridEvent: FunctionComponent<Props> = ({
     headerHeight,
     flat,
   });
-
-  const { start } = getEventColIndex(viewModel, cells);
+  const { start, end } = getEventColIndex(viewModel, cells);
 
   const { onMouseDown } = useDrag({
-    onDragStart: (e) => {
-      const mousePositionData = getMousePositionData?.(e);
-      if (!mousePositionData) {
-        return;
-      }
-
+    onDragStart: () => {
+      lastGridX.current = end;
       setResizing(true);
     },
     onDrag: (e) => {
@@ -168,6 +167,7 @@ const GridEvent: FunctionComponent<Props> = ({
       }
 
       const { gridX } = mousePositionData;
+      lastGridX.current = gridX;
 
       if (start <= gridX) {
         setResizeGuideStyle({
@@ -176,8 +176,17 @@ const GridEvent: FunctionComponent<Props> = ({
       }
     },
     onDragEnd: () => {
+      const { current: gridX } = lastGridX;
+      if (!isNil(start) && !isNil(gridX)) {
+        if (start <= gridX && end !== gridX) {
+          const targetDate = cells[gridX];
+          updateSchedule({ event: viewModel.model, eventData: { end: targetDate } });
+        }
+      }
+
       setResizing(false);
       setResizeGuideStyle({});
+      lastGridX.current = null;
     },
   });
 
