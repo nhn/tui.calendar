@@ -787,7 +787,7 @@ export function getDateDifference(d1: TZDate, d2: TZDate) {
   return Math.round((_d1 - _d2) / MS_PER_DAY);
 }
 
-export function getMonthCalendar(renderMonthDate: Date | TZDate, options: MonthOption) {
+export function getMonthDates(renderMonthDate: Date | TZDate, options: MonthOption) {
   const date = new TZDate(renderMonthDate);
   const {
     startDayOfWeek = 0,

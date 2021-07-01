@@ -29,13 +29,13 @@ export const cell = () => {
 };
 
 export const week = () => {
-  const calendar = getWeekDates();
+  const weekDates = getWeekDates();
 
   return (
     <ProviderWrapper>
       <Grid
         cssHeight={100}
-        calendar={calendar}
+        weekDates={weekDates}
         appContainer={{ current: document.createElement('div') }}
       />
     </ProviderWrapper>
@@ -43,13 +43,13 @@ export const week = () => {
 };
 
 export const weekend = () => {
-  const calendar = getWeekendDates();
+  const weekDates = getWeekendDates();
 
   return (
     <ProviderWrapper>
       <Grid
         height={200}
-        calendar={calendar}
+        weekDates={weekDates}
         appContainer={{ current: document.createElement('div') }}
       />
     </ProviderWrapper>
@@ -65,7 +65,7 @@ export const daygrid = () => {
   const sunday = saturday + 1;
   const WEEKDAYS = 7;
 
-  const calendar = range(3).map((index) => [
+  const weekDates = range(3).map((index) => [
     new TZDate(date.setDate(saturday + WEEKDAYS * index)),
     new TZDate(date.setDate(sunday + WEEKDAYS * index)),
   ]);
@@ -90,7 +90,7 @@ export const daygrid = () => {
     <ProviderWrapper>
       <DayGrid
         options={options}
-        calendar={calendar}
+        monthDates={weekDates}
         appContainer={{ current: document.createElement('div') }}
       />
     </ProviderWrapper>
@@ -98,7 +98,7 @@ export const daygrid = () => {
 };
 
 export const randomEvents = () => {
-  const calendar = getWeekDates();
+  const weekDates = getWeekDates();
 
   const options: CalendarMonthOption = {
     visibleWeeksCount: 1,
@@ -116,7 +116,7 @@ export const randomEvents = () => {
     scheduleFilter: () => true,
   };
 
-  const data = createRandomEvents('month', calendar[0], calendar[6], 10);
+  const data = createRandomEvents('month', weekDates[0], weekDates[6], 10);
   const events = data.map((event: ScheduleData) => Schedule.create(event));
 
   return (
@@ -124,7 +124,7 @@ export const randomEvents = () => {
       <Panel name="weekday" height={400}>
         <DayGrid
           options={options}
-          calendar={[calendar]}
+          monthDates={[weekDates]}
           events={events}
           appContainer={{ current: document.createElement('div') }}
         />

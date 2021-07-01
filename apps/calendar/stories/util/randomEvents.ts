@@ -4,7 +4,7 @@ import moment from 'moment-timezone';
 import { CalendarData, ScheduleData, ViewType } from '@src/model';
 import Schedule, { ScheduleCategory } from '@src/model/schedule';
 import TZDate from '@src/time/date';
-import { getMonthCalendar } from '@src/time/datetime';
+import { getMonthDates } from '@src/time/datetime';
 
 import { calendars } from '@stories/util/mockCalendars';
 
@@ -133,11 +133,11 @@ export function createRandomEvents(
 }
 
 export function createRandomEventModelsForMonth(length = defaultEventCount.month) {
-  const calendar = getMonthCalendar(new Date(), {});
+  const monthDates = getMonthDates(new Date(), {});
   const data = createRandomEvents(
     'month',
-    calendar[0][0],
-    calendar[calendar.length - 1][6],
+    monthDates[0][0],
+    monthDates[monthDates.length - 1][6],
     length
   );
 

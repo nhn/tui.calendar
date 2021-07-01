@@ -18,7 +18,7 @@ interface Props {
   narrowWeekend?: boolean;
   startDayOfWeek?: number;
   workweek?: boolean;
-  calendar: TZDate[];
+  weekDates: TZDate[];
   appContainer: { current: HTMLDivElement };
   eventHeight?: number;
   height?: number;
@@ -29,7 +29,7 @@ const Grid: FunctionComponent<Props> = ({
   narrowWeekend = false,
   startDayOfWeek = 0,
   workweek = false,
-  calendar,
+  weekDates,
   appContainer,
   gridDateEventModelMap = {},
   eventHeight = EVENT_HEIGHT,
@@ -43,11 +43,11 @@ const Grid: FunctionComponent<Props> = ({
     borderTop: common.border,
   };
 
-  const { gridInfo } = getGridInfo(calendar.length, narrowWeekend, startDayOfWeek, workweek);
+  const { gridInfo } = getGridInfo(weekDates.length, narrowWeekend, startDayOfWeek, workweek);
 
   return (
     <div className={cls('weekday-grid')} style={style} ref={container}>
-      {calendar.map((date, columnIndex) => {
+      {weekDates.map((date, columnIndex) => {
         const dayIndex = date.getDay();
         const { width, left } = gridInfo[columnIndex];
         const ymd = toFormat(toStartOfDay(date), 'YYYYMMDD');
@@ -73,4 +73,5 @@ const Grid: FunctionComponent<Props> = ({
     </div>
   );
 };
+
 export default Grid;

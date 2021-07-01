@@ -8,7 +8,7 @@ import { useStore } from '@src/components/hooks/store';
 import { useTheme } from '@src/components/hooks/theme';
 import Panel from '@src/components/panel';
 import { TemplateMonthDayName } from '@src/model';
-import { getGridInfo, getMonthCalendar, isWeekend } from '@src/time/datetime';
+import { getGridInfo, getMonthDates, isWeekend } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
 import { capitalizeDayName } from '@src/util/dayName';
 import { getSize } from '@src/util/dom';
@@ -70,12 +70,12 @@ const Month: FunctionComponent = () => {
   const dayNames = getDayNames(options);
   const renderMonthDate = new Date(); // @TODO: 현재 렌더링된 MonthDate기준으로 계산(prev, next 사용 시 날짜 계산 필요)
   const monthOptions = options.month;
-  const calendar = getMonthCalendar(renderMonthDate, monthOptions);
+  const monthDates = getMonthDates(renderMonthDate, monthOptions);
   const { narrowWeekend, startDayOfWeek, workweek } = options.month;
   const { gridInfo } = getGridInfo(dayNames.length, narrowWeekend, startDayOfWeek, workweek);
 
   const getMouseDataOnMonth = panelContainer
-    ? createMousePositionDataGrabber(calendar, gridInfo, panelContainer)
+    ? createMousePositionDataGrabber(monthDates, gridInfo, panelContainer)
     : () => null;
 
   return (
@@ -93,7 +93,7 @@ const Month: FunctionComponent = () => {
       <Panel name="month-daygrid" height={gridPanelHeight}>
         <DayGrid
           options={monthOptions}
-          calendar={calendar}
+          monthDates={monthDates}
           appContainer={containerRef}
           shouldRenderDefaultPopup={options.useCreationPopup}
           getMousePositionData={getMouseDataOnMonth}
