@@ -79,7 +79,7 @@ const DayNames: FunctionComponent<Props> = ({
           templateType={templateType}
           dayname={dayName}
           dayIndex={dayName.day}
-          key={`dayNames-${dayName.day}-${'label' in dayName ? dayName.label : dayName.dayName}`}
+          key={`dayNames-${dayName.day}`}
           style={{
             ...dayNameStyle,
             width: toPercent(gridInfo[index].width),
