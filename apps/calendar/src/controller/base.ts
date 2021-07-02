@@ -32,7 +32,8 @@ export function createScheduleCollection<T extends Schedule | ScheduleViewModel>
 }
 /**
  * Calculate contain dates in schedule.
- * @param {Schedule} schedule The instance of schedule.
+ * @param {TZDate} start - start date of range
+ * @param {TZDate} end - end date of range
  * @returns {array} contain dates.
  */
 export function getDateRange(start: TZDate, end: TZDate) {
@@ -72,6 +73,7 @@ export function filterByCategory(viewModel: ScheduleViewModel) {
 
 /**
  * Set date matrix to supplied schedule instance.
+ * @param {IDS_OF_DAY} idsOfDay - ids of day
  * @param {Schedule} schedule - instance of schedule.
  */
 export function addToMatrix(idsOfDay: IDS_OF_DAY, schedule: Schedule) {
@@ -87,6 +89,7 @@ export function addToMatrix(idsOfDay: IDS_OF_DAY, schedule: Schedule) {
 
 /**
  * Remove schedule's id from matrix.
+ * @param {IDS_OF_DAY} idsOfDay - ids of day
  * @param {Schedule} schedule - instance of schedule
  */
 export function removeFromMatrix(idsOfDay: IDS_OF_DAY, schedule: Schedule) {
@@ -103,6 +106,7 @@ export function removeFromMatrix(idsOfDay: IDS_OF_DAY, schedule: Schedule) {
 
 /**
  * Add an schedule instance.
+ * @param {CalendarData} calendarData - data of calendar
  * @param {Schedule} schedule The instance of Schedule.
  * @returns {Schedule} The instance of Schedule that added.
  */
@@ -115,6 +119,7 @@ export function addSchedule(calendarData: CalendarData, schedule: Schedule) {
 
 /**
  * Create an schedule instance from raw data.
+ * @param {CalendarData} calendarData - data of calendar
  * @param {ScheduleData} scheduleData - Data object to create schedule.
  * @returns {Schedule[]} The instance of Schedule that created.
  */
@@ -126,7 +131,8 @@ export function createSchedule(calendarData: CalendarData, scheduleData: Schedul
 
 /**
  * Create schedules from raw data.
- * @param {ScheduleData[]} dataList - schedule data list to create schedule.
+ * @param {CalendarData} calendarData - data of calendar
+ * @param {ScheduleData[]} schedules - schedule data list to create schedule.
  * @returns {Schedule[]} The instance list of Schedule that created.
  */
 export function createSchedules(calendarData: CalendarData, schedules: ScheduleData[] = []) {
@@ -135,6 +141,7 @@ export function createSchedules(calendarData: CalendarData, schedules: ScheduleD
 
 /**
  * Update an schedule.
+ * @param {CalendarData} calendarData - data of calendar
  * @param {string} scheduleId - schedule id
  * @param {string} calendarId - calendar id
  * @param {ScheduleData} scheduleData - schedule data
@@ -165,6 +172,7 @@ export function updateSchedule(
 
 /**
  * Delete schedule instance from controller.
+ * @param {CalendarData} calendarData - data of calendar
  * @param {Schedule} schedule - schedule instance to delete
  * @returns {Schedule} deleted model instance.
  */
@@ -182,6 +190,7 @@ export function clearSchedules(calendarData: CalendarData) {
 
 /**
  * Set calendar list
+ * @param {CalendarData} calendarData - data of calendar
  * @param {Array.<Calendar>} calendars - calendar list
  */
 export function setCalendars(calendarData: CalendarData, calendars: CalendarInfo[]) {
@@ -192,8 +201,8 @@ export function setCalendars(calendarData: CalendarData, calendars: CalendarInfo
  * Return schedules in supplied date range.
  *
  * available only YMD.
- * @param {TZDate} start start date.
- * @param {TZDate} end end date.
+ * @param {CalendarData} calendarData - data of calendar
+ * @param {{start: TZDate, end: TZDate}} condition - condition of find range
  * @returns {object.<string, Collection>} schedule collection grouped by dates.
  */
 export function findByDateRange(
