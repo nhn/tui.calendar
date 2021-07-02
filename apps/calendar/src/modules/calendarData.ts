@@ -9,15 +9,13 @@ import Schedule from '@src/model/schedule';
 
 type UpdateScheduleParams = { event: Schedule; eventData: ScheduleData };
 
-const initialCalendarData: CalendarData = {
-  calendars: [],
-  schedules: createScheduleCollection(),
-  idsOfDay: {},
-};
-
 export const calendarData = {
   name: 'calendarData',
-  state: initialCalendarData,
+  state: {
+    calendars: [],
+    schedules: createScheduleCollection(),
+    idsOfDay: {},
+  } as CalendarData,
   actions: {
     createSchedules(state: CalendarData, events: Schedule[]) {
       createSchedules(state, events);
