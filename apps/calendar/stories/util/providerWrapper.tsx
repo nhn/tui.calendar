@@ -31,10 +31,10 @@ export function ProviderWrapper({
 }: RenderableProps<Props>) {
   const theme = new Theme();
   const store = createStore(optionsUserInput);
-  store.dispatch('calendarData/clearSchedules', { events });
+  store.dispatch('calendarData/clearSchedules');
 
   if (events.length) {
-    store.dispatch('calendarData/createSchedules', { events });
+    store.dispatch('calendarData/createSchedules', events);
   }
 
   return (

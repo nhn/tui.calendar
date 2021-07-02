@@ -59,7 +59,7 @@ function createEvents() {
   store.dispatch('calendarData/clearSchedules');
 
   if (events.length) {
-    store.dispatch('calendarData/createSchedules', { events });
+    store.dispatch('calendarData/createSchedules', events);
   }
 }
 
