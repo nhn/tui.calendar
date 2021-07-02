@@ -13,7 +13,7 @@ import {
   limitRenderRange,
   positionViewModels,
 } from '@src/controller/core';
-import { DataStore } from '@src/model';
+import { CalendarData } from '@src/model';
 import Schedule from '@src/model/schedule';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import TZDate from '@src/time/date';
@@ -186,7 +186,7 @@ function _addMultiDatesInfo(viewModelColl: Collection<ScheduleViewModel>) {
  * @returns {object} view model data
  */
 export function findByDateRange(
-  dataStore: DataStore,
+  calendarData: CalendarData,
   condition: {
     start: TZDate;
     end: TZDate;
@@ -195,7 +195,7 @@ export function findByDateRange(
   }
 ) {
   const { start, end, andFilters = [], alldayFirstMode = false } = condition;
-  const { schedules, idsOfDay } = dataStore;
+  const { schedules, idsOfDay } = calendarData;
   const filter = Collection.and(...[getScheduleInDateRangeFilter(start, end)].concat(andFilters));
 
   const coll = schedules.find(filter);

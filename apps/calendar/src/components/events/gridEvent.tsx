@@ -1,16 +1,35 @@
-import { FunctionComponent, h } from 'preact';
+import { ComponentProps, Fragment, FunctionComponent, h } from 'preact';
+import { useRef, useState } from 'preact/hooks';
 
+import GridWithMouse from '@src/components/daygrid/gridWithMouse';
 import ResizeIcon from '@src/components/events/resizeIcon';
+import { useDrag } from '@src/components/hooks/drag';
+import { useActions } from '@src/components/hooks/store';
 import Template from '@src/components/template';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { cls } from '@src/util/cssHelper';
+import { getGridDateIndex } from '@src/util/gridHelper';
 import { toPercent, toPx } from '@src/util/units';
+import { isNil } from '@src/util/utils';
 
-interface GridEventProps {
+import { StyleProp } from '@t/components/common';
+import { Cells } from '@t/panel';
+
+interface Props {
   viewModel: ScheduleViewModel;
   eventHeight: number;
   headerHeight: number;
   flat?: boolean;
+  getMousePositionData?: ComponentProps<typeof GridWithMouse>['getMousePositionData'];
+  gridColWidthMap?: string[][];
+  cells?: Cells;
+}
+
+interface StyleProps {
+  viewModel: ScheduleViewModel;
+  eventHeight: number;
+  headerHeight: number;
+  flat: boolean;
 }
 
 function getMargin(flat: boolean) {
@@ -65,7 +84,7 @@ function getEventItemStyle({
       };
 }
 
-function getStyles({ viewModel, eventHeight, headerHeight, flat = false }: GridEventProps) {
+function getStyles({ viewModel, eventHeight, headerHeight, flat }: StyleProps) {
   const {
     width,
     left,
@@ -77,7 +96,7 @@ function getStyles({ viewModel, eventHeight, headerHeight, flat = false }: GridE
 
   const margin = getMargin(flat);
 
-  const blockStyle = flat
+  const containerStyle = flat
     ? {}
     : {
         width: toPercent(width),
@@ -104,26 +123,110 @@ function getStyles({ viewModel, eventHeight, headerHeight, flat = false }: GridE
     exceedRight
   )}`;
 
-  return { dayEventBlockClassName, blockStyle, eventItemStyle, resizeIconStyle };
+  return { dayEventBlockClassName, containerStyle, eventItemStyle, resizeIconStyle };
 }
 
-const GridEvent: FunctionComponent<GridEventProps> = (props) => {
-  const { dayEventBlockClassName, blockStyle, eventItemStyle, resizeIconStyle } = getStyles(props);
+function getEventColIndex(viewModel: ScheduleViewModel, cells: Cells) {
+  const start = getGridDateIndex(viewModel.getStarts(), cells);
+  const end = getGridDateIndex(viewModel.getEnds(), cells);
 
-  const {
-    flat = false,
-    viewModel: { model },
-  } = props;
+  return { start, end };
+}
+
+const EventItem: FunctionComponent<{
+  containerStyle: StyleProp;
+  eventItemStyle: StyleProp;
+  className: string;
+}> = ({ containerStyle, eventItemStyle, className, children }) => (
+  <div className={className} style={containerStyle}>
+    <div className={cls('weekday-event')} style={eventItemStyle}>
+      {children}
+    </div>
+  </div>
+);
+
+const GridEvent: FunctionComponent<Props> = ({
+  flat = false,
+  viewModel,
+  eventHeight,
+  headerHeight,
+  getMousePositionData,
+  gridColWidthMap,
+  cells = [],
+}) => {
+  const { updateSchedule } = useActions('calendarData');
+
+  const [isResizing, setResizing] = useState(false);
+  const [resizeGuideStyle, setResizeGuideStyle] = useState<StyleProp | null>(null);
+  const lastGridColIndex = useRef<number | null>(null);
+
+  const { dayEventBlockClassName, containerStyle, eventItemStyle, resizeIconStyle } = getStyles({
+    viewModel,
+    eventHeight,
+    headerHeight,
+    flat,
+  });
+  const { start, end } = getEventColIndex(viewModel, cells);
+  const resetResizing = () => {
+    setResizing(false);
+    setResizeGuideStyle(null);
+    lastGridColIndex.current = null;
+  };
+
+  const { onMouseDown } = useDrag({
+    onDragStart: () => {
+      lastGridColIndex.current = end;
+      setResizing(true);
+    },
+    onDrag: (e) => {
+      const mousePositionData = getMousePositionData?.(e);
+      if (!mousePositionData || !gridColWidthMap || isNil(start)) {
+        return;
+      }
+
+      const { gridX } = mousePositionData;
+      lastGridColIndex.current = gridX;
+
+      if (start <= gridX) {
+        setResizeGuideStyle({
+          width: gridColWidthMap[start][gridX],
+        });
+      }
+    },
+    onDragEnd: () => {
+      const { current: gridX } = lastGridColIndex;
+      if (!isNil(start) && !isNil(gridX)) {
+        if (start <= gridX && end !== gridX) {
+          const targetDate = cells[gridX];
+          updateSchedule({ event: viewModel.model, eventData: { end: targetDate } });
+        }
+      }
+
+      resetResizing();
+    },
+    onCancel: resetResizing,
+  });
 
   return (
-    <div className={dayEventBlockClassName} style={blockStyle}>
-      <div className={cls('weekday-event')} style={eventItemStyle}>
+    <Fragment>
+      <EventItem
+        containerStyle={containerStyle}
+        eventItemStyle={eventItemStyle}
+        className={dayEventBlockClassName}
+      >
         <span className={cls('weekday-schedule-title')}>
-          <Template template="time" model={model} />
+          <Template template="time" model={viewModel.model} />
         </span>
-        {flat ? null : <ResizeIcon style={resizeIconStyle} />}
-      </div>
-    </div>
+        {flat ? null : <ResizeIcon style={resizeIconStyle} onMouseDown={onMouseDown} />}
+      </EventItem>
+      {isResizing ? (
+        <EventItem
+          containerStyle={{ ...containerStyle, ...resizeGuideStyle }}
+          eventItemStyle={eventItemStyle}
+          className={dayEventBlockClassName}
+        />
+      ) : null}
+    </Fragment>
   );
 };
 

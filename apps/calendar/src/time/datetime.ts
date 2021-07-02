@@ -9,6 +9,8 @@ import forEachOwnProperties from 'tui-code-snippet/collection/forEachOwnProperti
 
 import { MonthOption, TimeUnit } from '@src/model';
 import TZDate from '@src/time/date';
+import { toPercent } from '@src/util/units';
+import { fill } from '@src/util/utils';
 
 export enum Day {
   SUN,
@@ -302,8 +304,8 @@ export function toStartOfDay(date?: number | TZDate | Date): TZDate {
 
 /**
  * Make date array from supplied paramters.
- * @param {TZDate} start Start date.
- * @param {TZDate} end End date.
+ * @param {TZDate} startDate Start date.
+ * @param {TZDate} endDate End date.
  * @param {number} step The number of milliseconds to use increment.
  * @returns {TZDate[]} TZDate array.
  */
@@ -670,12 +672,12 @@ export function arr2dCalendar(
  * @param {boolean} workweek - only show work week
  * @returns {Array} day, left, width
  */
-export function getGridLeftAndWidth(
+export function getGridInfo(
   days: number,
   narrowWeekend: boolean,
   startDayOfWeek: number,
   workweek: boolean
-): GridInfo[] {
+): { gridInfo: GridInfo[]; gridColWidthMap: string[][] } {
   const limitDaysToApplyNarrowWeekend = 5;
   const uniformWidth = 100 / days;
   const wideWidth = days > limitDaysToApplyNarrowWeekend ? 100 / (days - 1) : uniformWidth;
@@ -690,7 +692,7 @@ export function getGridLeftAndWidth(
 
   narrowWeekend = workweek ? false : narrowWeekend;
 
-  return dates.map((day: number) => {
+  const gridInfo = dates.map((day: number) => {
     let width = narrowWeekend ? wideWidth : uniformWidth;
     if (days > limitDaysToApplyNarrowWeekend && narrowWeekend && isWeekend(day)) {
       width = wideWidth / 2;
@@ -706,6 +708,24 @@ export function getGridLeftAndWidth(
 
     return model;
   });
+
+  const { length } = gridInfo;
+  const gridColWidthMap = fill(length, fill(length, 0));
+
+  gridInfo.forEach(({ width }, index) => {
+    for (let i = 0; i <= index; i += 1) {
+      for (let j = index; j < length; j += 1) {
+        gridColWidthMap[i][j] += width;
+      }
+    }
+  });
+
+  gridColWidthMap[0][length - 1] = 100;
+
+  return {
+    gridInfo,
+    gridColWidthMap: gridColWidthMap.map((widthList) => widthList.map(toPercent)),
+  };
 }
 
 export function addMilliseconds(d: TZDate, step: number) {

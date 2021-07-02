@@ -11,14 +11,14 @@ enum CellBarType {
   footer = 'footer',
 }
 
-interface CellBarProps {
+interface Props {
   type?: CellBarType;
   exceedCount?: number;
   date: TZDate;
   onClickExceedCount: () => void;
 }
 
-const CellBar: FunctionComponent<CellBarProps> = ({
+const CellBar: FunctionComponent<Props> = ({
   type = CellBarType.header,
   exceedCount = 0,
   date,

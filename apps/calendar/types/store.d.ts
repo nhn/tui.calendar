@@ -1,6 +1,6 @@
 import { MonthOption, WeekOption } from '@src/model';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
-import { dataStore, grid, options, template } from '@src/modules';
+import { calendarData, grid, options, template } from '@src/modules';
 import { layerPopup, PopupType } from '@src/modules/layerPopup';
 import Store from '@src/store';
 import TZDate from '@src/time/date';
@@ -56,7 +56,7 @@ declare global {
     options: typeof options;
     template: typeof template;
     layerPopup: typeof layerPopup;
-    dataStore: typeof dataStore;
+    calendarData: typeof calendarData;
     grid: typeof grid;
   }
 }

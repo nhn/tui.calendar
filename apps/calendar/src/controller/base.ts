@@ -5,7 +5,7 @@
 import inArray from 'tui-code-snippet/array/inArray';
 import forEach from 'tui-code-snippet/collection/forEach';
 
-import { CalendarData, DataStore, ScheduleData } from '@src/model';
+import { CalendarData, CalendarInfo, ScheduleData } from '@src/model';
 import Schedule from '@src/model/schedule';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import TZDate from '@src/time/date';
@@ -32,7 +32,8 @@ export function createScheduleCollection<T extends Schedule | ScheduleViewModel>
 }
 /**
  * Calculate contain dates in schedule.
- * @param {Schedule} schedule The instance of schedule.
+ * @param {TZDate} start - start date of range
+ * @param {TZDate} end - end date of range
  * @returns {array} contain dates.
  */
 export function getDateRange(start: TZDate, end: TZDate) {
@@ -72,6 +73,7 @@ export function filterByCategory(viewModel: ScheduleViewModel) {
 
 /**
  * Set date matrix to supplied schedule instance.
+ * @param {IDS_OF_DAY} idsOfDay - ids of day
  * @param {Schedule} schedule - instance of schedule.
  */
 export function addToMatrix(idsOfDay: IDS_OF_DAY, schedule: Schedule) {
@@ -87,6 +89,7 @@ export function addToMatrix(idsOfDay: IDS_OF_DAY, schedule: Schedule) {
 
 /**
  * Remove schedule's id from matrix.
+ * @param {IDS_OF_DAY} idsOfDay - ids of day
  * @param {Schedule} schedule - instance of schedule
  */
 export function removeFromMatrix(idsOfDay: IDS_OF_DAY, schedule: Schedule) {
@@ -103,51 +106,55 @@ export function removeFromMatrix(idsOfDay: IDS_OF_DAY, schedule: Schedule) {
 
 /**
  * Add an schedule instance.
+ * @param {CalendarData} calendarData - data of calendar
  * @param {Schedule} schedule The instance of Schedule.
  * @returns {Schedule} The instance of Schedule that added.
  */
-export function addSchedule(dataStore: DataStore, schedule: Schedule) {
-  dataStore.schedules.add(schedule);
-  addToMatrix(dataStore.idsOfDay, schedule);
+export function addSchedule(calendarData: CalendarData, schedule: Schedule) {
+  calendarData.schedules.add(schedule);
+  addToMatrix(calendarData.idsOfDay, schedule);
 
   return schedule;
 }
 
 /**
  * Create an schedule instance from raw data.
+ * @param {CalendarData} calendarData - data of calendar
  * @param {ScheduleData} scheduleData - Data object to create schedule.
  * @returns {Schedule[]} The instance of Schedule that created.
  */
-export function createSchedule(dataStore: DataStore, scheduleData: ScheduleData) {
+export function createSchedule(calendarData: CalendarData, scheduleData: ScheduleData) {
   const schedule = Schedule.create(scheduleData);
 
-  return addSchedule(dataStore, schedule);
+  return addSchedule(calendarData, schedule);
 }
 
 /**
  * Create schedules from raw data.
- * @param {ScheduleData[]} dataList - schedule data list to create schedule.
+ * @param {CalendarData} calendarData - data of calendar
+ * @param {ScheduleData[]} schedules - schedule data list to create schedule.
  * @returns {Schedule[]} The instance list of Schedule that created.
  */
-export function createSchedules(dataStore: DataStore, schedules: ScheduleData[] = []) {
-  return schedules.map((scheduleData) => createSchedule(dataStore, scheduleData));
+export function createSchedules(calendarData: CalendarData, schedules: ScheduleData[] = []) {
+  return schedules.map((scheduleData) => createSchedule(calendarData, scheduleData));
 }
 
 /**
  * Update an schedule.
+ * @param {CalendarData} calendarData - data of calendar
  * @param {string} scheduleId - schedule id
  * @param {string} calendarId - calendar id
  * @param {ScheduleData} scheduleData - schedule data
- * @returns {boolean} success of failture
+ * @returns {boolean} success or failure
  */
 export function updateSchedule(
-  dataStore: DataStore,
+  calendarData: CalendarData,
   scheduleId: string,
   calendarId: string,
   scheduleData: ScheduleData
 ) {
-  const { idsOfDay } = dataStore;
-  const schedule = dataStore.schedules.single((item) =>
+  const { idsOfDay } = calendarData;
+  const schedule = calendarData.schedules.single((item) =>
     isSameSchedule(item, scheduleId, calendarId)
   );
 
@@ -155,7 +162,7 @@ export function updateSchedule(
     return false;
   }
 
-  schedule.init(scheduleData);
+  schedule.init({ ...schedule, ...scheduleData });
 
   removeFromMatrix(idsOfDay, schedule);
   addToMatrix(idsOfDay, schedule);
@@ -165,43 +172,45 @@ export function updateSchedule(
 
 /**
  * Delete schedule instance from controller.
+ * @param {CalendarData} calendarData - data of calendar
  * @param {Schedule} schedule - schedule instance to delete
  * @returns {Schedule} deleted model instance.
  */
-export function deleteSchedule(dataStore: DataStore, schedule: Schedule) {
-  removeFromMatrix(dataStore.idsOfDay, schedule);
-  dataStore.schedules.remove(schedule);
+export function deleteSchedule(calendarData: CalendarData, schedule: Schedule) {
+  removeFromMatrix(calendarData.idsOfDay, schedule);
+  calendarData.schedules.remove(schedule);
 
   return schedule;
 }
 
-export function clearSchedules(dataStore: DataStore) {
-  dataStore.idsOfDay = {};
-  dataStore.schedules.clear();
+export function clearSchedules(calendarData: CalendarData) {
+  calendarData.idsOfDay = {};
+  calendarData.schedules.clear();
 }
 
 /**
  * Set calendar list
+ * @param {CalendarData} calendarData - data of calendar
  * @param {Array.<Calendar>} calendars - calendar list
  */
-export function setCalendars(dataStore: DataStore, calendars: CalendarData[]) {
-  dataStore.calendars = calendars;
+export function setCalendars(calendarData: CalendarData, calendars: CalendarInfo[]) {
+  calendarData.calendars = calendars;
 }
 
 /**
  * Return schedules in supplied date range.
  *
  * available only YMD.
- * @param {TZDate} start start date.
- * @param {TZDate} end end date.
+ * @param {CalendarData} calendarData - data of calendar
+ * @param {{start: TZDate, end: TZDate}} condition - condition of find range
  * @returns {object.<string, Collection>} schedule collection grouped by dates.
  */
 export function findByDateRange(
-  dataStore: DataStore,
+  calendarData: CalendarData,
   condition: { start: TZDate; end: TZDate }
 ): Record<string, Schedule[]> {
   const { start, end } = condition;
-  const { schedules, idsOfDay } = dataStore;
+  const { schedules, idsOfDay } = calendarData;
   const range = getDateRange(start, end);
   const ownSchedules = schedules.items;
   const ownMatrix = idsOfDay;

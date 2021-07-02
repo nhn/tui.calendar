@@ -7,11 +7,11 @@ import { toFormat } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
 import { pick } from '@src/util/utils';
 
-interface MoreTitleProps {
+interface Props {
   date: TZDate;
 }
 
-const SeeMoreTitle: FunctionComponent<MoreTitleProps> = ({ date }) => {
+const SeeMoreTitle: FunctionComponent<Props> = ({ date }) => {
   const { month } = useTheme();
   const style = pick(
     month.moreViewTitle,

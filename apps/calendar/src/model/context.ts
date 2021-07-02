@@ -5,14 +5,13 @@ import { EventHandler } from '@src/event';
 import { ExternalEventName } from '@src/event/externalEventType';
 import { InternalEventName } from '@src/event/internalEventType';
 import { registerTemplateConfig } from '@src/template';
-import Theme from '@src/theme';
 
 import { AppContext } from '.';
 
 export function getNewAppContext() {
   const appContext: AppContext = {
     options: {},
-    dataStore: {
+    calendarData: {
       calendars: [],
       schedules: createScheduleCollection(),
       idsOfDay: {},

@@ -2,19 +2,21 @@ import { FunctionComponent, h } from 'preact';
 
 import DayName from '@src/components/daygrid/dayName';
 import { Template, TemplateMonthDayName, TemplateWeekDay } from '@src/model';
-import { getGridLeftAndWidth } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
 import { toPercent, toPx } from '@src/util/units';
 import { isNumber } from '@src/util/utils';
 
 import type { CalendarMonthOption, CalendarWeekOption } from '@t/store';
 
-export interface DayNamesProps {
-  dayNames: TemplateWeekDay[] | TemplateMonthDayName[];
+type TemplateDayNames = (TemplateWeekDay | TemplateMonthDayName)[];
+
+interface Props {
+  dayNames: TemplateDayNames;
   theme?: DayNameTheme;
   options?: CalendarMonthOption | CalendarWeekOption;
   marginLeft?: number;
   templateType: keyof Template;
+  gridInfo: GridInfo[];
 }
 
 const defaultDayNameOption = {
@@ -35,15 +37,14 @@ const defaultDayNameTheme = {
 };
 const defaultMarginLeft = 0;
 
-const DayNames: FunctionComponent<DayNamesProps> = ({
+const DayNames: FunctionComponent<Props> = ({
   dayNames = [],
   theme = defaultDayNameTheme,
   options = defaultDayNameOption,
   marginLeft = defaultMarginLeft,
   templateType,
+  gridInfo,
 }) => {
-  const { narrowWeekend = false, startDayOfWeek = 0, workweek = false } = options;
-
   const {
     height,
     borderLeft,
@@ -71,20 +72,18 @@ const DayNames: FunctionComponent<DayNamesProps> = ({
     lineHeight: isNumber(height) ? toPx(height) : height,
   };
 
-  const grids = getGridLeftAndWidth(dayNames.length, narrowWeekend, startDayOfWeek, workweek);
-
   return (
     <div className={cls('daynames')} style={style}>
-      {(dayNames as Array<TemplateWeekDay | TemplateMonthDayName>).map((dayName, index) => (
+      {(dayNames as TemplateDayNames).map((dayName, index) => (
         <DayName
           templateType={templateType}
           dayname={dayName}
           dayIndex={dayName.day}
-          key={`dayNames-${dayName.day}-${'label' in dayName ? dayName.label : dayName.dayName}`}
+          key={`dayNames-${dayName.day}`}
           style={{
             ...dayNameStyle,
-            width: toPercent(grids[index].width),
-            left: toPercent(grids[index].left),
+            width: toPercent(gridInfo[index].width),
+            left: toPercent(gridInfo[index].left),
           }}
         />
       ))}

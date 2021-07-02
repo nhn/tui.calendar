@@ -1,8 +1,8 @@
-import { CalendarData } from '@src/model';
+import { CalendarInfo } from '@src/model';
 
-export const calendars: CalendarData[] = [];
+export const calendars: CalendarInfo[] = [];
 
-function addCalendar(calendar: CalendarData) {
+function addCalendar(calendar: CalendarInfo) {
   calendars.push(calendar);
 }
 

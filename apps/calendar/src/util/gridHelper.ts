@@ -1,6 +1,6 @@
 import { findByDateRange } from '@src/controller/month';
 import { findByDateRange as findByDateRangeForWeek } from '@src/controller/week';
-import { DataStore, WeekOption } from '@src/model';
+import { CalendarData, WeekOption } from '@src/model';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import TZDate from '@src/time/date';
 import {
@@ -98,7 +98,7 @@ export const isInGrid = (gridDate: TZDate) => {
   };
 };
 
-function getGridDateIndex(date: TZDate, cells: TZDate[]) {
+export function getGridDateIndex(date: TZDate, cells: TZDate[]) {
   return findIndex(cells, (item) => date >= toStartOfDay(item) && date <= toEndOfDay(item));
 }
 
@@ -166,11 +166,11 @@ function getEventViewModelWithPosition(
 
 export function getRenderedEventViewModels(
   cells: TZDate[],
-  dataStore: DataStore,
+  calendarData: CalendarData,
   narrowWeekend: boolean
 ) {
-  const { idsOfDay } = dataStore;
-  const eventViewModels = findByDateRange(dataStore, {
+  const { idsOfDay } = calendarData;
+  const eventViewModels = findByDateRange(calendarData, {
     start: cells[0],
     end: cells[cells.length - 1],
   });
@@ -242,7 +242,7 @@ const getTimeGridEventModels = (
 
 export const getDayGridEvents = (
   cells: Cells,
-  dataStore: DataStore,
+  calendarData: CalendarData,
   { narrowWeekend, hourStart, hourEnd }: WeekOption
 ): EventModelMap => {
   const panels: Panel[] = [
@@ -267,7 +267,7 @@ export const getDayGridEvents = (
       show: true,
     },
   ];
-  const eventModels = findByDateRangeForWeek(dataStore, {
+  const eventModels = findByDateRangeForWeek(calendarData, {
     start: toStartOfDay(cells[0]),
     end: toEndOfDay(cells[cells.length - 1]),
     panels,

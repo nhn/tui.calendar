@@ -2,17 +2,13 @@ import { FunctionComponent, h } from 'preact';
 
 import Template from '@src/components/template';
 
-interface ExceedCountButtonProps {
+interface Props {
   number: number;
   clickHandler: () => void;
   className: string;
 }
 
-const ExceedCountButton: FunctionComponent<ExceedCountButtonProps> = ({
-  number,
-  clickHandler,
-  className,
-}) => {
+const ExceedCountButton: FunctionComponent<Props> = ({ number, clickHandler, className }) => {
   if (!number) {
     return null;
   }

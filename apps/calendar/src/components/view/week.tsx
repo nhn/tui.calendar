@@ -10,7 +10,14 @@ import { ColumnInfo } from '@src/components/timegrid/columns';
 import { TimeGrid } from '@src/components/timegrid/timegrid';
 import { WeekOption } from '@src/model';
 import TZDate from '@src/time/date';
-import { addDate, isWeekend, toEndOfDay, toStartOfDay, WEEK_DAYS } from '@src/time/datetime';
+import {
+  addDate,
+  getGridInfo,
+  isWeekend,
+  toEndOfDay,
+  toStartOfDay,
+  WEEK_DAYS,
+} from '@src/time/datetime';
 import { getDayNames } from '@src/util/dayName';
 import { getDayGridEvents } from '@src/util/gridHelper';
 import { range } from '@src/util/utils';
@@ -38,20 +45,30 @@ const dayNameHeight = 42;
 
 const Week: FunctionComponent = () => {
   const {
-    state: { template, options, dataStore, grid },
+    state: { template, options, calendarData, grid },
   } = useStore();
   const theme = useTheme();
 
-  if (!template || !theme || !options || !dataStore || !grid) {
+  if (!template || !theme || !options || !calendarData || !grid) {
     return null;
   }
 
-  const { narrowWeekend, hourStart, hourEnd } = options.week;
+  const { narrowWeekend, startDayOfWeek, workweek, hourStart, hourEnd } = options.week;
   // @TODO: calculate based on today(need to calculate date when prev & next used)
   const renderWeekDate = new TZDate();
   const cells = getCells(renderWeekDate, options.week);
   const dayNames = getDayNames(cells);
-  const dayGridEvents = getDayGridEvents(cells, dataStore, { narrowWeekend, hourStart, hourEnd });
+  const { gridInfo, gridColWidthMap } = getGridInfo(
+    cells.length,
+    narrowWeekend,
+    startDayOfWeek,
+    workweek
+  );
+  const dayGridEvents = getDayGridEvents(cells, calendarData, {
+    narrowWeekend,
+    hourStart,
+    hourEnd,
+  });
   const columnInfoList = cells.map(
     (cell) =>
       ({ start: toStartOfDay(cell), end: toEndOfDay(cell), unit: 'minute', slot: 30 } as ColumnInfo)
@@ -67,6 +84,8 @@ const Week: FunctionComponent = () => {
           type={panelType}
           height={value.height}
           options={options.week}
+          gridInfo={gridInfo}
+          gridColWidthMap={gridColWidthMap}
         />
       </Panel>
     );
@@ -80,6 +99,7 @@ const Week: FunctionComponent = () => {
           marginLeft={120}
           templateType="weekDayname"
           options={options.week}
+          gridInfo={gridInfo}
         />
       </Panel>
       {allDayPanels}

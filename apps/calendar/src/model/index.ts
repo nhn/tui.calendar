@@ -5,7 +5,6 @@ import { EventHandler } from '@src/event';
 import { ExternalEventName } from '@src/event/externalEventType';
 import { InternalEventName } from '@src/event/internalEventType';
 import Schedule, { ScheduleCategory } from '@src/model/schedule';
-import Theme from '@src/theme';
 import { ThemeKeyValue } from '@src/theme/themeProps';
 import TZDate from '@src/time/date';
 import Collection from '@src/util/collection';
@@ -43,15 +42,15 @@ export interface ScheduleData {
   raw?: any;
 }
 
-export interface DataStore {
-  calendars: CalendarData[];
+export interface CalendarData {
+  calendars: CalendarInfo[];
   schedules: Collection<Schedule>;
   idsOfDay: IDS_OF_DAY;
 }
 
 export interface AppContext {
   options: Option;
-  dataStore: DataStore;
+  calendarData: CalendarData;
   templates: Template;
   internalEvent: EventHandler<InternalEventName>;
   externalEvent: EventHandler<ExternalEventName>;
@@ -214,7 +213,7 @@ export interface CalendarColor {
   borderColor?: string;
 }
 
-export interface CalendarData extends CalendarColor {
+export interface CalendarInfo extends CalendarColor {
   id: string;
   name: string;
 }
@@ -229,7 +228,7 @@ export interface Option {
   template?: TemplateConfig;
   week?: WeekOption;
   month?: MonthOption;
-  calendars?: CalendarData[];
+  calendars?: CalendarInfo[];
   useCreationPopup?: boolean;
   useDetailPopup?: boolean;
   disableDblClick?: boolean;

@@ -27,7 +27,7 @@ import { PopupRect } from '@t/store';
 const OUT_PADDING = 5;
 const VIEW_MIN_WIDTH = 280;
 
-interface CellProps {
+interface Props {
   date: TZDate;
   dayIndex: Day;
   style?: {
@@ -214,7 +214,7 @@ function usePopupRect(
   return { popupRect, container };
 }
 
-export const Cell: FunctionComponent<CellProps> = (props) => {
+export const Cell: FunctionComponent<Props> = (props) => {
   const { show } = useActions('layerPopup');
   const theme = useTheme();
 

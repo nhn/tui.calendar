@@ -3,7 +3,7 @@ import { h, RenderableProps } from 'preact';
 import { StoreProvider } from '@src/components/provider/store';
 import { ThemeProvider } from '@src/components/provider/theme';
 import Schedule from '@src/model/schedule';
-import { dataStore, grid, layerPopup, options, template } from '@src/modules';
+import { calendarData, grid, layerPopup, options, template } from '@src/modules';
 import Store from '@src/store';
 import Theme from '@src/theme';
 import { cls } from '@src/util/cssHelper';
@@ -31,10 +31,10 @@ export function ProviderWrapper({
 }: RenderableProps<Props>) {
   const theme = new Theme();
   const store = createStore(optionsUserInput);
-  store.dispatch('dataStore/clearSchedules', { events });
+  store.dispatch('calendarData/clearSchedules');
 
   if (events.length) {
-    store.dispatch('dataStore/createSchedules', { events });
+    store.dispatch('calendarData/createSchedules', events);
   }
 
   return (
@@ -49,6 +49,6 @@ export function ProviderWrapper({
 export function createStore(optionsUseInput: Options) {
   return new Store<CalendarState>({
     initStoreData: { options: optionsUseInput },
-    modules: [template, options, dataStore, layerPopup, grid],
+    modules: [template, options, calendarData, layerPopup, grid],
   });
 }

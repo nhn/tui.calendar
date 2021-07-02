@@ -1,6 +1,6 @@
 import { addSchedule, createScheduleCollection } from '@src/controller/base';
 import { findByDateRange } from '@src/controller/month';
-import { DataStore, ScheduleData } from '@src/model';
+import { CalendarData, ScheduleData } from '@src/model';
 import Schedule from '@src/model/schedule';
 import TZDate from '@src/time/date';
 import array from '@src/util/array';
@@ -8,13 +8,13 @@ import array from '@src/util/array';
 describe('Base.Month', () => {
   // eslint-disable-next-line no-undefined
   const undef = undefined;
-  let dataStore: DataStore;
+  let calendarData: CalendarData;
   let mockData: ScheduleData[];
   let scheduleList: Schedule[];
   let actual;
 
   beforeEach(() => {
-    dataStore = {
+    calendarData = {
       calendars: [],
       schedules: createScheduleCollection(),
       idsOfDay: {},
@@ -120,7 +120,7 @@ describe('Base.Month', () => {
     beforeEach(() => {
       // add schedule instance to controller
       scheduleList.forEach((schedule) => {
-        addSchedule(dataStore, schedule);
+        addSchedule(calendarData, schedule);
       });
     });
 
@@ -159,7 +159,7 @@ describe('Base.Month', () => {
         [undef, undef, 6],
       ];
 
-      actual = findByDateRange(dataStore, { start, end, andFilters: [], alldayFirstMode: true });
+      actual = findByDateRange(calendarData, { start, end, andFilters: [], alldayFirstMode: true });
 
       expect(actual[0]).toEqualMatricesTitle(expectedMatrix);
       expect(actual[0]).toEqualMatricesTop(expectedTop);
@@ -170,7 +170,7 @@ describe('Base.Month', () => {
     beforeEach(() => {
       // add schedule instance to controller
       scheduleList.forEach((schedule) => {
-        addSchedule(dataStore, schedule);
+        addSchedule(calendarData, schedule);
       });
     });
 
@@ -209,7 +209,7 @@ describe('Base.Month', () => {
         [undef, undef, 5],
       ];
 
-      actual = findByDateRange(dataStore, { start, end });
+      actual = findByDateRange(calendarData, { start, end });
 
       expect(actual[0]).toEqualMatricesTitle(expectedMatrix);
       expect(actual[0]).toEqualMatricesTop(expectedTop);

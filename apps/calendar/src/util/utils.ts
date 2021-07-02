@@ -16,7 +16,7 @@ export function isFunction(value: unknown): value is Function {
   return typeof value === 'function';
 }
 
-export function isNil(value: unknown): boolean {
+export function isNil(value: unknown): value is null | undefined {
   return isUndefined(value) || value === null;
 }
 
@@ -166,4 +166,20 @@ export function forEachArray<T>(
       break;
     }
   }
+}
+
+export function fill<T>(size: number, value: T): T[] {
+  const result: T[] = [];
+
+  if (size > 0) {
+    for (let i = 0; i < size; i += 1) {
+      if (isObject(value)) {
+        result.push(Array.isArray(value) ? deepCopyArray(value) : deepCopy(value));
+      } else {
+        result.push(value);
+      }
+    }
+  }
+
+  return result;
 }

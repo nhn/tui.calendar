@@ -8,7 +8,7 @@ import { useStore } from '@src/components/hooks/store';
 import { useTheme } from '@src/components/hooks/theme';
 import Panel from '@src/components/panel';
 import { TemplateMonthDayName } from '@src/model';
-import { getGridLeftAndWidth, getMonthCalendar, isWeekend } from '@src/time/datetime';
+import { getGridInfo, getMonthCalendar, isWeekend } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
 import { capitalizeDayName } from '@src/util/dayName';
 import { getSize } from '@src/util/dom';
@@ -72,10 +72,10 @@ const Month: FunctionComponent = () => {
   const monthOptions = options.month;
   const calendar = getMonthCalendar(renderMonthDate, monthOptions);
   const { narrowWeekend, startDayOfWeek, workweek } = options.month;
-  const grids = getGridLeftAndWidth(dayNames.length, narrowWeekend, startDayOfWeek, workweek);
+  const { gridInfo } = getGridInfo(dayNames.length, narrowWeekend, startDayOfWeek, workweek);
 
   const getMouseDataOnMonth = panelContainer
-    ? createMousePositionDataGrabber(calendar, grids, panelContainer)
+    ? createMousePositionDataGrabber(calendar, gridInfo, panelContainer)
     : () => null;
 
   return (
@@ -87,6 +87,7 @@ const Month: FunctionComponent = () => {
           dayNames={dayNames}
           theme={theme.month.dayname}
           options={monthOptions}
+          gridInfo={gridInfo}
         />
       </Panel>
       <Panel name="month-daygrid" height={gridPanelHeight}>

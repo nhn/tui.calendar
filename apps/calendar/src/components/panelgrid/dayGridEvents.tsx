@@ -3,8 +3,8 @@ import { Fragment, FunctionComponent, h } from 'preact';
 import range from 'tui-code-snippet/array/range';
 
 import { CreationGuide } from '@src/components/daygrid/creationGuide';
-import GridEvents from '@src/components/daygrid/gridEvents';
 import GridWithMouse from '@src/components/daygrid/gridWithMouse';
+import GridEvent from '@src/components/events/gridEvent';
 import { useCreationGuide } from '@src/components/hooks/creationGuide';
 import { useDOMNode } from '@src/components/hooks/domNode';
 import { useTheme } from '@src/components/hooks/theme';
@@ -14,8 +14,9 @@ import { DEFAULT_PANEL_HEIGHT } from '@src/controller/panel';
 import { WeekOption } from '@src/model';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import TZDate from '@src/time/date';
-import { addDate, getGridLeftAndWidth, toEndOfDay, toStartOfDay } from '@src/time/datetime';
+import { addDate, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
+import { EVENT_HEIGHT, isWithinHeight } from '@src/util/gridHelper';
 import { convertPxToNum } from '@src/util/units';
 import { createMousePositionDataGrabber } from '@src/util/weekViewHelper';
 
@@ -37,6 +38,8 @@ interface Props {
   height?: number;
   options?: WeekOption;
   shouldRenderDefaultPopup?: boolean;
+  gridInfo: GridInfo[];
+  gridColWidthMap: string[][];
 }
 
 function getGridInfoList(cells: Cells): GridGuideInfo[][] {
@@ -59,35 +62,39 @@ export const DayGridEvents: FunctionComponent<Props> = ({
   height = DEFAULT_PANEL_HEIGHT,
   options = {},
   shouldRenderDefaultPopup = false,
+  gridInfo,
+  gridColWidthMap,
 }) => {
   const {
     week: { dayGridSchedule },
   } = useTheme();
   const [panelContainer, setPanelContainerRef] = useDOMNode<HTMLDivElement>();
   const columnWidth = timesWidth * timezonesCount;
-  const { narrowWeekend = false, startDayOfWeek = 0, workweek = false } = options;
-  const grids = getGridLeftAndWidth(cells.length, narrowWeekend, startDayOfWeek, workweek);
+  const { narrowWeekend = false } = options;
   const getMousePositionData =
     type === 'allday' && panelContainer
-      ? createMousePositionDataGrabber(cells, grids, panelContainer)
+      ? createMousePositionDataGrabber(cells, gridInfo, panelContainer)
       : () => null;
 
   const { creationGuide, onGuideChange, onGuideEnd, onGuideCancel } = useCreationGuide(
     shouldRenderDefaultPopup
   );
   const gridInfoList = getGridInfoList(cells);
+  const filteredViewModels = events.filter(
+    isWithinHeight(height, EVENT_HEIGHT + convertPxToNum(dayGridSchedule.marginTop))
+  );
 
   return (
     <Fragment>
       <PanelTitle width={columnWidth} template={type} model={type} />
-      <GridWithMouse
-        gridInfoList={gridInfoList}
-        onGuideEnd={onGuideEnd}
-        onGuideChange={onGuideChange}
-        onGuideCancel={onGuideCancel}
-        getMousePositionData={getMousePositionData}
-      >
-        <div className={cls('allday-panel')} ref={setPanelContainerRef}>
+      <div className={cls('allday-panel')} ref={setPanelContainerRef}>
+        <GridWithMouse
+          gridInfoList={gridInfoList}
+          onGuideEnd={onGuideEnd}
+          onGuideChange={onGuideChange}
+          onGuideCancel={onGuideCancel}
+          getMousePositionData={getMousePositionData}
+        >
           <PanelGrid
             name={type}
             cells={cells}
@@ -95,23 +102,26 @@ export const DayGridEvents: FunctionComponent<Props> = ({
             height={height}
             options={{ narrowWeekend }}
           />
-          <GridEvents
-            name={type}
-            cells={cells}
-            height={height}
-            events={events}
-            narrowWeekend={narrowWeekend}
-            className={cls(`panel-${type}-events`)}
-            headerHeight={0}
-            eventTopMargin={convertPxToNum(dayGridSchedule.marginTop)}
-          />
           <CreationGuide
             creationGuide={creationGuide}
             cells={cells}
             narrowWeekend={narrowWeekend}
           />
+        </GridWithMouse>
+        <div className={cls(`panel-${type}-events`)}>
+          {filteredViewModels.map((viewModel) => (
+            <GridEvent
+              viewModel={viewModel}
+              key={`${type}-DayEvent-${viewModel.cid()}`}
+              eventHeight={EVENT_HEIGHT}
+              headerHeight={0}
+              getMousePositionData={getMousePositionData}
+              gridColWidthMap={gridColWidthMap}
+              cells={cells}
+            />
+          ))}
         </div>
-      </GridWithMouse>
+      </div>
     </Fragment>
   );
 };

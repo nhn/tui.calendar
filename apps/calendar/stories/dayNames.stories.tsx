@@ -2,6 +2,7 @@ import { h } from 'preact';
 
 import DayNames from '@src/components/daygrid/dayNames';
 import { TemplateMonthDayName } from '@src/model';
+import { getGridInfo } from '@src/time/datetime';
 
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { Story } from '@storybook/preact';
@@ -13,11 +14,20 @@ interface DayNamesStory {
   marginLeft?: number;
 }
 
-const Template: Story<DayNamesStory> = ({ dayNames, marginLeft }) => (
-  <ProviderWrapper>
-    <DayNames templateType="monthDayname" dayNames={dayNames} marginLeft={marginLeft} />
-  </ProviderWrapper>
-);
+const Template: Story<DayNamesStory> = ({ dayNames, marginLeft }) => {
+  const { gridInfo } = getGridInfo(dayNames.length, true, 0, true);
+
+  return (
+    <ProviderWrapper>
+      <DayNames
+        templateType="monthDayname"
+        dayNames={dayNames}
+        marginLeft={marginLeft}
+        gridInfo={gridInfo}
+      />
+    </ProviderWrapper>
+  );
+};
 
 const oneDayName = [
   {

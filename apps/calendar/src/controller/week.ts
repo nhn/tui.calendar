@@ -15,7 +15,7 @@ import {
   limitRenderRange,
   positionViewModels,
 } from '@src/controller/core';
-import { DataStore, WeekOption } from '@src/model';
+import { CalendarData, WeekOption } from '@src/model';
 import Schedule from '@src/model/schedule';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import TZDate from '@src/time/date';
@@ -334,7 +334,7 @@ export function getViewModelForAlldayView(
 
 /**
  * Populate schedules in date range.
- * @param {DataStore} dataStore - data store
+ * @param {CalendarData} calendarData - data store
  * @param {object} condition - find option
  *  @param {IDS_OF_DAY} condition.idsOfDay - model controller
  *  @param {TZDate} condition.start start date.
@@ -345,7 +345,7 @@ export function getViewModelForAlldayView(
  * @returns {object} schedules grouped by dates.
  */
 export function findByDateRange(
-  dataStore: DataStore,
+  calendarData: CalendarData,
   condition: {
     start: TZDate;
     end: TZDate;
@@ -355,7 +355,7 @@ export function findByDateRange(
   }
 ) {
   const { start, end, panels, andFilters = [], options } = condition;
-  const { schedules, idsOfDay } = dataStore;
+  const { schedules, idsOfDay } = calendarData;
   const scheduleTypes = pluck(panels, 'name');
   const hourStart = pick(options, 'hourStart');
   const hourEnd = pick(options, 'hourEnd');
