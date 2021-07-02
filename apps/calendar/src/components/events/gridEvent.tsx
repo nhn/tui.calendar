@@ -12,6 +12,7 @@ import { getGridDateIndex } from '@src/util/gridHelper';
 import { toPercent, toPx } from '@src/util/units';
 import { isNil } from '@src/util/utils';
 
+import { StyleProp } from '@t/components/common';
 import { Cells } from '@t/panel';
 
 interface Props {
@@ -133,8 +134,8 @@ function getEventColIndex(viewModel: ScheduleViewModel, cells: Cells) {
 }
 
 const EventItem: FunctionComponent<{
-  containerStyle: h.JSX.CSSProperties;
-  eventItemStyle: h.JSX.CSSProperties;
+  containerStyle: StyleProp;
+  eventItemStyle: StyleProp;
   className: string;
 }> = ({ containerStyle, eventItemStyle, className, children }) => (
   <div className={className} style={containerStyle}>
@@ -156,8 +157,8 @@ const GridEvent: FunctionComponent<Props> = ({
   const { updateSchedule } = useActions('calendarData');
 
   const [isResizing, setResizing] = useState(false);
-  const [resizeGuidStyle, setResizeGuideStyle] = useState<h.JSX.CSSProperties>({});
-  const lastGridX = useRef<number | null>(null);
+  const [resizeGuideStyle, setResizeGuideStyle] = useState<StyleProp | null>(null);
+  const lastGridColIndex = useRef<number | null>(null);
 
   const { dayEventBlockClassName, containerStyle, eventItemStyle, resizeIconStyle } = getStyles({
     viewModel,
@@ -166,10 +167,15 @@ const GridEvent: FunctionComponent<Props> = ({
     flat,
   });
   const { start, end } = getEventColIndex(viewModel, cells);
+  const resetResizing = () => {
+    setResizing(false);
+    setResizeGuideStyle(null);
+    lastGridColIndex.current = null;
+  };
 
   const { onMouseDown } = useDrag({
     onDragStart: () => {
-      lastGridX.current = end;
+      lastGridColIndex.current = end;
       setResizing(true);
     },
     onDrag: (e) => {
@@ -179,7 +185,7 @@ const GridEvent: FunctionComponent<Props> = ({
       }
 
       const { gridX } = mousePositionData;
-      lastGridX.current = gridX;
+      lastGridColIndex.current = gridX;
 
       if (start <= gridX) {
         setResizeGuideStyle({
@@ -188,7 +194,7 @@ const GridEvent: FunctionComponent<Props> = ({
       }
     },
     onDragEnd: () => {
-      const { current: gridX } = lastGridX;
+      const { current: gridX } = lastGridColIndex;
       if (!isNil(start) && !isNil(gridX)) {
         if (start <= gridX && end !== gridX) {
           const targetDate = cells[gridX];
@@ -196,10 +202,9 @@ const GridEvent: FunctionComponent<Props> = ({
         }
       }
 
-      setResizing(false);
-      setResizeGuideStyle({});
-      lastGridX.current = null;
+      resetResizing();
     },
+    onCancel: resetResizing,
   });
 
   return (
@@ -216,7 +221,7 @@ const GridEvent: FunctionComponent<Props> = ({
       </EventItem>
       {isResizing ? (
         <EventItem
-          containerStyle={{ ...containerStyle, ...resizeGuidStyle }}
+          containerStyle={{ ...containerStyle, ...resizeGuideStyle }}
           eventItemStyle={eventItemStyle}
           className={dayEventBlockClassName}
         />
