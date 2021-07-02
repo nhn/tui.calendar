@@ -723,7 +723,7 @@ export function getGridInfo(
 
   return {
     gridInfo,
-    gridColWidthMap: gridColWidthMap.map((widthList) => widthList.map((width) => toPercent(width))),
+    gridColWidthMap: gridColWidthMap.map((widthList) => widthList.map(toPercent)),
   };
 }
 
