@@ -1,5 +1,7 @@
 import type { LayoutState } from '@t/store';
 
+type UpdatePanelHeightParams = { type: string; height: number };
+
 const initialLayout: LayoutState = {
   milestone: {
     height: 72,
@@ -16,7 +18,7 @@ export const grid = {
   name: 'grid',
   state: initialLayout,
   actions: {
-    updatePanelHeight(state: LayoutState, { type, height }: { type: string; height: number }) {
+    updatePanelHeight(state: LayoutState, { type, height }: UpdatePanelHeightParams) {
       return {
         ...state,
         [type]: {

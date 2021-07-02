@@ -216,7 +216,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * ]);
    */
   createSchedules(events: ScheduleData[]) {
-    this.store.dispatch('calendarData/createSchedules', { events });
+    this.store.dispatch('calendarData/createSchedules', events);
   }
 
   /**

@@ -7,6 +7,8 @@ import {
 import { CalendarData, ScheduleData } from '@src/model';
 import Schedule from '@src/model/schedule';
 
+type UpdateScheduleParams = { event: Schedule; eventData: ScheduleData };
+
 const initialCalendarData: CalendarData = {
   calendars: [],
   schedules: createScheduleCollection(),
@@ -17,15 +19,12 @@ export const calendarData = {
   name: 'calendarData',
   state: initialCalendarData,
   actions: {
-    createSchedules(state: CalendarData, { events }: { events: Schedule[] }) {
+    createSchedules(state: CalendarData, events: Schedule[]) {
       createSchedules(state, events);
 
       return { ...state };
     },
-    updateSchedule(
-      state: CalendarData,
-      { event, eventData }: { event: Schedule; eventData: ScheduleData }
-    ) {
+    updateSchedule(state: CalendarData, { event, eventData }: UpdateScheduleParams) {
       updateSchedule(state, event.id, event.calendarId, eventData);
 
       return { ...state };
