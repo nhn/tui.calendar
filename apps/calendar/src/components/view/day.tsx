@@ -19,11 +19,11 @@ const dayNameHeight = 42;
 
 const Day: FunctionComponent = () => {
   const {
-    state: { template, options, dataStore, grid },
+    state: { template, options, calendarData, grid },
   } = useStore();
   const theme = useTheme();
 
-  if (!template || !theme || !options || !dataStore || !grid) {
+  if (!template || !theme || !options || !calendarData || !grid) {
     return null;
   }
 
@@ -37,7 +37,11 @@ const Day: FunctionComponent = () => {
     startDayOfWeek,
     workweek
   );
-  const dayGridEvents = getDayGridEvents(cells, dataStore, { narrowWeekend, hourStart, hourEnd });
+  const dayGridEvents = getDayGridEvents(cells, calendarData, {
+    narrowWeekend,
+    hourStart,
+    hourEnd,
+  });
   const columnInfoList = cells.map(
     (cell) =>
       ({ start: toStartOfDay(cell), end: toEndOfDay(cell), unit: 'minute', slot: 30 } as ColumnInfo)

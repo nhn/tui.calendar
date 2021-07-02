@@ -153,7 +153,7 @@ const GridEvent: FunctionComponent<Props> = ({
   gridColWidthMap,
   cells = [],
 }) => {
-  const { updateSchedule } = useActions('dataStore');
+  const { updateSchedule } = useActions('calendarData');
 
   const [isResizing, setResizing] = useState(false);
   const [resizeGuidStyle, setResizeGuideStyle] = useState<h.JSX.CSSProperties>({});

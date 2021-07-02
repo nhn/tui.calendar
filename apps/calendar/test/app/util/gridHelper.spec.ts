@@ -1,5 +1,5 @@
 import { createScheduleCollection } from '@src/controller/base';
-import { DataStore } from '@src/model';
+import { CalendarData } from '@src/model';
 import Schedule from '@src/model/schedule';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import TZDate from '@src/time/date';
@@ -50,13 +50,13 @@ describe('gridHelper', () => {
       new TZDate(2021, 5, 4),
       new TZDate(2021, 5, 5),
     ];
-    const dataStore: DataStore = {
+    const calendarData: CalendarData = {
       calendars: [],
       schedules: createScheduleCollection(),
       idsOfDay: {},
     };
 
-    expect(getRenderedEventViewModels(cells, dataStore, narrowWeekend)).toEqual({
+    expect(getRenderedEventViewModels(cells, calendarData, narrowWeekend)).toEqual({
       viewModels: [],
       gridDateEventModelMap: {},
     });

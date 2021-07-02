@@ -74,10 +74,10 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
   const rowHeight =
     TOTAL_PERCENT_HEIGHT / Math.max(visibleWeeksCount === 0 ? 6 : visibleWeeksCount, 1);
 
-  const { state: dataStore } = useStore('dataStore');
+  const { state: calendarData } = useStore('calendarData');
   const theme = useTheme();
 
-  if (!theme || !dataStore) {
+  if (!theme || !calendarData) {
     return null;
   }
 
@@ -101,7 +101,7 @@ const DayGrid: FunctionComponent<DayGridProps> = (props) => {
       {calendar.map((week, rowIndex) => {
         const { viewModels, gridDateEventModelMap } = getRenderedEventViewModels(
           week,
-          dataStore,
+          calendarData,
           narrowWeekend
         );
 

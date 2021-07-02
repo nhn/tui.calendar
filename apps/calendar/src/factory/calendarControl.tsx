@@ -13,7 +13,7 @@ import { InternalEventName } from '@src/event/internalEventType';
 import {
   AppContext,
   CalendarColor,
-  CalendarData,
+  CalendarInfo,
   CustomTimezone,
   DateType,
   Option,
@@ -21,7 +21,7 @@ import {
   ViewType,
 } from '@src/model';
 import {
-  dataStore,
+  calendarData,
   grid,
   layerPopup,
   options as OptionsModule,
@@ -88,7 +88,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
       options: {
         defaultView: 'month',
       },
-      dataStore: {
+      calendarData: {
         calendars: [],
         schedules: createScheduleCollection(),
         idsOfDay: {},
@@ -108,7 +108,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
 
     this.store = new Store({
       initStoreData: { options: this._options },
-      modules: [OptionsModule, templateModule, dataStore, layerPopup, grid],
+      modules: [OptionsModule, templateModule, calendarData, layerPopup, grid],
     });
   }
 
@@ -216,7 +216,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * ]);
    */
   createSchedules(events: ScheduleData[]) {
-    this.store.dispatch('dataStore/createSchedules', { events });
+    this.store.dispatch('calendarData/createSchedules', { events });
   }
 
   /**
@@ -335,7 +335,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * calendar.render();
    */
   clear() {
-    this.store.dispatch('dataStore/clearSchedules');
+    this.store.dispatch('calendarData/clearSchedules');
   }
 
   /**
@@ -625,7 +625,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * @param {Array.<Object>} calendars - calendar list
    * @todo implement this
    */
-  setCalendars(calendars: CalendarData[]) {
+  setCalendars(calendars: CalendarInfo[]) {
     // console.log('setCalendars', calendars);
   }
 

@@ -6,7 +6,7 @@ import {
   hasCollision,
   splitScheduleByDateRange,
 } from '@src/controller/week';
-import { DataStore, ScheduleData } from '@src/model';
+import { CalendarData, ScheduleData } from '@src/model';
 import Schedule from '@src/model/schedule';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import TZDate from '@src/time/date';
@@ -19,11 +19,11 @@ import type { Panel } from '@t/panel';
 const SCHEDULE_MIN_DURATION = MS_SCHEDULE_MIN_DURATION;
 
 describe('Base.Week', () => {
-  let dataStore: DataStore;
+  let calendarData: CalendarData;
   let mockData: ScheduleData[];
 
   beforeEach(() => {
-    dataStore = {
+    calendarData = {
       calendars: [],
       schedules: createScheduleCollection(),
       idsOfDay: {},
@@ -183,7 +183,7 @@ describe('Base.Week', () => {
       ];
 
       mockData.forEach((data) => {
-        createSchedule(dataStore, data);
+        createSchedule(calendarData, data);
       });
 
       /*
@@ -201,7 +201,7 @@ describe('Base.Week', () => {
       const start = new TZDate('2015/04/30');
       const end = new TZDate('2015/05/02');
 
-      const result = findByDateRange(dataStore, {
+      const result = findByDateRange(calendarData, {
         start,
         end,
         panels,
@@ -221,7 +221,7 @@ describe('Base.Week', () => {
       const end = new TZDate('2015/05/02');
 
       // Since there is only one event with title J
-      const result = findByDateRange(dataStore, {
+      const result = findByDateRange(calendarData, {
         start,
         end,
         panels,
@@ -335,14 +335,14 @@ describe('Base.Week', () => {
       collection.add(...schedules);
 
       schedules.forEach((schedule) => {
-        dataStore.schedules.add(schedule);
-        addToMatrix(dataStore.idsOfDay, schedule);
+        calendarData.schedules.add(schedule);
+        addToMatrix(calendarData.idsOfDay, schedule);
       });
     });
 
     it('split schedule by ymd.', () => {
       const result = splitScheduleByDateRange(
-        dataStore.idsOfDay,
+        calendarData.idsOfDay,
         new TZDate('2015-05-01T00:00:00'),
         new TZDate('2015-05-03T23:59:59'),
         collection

@@ -1,7 +1,7 @@
 import Chance from 'chance';
 import moment from 'moment-timezone';
 
-import { CalendarData, ScheduleData, ViewType } from '@src/model';
+import { CalendarInfo, ScheduleData, ViewType } from '@src/model';
 import Schedule, { ScheduleCategory } from '@src/model/schedule';
 import TZDate from '@src/time/date';
 import { getMonthCalendar } from '@src/time/datetime';
@@ -62,7 +62,7 @@ function createNames() {
   return names;
 }
 
-function createRandomEvent(calendar: CalendarData, renderStart: TZDate, renderEnd: TZDate) {
+function createRandomEvent(calendar: CalendarInfo, renderStart: TZDate, renderEnd: TZDate) {
   const event: ScheduleData = {
     raw: {
       creator: {},

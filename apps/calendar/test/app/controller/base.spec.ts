@@ -6,16 +6,16 @@ import {
   getDateRange,
   updateSchedule,
 } from '@src/controller/base';
-import { DataStore, ScheduleData } from '@src/model';
+import { CalendarData, ScheduleData } from '@src/model';
 import Schedule from '@src/model/schedule';
 import TZDate from '@src/time/date';
 
 describe('controller/base', () => {
-  let dataStore: DataStore;
+  let calendarData: CalendarData;
   let scheduleDataList: ScheduleData[];
 
   beforeEach(() => {
-    dataStore = {
+    calendarData = {
       calendars: [],
       schedules: createScheduleCollection(),
       idsOfDay: {},
@@ -90,16 +90,16 @@ describe('controller/base', () => {
     it('return itself for chaining pattern.', () => {
       const schedule = Schedule.create(scheduleDataList[0]);
 
-      expect(schedule.equals(createSchedule(dataStore, scheduleDataList[0]))).toBe(true);
+      expect(schedule.equals(createSchedule(calendarData, scheduleDataList[0]))).toBe(true);
     });
 
     it('create schedule instance by raw schedule data.', () => {
-      const id = createSchedule(dataStore, scheduleDataList[0]).cid();
-      const id2 = createSchedule(dataStore, scheduleDataList[1]).cid();
-      const id3 = createSchedule(dataStore, scheduleDataList[3]).cid();
+      const id = createSchedule(calendarData, scheduleDataList[0]).cid();
+      const id2 = createSchedule(calendarData, scheduleDataList[1]).cid();
+      const id3 = createSchedule(calendarData, scheduleDataList[3]).cid();
 
-      expect(dataStore.schedules.length).toBe(3);
-      expect(dataStore.idsOfDay).toEqual({
+      expect(calendarData.schedules.length).toBe(3);
+      expect(calendarData.idsOfDay).toEqual({
         '20150501': [id],
         '20150502': [id, id3],
         '20150503': [id2, id3],
@@ -116,7 +116,7 @@ describe('controller/base', () => {
       idList = [];
 
       scheduleDataList.forEach((data) => {
-        const item = createSchedule(dataStore, data);
+        const item = createSchedule(calendarData, data);
         scheduleList.push(item);
         idList.push(item.cid());
       });
@@ -139,7 +139,7 @@ describe('controller/base', () => {
 
       const start = new TZDate('2015/04/30');
       const end = new TZDate('2015/05/02');
-      const result = findByDateRange(dataStore, { start, end });
+      const result = findByDateRange(calendarData, { start, end });
 
       expect(result).toEqualViewModelByTitle(expected);
     });
@@ -153,7 +153,7 @@ describe('controller/base', () => {
       const start = new TZDate('2015/05/02');
       const end = new TZDate('2015/05/03');
 
-      const result = findByDateRange(dataStore, { start, end });
+      const result = findByDateRange(calendarData, { start, end });
 
       expect(result).toEqualViewModelByTitle(expected);
     });
@@ -161,7 +161,7 @@ describe('controller/base', () => {
 
   describe('updateSchedule()', () => {
     it('update owned schedule and date matrix.', () => {
-      const model = createSchedule(dataStore, {
+      const model = createSchedule(calendarData, {
         title: 'Go to work',
         isAllDay: false,
         start: '2015/05/01 09:30:00',
@@ -169,14 +169,14 @@ describe('controller/base', () => {
       });
       const id = model.cid();
 
-      updateSchedule(dataStore, model.id, model.calendarId, {
+      updateSchedule(calendarData, model.id, model.calendarId, {
         title: 'Go to work',
         isAllDay: false,
         start: '2015/05/02',
         end: '2015/05/02',
       });
 
-      const schedule = dataStore.schedules.single();
+      const schedule = calendarData.schedules.single();
 
       expect(schedule).not.toBeNull();
 
@@ -191,7 +191,7 @@ describe('controller/base', () => {
         })
       );
 
-      expect(dataStore.idsOfDay).toEqual({
+      expect(calendarData.idsOfDay).toEqual({
         '20150501': [],
         '20150502': [id],
       });
@@ -202,7 +202,7 @@ describe('controller/base', () => {
     let schedule: Schedule;
 
     beforeEach(() => {
-      schedule = createSchedule(dataStore, {
+      schedule = createSchedule(calendarData, {
         title: 'Go to work',
         isAllDay: false,
         start: '2015/05/01 09:30:00',
@@ -211,9 +211,9 @@ describe('controller/base', () => {
     });
 
     it('delete an schedule by model.', () => {
-      expect(deleteSchedule(dataStore, schedule)).toEqual(schedule);
-      expect(dataStore.schedules.length).toBe(0);
-      expect(dataStore.idsOfDay).toEqual({
+      expect(deleteSchedule(calendarData, schedule)).toEqual(schedule);
+      expect(calendarData.schedules.length).toBe(0);
+      expect(calendarData.idsOfDay).toEqual({
         '20150501': [],
       });
     });

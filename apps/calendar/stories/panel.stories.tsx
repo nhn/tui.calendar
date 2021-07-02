@@ -7,7 +7,7 @@ import Panel from '@src/components/panel';
 import { DayGridEvents } from '@src/components/panelgrid/dayGridEvents';
 import { PanelTitle } from '@src/components/panelgrid/panelTitle';
 import { createScheduleCollection } from '@src/controller/base';
-import { DataStore } from '@src/model';
+import { CalendarData } from '@src/model';
 import TZDate from '@src/time/date';
 import { addDate, getGridInfo, toStartOfDay } from '@src/time/datetime';
 import { getDayGridEvents } from '@src/util/gridHelper';
@@ -25,12 +25,12 @@ const cells = range(0, 7).map((day) => {
 
   return addDate(now, day - now.getDay());
 });
-const dataStore: DataStore = {
+const calendarData: CalendarData = {
   calendars: [],
   schedules: createScheduleCollection(...events),
   idsOfDay: {},
 };
-const dayGridEvents = getDayGridEvents(cells, dataStore, { narrowWeekend: false });
+const dayGridEvents = getDayGridEvents(cells, calendarData, { narrowWeekend: false });
 
 const Template: Story = (args) => {
   const { gridInfo, gridColWidthMap } = getGridInfo(cells.length, true, 0, true);

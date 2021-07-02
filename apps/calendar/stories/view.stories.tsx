@@ -56,10 +56,10 @@ const timeGridDay = {
 function createEvents() {
   const events = createRandomEventModelsForMonth();
 
-  store.dispatch('dataStore/clearSchedules');
+  store.dispatch('calendarData/clearSchedules');
 
   if (events.length) {
-    store.dispatch('dataStore/createSchedules', { events });
+    store.dispatch('calendarData/createSchedules', { events });
   }
 }
 
