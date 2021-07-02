@@ -8,7 +8,7 @@ import { getDayName } from '@src/util/dayName';
 
 import { CSSValue } from '@t/components/daygrid/cell';
 
-interface DayNameProps {
+interface Props {
   dayname: TemplateWeekDay | TemplateMonthDayName;
   dayIndex: Day;
   style: Pick<
@@ -22,7 +22,7 @@ interface DayNameProps {
   templateType: keyof TemplateType;
 }
 
-const DayName: FunctionComponent<DayNameProps> = (props) => {
+const DayName: FunctionComponent<Props> = (props) => {
   const { dayname, dayIndex, style, templateType } = props;
 
   return (

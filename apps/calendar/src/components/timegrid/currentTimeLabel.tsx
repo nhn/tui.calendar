@@ -12,14 +12,14 @@ const classNames = {
   currentTime: addTimeGridPrefix('current-time'),
 };
 
-interface CurrentTimeLabelProps {
+interface Props {
   unit: TimeUnit;
   top: number;
   time?: TZDate;
   dateDifference?: number;
 }
 
-export const CurrentTimeLabel: FunctionComponent<CurrentTimeLabelProps> = ({
+export const CurrentTimeLabel: FunctionComponent<Props> = ({
   unit,
   dateDifference = 0,
   top,

@@ -3,12 +3,12 @@ import { FunctionComponent, h } from 'preact';
 import { MouseEventListener } from '@src/components/hooks/drag';
 import { cls } from '@src/util/cssHelper';
 
-interface ResizeIconProps {
+interface Props {
   style: { lineHeight: number | string };
   onMouseDown: MouseEventListener;
 }
 
-const ResizeIcon: FunctionComponent<ResizeIconProps> = ({ style, onMouseDown }) => {
+const ResizeIcon: FunctionComponent<Props> = ({ style, onMouseDown }) => {
   return (
     <span
       className={`${cls('weekday-resize-handle')} ${cls('handle-y')}`}

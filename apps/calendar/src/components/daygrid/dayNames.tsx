@@ -8,8 +8,10 @@ import { isNumber } from '@src/util/utils';
 
 import type { CalendarMonthOption, CalendarWeekOption } from '@t/store';
 
-export interface Props {
-  dayNames: TemplateWeekDay[] | TemplateMonthDayName[];
+type TemplateDayNames = (TemplateWeekDay | TemplateMonthDayName)[];
+
+interface Props {
+  dayNames: TemplateDayNames;
   theme?: DayNameTheme;
   options?: CalendarMonthOption | CalendarWeekOption;
   marginLeft?: number;
@@ -72,7 +74,7 @@ const DayNames: FunctionComponent<Props> = ({
 
   return (
     <div className={cls('daynames')} style={style}>
-      {(dayNames as Array<TemplateWeekDay | TemplateMonthDayName>).map((dayName, index) => (
+      {(dayNames as TemplateDayNames).map((dayName, index) => (
         <DayName
           templateType={templateType}
           dayname={dayName}

@@ -21,7 +21,7 @@ import { CalendarMonthOption } from '@t/store';
 
 const TOTAL_PERCENT_HEIGHT = 100;
 
-interface DayGridProps {
+interface Props {
   options: CalendarMonthOption;
   calendar: TZDate[][];
   appContainer: { current: HTMLDivElement };
@@ -55,7 +55,7 @@ function getGridInfoList(calendar: TZDate[][]): GridGuideInfo[][] {
   );
 }
 
-const DayGrid: FunctionComponent<DayGridProps> = (props) => {
+const DayGrid: FunctionComponent<Props> = (props) => {
   const {
     options,
     calendar = [],

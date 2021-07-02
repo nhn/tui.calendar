@@ -5,11 +5,11 @@ import SeeMoreTitle from '@src/components/popup/seeMoreTitle';
 import TZDate from '@src/time/date';
 import { cls } from '@src/util/cssHelper';
 
-interface MoreHeaderProps {
+interface Props {
   date: TZDate;
 }
 
-const SeeMoreHeader: FunctionComponent<MoreHeaderProps> = ({ date }) => {
+const SeeMoreHeader: FunctionComponent<Props> = ({ date }) => {
   return (
     <div className={cls('see-more-header')}>
       <SeeMoreTitle date={date} />
