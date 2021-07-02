@@ -168,15 +168,17 @@ export function forEachArray<T>(
   }
 }
 
-export function fill<T>(size: number, value: T): Array<T> {
+export function fill<T>(size: number, value: T): T[] {
   const result: T[] = [];
 
-  if (size < 0) {
-    return result;
-  }
-
-  for (let i = 0; i < size; i += 1) {
-    result.push(value);
+  if (size > 0) {
+    for (let i = 0; i < size; i += 1) {
+      if (isObject(value)) {
+        result.push(Array.isArray(value) ? deepCopyArray(value) : deepCopy(value));
+      } else {
+        result.push(value);
+      }
+    }
   }
 
   return result;

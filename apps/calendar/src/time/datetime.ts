@@ -711,6 +711,7 @@ export function getGridInfo(
 
   const { length } = gridInfo;
   const gridColWidthMap = fill(length, fill(length, 0));
+
   gridInfo.forEach(({ width }, index) => {
     for (let i = 0; i <= index; i += 1) {
       for (let j = index; j < length; j += 1) {
