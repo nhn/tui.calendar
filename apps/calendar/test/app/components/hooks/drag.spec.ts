@@ -1,8 +1,4 @@
-import {
-  DragListeners,
-  MINIMUM_MOVE_DETECTION_DISTANCE,
-  useDrag,
-} from '@src/components/hooks/drag';
+import { DragListeners, MINIMUM_MOVE_DISTANCE, useDrag } from '@src/components/hooks/drag';
 import { noop } from '@src/util';
 
 import { createKeyboardEvent, createMouseEvent, spyOnDragEvent } from '@test/helper';
@@ -40,7 +36,7 @@ describe('drag hook', () => {
     });
 
     // do not fire until distance is DISTANCE
-    for (let i = 0; i < MINIMUM_MOVE_DETECTION_DISTANCE; i += 1) {
+    for (let i = 0; i < MINIMUM_MOVE_DISTANCE; i += 1) {
       result.current?.onMouseMove(mouseMoveEvent);
 
       expect(listeners.onDragStart).not.toHaveBeenCalledWith(mouseMoveEvent);
@@ -59,7 +55,7 @@ describe('drag hook', () => {
     });
 
     // fire it after fulfilling distance
-    for (let i = 0; i <= MINIMUM_MOVE_DETECTION_DISTANCE; i += 1) {
+    for (let i = 0; i <= MINIMUM_MOVE_DISTANCE; i += 1) {
       result.current?.onMouseMove(mouseMoveEvent);
     }
 
@@ -75,7 +71,7 @@ describe('drag hook', () => {
     });
 
     // fire onDragStart after fulfilling distance
-    for (let i = 0; i <= MINIMUM_MOVE_DETECTION_DISTANCE; i += 1) {
+    for (let i = 0; i <= MINIMUM_MOVE_DISTANCE; i += 1) {
       result.current?.onMouseMove(mouseMoveEvent);
     }
 
@@ -111,7 +107,7 @@ describe('drag hook', () => {
     });
 
     // fire onDragStart after fulfilling distance
-    for (let i = 0; i <= MINIMUM_MOVE_DETECTION_DISTANCE; i += 1) {
+    for (let i = 0; i <= MINIMUM_MOVE_DISTANCE; i += 1) {
       result.current?.onMouseMove(mouseMoveEvent);
     }
 

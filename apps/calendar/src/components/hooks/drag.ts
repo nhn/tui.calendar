@@ -15,7 +15,7 @@ function isLeftClick(buttonNum: number) {
   return buttonNum === 0;
 }
 
-export const MINIMUM_MOVE_DETECTION_DISTANCE = 3;
+export const MINIMUM_MOVE_DISTANCE = 3;
 
 export function useDrag({
   onDragStart = noop,
@@ -39,8 +39,8 @@ export function useDrag({
   }, []);
 
   const onMouseDown = useCallback<MouseEventListener>(
-    (e) => {
-      if (!isLeftClick(e.button)) {
+    ({ button }) => {
+      if (!isLeftClick(button)) {
         return;
       }
 
@@ -52,10 +52,10 @@ export function useDrag({
 
   const onMouseMove = useCallback<MouseEventListener>(
     (e) => {
-      // prevent automatic scrolling.
+      // prevent text selection on dragging
       e.preventDefault();
 
-      if (movedDistanceRef.current < MINIMUM_MOVE_DETECTION_DISTANCE) {
+      if (movedDistanceRef.current < MINIMUM_MOVE_DISTANCE) {
         movedDistanceRef.current += 1;
 
         return;
