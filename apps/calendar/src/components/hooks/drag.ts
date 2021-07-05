@@ -3,9 +3,6 @@ import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import { noop } from '@src/util';
 import { ESCAPE, isKey } from '@src/util/keycode';
 
-export type MouseEventListener = (e: MouseEvent) => void;
-type KeyboardEventListener = (e: KeyboardEvent) => void;
-
 export interface DragListeners {
   onDragStart?: MouseEventListener;
   onDrag?: MouseEventListener;
