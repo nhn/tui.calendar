@@ -11,15 +11,21 @@ describe('drag hook', () => {
   let mouseMoveEvent: MouseEvent;
   let mouseUpEvent: MouseEvent;
   let listeners: DragListeners;
-  const setup = () => renderHook(() => useDrag(listeners));
+  const setup = () => {
+    const { result } = renderHook(() => useDrag(listeners));
+    act(() => {
+      result.current?.onMouseDown(mouseDownEvent);
+    });
+
+    return result;
+  };
 
   beforeEach(() => {
     listeners = {
       onDragStart: noop,
       onDrag: noop,
       onDragEnd: noop,
-      onClick: noop,
-      onCancel: noop,
+      onPressESCKey: noop,
     };
 
     spyOnDragEvent(listeners);
@@ -30,53 +36,59 @@ describe('drag hook', () => {
   });
 
   it('fires onDragStart', () => {
-    const { result } = setup();
-    act(() => {
-      result.current?.onMouseDown(mouseDownEvent);
-    });
+    const result = setup();
 
     // do not fire until distance is DISTANCE
     for (let i = 0; i < MINIMUM_MOVE_DISTANCE; i += 1) {
-      result.current?.onMouseMove(mouseMoveEvent);
+      // eslint-disable-next-line no-loop-func
+      act(() => {
+        result.current?.onMouseMove(mouseMoveEvent);
+      });
 
       expect(listeners.onDragStart).not.toHaveBeenCalledWith(mouseMoveEvent);
     }
 
     // fire it after fulfilling distance
-    result.current?.onMouseMove(mouseMoveEvent);
+    act(() => {
+      result.current?.onMouseMove(mouseMoveEvent);
+    });
 
     expect(listeners.onDragStart).toHaveBeenCalledWith(mouseMoveEvent);
   });
 
   it('fires onDrag', () => {
-    const { result } = setup();
-    act(() => {
-      result.current?.onMouseDown(mouseDownEvent);
-    });
+    const result = setup();
 
     // fire it after fulfilling distance
     for (let i = 0; i <= MINIMUM_MOVE_DISTANCE; i += 1) {
-      result.current?.onMouseMove(mouseMoveEvent);
+      // eslint-disable-next-line no-loop-func
+      act(() => {
+        result.current?.onMouseMove(mouseMoveEvent);
+      });
     }
 
-    result.current?.onMouseMove(mouseMoveEvent);
+    act(() => {
+      result.current?.onMouseMove(mouseMoveEvent);
+    });
 
     expect(listeners.onDrag).toHaveBeenCalledWith(mouseMoveEvent);
   });
 
-  it('fires onDragEnd, not onClick', () => {
-    const { result } = setup();
-    act(() => {
-      result.current?.onMouseDown(mouseDownEvent);
-    });
+  it('fires onDragEnd', () => {
+    const result = setup();
 
     // fire onDragStart after fulfilling distance
     for (let i = 0; i <= MINIMUM_MOVE_DISTANCE; i += 1) {
-      result.current?.onMouseMove(mouseMoveEvent);
+      // eslint-disable-next-line no-loop-func
+      act(() => {
+        result.current?.onMouseMove(mouseMoveEvent);
+      });
     }
 
     // fire onDrag
-    result.current?.onMouseMove(mouseMoveEvent);
+    act(() => {
+      result.current?.onMouseMove(mouseMoveEvent);
+    });
 
     // fire onDragEnd
     act(() => {
@@ -84,31 +96,18 @@ describe('drag hook', () => {
     });
 
     expect(listeners.onDragEnd).toHaveBeenCalledWith(mouseUpEvent);
-    expect(listeners.onClick).not.toHaveBeenCalled();
-  });
-
-  it('fires onClick', () => {
-    const { result } = setup();
-    act(() => {
-      result.current?.onMouseDown(mouseDownEvent);
-    });
-
-    result.current?.onMouseMove(mouseMoveEvent);
-    result.current?.onMouseUp(mouseUpEvent);
-
-    expect(listeners.onClick).toHaveBeenCalledWith(mouseUpEvent);
   });
 
   it('ESC fires onCancel and do not fire any more events', () => {
     const keyEvent = createKeyboardEvent('keydown', { key: 'Escape' });
-    const { result } = setup();
-    act(() => {
-      result.current?.onMouseDown(mouseDownEvent);
-    });
+    const result = setup();
 
     // fire onDragStart after fulfilling distance
     for (let i = 0; i <= MINIMUM_MOVE_DISTANCE; i += 1) {
-      result.current?.onMouseMove(mouseMoveEvent);
+      // eslint-disable-next-line no-loop-func
+      act(() => {
+        result.current?.onMouseMove(mouseMoveEvent);
+      });
     }
 
     act(() => {
@@ -116,10 +115,12 @@ describe('drag hook', () => {
     });
 
     expect(listeners.onDragStart).toHaveBeenCalledWith(mouseMoveEvent);
-    expect(listeners.onCancel).toHaveBeenCalled();
+    expect(listeners.onPressESCKey).toHaveBeenCalled();
 
-    result.current?.onMouseMove(mouseMoveEvent);
-    result.current?.onMouseUp(mouseUpEvent);
+    act(() => {
+      result.current?.onMouseMove(mouseMoveEvent);
+      result.current?.onMouseUp(mouseUpEvent);
+    });
 
     expect(listeners.onDrag).not.toHaveBeenCalledWith(mouseMoveEvent);
     expect(listeners.onDragEnd).not.toHaveBeenCalled();
