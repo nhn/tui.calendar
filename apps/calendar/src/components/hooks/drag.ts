@@ -1,7 +1,10 @@
+import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
+
 import { noop } from '@src/util';
 import { ESCAPE, isKey } from '@src/util/keycode';
 
 export type MouseEventListener = (e: MouseEvent) => void;
+type KeyboardEventListener = (e: KeyboardEvent) => void;
 
 export interface DragListeners {
   onDragStart?: MouseEventListener;
@@ -11,7 +14,11 @@ export interface DragListeners {
   onCancel?: () => void;
 }
 
-export const DISTANCE = 3;
+function isLeftClick(buttonNum: number) {
+  return buttonNum === 0;
+}
+
+export const MINIMUM_MOVE_DETECTION_DISTANCE = 3;
 
 export function useDrag({
   onDragStart = noop,
@@ -20,86 +27,106 @@ export function useDrag({
   onClick = noop,
   onCancel = noop,
 }: DragListeners) {
-  let onMouseMove: MouseEventListener;
-  let onMouseUp: MouseEventListener;
-  let onKeydownESC: (e: KeyboardEvent) => void;
+  const [isStarted, setStarted] = useState(false);
+  const movedDistanceRef = useRef(0);
+  const isDraggingRef = useRef(false);
 
-  let distance = 0;
-  let isMoved = false;
-  let isDragStartFired = false;
+  const onMouseMoveRef = useRef<MouseEventListener | null>(null);
+  const onMouseUpRef = useRef<MouseEventListener | null>(null);
+  const onKeyDownRef = useRef<KeyboardEventListener | null>(null);
 
-  const clearData = () => {
-    distance = 0;
-    isDragStartFired = false;
-    isMoved = false;
-  };
-  const toggleListeners = (on: boolean) => {
-    if (on) {
-      document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mouseup', onMouseUp);
-      document.addEventListener('keyup', onKeydownESC);
-    } else {
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-      document.removeEventListener('keydown', onKeydownESC);
-    }
-  };
+  const resetState = useCallback(() => {
+    movedDistanceRef.current = 0;
+    isDraggingRef.current = false;
+    setStarted(false);
+  }, []);
 
-  const onMouseDown = (e: MouseEvent) => {
-    // only primary button can start drag. 0 is primary button value.
-    if (e.button !== 0) {
-      return;
-    }
-
-    clearData();
-    toggleListeners(true);
-  };
-
-  onMouseMove = (e: MouseEvent) => {
-    // prevent automatic scrolling.
-    e.preventDefault();
-
-    if (distance < DISTANCE) {
-      distance += 1;
-
-      return;
-    }
-
-    if (!isMoved) {
-      isMoved = true;
-    }
-
-    if (!isDragStartFired) {
-      isDragStartFired = true;
-      onDragStart(e);
-
-      return;
-    }
-
-    onDrag(e);
-  };
-
-  onMouseUp = (e: MouseEvent) => {
-    if (isMoved) {
-      onDragEnd(e);
-    } else {
-      onClick(e);
-    }
-
-    clearData();
-    toggleListeners(false);
-  };
-
-  onKeydownESC = (e: KeyboardEvent) => {
-    if (isKey(e, ESCAPE)) {
-      if (isDragStartFired) {
-        onCancel();
+  const onMouseDown = useCallback<MouseEventListener>(
+    (e) => {
+      if (!isLeftClick(e.button)) {
+        return;
       }
 
-      clearData();
-      toggleListeners(false);
+      resetState();
+      setStarted(true);
+    },
+    [resetState]
+  );
+
+  const onMouseMove = useCallback<MouseEventListener>(
+    (e) => {
+      // prevent automatic scrolling.
+      e.preventDefault();
+
+      if (movedDistanceRef.current < MINIMUM_MOVE_DETECTION_DISTANCE) {
+        movedDistanceRef.current += 1;
+
+        return;
+      }
+
+      if (!isDraggingRef.current) {
+        isDraggingRef.current = true;
+        onDragStart(e);
+
+        return;
+      }
+
+      onDrag(e);
+    },
+    [onDrag, onDragStart]
+  );
+
+  const onMouseUp = useCallback<MouseEventListener>(
+    (e) => {
+      if (isDraggingRef.current) {
+        onDragEnd(e);
+      } else {
+        onClick(e);
+      }
+
+      resetState();
+    },
+    [onClick, onDragEnd, resetState]
+  );
+
+  const onKeydownESC = useCallback<KeyboardEventListener>(
+    (e) => {
+      if (isKey(e, ESCAPE)) {
+        if (isDraggingRef.current) {
+          onCancel();
+        }
+
+        resetState();
+      }
+    },
+    [onCancel, resetState]
+  );
+
+  useEffect(() => {
+    onMouseMoveRef.current = onMouseMove;
+    onMouseUpRef.current = onMouseUp;
+    onKeyDownRef.current = onKeydownESC;
+  }, [onKeydownESC, onMouseMove, onMouseUp]);
+
+  useEffect(() => {
+    const handleMouseMove: MouseEventListener = (e) => onMouseMoveRef.current?.(e);
+    const handleMouseUp: MouseEventListener = (e) => onMouseUpRef.current?.(e);
+    const handleKeydown: KeyboardEventListener = (e) => onKeyDownRef.current?.(e);
+
+    if (isStarted) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      document.addEventListener('keyup', handleKeydown);
+
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+        document.removeEventListener('keydown', handleKeydown);
+      };
     }
-  };
+
+    return noop;
+  }, [isStarted]);
 
   return {
     onMouseDown,
