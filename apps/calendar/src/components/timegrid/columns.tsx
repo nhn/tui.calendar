@@ -117,36 +117,42 @@ export const ColumnsWithMouse: FunctionComponent<Props> = (props: Props) => {
     }
   };
 
-  const onClick = (e: MouseEvent) => {
-    const guideData = getCreationGuideDataFromMouse(e);
-
-    if (props.onGuideStart) {
-      props.onGuideStart(guideData);
-    }
-
-    if (props.onGuideEnd) {
-      props.onGuideEnd(guideData);
-    }
-  };
-
-  const onCancel = () => {
+  const onPressESCKey = () => {
     if (props.onGuideCancel) {
       props.onGuideCancel();
     }
   };
 
-  const { onMouseDown } = useDrag({
+  const { onMouseDown, isDragging } = useDrag({
     onDragStart,
     onDrag,
     onDragEnd,
-    onClick,
-    onCancel,
+    onPressESCKey,
   });
+
+  const onMouseUp = (e: MouseEvent) => {
+    if (!isDragging) {
+      const guideData = getCreationGuideDataFromMouse(e);
+
+      if (props.onGuideStart) {
+        props.onGuideStart(guideData);
+      }
+
+      if (props.onGuideEnd) {
+        props.onGuideEnd(guideData);
+      }
+    }
+  };
 
   const { columnLeft, children } = props;
 
   return (
-    <div className={classNames.columns} style={{ left: columnLeft }} onMouseDown={onMouseDown}>
+    <div
+      className={classNames.columns}
+      style={{ left: columnLeft }}
+      onMouseDown={onMouseDown}
+      onMouseUp={onMouseUp}
+    >
       {children}
     </div>
   );

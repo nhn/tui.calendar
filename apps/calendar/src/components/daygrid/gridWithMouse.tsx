@@ -112,27 +112,29 @@ const GridWithMouse: FunctionComponent<Props> = ({
     }
   };
 
-  const onClick = (e: MouseEvent) => {
-    const mousePositionData = getMousePositionData(e);
-    const guideData = mousePositionData
-      ? getCreationGuideData(mousePositionData, gridInfoList)
-      : null;
+  const onPressESCKey = () => onGuideCancel();
 
-    onGuideChange(guideData);
-    onGuideEnd(guideData);
-  };
-
-  const onCancel = () => onGuideCancel();
-  const { onMouseDown } = useDrag({
+  const { onMouseDown, isDragging } = useDrag({
     onDragStart,
     onDrag,
     onDragEnd,
-    onClick,
-    onCancel,
+    onPressESCKey,
   });
 
+  const onMouseUp = (e: MouseEvent) => {
+    if (!isDragging) {
+      const mousePositionData = getMousePositionData(e);
+      const guideData = mousePositionData
+        ? getCreationGuideData(mousePositionData, gridInfoList)
+        : null;
+
+      onGuideChange(guideData);
+      onGuideEnd(guideData);
+    }
+  };
+
   return (
-    <div style={{ height: toPercent(100) }} onMouseDown={onMouseDown}>
+    <div style={{ height: toPercent(100) }} onMouseDown={onMouseDown} onMouseUp={onMouseUp}>
       {children}
     </div>
   );
