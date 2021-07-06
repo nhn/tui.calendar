@@ -1,32 +1,34 @@
-import { DISTANCE, DragListeners, MouseEventListener, useDrag } from '@src/components/hooks/drag';
+import { DragListeners, MINIMUM_MOVE_DISTANCE, useDrag } from '@src/components/hooks/drag';
 import { noop } from '@src/util';
 
 import { createKeyboardEvent, createMouseEvent, spyOnDragEvent } from '@test/helper';
+import { act, renderHook } from '@testing-library/preact-hooks';
 
 const primaryButton = 0;
 
 describe('drag hook', () => {
-  let onMouseDown: MouseEventListener;
-  let onMouseMove: MouseEventListener;
-  let onMouseUp: MouseEventListener;
-  let onKeydown: (e: KeyboardEvent) => void;
   let mouseDownEvent: MouseEvent;
   let mouseMoveEvent: MouseEvent;
   let mouseUpEvent: MouseEvent;
   let listeners: DragListeners;
+  const setup = () => {
+    const { result } = renderHook(() => useDrag(listeners));
+    act(() => {
+      result.current?.onMouseDown(mouseDownEvent);
+    });
+
+    return result;
+  };
 
   beforeEach(() => {
     listeners = {
       onDragStart: noop,
       onDrag: noop,
       onDragEnd: noop,
-      onClick: noop,
-      onCancel: noop,
+      onPressESCKey: noop,
     };
 
     spyOnDragEvent(listeners);
-
-    ({ onMouseDown, onMouseMove, onMouseUp, onKeydown } = useDrag(listeners));
 
     mouseDownEvent = createMouseEvent('mousedown', { button: primaryButton });
     mouseMoveEvent = createMouseEvent('mousemove');
@@ -34,78 +36,93 @@ describe('drag hook', () => {
   });
 
   it('fires onDragStart', () => {
-    onMouseDown(mouseDownEvent);
+    const result = setup();
 
     // do not fire until distance is DISTANCE
-    for (let i = 0; i < DISTANCE; i += 1) {
-      onMouseMove(mouseMoveEvent);
+    for (let i = 0; i < MINIMUM_MOVE_DISTANCE; i += 1) {
+      // eslint-disable-next-line no-loop-func
+      act(() => {
+        result.current?.onMouseMove(mouseMoveEvent);
+      });
 
       expect(listeners.onDragStart).not.toHaveBeenCalledWith(mouseMoveEvent);
     }
 
     // fire it after fulfilling distance
-    onMouseMove(mouseMoveEvent);
+    act(() => {
+      result.current?.onMouseMove(mouseMoveEvent);
+    });
 
     expect(listeners.onDragStart).toHaveBeenCalledWith(mouseMoveEvent);
   });
 
   it('fires onDrag', () => {
-    onMouseDown(mouseDownEvent);
+    const result = setup();
 
     // fire it after fulfilling distance
-    for (let i = 0; i <= DISTANCE; i += 1) {
-      onMouseMove(mouseMoveEvent);
+    for (let i = 0; i <= MINIMUM_MOVE_DISTANCE; i += 1) {
+      // eslint-disable-next-line no-loop-func
+      act(() => {
+        result.current?.onMouseMove(mouseMoveEvent);
+      });
     }
 
-    onMouseMove(mouseMoveEvent);
+    act(() => {
+      result.current?.onMouseMove(mouseMoveEvent);
+    });
 
     expect(listeners.onDrag).toHaveBeenCalledWith(mouseMoveEvent);
   });
 
-  it('fires onDragEnd, not onClick', () => {
-    onMouseDown(mouseDownEvent);
+  it('fires onDragEnd', () => {
+    const result = setup();
 
     // fire onDragStart after fulfilling distance
-    for (let i = 0; i <= DISTANCE; i += 1) {
-      onMouseMove(mouseMoveEvent);
+    for (let i = 0; i <= MINIMUM_MOVE_DISTANCE; i += 1) {
+      // eslint-disable-next-line no-loop-func
+      act(() => {
+        result.current?.onMouseMove(mouseMoveEvent);
+      });
     }
 
     // fire onDrag
-    onMouseMove(mouseMoveEvent);
+    act(() => {
+      result.current?.onMouseMove(mouseMoveEvent);
+    });
 
     // fire onDragEnd
-    onMouseUp(mouseUpEvent);
+    act(() => {
+      result.current?.onMouseUp(mouseUpEvent);
+    });
 
     expect(listeners.onDragEnd).toHaveBeenCalledWith(mouseUpEvent);
-    expect(listeners.onClick).not.toHaveBeenCalledWith();
-  });
-
-  it('fires onClick', () => {
-    onMouseDown(mouseDownEvent);
-    onMouseMove(mouseMoveEvent);
-    onMouseUp(mouseUpEvent);
-
-    expect(listeners.onClick).toHaveBeenCalledWith(mouseUpEvent);
   });
 
   it('ESC fires onCancel and do not fire any more events', () => {
     const keyEvent = createKeyboardEvent('keydown', { key: 'Escape' });
-
-    onMouseDown(mouseDownEvent);
+    const result = setup();
 
     // fire onDragStart after fulfilling distance
-    for (let i = 0; i <= DISTANCE; i += 1) {
-      onMouseMove(mouseMoveEvent);
+    for (let i = 0; i <= MINIMUM_MOVE_DISTANCE; i += 1) {
+      // eslint-disable-next-line no-loop-func
+      act(() => {
+        result.current?.onMouseMove(mouseMoveEvent);
+      });
     }
 
-    onKeydown(keyEvent);
-
-    onMouseMove(mouseMoveEvent);
-    onMouseUp(mouseUpEvent);
+    act(() => {
+      result.current?.onKeydown(keyEvent);
+    });
 
     expect(listeners.onDragStart).toHaveBeenCalledWith(mouseMoveEvent);
-    expect(listeners.onCancel).toHaveBeenCalledWith();
+    expect(listeners.onPressESCKey).toHaveBeenCalled();
+
+    act(() => {
+      result.current?.onMouseMove(mouseMoveEvent);
+      result.current?.onMouseUp(mouseUpEvent);
+    });
+
     expect(listeners.onDrag).not.toHaveBeenCalledWith(mouseMoveEvent);
-    expect(listeners.onDragEnd).not.toHaveBeenCalledWith();
+    expect(listeners.onDragEnd).not.toHaveBeenCalled();
   });
 });

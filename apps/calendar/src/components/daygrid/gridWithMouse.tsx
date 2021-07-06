@@ -1,4 +1,5 @@
 import { FunctionComponent, h } from 'preact';
+import { useState } from 'preact/hooks';
 
 import { useDrag } from '@src/components/hooks/drag';
 import TZDate from '@src/time/date';
@@ -49,8 +50,8 @@ const GridWithMouse: FunctionComponent<Props> = ({
   getMousePositionData,
   children,
 }) => {
-  let guideStartData: GridCreationGuide | null = null;
-  let guidePrevDragData: GridCreationGuide | null = null;
+  const [guideStartData, setGuideStartData] = useState<GridCreationGuide | null>(null);
+  const [guidePrevDragData, setGuidePrevDragData] = useState<GridCreationGuide | null>(null);
 
   const onDragStart = (e: MouseEvent) => {
     const mousePositionData = getMousePositionData(e);
@@ -59,10 +60,11 @@ const GridWithMouse: FunctionComponent<Props> = ({
       return;
     }
 
-    guideStartData = getCreationGuideData(mousePositionData, gridInfoList);
+    const guideData = getCreationGuideData(mousePositionData, gridInfoList);
 
-    if (guideStartData) {
-      onGuideChange(guideStartData);
+    if (guideData) {
+      onGuideChange(guideData);
+      setGuideStartData(guideData);
     }
   };
 
@@ -100,7 +102,7 @@ const GridWithMouse: FunctionComponent<Props> = ({
       return;
     }
 
-    guidePrevDragData = guideInfo;
+    setGuidePrevDragData(guideInfo);
     onGuideChange(guideInfo);
   };
 
@@ -110,27 +112,29 @@ const GridWithMouse: FunctionComponent<Props> = ({
     }
   };
 
-  const onClick = (e: MouseEvent) => {
-    const mousePositionData = getMousePositionData(e);
-    const guideData = mousePositionData
-      ? getCreationGuideData(mousePositionData, gridInfoList)
-      : null;
+  const onPressESCKey = () => onGuideCancel();
 
-    onGuideChange(guideData);
-    onGuideEnd(guideData);
-  };
-
-  const onCancel = () => onGuideCancel();
-  const { onMouseDown } = useDrag({
+  const { onMouseDown, isDragging } = useDrag({
     onDragStart,
     onDrag,
     onDragEnd,
-    onClick,
-    onCancel,
+    onPressESCKey,
   });
 
+  const onMouseUp = (e: MouseEvent) => {
+    if (!isDragging) {
+      const mousePositionData = getMousePositionData(e);
+      const guideData = mousePositionData
+        ? getCreationGuideData(mousePositionData, gridInfoList)
+        : null;
+
+      onGuideChange(guideData);
+      onGuideEnd(guideData);
+    }
+  };
+
   return (
-    <div style={{ height: toPercent(100) }} onMouseDown={onMouseDown}>
+    <div style={{ height: toPercent(100) }} onMouseDown={onMouseDown} onMouseUp={onMouseUp}>
       {children}
     </div>
   );

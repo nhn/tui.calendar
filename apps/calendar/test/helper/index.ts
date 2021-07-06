@@ -74,8 +74,7 @@ export function spyOnDragEvent(listeners: DragListeners) {
   jest.spyOn(listeners, 'onDragStart');
   jest.spyOn(listeners, 'onDrag');
   jest.spyOn(listeners, 'onDragEnd');
-  jest.spyOn(listeners, 'onClick');
-  jest.spyOn(listeners, 'onCancel');
+  jest.spyOn(listeners, 'onPressESCKey');
 }
 
 export function createDate(y: number, M: number, d: number): TZDate {

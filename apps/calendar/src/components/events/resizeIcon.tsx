@@ -1,6 +1,5 @@
 import { FunctionComponent, h } from 'preact';
 
-import { MouseEventListener } from '@src/components/hooks/drag';
 import { cls } from '@src/util/cssHelper';
 
 interface Props {

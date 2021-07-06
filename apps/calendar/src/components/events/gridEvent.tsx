@@ -204,7 +204,7 @@ const GridEvent: FunctionComponent<Props> = ({
 
       resetResizing();
     },
-    onCancel: resetResizing,
+    onPressESCKey: resetResizing,
   });
 
   return (

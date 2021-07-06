@@ -1,4 +1,5 @@
 import { ComponentChildren, FunctionComponent, h } from 'preact';
+import { useState } from 'preact/hooks';
 
 import getTarget from 'tui-code-snippet/domEvent/getTarget';
 import pick from 'tui-code-snippet/object/pick';
@@ -41,9 +42,8 @@ interface ColumnGuideCreationInfo extends CreationGuideInfo {
 }
 
 export const ColumnsWithMouse: FunctionComponent<Props> = (props: Props) => {
-  let guideStartData: ColumnGuideCreationInfo | null = null;
-
-  let guidePrevDragData: ColumnGuideCreationInfo | null = null;
+  const [guideStartData, setGuideStartData] = useState<ColumnGuideCreationInfo | null>(null);
+  const [guidePrevDragData, setGuidePrevDragData] = useState<ColumnGuideCreationInfo | null>(null);
 
   const getColumnIndexFromMouse = (e: MouseEvent) => {
     const target = getTarget(e);
@@ -65,10 +65,11 @@ export const ColumnsWithMouse: FunctionComponent<Props> = (props: Props) => {
   };
 
   const onDragStart = (e: MouseEvent) => {
-    guideStartData = getCreationGuideDataFromMouse(e);
+    const guideData = getCreationGuideDataFromMouse(e);
 
     if (props.onGuideStart) {
-      props.onGuideStart(guideStartData);
+      props.onGuideStart(guideData);
+      setGuideStartData(guideData);
     }
   };
 
@@ -101,50 +102,57 @@ export const ColumnsWithMouse: FunctionComponent<Props> = (props: Props) => {
       return;
     }
 
-    guidePrevDragData = guideInfo;
+    setGuidePrevDragData(guideInfo);
+
     if (props.onGuideChange) {
       props.onGuideChange(guideInfo);
     }
   };
 
   const onDragEnd = (e: MouseEvent) => {
-    guideStartData = null;
+    setGuideStartData(null);
 
     if (props.onGuideEnd) {
       props.onGuideEnd(getCreationGuideDataFromMouse(e));
     }
   };
 
-  const onClick = (e: MouseEvent) => {
-    const guideData = getCreationGuideDataFromMouse(e);
-
-    if (props.onGuideStart) {
-      props.onGuideStart(guideData);
-    }
-
-    if (props.onGuideEnd) {
-      props.onGuideEnd(guideData);
-    }
-  };
-
-  const onCancel = () => {
+  const onPressESCKey = () => {
     if (props.onGuideCancel) {
       props.onGuideCancel();
     }
   };
 
-  const { onMouseDown } = useDrag({
+  const { onMouseDown, isDragging } = useDrag({
     onDragStart,
     onDrag,
     onDragEnd,
-    onClick,
-    onCancel,
+    onPressESCKey,
   });
+
+  const onMouseUp = (e: MouseEvent) => {
+    if (!isDragging) {
+      const guideData = getCreationGuideDataFromMouse(e);
+
+      if (props.onGuideStart) {
+        props.onGuideStart(guideData);
+      }
+
+      if (props.onGuideEnd) {
+        props.onGuideEnd(guideData);
+      }
+    }
+  };
 
   const { columnLeft, children } = props;
 
   return (
-    <div className={classNames.columns} style={{ left: columnLeft }} onMouseDown={onMouseDown}>
+    <div
+      className={classNames.columns}
+      style={{ left: columnLeft }}
+      onMouseDown={onMouseDown}
+      onMouseUp={onMouseUp}
+    >
       {children}
     </div>
   );
