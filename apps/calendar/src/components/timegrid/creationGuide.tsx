@@ -2,15 +2,8 @@ import { FunctionComponent, h } from 'preact';
 
 import { CreationGuideInfo, timeFormats } from '@src/components/timegrid';
 import { toFormat } from '@src/time/datetime';
-import { classnames, cls } from '@src/util/cssHelper';
+import { cls } from '@src/util/cssHelper';
 import { toPercent } from '@src/util/units';
-
-// @TODO: change classname & selector to 'timegrid-creation-guide'
-const classNames = {
-  guide: cls('guide-creation'),
-  label: cls('creation-label'),
-  bottom: cls('creation-label-bottom'),
-};
 
 interface Props extends CreationGuideInfo {
   top: number;
@@ -31,13 +24,17 @@ export const CreationGuide: FunctionComponent<Props> = ({
     top: toPercent(top),
     height: toPercent(height),
   };
-  const labelClassName = classnames(classNames.label, {
-    [classNames.bottom]: textPosition === 'bottom',
-  });
 
   return (
-    <div className={classNames.guide} style={style}>
-      <span className={labelClassName}>{text}</span>
+    // @TODO: change classname & selector to 'timegrid-creation-guide'
+    <div className={cls('guide-creation')} style={style}>
+      <span
+        className={cls('creation-label', {
+          'creation-label-bottom': textPosition === 'bottom',
+        })}
+      >
+        {text}
+      </span>
     </div>
   );
 };

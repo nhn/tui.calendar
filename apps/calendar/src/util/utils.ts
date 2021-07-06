@@ -8,6 +8,10 @@ export function isObject(obj: unknown): obj is object {
   return typeof obj === 'object' && obj !== null;
 }
 
+export function isString(value: unknown): value is string {
+  return typeof value === 'string';
+}
+
 export function isNumber(value: unknown): value is number {
   return typeof value === 'number';
 }

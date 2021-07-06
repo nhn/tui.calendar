@@ -15,7 +15,7 @@ import { TemplateName } from '@src/template/default';
 import TZDate from '@src/time/date';
 import { isSameDate, isSameMonth, isSameYear, toFormat } from '@src/time/datetime';
 import { first, last } from '@src/util/array';
-import { classnames } from '@src/util/cssHelper';
+import { cls } from '@src/util/cssHelper';
 import { isOverlapped } from '@src/util/dom';
 
 const classNames = {
@@ -66,17 +66,17 @@ function isPastByUnit(time: TZDate, now: TZDate, unit: TimeUnit) {
 
 function hideOverlappedTime(timesElement: HTMLElement) {
   const timeLabelElements = toArray<HTMLElement>(
-    timesElement.getElementsByClassName(classNames.timeLabel)
+    timesElement.getElementsByClassName(cls(classNames.timeLabel))
   );
   const [currentElement] = toArray<HTMLElement>(
-    timesElement.getElementsByClassName(classNames.currentTime)
+    timesElement.getElementsByClassName(cls(classNames.currentTime))
   );
 
   timeLabelElements.forEach((timeLabelElement) => {
     if (isOverlapped(timeLabelElement, currentElement)) {
-      addClass(timeLabelElement, classNames.hidden);
+      addClass(timeLabelElement, cls(classNames.hidden));
     } else {
-      removeClass(timeLabelElement, classNames.hidden);
+      removeClass(timeLabelElement, cls(classNames.hidden));
     }
   });
 }
@@ -116,12 +116,12 @@ export const Times: FunctionComponent<Props> = ({
   }, [showCurrentTime]);
 
   return (
-    <div ref={ref} className={classNames.times} style={{ width }}>
+    <div ref={ref} className={cls(classNames.times)} style={{ width }}>
       {filteredTimes.map((slot, index) => {
         const isPast = isPastByUnit(slot.date, currentTime, unit);
         const isFirst = index === 0;
         const isLast = index === timesLength;
-        const className = classnames(classNames.time, {
+        const className = cls(classNames.time, {
           [classNames.past]: isPast,
           [classNames.first]: isFirst,
           [classNames.last]: isLast,
@@ -131,7 +131,7 @@ export const Times: FunctionComponent<Props> = ({
 
         return (
           <div className={className} key={index}>
-            <span className={classNames.timeLabel}>
+            <span className={cls(classNames.timeLabel)}>
               {timeTemplate ? (
                 <Template template={timeTemplate} model={{ time: slot.date }} />
               ) : (

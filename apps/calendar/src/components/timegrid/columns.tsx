@@ -16,7 +16,7 @@ import { closest } from '@src/util/dom';
 
 const classNames = {
   columns: cls('columns'),
-  columnsSelector: cls('.column'),
+  column: cls('column'),
 };
 
 interface Props {
@@ -47,7 +47,7 @@ export const ColumnsWithMouse: FunctionComponent<Props> = (props: Props) => {
 
   const getColumnIndexFromMouse = (e: MouseEvent) => {
     const target = getTarget(e);
-    const container = closest(target, classNames.columnsSelector) || target;
+    const container = closest(target, classNames.column) || target;
     const columnIndex = Number(container.getAttribute('data-index'));
 
     return columnIndex;
@@ -57,8 +57,7 @@ export const ColumnsWithMouse: FunctionComponent<Props> = (props: Props) => {
     const columnIndex = guideStartData ? guideStartData.columnIndex : getColumnIndexFromMouse(e);
     const columnInfo = props.columnInfoList[columnIndex];
     const { unit, slot } = columnInfo;
-    const containerSelector = classNames.columnsSelector;
-    const start = getPrevGridTimeFromMouseEvent(e, columnInfo, containerSelector);
+    const start = getPrevGridTimeFromMouseEvent(e, columnInfo, classNames.column);
     const end = getNextGridTime(addMilliseconds(start, 1), slot, unit);
 
     return { start, end, unit, columnIndex };
