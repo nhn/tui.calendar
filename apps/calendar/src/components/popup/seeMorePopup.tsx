@@ -2,7 +2,7 @@ import { FunctionComponent, h } from 'preact';
 
 import GridEvent from '@src/components/events/gridEvent';
 import { useTheme } from '@src/components/hooks/theme';
-import SeeMoreHeader from '@src/components/popup/seeMoreHeader';
+import SeeMoreHeader, { HEIGHT as headerHeight } from '@src/components/popup/seeMoreHeader';
 import { cls } from '@src/util/cssHelper';
 import { convertPxToNum } from '@src/util/units';
 
@@ -12,10 +12,8 @@ const SeeMorePopup: FunctionComponent<SeeMorePopupParam> = (props) => {
   const { date, events = [] } = props;
 
   const {
-    month: { moreView, moreViewTitle, moreViewList, schedule },
+    month: { moreView, moreViewList, schedule },
   } = useTheme();
-  const headerHeight =
-    convertPxToNum(moreViewTitle.height) + convertPxToNum(moreViewTitle.marginBottom);
   const moreListStyle = {
     padding: moreViewList.padding,
     height: `calc(100% - ${headerHeight}px)`,

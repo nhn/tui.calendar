@@ -19,3 +19,9 @@
 .month-more-list {
   overflow: auto;
 }
+
+.see-more-header {
+  padding: 12px 17px 0;
+  margin-bottom: 12px;
+  border-bottom: none;
+}
