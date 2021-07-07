@@ -1,8 +1,8 @@
 import { cls, CSS_PREFIX, matchViewIDRegExp } from '@src/util/cssHelper';
 
 describe('cssHelper', () => {
-  describe('cls', function () {
-    it('should return css selector with prefix "tui-calendar"', function () {
+  describe('cls', () => {
+    it('should return css selector with prefix "tui-calendar"', () => {
       expect(cls('view')).toBe(`${CSS_PREFIX}view`);
     });
 
@@ -30,8 +30,8 @@ describe('cssHelper', () => {
     });
   });
 
-  describe('matchViewIDRegExp', function () {
-    it('should match css selector with view id', function () {
+  describe('matchViewIDRegExp', () => {
+    it('should match css selector with view id', () => {
       expect(matchViewIDRegExp('allday', `${CSS_PREFIX}weekday tui-view-67`)).not.toBeNull();
       expect(matchViewIDRegExp('daygrid', `${CSS_PREFIX}weekday tui-view-327`)).not.toBeNull();
       expect(matchViewIDRegExp('time', `${CSS_PREFIX}time-date tui-view-1`)).not.toBeNull();
