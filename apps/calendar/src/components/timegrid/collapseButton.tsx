@@ -3,7 +3,7 @@ import { useCallback } from 'preact/hooks';
 
 import { addTimeGridPrefix } from '@src/components/timegrid';
 import { noop } from '@src/util';
-import { classnames, cls } from '@src/util/cssHelper';
+import { cls } from '@src/util/cssHelper';
 
 interface Props {
   collapsed: boolean;
@@ -11,9 +11,9 @@ interface Props {
 }
 
 export const CollapseButton: FunctionComponent<Props> = ({ collapsed = false, onClick = noop }) => {
-  const iconClassName = classnames(cls('icon'), {
-    [cls('ic-arrow-right')]: collapsed,
-    [cls('ic-arrow-left')]: !collapsed,
+  const iconClassName = cls('icon', {
+    'ic-arrow-right': collapsed,
+    'ic-arrow-left': !collapsed,
   });
   const memoizedOnClick = useCallback(() => onClick(collapsed), [collapsed, onClick]);
 

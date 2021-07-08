@@ -1,9 +1,8 @@
 import { TimeUnit } from '@src/model';
 import TZDate from '@src/time/date';
-import { cls } from '@src/util/cssHelper';
 
 export const className = 'timegrid';
-export const addTimeGridPrefix = (selector: string) => cls(selector, `${className}-`);
+export const addTimeGridPrefix = (selector: string) => `${className}-${selector}`;
 
 export const timeFormats: Record<TimeUnit, string> = {
   second: 'HH:mm:ss',

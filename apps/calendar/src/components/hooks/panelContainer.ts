@@ -9,7 +9,7 @@ export function usePanelContainer(containerRef: Ref<HTMLDivElement>, selector: s
   useEffect(() => {
     if (containerRef.current) {
       const panelContainer: HTMLElement | null = containerRef.current.querySelector(
-        `${cls('.panel')}${selector}`
+        `${cls('panel')}${selector}`
       );
 
       if (panelContainer) {

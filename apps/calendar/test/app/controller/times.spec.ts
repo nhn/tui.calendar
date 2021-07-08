@@ -280,7 +280,6 @@ describe('times controller', () => {
   ];
 
   describe('getPrevGridTimeFromMouseEvent() with unit', () => {
-    const selector = cls('.column');
     let container = document.createElement('div');
 
     beforeEach(() => {
@@ -308,7 +307,7 @@ describe('times controller', () => {
             const result = getPrevGridTimeFromMouseEvent(
               vMouseEvent,
               { start: startGridTime, end: endGridTime, slot, unit },
-              selector
+              cls('column')
             );
 
             expect(result).toEqual(expected);

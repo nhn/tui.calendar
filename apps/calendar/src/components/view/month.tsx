@@ -61,7 +61,7 @@ const Month: FunctionComponent = () => {
 
   const dayNameHeight = getDayNameHeight(theme?.month.dayname.height);
   const gridPanelHeight = useContainerHeight(containerRef, dayNameHeight);
-  const panelContainer = usePanelContainer(containerRef, cls('.month-daygrid'));
+  const panelContainer = usePanelContainer(containerRef, cls('month-daygrid'));
 
   if (!theme || !options) {
     return null;
