@@ -1,5 +1,6 @@
 .see-more {
   height: inherit;
+  border: 1px solid;
 }
 
 .more-title {
@@ -18,6 +19,7 @@
 
 .month-more-list {
   overflow: auto;
+  padding: 0 17px;
 }
 
 .see-more-header {

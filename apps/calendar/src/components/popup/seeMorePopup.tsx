@@ -3,32 +3,29 @@ import { FunctionComponent, h } from 'preact';
 import GridEvent from '@src/components/events/gridEvent';
 import { useTheme } from '@src/components/hooks/theme';
 import SeeMoreHeader, { HEIGHT as headerHeight } from '@src/components/popup/seeMoreHeader';
+import { eventStyle } from '@src/components/view/month';
 import { cls } from '@src/util/cssHelper';
-import { convertPxToNum } from '@src/util/units';
 
 import { SeeMorePopupParam } from '@t/store';
+
+const PADDING_BOTTOM = 17;
 
 const SeeMorePopup: FunctionComponent<SeeMorePopupParam> = (props) => {
   const { date, events = [] } = props;
 
   const {
-    month: { moreView, moreViewList, schedule },
+    month: { moreView },
   } = useTheme();
-  const moreListStyle = {
-    padding: moreViewList.padding,
-    height: `calc(100% - ${headerHeight}px)`,
-  };
-  const eventHeight = convertPxToNum(schedule.height);
 
   return (
-    <div className={cls('see-more')} style={moreView}>
+    <div className={cls('see-more')} style={{ ...moreView, paddingBottom: PADDING_BOTTOM }}>
       <SeeMoreHeader date={date} />
-      <div className={cls('month-more-list')} style={moreListStyle}>
+      <div className={cls('month-more-list')} style={{ height: `calc(100% - ${headerHeight}px)` }}>
         {events.map((viewModel) => (
           <GridEvent
             key={`see-more-event-item-${viewModel.cid()}`}
             viewModel={viewModel}
-            eventHeight={eventHeight}
+            eventHeight={eventStyle.HEIGHT}
             headerHeight={headerHeight}
             flat={true}
           />

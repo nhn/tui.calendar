@@ -17,6 +17,14 @@ import { isNumber } from '@src/util/utils';
 
 import { OptionData } from '@t/store';
 
+export const eventStyle = {
+  BORDER_RADIUS: 2,
+  HEIGHT: 24,
+  MARGIN_TOP: 2,
+  MARGIN_LEFT: 8,
+  MARGIN_RIGHT: 8,
+};
+
 function getDayNames(options: OptionData) {
   const { daynames, workweek } = options.month;
   const dayNames: TemplateMonthDayName[] = [];

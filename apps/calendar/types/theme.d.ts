@@ -35,6 +35,7 @@ type WeekTheme = {
   dayGridSchedule: ScheduleTheme;
 };
 
+// @TODO: remove border, margin, padding after removing from theme
 type MonthTheme = {
   day: { fontSize: string };
   dayExceptThisMonth: { color: string };
@@ -43,6 +44,7 @@ type MonthTheme = {
   moreView: {
     backgroundColor: string;
     border: string;
+    borderColor: string;
     boxShadow: string;
     paddingBottom: string;
   };
