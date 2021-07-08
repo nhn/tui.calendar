@@ -1,20 +1,22 @@
 import { FunctionComponent, h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 
+import { PADDING_TOP as cellPaddingTop } from '@src/components/daygrid/cell';
+import { HEIGHT as cellBarHeight } from '@src/components/daygrid/cellBar';
 import { CreationGuide } from '@src/components/daygrid/creationGuide';
 import Grid from '@src/components/daygrid/grid';
 import GridEvents from '@src/components/daygrid/gridEvents';
 import GridWithMouse from '@src/components/daygrid/gridWithMouse';
 import { useCreationGuide } from '@src/components/hooks/creationGuide';
 import { useStore } from '@src/components/hooks/store';
-import { useTheme } from '@src/components/hooks/theme';
+import { eventStyle } from '@src/components/view/month';
 import Schedule from '@src/model/schedule';
 import TZDate from '@src/time/date';
 import { toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
 import { getSize } from '@src/util/dom';
 import { getRenderedEventViewModels } from '@src/util/gridHelper';
-import { convertPxToNum, toPercent } from '@src/util/units';
+import { toPercent } from '@src/util/units';
 
 import { GridGuideInfo } from '@t/components/daygrid/creationGuide';
 import { CalendarMonthOption } from '@t/store';
@@ -55,14 +57,13 @@ function getGridInfoList(calendar: TZDate[][]): GridGuideInfo[][] {
   );
 }
 
-const DayGrid: FunctionComponent<Props> = (props) => {
-  const {
-    options,
-    calendar = [],
-    appContainer,
-    shouldRenderDefaultPopup = false,
-    getMousePositionData = () => null,
-  } = props;
+const DayGrid: FunctionComponent<Props> = ({
+  options,
+  calendar = [],
+  appContainer,
+  shouldRenderDefaultPopup = false,
+  getMousePositionData = () => null,
+}) => {
   const { visibleWeeksCount, workweek, startDayOfWeek, narrowWeekend } = options;
 
   const { ref, height } = useGridHeight();
@@ -75,19 +76,11 @@ const DayGrid: FunctionComponent<Props> = (props) => {
     TOTAL_PERCENT_HEIGHT / Math.max(visibleWeeksCount === 0 ? 6 : visibleWeeksCount, 1);
 
   const { state: calendarData } = useStore('calendarData');
-  const theme = useTheme();
 
-  if (!theme || !calendarData) {
+  if (!calendarData) {
     return null;
   }
 
-  const {
-    schedule: monthScheduleTheme,
-    daygrid: { cell, cellBar },
-  } = theme.month;
-  const eventHeight = convertPxToNum(monthScheduleTheme.height);
-  const eventTopMargin = convertPxToNum(monthScheduleTheme.marginTop);
-  const headerHeight = convertPxToNum(cell.paddingTop) + convertPxToNum(cellBar.height);
   const gridInfoList = getGridInfoList(calendar);
 
   return (
@@ -119,7 +112,7 @@ const DayGrid: FunctionComponent<Props> = (props) => {
                 workweek={workweek}
                 startDayOfWeek={startDayOfWeek}
                 narrowWeekend={narrowWeekend}
-                calendar={week}
+                week={week}
                 appContainer={appContainer}
                 height={height}
               />
@@ -129,10 +122,10 @@ const DayGrid: FunctionComponent<Props> = (props) => {
                 events={viewModels}
                 height={height}
                 narrowWeekend={narrowWeekend}
-                eventHeight={eventHeight}
+                eventHeight={eventStyle.HEIGHT}
                 className={cls('weekday-schedules')}
-                headerHeight={headerHeight}
-                eventTopMargin={eventTopMargin}
+                headerHeight={cellPaddingTop + cellBarHeight}
+                eventTopMargin={eventStyle.MARGIN_TOP}
               />
               <CreationGuide
                 creationGuide={creationGuide}

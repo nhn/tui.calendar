@@ -18,6 +18,8 @@ interface Props {
   onClickExceedCount: () => void;
 }
 
+export const HEIGHT = 27;
+
 const CellBar: FunctionComponent<Props> = ({
   type = CellBarType.header,
   exceedCount = 0,
