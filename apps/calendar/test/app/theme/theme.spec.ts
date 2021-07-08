@@ -13,13 +13,8 @@ const doorayTheme = {
   'common.today.color': '#135de6',
   'common.creationGuide.backgroundColor': 'rgba(19, 93, 230, 0.1)',
   'common.creationGuide.border': '1px solid #135de6',
-  'month.dayname.height': '42px',
   'month.dayname.borderLeft': '1px solid #ddd',
-  'month.dayname.paddingLeft': '8px',
-  'month.dayname.fontSize': '13px',
   'month.dayname.backgroundColor': 'inherit',
-  'month.dayname.fontWeight': 'normal',
-  'month.dayname.textAlign': 'left',
   'month.holidayExceptThisMonth.color': '#f3acac',
   'month.dayExceptThisMonth.color': '#bbb',
   'month.weekend.backgroundColor': '#fafafa',
@@ -105,7 +100,6 @@ describe('Theme', () => {
     const result = theme.setStyles(map);
 
     expect(theme.getStyle('common.border')).toBe('2px dashed #ddd');
-    expect(theme.getStyle('month.dayname.paddingLeft')).toBe('3px');
     expect(theme.getStyle('week.today.color')).toBe('#555');
     expect(result.length).toBe(0);
   });

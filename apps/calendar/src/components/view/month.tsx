@@ -13,7 +13,6 @@ import { cls } from '@src/util/cssHelper';
 import { capitalizeDayName } from '@src/util/dayName';
 import { getSize } from '@src/util/dom';
 import { createMousePositionDataGrabber } from '@src/util/monthViewHelper';
-import { isNumber } from '@src/util/utils';
 
 import { OptionData } from '@t/store';
 
@@ -24,6 +23,8 @@ export const eventStyle = {
   MARGIN_LEFT: 8,
   MARGIN_RIGHT: 8,
 };
+
+const DAY_NAME_HEIGHT = 31;
 
 function getDayNames(options: OptionData) {
   const { daynames, workweek } = options.month;
@@ -39,12 +40,6 @@ function getDayNames(options: OptionData) {
   });
 
   return dayNames;
-}
-
-function getDayNameHeight(height?: string | number) {
-  const dayNameHeight = height ?? 0;
-
-  return isNumber(dayNameHeight) ? dayNameHeight : parseFloat(dayNameHeight);
 }
 
 function useContainerHeight(container: Ref<HTMLDivElement>, dayNameHeight: number) {
@@ -67,8 +62,7 @@ const Month: FunctionComponent = () => {
   const { state: options } = useStore('options');
   const theme = useTheme();
 
-  const dayNameHeight = getDayNameHeight(theme?.month.dayname.height);
-  const gridPanelHeight = useContainerHeight(containerRef, dayNameHeight);
+  const gridPanelHeight = useContainerHeight(containerRef, DAY_NAME_HEIGHT);
   const panelContainer = usePanelContainer(containerRef, cls('month-daygrid'));
 
   if (!theme || !options) {
@@ -89,13 +83,14 @@ const Month: FunctionComponent = () => {
   return (
     // @TODO: change to layout component
     <div className={cls('month')} ref={containerRef}>
-      <Panel name="month-daynames" height={dayNameHeight}>
+      <Panel name="month-daynames" height={DAY_NAME_HEIGHT}>
         <DayNames
           templateType="monthDayname"
           dayNames={dayNames}
-          theme={theme.month.dayname}
+          style={theme.month.dayname}
           options={monthOptions}
           gridInfo={gridInfo}
+          type="month"
         />
       </Panel>
       <Panel name="month-daygrid" height={gridPanelHeight}>

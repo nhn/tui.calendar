@@ -72,6 +72,7 @@ const Day: FunctionComponent = () => {
           marginLeft={120}
           templateType="weekDayname"
           gridInfo={gridInfo}
+          type="week"
         />
       </Panel>
       {allDayPanels}

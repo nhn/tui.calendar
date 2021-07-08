@@ -3,11 +3,37 @@
 }
 
 .dayname-item {
-  width: 100%;
   position: absolute;
+  font-size: 12px;
+  font-weight: normal;
+  text-align: left;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
-.day-daynames,
+.dayname-item.week {
+  line-height: 42px;
+}
+
+.dayname-item.month {
+  line-height: 31px;
+}
+
 .week-daynames {
   border-bottom: 1px solid #e5e5e5;
+}
+
+.daynames.week {
+  height: 42px;
+  padding-left: 0;
+  text-align: left;
+}
+
+.daynames.month {
+  height: 31px;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 12px;
+  font-weight: normal;
+  text-align: left;
 }

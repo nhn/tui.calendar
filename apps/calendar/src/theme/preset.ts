@@ -22,14 +22,8 @@ const theme: ThemeKeyValue = {
   'common.creationGuide.border': '1px solid #515ce6',
 
   // month header 'dayname'
-  'month.dayname.height': '31px',
   'month.dayname.borderLeft': 'none',
-  'month.dayname.paddingLeft': '10px',
-  'month.dayname.paddingRight': '0',
   'month.dayname.backgroundColor': 'inherit',
-  'month.dayname.fontSize': '12px',
-  'month.dayname.fontWeight': 'normal',
-  'month.dayname.textAlign': 'left',
 
   // month day grid cell 'day'
   'month.holidayExceptThisMonth.color': 'rgba(255, 64, 64, 0.4)',

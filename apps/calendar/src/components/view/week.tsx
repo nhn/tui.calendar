@@ -100,6 +100,7 @@ const Week: FunctionComponent = () => {
           templateType="weekDayname"
           options={options.week}
           gridInfo={gridInfo}
+          type="week"
         />
       </Panel>
       {allDayPanels}

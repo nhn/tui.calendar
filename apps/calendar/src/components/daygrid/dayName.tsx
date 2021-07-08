@@ -9,27 +9,20 @@ import { getDayName } from '@src/util/dayName';
 interface Props {
   dayname: TemplateWeekDay | TemplateMonthDayName;
   dayIndex: Day;
-  style: Pick<
-    DayNameTheme,
-    'fontSize' | 'fontWeight' | 'textAlign' | 'paddingLeft' | 'paddingRight'
-  > & {
-    lineHeight: string;
+  style: {
     width: CSSValue;
     left: CSSValue;
   };
   templateType: keyof TemplateType;
+  type?: 'week' | 'month';
 }
 
-const DayName: FunctionComponent<Props> = (props) => {
-  const { dayname, dayIndex, style, templateType } = props;
-
-  return (
-    <div className={cls('dayname-item')} style={style}>
-      <span className={isWeekend(dayIndex) ? cls(`holiday-${getDayName(dayIndex)}`) : ''}>
-        <Template template={templateType} model={dayname} />
-      </span>
-    </div>
-  );
-};
+const DayName: FunctionComponent<Props> = ({ dayname, dayIndex, style, templateType, type }) => (
+  <div className={cls('dayname-item', type)} style={style}>
+    <span className={isWeekend(dayIndex) ? cls(`holiday-${getDayName(dayIndex)}`) : ''}>
+      <Template template={templateType} model={dayname} />
+    </span>
+  </div>
+);
 
 export default DayName;

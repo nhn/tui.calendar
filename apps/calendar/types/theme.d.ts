@@ -20,14 +20,8 @@ type ScheduleTheme = {
 };
 
 type DayNameTheme = {
-  height: number | string;
-  borderLeft: number;
-  paddingRight: string | number;
-  paddingLeft: string | number;
+  borderLeft: string;
   backgroundColor: string;
-  fontSize: string | number;
-  fontWeight: string | number;
-  textAlign: string;
 };
 
 type WeekTheme = {
