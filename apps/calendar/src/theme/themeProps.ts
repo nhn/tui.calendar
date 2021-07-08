@@ -175,8 +175,7 @@ export const defaultProps = {
 
   // @TODO: remove border, margin, padding after removing from theme
   // month more view
-  'month.moreView.border': '1px solid',
-  'month.moreView.borderColor': '#d5d5d5',
+  'month.moreView.border': '1px solid d5d5d5',
   'month.moreView.boxShadow': '0 2px 6px 0 rgba(0, 0, 0, 0.1)',
   'month.moreView.backgroundColor': 'white',
   'month.moreView.paddingBottom': '17px',

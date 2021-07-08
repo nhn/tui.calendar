@@ -7,7 +7,7 @@ import ScheduleViewModel from '@src/model/scheduleViewModel';
 import TZDate from '@src/time/date';
 import { getGridInfo, toFormat, toStartOfDay } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
-import { toPercent, toPx } from '@src/util/units';
+import { toPercent } from '@src/util/units';
 
 interface Props {
   cssHeight?: CSSValue;
@@ -33,15 +33,17 @@ const Grid: FunctionComponent<Props> = ({
   const container = useRef<HTMLDivElement>(null);
   const { common } = useTheme();
 
-  const style = {
-    height: cssHeight ?? toPx(height),
-    borderTop: common.border,
-  };
-
   const { gridInfo } = getGridInfo(calendar.length, narrowWeekend, startDayOfWeek, workweek);
 
   return (
-    <div className={cls('weekday-grid')} style={style} ref={container}>
+    <div
+      className={cls('weekday-grid')}
+      style={{
+        height: cssHeight ?? height,
+        borderTop: common.border,
+      }}
+      ref={container}
+    >
       {calendar.map((date, columnIndex) => {
         const dayIndex = date.getDay();
         const { width, left } = gridInfo[columnIndex];

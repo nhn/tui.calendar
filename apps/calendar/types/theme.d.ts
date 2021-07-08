@@ -44,7 +44,6 @@ type MonthTheme = {
   moreView: {
     backgroundColor: string;
     border: string;
-    borderColor: string;
     boxShadow: string;
     paddingBottom: string;
   };
