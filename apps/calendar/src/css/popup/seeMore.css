@@ -3,10 +3,6 @@
   border: 1px solid;
 }
 
-.more-title {
-  display: inline-block;
-}
-
 .more-title-date {
   font-size: 23px;
   color: #333;
@@ -24,6 +20,5 @@
 
 .see-more-header {
   padding: 12px 17px 0;
-  margin-bottom: 12px;
   border-bottom: none;
 }

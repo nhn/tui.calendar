@@ -7,10 +7,7 @@ import ScheduleViewModel from '@src/model/scheduleViewModel';
 import TZDate from '@src/time/date';
 import { getGridInfo, toFormat, toStartOfDay } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
-import { EVENT_HEIGHT } from '@src/util/gridHelper';
 import { toPercent, toPx } from '@src/util/units';
-
-import { CSSValue } from '@t/components/daygrid/cell';
 
 interface Props {
   cssHeight?: CSSValue;
@@ -20,7 +17,6 @@ interface Props {
   workweek?: boolean;
   calendar: TZDate[];
   appContainer: { current: HTMLDivElement };
-  eventHeight?: number;
   height?: number;
 }
 
@@ -32,7 +28,6 @@ const Grid: FunctionComponent<Props> = ({
   calendar,
   appContainer,
   gridDateEventModelMap = {},
-  eventHeight = EVENT_HEIGHT,
   height = 0,
 }) => {
   const container = useRef<HTMLDivElement>(null);
@@ -65,7 +60,6 @@ const Grid: FunctionComponent<Props> = ({
             parentContainer={container.current}
             appContainer={appContainer.current}
             events={gridDateEventModelMap[ymd]}
-            eventHeight={eventHeight}
             height={height}
           />
         );

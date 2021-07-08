@@ -12,12 +12,14 @@ interface Props {
 }
 
 export const HEIGHT = 44;
+export const MARGIN_BOTTOM = 12;
 
 const SeeMoreHeader: FunctionComponent<Props> = ({ date }) => {
   const { month } = useTheme();
 
   const style = {
     height: HEIGHT,
+    marginBottom: MARGIN_BOTTOM,
     backgroundColor: month.moreViewTitle.backgroundColor,
   };
 

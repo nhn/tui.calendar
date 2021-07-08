@@ -6,8 +6,6 @@ import { Day, isWeekend } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
 import { getDayName } from '@src/util/dayName';
 
-import { CSSValue } from '@t/components/daygrid/cell';
-
 interface Props {
   dayname: TemplateWeekDay | TemplateMonthDayName;
   dayIndex: Day;

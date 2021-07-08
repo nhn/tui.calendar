@@ -121,7 +121,6 @@ const DayGrid: FunctionComponent<Props> = (props) => {
                 narrowWeekend={narrowWeekend}
                 calendar={week}
                 appContainer={appContainer}
-                eventHeight={eventHeight}
                 height={height}
               />
               <GridEvents
