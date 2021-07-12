@@ -19,7 +19,7 @@ interface Props {
 
 const DayName: FunctionComponent<Props> = ({ dayname, dayIndex, style, templateType, type }) => (
   <div className={cls('dayname-item', type)} style={style}>
-    <span className={isWeekend(dayIndex) ? cls(`holiday-${getDayName(dayIndex)}`) : ''}>
+    <span className={cls({ [`holiday-${getDayName(dayIndex)}`]: isWeekend(dayIndex) })}>
       <Template template={templateType} model={dayname} />
     </span>
   </div>
