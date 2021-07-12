@@ -152,7 +152,7 @@ export const defaultProps = {
   'month.dayExceptThisMonth.color': 'rgba(51, 51, 51, 0.4)',
   'month.weekend.backgroundColor': 'inherit',
 
-  'month.moreView.border': '1px solid d5d5d5',
+  'month.moreView.border': '1px solid #d5d5d5',
   'month.moreView.boxShadow': '0 2px 6px 0 rgba(0, 0, 0, 0.1)',
   'month.moreView.backgroundColor': 'white',
   'month.moreViewTitle.backgroundColor': 'inherit',
