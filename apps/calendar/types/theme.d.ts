@@ -29,9 +29,7 @@ type WeekTheme = {
   dayGridSchedule: ScheduleTheme;
 };
 
-// @TODO: remove border, margin, padding after removing from theme
 type MonthTheme = {
-  day: { fontSize: string };
   dayExceptThisMonth: { color: string };
   dayname: DayNameTheme;
   holidayExceptThisMonth: { color: string };
@@ -39,20 +37,9 @@ type MonthTheme = {
     backgroundColor: string;
     border: string;
     boxShadow: string;
-    paddingBottom: string;
   };
-  moreViewList: { padding: string };
   moreViewTitle: {
     backgroundColor: string;
-    borderBottom: string;
-    height: string;
-    marginBottom: string;
-    padding: string;
   };
-  schedule: ScheduleTheme;
   weekend: { backgroundColor: string };
-  daygrid: {
-    cell: { paddingTop: string; paddingBottom: string };
-    cellBar: { height: string };
-  };
 };
