@@ -151,33 +151,11 @@ export const defaultProps = {
   'month.holidayExceptThisMonth.color': 'rgba(255, 64, 64, 0.4)',
   'month.dayExceptThisMonth.color': 'rgba(51, 51, 51, 0.4)',
   'month.weekend.backgroundColor': 'inherit',
-  'month.day.fontSize': '14px',
 
-  // month day grid cell
-  'month.daygrid.cell.paddingTop': '3px',
-  'month.daygrid.cell.paddingBottom': '3px',
-
-  // month day grid cellBar
-  'month.daygrid.cellBar.height': '27px',
-
-  // month schedule style
-  'month.schedule.borderRadius': '2px',
-  'month.schedule.height': '24px',
-  'month.schedule.marginTop': '2px',
-  'month.schedule.marginLeft': '8px',
-  'month.schedule.marginRight': '8px',
-
-  // @TODO: remove border, margin, padding after removing from theme
-  // month more view
   'month.moreView.border': '1px solid d5d5d5',
   'month.moreView.boxShadow': '0 2px 6px 0 rgba(0, 0, 0, 0.1)',
   'month.moreView.backgroundColor': 'white',
-  'month.moreView.paddingBottom': '17px',
-  'month.moreViewTitle.height': '44px',
-  'month.moreViewTitle.marginBottom': '12px',
   'month.moreViewTitle.backgroundColor': 'inherit',
-  'month.moreViewTitle.borderBottom': 'none',
-  'month.moreViewTitle.padding': '12px 17px 0 17px',
 
   // week header 'dayname'
   'week.dayname.height': '42px',
