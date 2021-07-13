@@ -9,11 +9,11 @@ export const MONTH_EVENT_MARGIN_LEFT = 8;
 export const MONTH_EVENT_MARGIN_RIGHT = 8;
 
 // month cell
-export const CELL_PADDING_TOP = 3;
-export const CELL_BAR_HEIGHT = 27;
+export const MONTH_CELL_PADDING_TOP = 3;
+export const MONTH_CELL_BAR_HEIGHT = 27;
 
 // month more view
-export const MORE_VIEW_PADDING = 5;
-export const MORE_VIEW_MIN_WIDTH = 280;
-export const MORE_VIEW_HEADER_HEIGHT = 44;
-export const MORE_VIEW_HEADER_MARGIN_BOTTOM = 12;
+export const MONTH_MORE_VIEW_PADDING = 5;
+export const MONTH_MORE_VIEW_MIN_WIDTH = 280;
+export const MONTH_MORE_VIEW_HEADER_HEIGHT = 44;
+export const MONTH_MORE_VIEW_HEADER_MARGIN_BOTTOM = 12;

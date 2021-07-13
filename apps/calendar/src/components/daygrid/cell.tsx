@@ -7,10 +7,10 @@ import { useTheme } from '@src/components/hooks/theme';
 import {
   MONTH_EVENT_HEIGHT,
   MONTH_EVENT_MARGIN_TOP,
-  MORE_VIEW_HEADER_HEIGHT,
-  MORE_VIEW_HEADER_MARGIN_BOTTOM,
-  MORE_VIEW_MIN_WIDTH,
-  MORE_VIEW_PADDING,
+  MONTH_MORE_VIEW_HEADER_HEIGHT,
+  MONTH_MORE_VIEW_HEADER_MARGIN_BOTTOM,
+  MONTH_MORE_VIEW_MIN_WIDTH,
+  MONTH_MORE_VIEW_PADDING,
 } from '@src/constants/style';
 import { Size } from '@src/controller/panel';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
@@ -48,16 +48,17 @@ function getSeeMorePopupSize(
   eventLength: number,
   options: SeeMoreOptions
 ): Size {
-  const minHeight = getSize(grid).height + MORE_VIEW_PADDING * 2;
-  let width = offsetWidth + MORE_VIEW_PADDING * 2;
+  const minHeight = getSize(grid).height + MONTH_MORE_VIEW_PADDING * 2;
+  let width = offsetWidth + MONTH_MORE_VIEW_PADDING * 2;
 
   const { moreLayerSize, eventHeight, eventMarginTop } = options;
   const { width: moreViewWidth, height: moreViewHeight } = moreLayerSize;
 
   const maxDisplayEventCount = 10;
 
-  width = Math.max(width, MORE_VIEW_MIN_WIDTH);
-  let height = MORE_VIEW_HEADER_HEIGHT + MORE_VIEW_HEADER_MARGIN_BOTTOM + MORE_VIEW_PADDING;
+  width = Math.max(width, MONTH_MORE_VIEW_MIN_WIDTH);
+  let height =
+    MONTH_MORE_VIEW_HEADER_HEIGHT + MONTH_MORE_VIEW_HEADER_MARGIN_BOTTOM + MONTH_MORE_VIEW_PADDING;
 
   if (eventLength <= maxDisplayEventCount) {
     height += (eventHeight + eventMarginTop) * eventLength;
@@ -129,8 +130,8 @@ function getSeeMorePopupRect({ appContainer, grid, cell, popupSize }: SeeMoreRec
     appContainer
   );
 
-  let left = pos[0] - MORE_VIEW_PADDING;
-  let top = pos[1] - MORE_VIEW_PADDING;
+  let left = pos[0] - MONTH_MORE_VIEW_PADDING;
+  let top = pos[1] - MONTH_MORE_VIEW_PADDING;
 
   left = ratio(appContainerSize.width, 100, left);
   top = ratio(appContainerSize.height, 100, top);

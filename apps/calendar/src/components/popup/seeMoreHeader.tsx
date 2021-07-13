@@ -3,7 +3,10 @@ import { FunctionComponent, h } from 'preact';
 import { useTheme } from '@src/components/hooks/theme';
 import CloseButton from '@src/components/popup/closeButton';
 import Template from '@src/components/template';
-import { MORE_VIEW_HEADER_HEIGHT, MORE_VIEW_HEADER_MARGIN_BOTTOM } from '@src/constants/style';
+import {
+  MONTH_MORE_VIEW_HEADER_HEIGHT,
+  MONTH_MORE_VIEW_HEADER_MARGIN_BOTTOM,
+} from '@src/constants/style';
 import TZDate from '@src/time/date';
 import { toFormat } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
@@ -16,8 +19,8 @@ const SeeMoreHeader: FunctionComponent<Props> = ({ date }) => {
   const { month } = useTheme();
 
   const style = {
-    height: MORE_VIEW_HEADER_HEIGHT,
-    marginBottom: MORE_VIEW_HEADER_MARGIN_BOTTOM,
+    height: MONTH_MORE_VIEW_HEADER_HEIGHT,
+    marginBottom: MONTH_MORE_VIEW_HEADER_MARGIN_BOTTOM,
     backgroundColor: month.moreViewTitle.backgroundColor,
   };
 

@@ -5,9 +5,9 @@ import { useTheme } from '@src/components/hooks/theme';
 import SeeMoreHeader from '@src/components/popup/seeMoreHeader';
 import {
   MONTH_EVENT_HEIGHT,
-  MORE_VIEW_HEADER_HEIGHT,
-  MORE_VIEW_HEADER_MARGIN_BOTTOM,
-  MORE_VIEW_PADDING,
+  MONTH_MORE_VIEW_HEADER_HEIGHT,
+  MONTH_MORE_VIEW_HEADER_MARGIN_BOTTOM,
+  MONTH_MORE_VIEW_PADDING,
 } from '@src/constants/style';
 import { cls } from '@src/util/cssHelper';
 
@@ -19,12 +19,14 @@ const SeeMorePopup: FunctionComponent<SeeMorePopupParam> = ({ date, events = [] 
   } = useTheme();
 
   return (
-    <div className={cls('see-more')} style={{ ...moreView, padding: MORE_VIEW_PADDING }}>
+    <div className={cls('see-more')} style={{ ...moreView, padding: MONTH_MORE_VIEW_PADDING }}>
       <SeeMoreHeader date={date} />
       <div
         className={cls('month-more-list')}
         style={{
-          height: `calc(100% - ${MORE_VIEW_HEADER_HEIGHT + MORE_VIEW_HEADER_MARGIN_BOTTOM}px)`,
+          height: `calc(100% - ${
+            MONTH_MORE_VIEW_HEADER_HEIGHT + MONTH_MORE_VIEW_HEADER_MARGIN_BOTTOM
+          }px)`,
         }}
       >
         {events.map((viewModel) => (
@@ -32,7 +34,7 @@ const SeeMorePopup: FunctionComponent<SeeMorePopupParam> = ({ date, events = [] 
             key={`see-more-event-item-${viewModel.cid()}`}
             viewModel={viewModel}
             eventHeight={MONTH_EVENT_HEIGHT}
-            headerHeight={MORE_VIEW_HEADER_HEIGHT}
+            headerHeight={MONTH_MORE_VIEW_HEADER_HEIGHT}
             flat={true}
           />
         ))}

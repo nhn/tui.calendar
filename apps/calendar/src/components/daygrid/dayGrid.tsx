@@ -8,8 +8,8 @@ import GridWithMouse from '@src/components/daygrid/gridWithMouse';
 import { useCreationGuide } from '@src/components/hooks/creationGuide';
 import { useStore } from '@src/components/hooks/store';
 import {
-  CELL_BAR_HEIGHT,
-  CELL_PADDING_TOP,
+  MONTH_CELL_BAR_HEIGHT,
+  MONTH_CELL_PADDING_TOP,
   MONTH_EVENT_HEIGHT,
   MONTH_EVENT_MARGIN_TOP,
 } from '@src/constants/style';
@@ -127,7 +127,7 @@ const DayGrid: FunctionComponent<Props> = ({
                 narrowWeekend={narrowWeekend}
                 eventHeight={MONTH_EVENT_HEIGHT}
                 className={cls('weekday-schedules')}
-                headerHeight={CELL_PADDING_TOP + CELL_BAR_HEIGHT}
+                headerHeight={MONTH_CELL_PADDING_TOP + MONTH_CELL_BAR_HEIGHT}
                 eventTopMargin={MONTH_EVENT_MARGIN_TOP}
               />
               <CreationGuide
