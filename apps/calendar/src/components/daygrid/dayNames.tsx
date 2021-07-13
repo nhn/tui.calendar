@@ -5,18 +5,19 @@ import { Template, TemplateMonthDayName, TemplateWeekDay } from '@src/model';
 import { cls } from '@src/util/cssHelper';
 import { toPercent } from '@src/util/units';
 
+import { ComponentType } from '@t/components/common';
 import type { CalendarMonthOption, CalendarWeekOption } from '@t/store';
 
 type TemplateDayNames = (TemplateWeekDay | TemplateMonthDayName)[];
 
 interface Props {
   dayNames: TemplateDayNames;
-  style?: DayNameTheme;
+  theme?: DayNameTheme;
   options?: CalendarMonthOption | CalendarWeekOption;
   marginLeft?: number;
   templateType: keyof Template;
   gridInfo: GridInfo[];
-  type?: 'week' | 'month';
+  type?: ComponentType;
 }
 
 const defaultDayNameOption = {
@@ -25,7 +26,7 @@ const defaultDayNameOption = {
   workweek: false,
   timezones: [],
 };
-const defaultDayNameStyle = {
+const defaultDayNameTheme = {
   borderLeft: '1px solid #ddd',
   backgroundColor: 'inherit',
 };
@@ -33,14 +34,14 @@ const defaultMarginLeft = 0;
 
 const DayNames: FunctionComponent<Props> = ({
   dayNames = [],
-  style = defaultDayNameStyle,
+  theme = defaultDayNameTheme,
   options = defaultDayNameOption,
   marginLeft = defaultMarginLeft,
   templateType,
   gridInfo,
   type = 'month',
 }) => {
-  const { borderLeft, backgroundColor } = style;
+  const { borderLeft, backgroundColor } = theme;
 
   return (
     <div

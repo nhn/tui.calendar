@@ -22,8 +22,7 @@
   border-right: 1px solid #e5e5e5;
   height: 100%;
   min-height: inherit;
-  padding-top: 3px;
-  padding-bottom: 3px;
+  padding: 3px 0;
 }
 
 .grid-cell-date {

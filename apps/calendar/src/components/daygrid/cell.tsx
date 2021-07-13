@@ -5,14 +5,13 @@ import CellBar from '@src/components/daygrid/cellBar';
 import { useActions } from '@src/components/hooks/store';
 import { useTheme } from '@src/components/hooks/theme';
 import {
-  HEIGHT as moreViewHeaderHeight,
-  MARGIN_BOTTOM as moreViewHeaderMarginBottom,
-} from '@src/components/popup/seeMoreHeader';
-import {
-  MIN_WIDTH as moreViewMinWidth,
-  PADDING as moreViewPadding,
-} from '@src/components/popup/seeMorePopup';
-import { eventStyle } from '@src/components/view/month';
+  MONTH_EVENT_HEIGHT,
+  MONTH_EVENT_MARGIN_TOP,
+  MORE_VIEW_HEADER_HEIGHT,
+  MORE_VIEW_HEADER_MARGIN_BOTTOM,
+  MORE_VIEW_MIN_WIDTH,
+  MORE_VIEW_PADDING,
+} from '@src/constants/style';
 import { Size } from '@src/controller/panel';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { PopupType } from '@src/modules/layerPopup';
@@ -43,31 +42,28 @@ interface Props {
   height: number;
 }
 
-export const PADDING_TOP = 3;
-
 function getSeeMorePopupSize(
   grid: HTMLDivElement,
   offsetWidth: number,
   eventLength: number,
   options: SeeMoreOptions
 ): Size {
-  const minHeight = getSize(grid).height + moreViewPadding * 2;
-  let width = offsetWidth + moreViewPadding * 2;
+  const minHeight = getSize(grid).height + MORE_VIEW_PADDING * 2;
+  let width = offsetWidth + MORE_VIEW_PADDING * 2;
 
   const { moreLayerSize, eventHeight, eventMarginTop } = options;
   const { width: moreViewWidth, height: moreViewHeight } = moreLayerSize;
 
   const maxDisplayEventCount = 10;
 
-  width = Math.max(width, moreViewMinWidth);
-  let height = moreViewHeaderHeight + moreViewHeaderMarginBottom;
+  width = Math.max(width, MORE_VIEW_MIN_WIDTH);
+  let height = MORE_VIEW_HEADER_HEIGHT + MORE_VIEW_HEADER_MARGIN_BOTTOM + MORE_VIEW_PADDING;
 
   if (eventLength <= maxDisplayEventCount) {
     height += (eventHeight + eventMarginTop) * eventLength;
   } else {
     height += (eventHeight + eventMarginTop) * maxDisplayEventCount;
   }
-  height += moreViewPadding;
 
   if (moreViewWidth) {
     width = moreViewWidth;
@@ -133,8 +129,8 @@ function getSeeMorePopupRect({ appContainer, grid, cell, popupSize }: SeeMoreRec
     appContainer
   );
 
-  let left = pos[0] - moreViewPadding;
-  let top = pos[1] - moreViewPadding;
+  let left = pos[0] - MORE_VIEW_PADDING;
+  let top = pos[1] - MORE_VIEW_PADDING;
 
   left = ratio(appContainerSize.width, 100, left);
   top = ratio(appContainerSize.height, 100, top);
@@ -160,8 +156,8 @@ function usePopupRect(
         eventLength,
         {
           moreLayerSize: { width: null, height: null },
-          eventHeight: eventStyle.HEIGHT,
-          eventMarginTop: eventStyle.MARGIN_TOP,
+          eventHeight: MONTH_EVENT_HEIGHT,
+          eventMarginTop: MONTH_EVENT_MARGIN_TOP,
         }
       );
 
@@ -208,7 +204,7 @@ export const Cell: FunctionComponent<Props> = ({
     }
   }, [date, events, popupRect, show]);
 
-  const exceedCount = getExceedCount(events, height, eventStyle.HEIGHT);
+  const exceedCount = getExceedCount(events, height, MONTH_EVENT_HEIGHT);
 
   return (
     <div

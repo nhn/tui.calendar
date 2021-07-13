@@ -6,6 +6,8 @@ import { Day, isWeekend } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
 import { getDayName } from '@src/util/dayName';
 
+import { ComponentType } from '@t/components/common';
+
 interface Props {
   dayname: TemplateWeekDay | TemplateMonthDayName;
   dayIndex: Day;
@@ -14,7 +16,7 @@ interface Props {
     left: CSSValue;
   };
   templateType: keyof TemplateType;
-  type?: 'week' | 'month';
+  type?: ComponentType;
 }
 
 const DayName: FunctionComponent<Props> = ({ dayname, dayIndex, style, templateType, type }) => (
