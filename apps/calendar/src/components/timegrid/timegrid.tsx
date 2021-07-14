@@ -165,8 +165,8 @@ export const TimeGrid: FunctionComponent<Props> = ({
   const creationGuideColumnIndex: number = pick(creationGuide, 'columnIndex');
 
   return (
-    <div className={classNames.timegrid}>
-      <div className={classNames.scrollArea}>
+    <div className={cls(classNames.timegrid)}>
+      <div className={cls(classNames.scrollArea)}>
         <MultipleTimezones
           timezones={timezones}
           currentTime={now}

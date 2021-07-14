@@ -5,6 +5,7 @@ import Template from '@src/components/template';
 import { addTimeGridPrefix, timeFormats } from '@src/components/timegrid';
 import { TimeUnit } from '@src/model';
 import TZDate from '@src/time/date';
+import { cls } from '@src/util/cssHelper';
 import { getSize } from '@src/util/dom';
 import { toPercent } from '@src/util/units';
 
@@ -53,7 +54,7 @@ export const CurrentTimeLabel: FunctionComponent<Props> = ({
   };
 
   return (
-    <div className={classNames.currentTime} style={{ top: topValue }}>
+    <div className={cls(classNames.currentTime)} style={{ top: topValue }}>
       {dateDifference ? <div ref={signRef}>{`[${dateDifference}]`}</div> : null}
       <div ref={ref}>
         <Template template="timegridCurrentTime" model={model} />
