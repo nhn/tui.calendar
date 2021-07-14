@@ -5,7 +5,7 @@ import { Template, TemplateMonthDayName, TemplateWeekDay } from '@src/model';
 import { cls } from '@src/util/cssHelper';
 import { toPercent } from '@src/util/units';
 
-import { ComponentType } from '@t/components/common';
+import { CalendarViewType } from '@t/components/common';
 import type { CalendarMonthOption, CalendarWeekOption } from '@t/store';
 
 type TemplateDayNames = (TemplateWeekDay | TemplateMonthDayName)[];
@@ -17,7 +17,7 @@ interface Props {
   marginLeft?: number;
   templateType: keyof Template;
   gridInfo: GridInfo[];
-  type?: ComponentType;
+  type?: CalendarViewType;
 }
 
 const defaultDayNameOption = {
