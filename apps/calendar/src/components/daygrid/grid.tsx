@@ -4,13 +4,11 @@ import { useRef } from 'preact/hooks';
 import { Cell } from '@src/components/daygrid/cell';
 import { useTheme } from '@src/components/hooks/theme';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
-import TZDate from '@src/time/date';
 import { getGridInfo, toFormat, toStartOfDay } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
-import { EVENT_HEIGHT } from '@src/util/gridHelper';
-import { toPercent, toPx } from '@src/util/units';
+import { toPercent } from '@src/util/units';
 
-import { CSSValue } from '@t/components/daygrid/cell';
+import { Cells } from '@t/panel';
 
 interface Props {
   cssHeight?: CSSValue;
@@ -18,9 +16,8 @@ interface Props {
   narrowWeekend?: boolean;
   startDayOfWeek?: number;
   workweek?: boolean;
-  calendar: TZDate[];
+  week: Cells;
   appContainer: { current: HTMLDivElement };
-  eventHeight?: number;
   height?: number;
 }
 
@@ -29,25 +26,26 @@ const Grid: FunctionComponent<Props> = ({
   narrowWeekend = false,
   startDayOfWeek = 0,
   workweek = false,
-  calendar,
+  week,
   appContainer,
   gridDateEventModelMap = {},
-  eventHeight = EVENT_HEIGHT,
   height = 0,
 }) => {
   const container = useRef<HTMLDivElement>(null);
   const { common } = useTheme();
 
-  const style = {
-    height: cssHeight ?? toPx(height),
-    borderTop: common.border,
-  };
-
-  const { gridInfo } = getGridInfo(calendar.length, narrowWeekend, startDayOfWeek, workweek);
+  const { gridInfo } = getGridInfo(week.length, narrowWeekend, startDayOfWeek, workweek);
 
   return (
-    <div className={cls('weekday-grid')} style={style} ref={container}>
-      {calendar.map((date, columnIndex) => {
+    <div
+      className={cls('weekday-grid')}
+      style={{
+        height: cssHeight ?? height,
+        borderTop: common.border,
+      }}
+      ref={container}
+    >
+      {week.map((date, columnIndex) => {
         const dayIndex = date.getDay();
         const { width, left } = gridInfo[columnIndex];
         const ymd = toFormat(toStartOfDay(date), 'YYYYMMDD');
@@ -65,7 +63,6 @@ const Grid: FunctionComponent<Props> = ({
             parentContainer={container.current}
             appContainer={appContainer.current}
             events={gridDateEventModelMap[ymd]}
-            eventHeight={eventHeight}
             height={height}
           />
         );

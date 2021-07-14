@@ -35,7 +35,7 @@ export const week = () => {
     <ProviderWrapper>
       <Grid
         cssHeight={100}
-        calendar={calendar}
+        week={calendar}
         appContainer={{ current: document.createElement('div') }}
       />
     </ProviderWrapper>
@@ -49,7 +49,7 @@ export const weekend = () => {
     <ProviderWrapper>
       <Grid
         height={200}
-        calendar={calendar}
+        week={calendar}
         appContainer={{ current: document.createElement('div') }}
       />
     </ProviderWrapper>

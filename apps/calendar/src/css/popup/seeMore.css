@@ -2,10 +2,6 @@
   height: inherit;
 }
 
-.more-title {
-  display: inline-block;
-}
-
 .more-title-date {
   font-size: 23px;
   color: #333;
@@ -18,4 +14,10 @@
 
 .month-more-list {
   overflow: auto;
+  padding: 0 17px;
+}
+
+.see-more-header {
+  padding: 12px 17px 0;
+  border-bottom: none;
 }

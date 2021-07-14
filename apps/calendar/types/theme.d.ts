@@ -20,14 +20,8 @@ type ScheduleTheme = {
 };
 
 type DayNameTheme = {
-  height: number | string;
-  borderLeft: number;
-  paddingRight: string | number;
-  paddingLeft: string | number;
+  borderLeft: string;
   backgroundColor: string;
-  fontSize: string | number;
-  fontWeight: string | number;
-  textAlign: string;
 };
 
 type WeekTheme = {
@@ -36,7 +30,6 @@ type WeekTheme = {
 };
 
 type MonthTheme = {
-  day: { fontSize: string };
   dayExceptThisMonth: { color: string };
   dayname: DayNameTheme;
   holidayExceptThisMonth: { color: string };
@@ -44,20 +37,9 @@ type MonthTheme = {
     backgroundColor: string;
     border: string;
     boxShadow: string;
-    paddingBottom: string;
   };
-  moreViewList: { padding: string };
   moreViewTitle: {
     backgroundColor: string;
-    borderBottom: string;
-    height: string;
-    marginBottom: string;
-    padding: string;
   };
-  schedule: ScheduleTheme;
   weekend: { backgroundColor: string };
-  daygrid: {
-    cell: { paddingTop: string; paddingBottom: string };
-    cellBar: { height: string };
-  };
 };

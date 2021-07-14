@@ -6,32 +6,25 @@ import { Day, isWeekend } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
 import { getDayName } from '@src/util/dayName';
 
-import { CSSValue } from '@t/components/daygrid/cell';
+import { CalendarViewType } from '@t/components/common';
 
 interface Props {
   dayname: TemplateWeekDay | TemplateMonthDayName;
   dayIndex: Day;
-  style: Pick<
-    DayNameTheme,
-    'fontSize' | 'fontWeight' | 'textAlign' | 'paddingLeft' | 'paddingRight'
-  > & {
-    lineHeight: string;
+  style: {
     width: CSSValue;
     left: CSSValue;
   };
   templateType: keyof TemplateType;
+  type?: CalendarViewType;
 }
 
-const DayName: FunctionComponent<Props> = (props) => {
-  const { dayname, dayIndex, style, templateType } = props;
-
-  return (
-    <div className={cls('dayname-item')} style={style}>
-      <span className={isWeekend(dayIndex) ? cls(`holiday-${getDayName(dayIndex)}`) : ''}>
-        <Template template={templateType} model={dayname} />
-      </span>
-    </div>
-  );
-};
+const DayName: FunctionComponent<Props> = ({ dayname, dayIndex, style, templateType, type }) => (
+  <div className={cls('dayname-item', type)} style={style}>
+    <span className={cls({ [`holiday-${getDayName(dayIndex)}`]: isWeekend(dayIndex) })}>
+      <Template template={templateType} model={dayname} />
+    </span>
+  </div>
+);
 
 export default DayName;

@@ -13,21 +13,11 @@ const doorayTheme = {
   'common.today.color': '#135de6',
   'common.creationGuide.backgroundColor': 'rgba(19, 93, 230, 0.1)',
   'common.creationGuide.border': '1px solid #135de6',
-  'month.dayname.height': '42px',
   'month.dayname.borderLeft': '1px solid #ddd',
-  'month.dayname.paddingLeft': '8px',
-  'month.dayname.fontSize': '13px',
   'month.dayname.backgroundColor': 'inherit',
-  'month.dayname.fontWeight': 'normal',
-  'month.dayname.textAlign': 'left',
   'month.holidayExceptThisMonth.color': '#f3acac',
   'month.dayExceptThisMonth.color': '#bbb',
   'month.weekend.backgroundColor': '#fafafa',
-  'month.day.fontSize': '16px',
-  'month.schedule.height': '18px',
-  'month.schedule.marginTop': '2px',
-  'month.schedule.marginLeft': '10px',
-  'month.schedule.marginRight': '10px',
   'week.dayname.height': '41px',
   'week.dayname.borderTop': '1px solid #ddd',
   'week.dayname.borderBottom': '1px solid #ddd',
@@ -99,15 +89,13 @@ describe('Theme', () => {
   it('set multiple styles with key, value map', () => {
     const map = {
       'common.border': '2px dashed #ddd',
-      'month.dayname.paddingLeft': '3px',
       'week.today.color': '#555',
     };
     const result = theme.setStyles(map);
 
     expect(theme.getStyle('common.border')).toBe('2px dashed #ddd');
-    expect(theme.getStyle('month.dayname.paddingLeft')).toBe('3px');
     expect(theme.getStyle('week.today.color')).toBe('#555');
-    expect(result.length).toBe(0);
+    expect(result).toHaveLength(0);
   });
 
   it('no return a style with wrong key parameter', () => {

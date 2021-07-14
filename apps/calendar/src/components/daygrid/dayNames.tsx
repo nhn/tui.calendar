@@ -3,9 +3,9 @@ import { FunctionComponent, h } from 'preact';
 import DayName from '@src/components/daygrid/dayName';
 import { Template, TemplateMonthDayName, TemplateWeekDay } from '@src/model';
 import { cls } from '@src/util/cssHelper';
-import { toPercent, toPx } from '@src/util/units';
-import { isNumber } from '@src/util/utils';
+import { toPercent } from '@src/util/units';
 
+import { CalendarViewType } from '@t/components/common';
 import type { CalendarMonthOption, CalendarWeekOption } from '@t/store';
 
 type TemplateDayNames = (TemplateWeekDay | TemplateMonthDayName)[];
@@ -17,6 +17,7 @@ interface Props {
   marginLeft?: number;
   templateType: keyof Template;
   gridInfo: GridInfo[];
+  type?: CalendarViewType;
 }
 
 const defaultDayNameOption = {
@@ -26,14 +27,8 @@ const defaultDayNameOption = {
   timezones: [],
 };
 const defaultDayNameTheme = {
-  height: '42px',
   borderLeft: '1px solid #ddd',
-  paddingLeft: '8px',
-  paddingRight: '8px',
-  fontSize: '13px',
   backgroundColor: 'inherit',
-  fontWeight: 'normal',
-  textAlign: 'left',
 };
 const defaultMarginLeft = 0;
 
@@ -44,36 +39,19 @@ const DayNames: FunctionComponent<Props> = ({
   marginLeft = defaultMarginLeft,
   templateType,
   gridInfo,
+  type = 'month',
 }) => {
-  const {
-    height,
-    borderLeft,
-    paddingLeft,
-    paddingRight,
-    backgroundColor,
-    fontSize,
-    fontWeight,
-    textAlign,
-  } = theme;
-
-  const style = {
-    height,
-    borderLeft,
-    backgroundColor,
-    marginLeft,
-  };
-
-  const dayNameStyle = {
-    fontSize,
-    fontWeight,
-    textAlign,
-    paddingLeft,
-    paddingRight,
-    lineHeight: isNumber(height) ? toPx(height) : height,
-  };
+  const { borderLeft, backgroundColor } = theme;
 
   return (
-    <div className={cls('daynames')} style={style}>
+    <div
+      className={cls('daynames', type)}
+      style={{
+        borderLeft,
+        backgroundColor,
+        marginLeft,
+      }}
+    >
       {(dayNames as TemplateDayNames).map((dayName, index) => (
         <DayName
           templateType={templateType}
@@ -81,10 +59,10 @@ const DayNames: FunctionComponent<Props> = ({
           dayIndex={dayName.day}
           key={`dayNames-${dayName.day}`}
           style={{
-            ...dayNameStyle,
             width: toPercent(gridInfo[index].width),
             left: toPercent(gridInfo[index].left),
           }}
+          type={type}
         />
       ))}
     </div>

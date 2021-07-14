@@ -1,24 +1,20 @@
-import ScheduleViewModel from '@src/model/scheduleViewModel';
-
 type CSSValue = number | string;
 
 type SeeMorePopupTheme = {
-  titleHeight: string;
-  titleMarginBottom: string;
-  paddingBottom: string;
+  headerHeight: number;
+  headerMarginBottom: number;
+  containerPaddingBottom: number;
 };
 
 type SeeMoreOptions = {
   moreLayerSize: { width: number | null; height: number | null };
-  scheduleGutter: number;
-  scheduleHeight: number;
+  eventHeight: number;
+  eventMarginTop: number;
 };
 
 type SeeMoreRectParam = {
   cell: HTMLDivElement;
   grid: HTMLDivElement;
   appContainer: HTMLDivElement;
-  theme: SeeMorePopupTheme;
-  options: SeeMoreOptions;
-  events: ScheduleViewModel[];
+  popupSize: { width: number; height: number };
 };

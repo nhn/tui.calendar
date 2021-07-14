@@ -1,9 +1,8 @@
 import { FunctionComponent, h } from 'preact';
 
+import { useActions } from '@src/components/hooks/store';
 import { cls } from '@src/util/cssHelper';
 import { isFunction } from '@src/util/utils';
-
-import { useActions } from '../hooks/store';
 
 interface Props {
   close?: () => void;
@@ -22,7 +21,7 @@ const CloseButton: FunctionComponent<Props> = ({ close }) => {
 
   return (
     <button type="button" className={cls('popup-close')} onClick={onClickHandler}>
-      <i className={[cls('icon'), cls('ic-close')].join(' ')} />
+      <i className={cls('icon', 'ic-close')} />
     </button>
   );
 };
