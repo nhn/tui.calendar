@@ -33,7 +33,7 @@ import { range } from '@src/util/utils';
 const REFRESH_INTERVAL = 1000 * SIXTY_SECONDS;
 
 const classNames = {
-  timegrid: cls(timegridClassName),
+  timegrid: timegridClassName,
   scrollArea: addTimeGridPrefix('scroll-area'),
 };
 
