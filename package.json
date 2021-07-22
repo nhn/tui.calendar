@@ -67,6 +67,7 @@
     "setup:date": "npm run install:date && npm run build:date",
     "test": "jest --detectOpenHandles --forceExit",
     "test:watch": "jest --watch",
+    "test:playwright": "npx playwright test --browser=all",
     "prepare": "husky install"
   },
   "workspaces": [

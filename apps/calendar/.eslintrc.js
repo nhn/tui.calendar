@@ -73,6 +73,7 @@ module.exports = {
       files: ['*.spec.ts', '*.spec.tsx'],
       rules: {
         'max-nested-callbacks': ['error', { max: 5 }],
+        'dot-notation': ['error', { allowKeywords: true }],
       },
     },
   ],
