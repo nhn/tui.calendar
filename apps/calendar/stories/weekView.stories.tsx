@@ -1,6 +1,7 @@
 import { h } from 'preact';
 
 import WeekView from '@src/components/view/weekView';
+import { ScheduleData } from '@src/model';
 import Schedule from '@src/model/schedule';
 import TZDate from '@src/time/date';
 import { addDate, Day } from '@src/time/datetime';
@@ -17,6 +18,33 @@ function createTimeGridEvents() {
   const end = addDate(start, 6);
 
   return createRandomEvents('week', start, end).map((event) => Schedule.create(event));
+}
+
+function createWeekEvents() {
+  const today = new TZDate();
+  const sunday = addDate(new TZDate(), -today.getDay());
+  const tuesday = addDate(sunday, 2);
+  const thursday = addDate(sunday, 4);
+  const saturday = addDate(sunday, 6);
+  const events: ScheduleData[] = [
+    {
+      title: 'event1',
+      start: sunday,
+      end: tuesday,
+    },
+    {
+      title: 'event2',
+      start: tuesday,
+      end: thursday,
+    },
+    {
+      title: 'event3',
+      start: thursday,
+      end: saturday,
+    },
+  ];
+
+  return events.map((event) => Schedule.create(event));
 }
 
 const Template: Story = (args) => (
@@ -48,4 +76,9 @@ WorkWeek.args = {
 export const RandomEvents = Template.bind({});
 RandomEvents.args = {
   events: [...createRandomEventModelsForMonth(40), ...createTimeGridEvents()],
+};
+
+export const FixedEvents = Template.bind({});
+FixedEvents.args = {
+  events: createWeekEvents(),
 };
