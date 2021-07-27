@@ -22,7 +22,7 @@ function createTimeGridEvents() {
 
 function createWeekEvents() {
   const today = new TZDate();
-  const sunday = addDate(new TZDate(), -today.getDay());
+  const sunday = addDate(today, -today.getDay());
   const tuesday = addDate(sunday, 2);
   const thursday = addDate(sunday, 4);
   const saturday = addDate(sunday, 6);
