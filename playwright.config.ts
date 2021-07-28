@@ -6,8 +6,7 @@ const config: PlaywrightTestConfig = {
   forbidOnly: !!process.env.CI,
   workers: process.env.CI ? 2 : undefined,
   use: {
-    headless: false,
-    screenshot: 'only-on-failure',
+    screenshot: process.env.CI ? undefined : 'only-on-failure',
   },
 };
 
