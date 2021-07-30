@@ -73,7 +73,13 @@ module.exports = {
       files: ['*.spec.ts', '*.spec.tsx'],
       rules: {
         'max-nested-callbacks': ['error', { max: 5 }],
+      },
+    },
+    {
+      files: ['playwright/*.ts'],
+      rules: {
         'dot-notation': ['error', { allowKeywords: true }],
+        'jest/no-done-callback': 'off',
       },
     },
   ],
