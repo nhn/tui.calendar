@@ -5,8 +5,7 @@ test('basic test', async ({ page }) => {
   await page.goto(
     'http://localhost:6006/iframe.html?id=weekview--fixed-events&args=&viewMode=story'
   );
-  const eventCount = 3;
   const events = await page.$$('.toastui-calendar-weekday-event');
 
-  expect(events).toHaveLength(eventCount);
+  expect(events).toHaveLength(3);
 });
