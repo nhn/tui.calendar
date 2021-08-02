@@ -34,7 +34,7 @@ const REFRESH_INTERVAL = 1000 * SIXTY_SECONDS;
 
 const classNames = {
   timegrid: cls(timegridClassName),
-  scrollArea: addTimeGridPrefix('scroll-area'),
+  scrollArea: cls(addTimeGridPrefix('scroll-area')),
 };
 
 interface Props {
