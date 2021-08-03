@@ -1,14 +1,9 @@
 import { useEffect, useLayoutEffect, useReducer, useRef } from 'preact/hooks';
 
-import {
-  createStore,
-  EqualityChecker,
-  InternalStoreAPI,
-  StateSelector,
-  StateWithActions,
-  StoreCreator,
-} from '@src/store/internal';
+import { createStore } from '@src/store/internal';
 import { isUndefined } from '@src/util/utils';
+
+import { EqualityChecker, StateSelector, StateWithActions, StoreCreator, UseStore } from '@t/store';
 
 /**
  * Inspired by Zustand
@@ -19,14 +14,6 @@ import { isUndefined } from '@src/util/utils';
 const isSSR = isUndefined(window) || !window.navigator;
 
 const useIsomorphicLayoutEffect = isSSR ? useEffect : useLayoutEffect;
-
-export interface UseStore<State extends StateWithActions> extends InternalStoreAPI<State> {
-  (): State;
-  <StateSlice>(
-    selector: StateSelector<State, StateSlice>,
-    equalityFn?: EqualityChecker<StateSlice>
-  ): StateSlice;
-}
 
 export function createStoreHook<State extends StateWithActions>(
   storeCreator: StoreCreator<State>

@@ -1,7 +1,8 @@
 import { useMemo } from 'preact/hooks';
 
-import { createStoreHook, UseStore } from '@src/store/hook';
+import { createStoreHook } from '@src/store/hook';
 
+import { UseStore } from '@t/store';
 import { act, renderHook } from '@testing-library/preact-hooks';
 
 describe('createStoreHook', () => {

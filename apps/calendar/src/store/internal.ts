@@ -1,59 +1,18 @@
 import { isFunction } from '@src/util/utils';
 
-/**
- * Inspired by Zustand
- *
- * See more: https://github.com/pmndrs/zustand
- */
-
-export type StateWithActions = Record<string, any>;
-
-type PartialState<State extends StateWithActions, Key extends keyof State = keyof State> =
-  | Pick<State, Key>
-  | State;
-
-type PartialStateFn<State extends StateWithActions, Key extends keyof State = keyof State> = (
-  state: State
-) => Pick<State, Key> | State;
-
-export type StateSelector<State extends StateWithActions, SelectedState> = (
-  state: State
-) => SelectedState;
-
-export type EqualityChecker<State> = (state: State, newState: State) => boolean;
-
-type StateListener<State> = (state: State, previousState: State) => void;
-
-type StateSliceListener<StateSlice> = (slice: StateSlice, previousSlice: StateSlice) => void;
-
-type SetState<State extends StateWithActions> = <Key extends keyof State>(
-  partial: PartialState<State, Key> | PartialStateFn<State, Key>
-) => void;
-
-type GetState<State extends StateWithActions> = () => State;
-
-type Unsubscribe = () => void;
-
-interface Subscribe<State extends StateWithActions> {
-  (listener: StateListener<State>): Unsubscribe;
-
-  <StateSlice>(
-    listener: StateSliceListener<StateSlice>,
-    selector?: StateSelector<State, StateSlice>,
-    equalityFn?: EqualityChecker<StateSlice>
-  ): Unsubscribe;
-}
-
-type ClearListeners = () => void;
-
-export interface InternalStoreAPI<State extends StateWithActions> {
-  setState: SetState<State>;
-  getState: GetState<State>;
-  subscribe: Subscribe<State>;
-  clearListeners: ClearListeners;
-}
-
-export type StoreCreator<State extends StateWithActions> = (set: SetState<State>) => State;
+import {
+  ClearListeners,
+  EqualityChecker,
+  GetState,
+  InternalStoreAPI,
+  SetState,
+  StateListener,
+  StateSelector,
+  StateSliceListener,
+  StateWithActions,
+  StoreCreator,
+  Subscribe,
+} from '@t/store';
 
 export function createStore<State extends StateWithActions>(
   storeCreator: StoreCreator<State>
