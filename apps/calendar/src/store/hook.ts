@@ -34,7 +34,8 @@ export function createStoreHook<State extends StateWithActions>(
     >,
     equalityFn: EqualityChecker<StateSlice> = Object.is
   ) => {
-    const [, notify] = useReducer((c) => c + 1, 0) as [never, () => void];
+    // a little trick to invoke re-render to notify hook consumers(usually components)
+    const [, notify] = useReducer((notifyCount) => notifyCount + 1, 0) as [never, () => void];
 
     const state = internalStore.getState();
     const stateRef = useRef(state);
