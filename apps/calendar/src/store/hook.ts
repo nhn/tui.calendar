@@ -34,7 +34,7 @@ export function createStoreHook<State extends StateWithActions>(
     >,
     equalityFn: EqualityChecker<StateSlice> = Object.is
   ) => {
-    const [, forceUpdate] = useReducer((c) => c + 1, 0) as [never, () => void];
+    const [, notify] = useReducer((c) => c + 1, 0) as [never, () => void];
 
     const state = internalStore.getState();
     const stateRef = useRef(state);
@@ -88,14 +88,14 @@ export function createStoreHook<State extends StateWithActions>(
             stateRef.current = nextState;
             currentSliceRef.current = newStateSlice;
 
-            forceUpdate();
+            notify();
           }
         } catch (e) {
           // This will be rarely happened, unless we don't pass the arguments to actions properly.
           // eslint-disable-next-line no-console
           console.error('[toastui-calendar] failed to update state', e.message);
           hasErrorRef.current = true;
-          forceUpdate();
+          notify();
         }
       };
 

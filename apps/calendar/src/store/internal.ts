@@ -39,7 +39,7 @@ export function createStore<State extends StateWithActions>(
 
     if (selector) {
       let currentSlice: StateSlice = selector(state);
-      const _equalityFn = equalityFn || Object.is;
+      const _equalityFn = equalityFn ?? Object.is;
       _listener = () => {
         const nextSlice = selector(state);
         if (!_equalityFn(currentSlice, nextSlice)) {
