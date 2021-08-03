@@ -55,7 +55,7 @@ describe('createStoreHook', () => {
     it('should slice state with selector', () => {
       const { result } = renderHook(() => useStore((state) => state.count));
 
-      expect(typeof result.current === 'number').toBeTruthy();
+      expect(typeof result.current === 'number').toBe(true);
     });
 
     it('should apply custom equality checker', () => {
