@@ -21,7 +21,7 @@ describe('createStoreHook', () => {
           set(({ count }) => ({
             count: count + 1,
           })),
-        setCount: (n: number) => set({ count: n }),
+        setCount: (n: number) => set(() => ({ count: n })),
       }));
     });
 
