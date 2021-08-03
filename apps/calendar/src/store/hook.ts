@@ -8,7 +8,7 @@ import {
   StateWithActions,
   StoreCreator,
 } from '@src/store/internal';
-import { isNil } from '@src/util/utils';
+import { isUndefined } from '@src/util/utils';
 
 /**
  * Inspired by Zustand
@@ -16,7 +16,7 @@ import { isNil } from '@src/util/utils';
  * See more: https://github.com/pmndrs/zustand
  */
 
-const isSSR = typeof window === 'undefined' || !window.navigator;
+const isSSR = isUndefined(window) || !window.navigator;
 
 const useIsomorphicLayoutEffect = isSSR ? useEffect : useLayoutEffect;
 
@@ -50,7 +50,7 @@ export function createStoreHook<State extends StateWithActions>(
     // `null` can be a valid state slice.
     const currentSliceRef = useRef<StateSlice | undefined>();
 
-    if (isNil(currentSliceRef.current)) {
+    if (isUndefined(currentSliceRef.current)) {
       currentSliceRef.current = selector(state);
     }
 
