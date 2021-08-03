@@ -15,7 +15,7 @@ describe('createStoreHook', () => {
     let useStore: UseStore<CounterStore>;
 
     beforeEach(() => {
-      useStore = createStoreHook<CounterStore>((set) => ({
+      const { useStore: _useStore } = createStoreHook<CounterStore>((set) => ({
         count: 0,
         increment: () =>
           set(({ count }) => ({
@@ -23,6 +23,7 @@ describe('createStoreHook', () => {
           })),
         setCount: (n: number) => set(() => ({ count: n })),
       }));
+      useStore = _useStore;
     });
 
     it('should be able to initialize store', () => {
@@ -98,7 +99,7 @@ describe('createStoreHook', () => {
     beforeEach(() => {
       const todoNames = ['a', 'b', 'c', 'd'];
 
-      useStore = createStoreHook((set) => ({
+      const { useStore: _useStore } = createStoreHook<Store>((set) => ({
         todo: {
           todos: todoNames.map((name) => ({
             title: name,
@@ -138,6 +139,7 @@ describe('createStoreHook', () => {
           },
         },
       }));
+      useStore = _useStore;
     });
 
     it('should not affect other states when modifying a certain scope of state', () => {

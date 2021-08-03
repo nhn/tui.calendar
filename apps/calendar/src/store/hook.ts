@@ -3,7 +3,14 @@ import { useEffect, useLayoutEffect, useReducer, useRef } from 'preact/hooks';
 import { createStore } from '@src/store/internal';
 import { isUndefined } from '@src/util/utils';
 
-import { EqualityChecker, StateSelector, StateWithActions, StoreCreator, UseStore } from '@t/store';
+import {
+  EqualityChecker,
+  InternalStoreAPI,
+  StateSelector,
+  StateWithActions,
+  StoreCreator,
+  UseStore,
+} from '@t/store';
 
 /**
  * Inspired by Zustand
@@ -17,7 +24,7 @@ const useIsomorphicLayoutEffect = isSSR ? useEffect : useLayoutEffect;
 
 export function createStoreHook<State extends StateWithActions>(
   storeCreator: StoreCreator<State>
-): UseStore<State> {
+): { useStore: UseStore<State>; useStoreInternal: () => InternalStoreAPI<State> } {
   const internalStore = createStore(storeCreator);
 
   const useStore = <StateSlice>(
@@ -103,7 +110,7 @@ export function createStoreHook<State extends StateWithActions>(
     return hasNewStateSlice ? (newStateSlice as StateSlice) : currentSliceRef.current;
   };
 
-  Object.assign(useStore, internalStore);
+  const useStoreInternal = () => internalStore;
 
-  return useStore as UseStore<State>;
+  return { useStore: useStore as UseStore<State>, useStoreInternal };
 }
