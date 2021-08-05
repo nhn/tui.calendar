@@ -3,6 +3,11 @@ import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { calendarData, grid, options, template } from '@src/modules';
 import { layerPopup, PopupType } from '@src/modules/layerPopup';
 import Store from '@src/store';
+import { CalendarDispatchers, CalendarSlice } from '@src/store/calendar';
+import { OptionDispatchers, OptionSlice } from '@src/store/options';
+import { PopupDispatchers, PopupSlice } from '@src/store/popup';
+import { TemplateSlice } from '@src/store/template';
+import { WeekViewLayoutDispatchers, WeekViewLayoutSlice } from '@src/store/weekViewLayout';
 import TZDate from '@src/time/date';
 
 import { Options } from './option';
@@ -220,3 +225,22 @@ export interface StoreHooks<_State extends StateWithActions> {
   useStore: UseStore<_State>;
   internalStore: InternalStoreAPI<_State>;
 }
+
+export type _CalendarState = {
+  option: OptionSlice;
+  template: TemplateSlice;
+  popup: PopupSlice;
+  weekViewLayout: WeekViewLayoutSlice;
+  calendar: CalendarSlice;
+};
+
+export type Dispatchers = {
+  option: OptionDispatchers;
+  popup: PopupDispatchers;
+  weekViewLayout: WeekViewLayoutDispatchers;
+  calendar: CalendarDispatchers;
+};
+
+export type CalendarStore = _CalendarState & {
+  dispatch: Dispatchers;
+};
