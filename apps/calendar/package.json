@@ -44,6 +44,7 @@
     "@storybook/core": "^6.2.8",
     "@storybook/preact": "^6.2.8",
     "@storybook/theming": "^6.2.8",
+    "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/preact": "^2.0.1",
     "@testing-library/preact-hooks": "^1.1.0",
     "@toast-ui/date": "file:../../libs/date",
