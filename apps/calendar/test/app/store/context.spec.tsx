@@ -47,13 +47,13 @@ describe('createStoreContext', () => {
       </StoreProvider>
     );
 
-    expect(container.textContent).toMatch(/current count is: 0/i);
+    expect(container).toHaveTextContent(/current count is: 0/i);
 
     fireEvent.click(screen.getByText('+'));
-    expect(container.textContent).toMatch(/current count is: 1/i);
+    expect(container).toHaveTextContent(/current count is: 1/i);
 
     fireEvent.click(screen.getByText('reset'));
-    expect(container.textContent).toMatch(/current count is: 0/i);
+    expect(container).toHaveTextContent(/current count is: 0/i);
   });
 
   it('should access store internal by `useStoreInternal`', () => {
@@ -80,9 +80,9 @@ describe('createStoreContext', () => {
       </StoreProvider>
     );
 
-    expect(container.textContent).toMatch(/x2 count: 0/i);
+    expect(container).toHaveTextContent(/x2 count: 0/i);
 
     fireEvent.click(screen.getByText('+'));
-    expect(container.textContent).toMatch(/x2 count: 2/i);
+    expect(container).toHaveTextContent(/x2 count: 2/i);
   });
 });
