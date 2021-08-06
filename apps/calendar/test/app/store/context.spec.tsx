@@ -15,7 +15,7 @@ describe('createStoreContext', () => {
   const {
     Provider: StoreProvider,
     useStore,
-    useStoreInternal,
+    useInternalStore,
   } = createStoreContext<CounterStore>();
   const storeCreator = () =>
     createStoreHook<CounterStore>((set) => ({
@@ -58,7 +58,7 @@ describe('createStoreContext', () => {
 
   it('should access store internal by `useStoreInternal`', () => {
     const CounterMultiplier = () => {
-      const storeInternal = useStoreInternal();
+      const storeInternal = useInternalStore();
       const [multipliedCounter, setMultipliedCounter] = useState(0);
 
       useEffect(

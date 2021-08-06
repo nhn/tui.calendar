@@ -5,10 +5,10 @@ import { isUndefined } from '@src/util/utils';
 
 import {
   EqualityChecker,
-  InternalStoreAPI,
   StateSelector,
   StateWithActions,
   StoreCreator,
+  StoreHooks,
   UseStore,
 } from '@t/store';
 
@@ -24,11 +24,11 @@ const useIsomorphicLayoutEffect = isSSR ? useEffect : useLayoutEffect;
 
 export function createStoreHook<State extends StateWithActions>(
   storeCreator: StoreCreator<State>
-): { useStore: UseStore<State>; storeInternal: InternalStoreAPI<State> } {
-  const storeInternal = createStore(storeCreator);
+): StoreHooks<State> {
+  const internalStore = createStore(storeCreator);
 
   const useStore = <StateSlice>(
-    selector: StateSelector<State, StateSlice> = storeInternal.getState as StateSelector<
+    selector: StateSelector<State, StateSlice> = internalStore.getState as StateSelector<
       State,
       StateSlice
     >,
@@ -37,7 +37,7 @@ export function createStoreHook<State extends StateWithActions>(
     // a little trick to invoke re-render to notify hook consumers(usually components)
     const [, notify] = useReducer((notifyCount) => notifyCount + 1, 0) as [never, () => void];
 
-    const state = storeInternal.getState();
+    const state = internalStore.getState();
     const stateRef = useRef(state);
     const selectorRef = useRef(selector);
     const equalityFnRef = useRef(equalityFn);
@@ -78,7 +78,7 @@ export function createStoreHook<State extends StateWithActions>(
     useIsomorphicLayoutEffect(() => {
       const listener = () => {
         try {
-          const nextState = storeInternal.getState();
+          const nextState = internalStore.getState();
           const nextStateSlice = selectorRef.current(nextState);
 
           const shouldUpdateState = !equalityFnRef.current(
@@ -100,8 +100,8 @@ export function createStoreHook<State extends StateWithActions>(
         }
       };
 
-      const unsubscribe = storeInternal.subscribe(listener);
-      if (storeInternal.getState() !== stateBeforeSubscriptionRef.current) {
+      const unsubscribe = internalStore.subscribe(listener);
+      if (internalStore.getState() !== stateBeforeSubscriptionRef.current) {
         listener();
       }
 
@@ -111,5 +111,5 @@ export function createStoreHook<State extends StateWithActions>(
     return hasNewStateSlice ? (newStateSlice as StateSlice) : currentSliceRef.current;
   };
 
-  return { useStore: useStore as UseStore<State>, storeInternal };
+  return { useStore: useStore as UseStore<State>, internalStore };
 }

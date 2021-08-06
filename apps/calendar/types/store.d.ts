@@ -216,9 +216,7 @@ export interface UseStore<_State extends StateWithActions> {
   ): StateSlice;
 }
 
-export interface StoreCreatorHook<_State extends StateWithActions> {
-  (storeCreator: StoreCreator<_State>): {
-    useStore: UseStore<_State>;
-    storeInternal: InternalStoreAPI<_State>;
-  };
+export interface StoreHooks<_State extends StateWithActions> {
+  useStore: UseStore<_State>;
+  internalStore: InternalStoreAPI<_State>;
 }

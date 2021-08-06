@@ -1,16 +1,10 @@
 import { createContext, createElement, FunctionComponent } from 'preact';
 import { useContext, useMemo, useRef } from 'preact/hooks';
 
-import {
-  EqualityChecker,
-  StateSelector,
-  StateWithActions,
-  StoreCreatorHook,
-  UseStore,
-} from '@t/store';
+import { EqualityChecker, StateSelector, StateWithActions, StoreHooks, UseStore } from '@t/store';
 
 export function createStoreContext<State extends StateWithActions>() {
-  type StoreContextType = ReturnType<StoreCreatorHook<State>>;
+  type StoreContextType = StoreHooks<State>;
   const StoreContext = createContext<StoreContextType | null>(null);
 
   const Provider: FunctionComponent<{
@@ -29,31 +23,35 @@ export function createStoreContext<State extends StateWithActions>() {
     selector?: StateSelector<State, StateSlice>,
     equalityFn: EqualityChecker<State> = Object.is
   ) => {
-    const useProviderStore = useContext(StoreContext);
+    const storeCtx = useContext(StoreContext);
 
-    if (!useProviderStore?.useStore) {
+    if (!storeCtx?.useStore) {
       throw new Error('StoreProvider is not found');
     }
 
-    // we cannot call `useProviderStore.useStore` in condition because it violates the rules of hook.
+    // we cannot call `storeCtx.useStore` in condition because it violates the rules of hook.
     // `selector` type should be `StateSelector<State, StateSlice>`
     // but TS cannot infer the type of `selector` clearly.
-    return useProviderStore.useStore(selector as StateSelector<State, State>, equalityFn);
+    return storeCtx.useStore(selector as StateSelector<State, State>, equalityFn);
   };
 
-  const useStoreInternal = () => {
-    const useProviderStore = useContext(StoreContext);
+  /**
+   * For handling often occurring state changes (Transient updates)
+   * See more: https://github.com/pmndrs/zustand/blob/master/readme.md#transient-updates-for-often-occuring-state-changes
+   */
+  const useInternalStore = () => {
+    const storeCtx = useContext(StoreContext);
 
-    if (!useProviderStore) {
+    if (!storeCtx) {
       throw new Error('StoreProvider is not found');
     }
 
-    return useMemo(() => useProviderStore.storeInternal, [useProviderStore]);
+    return useMemo(() => storeCtx.internalStore, [storeCtx]);
   };
 
   return {
     Provider,
     useStore,
-    useStoreInternal,
+    useInternalStore,
   };
 }
