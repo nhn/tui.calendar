@@ -5,10 +5,10 @@ import { isUndefined } from '@src/util/utils';
 
 import {
   EqualityChecker,
-  InternalStoreAPI,
   StateSelector,
   StateWithActions,
   StoreCreator,
+  StoreHooks,
   UseStore,
 } from '@t/store';
 
@@ -24,7 +24,7 @@ const useIsomorphicLayoutEffect = isSSR ? useEffect : useLayoutEffect;
 
 export function createStoreHook<State extends StateWithActions>(
   storeCreator: StoreCreator<State>
-): { useStore: UseStore<State>; useStoreInternal: () => InternalStoreAPI<State> } {
+): StoreHooks<State> {
   const internalStore = createStore(storeCreator);
 
   const useStore = <StateSlice>(
@@ -111,7 +111,5 @@ export function createStoreHook<State extends StateWithActions>(
     return hasNewStateSlice ? (newStateSlice as StateSlice) : currentSliceRef.current;
   };
 
-  const useStoreInternal = () => internalStore;
-
-  return { useStore: useStore as UseStore<State>, useStoreInternal };
+  return { useStore: useStore as UseStore<State>, internalStore };
 }

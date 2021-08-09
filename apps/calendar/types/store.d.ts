@@ -207,11 +207,16 @@ export interface InternalStoreAPI<_State extends StateWithActions> {
 
 export type StoreCreator<_State extends StateWithActions> = (set: SetState<_State>) => _State;
 
-export interface UseStore<_State extends StateWithActions> extends InternalStoreAPI<_State> {
+export interface UseStore<_State extends StateWithActions> {
   (): _State;
 
   <StateSlice>(
     selector: StateSelector<_State, StateSlice>,
     equalityFn?: EqualityChecker<StateSlice>
   ): StateSlice;
+}
+
+export interface StoreHooks<_State extends StateWithActions> {
+  useStore: UseStore<_State>;
+  internalStore: InternalStoreAPI<_State>;
 }
