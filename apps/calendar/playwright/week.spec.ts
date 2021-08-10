@@ -14,37 +14,23 @@ test.describe('basic test', () => {
     expect(events).toHaveLength(3);
   });
 
-  // eslint-disable-next-line complexity
   test('event resizing', async ({ page }) => {
     const boundingBoxBeforeResizing = await events[0].boundingBox();
-    const eventWidthBeforeResizing = boundingBoxBeforeResizing?.width ?? 0;
-    const sourceEvent = await events[0].$('.toastui-calendar-handle-y');
-    const targetEvent = await events[2].$('.toastui-calendar-handle-y');
+    const eventWidthBeforeResizing = boundingBoxBeforeResizing.width;
 
-    const sourceBoundingBox = await sourceEvent?.boundingBox();
-    const targetBoundingBox = await targetEvent?.boundingBox();
+    const resizer = await events[0].$('.toastui-calendar-handle-y');
+    const resizerBoundingBox = await resizer?.boundingBox();
 
-    const sourceX = sourceBoundingBox?.x ?? 0;
-    const sourceY = sourceBoundingBox?.y ?? 0;
-    const sourceWidth = sourceBoundingBox?.width ?? 0;
-    const sourceHeight = sourceBoundingBox?.height ?? 0;
-    const targetX = targetBoundingBox?.x ?? 0;
-    const targetY = targetBoundingBox?.y ?? 0;
-    const targetWidth = targetBoundingBox?.width ?? 0;
-    const targetHeight = targetBoundingBox?.height ?? 0;
+    const targetX = resizerBoundingBox.x + resizerBoundingBox.width / 2;
+    const targetY = resizerBoundingBox.y + resizerBoundingBox.height / 2;
 
-    const startX = sourceX + sourceWidth / 2;
-    const startY = sourceY + sourceHeight / 2;
-    const endX = targetX + targetWidth / 2;
-    const endY = targetY + targetHeight / 2;
-
-    await page.mouse.move(startX, startY, { steps: 10 });
+    await page.mouse.move(targetX, targetY, { steps: 15 });
     await page.mouse.down();
-    await page.mouse.move(endX, endY, { steps: 10 });
+    await page.mouse.move(targetX + 500, targetY, { steps: 15 });
     await page.mouse.up();
 
     const boundingBoxAfterResizing = await events[0].boundingBox();
-    const eventWidthAfterResizing = boundingBoxAfterResizing?.width ?? 0;
+    const eventWidthAfterResizing = boundingBoxAfterResizing.width;
 
     expect(eventWidthBeforeResizing).toBeLessThan(eventWidthAfterResizing);
   });
