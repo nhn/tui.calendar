@@ -38,9 +38,9 @@ test.describe('basic test', () => {
     const endX = targetX + targetWidth / 2;
     const endY = targetY + targetHeight / 2;
 
-    await page.mouse.move(startX, startY, { steps: 5 });
+    await page.mouse.move(startX, startY, { steps: 10 });
     await page.mouse.down();
-    await page.mouse.move(endX, endY, { steps: 5 });
+    await page.mouse.move(endX, endY, { steps: 10 });
     await page.mouse.up();
 
     const boundingBoxAfterResizing = await events[0].boundingBox();
