@@ -1,8 +1,7 @@
 import { expect, test } from '@playwright/test';
-import { ElementHandle } from '@playwright/test/types/types';
 
 test.describe('basic test', () => {
-  let events: ElementHandle<SVGElement | HTMLElement>[];
+  let events: any[];
 
   test.beforeEach(async ({ page }) => {
     await page.goto(
