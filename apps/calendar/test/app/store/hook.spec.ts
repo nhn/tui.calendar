@@ -1,5 +1,3 @@
-import { useMemo } from 'preact/hooks';
-
 import { createStoreHook } from '@src/store/hook';
 
 import { UseStore } from '@t/store';
@@ -196,22 +194,22 @@ describe('createStoreHook', () => {
 
     it('should be able to create derived states through custom hooks', () => {
       function useFilteredTodo() {
-        const { todos, filter } = useStore((state) => state.todo);
-        const { todoSearchKeyword } = useStore((state) => state.search);
-
-        return useMemo(() => {
-          const searchFilter = todoSearchKeyword
+        // it's recommended to move a selector to the outside of the custom hook for production.
+        return useStore((state) => {
+          const { todos, filter } = state.todo;
+          const { todoSearchKeyword } = state.search;
+          const filterBySearchKeyword = todoSearchKeyword
             ? (todo: Store['todo']['todos'][number]) => todo.title.startsWith(todoSearchKeyword)
             : Boolean;
 
           if (filter === 'all') {
-            return todos.filter(searchFilter);
+            return todos.filter(filterBySearchKeyword);
           }
 
           return todos
             .filter((todo) => (filter === 'done' ? todo.isDone : !todo.isDone))
-            .filter(searchFilter);
-        }, [todos, filter, todoSearchKeyword]);
+            .filter(filterBySearchKeyword);
+        });
       }
 
       const { result: dispatchers } = renderHook(() => useStore((state) => state.dispatch));
