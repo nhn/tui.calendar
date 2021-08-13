@@ -75,5 +75,12 @@ module.exports = {
         'max-nested-callbacks': ['error', { max: 5 }],
       },
     },
+    {
+      files: ['playwright/*.ts'],
+      rules: {
+        'dot-notation': ['error', { allowKeywords: true }],
+        'jest/no-done-callback': 'off',
+      },
+    },
   ],
 };

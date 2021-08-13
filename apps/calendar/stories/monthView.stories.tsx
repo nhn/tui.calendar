@@ -1,13 +1,51 @@
 import { h } from 'preact';
 
 import MonthView from '@src/components/view/monthView';
+import { ScheduleData } from '@src/model';
+import Schedule from '@src/model/schedule';
+import TZDate from '@src/time/date';
+import { addDate } from '@src/time/datetime';
 
 import { ProviderWrapper } from '@stories/util/providerWrapper';
+import { createRandomEventModelsForMonth } from '@stories/util/randomEvents';
 import { Story } from '@storybook/preact';
 
-import { createRandomEventModelsForMonth } from './util/randomEvents';
-
 export default { title: 'MonthView' };
+
+function createMonthEvents() {
+  const DAYS_OF_WEEK = 7;
+  const today = new TZDate();
+  const thisSunday = addDate(today, -today.getDay());
+  const sundayDate = thisSunday.getDate();
+  const weekCount = Math.floor(
+    sundayDate % DAYS_OF_WEEK ? sundayDate / DAYS_OF_WEEK : (sundayDate - 1) / DAYS_OF_WEEK
+  );
+  const firstSunday = addDate(thisSunday, -weekCount * DAYS_OF_WEEK);
+  const firstTuesday = addDate(firstSunday, 2);
+  const secondTuesday = addDate(firstTuesday, DAYS_OF_WEEK);
+  const secondThursday = addDate(secondTuesday, 2);
+  const thirdThursday = addDate(secondThursday, DAYS_OF_WEEK);
+  const thirdSaturday = addDate(thirdThursday, 2);
+  const events: ScheduleData[] = [
+    {
+      title: 'event1',
+      start: firstSunday,
+      end: secondTuesday,
+    },
+    {
+      title: 'event2',
+      start: secondTuesday,
+      end: secondThursday,
+    },
+    {
+      title: 'event3',
+      start: thirdThursday,
+      end: thirdSaturday,
+    },
+  ];
+
+  return events.map((event) => Schedule.create(event));
+}
 
 const Template: Story = (args) => (
   <ProviderWrapper options={args.options} events={args.events}>
@@ -50,4 +88,9 @@ export const randomEvents = Template.bind({});
 randomEvents.args = {
   options: { month: { narrowWeekend: true } },
   events: createRandomEventModelsForMonth(40),
+};
+
+export const FixedEvents = Template.bind({});
+FixedEvents.args = {
+  events: createMonthEvents(),
 };

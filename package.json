@@ -10,6 +10,7 @@
     "@babel/preset-env": "^7.13.12",
     "@babel/preset-react": "^7.13.13",
     "@babel/preset-typescript": "^7.13.0",
+    "@playwright/test": "^1.12.3",
     "@types/jest": "^26.0.22",
     "@types/node": "^14.14.37",
     "@types/webpack-env": "^1.16.0",
@@ -66,6 +67,7 @@
     "setup:date": "npm run install:date && npm run build:date",
     "test": "jest --detectOpenHandles --forceExit",
     "test:watch": "jest --watch",
+    "test:playwright": "playwright test --browser=all",
     "prepare": "husky install"
   },
   "workspaces": [

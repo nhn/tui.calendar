@@ -33,8 +33,8 @@ import { range } from '@src/util/utils';
 const REFRESH_INTERVAL = 1000 * SIXTY_SECONDS;
 
 const classNames = {
-  timegrid: timegridClassName,
-  scrollArea: addTimeGridPrefix('scroll-area'),
+  timegrid: cls(timegridClassName),
+  scrollArea: cls(addTimeGridPrefix('scroll-area')),
 };
 
 interface Props {
@@ -165,8 +165,8 @@ export const TimeGrid: FunctionComponent<Props> = ({
   const creationGuideColumnIndex: number = pick(creationGuide, 'columnIndex');
 
   return (
-    <div className={cls(classNames.timegrid)}>
-      <div className={cls(classNames.scrollArea)}>
+    <div className={classNames.timegrid}>
+      <div className={classNames.scrollArea}>
         <MultipleTimezones
           timezones={timezones}
           currentTime={now}
