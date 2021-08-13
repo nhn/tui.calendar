@@ -11,6 +11,7 @@ module.exports = {
   watchPathIgnorePatterns: ['<rootDir>/.storybook', '<rootDir>/.stories', '/node_modules/'],
   testPathIgnorePatterns: ['/node_modules/', '/dist/', '/playwright/'],
   setupFilesAfterEnv: [
+    '<rootDir>/test/jestSetup.ts',
     '<rootDir>/test/matcher/matrices.ts',
     '<rootDir>/test/matcher/viewModels.ts',
   ],

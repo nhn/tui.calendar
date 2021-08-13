@@ -162,3 +162,61 @@ interface PanelState {
 interface LayoutState {
   [key: string]: PanelState;
 }
+
+/**
+ * ==================================
+ *  New State Management Module
+ * ==================================
+ */
+
+export type StateWithActions = Record<string, any>;
+type PartialStateCreator<
+  _State extends StateWithActions,
+  Key extends keyof _State = keyof _State
+> = (state: _State) => Pick<_State, Key> | _State;
+export type StateSelector<_State extends StateWithActions, SelectedState> = (
+  state: _State
+) => SelectedState;
+export type EqualityChecker<_State> = (state: _State, newState: _State) => boolean;
+export type StateListener<_State> = (state: _State, previousState: _State) => void;
+export type StateSliceListener<StateSlice> = (slice: StateSlice, previousSlice: StateSlice) => void;
+export type SetState<_State extends StateWithActions> = <Key extends keyof _State>(
+  partialStateCreator: PartialStateCreator<_State, Key>
+) => void;
+export type GetState<_State extends StateWithActions> = () => _State;
+type Unsubscribe = () => void;
+
+export interface Subscribe<_State extends StateWithActions> {
+  (listener: StateListener<_State>): Unsubscribe;
+
+  <StateSlice>(
+    listener: StateSliceListener<StateSlice>,
+    selector?: StateSelector<_State, StateSlice>,
+    equalityFn?: EqualityChecker<StateSlice>
+  ): Unsubscribe;
+}
+
+export type ClearListeners = () => void;
+
+export interface InternalStoreAPI<_State extends StateWithActions> {
+  setState: SetState<_State>;
+  getState: GetState<_State>;
+  subscribe: Subscribe<_State>;
+  clearListeners: ClearListeners;
+}
+
+export type StoreCreator<_State extends StateWithActions> = (set: SetState<_State>) => _State;
+
+export interface UseStore<_State extends StateWithActions> {
+  (): _State;
+
+  <StateSlice>(
+    selector: StateSelector<_State, StateSlice>,
+    equalityFn?: EqualityChecker<StateSlice>
+  ): StateSlice;
+}
+
+export interface StoreHooks<_State extends StateWithActions> {
+  useStore: UseStore<_State>;
+  internalStore: InternalStoreAPI<_State>;
+}
