@@ -1,5 +1,4 @@
 import {
-  ClearListeners,
   EqualityChecker,
   GetState,
   InternalStoreAPI,
@@ -56,9 +55,12 @@ export function createStore<State extends StateWithActions>(
     return () => listeners.delete(_listener as StateListener<State>);
   };
 
-  const clearListeners: ClearListeners = () => listeners.clear();
+  const reset = () => {
+    listeners.clear();
+    state = storeCreator(setState);
+  };
 
-  const internal = { setState, getState, subscribe, clearListeners };
+  const internal = { setState, getState, subscribe, reset };
   state = storeCreator(setState);
 
   return internal;

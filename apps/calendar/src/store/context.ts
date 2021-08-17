@@ -3,17 +3,17 @@ import { useContext, useMemo, useRef } from 'preact/hooks';
 
 import { EqualityChecker, StateSelector, StateWithActions, StoreHooks, UseStore } from '@t/store';
 
-export function createStoreContext<State extends StateWithActions>() {
-  type StoreContextType = StoreHooks<State>;
-  const StoreContext = createContext<StoreContextType | null>(null);
+export function createStoreContext<State extends StateWithActions>(
+  storeCreator: () => StoreHooks<State>
+) {
+  const StoreContext = createContext<StoreHooks<State> | null>(null);
+  const storeHooks = storeCreator();
 
-  const Provider: FunctionComponent<{
-    storeCreator: () => StoreContextType;
-  }> = ({ storeCreator, children }) => {
-    const storeRef = useRef<StoreContextType>();
+  const Provider: FunctionComponent = ({ children }) => {
+    const storeRef = useRef<StoreHooks<State>>();
 
     if (!storeRef.current) {
-      storeRef.current = storeCreator();
+      storeRef.current = storeHooks;
     }
 
     return createElement(StoreContext.Provider, { value: storeRef.current, children });
@@ -53,5 +53,6 @@ export function createStoreContext<State extends StateWithActions>() {
     Provider,
     useStore,
     useInternalStore,
+    internalStore: storeHooks.internalStore,
   };
 }

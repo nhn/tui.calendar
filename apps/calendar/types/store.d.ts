@@ -201,13 +201,13 @@ export interface Subscribe<_State extends StateWithActions> {
   ): Unsubscribe;
 }
 
-export type ClearListeners = () => void;
+export type ResetStore = () => void;
 
 export interface InternalStoreAPI<_State extends StateWithActions> {
   setState: SetState<_State>;
   getState: GetState<_State>;
   subscribe: Subscribe<_State>;
-  clearListeners: ClearListeners;
+  reset: ResetStore;
 }
 
 export type StoreCreator<_State extends StateWithActions> = (set: SetState<_State>) => _State;
