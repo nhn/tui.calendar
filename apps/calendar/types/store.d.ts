@@ -226,13 +226,11 @@ export interface StoreHooks<_State extends StateWithActions> {
   internalStore: InternalStoreAPI<_State>;
 }
 
-export type _CalendarState = {
-  option: OptionSlice;
-  template: TemplateSlice;
-  popup: PopupSlice;
-  weekViewLayout: WeekViewLayoutSlice;
-  calendar: CalendarSlice;
-};
+export type _CalendarState = OptionSlice &
+  TemplateSlice &
+  PopupSlice &
+  WeekViewLayoutSlice &
+  CalendarSlice;
 
 export type Dispatchers = {
   option: OptionDispatchers;

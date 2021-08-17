@@ -9,13 +9,15 @@ import Schedule from '@src/model/schedule';
 
 import { CalendarStore, SetState } from '@t/store';
 
-export type CalendarSlice = CalendarData;
+export type CalendarSlice = { calendar: CalendarData };
 
 export function createCalendarSlice(): CalendarSlice {
   return {
-    calendars: [],
-    schedules: createScheduleCollection(),
-    idsOfDay: {},
+    calendar: {
+      calendars: [],
+      schedules: createScheduleCollection(),
+      idsOfDay: {},
+    },
   };
 }
 

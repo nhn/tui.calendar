@@ -1,13 +1,25 @@
 import { StateUpdater } from 'preact/hooks';
 
+import { createCalendarDispatchers, createCalendarSlice } from '@src/store/calendar';
+import { createStoreContext } from '@src/store/context';
+import { createStoreHook } from '@src/store/hook';
+import { createOptionDispatchers, createOptionSlice } from '@src/store/options';
+import { createPopupDispatchers, createPopupSlice } from '@src/store/popup';
+import { createTemplateSlice } from '@src/store/template';
+import {
+  createWeekViewLayoutDispatchers,
+  createWeekViewLayoutSlice,
+} from '@src/store/weekViewLayout';
 import { deepCopy, forEach, includes } from '@src/util/utils';
 
 import {
   Action,
   ActionFunc,
+  CalendarStore,
   FlattenActions,
   InitStoreData,
   PayloadActions,
+  StoreCreator,
   StoreModule,
 } from '@t/store';
 
@@ -93,3 +105,21 @@ class Store<State extends Record<string, any> = any> {
 }
 
 export default Store;
+
+const storeCreator: StoreCreator<CalendarStore> = (set) => {
+  return {
+    ...createOptionSlice(),
+    ...createTemplateSlice(),
+    ...createPopupSlice(),
+    ...createWeekViewLayoutSlice(),
+    ...createCalendarSlice(),
+    dispatch: {
+      option: createOptionDispatchers(set),
+      popup: createPopupDispatchers(set),
+      weekViewLayout: createWeekViewLayoutDispatchers(set),
+      calendar: createCalendarDispatchers(set),
+    },
+  };
+};
+
+export const initializeStore = () => createStoreContext(() => createStoreHook(storeCreator));
