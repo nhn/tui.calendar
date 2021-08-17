@@ -58,31 +58,35 @@ function initializeMonthOption(monthOption: Option['month']): CalendarMonthOptio
   return month;
 }
 
-export type OptionSlice = Omit<Option, 'template' | 'calendars' | 'theme'>;
+export type OptionSlice = {
+  option: Omit<Option, 'template' | 'calendars' | 'theme'>;
+};
 
 export type OptionDispatchers = {
-  setOptions: (newOption: OptionSlice) => void;
+  setOptions: (newOption: OptionSlice['option']) => void;
 };
 
 // eslint-disable-next-line complexity
 export function createOptionSlice(option: Option = {}): OptionSlice {
   return {
-    defaultView: option?.defaultView ?? 'week',
-    taskView: option?.taskView ?? true,
-    scheduleView: option?.scheduleView ?? true,
-    useCreationPopup: option?.useCreationPopup ?? false,
-    useDetailPopup: option?.useDetailPopup ?? false,
-    disableDblClick: option?.disableDblClick ?? false,
-    disableClick: option?.disableClick ?? false,
-    isReadOnly: option?.isReadOnly ?? false,
-    week: initializeWeekOption(option.week),
-    month: initializeMonthOption(option.month),
+    option: {
+      defaultView: option?.defaultView ?? 'week',
+      taskView: option?.taskView ?? true,
+      scheduleView: option?.scheduleView ?? true,
+      useCreationPopup: option?.useCreationPopup ?? false,
+      useDetailPopup: option?.useDetailPopup ?? false,
+      disableDblClick: option?.disableDblClick ?? false,
+      disableClick: option?.disableClick ?? false,
+      isReadOnly: option?.isReadOnly ?? false,
+      week: initializeWeekOption(option.week),
+      month: initializeMonthOption(option.month),
+    },
   };
 }
 
 export function createOptionDispatchers(set: SetState<CalendarStore>): OptionDispatchers {
   return {
-    setOptions: (newOption: OptionSlice = {}) =>
+    setOptions: (newOption: OptionSlice['option'] = {}) =>
       set((state) => ({
         option: {
           ...state.option,

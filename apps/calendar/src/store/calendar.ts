@@ -9,27 +9,29 @@ import Schedule from '@src/model/schedule';
 
 import { CalendarStore, SetState } from '@t/store';
 
-export type CalendarSlice = CalendarData;
+export type CalendarSlice = { calendar: CalendarData };
 
 export function createCalendarSlice(): CalendarSlice {
   return {
-    calendars: [],
-    schedules: createScheduleCollection(),
-    idsOfDay: {},
+    calendar: {
+      calendars: [],
+      schedules: createScheduleCollection(),
+      idsOfDay: {},
+    },
   };
 }
 
 type UpdateEventParams = { event: Schedule; eventData: ScheduleData };
 
 export type CalendarDispatchers = {
-  createEvents: (events: Schedule[]) => void;
+  createEvents: (events: (Schedule | ScheduleData)[]) => void;
   updateEvent: (params: UpdateEventParams) => void;
   clearEvents: () => void;
 };
 
 export function createCalendarDispatchers(set: SetState<CalendarStore>): CalendarDispatchers {
   return {
-    createEvents: (events: Schedule[]) =>
+    createEvents: (events: (Schedule | ScheduleData)[]) =>
       set((state) => {
         createSchedules(state.calendar, events);
 

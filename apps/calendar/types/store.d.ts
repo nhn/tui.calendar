@@ -185,8 +185,10 @@ export type StateSelector<_State extends StateWithActions, SelectedState> = (
 export type EqualityChecker<_State> = (state: _State, newState: _State) => boolean;
 export type StateListener<_State> = (state: _State, previousState: _State) => void;
 export type StateSliceListener<StateSlice> = (slice: StateSlice, previousSlice: StateSlice) => void;
-export type SetState<_State extends StateWithActions> = <Key extends keyof _State>(
-  partialStateCreator: PartialStateCreator<_State, Key>
+export type SetState<_State extends StateWithActions> = <
+  Key extends keyof Omit<_State, 'dispatch'>
+>(
+  partialStateCreator: PartialStateCreator<Omit<_State, 'dispatch'>, Key>
 ) => void;
 export type GetState<_State extends StateWithActions> = () => _State;
 type Unsubscribe = () => void;
@@ -226,13 +228,11 @@ export interface StoreHooks<_State extends StateWithActions> {
   internalStore: InternalStoreAPI<_State>;
 }
 
-export type _CalendarState = {
-  option: OptionSlice;
-  template: TemplateSlice;
-  popup: PopupSlice;
-  weekViewLayout: WeekViewLayoutSlice;
-  calendar: CalendarSlice;
-};
+export type _CalendarState = OptionSlice &
+  TemplateSlice &
+  PopupSlice &
+  WeekViewLayoutSlice &
+  CalendarSlice;
 
 export type Dispatchers = {
   option: OptionDispatchers;

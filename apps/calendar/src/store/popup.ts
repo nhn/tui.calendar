@@ -8,20 +8,21 @@ export enum PopupType {
 
 type ShowPopupParams<T extends PopupType> = { type: T; param: PopupParamMap[T] };
 
-export type PopupSlice =
-  | {
-      type: null;
-      param: null;
-    }
-  | {
-      type: PopupType;
-      param: PopupParamMap[PopupType];
-    };
+export type PopupSlice = {
+  popup:
+    | {
+        type: null;
+        param: null;
+      }
+    | {
+        type: PopupType;
+        param: PopupParamMap[PopupType];
+      };
+};
 
 export function createPopupSlice(): PopupSlice {
   return {
-    type: null,
-    param: null,
+    popup: { type: null, param: null },
   };
 }
 
