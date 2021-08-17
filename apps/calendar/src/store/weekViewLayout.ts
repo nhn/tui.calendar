@@ -1,4 +1,4 @@
-import { _CalendarState, SetState } from '@t/store';
+import { CalendarStore, SetState } from '@t/store';
 
 type WeekGridRows = 'milestone' | 'task' | 'allday';
 
@@ -31,7 +31,7 @@ export type WeekViewLayoutDispatchers = {
 };
 
 export function createWeekViewLayoutDispatchers(
-  set: SetState<_CalendarState>
+  set: SetState<CalendarStore>
 ): WeekViewLayoutDispatchers {
   return {
     updateGridRowHeight: ({ rowName, height }: UpdateGridRowHeightParams) =>

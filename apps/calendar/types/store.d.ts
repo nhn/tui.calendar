@@ -234,7 +234,7 @@ export type _CalendarState = {
   calendar: CalendarSlice;
 };
 
-export type _CalendarDispatchers = {
+export type Dispatchers = {
   option: OptionDispatchers;
   popup: PopupDispatchers;
   weekViewLayout: WeekViewLayoutDispatchers;
@@ -242,5 +242,5 @@ export type _CalendarDispatchers = {
 };
 
 export type CalendarStore = _CalendarState & {
-  dispatch: _CalendarDispatchers;
+  dispatch: Dispatchers;
 };

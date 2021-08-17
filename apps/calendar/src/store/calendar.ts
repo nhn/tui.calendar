@@ -7,7 +7,7 @@ import {
 import { CalendarData, ScheduleData } from '@src/model';
 import Schedule from '@src/model/schedule';
 
-import { _CalendarState, SetState } from '@t/store';
+import { CalendarStore, SetState } from '@t/store';
 
 export type CalendarSlice = CalendarData;
 
@@ -27,7 +27,7 @@ export type CalendarDispatchers = {
   clearEvents: () => void;
 };
 
-export function createCalendarDispatchers(set: SetState<_CalendarState>): CalendarDispatchers {
+export function createCalendarDispatchers(set: SetState<CalendarStore>): CalendarDispatchers {
   return {
     createEvents: (events: Schedule[]) =>
       set((state) => {

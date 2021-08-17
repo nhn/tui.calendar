@@ -1,4 +1,4 @@
-import { _CalendarState, PopupParamMap, SetState } from '@t/store';
+import { CalendarStore, PopupParamMap, SetState } from '@t/store';
 
 export enum PopupType {
   seeMore = 'seeMore',
@@ -30,7 +30,7 @@ export type PopupDispatchers = {
   hide: () => void;
 };
 
-export function createPopupDispatchers(set: SetState<_CalendarState>): PopupDispatchers {
+export function createPopupDispatchers(set: SetState<CalendarStore>): PopupDispatchers {
   return {
     show: <T extends PopupType>({ type, param }: ShowPopupParams<T>) =>
       set((state) => ({

@@ -3,7 +3,7 @@ import { Day } from '@src/time/datetime';
 import { getDayName } from '@src/util/dayName';
 import { includes, range } from '@src/util/utils';
 
-import { _CalendarState, CalendarMonthOption, CalendarWeekOption, SetState } from '@t/store';
+import { CalendarMonthOption, CalendarStore, CalendarWeekOption, SetState } from '@t/store';
 
 function initializeDayNames(startDayOfWeek = 0) {
   return range(startDayOfWeek, 7)
@@ -80,7 +80,7 @@ export function createOptionSlice(option: Option = {}): OptionSlice {
   };
 }
 
-export function createOptionDispatchers(set: SetState<_CalendarState>): OptionDispatchers {
+export function createOptionDispatchers(set: SetState<CalendarStore>): OptionDispatchers {
   return {
     setOptions: (newOption: OptionSlice = {}) =>
       set((state) => ({
