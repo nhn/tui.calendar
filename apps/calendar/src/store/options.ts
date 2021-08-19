@@ -1,7 +1,7 @@
 import { Option, ScheduleData } from '@src/model';
 import { Day } from '@src/time/datetime';
 import { getDayName } from '@src/util/dayName';
-import { includes, range } from '@src/util/utils';
+import { deepMergedCopy, includes, range } from '@src/util/utils';
 
 import { CalendarMonthOption, CalendarStore, CalendarWeekOption, SetState } from '@t/store';
 
@@ -94,10 +94,7 @@ export function createOptionDispatchers(set: SetState<CalendarStore>): OptionDis
   return {
     setOptions: (newOption: Partial<OptionSlice['option']> = {}) =>
       set((state) => ({
-        option: {
-          ...state.option,
-          ...newOption,
-        },
+        option: deepMergedCopy(state.option, newOption),
       })),
   };
 }

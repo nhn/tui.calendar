@@ -1,3 +1,5 @@
+import { deepMergedCopy } from '@src/util/utils';
+
 import { CalendarStore, SetState } from '@t/store';
 
 export type WeekGridRows = 'milestone' | 'task' | 'allday';
@@ -40,15 +42,13 @@ export function createWeekViewLayoutDispatchers(
   return {
     updateDayGridRowHeight: ({ rowName, height }: UpdateGridRowHeightParams) =>
       set((state) => ({
-        weekViewLayout: {
-          ...state.weekViewLayout,
+        weekViewLayout: deepMergedCopy(state.weekViewLayout, {
           dayGridRows: {
-            ...state.weekViewLayout.dayGridRows,
             [rowName]: {
               height,
             },
           },
-        },
+        }),
       })),
   };
 }

@@ -1,3 +1,5 @@
+import { deepMergedCopy } from '@src/util/utils';
+
 import { CalendarStore, PopupParamMap, SetState } from '@t/store';
 
 export enum PopupType {
@@ -35,19 +37,11 @@ export function createPopupDispatchers(set: SetState<CalendarStore>): PopupDispa
   return {
     show: <T extends PopupType>({ type, param }: ShowPopupParams<T>) =>
       set((state) => ({
-        popup: {
-          ...state.popup,
-          type,
-          param,
-        },
+        popup: deepMergedCopy(state.popup, { type, param }),
       })),
     hide: () =>
-      set((state) => ({
-        popup: {
-          ...state.popup,
-          type: null,
-          param: null,
-        },
+      set(() => ({
+        popup: { type: null, param: null },
       })),
   };
 }
