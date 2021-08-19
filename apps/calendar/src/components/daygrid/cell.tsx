@@ -13,8 +13,8 @@ import {
 } from '@src/constants/style';
 import { Size } from '@src/controller/panel';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
-import { PopupType } from '@src/modules/layerPopup';
 import { useDispatch } from '@src/store';
+import { PopupType } from '@src/store/popup';
 import TZDate from '@src/time/date';
 import { Day } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';

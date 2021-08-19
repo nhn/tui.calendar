@@ -1,7 +1,7 @@
 import { useState } from 'preact/hooks';
 
-import { PopupType } from '@src/modules/layerPopup';
 import { useDispatch } from '@src/store';
+import { PopupType } from '@src/store/popup';
 
 import { GridCreationGuide } from '@t/components/daygrid/gridWithMouse';
 

@@ -3,8 +3,8 @@ import { FunctionComponent, h } from 'preact';
 import CreationPopup from '@src/components/popup/creationPopup';
 import DetailPopup from '@src/components/popup/detailPopup';
 import SeeMorePopup from '@src/components/popup/seeMorePopup';
-import { PopupType } from '@src/modules/layerPopup';
 import { topLevelStateSelector, useStore } from '@src/store';
+import { PopupType } from '@src/store/popup';
 import { cls } from '@src/util/cssHelper';
 
 import { CreationPopupParam, DetailPopupParam, PopupParamMap, SeeMorePopupParam } from '@t/store';
