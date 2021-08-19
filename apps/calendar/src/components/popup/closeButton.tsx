@@ -1,6 +1,6 @@
 import { FunctionComponent, h } from 'preact';
 
-import { useActions } from '@src/components/hooks/store';
+import { useDispatch } from '@src/store';
 import { cls } from '@src/util/cssHelper';
 import { isFunction } from '@src/util/utils';
 
@@ -9,7 +9,7 @@ interface Props {
 }
 
 const CloseButton: FunctionComponent<Props> = ({ close }) => {
-  const { hide } = useActions('layerPopup');
+  const { hide } = useDispatch('popup');
 
   const onClickHandler = () => {
     hide();

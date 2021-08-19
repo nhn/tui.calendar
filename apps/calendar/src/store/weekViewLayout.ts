@@ -1,6 +1,6 @@
 import { CalendarStore, SetState } from '@t/store';
 
-type WeekGridRows = 'milestone' | 'task' | 'allday';
+export type WeekGridRows = 'milestone' | 'task' | 'allday';
 
 export type WeekViewLayoutSlice = {
   weekViewLayout: {

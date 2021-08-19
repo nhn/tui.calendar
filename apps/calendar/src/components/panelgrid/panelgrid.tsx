@@ -1,10 +1,11 @@
 import { FunctionComponent, h } from 'preact';
 import { useState } from 'preact/hooks';
 
-import { useActions } from '@src/components/hooks/store';
 import { DEFAULT_PANEL_HEIGHT } from '@src/controller/panel';
 import { WeekOption } from '@src/model';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
+import { useDispatch } from '@src/store';
+import { WeekGridRows } from '@src/store/weekViewLayout';
 import { cls } from '@src/util/cssHelper';
 import {
   EVENT_HEIGHT,
@@ -81,7 +82,7 @@ export const PanelGrid: FunctionComponent<Props> = ({
   const [clickedIndex, setClickedIndex] = useState(0);
   const [isClickedCount, setClickedCount] = useState(false);
   const { narrowWeekend = false } = options;
-  const { updatePanelHeight } = useActions('grid');
+  const { updateGridRowHeight } = useDispatch('weekViewLayout');
   // @TODO: set margin value from theme in store
   const eventTopMargin = 2;
   const maxTop = Math.max(0, ...events.map(({ top }) => top));
@@ -89,15 +90,15 @@ export const PanelGrid: FunctionComponent<Props> = ({
   const onClickExceedCount = (index: number) => {
     setClickedCount(true);
     setClickedIndex(index);
-    updatePanelHeight({
-      type: name,
+    updateGridRowHeight({
+      rowName: name as WeekGridRows,
       height: (maxTop + 1) * EVENT_HEIGHT,
     });
   };
   const onClickCollapseButton = () => {
     setClickedCount(false);
-    updatePanelHeight({
-      type: name,
+    updateGridRowHeight({
+      rowName: name as WeekGridRows,
       height: DEFAULT_PANEL_HEIGHT,
     });
   };

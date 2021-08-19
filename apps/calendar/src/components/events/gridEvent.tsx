@@ -4,9 +4,9 @@ import { useRef, useState } from 'preact/hooks';
 import GridWithMouse from '@src/components/daygrid/gridWithMouse';
 import ResizeIcon from '@src/components/events/resizeIcon';
 import { useDrag } from '@src/components/hooks/drag';
-import { useActions } from '@src/components/hooks/store';
 import Template from '@src/components/template';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
+import { useDispatch } from '@src/store';
 import { cls } from '@src/util/cssHelper';
 import { getGridDateIndex } from '@src/util/gridHelper';
 import { toPercent, toPx } from '@src/util/units';
@@ -154,7 +154,7 @@ const GridEvent: FunctionComponent<Props> = ({
   gridColWidthMap,
   cells = [],
 }) => {
-  const { updateSchedule } = useActions('calendarData');
+  const { updateEvent } = useDispatch('calendar');
 
   const [isResizing, setResizing] = useState(false);
   const [resizeGuideStyle, setResizeGuideStyle] = useState<StyleProp | null>(null);
@@ -198,7 +198,7 @@ const GridEvent: FunctionComponent<Props> = ({
       if (!isNil(start) && !isNil(gridX)) {
         if (start <= gridX && end !== gridX) {
           const targetDate = cells[gridX];
-          updateSchedule({ event: viewModel.model, eventData: { end: targetDate } });
+          updateEvent({ event: viewModel.model, eventData: { end: targetDate } });
         }
       }
 

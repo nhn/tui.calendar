@@ -2,7 +2,6 @@ import { FunctionComponent, h } from 'preact';
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
 import CellBar from '@src/components/daygrid/cellBar';
-import { useActions } from '@src/components/hooks/store';
 import { useTheme } from '@src/components/hooks/theme';
 import {
   MONTH_EVENT_HEIGHT,
@@ -15,6 +14,7 @@ import {
 import { Size } from '@src/controller/panel';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { PopupType } from '@src/modules/layerPopup';
+import { useDispatch } from '@src/store';
 import TZDate from '@src/time/date';
 import { Day } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
@@ -185,7 +185,7 @@ export const Cell: FunctionComponent<Props> = ({
   appContainer,
   height,
 }) => {
-  const { show } = useActions('layerPopup');
+  const { show } = useDispatch('popup');
   const theme = useTheme();
 
   const { common: commonTheme } = theme;
