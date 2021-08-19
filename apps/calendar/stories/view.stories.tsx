@@ -5,17 +5,16 @@ import DayView from '@src/components/view/dayView';
 import Main from '@src/components/view/Main';
 import MonthView from '@src/components/view/monthView';
 import WeekView from '@src/components/view/weekView';
+import { initializeStore } from '@src/store';
 import { cls } from '@src/util/cssHelper';
 
 import { ViewListMap } from '@t/option';
-
-import { createStore } from '@stories/util/providerWrapper';
 
 import { createRandomEventModelsForMonth } from './util/randomEvents';
 
 export default { title: 'View' };
 
-const store = createStore({});
+const store = initializeStore();
 const style = {
   position: 'absolute',
   left: 0,
@@ -55,11 +54,11 @@ const timeGridDay = {
 
 function createEvents() {
   const events = createRandomEventModelsForMonth();
-
-  store.dispatch('calendarData/clearSchedules');
+  const { dispatch } = store.getState();
+  dispatch.calendar.clearEvents();
 
   if (events.length) {
-    store.dispatch('calendarData/createSchedules', events);
+    dispatch.calendar.createEvents(events);
   }
 }
 

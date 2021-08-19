@@ -4,21 +4,21 @@ import { Ref, useLayoutEffect, useRef, useState } from 'preact/hooks';
 import DayGrid from '@src/components/daygrid/dayGrid';
 import DayNames from '@src/components/daygrid/dayNames';
 import { usePanelContainer } from '@src/components/hooks/panelContainer';
-import { useStore } from '@src/components/hooks/store';
 import { useTheme } from '@src/components/hooks/theme';
 import Panel from '@src/components/panel';
 import { MONTH_DAY_NAME_HEIGHT } from '@src/constants/style';
-import { TemplateMonthDayName } from '@src/model';
+import { MonthOption, TemplateMonthDayName } from '@src/model';
+import { topLevelStateSelector, useStore } from '@src/store';
 import { getGridInfo, getMonthCalendar, isWeekend } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
 import { capitalizeDayName } from '@src/util/dayName';
 import { getSize } from '@src/util/dom';
 import { createMousePositionDataGrabber } from '@src/util/monthViewHelper';
 
-import { OptionData } from '@t/store';
+import { CalendarStore } from '@t/store';
 
-function getDayNames(options: OptionData) {
-  const { daynames, workweek } = options.month;
+function getDayNames(option: CalendarStore['option']) {
+  const { daynames, workweek } = option.month as Required<MonthOption>;
   const dayNames: TemplateMonthDayName[] = [];
 
   daynames.forEach((name, index) => {
@@ -50,21 +50,21 @@ function useContainerHeight(container: Ref<HTMLDivElement>, dayNameHeight: numbe
 const Month: FunctionComponent = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const { state: options } = useStore('options');
+  const option = useStore(topLevelStateSelector('option'));
   const theme = useTheme();
 
   const gridPanelHeight = useContainerHeight(containerRef, MONTH_DAY_NAME_HEIGHT);
   const panelContainer = usePanelContainer(containerRef, cls('month-daygrid'));
 
-  if (!theme || !options) {
+  if (!theme || !option) {
     return null;
   }
 
-  const dayNames = getDayNames(options);
+  const dayNames = getDayNames(option);
   const renderMonthDate = new Date(); // @TODO: 현재 렌더링된 MonthDate기준으로 계산(prev, next 사용 시 날짜 계산 필요)
-  const monthOptions = options.month;
+  const monthOptions = option.month as Required<MonthOption>;
   const calendar = getMonthCalendar(renderMonthDate, monthOptions);
-  const { narrowWeekend, startDayOfWeek, workweek } = options.month;
+  const { narrowWeekend, startDayOfWeek, workweek } = monthOptions;
   const { gridInfo } = getGridInfo(dayNames.length, narrowWeekend, startDayOfWeek, workweek);
 
   const getMouseDataOnMonth = panelContainer
@@ -89,7 +89,7 @@ const Month: FunctionComponent = () => {
           options={monthOptions}
           calendar={calendar}
           appContainer={containerRef}
-          shouldRenderDefaultPopup={options.useCreationPopup}
+          shouldRenderDefaultPopup={option.useCreationPopup}
           getMousePositionData={getMouseDataOnMonth}
         />
       </Panel>

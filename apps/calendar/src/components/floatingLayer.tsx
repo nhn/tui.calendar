@@ -1,10 +1,10 @@
 import { FunctionComponent, h } from 'preact';
 
-import { useStore } from '@src/components/hooks/store';
 import CreationPopup from '@src/components/popup/creationPopup';
 import DetailPopup from '@src/components/popup/detailPopup';
 import SeeMorePopup from '@src/components/popup/seeMorePopup';
 import { PopupType } from '@src/modules/layerPopup';
+import { topLevelStateSelector, useStore } from '@src/store';
 import { cls } from '@src/util/cssHelper';
 
 import { CreationPopupParam, DetailPopupParam, PopupParamMap, SeeMorePopupParam } from '@t/store';
@@ -23,10 +23,10 @@ const renderPopup = (popupType: PopupType | null, param: PopupParamMap[PopupType
 };
 
 const FloatingLayer: FunctionComponent = () => {
-  const { state } = useStore('layerPopup');
-  const { popupType, param } = state;
+  const popupState = useStore(topLevelStateSelector('popup'));
+  const { type, param } = popupState;
 
-  if (!popupType) {
+  if (!type || !param) {
     return null;
   }
 
@@ -41,7 +41,7 @@ const FloatingLayer: FunctionComponent = () => {
 
   return (
     <div className={cls('floating-layer')} style={style}>
-      {renderPopup(popupType, param)}
+      {renderPopup(type, param)}
     </div>
   );
 };

@@ -148,3 +148,9 @@ export function useDispatch<Group extends keyof Dispatchers>(group?: Group | Gro
     )
   );
 }
+
+export function topLevelStateSelector<Group extends keyof CalendarStore>(
+  group: Group
+): (state: CalendarStore) => CalendarStore[Group] {
+  return (state: CalendarStore) => state[group];
+}

@@ -58,12 +58,18 @@ function initializeMonthOption(monthOption: Option['month']): CalendarMonthOptio
   return month;
 }
 
+// @TODO: some of options has default values. so it should be `Required` type.
+// But it needs a complex type such as `DeepRequired`.
+// maybe leveraging library like `ts-essential` might be helpful.
 export type OptionSlice = {
-  option: Omit<Option, 'template' | 'calendars' | 'theme'>;
+  option: Omit<
+    Required<Option>,
+    'template' | 'calendars' | 'theme' | 'usageStatistics' | 'timezone'
+  >;
 };
 
 export type OptionDispatchers = {
-  setOptions: (newOption: OptionSlice['option']) => void;
+  setOptions: (newOption: Partial<OptionSlice['option']>) => void;
 };
 
 // eslint-disable-next-line complexity
@@ -86,7 +92,7 @@ export function createOptionSlice(option: Option = {}): OptionSlice {
 
 export function createOptionDispatchers(set: SetState<CalendarStore>): OptionDispatchers {
   return {
-    setOptions: (newOption: OptionSlice['option'] = {}) =>
+    setOptions: (newOption: Partial<OptionSlice['option']> = {}) =>
       set((state) => ({
         option: {
           ...state.option,
