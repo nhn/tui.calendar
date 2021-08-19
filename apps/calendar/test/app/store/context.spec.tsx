@@ -7,7 +7,7 @@ import { createStore } from '@src/store/internal';
 import { InternalStoreAPI } from '@t/store';
 import { fireEvent, render, screen } from '@testing-library/preact';
 
-describe('Using store & and store context', () => {
+describe('Using store and store context', () => {
   describe('Simple State', () => {
     type CounterStore = {
       count: number;
