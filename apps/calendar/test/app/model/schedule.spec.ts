@@ -17,12 +17,7 @@ describe('model/schedule basic', () => {
 
   describe('init()', () => {
     beforeEach(() => {
-      jest.useFakeTimers();
       advanceTo(new Date('2015/05/01 00:00:00').getTime());
-    });
-
-    afterEach(() => {
-      jest.useRealTimers();
     });
 
     it('initialize schedule with supplied options.', () => {

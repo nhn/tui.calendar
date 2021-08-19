@@ -14,7 +14,6 @@ MomentDate.setMoment(moment);
  * @param {string} initialDate
  */
 function startMockingTimezone(timezoneName: TimeZone, initialDate: string) {
-  jest.useFakeTimers();
   advanceTo(new Date(initialDate).getTime());
   register(timezoneName);
 }
@@ -24,7 +23,6 @@ function startMockingTimezone(timezoneName: TimeZone, initialDate: string) {
  */
 function finishMockingTimezone() {
   unregister();
-  jest.useRealTimers();
 }
 
 describe('UTCDate', () => {

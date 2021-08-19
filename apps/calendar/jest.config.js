@@ -1,4 +1,5 @@
 module.exports = {
+  testEnvironment: 'jsdom',
   clearMocks: true,
   preset: 'ts-jest/presets/js-with-babel',
   moduleFileExtensions: ['js', 'json', 'jsx', 'ts', 'tsx', 'node', 'd.ts'],
