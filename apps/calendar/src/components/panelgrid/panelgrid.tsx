@@ -82,7 +82,7 @@ export const PanelGrid: FunctionComponent<Props> = ({
   const [clickedIndex, setClickedIndex] = useState(0);
   const [isClickedCount, setClickedCount] = useState(false);
   const { narrowWeekend = false } = options;
-  const { updateGridRowHeight } = useDispatch('weekViewLayout');
+  const { updateDayGridRowHeight } = useDispatch('weekViewLayout');
   // @TODO: set margin value from theme in store
   const eventTopMargin = 2;
   const maxTop = Math.max(0, ...events.map(({ top }) => top));
@@ -90,14 +90,14 @@ export const PanelGrid: FunctionComponent<Props> = ({
   const onClickExceedCount = (index: number) => {
     setClickedCount(true);
     setClickedIndex(index);
-    updateGridRowHeight({
+    updateDayGridRowHeight({
       rowName: name as WeekGridRows,
       height: (maxTop + 1) * EVENT_HEIGHT,
     });
   };
   const onClickCollapseButton = () => {
     setClickedCount(false);
-    updateGridRowHeight({
+    updateDayGridRowHeight({
       rowName: name as WeekGridRows,
       height: DEFAULT_PANEL_HEIGHT,
     });

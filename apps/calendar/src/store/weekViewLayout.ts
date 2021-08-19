@@ -31,19 +31,22 @@ export function createWeekViewLayoutSlice(): WeekViewLayoutSlice {
 type UpdateGridRowHeightParams = { rowName: WeekGridRows; height: number };
 
 export type WeekViewLayoutDispatchers = {
-  updateGridRowHeight: (params: UpdateGridRowHeightParams) => void;
+  updateDayGridRowHeight: (params: UpdateGridRowHeightParams) => void;
 };
 
 export function createWeekViewLayoutDispatchers(
   set: SetState<CalendarStore>
 ): WeekViewLayoutDispatchers {
   return {
-    updateGridRowHeight: ({ rowName, height }: UpdateGridRowHeightParams) =>
+    updateDayGridRowHeight: ({ rowName, height }: UpdateGridRowHeightParams) =>
       set((state) => ({
         weekViewLayout: {
           ...state.weekViewLayout,
-          [rowName]: {
-            height,
+          dayGridRows: {
+            ...state.weekViewLayout.dayGridRows,
+            [rowName]: {
+              height,
+            },
           },
         },
       })),

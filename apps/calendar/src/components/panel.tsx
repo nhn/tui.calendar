@@ -47,7 +47,7 @@ const Panel: FunctionComponent<Props> = (props) => {
   const resizerRef = useRef<{ base: HTMLDivElement }>(null);
   const [resizerRect, setResizerRect] = useState<Size>({ width: 0, height: 0 });
   const { dayGridRows } = useStore(topLevelStateSelector('weekViewLayout'));
-  const { updateGridRowHeight } = useDispatch('weekViewLayout');
+  const { updateDayGridRowHeight } = useDispatch('weekViewLayout');
 
   const panelResizeEnd = (resizeInfo: DragPositionInfo) => {
     onResizeEnd(name, resizeInfo);
@@ -56,7 +56,7 @@ const Panel: FunctionComponent<Props> = (props) => {
       props.minHeight ?? DEFAULT_PANEL_HEIGHT,
       getElementRect(panelRef.current).height + resizeInfo.endY - resizeInfo.startY
     );
-    updateGridRowHeight({
+    updateDayGridRowHeight({
       rowName: name as WeekGridRows,
       height: panelHeight,
     });
