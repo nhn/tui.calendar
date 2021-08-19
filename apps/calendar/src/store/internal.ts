@@ -1,5 +1,5 @@
+/* eslint-disable no-console */
 import {
-  ClearListeners,
   EqualityChecker,
   GetState,
   InternalStoreAPI,
@@ -16,12 +16,19 @@ export function createStore<State extends StateWithActions>(
   storeCreator: StoreCreator<State>
 ): InternalStoreAPI<State> {
   let state: State;
+  let isDebugging = false;
   const listeners = new Set<StateListener<State>>();
 
   const setState: SetState<State> = (partialStateCreator) => {
     const nextState = partialStateCreator(state);
 
     if (nextState !== state) {
+      if (isDebugging) {
+        console.trace(
+          '%c====== [Store debugger] Changing state ======',
+          'background-color: bisque;'
+        );
+      }
       const previousState = state;
       state = { ...state, ...nextState };
       listeners.forEach((listener) => listener(state, previousState));
@@ -56,9 +63,20 @@ export function createStore<State extends StateWithActions>(
     return () => listeners.delete(_listener as StateListener<State>);
   };
 
-  const clearListeners: ClearListeners = () => listeners.clear();
+  const clearListeners = () => listeners.clear();
 
-  const internal = { setState, getState, subscribe, clearListeners };
+  const debug = () => {
+    isDebugging = true;
+    subscribe((newState, prevState) => {
+      console.log('%c============= from the old state ==============', 'color: blue;');
+      console.dir(prevState);
+      console.log('%c============== to the new state ===============', 'color: maroon;');
+      console.dir(newState);
+      console.log('%c=================== END =======================', 'background-color: bisque;');
+    });
+  };
+
+  const internal = { setState, getState, subscribe, clearListeners, debug };
   state = storeCreator(setState);
 
   return internal;

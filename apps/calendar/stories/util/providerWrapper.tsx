@@ -28,9 +28,11 @@ export function ProviderWrapper({
 }: RenderableProps<Props>) {
   const theme = new Theme();
   const store = initializeStore();
+  store.debug();
   const { dispatch } = store.getState();
 
   dispatch.option.setOptions(optionsUserInput);
+  dispatch.calendar.clearEvents();
 
   if (events.length) {
     dispatch.calendar.createEvents(events);
