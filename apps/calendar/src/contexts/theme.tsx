@@ -1,4 +1,4 @@
-import { createContext } from 'preact';
+import { createContext, FunctionComponent, h } from 'preact';
 import { useContext } from 'preact/hooks';
 
 import Theme from '@src/theme';
@@ -15,3 +15,7 @@ export const useTheme = (): Theme => {
 
   return ctx as Theme;
 };
+
+export const ThemeProvider: FunctionComponent<{ theme: Theme }> = ({ theme, children }) => (
+  <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>
+);

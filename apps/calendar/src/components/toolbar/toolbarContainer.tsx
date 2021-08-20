@@ -1,6 +1,6 @@
 import { ComponentType, FunctionComponent, h } from 'preact';
 
-import { useRouter } from '@src/components/hooks/router';
+import { useRouter } from '@src/contexts/router';
 
 import { ToolbarProps } from '@t/toolbar';
 

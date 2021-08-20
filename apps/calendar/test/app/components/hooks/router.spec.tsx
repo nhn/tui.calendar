@@ -1,6 +1,6 @@
 import { FunctionComponent, h } from 'preact';
 
-import { useCreateRouter } from '@src/components/hooks/router';
+import { useCreateRouter } from '@src/contexts/router';
 
 import { act, renderHook } from '@testing-library/preact-hooks';
 

@@ -1,7 +1,7 @@
 import { h, RenderableProps } from 'preact';
 
-import { ThemeProvider } from '@src/components/provider/theme';
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
+import { ThemeProvider } from '@src/contexts/theme';
 import Schedule from '@src/model/schedule';
 import Theme from '@src/theme';
 import { cls } from '@src/util/cssHelper';

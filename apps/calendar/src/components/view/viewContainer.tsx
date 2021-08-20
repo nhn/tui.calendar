@@ -1,6 +1,6 @@
 import { FunctionComponent, h } from 'preact';
 
-import { useRouter } from '@src/components/hooks/router';
+import { useRouter } from '@src/contexts/router';
 
 export const ViewContainer: FunctionComponent = () => {
   const { getCurrentComponent } = useRouter();

@@ -4,8 +4,8 @@ import renderToString from 'preact-render-to-string';
 import isNumber from 'tui-code-snippet/type/isNumber';
 import isString from 'tui-code-snippet/type/isString';
 
-import { ThemeProvider } from '@src/components/provider/theme';
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
+import { ThemeProvider } from '@src/contexts/theme';
 import { createScheduleCollection } from '@src/controller/base';
 import { EventHandler } from '@src/event';
 import { ExternalEventName } from '@src/event/externalEventType';

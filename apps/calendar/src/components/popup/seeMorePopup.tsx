@@ -1,7 +1,6 @@
 import { FunctionComponent, h } from 'preact';
 
 import GridEvent from '@src/components/events/gridEvent';
-import { useTheme } from '@src/components/hooks/theme';
 import SeeMoreHeader from '@src/components/popup/seeMoreHeader';
 import {
   MONTH_EVENT_HEIGHT,
@@ -9,6 +8,7 @@ import {
   MONTH_MORE_VIEW_HEADER_MARGIN_BOTTOM,
   MONTH_MORE_VIEW_PADDING,
 } from '@src/constants/style';
+import { useTheme } from '@src/contexts/theme';
 import { cls } from '@src/util/cssHelper';
 
 import { SeeMorePopupParam } from '@t/store';
