@@ -315,4 +315,3 @@ export default class Calendar {
 
   public on(event: CustomEventType | IEvents, handler?: EventHandlerType): void;
 }
-export { CalendarState } from './types/store';
