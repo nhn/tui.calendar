@@ -11,10 +11,10 @@ import {
   MONTH_MORE_VIEW_MIN_WIDTH,
   MONTH_MORE_VIEW_PADDING,
 } from '@src/constants/style';
+import { useDispatch } from '@src/contexts/calendarStore';
 import { Size } from '@src/controller/panel';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
-import { useDispatch } from '@src/store';
-import { PopupType } from '@src/store/popup';
+import { PopupType } from '@src/slices/popup';
 import TZDate from '@src/time/date';
 import { Day } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';

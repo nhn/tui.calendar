@@ -1,7 +1,7 @@
 import { useState } from 'preact/hooks';
 
-import { useDispatch } from '@src/store';
-import { PopupType } from '@src/store/popup';
+import { useDispatch } from '@src/contexts/calendarStore';
+import { PopupType } from '@src/slices/popup';
 
 import { GridCreationGuide } from '@t/components/daygrid/gridWithMouse';
 

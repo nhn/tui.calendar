@@ -1,8 +1,8 @@
 import { h, RenderableProps } from 'preact';
 
 import { ThemeProvider } from '@src/components/provider/theme';
+import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
 import Schedule from '@src/model/schedule';
-import { initializeStore, StoreProvider } from '@src/store';
 import Theme from '@src/theme';
 import { cls } from '@src/util/cssHelper';
 
@@ -27,7 +27,7 @@ export function ProviderWrapper({
   events = [],
 }: RenderableProps<Props>) {
   const theme = new Theme();
-  const store = initializeStore();
+  const store = initCalendarStore();
   store.debug();
   const { dispatch } = store.getState();
 

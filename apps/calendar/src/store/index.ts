@@ -1,64 +1,133 @@
-import { useCallback } from 'preact/hooks';
+import { createContext, createElement, FunctionComponent } from 'preact';
+import { useContext, useEffect, useLayoutEffect, useMemo, useReducer, useRef } from 'preact/hooks';
 
-import { createCalendarDispatchers, createCalendarSlice } from '@src/store/calendar';
-import { createStoreContext } from '@src/store/context';
-import { createStore } from '@src/store/internal';
-import { createOptionDispatchers, createOptionSlice } from '@src/store/options';
-import { createPopupDispatchers, createPopupSlice } from '@src/store/popup';
-import { createTemplateSlice } from '@src/store/template';
-import {
-  createWeekViewLayoutDispatchers,
-  createWeekViewLayoutSlice,
-} from '@src/store/weekViewLayout';
-import { pick } from '@src/util/utils';
+import { isNil, isUndefined } from '@src/util/utils';
 
-import { CalendarStore, Dispatchers } from '@t/store';
+import { EqualityChecker, InternalStoreAPI, StateSelector, StateWithActions } from '@t/store';
 
-export const initializeStore = () =>
-  createStore<CalendarStore>((set) => {
-    return {
-      ...createOptionSlice(),
-      ...createTemplateSlice(),
-      ...createPopupSlice(),
-      ...createWeekViewLayoutSlice(),
-      ...createCalendarSlice(),
-      dispatch: {
-        option: createOptionDispatchers(set),
-        popup: createPopupDispatchers(set),
-        weekViewLayout: createWeekViewLayoutDispatchers(set),
-        calendar: createCalendarDispatchers(set),
-      },
-    };
-  });
+/**
+ * Inspired by Zustand
+ *
+ * See more: https://github.com/pmndrs/zustand
+ */
 
-const { StoreProvider, useStore, useInternalStore } = createStoreContext<CalendarStore>();
-export { StoreProvider, useInternalStore, useStore };
+const isSSR = isUndefined(window) || !window.navigator;
+const useIsomorphicLayoutEffect = isSSR ? useEffect : useLayoutEffect;
 
-export function useDispatch(): Dispatchers;
-export function useDispatch<Group extends keyof Dispatchers>(group: Group): Dispatchers[Group];
-export function useDispatch<Group extends keyof Dispatchers>(
-  group: Group[]
-): Pick<Dispatchers, Group>;
-export function useDispatch<Group extends keyof Dispatchers>(group?: Group | Group[]) {
-  return useStore(
-    useCallback(
-      (state) => {
-        if (!group) {
-          return state.dispatch;
+export function createStoreContext<State extends StateWithActions>() {
+  const StoreContext = createContext<InternalStoreAPI<State> | null>(null);
+
+  const StoreProvider: FunctionComponent<{ store: InternalStoreAPI<State> }> = ({
+    children,
+    store,
+  }) => {
+    return createElement(StoreContext.Provider, { value: store, children });
+  };
+
+  const useStore = <StateSlice>(
+    selector: StateSelector<State, StateSlice>,
+    equalityFn: EqualityChecker<StateSlice> = Object.is
+  ) => {
+    const storeCtx = useContext(StoreContext);
+
+    if (isNil(storeCtx)) {
+      throw new Error('StoreProvider is not found');
+    }
+
+    // a little trick to invoke re-render to notify hook consumers(usually components)
+    const [, notify] = useReducer((notifyCount) => notifyCount + 1, 0) as [never, () => void];
+
+    const state = storeCtx.getState();
+    const stateRef = useRef(state);
+    const selectorRef = useRef(selector);
+    const equalityFnRef = useRef(equalityFn);
+    const hasErrorRef = useRef(false);
+    // `null` can be a valid state slice.
+    const currentSliceRef = useRef<StateSlice | undefined>();
+
+    if (isUndefined(currentSliceRef.current)) {
+      currentSliceRef.current = selector(state);
+    }
+
+    let newStateSlice: StateSlice | undefined;
+    let hasNewStateSlice = false;
+
+    const shouldGetNewSlice =
+      stateRef.current !== state ||
+      selectorRef.current !== selector ||
+      equalityFnRef.current !== equalityFn ||
+      hasErrorRef.current;
+    if (shouldGetNewSlice) {
+      newStateSlice = selector(state);
+      hasNewStateSlice = !equalityFn(currentSliceRef.current, newStateSlice);
+    }
+
+    useIsomorphicLayoutEffect(() => {
+      if (hasNewStateSlice) {
+        currentSliceRef.current = newStateSlice as StateSlice;
+      }
+
+      stateRef.current = state;
+      selectorRef.current = selector;
+      equalityFnRef.current = equalityFn;
+      hasErrorRef.current = false;
+    });
+
+    // NOTE: There is edge case that state is changed before subscription
+    const stateBeforeSubscriptionRef = useRef(state);
+    useIsomorphicLayoutEffect(() => {
+      const listener = () => {
+        try {
+          const nextState = storeCtx.getState();
+          const nextStateSlice = selectorRef.current(nextState);
+
+          const shouldUpdateState = !equalityFnRef.current(
+            currentSliceRef.current as StateSlice,
+            nextStateSlice
+          );
+          if (shouldUpdateState) {
+            stateRef.current = nextState;
+            currentSliceRef.current = newStateSlice;
+
+            notify();
+          }
+        } catch (e) {
+          // This will be rarely happened, unless we don't pass the arguments to actions properly.
+          // eslint-disable-next-line no-console
+          console.error('[toastui-calendar] failed to update state', e.message);
+          hasErrorRef.current = true;
+          notify();
         }
-        if (Array.isArray(group)) {
-          return pick(state.dispatch, ...group);
-        }
+      };
 
-        return state.dispatch[group];
-      },
-      [group]
-    )
-  );
-}
+      const unsubscribe = storeCtx.subscribe(listener);
+      if (storeCtx.getState() !== stateBeforeSubscriptionRef.current) {
+        listener();
+      }
 
-export function topLevelStateSelector<Group extends keyof CalendarStore>(
-  group: Group
-): (state: CalendarStore) => CalendarStore[Group] {
-  return (state: CalendarStore) => state[group];
+      return unsubscribe;
+    }, []);
+
+    return hasNewStateSlice ? (newStateSlice as StateSlice) : currentSliceRef.current;
+  };
+
+  /**
+   * For handling often occurring state changes (Transient updates)
+   * See more: https://github.com/pmndrs/zustand/blob/master/readme.md#transient-updates-for-often-occuring-state-changes
+   */
+  const useInternalStore = () => {
+    const storeCtx = useContext(StoreContext);
+
+    if (isNil(storeCtx)) {
+      throw new Error('StoreProvider is not found');
+    }
+
+    return useMemo(() => storeCtx, [storeCtx]);
+  };
+
+  return {
+    StoreProvider,
+    useStore,
+    useInternalStore,
+  };
 }

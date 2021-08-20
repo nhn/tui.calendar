@@ -4,7 +4,7 @@ import { RouterContext, useCreateRouter } from '@src/components/hooks/router';
 import { ThemeProvider } from '@src/components/provider/theme';
 import ToolbarContainer from '@src/components/toolbar/toolbarContainer';
 import ViewContainer from '@src/components/view/viewContainer';
-import { StoreProvider } from '@src/store';
+import { StoreProvider } from '@src/contexts/calendarStore';
 import Theme from '@src/theme';
 
 import { ViewListMap } from '@t/option';

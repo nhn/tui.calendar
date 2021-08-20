@@ -3,8 +3,9 @@ import { FunctionComponent, h } from 'preact';
 import CreationPopup from '@src/components/popup/creationPopup';
 import DetailPopup from '@src/components/popup/detailPopup';
 import SeeMorePopup from '@src/components/popup/seeMorePopup';
-import { topLevelStateSelector, useStore } from '@src/store';
-import { PopupType } from '@src/store/popup';
+import { useStore } from '@src/contexts/calendarStore';
+import { topLevelStateSelector } from '@src/selectors';
+import { PopupType } from '@src/slices/popup';
 import { cls } from '@src/util/cssHelper';
 
 import { CreationPopupParam, DetailPopupParam, PopupParamMap, SeeMorePopupParam } from '@t/store';

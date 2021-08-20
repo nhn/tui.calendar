@@ -12,8 +12,9 @@ import {
   MONTH_EVENT_HEIGHT,
   MONTH_EVENT_MARGIN_TOP,
 } from '@src/constants/style';
+import { useStore } from '@src/contexts/calendarStore';
 import Schedule from '@src/model/schedule';
-import { topLevelStateSelector, useStore } from '@src/store';
+import { topLevelStateSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
 import { toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';

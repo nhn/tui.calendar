@@ -1,6 +1,6 @@
 import { FunctionComponent, h } from 'preact';
 
-import { useDispatch } from '@src/store';
+import { useDispatch } from '@src/contexts/calendarStore';
 import { cls } from '@src/util/cssHelper';
 import { isFunction } from '@src/util/utils';
 

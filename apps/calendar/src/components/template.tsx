@@ -2,7 +2,8 @@ import { FunctionComponent, h } from 'preact';
 
 import isString from 'tui-code-snippet/type/isString';
 
-import { topLevelStateSelector, useStore } from '@src/store';
+import { useStore } from '@src/contexts/calendarStore';
+import { topLevelStateSelector } from '@src/selectors';
 import { TemplateName } from '@src/template/default';
 import { identity } from '@src/util';
 

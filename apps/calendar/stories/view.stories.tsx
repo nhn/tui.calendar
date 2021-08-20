@@ -5,7 +5,7 @@ import DayView from '@src/components/view/dayView';
 import Main from '@src/components/view/Main';
 import MonthView from '@src/components/view/monthView';
 import WeekView from '@src/components/view/weekView';
-import { initializeStore } from '@src/store';
+import { initCalendarStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/util/cssHelper';
 
 import { ViewListMap } from '@t/option';
@@ -14,7 +14,7 @@ import { createRandomEventModelsForMonth } from './util/randomEvents';
 
 export default { title: 'View' };
 
-const store = initializeStore();
+const store = initCalendarStore();
 const style = {
   position: 'absolute',
   left: 0,

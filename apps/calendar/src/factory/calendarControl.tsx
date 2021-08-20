@@ -5,6 +5,7 @@ import isNumber from 'tui-code-snippet/type/isNumber';
 import isString from 'tui-code-snippet/type/isString';
 
 import { ThemeProvider } from '@src/components/provider/theme';
+import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
 import { createScheduleCollection } from '@src/controller/base';
 import { EventHandler } from '@src/event';
 import { ExternalEventName } from '@src/event/externalEventType';
@@ -19,7 +20,6 @@ import {
   ScheduleData,
   ViewType,
 } from '@src/model';
-import { initializeStore, StoreProvider } from '@src/store';
 import { registerTemplateConfig } from '@src/template';
 import Theme from '@src/theme';
 import { ThemeKeyValue } from '@src/theme/themeProps';
@@ -99,7 +99,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
 
     this.theme = new Theme(option.theme);
 
-    this.store = initializeStore();
+    this.store = initCalendarStore();
   }
 
   protected abstract getComponent(): ComponentChild;

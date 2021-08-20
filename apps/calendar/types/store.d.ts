@@ -1,10 +1,10 @@
 import { MonthOption, WeekOption } from '@src/model';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
-import { CalendarDispatchers, CalendarSlice } from '@src/store/calendar';
-import { OptionDispatchers, OptionSlice } from '@src/store/options';
-import { PopupDispatchers, PopupSlice } from '@src/store/popup';
-import { TemplateSlice } from '@src/store/template';
-import { WeekViewLayoutDispatchers, WeekViewLayoutSlice } from '@src/store/weekViewLayout';
+import { CalendarDispatchers, CalendarSlice } from '@src/slices/calendar';
+import { OptionDispatchers, OptionSlice } from '@src/slices/options';
+import { PopupDispatchers, PopupSlice } from '@src/slices/popup';
+import { TemplateSlice } from '@src/slices/template';
+import { WeekViewLayoutDispatchers, WeekViewLayoutSlice } from '@src/slices/weekViewLayout';
 import TZDate from '@src/time/date';
 
 type CalendarMonthOption = Required<MonthOption>;

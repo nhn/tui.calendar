@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
-import { createStoreContext } from '@src/store/context';
+import { createStoreContext } from '@src/store';
 import { createStore } from '@src/store/internal';
 
 import { InternalStoreAPI } from '@t/store';

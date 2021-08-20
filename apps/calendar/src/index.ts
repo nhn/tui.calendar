@@ -10,3 +10,5 @@ if (module.hot) {
   // eslint-disable-next-line global-require
   require('preact/debug');
 }
+export { useDispatch } from '@src/contexts/calendarStore';
+export { initCalendarStore } from '@src/contexts/calendarStore';

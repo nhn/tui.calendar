@@ -6,23 +6,22 @@ import Panel from '@src/components/panel';
 import { DayGridEvents } from '@src/components/panelgrid/dayGridEvents';
 import { ColumnInfo } from '@src/components/timegrid/columns';
 import { TimeGrid } from '@src/components/timegrid/timegrid';
+import { useStore } from '@src/contexts/calendarStore';
 import { WeekOption } from '@src/model';
-import { useStore } from '@src/store';
+import { weekViewStateSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
 import { getGridInfo, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { getDayNames } from '@src/util/dayName';
 import { getDayGridEvents } from '@src/util/gridHelper';
-import { pick } from '@src/util/utils';
 
 import type { DayGridEventType } from '@t/panel';
-import { CalendarStore } from '@t/store';
 
 const dayNameHeight = 42;
-const selector = (state: CalendarStore) =>
-  pick(state, 'template', 'option', 'calendar', 'weekViewLayout');
 
 const Day: FunctionComponent = () => {
-  const { template, calendar: calendarData, option, weekViewLayout } = useStore(selector);
+  const { template, calendar: calendarData, option, weekViewLayout } = useStore(
+    weekViewStateSelector
+  );
 
   if (!template || !option || !calendarData || !weekViewLayout) {
     return null;

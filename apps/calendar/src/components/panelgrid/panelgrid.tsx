@@ -1,11 +1,11 @@
 import { FunctionComponent, h } from 'preact';
 import { useState } from 'preact/hooks';
 
+import { useDispatch } from '@src/contexts/calendarStore';
 import { DEFAULT_PANEL_HEIGHT } from '@src/controller/panel';
 import { WeekOption } from '@src/model';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
-import { useDispatch } from '@src/store';
-import { WeekGridRows } from '@src/store/weekViewLayout';
+import { WeekGridRows } from '@src/slices/weekViewLayout';
 import { cls } from '@src/util/cssHelper';
 import {
   EVENT_HEIGHT,

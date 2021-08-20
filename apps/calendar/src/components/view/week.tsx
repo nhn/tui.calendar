@@ -6,8 +6,9 @@ import Panel from '@src/components/panel';
 import { DayGridEvents } from '@src/components/panelgrid/dayGridEvents';
 import { ColumnInfo } from '@src/components/timegrid/columns';
 import { TimeGrid } from '@src/components/timegrid/timegrid';
+import { useStore } from '@src/contexts/calendarStore';
 import { WeekOption } from '@src/model';
-import { useStore } from '@src/store';
+import { weekViewStateSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
 import {
   addDate,
@@ -19,10 +20,9 @@ import {
 } from '@src/time/datetime';
 import { getDayNames } from '@src/util/dayName';
 import { getDayGridEvents } from '@src/util/gridHelper';
-import { pick, range } from '@src/util/utils';
+import { range } from '@src/util/utils';
 
 import type { Cells, DayGridEventType } from '@t/panel';
-import { CalendarStore } from '@t/store';
 
 function getCells(renderDate: TZDate, { startDayOfWeek = 0, workweek }: WeekOption): Cells {
   const renderDay = renderDate.getDay();
@@ -43,15 +43,13 @@ function getCells(renderDate: TZDate, { startDayOfWeek = 0, workweek }: WeekOpti
 
 const dayNameHeight = 42;
 
-const selector = (state: CalendarStore) =>
-  pick(state, 'template', 'option', 'calendar', 'weekViewLayout');
 const Week: FunctionComponent = () => {
   const {
     template,
     option,
     calendar,
     weekViewLayout: { dayGridRows },
-  } = useStore(selector);
+  } = useStore(weekViewStateSelector);
 
   if (!template || !option || !calendar || !dayGridRows) {
     return null;

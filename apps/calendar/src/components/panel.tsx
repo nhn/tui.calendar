@@ -6,6 +6,7 @@ import isString from 'tui-code-snippet/type/isString';
 
 import { DragPositionInfo } from '@src/components/draggable';
 import { PanelResizer } from '@src/components/panelResizer';
+import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { Direction } from '@src/controller/layout';
 import {
   DEFAULT_PANEL_HEIGHT,
@@ -17,8 +18,8 @@ import {
   PanelRect,
   Size,
 } from '@src/controller/panel';
-import { topLevelStateSelector, useDispatch, useStore } from '@src/store';
-import { WeekGridRows } from '@src/store/weekViewLayout';
+import { topLevelStateSelector } from '@src/selectors';
+import { WeekGridRows } from '@src/slices/weekViewLayout';
 import { noop } from '@src/util';
 import { cls } from '@src/util/cssHelper';
 
