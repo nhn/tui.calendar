@@ -14,6 +14,12 @@ export type WeekViewLayoutSlice = {
   };
 };
 
+type UpdateGridRowHeightParams = { rowName: WeekGridRows; height: number };
+
+export type WeekViewLayoutDispatchers = {
+  updateDayGridRowHeight: (params: UpdateGridRowHeightParams) => void;
+};
+
 const DAYGRID_ROW_NAMES = ['milestone', 'task', 'allday'] as const;
 
 export function createWeekViewLayoutSlice(): WeekViewLayoutSlice {
@@ -29,12 +35,6 @@ export function createWeekViewLayoutSlice(): WeekViewLayoutSlice {
     },
   };
 }
-
-type UpdateGridRowHeightParams = { rowName: WeekGridRows; height: number };
-
-export type WeekViewLayoutDispatchers = {
-  updateDayGridRowHeight: (params: UpdateGridRowHeightParams) => void;
-};
 
 export function createWeekViewLayoutDispatchers(
   set: SetState<CalendarStore>

@@ -99,7 +99,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
 
     this.theme = new Theme(option.theme);
 
-    this.store = initCalendarStore();
+    this.store = initCalendarStore(this._options);
   }
 
   protected abstract getComponent(): ComponentChild;

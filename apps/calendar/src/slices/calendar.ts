@@ -4,22 +4,12 @@ import {
   createSchedules,
   updateSchedule,
 } from '@src/controller/base';
-import { CalendarData, ScheduleData } from '@src/model';
+import { CalendarData, CalendarInfo, ScheduleData } from '@src/model';
 import Schedule from '@src/model/schedule';
 
 import { CalendarStore, SetState } from '@t/store';
 
 export type CalendarSlice = { calendar: CalendarData };
-
-export function createCalendarSlice(): CalendarSlice {
-  return {
-    calendar: {
-      calendars: [],
-      schedules: createScheduleCollection(),
-      idsOfDay: {},
-    },
-  };
-}
 
 type UpdateEventParams = { event: Schedule; eventData: ScheduleData };
 
@@ -28,6 +18,16 @@ export type CalendarDispatchers = {
   updateEvent: (params: UpdateEventParams) => void;
   clearEvents: () => void;
 };
+
+export function createCalendarSlice(calendars: CalendarInfo[] = []): CalendarSlice {
+  return {
+    calendar: {
+      calendars,
+      schedules: createScheduleCollection(),
+      idsOfDay: {},
+    },
+  };
+}
 
 export function createCalendarDispatchers(set: SetState<CalendarStore>): CalendarDispatchers {
   return {

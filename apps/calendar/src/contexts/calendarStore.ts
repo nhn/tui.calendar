@@ -1,5 +1,6 @@
 import { useCallback } from 'preact/hooks';
 
+import { Option } from '@src/model';
 import { createCalendarDispatchers, createCalendarSlice } from '@src/slices/calendar';
 import { createOptionDispatchers, createOptionSlice } from '@src/slices/options';
 import { createPopupDispatchers, createPopupSlice } from '@src/slices/popup';
@@ -14,14 +15,14 @@ import { pick } from '@src/util/utils';
 
 import { CalendarStore, Dispatchers } from '@t/store';
 
-export const initCalendarStore = () =>
+export const initCalendarStore = (option: Option = {}) =>
   createStore<CalendarStore>((set) => {
     return {
-      ...createOptionSlice(),
-      ...createTemplateSlice(),
+      ...createOptionSlice(option),
+      ...createTemplateSlice(option.template),
       ...createPopupSlice(),
       ...createWeekViewLayoutSlice(),
-      ...createCalendarSlice(),
+      ...createCalendarSlice(option.calendars),
       dispatch: {
         option: createOptionDispatchers(set),
         popup: createPopupDispatchers(set),

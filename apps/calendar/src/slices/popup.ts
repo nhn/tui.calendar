@@ -22,16 +22,16 @@ export type PopupSlice = {
       };
 };
 
+export type PopupDispatchers = {
+  show: <T extends PopupType>(params: ShowPopupParams<T>) => void;
+  hide: () => void;
+};
+
 export function createPopupSlice(): PopupSlice {
   return {
     popup: { type: null, param: null },
   };
 }
-
-export type PopupDispatchers = {
-  show: <T extends PopupType>(params: ShowPopupParams<T>) => void;
-  hide: () => void;
-};
 
 export function createPopupDispatchers(set: SetState<CalendarStore>): PopupDispatchers {
   return {
