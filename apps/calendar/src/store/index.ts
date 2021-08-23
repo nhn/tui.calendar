@@ -1,95 +1,133 @@
-import { StateUpdater } from 'preact/hooks';
+import { createContext, createElement, FunctionComponent } from 'preact';
+import { useContext, useEffect, useLayoutEffect, useMemo, useReducer, useRef } from 'preact/hooks';
 
-import { deepCopy, forEach, includes } from '@src/util/utils';
+import { isNil, isUndefined } from '@src/util/utils';
 
-import {
-  Action,
-  ActionFunc,
-  FlattenActions,
-  InitStoreData,
-  PayloadActions,
-  StoreModule,
-} from '@t/store';
+import { EqualityChecker, InternalStoreAPI, StateSelector, StateWithActions } from '@t/store';
 
-interface StoreProps {
-  modules: StoreModule[];
-  initStoreData: InitStoreData;
-}
+/**
+ * Inspired by Zustand
+ *
+ * See more: https://github.com/pmndrs/zustand
+ */
 
-class Store<State extends Record<string, any> = any> {
-  state = {} as State;
+const isSSR = isUndefined(window) || !window.navigator;
+const useIsomorphicLayoutEffect = isSSR ? useEffect : useLayoutEffect;
 
-  initStoreData!: InitStoreData;
+export function createStoreContext<State extends StateWithActions>() {
+  const StoreContext = createContext<InternalStoreAPI<State> | null>(null);
 
-  flattenActionMap: Action = {};
+  const StoreProvider: FunctionComponent<{ store: InternalStoreAPI<State> }> = ({
+    children,
+    store,
+  }) => {
+    return createElement(StoreContext.Provider, { value: store, children });
+  };
 
-  actions: PayloadActions = {};
+  const useStore = <StateSlice>(
+    selector: StateSelector<State, StateSlice>,
+    equalityFn: EqualityChecker<StateSlice> = Object.is
+  ) => {
+    const storeCtx = useContext(StoreContext);
 
-  stateUpdater: StateUpdater<State> | null = null;
-
-  constructor({ modules, initStoreData }: StoreProps) {
-    this.initStoreData = deepCopy(initStoreData);
-
-    modules.forEach((module) => this.setModule(module));
-  }
-
-  setStateUpdater(stateUpdater: StateUpdater<State>) {
-    this.stateUpdater = stateUpdater;
-  }
-
-  setState(state: State) {
-    this.state = state;
-  }
-
-  setModule(module: StoreModule) {
-    const { name, actions = {} } = module;
-
-    if (module.state) {
-      const state =
-        typeof module.state === 'function' ? module.state(this.initStoreData) : module.state;
-      this.state = { ...this.state, [name]: state };
+    if (isNil(storeCtx)) {
+      throw new Error('StoreProvider is not found');
     }
 
-    if (!this.actions[name]) {
-      this.actions[name] = {};
+    // a little trick to invoke re-render to notify hook consumers(usually components)
+    const [, notify] = useReducer((notifyCount) => notifyCount + 1, 0) as [never, () => void];
+
+    const state = storeCtx.getState();
+    const stateRef = useRef(state);
+    const selectorRef = useRef(selector);
+    const equalityFnRef = useRef(equalityFn);
+    const hasErrorRef = useRef(false);
+    // `null` can be a valid state slice.
+    const currentSliceRef = useRef<StateSlice | undefined>();
+
+    if (isUndefined(currentSliceRef.current)) {
+      currentSliceRef.current = selector(state);
     }
 
-    forEach(actions, (action, actionName) => {
-      this.setFlattenActionMap(`${name}/${actionName}`, action);
-      this.setPayloadAction(name, actionName);
+    let newStateSlice: StateSlice | undefined;
+    let hasNewStateSlice = false;
+
+    const shouldGetNewSlice =
+      stateRef.current !== state ||
+      selectorRef.current !== selector ||
+      equalityFnRef.current !== equalityFn ||
+      hasErrorRef.current;
+    if (shouldGetNewSlice) {
+      newStateSlice = selector(state);
+      hasNewStateSlice = !equalityFn(currentSliceRef.current, newStateSlice);
+    }
+
+    useIsomorphicLayoutEffect(() => {
+      if (hasNewStateSlice) {
+        currentSliceRef.current = newStateSlice as StateSlice;
+      }
+
+      stateRef.current = state;
+      selectorRef.current = selector;
+      equalityFnRef.current = equalityFn;
+      hasErrorRef.current = false;
     });
-  }
 
-  setPayloadAction(name: string, actionName: string) {
-    this.actions[name][actionName] = (payload?: any) => {
-      const actionType = `${name}/${actionName}` as keyof FlattenActions;
+    // NOTE: There is edge case that state is changed before subscription
+    const stateBeforeSubscriptionRef = useRef(state);
+    useIsomorphicLayoutEffect(() => {
+      const listener = () => {
+        try {
+          const nextState = storeCtx.getState();
+          const nextStateSlice = selectorRef.current(nextState);
 
-      this.dispatch(actionType, payload);
-    };
-  }
+          const shouldUpdateState = !equalityFnRef.current(
+            currentSliceRef.current as StateSlice,
+            nextStateSlice
+          );
+          if (shouldUpdateState) {
+            stateRef.current = nextState;
+            currentSliceRef.current = newStateSlice;
 
-  setFlattenActionMap(actionType: string, actionFn: ActionFunc) {
-    this.flattenActionMap[actionType] = actionFn;
-  }
+            notify();
+          }
+        } catch (e) {
+          // This will be rarely happened, unless we don't pass the arguments to actions properly.
+          // eslint-disable-next-line no-console
+          console.error('[toastui-calendar] failed to update state', e.message);
+          hasErrorRef.current = true;
+          notify();
+        }
+      };
 
-  dispatch(actionType: keyof FlattenActions, payload?: any) {
-    if (!includes(Object.keys(this.flattenActionMap), actionType)) {
-      throw new TypeError(`Action type '${actionType}' is not valid.`);
+      const unsubscribe = storeCtx.subscribe(listener);
+      if (storeCtx.getState() !== stateBeforeSubscriptionRef.current) {
+        listener();
+      }
+
+      return unsubscribe;
+    }, []);
+
+    return hasNewStateSlice ? (newStateSlice as StateSlice) : currentSliceRef.current;
+  };
+
+  /**
+   * For handling often occurring state changes (Transient updates)
+   * See more: https://github.com/pmndrs/zustand/blob/master/readme.md#transient-updates-for-often-occuring-state-changes
+   */
+  const useInternalStore = () => {
+    const storeCtx = useContext(StoreContext);
+
+    if (isNil(storeCtx)) {
+      throw new Error('StoreProvider is not found');
     }
 
-    const [name] = actionType.split('/');
-    const nextState = this.flattenActionMap[actionType](this.state[name], payload, this);
+    return useMemo(() => storeCtx, [storeCtx]);
+  };
 
-    if (!this.state[name]) {
-      throw new Error(`The ${name} does not exist.`);
-    }
-
-    this.state = { ...this.state, [name]: nextState };
-
-    if (this.stateUpdater) {
-      this.stateUpdater(this.state);
-    }
-  }
+  return {
+    StoreProvider,
+    useStore,
+    useInternalStore,
+  };
 }
-
-export default Store;

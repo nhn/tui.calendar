@@ -2,10 +2,9 @@ import { h } from 'preact';
 import renderToString from 'preact-render-to-string';
 
 import Template from '@src/components/template';
+import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
 import Schedule from '@src/model/schedule';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
-import { template as TemplateModule } from '@src/modules';
-import Store from '@src/store';
 import {
   getCommonWidth,
   getMonthScheduleBlock,
@@ -13,8 +12,6 @@ import {
   registerTemplateConfig,
 } from '@src/template';
 import { templates } from '@src/template/default';
-
-import { getStoreWrapper } from '@test/helper/storeProvider';
 
 describe('Render Template', () => {
   it('registerTemplateConfig() returns Template instance with given config and defaults.', () => {
@@ -35,17 +32,11 @@ describe('Render Template', () => {
   });
 
   it('Template component renders html string with given template', () => {
-    const store = new Store({
-      modules: [TemplateModule],
-      initStoreData: { options: {} },
-    });
-
-    const Wrapper = getStoreWrapper(store);
-
+    const store = initCalendarStore();
     const vdom = (
-      <Wrapper>
+      <StoreProvider store={store}>
         <Template template="time" model={{ title: 'Custom Title 4' }} />
-      </Wrapper>
+      </StoreProvider>
     );
     const html = renderToString(vdom);
 

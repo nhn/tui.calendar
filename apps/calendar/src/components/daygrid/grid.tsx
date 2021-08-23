@@ -2,7 +2,7 @@ import { FunctionComponent, h } from 'preact';
 import { useRef } from 'preact/hooks';
 
 import { Cell } from '@src/components/daygrid/cell';
-import { useTheme } from '@src/components/hooks/theme';
+import { useTheme } from '@src/contexts/theme';
 import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { getGridInfo, toFormat, toStartOfDay } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';

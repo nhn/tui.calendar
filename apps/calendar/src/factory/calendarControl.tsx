@@ -4,8 +4,8 @@ import renderToString from 'preact-render-to-string';
 import isNumber from 'tui-code-snippet/type/isNumber';
 import isString from 'tui-code-snippet/type/isString';
 
-import { StoreProvider } from '@src/components/provider/store';
-import { ThemeProvider } from '@src/components/provider/theme';
+import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
+import { ThemeProvider } from '@src/contexts/theme';
 import { createScheduleCollection } from '@src/controller/base';
 import { EventHandler } from '@src/event';
 import { ExternalEventName } from '@src/event/externalEventType';
@@ -20,20 +20,13 @@ import {
   ScheduleData,
   ViewType,
 } from '@src/model';
-import {
-  calendarData,
-  grid,
-  layerPopup,
-  options as OptionsModule,
-  template as templateModule,
-} from '@src/modules';
-import Store from '@src/store';
 import { registerTemplateConfig } from '@src/template';
 import Theme from '@src/theme';
 import { ThemeKeyValue } from '@src/theme/themeProps';
 import TZDate from '@src/time/date';
 import { toStartOfDay } from '@src/time/datetime';
 
+import { CalendarStore, Dispatchers, InternalStoreAPI } from '@t/store';
 import { DateInterface, LocalDate } from '@toast-ui/date';
 
 export default abstract class CalendarControl extends EventHandler<ExternalEventName> {
@@ -68,7 +61,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
 
   protected theme: Theme;
 
-  protected store: Store;
+  protected store: InternalStoreAPI<CalendarStore>;
 
   private _mainApp?: AnyComponent<any, any>;
 
@@ -106,13 +99,18 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
 
     this.theme = new Theme(option.theme);
 
-    this.store = new Store({
-      initStoreData: { options: this._options },
-      modules: [OptionsModule, templateModule, calendarData, layerPopup, grid],
-    });
+    this.store = initCalendarStore(this._options);
   }
 
   protected abstract getComponent(): ComponentChild;
+
+  private getStoreDispatchers(): Dispatchers;
+
+  private getStoreDispatchers<Group extends keyof Dispatchers>(group: Group): Dispatchers[Group];
+
+  private getStoreDispatchers<Group extends keyof Dispatchers>(group?: Group) {
+    return group ? this.store.getState().dispatch[group] : this.store.getState().dispatch;
+  }
 
   private initOption(option: Option = {}): Option {
     const {
@@ -216,7 +214,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * ]);
    */
   createSchedules(events: ScheduleData[]) {
-    this.store.dispatch('calendarData/createSchedules', events);
+    this.getStoreDispatchers('calendar').createEvents(events);
   }
 
   /**
@@ -335,7 +333,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * calendar.render();
    */
   clear() {
-    this.store.dispatch('calendarData/clearSchedules');
+    this.getStoreDispatchers('calendar').clearEvents();
   }
 
   /**

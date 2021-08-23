@@ -1,7 +1,7 @@
 import { useState } from 'preact/hooks';
 
-import { useActions } from '@src/components/hooks/store';
-import { PopupType } from '@src/modules/layerPopup';
+import { useDispatch } from '@src/contexts/calendarStore';
+import { PopupType } from '@src/slices/popup';
 
 import { GridCreationGuide } from '@t/components/daygrid/gridWithMouse';
 
@@ -9,7 +9,7 @@ export function useCreationGuide(shouldRenderDefaultPopup = false) {
   const [creationGuide, setCreationGuide] = useState<GridCreationGuide | null>(null);
   const [isOpenedPopup, setOpenedPopup] = useState(false);
 
-  const { show, hide } = useActions('layerPopup');
+  const { show, hide } = useDispatch('popup');
 
   const onOpenCreationPopup = (guide: GridCreationGuide) => {
     if (shouldRenderDefaultPopup) {

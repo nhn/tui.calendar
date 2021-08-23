@@ -2,7 +2,8 @@ import { FunctionComponent, h } from 'preact';
 
 import isString from 'tui-code-snippet/type/isString';
 
-import { useStore } from '@src/components/hooks/store';
+import { useStore } from '@src/contexts/calendarStore';
+import { topLevelStateSelector } from '@src/selectors';
 import { TemplateName } from '@src/template/default';
 import { identity } from '@src/util';
 
@@ -12,7 +13,7 @@ interface Props {
 }
 
 const Template: FunctionComponent<Props> = ({ template, model }) => {
-  const { state: templates } = useStore('template');
+  const templates = useStore(topLevelStateSelector('template'));
   const templateFunc: Function = templates[template] || identity;
   const htmlOrVnode = templateFunc(model, h);
 

@@ -5,8 +5,8 @@ import isNumber from 'tui-code-snippet/type/isNumber';
 import isString from 'tui-code-snippet/type/isString';
 
 import { DragPositionInfo } from '@src/components/draggable';
-import { useStore } from '@src/components/hooks/store';
 import { PanelResizer } from '@src/components/panelResizer';
+import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { Direction } from '@src/controller/layout';
 import {
   DEFAULT_PANEL_HEIGHT,
@@ -18,6 +18,8 @@ import {
   PanelRect,
   Size,
 } from '@src/controller/panel';
+import { topLevelStateSelector } from '@src/selectors';
+import { WeekGridRows } from '@src/slices/weekViewLayout';
 import { noop } from '@src/util';
 import { cls } from '@src/util/cssHelper';
 
@@ -45,10 +47,8 @@ const Panel: FunctionComponent<Props> = (props) => {
   const panelRef = useRef<HTMLDivElement>(null);
   const resizerRef = useRef<{ base: HTMLDivElement }>(null);
   const [resizerRect, setResizerRect] = useState<Size>({ width: 0, height: 0 });
-  const {
-    state,
-    actions: { updatePanelHeight },
-  } = useStore('grid');
+  const { dayGridRows } = useStore(topLevelStateSelector('weekViewLayout'));
+  const { updateDayGridRowHeight } = useDispatch('weekViewLayout');
 
   const panelResizeEnd = (resizeInfo: DragPositionInfo) => {
     onResizeEnd(name, resizeInfo);
@@ -57,8 +57,8 @@ const Panel: FunctionComponent<Props> = (props) => {
       props.minHeight ?? DEFAULT_PANEL_HEIGHT,
       getElementRect(panelRef.current).height + resizeInfo.endY - resizeInfo.startY
     );
-    updatePanelHeight({
-      type: name,
+    updateDayGridRowHeight({
+      rowName: name as WeekGridRows,
       height: panelHeight,
     });
   };
@@ -118,8 +118,10 @@ const Panel: FunctionComponent<Props> = (props) => {
     updateElementRect();
   }, [updateElementRect]);
 
-  const panelHeight = state[name]?.height ?? props.height ?? DEFAULT_PANEL_HEIGHT;
-  const panelWidth = state[name]?.height ?? props.width ?? DEFAULT_PANEL_HEIGHT;
+  const panelHeight =
+    dayGridRows[name as WeekGridRows]?.height ?? props.height ?? DEFAULT_PANEL_HEIGHT;
+  const panelWidth =
+    dayGridRows[name as WeekGridRows]?.height ?? props.width ?? DEFAULT_PANEL_HEIGHT;
   const styleWithDirection =
     direction === Direction.COLUMN ? { height: panelHeight } : { width: panelWidth };
   const styles = getPanelStylesFromInfo({ ...props, ...styleWithDirection });

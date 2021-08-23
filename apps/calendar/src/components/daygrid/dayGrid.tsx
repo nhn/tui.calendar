@@ -6,14 +6,15 @@ import Grid from '@src/components/daygrid/grid';
 import GridEvents from '@src/components/daygrid/gridEvents';
 import GridWithMouse from '@src/components/daygrid/gridWithMouse';
 import { useCreationGuide } from '@src/components/hooks/creationGuide';
-import { useStore } from '@src/components/hooks/store';
 import {
   MONTH_CELL_BAR_HEIGHT,
   MONTH_CELL_PADDING_TOP,
   MONTH_EVENT_HEIGHT,
   MONTH_EVENT_MARGIN_TOP,
 } from '@src/constants/style';
+import { useStore } from '@src/contexts/calendarStore';
 import Schedule from '@src/model/schedule';
+import { topLevelStateSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
 import { toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
@@ -78,7 +79,7 @@ const DayGrid: FunctionComponent<Props> = ({
   const rowHeight =
     TOTAL_PERCENT_HEIGHT / Math.max(visibleWeeksCount === 0 ? 6 : visibleWeeksCount, 1);
 
-  const { state: calendarData } = useStore('calendarData');
+  const calendarData = useStore(topLevelStateSelector('calendar'));
 
   if (!calendarData) {
     return null;

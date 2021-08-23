@@ -1,13 +1,14 @@
 import { FunctionComponent, h } from 'preact';
 
 import DayNames from '@src/components/daygrid/dayNames';
-import { useStore } from '@src/components/hooks/store';
 import { Layout } from '@src/components/layout';
 import Panel from '@src/components/panel';
 import { DayGridEvents } from '@src/components/panelgrid/dayGridEvents';
 import { ColumnInfo } from '@src/components/timegrid/columns';
 import { TimeGrid } from '@src/components/timegrid/timegrid';
+import { useStore } from '@src/contexts/calendarStore';
 import { WeekOption } from '@src/model';
+import { weekViewStateSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
 import {
   addDate,
@@ -44,17 +45,21 @@ const dayNameHeight = 42;
 
 const Week: FunctionComponent = () => {
   const {
-    state: { template, options, calendarData, grid },
-  } = useStore();
+    template,
+    option,
+    calendar,
+    weekViewLayout: { dayGridRows },
+  } = useStore(weekViewStateSelector);
 
-  if (!template || !options || !calendarData || !grid) {
+  if (!template || !option || !calendar || !dayGridRows) {
     return null;
   }
 
-  const { narrowWeekend, startDayOfWeek, workweek, hourStart, hourEnd } = options.week;
+  const weekOptions = option.week as Required<WeekOption>;
+  const { narrowWeekend, startDayOfWeek, workweek, hourStart, hourEnd } = weekOptions;
   // @TODO: calculate based on today(need to calculate date when prev & next used)
   const renderWeekDate = new TZDate();
-  const cells = getCells(renderWeekDate, options.week);
+  const cells = getCells(renderWeekDate, weekOptions);
   const dayNames = getDayNames(cells);
   const { gridInfo, gridColWidthMap } = getGridInfo(
     cells.length,
@@ -62,7 +67,7 @@ const Week: FunctionComponent = () => {
     startDayOfWeek,
     workweek
   );
-  const dayGridEvents = getDayGridEvents(cells, calendarData, {
+  const dayGridEvents = getDayGridEvents(cells, calendar, {
     narrowWeekend,
     hourStart,
     hourEnd,
@@ -71,7 +76,7 @@ const Week: FunctionComponent = () => {
     (cell) =>
       ({ start: toStartOfDay(cell), end: toEndOfDay(cell), unit: 'minute', slot: 30 } as ColumnInfo)
   );
-  const allDayPanels = Object.entries(grid).map(([key, value]) => {
+  const allDayPanels = Object.entries(dayGridRows).map(([key, value]) => {
     const panelType = key as DayGridEventType;
 
     return (
@@ -81,7 +86,7 @@ const Week: FunctionComponent = () => {
           cells={cells}
           type={panelType}
           height={value.height}
-          options={options.week}
+          options={weekOptions}
           gridInfo={gridInfo}
           gridColWidthMap={gridColWidthMap}
         />
@@ -96,7 +101,7 @@ const Week: FunctionComponent = () => {
           dayNames={dayNames}
           marginLeft={120}
           templateType="weekDayname"
-          options={options.week}
+          options={weekOptions}
           gridInfo={gridInfo}
           type="week"
         />
