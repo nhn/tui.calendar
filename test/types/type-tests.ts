@@ -300,11 +300,13 @@ calendar.on({
 
         if (!isUsingCreationPopup(event)) {
             if (isMonthViewCreationGuide(event.guide)) {
-                event.guide.clearGuideElements();
+                event.guide.clearGuideElements
             }
         }
 
-        console.log('beforeCreateSchedule: ', event);
+        const ev = event as IEventWithCreationPopup;
+
+        console.log('beforeCreateSchedule: ', ev);
     },
     beforeDeleteSchedule(eventSechedule) {
         console.log('beforeDeleteSchedule: ', eventSechedule);

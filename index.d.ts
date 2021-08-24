@@ -70,32 +70,40 @@ export interface IEventWithoutCreationPopup {
 }
 
 /**
- * Cast `TEventWithCreationPopup` if you enabled the `useCreationPopup` option.
- * Otherwise use `TEventWithoutCreationPopup`.
+ * Cast `IEventWithCreationPopup` if you enabled the `useCreationPopup` option.
+ *
+ * Otherwise use `IEventWithoutCreationPopup`.
+ *
+ * You might need to implement and use type guard functions to narrow down the type of the event.
  *
  * @example
- * With the default creation popup.
  * ```
  * const cal = new Calendar({
  *   useCreationPopup: true,
  *   // ...
  * });
  *
- * cal.on('beforeCreateSchedule', (e: TEventWithCreationPopup) => {
- *   // ...
- * });
- * ```
  *
- * @example
- * Without the default creation popup.
- * ```
- * const cal = new Calendar({
- *   useCreationPopup: false, // or not to use this property at all.
- *   // ...
+ * function isUsingCreationPopup(event: TEventBeforeCreateSchedule): event is IEventWithCreationPopup {
+ *   return 'useCreationPopup' in event;
+ * }
+ * function isMonthViewCreationGuide(guide: IEventWithoutCreationPopup['guide']): guide is IMonthGuide {
+ *   return 'guideElements' in guide;
+ * }
+ *
+ * cal.on('beforeCreateSchedule', e => {
+ *   if (!isUsingCreationPopup(e)) {
+ *     // ...
+ *     if (isMonthViewCreationGuide(e.guide)) {
+ *       e.guide.clearElements();
+ *       // ...
+ *     }
+ *   }
  * });
  *
- * cal.on('beforeCreateSchedule', (e: TEventWithoutCreationPopup) => {
- *   // ...
+ * // or you can just cast it with `as` keyword.
+ * cal.on('beforeCreateSchedule', e => {
+ *   const event = e as IEventWithCreationPopup;
  * });
  * ```
  */
