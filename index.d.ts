@@ -29,9 +29,81 @@ export interface IEventScheduleObject {
     schedule: ISchedule;
 }
 
+export interface ITimeCreationGuide {
+    guideElement: HTMLElement;
+    guideTimeElement: HTMLElement;
+    clearGuideElement: () => void;
+}
+
+export interface IMonthGuide {
+    guideElements: HTMLElement[];
+    clearGuideElements: () => void;
+}
+
+export interface IDayGridCreationGuide {
+    guideElement: HTMLElement;
+    clearGuideElement: () => void;
+}
+
+export interface IEventWithCreationPopup extends Pick<ISchedule, 'start' | 'end' | 'state' | 'title' | 'location'> {
+    calendarId: string | number | null;
+    raw: ISchedule['raw'] & {
+        class?: 'public' | 'private'
+    };
+    useCreationPopup: true;
+    isAllDay: boolean;
+}
+
+export interface IEventWithoutCreationPopup {
+    start: TZDate;
+    end: TZDate;
+    isAllDay: boolean;
+    triggerEventName: 'click' | 'dblclick' | 'mouseup';
+    /**
+     * Depending on the position when creating the schedule creation guide.
+     *
+     * - `ITimeCreationGuide`: In Week/Day view, trying to create a timely schedule.
+     * - `IDayGridCreationGuide`: In Week/Day view, trying to create a all-day schedule.
+     * - `IMonthGuide`: In Month view, trying to create a schedule with a range of days.
+     */
+    guide: ITimeCreationGuide | IDayGridCreationGuide | IMonthGuide;
+}
+
+/**
+ * Cast `TEventWithCreationPopup` if you enabled the `useCreationPopup` option.
+ * Otherwise use `TEventWithoutCreationPopup`.
+ *
+ * @example
+ * With the default creation popup.
+ * ```
+ * const cal = new Calendar({
+ *   useCreationPopup: true,
+ *   // ...
+ * });
+ *
+ * cal.on('beforeCreateSchedule', (e: TEventWithCreationPopup) => {
+ *   // ...
+ * });
+ * ```
+ *
+ * @example
+ * Without the default creation popup.
+ * ```
+ * const cal = new Calendar({
+ *   useCreationPopup: false, // or not to use this property at all.
+ *   // ...
+ * });
+ *
+ * cal.on('beforeCreateSchedule', (e: TEventWithoutCreationPopup) => {
+ *   // ...
+ * });
+ * ```
+ */
+export type TEventBeforeCreateSchedule = IEventWithCreationPopup | IEventWithoutCreationPopup;
+
 export interface IEvents {
     'afterRenderSchedule'?: (eventObj: {schedule: ISchedule}) => void;
-    'beforeCreateSchedule'?: (schedule: ISchedule) => void;
+    'beforeCreateSchedule'?: (schedule: TEventBeforeCreateSchedule) => void;
     'beforeDeleteSchedule'?: (eventObj: IEventScheduleObject) => void;
     'beforeUpdateSchedule'?: (eventObj: IEventObject) => void;
     'clickDayname'?: (eventObj: IEventDateObject) => void;
