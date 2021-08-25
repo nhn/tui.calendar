@@ -29,9 +29,89 @@ export interface IEventScheduleObject {
     schedule: ISchedule;
 }
 
+export interface ITimeCreationGuide {
+    guideElement: HTMLElement;
+    guideTimeElement: HTMLElement;
+    clearGuideElement: () => void;
+}
+
+export interface IMonthGuide {
+    guideElements: HTMLElement[];
+    clearGuideElements: () => void;
+}
+
+export interface IDayGridCreationGuide {
+    guideElement: HTMLElement;
+    clearGuideElement: () => void;
+}
+
+export interface IEventWithCreationPopup extends Pick<ISchedule, 'start' | 'end' | 'state' | 'title' | 'location'> {
+    calendarId: string | number | null;
+    raw: ISchedule['raw'] & {
+        class?: 'public' | 'private'
+    };
+    useCreationPopup: true;
+    isAllDay: boolean;
+}
+
+export interface IEventWithoutCreationPopup {
+    start: TZDate;
+    end: TZDate;
+    isAllDay: boolean;
+    triggerEventName: 'click' | 'dblclick' | 'mouseup';
+    /**
+     * Depending on the position when creating the schedule creation guide.
+     *
+     * - `ITimeCreationGuide`: In Week/Day view, trying to create a timely schedule.
+     * - `IDayGridCreationGuide`: In Week/Day view, trying to create a all-day schedule.
+     * - `IMonthGuide`: In Month view, trying to create a schedule with a range of days.
+     */
+    guide: ITimeCreationGuide | IDayGridCreationGuide | IMonthGuide;
+}
+
+/**
+ * Cast `IEventWithCreationPopup` if you enabled the `useCreationPopup` option.
+ *
+ * Otherwise use `IEventWithoutCreationPopup`.
+ *
+ * You might need to implement and use type guard functions to narrow down the type of the event.
+ *
+ * @example
+ * ```
+ * const cal = new Calendar({
+ *   useCreationPopup: true,
+ *   // ...
+ * });
+ *
+ *
+ * function isUsingCreationPopup(event: TEventBeforeCreateSchedule): event is IEventWithCreationPopup {
+ *   return 'useCreationPopup' in event;
+ * }
+ * function isMonthViewCreationGuide(guide: IEventWithoutCreationPopup['guide']): guide is IMonthGuide {
+ *   return 'guideElements' in guide;
+ * }
+ *
+ * cal.on('beforeCreateSchedule', e => {
+ *   if (!isUsingCreationPopup(e)) {
+ *     // ...
+ *     if (isMonthViewCreationGuide(e.guide)) {
+ *       e.guide.clearElements();
+ *       // ...
+ *     }
+ *   }
+ * });
+ *
+ * // or you can just cast it with `as` keyword.
+ * cal.on('beforeCreateSchedule', e => {
+ *   const event = e as IEventWithCreationPopup;
+ * });
+ * ```
+ */
+export type TEventBeforeCreateSchedule = IEventWithCreationPopup | IEventWithoutCreationPopup;
+
 export interface IEvents {
     'afterRenderSchedule'?: (eventObj: {schedule: ISchedule}) => void;
-    'beforeCreateSchedule'?: (schedule: ISchedule) => void;
+    'beforeCreateSchedule'?: (schedule: TEventBeforeCreateSchedule) => void;
     'beforeDeleteSchedule'?: (eventObj: IEventScheduleObject) => void;
     'beforeUpdateSchedule'?: (eventObj: IEventObject) => void;
     'clickDayname'?: (eventObj: IEventDateObject) => void;
