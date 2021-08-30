@@ -99,7 +99,8 @@
     "eslint": "eslint ./src",
     "tslint": "tslint index.d.ts",
     "doc:serve": "tuidoc --serv",
-    "doc": "tuidoc"
+    "doc": "tuidoc",
+    "publish:cdn": "node scripts/publishToCDN.js"
   },
   "dependencies": {
     "dompurify": "^2.3.1",
