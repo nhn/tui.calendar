@@ -1,0 +1,16 @@
+name: 'Get target version'
+description: "Find the target release version"
+outputs:
+  target-version:
+    value: ${{ steps.target-version-getter.outputs.target-version }}
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout branch
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: '1'
+    - id: target-version-getter
+      run: |
+        echo "::set-output name=target-version::$(git log -1 --pretty=format:"%s")"
+      shell: bash
