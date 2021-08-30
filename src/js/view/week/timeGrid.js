@@ -4,6 +4,7 @@
  */
 'use strict';
 
+var DOMPurify = require('dompurify');
 var util = require('tui-code-snippet');
 var config = require('../../config');
 var common = require('../../common/common');
@@ -477,7 +478,7 @@ TimeGrid.prototype.render = function(viewModel) {
 
     baseViewModel.showHourMarker = baseViewModel.todaymarkerLeft >= 0;
 
-    container.innerHTML = mainTmpl(baseViewModel);
+    container.innerHTML = DOMPurify.sanitize(mainTmpl(baseViewModel));
 
     /**********
      * Render sticky container for timezone display label
@@ -510,7 +511,7 @@ TimeGrid.prototype.render = function(viewModel) {
 TimeGrid.prototype.renderStickyContainer = function(baseViewModel) {
     var stickyContainer = this.stickyContainer;
 
-    stickyContainer.innerHTML = timezoneStickyTmpl(baseViewModel);
+    stickyContainer.innerHTML = DOMPurify.sanitize(timezoneStickyTmpl(baseViewModel));
 
     stickyContainer.style.display = baseViewModel.timezones.length > 1 ? 'block' : 'none';
     stickyContainer.style.width = baseViewModel.styles.leftWidth;

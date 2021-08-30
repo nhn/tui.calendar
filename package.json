@@ -101,8 +101,9 @@
     "doc": "tuidoc"
   },
   "dependencies": {
+    "dompurify": "^2.3.1",
     "tui-code-snippet": "^1.5.0",
-    "tui-date-picker": "^4.0.2",
-    "tui-time-picker": "^2.0.1"
+    "tui-date-picker": "^4.3.0",
+    "tui-time-picker": "^2.1.4"
   }
 }

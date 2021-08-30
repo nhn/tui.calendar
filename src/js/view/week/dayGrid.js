@@ -4,6 +4,7 @@
  */
 'use strict';
 
+var DOMPurify = require('dompurify');
 var util = require('tui-code-snippet');
 var config = require('../../config'),
     common = require('../../common/common'),
@@ -152,7 +153,7 @@ DayGrid.prototype.render = function(viewModel) {
         scheduleContainerTop = this.options.scheduleContainerTop;
     var dayGridSchedule;
 
-    container.innerHTML = baseTmpl(baseViewModel);
+    container.innerHTML = DOMPurify.sanitize(baseTmpl(baseViewModel));
 
     this.children.clear();
 

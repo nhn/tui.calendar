@@ -4,6 +4,7 @@
  */
 'use strict';
 
+var DOMPurify = require('dompurify');
 var util = require('tui-code-snippet');
 var config = require('../../config');
 var common = require('../../common/common');
@@ -98,7 +99,7 @@ DayName.prototype.render = function(viewModel) {
         styles: styles
     });
 
-    this.container.innerHTML = daynameTmpl(baseViewModel);
+    this.container.innerHTML = DOMPurify.sanitize(daynameTmpl(baseViewModel));
 };
 
 /**
