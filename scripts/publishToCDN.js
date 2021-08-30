@@ -68,7 +68,7 @@ async function publish() {
   const container = await getCDNContainer(token);
   const cdnPath = `${STORAGE_ID}/${container}`;
 
-  [pkg.version, 'latest'].forEach((dir) => {
+  [`v${pkg.version}`, 'latest'].forEach((dir) => {
     uploadToCDN(token, LOCAL_DIST_PATH, `${cdnPath}/${dir}`).catch((e) =>
       console.error(`Uploading to ${dir} is failed: `, e)
     );
