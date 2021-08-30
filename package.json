@@ -46,6 +46,7 @@
     "eslint-loader": "^2.0.0",
     "eslint-plugin-jasmine": "^2.10.1",
     "eslint-plugin-prettier": "^3.1.4",
+    "got": "^11.8.2",
     "handlebars": "^4.7.6",
     "handlebars-template-loader": "^1.0.0",
     "istanbul-instrumenter-loader": "^3.0.1",
@@ -98,7 +99,8 @@
     "eslint": "eslint ./src",
     "tslint": "tslint index.d.ts",
     "doc:serve": "tuidoc --serv",
-    "doc": "tuidoc"
+    "doc": "tuidoc",
+    "publish:cdn": "node scripts/publishToCDN.js"
   },
   "dependencies": {
     "dompurify": "^2.3.1",

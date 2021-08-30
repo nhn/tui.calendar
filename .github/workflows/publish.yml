@@ -1,0 +1,93 @@
+name: Publish Package
+on: [workflow_dispatch]
+jobs:
+  publish-package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v2
+      - name: Check the package version
+        id: cpv
+        uses: PostHog/check-package-version@v2
+      - name: Get target version
+        id: tgv
+        uses: ./.github/actions/get-target-version
+      - uses: actions/checkout@v2
+      - name: Create new version tag
+        if: steps.cpv.outputs.is-new-version == 'true'
+        run: |
+          git tag v${{ steps.tgv.outputs.target-version }}
+      - name: Push new version tag
+        if: steps.cpv.outputs.is-new-version == 'true'
+        run: |
+          git push origin v${{ steps.tgv.outputs.target-version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: ./.github/actions/install-dependencies
+        if: steps.cpv.outputs.is-new-version == 'true'
+      - name: Publish the release note
+        if: steps.cpv.outputs.is-new-version == 'true'
+        run: |
+          npm run release-note
+        env:
+          TUI_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish the package to npm
+        if: steps.cpv.outputs.is-new-version == 'true'
+        run: |
+          npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Version mismatch (Force exit)
+        if: steps.cpv.outputs.is-new-version != 'true'
+        run: |
+          exit 1
+  publish-cdn:
+    needs: publish-package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v2
+      - uses: ./.github/actions/install-dependencies
+      - name: Upload files to CDN
+        run: |
+          npm run publish:cdn
+        env:
+          TOAST_CLOUD_TENENTID: ${{ secrets.TOAST_CLOUD_TENENTID }}
+          TOAST_CLOUD_STORAGEID: ${{ secrets.TOAST_CLOUD_STORAGEID }}
+          TOAST_CLOUD_USERNAME: ${{ secrets.TOAST_CLOUD_USERNAME }}
+          TOAST_CLOUD_PASSWORD: ${{ secrets.TOAST_CLOUD_PASSWORD }}
+  publish-docs:
+    needs: publish-package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Get target version
+        id: tgv
+        uses: ./.github/actions/get-target-version
+      - uses: ./.github/actions/install-dependencies
+      - name: Install tuidoc
+        run: |
+          npm i -g @toast-ui/doc
+      - name: Generate docs
+        run: |
+          npm run doc
+      - name: Commit new doc files
+        run: |
+          git checkout gh-pages
+          git config --local user.email "dohyung.ahn@nhn.com"
+          git config --local user.name "Dohyung Ahn"
+          rm -rf latest
+          mv _latest latest
+          mv _${{ steps.tgv.outputs.target-version }} ${{ steps.tgv.outputs.target-version }}
+          git add .
+          git commit -m "${{ steps.tgv.outputs.target-version }}"
+      - name: Publish new docs
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages
+      - name: Back to master branch
+        run: |
+          git checkout master
