@@ -4,7 +4,6 @@
  */
 'use strict';
 
-var DOMPurify = require('dompurify');
 var util = require('tui-code-snippet');
 var config = require('../../config'),
     common = require('../../common/common.js'),
@@ -115,7 +114,7 @@ WeekdayInMonth.prototype.render = function(viewModel) {
         setIsOtherMonthFlag(baseViewModel.dates, this.options.renderMonth, viewModel.theme);
     }
 
-    container.innerHTML = DOMPurify.sanitize(baseTmpl(baseViewModel));
+    container.innerHTML = baseTmpl(baseViewModel);
 
     scheduleContainer = domutil.find(
         config.classname('.weekday-schedules'),
@@ -126,7 +125,7 @@ WeekdayInMonth.prototype.render = function(viewModel) {
         return;
     }
 
-    scheduleContainer.innerHTML = DOMPurify.sanitize(scheduleTmpl(baseViewModel));
+    scheduleContainer.innerHTML = scheduleTmpl(baseViewModel);
 
     common.setAutoEllipsis(
         config.classname('.weekday-schedule-title'),

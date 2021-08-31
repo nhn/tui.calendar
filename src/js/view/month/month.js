@@ -4,7 +4,6 @@
  */
 'use strict';
 
-var DOMPurify = require('dompurify');
 var util = require('tui-code-snippet');
 var config = require('../../config'),
     datetime = require('../../common/datetime'),
@@ -239,7 +238,7 @@ Month.prototype.render = function() {
         styles: styles
     };
 
-    vLayout.panels[0].container.innerHTML = DOMPurify.sanitize(tmpl(baseViewModel));
+    vLayout.panels[0].container.innerHTML = tmpl(baseViewModel);
 
     this._renderChildren(vLayout.panels[1].container, calendar, theme);
 
