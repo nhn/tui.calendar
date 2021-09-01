@@ -299,8 +299,8 @@ For more information on PR's step, please see links of Contributing section.
 ## 🔩 Dependency
 
 * [tui-code-snippet](https://github.com/nhn/tui.code-snippet) >= 1.5.0
-* [tui-date-picker](https://github.com/nhn/tui.date-picker) >= 4.0.2 is optional.
-* [tui-time-picker](https://github.com/nhn/tui.time-picker) >= 2.0.1 is optional.
+* [tui-date-picker](https://github.com/nhn/tui.date-picker) >= 4.3.0 is optional.
+* [tui-time-picker](https://github.com/nhn/tui.time-picker) >= 2.1.4 is optional.
 
 ## 🍞 TOAST UI Family
 * [TOAST UI Grid](https://github.com/nhn/tui.grid)
