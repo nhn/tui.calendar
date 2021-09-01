@@ -6,6 +6,7 @@
 
 var GA_TRACKING_ID = 'UA-129951699-1';
 
+var DOMPurify = require('dompurify');
 var util = require('tui-code-snippet'),
     Handlebars = require('handlebars-template-loader/runtime');
 var dw = require('../common/dw');
@@ -774,11 +775,18 @@ Calendar.prototype._initialize = function(options) {
  */
 Calendar.prototype._setAdditionalInternalOptions = function(options) {
     var timezone = options.timezone;
+    var templateWithSanitizer = function(templateFn) {
+        return function() {
+            var template = templateFn.apply(null, arguments);
+
+            return DOMPurify.sanitize(template);
+        };
+    };
     var zones, offsetCalculator;
 
     util.forEach(options.template, function(func, name) {
         if (func) {
-            Handlebars.registerHelper(name + '-tmpl', func);
+            Handlebars.registerHelper(name + '-tmpl', templateWithSanitizer(func));
         }
     });
 
