@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.14.0 | Mon Aug 30 2021
+ * @version 1.14.1 | Wed Sep 01 2021
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -8718,6 +8718,7 @@ module.exports = config;
  */
 
 
+var DOMPurify = __webpack_require__(/*! dompurify */ "./node_modules/dompurify/dist/purify.js");
 var util = __webpack_require__(/*! tui-code-snippet */ "tui-code-snippet");
 var Schedule = __webpack_require__(/*! ../model/schedule */ "./src/js/model/schedule.js");
 var ScheduleViewModel = __webpack_require__(/*! ../model/viewModel/scheduleViewModel */ "./src/js/model/viewModel/scheduleViewModel.js");
@@ -8726,6 +8727,23 @@ var common = __webpack_require__(/*! ../common/common */ "./src/js/common/common
 var Theme = __webpack_require__(/*! ../theme/theme */ "./src/js/theme/theme.js");
 var tz = __webpack_require__(/*! ../common/timezone */ "./src/js/common/timezone.js");
 var TZDate = tz.Date;
+
+var SCHEDULE_VULNERABLE_OPTIONS = ['title', 'body', 'location', 'state', 'category', 'dueDateClass'];
+
+/**
+ * Sanitize option values having possible vulnerabilities
+ * @param {object} options options.
+ * @returns {object} sanitized options.
+ */
+function sanitizeOptions(options) {
+    util.forEachArray(SCHEDULE_VULNERABLE_OPTIONS, function(prop) {
+        if (options[prop]) {
+            options[prop] = DOMPurify.sanitize(options[prop]);
+        }
+    });
+
+    return options;
+}
 
 /**
  * Get range date by custom timezone or native timezone
@@ -8872,7 +8890,7 @@ Base.prototype._getContainDatesInSchedule = function(schedule) {
 Base.prototype.createSchedule = function(options, silent) {
     var schedule,
         scheduleData = {
-            data: options
+            data: sanitizeOptions(options)
         };
 
     /**
@@ -8923,7 +8941,7 @@ Base.prototype.updateSchedule = function(schedule, options) {
     var start = options.start || schedule.start;
     var end = options.end || schedule.end;
 
-    options = options || {};
+    options = options ? sanitizeOptions(options) : {};
 
     if (['milestone', 'task', 'allday', 'time'].indexOf(options.category) > -1) {
         schedule.set('category', options.category);
@@ -10145,6 +10163,7 @@ module.exports = Week;
 
 var GA_TRACKING_ID = 'UA-129951699-1';
 
+var DOMPurify = __webpack_require__(/*! dompurify */ "./node_modules/dompurify/dist/purify.js");
 var util = __webpack_require__(/*! tui-code-snippet */ "tui-code-snippet"),
     Handlebars = __webpack_require__(/*! handlebars-template-loader/runtime */ "./node_modules/handlebars-template-loader/runtime/index.js");
 var dw = __webpack_require__(/*! ../common/dw */ "./src/js/common/dw.js");
@@ -10913,11 +10932,18 @@ Calendar.prototype._initialize = function(options) {
  */
 Calendar.prototype._setAdditionalInternalOptions = function(options) {
     var timezone = options.timezone;
+    var templateWithSanitizer = function(templateFn) {
+        return function() {
+            var template = templateFn.apply(null, arguments);
+
+            return DOMPurify.sanitize(template);
+        };
+    };
     var zones, offsetCalculator;
 
     util.forEach(options.template, function(func, name) {
         if (func) {
-            Handlebars.registerHelper(name + '-tmpl', func);
+            Handlebars.registerHelper(name + '-tmpl', templateWithSanitizer(func));
         }
     });
 
@@ -20772,7 +20798,6 @@ module.exports = Layout;
  */
 
 
-var DOMPurify = __webpack_require__(/*! dompurify */ "./node_modules/dompurify/dist/purify.js");
 var util = __webpack_require__(/*! tui-code-snippet */ "tui-code-snippet");
 var config = __webpack_require__(/*! ../../config */ "./src/js/config.js"),
     datetime = __webpack_require__(/*! ../../common/datetime */ "./src/js/common/datetime.js"),
@@ -21007,7 +21032,7 @@ Month.prototype.render = function() {
         styles: styles
     };
 
-    vLayout.panels[0].container.innerHTML = DOMPurify.sanitize(tmpl(baseViewModel));
+    vLayout.panels[0].container.innerHTML = tmpl(baseViewModel);
 
     this._renderChildren(vLayout.panels[1].container, calendar, theme);
 
@@ -21424,7 +21449,6 @@ module.exports = More;
  */
 
 
-var DOMPurify = __webpack_require__(/*! dompurify */ "./node_modules/dompurify/dist/purify.js");
 var util = __webpack_require__(/*! tui-code-snippet */ "tui-code-snippet");
 var config = __webpack_require__(/*! ../../config */ "./src/js/config.js"),
     common = __webpack_require__(/*! ../../common/common.js */ "./src/js/common/common.js"),
@@ -21535,7 +21559,7 @@ WeekdayInMonth.prototype.render = function(viewModel) {
         setIsOtherMonthFlag(baseViewModel.dates, this.options.renderMonth, viewModel.theme);
     }
 
-    container.innerHTML = DOMPurify.sanitize(baseTmpl(baseViewModel));
+    container.innerHTML = baseTmpl(baseViewModel);
 
     scheduleContainer = domutil.find(
         config.classname('.weekday-schedules'),
@@ -21546,7 +21570,7 @@ WeekdayInMonth.prototype.render = function(viewModel) {
         return;
     }
 
-    scheduleContainer.innerHTML = DOMPurify.sanitize(scheduleTmpl(baseViewModel));
+    scheduleContainer.innerHTML = scheduleTmpl(baseViewModel);
 
     common.setAutoEllipsis(
         config.classname('.weekday-schedule-title'),
@@ -26203,7 +26227,6 @@ module.exports = View;
  */
 
 
-var DOMPurify = __webpack_require__(/*! dompurify */ "./node_modules/dompurify/dist/purify.js");
 var util = __webpack_require__(/*! tui-code-snippet */ "tui-code-snippet");
 var config = __webpack_require__(/*! ../../config */ "./src/js/config.js"),
     common = __webpack_require__(/*! ../../common/common */ "./src/js/common/common.js"),
@@ -26352,7 +26375,7 @@ DayGrid.prototype.render = function(viewModel) {
         scheduleContainerTop = this.options.scheduleContainerTop;
     var dayGridSchedule;
 
-    container.innerHTML = DOMPurify.sanitize(baseTmpl(baseViewModel));
+    container.innerHTML = baseTmpl(baseViewModel);
 
     this.children.clear();
 
@@ -26536,7 +26559,6 @@ module.exports = DayGrid;
  */
 
 
-var DOMPurify = __webpack_require__(/*! dompurify */ "./node_modules/dompurify/dist/purify.js");
 var util = __webpack_require__(/*! tui-code-snippet */ "tui-code-snippet");
 var Weekday = __webpack_require__(/*! ../weekday */ "./src/js/view/weekday.js"),
     tmpl = __webpack_require__(/*! ../template/week/dayGridSchedule.hbs */ "./src/js/view/template/week/dayGridSchedule.hbs");
@@ -26571,7 +26593,7 @@ DayGridSchedule.prototype.render = function(viewModel) {
 
     baseViewModel = this.getBaseViewModel(viewModel);
 
-    container.innerHTML = DOMPurify.sanitize(tmpl(baseViewModel));
+    container.innerHTML = tmpl(baseViewModel);
 
     this.fire('afterRender', baseViewModel);
 };
@@ -26668,7 +26690,6 @@ module.exports = DayGridSchedule;
  */
 
 
-var DOMPurify = __webpack_require__(/*! dompurify */ "./node_modules/dompurify/dist/purify.js");
 var util = __webpack_require__(/*! tui-code-snippet */ "tui-code-snippet");
 var config = __webpack_require__(/*! ../../config */ "./src/js/config.js");
 var common = __webpack_require__(/*! ../../common/common */ "./src/js/common/common.js");
@@ -26763,7 +26784,7 @@ DayName.prototype.render = function(viewModel) {
         styles: styles
     });
 
-    this.container.innerHTML = DOMPurify.sanitize(daynameTmpl(baseViewModel));
+    this.container.innerHTML = daynameTmpl(baseViewModel);
 };
 
 /**
@@ -27215,7 +27236,6 @@ module.exports = Time;
  */
 
 
-var DOMPurify = __webpack_require__(/*! dompurify */ "./node_modules/dompurify/dist/purify.js");
 var util = __webpack_require__(/*! tui-code-snippet */ "tui-code-snippet");
 var config = __webpack_require__(/*! ../../config */ "./src/js/config.js");
 var common = __webpack_require__(/*! ../../common/common */ "./src/js/common/common.js");
@@ -27689,7 +27709,7 @@ TimeGrid.prototype.render = function(viewModel) {
 
     baseViewModel.showHourMarker = baseViewModel.todaymarkerLeft >= 0;
 
-    container.innerHTML = DOMPurify.sanitize(mainTmpl(baseViewModel));
+    container.innerHTML = mainTmpl(baseViewModel);
 
     /**********
      * Render sticky container for timezone display label
@@ -27722,7 +27742,7 @@ TimeGrid.prototype.render = function(viewModel) {
 TimeGrid.prototype.renderStickyContainer = function(baseViewModel) {
     var stickyContainer = this.stickyContainer;
 
-    stickyContainer.innerHTML = DOMPurify.sanitize(timezoneStickyTmpl(baseViewModel));
+    stickyContainer.innerHTML = timezoneStickyTmpl(baseViewModel);
 
     stickyContainer.style.display = baseViewModel.timezones.length > 1 ? 'block' : 'none';
     stickyContainer.style.width = baseViewModel.styles.leftWidth;
