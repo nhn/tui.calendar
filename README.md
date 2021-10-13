@@ -113,7 +113,7 @@ $ bower install tui-calendar#<tag> # Specific version
 ```
 
 ### Via Contents Delivery Network (CDN)
-TOAST UI products are available over the CDN powered by [TOAST Cloud](https://www.toast.com).
+TOAST UI products are available over the CDN powered by [NHN Cloud](https://www.toast.com).
 
 You can use the CDN as below.
 
@@ -310,7 +310,7 @@ For more information on PR's step, please see links of Contributing section.
 * [TOAST UI Components](https://github.com/nhn?q=tui)
 
 ## 🚀 Used By
-* [TOAST Dooray! - Collaboration Service (Project, Messenger, Mail, Calendar, Drive, Wiki, Contacts)](https://dooray.com)
+* [NHN Dooray! - Collaboration Service (Project, Messenger, Mail, Calendar, Drive, Wiki, Contacts)](https://dooray.com)
 * [NCP - Commerce Platform](https://www.e-ncp.com/)
 * [shopby](https://www.godo.co.kr/shopby/main.gd)
 * [payco-shopping](https://shopping.payco.com/)
