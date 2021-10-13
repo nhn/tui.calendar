@@ -142,7 +142,7 @@ For more information on PR's step, please see links of Contributing section.
 * [TOAST UI Components](https://github.com/nhn?q=tui)
 
 ## 🚀 Used By
-* [TOAST Dooray! - Collaboration Service (Project, Messenger, Mail, Calendar, Drive, Wiki, Contacts)](https://dooray.com)
+* [NHN Dooray! - Collaboration Service (Project, Messenger, Mail, Calendar, Drive, Wiki, Contacts)](https://dooray.com)
 * [NCP - Commerce Platform](https://www.e-ncp.com/)
 * [shopby](https://www.godo.co.kr/shopby/main.gd)
 * [payco-shopping](https://shopping.payco.com/)
