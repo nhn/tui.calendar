@@ -678,7 +678,7 @@ ScheduleCreationPopup.prototype._validateForm = function(title, startDate, endDa
  */
 ScheduleCreationPopup.prototype._getRangeDate = function(startDate, endDate, isAllDay) {
     var start = isAllDay ? datetime.start(startDate) : startDate;
-    var end = isAllDay ? datetime.renderEnd(startDate, endDate) : endDate;
+    var end = isAllDay ? datetime.renderEnd(startDate, datetime.end(endDate)) : endDate;
 
     /**
      * @typedef {object} RangeDate
