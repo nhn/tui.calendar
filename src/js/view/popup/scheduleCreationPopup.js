@@ -84,6 +84,8 @@ ScheduleCreationPopup.prototype._onMouseDown = function(mouseDownEvent) {
 ScheduleCreationPopup.prototype.destroy = function() {
     this.layer.destroy();
     this.layer = null;
+    this.rangePicker.destroy();
+    this.rangePicker = null;
     domevent.off(this.container, 'click', this._onClick, this);
     domevent.off(document.body, 'mousedown', this._onMouseDown, this);
     View.prototype.destroy.call(this);
@@ -211,6 +213,15 @@ ScheduleCreationPopup.prototype._toggleIsAllday = function(target) {
         checkbox = domutil.find(config.classname('.checkbox-square'), alldaySection);
         checkbox.checked = !checkbox.checked;
 
+        this.rangePicker.destroy();
+        this.rangePicker = null;
+        this._setDatepickerState(
+            this._datepickerState.start,
+            this._datepickerState.end,
+            checkbox.checked
+        );
+        this._createDatepicker();
+
         return true;
     }
 
@@ -306,7 +317,7 @@ ScheduleCreationPopup.prototype.render = function(viewModel) {
     var calendars = this.calendars;
     var layer = this.layer;
     var self = this;
-    var boxElement, guideElements;
+    var boxElement, guideElements, defaultStartDate, defaultEndDate;
 
     viewModel.zIndex = this.layer.zIndex + 5;
     viewModel.calendars = calendars;
@@ -324,8 +335,20 @@ ScheduleCreationPopup.prototype.render = function(viewModel) {
         boxElement = guideElements.length ? guideElements[0] : null;
     }
     layer.setContent(tmpl(viewModel));
-    this._setDatepickerState(viewModel.start, viewModel.end, viewModel.isAllDay);
+
+    defaultStartDate = new TZDate(viewModel.start);
+    defaultEndDate = new TZDate(viewModel.end);
+    if (viewModel.isAllDay) {
+        defaultStartDate.setHours(12, 0, 0);
+        defaultEndDate.setHours(13, 0, 0);
+    }
+    this._setDatepickerState(
+        defaultStartDate,
+        defaultEndDate,
+        viewModel.isAllDay
+    );
     this._createDatepicker();
+
     layer.show();
 
     if (boxElement) {
@@ -607,6 +630,7 @@ ScheduleCreationPopup.prototype._setArrowDirection = function(arrow) {
 ScheduleCreationPopup.prototype._createDatepicker = function() {
     var start, end, isAllDay;
     var cssPrefix = config.cssPrefix;
+    var self = this;
 
     start = this._datepickerState.start;
     end = this._datepickerState.end;
@@ -629,6 +653,20 @@ ScheduleCreationPopup.prototype._createDatepicker = function() {
             usageStatistics: this._usageStatistics
         },
         usageStatistics: this._usageStatistics
+    });
+    this.rangePicker.on('change:start', function() {
+        self._setDatepickerState(
+            self.rangePicker.getStartDate(),
+            self._datepickerState.end,
+            self._datepickerState.isAllDay
+        );
+    });
+    this.rangePicker.on('change:end', function() {
+        self._setDatepickerState(
+            self._datepickerState.start,
+            self.rangePicker.getEndDate(),
+            self._datepickerState.isAllDay
+        );
     });
 };
 
