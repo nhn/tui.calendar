@@ -51,6 +51,11 @@ function ScheduleCreationPopup(container, calendars, usageStatistics) {
         this._toggleIsPrivate.bind(this),
         this._onClickSaveSchedule.bind(this)
     ];
+    this._datepickerState = {
+        start: null,
+        end: null,
+        isAllDay: false
+    };
 
     domevent.on(container, 'click', this._onClick, this);
 }
@@ -319,7 +324,8 @@ ScheduleCreationPopup.prototype.render = function(viewModel) {
         boxElement = guideElements.length ? guideElements[0] : null;
     }
     layer.setContent(tmpl(viewModel));
-    this._createDatepicker(viewModel.start, viewModel.end, viewModel.isAllDay);
+    this._setDatepickerState(viewModel.start, viewModel.end, viewModel.isAllDay);
+    this._createDatepicker();
     layer.show();
 
     if (boxElement) {
@@ -374,6 +380,12 @@ ScheduleCreationPopup.prototype._makeEditModeData = function(viewModel) {
         zIndex: this.layer.zIndex + 5,
         isEditMode: this._isEditMode
     };
+};
+
+ScheduleCreationPopup.prototype._setDatepickerState = function(start, end, isAllDay) {
+    this._datepickerState.start = start;
+    this._datepickerState.end = end;
+    this._datepickerState.isAllDay = isAllDay;
 };
 
 /**
@@ -592,8 +604,13 @@ ScheduleCreationPopup.prototype._setArrowDirection = function(arrow) {
  * @param {TZDate} end - end date
  * @param {boolean} isAllDay - isAllDay
  */
-ScheduleCreationPopup.prototype._createDatepicker = function(start, end, isAllDay) {
+ScheduleCreationPopup.prototype._createDatepicker = function() {
+    var start, end, isAllDay;
     var cssPrefix = config.cssPrefix;
+
+    start = this._datepickerState.start;
+    end = this._datepickerState.end;
+    isAllDay = this._datepickerState.isAllDay;
 
     this.rangePicker = DatePicker.createRangePicker({
         startpicker: {
