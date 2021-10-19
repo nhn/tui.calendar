@@ -3,6 +3,88 @@
 var ScheduleCreationPopup = require('../../../src/js/view/popup/scheduleCreationPopup');
 var TZDate = require('common/timezone').Date;
 
+describe('ScheduleCreationPopup date range picker', function() {
+    var container, popup;
+    var startPickerId = 'tui-full-calendar-schedule-start-date';
+    var endPickerId = 'tui-full-calendar-schedule-end-date';
+    var mockTimedViewModel = {
+        start: '2015-05-01T09:00:00',
+        end: '2015-05-01T10:00:00',
+        guide: []
+    };
+    var mockAllDayViewModel = {
+        start: '2015-05-01T09:00:00',
+        end: '2015-05-01T10:00:00',
+        isAllDay: true,
+        guide: []
+    };
+
+    function getInputValue(inputId) {
+        var input = document.getElementById(inputId);
+
+        return input ? input.value : null;
+    }
+
+    function clickAllDaySection() {
+        var allDaySectionClassName = 'tui-full-calendar-section-allday';
+        var clickEvent = new MouseEvent('click', {bubbles: true});
+
+        document.querySelector('.' + allDaySectionClassName).dispatchEvent(clickEvent);
+    }
+
+    beforeEach(function() {
+        fixture.load('view.html');
+        container = document.getElementById('container');
+        popup = new ScheduleCreationPopup(container, [], false);
+    });
+
+    afterEach(function() {
+        fixture.cleanup();
+    });
+
+    it('should render start & end dates on the date range picker', function() {
+        var popupClassName = 'tui-full-calendar-popup-container';
+        var popupNode = document.getElementsByClassName(popupClassName);
+        popup.render(mockTimedViewModel);
+
+        expect(popupNode).toBeDefined();
+        expect(getInputValue(startPickerId)).toBe('2015-05-01 09:00');
+        expect(getInputValue(endPickerId)).toBe('2015-05-01 10:00');
+    });
+
+    it('should not show time values for allday events at initial render', function() {
+        popup.render(mockAllDayViewModel);
+
+        expect(getInputValue(startPickerId)).toBe('2015-05-01');
+        expect(getInputValue(endPickerId)).toBe('2015-05-01');
+    });
+
+    it('should be able to switch between timed and allday range pickers', function() {
+        popup.render(mockTimedViewModel);
+        clickAllDaySection();
+
+        expect(getInputValue(startPickerId)).toBe('2015-05-01');
+        expect(getInputValue(endPickerId)).toBe('2015-05-01');
+
+        clickAllDaySection();
+
+        expect(getInputValue(startPickerId)).toBe('2015-05-01 09:00');
+        expect(getInputValue(endPickerId)).toBe('2015-05-01 10:00');
+    });
+
+    it('should set default start & end time when start editing allday events', function() {
+        var mockViewModel = Object.create(mockAllDayViewModel);
+        mockViewModel.schedule = {id: ''};
+
+        popup.render(mockAllDayViewModel);
+
+        clickAllDaySection();
+
+        expect(getInputValue(startPickerId)).toBe('2015-05-01 12:00');
+        expect(getInputValue(endPickerId)).toBe('2015-05-01 13:00');
+    });
+});
+
 /* eslint-disable object-property-newline */
 describe('ScheduleCreationPopup#_calcRenderingData', function() {
     var popupSize, containerSize;
