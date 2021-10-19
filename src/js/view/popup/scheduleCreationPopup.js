@@ -215,11 +215,7 @@ ScheduleCreationPopup.prototype._toggleIsAllday = function(target) {
 
         this.rangePicker.destroy();
         this.rangePicker = null;
-        this._setDatepickerState(
-            this._datepickerState.start,
-            this._datepickerState.end,
-            checkbox.checked
-        );
+        this._setDatepickerState({isAllDay: checkbox.checked});
         this._createDatepicker();
 
         return true;
@@ -342,11 +338,11 @@ ScheduleCreationPopup.prototype.render = function(viewModel) {
         defaultStartDate.setHours(12, 0, 0);
         defaultEndDate.setHours(13, 0, 0);
     }
-    this._setDatepickerState(
-        defaultStartDate,
-        defaultEndDate,
-        viewModel.isAllDay
-    );
+    this._setDatepickerState({
+        start: defaultStartDate,
+        end: defaultEndDate,
+        isAllDay: viewModel.isAllDay
+    });
     this._createDatepicker();
 
     layer.show();
@@ -405,10 +401,8 @@ ScheduleCreationPopup.prototype._makeEditModeData = function(viewModel) {
     };
 };
 
-ScheduleCreationPopup.prototype._setDatepickerState = function(start, end, isAllDay) {
-    this._datepickerState.start = start;
-    this._datepickerState.end = end;
-    this._datepickerState.isAllDay = isAllDay;
+ScheduleCreationPopup.prototype._setDatepickerState = function(newState) {
+    util.extend(this._datepickerState, newState);
 };
 
 /**
@@ -655,18 +649,10 @@ ScheduleCreationPopup.prototype._createDatepicker = function() {
         usageStatistics: this._usageStatistics
     });
     this.rangePicker.on('change:start', function() {
-        self._setDatepickerState(
-            self.rangePicker.getStartDate(),
-            self._datepickerState.end,
-            self._datepickerState.isAllDay
-        );
+        self._setDatepickerState({start: self.rangePicker.getStartDate()});
     });
     this.rangePicker.on('change:end', function() {
-        self._setDatepickerState(
-            self._datepickerState.start,
-            self.rangePicker.getEndDate(),
-            self._datepickerState.isAllDay
-        );
+        self._setDatepickerState({end: self.rangePicker.getEndDate()});
     });
 };
 
