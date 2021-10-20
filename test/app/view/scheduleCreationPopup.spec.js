@@ -1,10 +1,98 @@
 'use strict';
 
-var ScheduleCreationpPopup = require('../../../src/js/view/popup/scheduleCreationPopup');
+var ScheduleCreationPopup = require('../../../src/js/view/popup/scheduleCreationPopup');
 var TZDate = require('common/timezone').Date;
 
+/**
+ * NOTE: Due to external dependency(tui-date-picker) and testing environment,
+ * couldn't add detailed test cases. Writing more intergrated test would draw a better coverage.
+ * e.g.) Changeing date range picker values
+ */
+describe('ScheduleCreationPopup date range picker', function() {
+    var container, popup;
+    var startPickerId = 'tui-full-calendar-schedule-start-date';
+    var endPickerId = 'tui-full-calendar-schedule-end-date';
+    var mockTimedViewModel = {
+        start: '2015-05-01T09:00:00',
+        end: '2015-05-01T10:00:00',
+        guide: []
+    };
+    var mockAllDayViewModel = {
+        start: '2015-05-01T09:00:00',
+        end: '2015-05-01T10:00:00',
+        isAllDay: true,
+        guide: []
+    };
+
+    function getInputValue(inputId) {
+        var input = document.getElementById(inputId);
+
+        return input ? input.value : null;
+    }
+
+    function clickAllDaySection() {
+        var allDaySectionClassName = 'tui-full-calendar-section-allday';
+        var clickEvent = new MouseEvent('click', {bubbles: true});
+
+        document.querySelector('.' + allDaySectionClassName).dispatchEvent(clickEvent);
+    }
+
+    beforeEach(function() {
+        fixture.load('view.html');
+        container = document.getElementById('container');
+        popup = new ScheduleCreationPopup(container, [], false);
+    });
+
+    afterEach(function() {
+        fixture.cleanup();
+        popup.destroy();
+    });
+
+    it('should render start & end dates on the date range picker', function() {
+        var popupClassName = 'tui-full-calendar-popup-container';
+        var popupNode = document.getElementsByClassName(popupClassName);
+        popup.render(mockTimedViewModel);
+
+        expect(popupNode).toBeDefined();
+        expect(getInputValue(startPickerId)).toBe('2015-05-01 09:00');
+        expect(getInputValue(endPickerId)).toBe('2015-05-01 10:00');
+    });
+
+    it('should not show time values for allday events at initial render', function() {
+        popup.render(mockAllDayViewModel);
+
+        expect(getInputValue(startPickerId)).toBe('2015-05-01');
+        expect(getInputValue(endPickerId)).toBe('2015-05-01');
+    });
+
+    it('should be able to switch between timed and allday range pickers', function() {
+        popup.render(mockTimedViewModel);
+        clickAllDaySection();
+
+        expect(getInputValue(startPickerId)).toBe('2015-05-01');
+        expect(getInputValue(endPickerId)).toBe('2015-05-01');
+
+        clickAllDaySection();
+
+        expect(getInputValue(startPickerId)).toBe('2015-05-01 09:00');
+        expect(getInputValue(endPickerId)).toBe('2015-05-01 10:00');
+    });
+
+    it('should set default start & end time when start editing allday events', function() {
+        var mockViewModel = Object.create(mockAllDayViewModel);
+        mockViewModel.schedule = {id: ''};
+
+        popup.render(mockAllDayViewModel);
+
+        clickAllDaySection();
+
+        expect(getInputValue(startPickerId)).toBe('2015-05-01 12:00');
+        expect(getInputValue(endPickerId)).toBe('2015-05-01 13:00');
+    });
+});
+
 /* eslint-disable object-property-newline */
-describe('ScheduleCreationpPopup#_calcRenderingData', function() {
+describe('ScheduleCreationPopup#_calcRenderingData', function() {
     var popupSize, containerSize;
 
     beforeEach(function() {
@@ -14,7 +102,7 @@ describe('ScheduleCreationpPopup#_calcRenderingData', function() {
 
     it('it is usually placed at the top center of the guide element', function() {
         var guideBound = {top: 200, left: 100, bottom: 200, right: 400};
-        var posData = ScheduleCreationpPopup.prototype._calcRenderingData(popupSize, containerSize, guideBound);
+        var posData = ScheduleCreationPopup.prototype._calcRenderingData(popupSize, containerSize, guideBound);
 
         expect(posData.x).toBe(50);
         expect(posData.y).toBe(67);
@@ -24,7 +112,7 @@ describe('ScheduleCreationpPopup#_calcRenderingData', function() {
 
     it('if it overflows the top of the container, it should be placed under the guide element', function() {
         var guideBound = {top: 100, left: 100, bottom: 200, right: 400};
-        var posData = ScheduleCreationpPopup.prototype._calcRenderingData(popupSize, containerSize, guideBound);
+        var posData = ScheduleCreationPopup.prototype._calcRenderingData(popupSize, containerSize, guideBound);
 
         expect(posData.x).toBe(50);
         expect(posData.y).toBe(153);
@@ -34,7 +122,7 @@ describe('ScheduleCreationpPopup#_calcRenderingData', function() {
 
     it('when overflowing to the left of the container, the left value is set to 0 and the left value of the arrow is also set.', function() {
         var guideBound = {top: 200, left: 50, bottom: 200, right: 200};
-        var posData = ScheduleCreationpPopup.prototype._calcRenderingData(popupSize, containerSize, guideBound);
+        var posData = ScheduleCreationPopup.prototype._calcRenderingData(popupSize, containerSize, guideBound);
 
         expect(posData.x).toBe(0);
         expect(posData.arrow.position).toBeDefined();
@@ -42,27 +130,18 @@ describe('ScheduleCreationpPopup#_calcRenderingData', function() {
 
     it('when it overflows to the right of the container, the popup is aligned to the right and the left value of the arrow should be set', function() {
         var guideBound = {top: 200, left: 400, bottom: 200, right: 500};
-        var posData = ScheduleCreationpPopup.prototype._calcRenderingData(popupSize, containerSize, guideBound);
+        var posData = ScheduleCreationPopup.prototype._calcRenderingData(popupSize, containerSize, guideBound);
 
         expect(posData.x).toBe(200);
         expect(posData.arrow.position).toBeDefined();
     });
 });
 
-describe('ScheduleCreationpPopup#_getRangeDate', function() {
+describe('ScheduleCreationPopup#_getRangeDate', function() {
     it('when it is an all-day schedule, set the hour and minute', function() {
         var start = new TZDate('2020/04/24 10:00:00');
         var end = new TZDate('2020/04/24 15:00:00');
-        var rangeDate = ScheduleCreationpPopup.prototype._getRangeDate(start, end, true);
-
-        expect(rangeDate.start).toEqual(new TZDate('2020/04/24 00:00:00'));
-        expect(rangeDate.end).toEqual(new TZDate('2020/04/24 23:59:59'));
-    });
-
-    it('when it is an all-day schedule, if the end date is the start time of the day, it is set as the last time of the previous day', function() {
-        var start = new TZDate('2020/04/24 00:00:00');
-        var end = new TZDate('2020/04/25 00:00:00');
-        var rangeDate = ScheduleCreationpPopup.prototype._getRangeDate(start, end, true);
+        var rangeDate = ScheduleCreationPopup.prototype._getRangeDate(start, end, true);
 
         expect(rangeDate.start).toEqual(new TZDate('2020/04/24 00:00:00'));
         expect(rangeDate.end).toEqual(new TZDate('2020/04/24 23:59:59'));
@@ -71,7 +150,7 @@ describe('ScheduleCreationpPopup#_getRangeDate', function() {
     it('when it is not an all-day schedule, if the end date is entered user date', function() {
         var start = new TZDate('2020/04/24 00:00:00');
         var end = new TZDate('2020/04/25 00:00:00');
-        var rangeDate = ScheduleCreationpPopup.prototype._getRangeDate(start, end, false);
+        var rangeDate = ScheduleCreationPopup.prototype._getRangeDate(start, end, false);
 
         expect(rangeDate.start).toEqual(new TZDate('2020/04/24 00:00:00'));
         expect(rangeDate.end).toEqual(new TZDate('2020/04/25 00:00:00'));
