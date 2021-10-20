@@ -3,6 +3,11 @@
 var ScheduleCreationPopup = require('../../../src/js/view/popup/scheduleCreationPopup');
 var TZDate = require('common/timezone').Date;
 
+/**
+ * NOTE: Due to external dependency(tui-date-picker) and testing environment,
+ * couldn't add detailed test cases. Writing more intergrated test would draw a better coverage.
+ * e.g.) Changeing date range picker values
+ */
 describe('ScheduleCreationPopup date range picker', function() {
     var container, popup;
     var startPickerId = 'tui-full-calendar-schedule-start-date';
@@ -40,6 +45,7 @@ describe('ScheduleCreationPopup date range picker', function() {
 
     afterEach(function() {
         fixture.cleanup();
+        popup.destroy();
     });
 
     it('should render start & end dates on the date range picker', function() {
@@ -140,15 +146,6 @@ describe('ScheduleCreationPopup#_getRangeDate', function() {
         expect(rangeDate.start).toEqual(new TZDate('2020/04/24 00:00:00'));
         expect(rangeDate.end).toEqual(new TZDate('2020/04/24 23:59:59'));
     });
-
-    // it('when it is an all-day schedule, if the end date is the start time of the day, it is set as the last time of the previous day', function() {
-    //     var start = new TZDate('2020/04/24 00:00:00');
-    //     var end = new TZDate('2020/04/25 00:00:00');
-    //     var rangeDate = ScheduleCreationPopup.prototype._getRangeDate(start, end, true);
-    //
-    //     expect(rangeDate.start).toEqual(new TZDate('2020/04/24 00:00:00'));
-    //     expect(rangeDate.end).toEqual(new TZDate('2020/04/24 23:59:59'));
-    // });
 
     it('when it is not an all-day schedule, if the end date is entered user date', function() {
         var start = new TZDate('2020/04/24 00:00:00');
