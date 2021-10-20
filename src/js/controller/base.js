@@ -4,7 +4,6 @@
  */
 'use strict';
 
-var DOMPurify = require('dompurify');
 var util = require('tui-code-snippet');
 var Schedule = require('../model/schedule');
 var ScheduleViewModel = require('../model/viewModel/scheduleViewModel');
@@ -12,6 +11,7 @@ var datetime = require('../common/datetime');
 var common = require('../common/common');
 var Theme = require('../theme/theme');
 var tz = require('../common/timezone');
+var sanitizer = require('../common/sanitizer');
 var TZDate = tz.Date;
 
 var SCHEDULE_VULNERABLE_OPTIONS = ['title', 'body', 'location', 'state', 'category', 'dueDateClass'];
@@ -24,7 +24,7 @@ var SCHEDULE_VULNERABLE_OPTIONS = ['title', 'body', 'location', 'state', 'catego
 function sanitizeOptions(options) {
     util.forEachArray(SCHEDULE_VULNERABLE_OPTIONS, function(prop) {
         if (options[prop]) {
-            options[prop] = DOMPurify.sanitize(options[prop]);
+            options[prop] = sanitizer.sanitize(options[prop]);
         }
     });
 
