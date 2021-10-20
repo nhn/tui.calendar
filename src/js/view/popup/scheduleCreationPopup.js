@@ -84,8 +84,10 @@ ScheduleCreationPopup.prototype._onMouseDown = function(mouseDownEvent) {
 ScheduleCreationPopup.prototype.destroy = function() {
     this.layer.destroy();
     this.layer = null;
-    this.rangePicker.destroy();
-    this.rangePicker = null;
+    if (this.rangePicker) {
+        this.rangePicker.destroy();
+        this.rangePicker = null;
+    }
     domevent.off(this.container, 'click', this._onClick, this);
     domevent.off(document.body, 'mousedown', this._onMouseDown, this);
     View.prototype.destroy.call(this);
@@ -656,8 +658,6 @@ ScheduleCreationPopup.prototype._createDatepicker = function() {
  */
 ScheduleCreationPopup.prototype.hide = function() {
     this.layer.hide();
-    this.rangePicker.destroy();
-
     if (this.guide) {
         this.guide.clearGuideElement();
         this.guide = null;
