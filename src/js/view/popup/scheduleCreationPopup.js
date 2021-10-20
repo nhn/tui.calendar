@@ -312,7 +312,6 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
 ScheduleCreationPopup.prototype.render = function(viewModel) {
     var calendars = this.calendars;
     var layer = this.layer;
-    var self = this;
     var boxElement, guideElements, defaultStartDate, defaultEndDate;
 
     viewModel.zIndex = this.layer.zIndex + 5;
@@ -334,6 +333,8 @@ ScheduleCreationPopup.prototype.render = function(viewModel) {
 
     defaultStartDate = new TZDate(viewModel.start);
     defaultEndDate = new TZDate(viewModel.end);
+    // NOTE: Setting default start/end time when editing all-day schedule first time.
+    // This logic refers to Apple calendar's behavior.
     if (viewModel.isAllDay) {
         defaultStartDate.setHours(12, 0, 0);
         defaultEndDate.setHours(13, 0, 0);
@@ -352,8 +353,8 @@ ScheduleCreationPopup.prototype.render = function(viewModel) {
     }
 
     util.debounce(function() {
-        domevent.on(document.body, 'mousedown', self._onMouseDown, self);
-    })();
+        domevent.on(document.body, 'mousedown', this._onMouseDown, this);
+    }.bind(this))();
 };
 
 /**
@@ -617,18 +618,12 @@ ScheduleCreationPopup.prototype._setArrowDirection = function(arrow) {
 
 /**
  * Create date range picker using start date and end date
- * @param {TZDate} start - start date
- * @param {TZDate} end - end date
- * @param {boolean} isAllDay - isAllDay
  */
 ScheduleCreationPopup.prototype._createDatepicker = function() {
-    var start, end, isAllDay;
     var cssPrefix = config.cssPrefix;
-    var self = this;
-
-    start = this._datepickerState.start;
-    end = this._datepickerState.end;
-    isAllDay = this._datepickerState.isAllDay;
+    var start = this._datepickerState.start;
+    var end = this._datepickerState.end;
+    var isAllDay = this._datepickerState.isAllDay;
 
     this.rangePicker = DatePicker.createRangePicker({
         startpicker: {
@@ -649,11 +644,11 @@ ScheduleCreationPopup.prototype._createDatepicker = function() {
         usageStatistics: this._usageStatistics
     });
     this.rangePicker.on('change:start', function() {
-        self._setDatepickerState({start: self.rangePicker.getStartDate()});
-    });
+        this._setDatepickerState({start: this.rangePicker.getStartDate()});
+    }.bind(this));
     this.rangePicker.on('change:end', function() {
-        self._setDatepickerState({end: self.rangePicker.getEndDate()});
-    });
+        this._setDatepickerState({end: this.rangePicker.getEndDate()});
+    }.bind(this));
 };
 
 /**
