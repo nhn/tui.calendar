@@ -656,6 +656,7 @@ ScheduleCreationPopup.prototype._createDatepicker = function() {
  */
 ScheduleCreationPopup.prototype.hide = function() {
     this.layer.hide();
+    this.rangePicker.destroy();
 
     if (this.guide) {
         this.guide.clearGuideElement();
