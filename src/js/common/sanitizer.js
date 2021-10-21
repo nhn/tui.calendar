@@ -8,13 +8,12 @@ var DOMPurify = require('dompurify');
  */
 function addAttributeHook() {
     DOMPurify.addHook('afterSanitizeAttributes', function sanitizeHook(node) {
-        var hasRelAttr = node.hasAttribute('rel');
         // Allowing `target="_blank"` usage.
         // Additionally set `rel="noopener"` to prevent another security issue.
         if ('target' in node) {
             node.setAttribute('target', '_blank');
 
-            if (!hasRelAttr) {
+            if (!node.hasAttribute('rel')) {
                 node.setAttribute('rel', 'noopener');
             }
         }
