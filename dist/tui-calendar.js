@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.14.1 | Wed Sep 01 2021
+ * @version 1.15.0 | Thu Oct 21 2021
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -7492,6 +7492,84 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./src/js/common/sanitizer.js":
+/*!************************************!*\
+  !*** ./src/js/common/sanitizer.js ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/**
+ * @fileoverview Sanitizer module in order to prevent XSS attacks.
+ * @author NHN FE Development Lab <dl_javascript@nhn.com>
+ */
+
+
+var DOMPurify = __webpack_require__(/*! dompurify */ "./node_modules/dompurify/dist/purify.js");
+
+// For temporarily saving original target value
+var TEMP_TARGET_ATTRIBUTE = 'data-target-temp';
+
+/**
+ * Add DOMPurify hook to handling exceptional rules for certain HTML attributes.
+ * Should be set when the calendar instance is created.
+ */
+function addAttributeHooks() {
+    DOMPurify.addHook('beforeSanitizeAttributes', function(node) {
+        var targetValue;
+        // Preserve default target attribute value
+        if (node.tagName === 'A') {
+            targetValue = node.getAttribute('target');
+
+            if (targetValue) {
+                node.setAttribute(TEMP_TARGET_ATTRIBUTE, targetValue);
+            } else {
+                // set default value
+                node.setAttribute('target', '_self');
+            }
+        }
+    });
+
+    DOMPurify.addHook('afterSanitizeAttributes', function(node) {
+        if (node.tagName === 'A' && node.hasAttribute(TEMP_TARGET_ATTRIBUTE)) {
+            node.setAttribute('target', node.getAttribute(TEMP_TARGET_ATTRIBUTE));
+            node.removeAttribute(TEMP_TARGET_ATTRIBUTE);
+
+            // Additionally set `rel="noopener"` to prevent another security issue.
+            if (node.getAttribute('target') === '_blank') {
+                node.setAttribute('rel', 'noopener');
+            }
+        }
+    });
+}
+
+/**
+ * Remove all attribute sanitizing hooks.
+ * Use it in `Calendar#destroy`.
+ */
+function removeAttributeHooks() {
+    DOMPurify.removeAllHooks();
+}
+
+/**
+ * Prevent XSS attack by sanitizing input string values via DOMPurify
+ * @param {string} str target string value
+ * @returns {string} sanitized string
+ */
+function sanitize(str) {
+    return DOMPurify.sanitize(str);
+}
+
+module.exports = {
+    sanitize: sanitize,
+    addAttributeHooks: addAttributeHooks,
+    removeAttributeHooks: removeAttributeHooks
+};
+
+
+/***/ }),
+
 /***/ "./src/js/common/timezone.js":
 /*!***********************************!*\
   !*** ./src/js/common/timezone.js ***!
@@ -8718,7 +8796,6 @@ module.exports = config;
  */
 
 
-var DOMPurify = __webpack_require__(/*! dompurify */ "./node_modules/dompurify/dist/purify.js");
 var util = __webpack_require__(/*! tui-code-snippet */ "tui-code-snippet");
 var Schedule = __webpack_require__(/*! ../model/schedule */ "./src/js/model/schedule.js");
 var ScheduleViewModel = __webpack_require__(/*! ../model/viewModel/scheduleViewModel */ "./src/js/model/viewModel/scheduleViewModel.js");
@@ -8726,6 +8803,7 @@ var datetime = __webpack_require__(/*! ../common/datetime */ "./src/js/common/da
 var common = __webpack_require__(/*! ../common/common */ "./src/js/common/common.js");
 var Theme = __webpack_require__(/*! ../theme/theme */ "./src/js/theme/theme.js");
 var tz = __webpack_require__(/*! ../common/timezone */ "./src/js/common/timezone.js");
+var sanitizer = __webpack_require__(/*! ../common/sanitizer */ "./src/js/common/sanitizer.js");
 var TZDate = tz.Date;
 
 var SCHEDULE_VULNERABLE_OPTIONS = ['title', 'body', 'location', 'state', 'category', 'dueDateClass'];
@@ -8738,7 +8816,7 @@ var SCHEDULE_VULNERABLE_OPTIONS = ['title', 'body', 'location', 'state', 'catego
 function sanitizeOptions(options) {
     util.forEachArray(SCHEDULE_VULNERABLE_OPTIONS, function(prop) {
         if (options[prop]) {
-            options[prop] = DOMPurify.sanitize(options[prop]);
+            options[prop] = sanitizer.sanitize(options[prop]);
         }
     });
 
@@ -10163,7 +10241,6 @@ module.exports = Week;
 
 var GA_TRACKING_ID = 'UA-129951699-1';
 
-var DOMPurify = __webpack_require__(/*! dompurify */ "./node_modules/dompurify/dist/purify.js");
 var util = __webpack_require__(/*! tui-code-snippet */ "tui-code-snippet"),
     Handlebars = __webpack_require__(/*! handlebars-template-loader/runtime */ "./node_modules/handlebars-template-loader/runtime/index.js");
 var dw = __webpack_require__(/*! ../common/dw */ "./src/js/common/dw.js");
@@ -10177,6 +10254,7 @@ var tz = __webpack_require__(/*! ../common/timezone */ "./src/js/common/timezone
 var TZDate = tz.Date;
 var config = __webpack_require__(/*! ../config */ "./src/js/config.js");
 var reqAnimFrame = __webpack_require__(/*! ../common/reqAnimFrame */ "./src/js/common/reqAnimFrame.js");
+var sanitizer = __webpack_require__(/*! ../common/sanitizer */ "./src/js/common/sanitizer.js");
 
 var mmin = Math.min;
 
@@ -10836,6 +10914,7 @@ function Calendar(container, options) {
  * destroy calendar instance.
  */
 Calendar.prototype.destroy = function() {
+    sanitizer.removeAttributeHooks();
     this._dragHandler.destroy();
     this._controller.off();
     this._layout.clear();
@@ -10920,6 +10999,8 @@ Calendar.prototype._initialize = function(options) {
     this._setAdditionalInternalOptions(this._options);
 
     this.changeView(viewName, true);
+
+    sanitizer.addAttributeHooks();
 };
 
 /**
@@ -10936,7 +11017,7 @@ Calendar.prototype._setAdditionalInternalOptions = function(options) {
         return function() {
             var template = templateFn.apply(null, arguments);
 
-            return DOMPurify.sanitize(template);
+            return sanitizer.sanitize(template);
         };
     };
     var zones, offsetCalculator;
@@ -21688,6 +21769,11 @@ function ScheduleCreationPopup(container, calendars, usageStatistics) {
         this._toggleIsPrivate.bind(this),
         this._onClickSaveSchedule.bind(this)
     ];
+    this._datepickerState = {
+        start: null,
+        end: null,
+        isAllDay: false
+    };
 
     domevent.on(container, 'click', this._onClick, this);
 }
@@ -21716,6 +21802,10 @@ ScheduleCreationPopup.prototype._onMouseDown = function(mouseDownEvent) {
 ScheduleCreationPopup.prototype.destroy = function() {
     this.layer.destroy();
     this.layer = null;
+    if (this.rangePicker) {
+        this.rangePicker.destroy();
+        this.rangePicker = null;
+    }
     domevent.off(this.container, 'click', this._onClick, this);
     domevent.off(document.body, 'mousedown', this._onMouseDown, this);
     View.prototype.destroy.call(this);
@@ -21843,6 +21933,11 @@ ScheduleCreationPopup.prototype._toggleIsAllday = function(target) {
         checkbox = domutil.find(config.classname('.checkbox-square'), alldaySection);
         checkbox.checked = !checkbox.checked;
 
+        this.rangePicker.destroy();
+        this.rangePicker = null;
+        this._setDatepickerState({isAllDay: checkbox.checked});
+        this._createDatepicker();
+
         return true;
     }
 
@@ -21937,8 +22032,7 @@ ScheduleCreationPopup.prototype._onClickSaveSchedule = function(target) {
 ScheduleCreationPopup.prototype.render = function(viewModel) {
     var calendars = this.calendars;
     var layer = this.layer;
-    var self = this;
-    var boxElement, guideElements;
+    var boxElement, guideElements, defaultStartDate, defaultEndDate;
 
     viewModel.zIndex = this.layer.zIndex + 5;
     viewModel.calendars = calendars;
@@ -21956,7 +22050,22 @@ ScheduleCreationPopup.prototype.render = function(viewModel) {
         boxElement = guideElements.length ? guideElements[0] : null;
     }
     layer.setContent(tmpl(viewModel));
-    this._createDatepicker(viewModel.start, viewModel.end, viewModel.isAllDay);
+
+    defaultStartDate = new TZDate(viewModel.start);
+    defaultEndDate = new TZDate(viewModel.end);
+    // NOTE: Setting default start/end time when editing all-day schedule first time.
+    // This logic refers to Apple calendar's behavior.
+    if (viewModel.isAllDay) {
+        defaultStartDate.setHours(12, 0, 0);
+        defaultEndDate.setHours(13, 0, 0);
+    }
+    this._setDatepickerState({
+        start: defaultStartDate,
+        end: defaultEndDate,
+        isAllDay: viewModel.isAllDay
+    });
+    this._createDatepicker();
+
     layer.show();
 
     if (boxElement) {
@@ -21964,8 +22073,8 @@ ScheduleCreationPopup.prototype.render = function(viewModel) {
     }
 
     util.debounce(function() {
-        domevent.on(document.body, 'mousedown', self._onMouseDown, self);
-    })();
+        domevent.on(document.body, 'mousedown', this._onMouseDown, this);
+    }.bind(this))();
 };
 
 /**
@@ -22011,6 +22120,10 @@ ScheduleCreationPopup.prototype._makeEditModeData = function(viewModel) {
         zIndex: this.layer.zIndex + 5,
         isEditMode: this._isEditMode
     };
+};
+
+ScheduleCreationPopup.prototype._setDatepickerState = function(newState) {
+    util.extend(this._datepickerState, newState);
 };
 
 /**
@@ -22225,12 +22338,12 @@ ScheduleCreationPopup.prototype._setArrowDirection = function(arrow) {
 
 /**
  * Create date range picker using start date and end date
- * @param {TZDate} start - start date
- * @param {TZDate} end - end date
- * @param {boolean} isAllDay - isAllDay
  */
-ScheduleCreationPopup.prototype._createDatepicker = function(start, end, isAllDay) {
+ScheduleCreationPopup.prototype._createDatepicker = function() {
     var cssPrefix = config.cssPrefix;
+    var start = this._datepickerState.start;
+    var end = this._datepickerState.end;
+    var isAllDay = this._datepickerState.isAllDay;
 
     this.rangePicker = DatePicker.createRangePicker({
         startpicker: {
@@ -22250,6 +22363,12 @@ ScheduleCreationPopup.prototype._createDatepicker = function(start, end, isAllDa
         },
         usageStatistics: this._usageStatistics
     });
+    this.rangePicker.on('change:start', function() {
+        this._setDatepickerState({start: this.rangePicker.getStartDate()});
+    }.bind(this));
+    this.rangePicker.on('change:end', function() {
+        this._setDatepickerState({end: this.rangePicker.getEndDate()});
+    }.bind(this));
 };
 
 /**
@@ -22257,7 +22376,6 @@ ScheduleCreationPopup.prototype._createDatepicker = function(start, end, isAllDa
  */
 ScheduleCreationPopup.prototype.hide = function() {
     this.layer.hide();
-
     if (this.guide) {
         this.guide.clearGuideElement();
         this.guide = null;
@@ -22315,7 +22433,7 @@ ScheduleCreationPopup.prototype._validateForm = function(title, startDate, endDa
  */
 ScheduleCreationPopup.prototype._getRangeDate = function(startDate, endDate, isAllDay) {
     var start = isAllDay ? datetime.start(startDate) : startDate;
-    var end = isAllDay ? datetime.renderEnd(startDate, endDate) : endDate;
+    var end = isAllDay ? datetime.renderEnd(startDate, datetime.end(endDate)) : endDate;
 
     /**
      * @typedef {object} RangeDate
