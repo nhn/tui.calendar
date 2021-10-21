@@ -679,7 +679,7 @@ function Calendar(container, options) {
  * destroy calendar instance.
  */
 Calendar.prototype.destroy = function() {
-    sanitizer.removeAttributeHook();
+    sanitizer.removeAttributeHooks();
     this._dragHandler.destroy();
     this._controller.off();
     this._layout.clear();
@@ -765,7 +765,7 @@ Calendar.prototype._initialize = function(options) {
 
     this.changeView(viewName, true);
 
-    sanitizer.addAttributeHook();
+    sanitizer.addAttributeHooks();
 };
 
 /**
