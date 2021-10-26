@@ -10,11 +10,8 @@ module.exports = {
       },
     ],
     ['@babel/preset-typescript', { jsxPragma: 'h' }],
-    '@babel/preset-react',
-  ],
-  plugins: [
     [
-      '@babel/plugin-transform-react-jsx',
+      '@babel/preset-react',
       {
         pragma: 'h',
         pragmaFrag: 'Fragment',
