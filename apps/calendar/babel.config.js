@@ -6,6 +6,7 @@ module.exports = {
         useBuiltIns: 'usage',
         corejs: 3,
         shippedProposals: true,
+        targets: 'defaults',
       },
     ],
     ['@babel/preset-typescript', { jsxPragma: 'h' }],
@@ -19,8 +20,5 @@ module.exports = {
         pragmaFrag: 'Fragment',
       },
     ],
-    '@babel/plugin-proposal-class-properties',
-    '@babel/plugin-proposal-optional-chaining',
-    '@babel/plugin-proposal-object-rest-spread',
   ],
 };
