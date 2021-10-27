@@ -1,12 +1,10 @@
 /* eslint @typescript-eslint/no-var-requires: "off" */
-const postcssPrefixer = require('postcss-prefixer');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const merge = require('webpack-merge');
 const common = require('./webpack.common.config');
 
 module.exports = (env, argv) => {
-  const prefix = 'toastui-calendar-';
   const config = {
     mode: 'development',
     entry: ['./src/css/index.css', './src/index.ts'],
@@ -27,10 +25,7 @@ module.exports = (env, argv) => {
                 importLoaders: 1,
               },
             },
-            {
-              loader: 'postcss-loader',
-              options: { postcssOptions: { plugins: [postcssPrefixer({ prefix })] } },
-            },
+            'postcss-loader',
           ],
         },
         {

@@ -33,10 +33,7 @@ module.exports = (env, argv) => {
                 importLoaders: 1,
               },
             },
-            {
-              loader: 'postcss-loader',
-              options: { postcssOptions: { plugins: [postcssPrefixer({ prefix })] } },
-            },
+            'postcss-loader',
           ],
         },
         {
