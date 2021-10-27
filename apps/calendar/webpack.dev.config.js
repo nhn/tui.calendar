@@ -13,7 +13,10 @@ module.exports = (env, argv) => {
         {
           test: /\.(ts|tsx|js)$/,
           exclude: /node_modules/,
-          loader: ['babel-loader'],
+          loader: 'babel-loader',
+          options: {
+            rootMode: 'upward',
+          },
         },
         {
           test: /\.css$/,

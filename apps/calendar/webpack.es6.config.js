@@ -18,7 +18,10 @@ module.exports = (env) => {
         {
           test: /\.(ts|tsx|js)$/,
           exclude: /node_modules/,
-          loader: ['babel-loader'],
+          loader: 'babel-loader',
+          options: {
+            rootMode: 'upward',
+          },
         },
       ],
     },

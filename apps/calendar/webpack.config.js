@@ -2,14 +2,12 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const StyleLintPlugin = require('stylelint-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
-const postcssPrefixer = require('postcss-prefixer');
 
 const merge = require('webpack-merge');
 const common = require('./webpack.common.config');
 
 module.exports = (env, argv) => {
   const { minify } = env;
-  const prefix = 'toastui-calendar-';
   const filename = `toastui-calendar${minify ? '.min' : ''}.css`;
 
   const config = {
@@ -21,7 +19,10 @@ module.exports = (env, argv) => {
         {
           test: /\.(ts|tsx|js)$/,
           exclude: /node_modules/,
-          use: ['babel-loader'],
+          loader: 'babel-loader',
+          options: {
+            rootMode: 'upward',
+          },
         },
         {
           test: /\.css$/,
