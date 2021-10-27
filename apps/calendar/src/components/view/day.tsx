@@ -19,21 +19,19 @@ import type { DayGridEventType } from '@t/panel';
 const dayNameHeight = 42;
 
 const Day: FunctionComponent = () => {
-  const { template, calendar: calendarData, option, weekViewLayout } = useStore(
-    weekViewStateSelector
-  );
+  const {
+    template,
+    calendar: calendarData,
+    option,
+    weekViewLayout,
+  } = useStore(weekViewStateSelector);
 
   if (!template || !option || !calendarData || !weekViewLayout) {
     return null;
   }
 
-  const {
-    narrowWeekend,
-    startDayOfWeek,
-    workweek,
-    hourStart,
-    hourEnd,
-  } = option.week as Required<WeekOption>;
+  const { narrowWeekend, startDayOfWeek, workweek, hourStart, hourEnd } =
+    option.week as Required<WeekOption>;
   // @TODO: calculate based on today(need to calculate date when prev & next used)
   const cells = [new TZDate()];
   const dayNames = getDayNames(cells);

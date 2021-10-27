@@ -79,17 +79,11 @@ function getStyles(viewModel: ScheduleViewModel) {
 }
 
 export const TimeEvent: FunctionComponent<Props> = ({ eventModels }) => {
-  const {
-    model,
-    goingDurationHeight,
-    modelDurationHeight,
-    comingDurationHeight,
-    croppedEnd,
-  } = eventModels;
+  const { model, goingDurationHeight, modelDurationHeight, comingDurationHeight, croppedEnd } =
+    eventModels;
   const { isReadOnly } = model;
-  const { containerStyle, goingDurationStyle, modelDurationStyle, comingDurationStyle } = getStyles(
-    eventModels
-  );
+  const { containerStyle, goingDurationStyle, modelDurationStyle, comingDurationStyle } =
+    getStyles(eventModels);
 
   return (
     <div className={classNames.time} style={containerStyle}>
