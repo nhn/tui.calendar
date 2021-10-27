@@ -64,7 +64,7 @@ export const DEFAULT_PANEL_HEIGHT = 72;
 
 const styleKeys: Array<keyof PanelInfo> = ['minHeight', 'maxHeight', 'minWidth', 'maxWidth'];
 
-export function getElementRect(element: HTMLElement) {
+export function getElementRect(element: HTMLElement | null) {
   if (element) {
     return getRect(element);
   }

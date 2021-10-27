@@ -36,8 +36,8 @@ interface Props {
     height?: CSSValue;
     top?: CSSValue;
   };
-  parentContainer?: HTMLDivElement;
-  appContainer?: HTMLDivElement;
+  parentContainer?: HTMLDivElement | null;
+  appContainer?: HTMLDivElement | null;
   events?: ScheduleViewModel[];
   height: number;
 }
@@ -143,14 +143,14 @@ function getSeeMorePopupRect({ appContainer, grid, cell, popupSize }: SeeMoreRec
 
 function usePopupRect(
   eventLength: number,
-  parentContainer?: HTMLDivElement,
-  appContainer?: HTMLDivElement
+  parentContainer?: HTMLDivElement | null,
+  appContainer?: HTMLDivElement | null
 ) {
   const container = useRef<HTMLDivElement>(null);
   const [popupRect, setPopupRect] = useState<PopupRect | null>(null);
 
   useEffect(() => {
-    if (appContainer && parentContainer) {
+    if (appContainer && parentContainer && container.current) {
       const popupSize = getSeeMorePopupSize(
         parentContainer,
         container.current.offsetWidth,

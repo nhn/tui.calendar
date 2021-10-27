@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { FunctionComponent, h, RefObject } from 'preact';
 import { useRef } from 'preact/hooks';
 
 import { Cell } from '@src/components/daygrid/cell';
@@ -17,7 +17,7 @@ interface Props {
   startDayOfWeek?: number;
   workweek?: boolean;
   week: Cells;
-  appContainer: { current: HTMLDivElement };
+  appContainer: RefObject<HTMLDivElement>;
   height?: number;
 }
 
