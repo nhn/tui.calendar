@@ -42,9 +42,9 @@ interface MSIEKeyboardEvent extends KeyboardEvent {
     viewArg: Window & typeof globalThis,
     charArg: string | undefined,
     keyArg?: number,
-    locationArg?: number,
-    modifiersListArg?: number,
-    repeat?: number
+    locationArg?: boolean,
+    modifiersListArg?: boolean,
+    repeat?: boolean
   ) => void;
 }
 
@@ -59,9 +59,9 @@ export function createKeyboardEvent(name: string, eventInitDict: KeyboardEventIn
       window,
       eventInitDict.key,
       keyAndKeyCodeMap[eventInitDict.key || ''],
-      0,
-      0,
-      0
+      false,
+      false,
+      false
     );
   } else {
     event = new KeyboardEvent(name, eventInitDict);
