@@ -43,7 +43,7 @@
     "terser-webpack-plugin": "^4.2.3",
     "timezone-mock": "^1.2.2",
     "ts-jest": "^27.0.7",
-    "ttypescript": "^1.5.12",
+    "ts-patch": "^1.4.5",
     "typescript": "~4.4.4",
     "typescript-transform-paths": "^3.3.1",
     "url-loader": "^4.1.1",
@@ -65,7 +65,7 @@
     "test": "jest --detectOpenHandles --forceExit",
     "test:watch": "jest --watch",
     "test:playwright": "playwright test --browser=all",
-    "prepare": "husky install"
+    "prepare": "husky install && ts-patch install -s"
   },
   "workspaces": [
     "apps/calendar",

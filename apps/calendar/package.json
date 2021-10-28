@@ -79,7 +79,7 @@
     "build": "rm -rf dist && npm run build:es5 && npm run build:es6 && npm run build:esm",
     "build:es5": "webpack && webpack --env minify",
     "build:es6": "webpack --config webpack.es6.config.js && webpack --config webpack.es6.config.js --env minify",
-    "build:esm": "ttsc -p tsconfig.esm.json && prettier dist/esm/**/*.js --write",
+    "build:esm": "tsc -p tsconfig.esm.json && prettier dist/esm/**/*.js --write",
     "analyze": "webpack --minify --profile --json > stats.json && webpack-bundle-analyzer stats.json ./dist",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
