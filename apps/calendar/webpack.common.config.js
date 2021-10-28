@@ -3,7 +3,7 @@ const pkg = require('./package.json');
 const path = require('path');
 const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 
 module.exports = (env) => {
@@ -62,7 +62,7 @@ module.exports = (env) => {
   if (minify) {
     config.optimization = {
       minimize: true,
-      minimizer: [new TerserPlugin({ extractComments: false }), new OptimizeCSSAssetsPlugin()],
+      minimizer: [new TerserPlugin({ extractComments: false }), new CssMinimizerPlugin()],
     };
   }
 

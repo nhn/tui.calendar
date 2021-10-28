@@ -1,7 +1,7 @@
 /* eslint @typescript-eslint/no-var-requires: "off" */
 const StyleLintPlugin = require('stylelint-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
-const merge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 const common = require('./webpack.common.config');
 
 module.exports = (env, argv) => {
@@ -33,7 +33,7 @@ module.exports = (env, argv) => {
         },
         {
           test: /\.(gif|png|jpe?g)$/,
-          use: 'url-loader',
+          type: 'asset/inline',
         },
       ],
     },
