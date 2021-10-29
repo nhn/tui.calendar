@@ -7,8 +7,8 @@ import {
   splitScheduleByDateRange,
 } from '@src/controller/week';
 import { CalendarData, ScheduleData } from '@src/model';
+import EventUIModel from '@src/model/eventUIModel';
 import Schedule from '@src/model/schedule';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
 import TZDate from '@src/time/date';
 import { MS_SCHEDULE_MIN_DURATION } from '@src/time/datetime';
 import Collection from '@src/util/collection';
@@ -225,9 +225,9 @@ describe('Base.Week', () => {
         start,
         end,
         panels,
-        andFilters: [(model: Schedule | ScheduleViewModel) => (model as Schedule).title === 'J'],
+        andFilters: [(model: Schedule | EventUIModel) => (model as Schedule).title === 'J'],
         options: { hourStart: 0, hourEnd: 24 },
-      }) as Record<string, Record<string, Matrix3d<ScheduleViewModel>>>;
+      }) as Record<string, Record<string, Matrix3d<EventUIModel>>>;
 
       // One collision block in the timeline group
       expect(result.time['20150501'].length).toBe(1);

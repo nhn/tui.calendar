@@ -3,8 +3,8 @@ import renderToString from 'preact-render-to-string';
 
 import Template from '@src/components/template';
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
+import EventUIModel from '@src/model/eventUIModel';
 import Schedule from '@src/model/schedule';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
 import {
   getCommonWidth,
   getMonthScheduleBlock,
@@ -56,23 +56,23 @@ describe('Render Template', () => {
   });
 
   it('getTimeScheduleBlock() returns top(px), left(%), width(%), height(px) css.', () => {
-    const viewModel = new ScheduleViewModel(new Schedule());
-    viewModel.top = 30;
-    viewModel.left = 40;
-    viewModel.width = 50;
-    viewModel.height = 60;
+    const uiModel = new EventUIModel(new Schedule());
+    uiModel.top = 30;
+    uiModel.left = 40;
+    uiModel.width = 50;
+    uiModel.height = 60;
 
-    expect(getTimeScheduleBlock(viewModel)).toBe('top:30px;left:40%;width:50%;height:60px');
+    expect(getTimeScheduleBlock(uiModel)).toBe('top:30px;left:40%;width:50%;height:60px');
   });
 
   it('getMonthScheduleBlock() returns top(px), left(%), width(%), height(px) css.', () => {
-    const viewModel = new ScheduleViewModel(new Schedule());
-    viewModel.top = 30;
-    viewModel.left = 40;
-    viewModel.width = 50;
-    viewModel.height = 60;
+    const uiModel = new EventUIModel(new Schedule());
+    uiModel.top = 30;
+    uiModel.left = 40;
+    uiModel.width = 50;
+    uiModel.height = 60;
 
-    const result = getMonthScheduleBlock(viewModel, [], 2, 10);
+    const result = getMonthScheduleBlock(uiModel, [], 2, 10);
 
     expect(result).toBe('top:68px;left:0%;width:0%;height:60px');
   });

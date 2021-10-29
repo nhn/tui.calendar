@@ -4,8 +4,8 @@
  */
 import inArray from 'tui-code-snippet/array/inArray';
 
+import EventUIModel from '@src/model/eventUIModel';
 import Schedule from '@src/model/schedule';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
 import TZDate from '@src/time/date';
 import { makeDateRange, MS_PER_DAY, toEndOfDay, toFormat, toStartOfDay } from '@src/time/datetime';
 import Collection, { Filter } from '@src/util/collection';
@@ -15,11 +15,11 @@ import { CollisionGroup, Matrix, Matrix3d } from '@t/events';
 
 /**
  * Calculate collision group.
- * @param {Array<Schedule|ScheduleViewModel>} schedules List of viewmodels.
+ * @param {Array<Schedule|EventUIModel>} schedules List of ui models.
  * @param {boolean} [usingTravelTime = true]
  * @returns {Array<number[]>} Collision Group.
  */
-export function getCollisionGroup<Events extends Schedule | ScheduleViewModel>(
+export function getCollisionGroup<Events extends Schedule | EventUIModel>(
   schedules: Events[],
   usingTravelTime = true
 ) {
@@ -88,7 +88,7 @@ export function getLastRowInColumn(matrix: Array<any[]>, col: number) {
  * @param {boolean} [usingTravelTime = true]
  * @returns {array} matrices
  */
-export function getMatrices<T extends Schedule | ScheduleViewModel>(
+export function getMatrices<T extends Schedule | EventUIModel>(
   collection: Collection<T>,
   collisionGroups: CollisionGroup,
   usingTravelTime = true
@@ -139,7 +139,7 @@ export function getMatrices<T extends Schedule | ScheduleViewModel>(
 export function getScheduleInDateRangeFilter(
   start: TZDate,
   end: TZDate
-): Filter<Schedule | ScheduleViewModel> {
+): Filter<Schedule | EventUIModel> {
   return (model) => {
     const ownStarts = model.getStarts();
     const ownEnds = model.getEnds();
@@ -154,17 +154,17 @@ export function getScheduleInDateRangeFilter(
 }
 
 /**
- * Position each view model for placing into container
+ * Position each ui model for placing into container
  * @param {TZDate} start - start date to render
  * @param {TZDate} end - end date to render
  * @param {Matrix3d} matrices - matrices from controller
- * @param {function} [iteratee] - iteratee function invoke each view models
+ * @param {function} [iteratee] - iteratee function invoke each ui models
  */
-export function positionViewModels(
+export function positionUIModels(
   start: TZDate,
   end: TZDate,
-  matrices: Matrix3d<ScheduleViewModel>,
-  iteratee?: (viewModel: ScheduleViewModel) => void
+  matrices: Matrix3d<EventUIModel>,
+  iteratee?: (uiModel: EventUIModel) => void
 ) {
   const ymdListToRender = makeDateRange(start, end, MS_PER_DAY).map((date) =>
     toFormat(date, 'YYYYMMDD')
@@ -172,66 +172,66 @@ export function positionViewModels(
 
   matrices.forEach((matrix) => {
     matrix.forEach((column) => {
-      column.forEach((viewModel, index) => {
-        if (!viewModel) {
+      column.forEach((uiModel, index) => {
+        if (!uiModel) {
           return;
         }
 
-        const ymd = toFormat(viewModel.getStarts(), 'YYYYMMDD');
+        const ymd = toFormat(uiModel.getStarts(), 'YYYYMMDD');
         const dateLength = makeDateRange(
-          toStartOfDay(viewModel.getStarts()),
-          toEndOfDay(viewModel.getEnds()),
+          toStartOfDay(uiModel.getStarts()),
+          toEndOfDay(uiModel.getEnds()),
           MS_PER_DAY
         ).length;
 
-        viewModel.top = index;
-        viewModel.left = inArray(ymd, ymdListToRender);
-        viewModel.width = dateLength;
+        uiModel.top = index;
+        uiModel.left = inArray(ymd, ymdListToRender);
+        uiModel.width = dateLength;
 
-        iteratee?.(viewModel);
+        iteratee?.(uiModel);
       });
     });
   });
 }
 
 /**
- * Limit render range for view models
+ * Limit render range for ui models
  * @param {TZDate} start
  * @param {TZDate} end
- * @param {ScheduleViewModel} viewModel - view model instance
- * @returns {ScheduleViewModel} view model that limited render range
+ * @param {EventUIModel} uiModel - ui model instance
+ * @returns {EventUIModel} ui model that limited render range
  */
-function limit(start: TZDate, end: TZDate, viewModel: ScheduleViewModel) {
-  if (viewModel.getStarts() < start) {
-    viewModel.exceedLeft = true;
-    viewModel.renderStarts = new TZDate(start);
+function limit(start: TZDate, end: TZDate, uiModel: EventUIModel) {
+  if (uiModel.getStarts() < start) {
+    uiModel.exceedLeft = true;
+    uiModel.renderStarts = new TZDate(start);
   }
 
-  if (viewModel.getEnds() > end) {
-    viewModel.exceedRight = true;
-    viewModel.renderEnds = new TZDate(end);
+  if (uiModel.getEnds() > end) {
+    uiModel.exceedRight = true;
+    uiModel.renderEnds = new TZDate(end);
   }
 
-  return viewModel;
+  return uiModel;
 }
 
 /**
- * Limit start, end date each view model for render properly
+ * Limit start, end date each ui model for render properly
  * @param {TZDate} start - start date to render
  * @param {TZDate} end - end date to render
- * @param {Collection<ScheduleViewModel>|ScheduleViewModel} viewModelColl - schedule view
- *  model collection or ScheduleViewModel
- * @returns {?ScheduleViewModel} return view model when third parameter is
- *  view model
+ * @param {Collection<EventUIModel>|EventUIModel} uiModelColl - schedule view
+ *  model collection or EventUIModel
+ * @returns {?EventUIModel} return ui model when third parameter is
+ *  ui model
  */
 export function limitRenderRange(
   start: TZDate,
   end: TZDate,
-  viewModelColl: Collection<ScheduleViewModel> | ScheduleViewModel
+  uiModelColl: Collection<EventUIModel> | EventUIModel
 ) {
-  if (viewModelColl instanceof Collection) {
-    viewModelColl.each((viewModel) => {
-      limit(start, end, viewModel);
+  if (uiModelColl instanceof Collection) {
+    uiModelColl.each((uiModel) => {
+      limit(start, end, uiModel);
 
       return true;
     });
@@ -239,22 +239,22 @@ export function limitRenderRange(
     return null;
   }
 
-  return limit(start, end, viewModelColl);
+  return limit(start, end, uiModelColl);
 }
 
 /**
- * Convert schedule model collection to view model collection.
+ * Convert schedule model collection to ui model collection.
  * @param {Collection} scheduleCollection - collection of schedule model
- * @returns {Collection} collection of schedule view model
+ * @returns {Collection} collection of schedule ui model
  */
-export function convertToViewModel(scheduleCollection: Collection<Schedule>) {
-  const viewModelColl = new Collection<ScheduleViewModel>((viewModel) => {
-    return viewModel.cid();
+export function convertToUIModel(scheduleCollection: Collection<Schedule>) {
+  const uiModelColl = new Collection<EventUIModel>((uiModel) => {
+    return uiModel.cid();
   });
 
   scheduleCollection.each(function (schedule) {
-    viewModelColl.add(ScheduleViewModel.create(schedule));
+    uiModelColl.add(EventUIModel.create(schedule));
   });
 
-  return viewModelColl;
+  return uiModelColl;
 }

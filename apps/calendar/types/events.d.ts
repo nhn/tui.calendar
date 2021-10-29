@@ -1,4 +1,4 @@
-import ScheduleViewModel from '@src/model/scheduleViewModel';
+import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 
 export interface BaseEvent {
@@ -10,14 +10,14 @@ export type Matrix<T> = Array<T[]>;
 export type Matrix3d<T> = Array<Matrix<T>>;
 export type CollisionGroup = Matrix<number>;
 
-export type DayGridEventMatrix = Matrix3d<ScheduleViewModel>;
-export type TimeGridEventMatrix = Record<string, Matrix3d<ScheduleViewModel>>;
+export type DayGridEventMatrix = Matrix3d<EventUIModel>;
+export type TimeGridEventMatrix = Record<string, Matrix3d<EventUIModel>>;
 
 export type EventModelMap = {
-  milestone: ScheduleViewModel[];
-  allday: ScheduleViewModel[];
-  task: ScheduleViewModel[];
-  time: ScheduleViewModel[];
+  milestone: EventUIModel[];
+  allday: EventUIModel[];
+  task: EventUIModel[];
+  time: EventUIModel[];
 };
 
 export type EventGroupMap = Record<keyof EventModelMap, DayGridEventMatrix | TimeGridEventMatrix>;

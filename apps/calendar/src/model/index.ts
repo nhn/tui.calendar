@@ -56,7 +56,7 @@ export interface AppContext {
   externalEvent: EventHandler<ExternalEventName>;
 }
 
-export interface GridViewModel {
+export interface GridUIModel {
   day: number;
   width: number;
   left: number;

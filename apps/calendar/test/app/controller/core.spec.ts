@@ -6,8 +6,8 @@ import {
   limitRenderRange,
 } from '@src/controller/core';
 import { ScheduleData } from '@src/model';
+import EventUIModel from '@src/model/eventUIModel';
 import Schedule from '@src/model/schedule';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
 import TZDate from '@src/time/date';
 import array from '@src/util/array';
 import Collection from '@src/util/collection';
@@ -310,40 +310,40 @@ describe('Base.Core', () => {
   });
 
   describe('limitRenderRange', () => {
-    let viewModelColl: Collection<ScheduleViewModel>;
+    let uiModelCollection: Collection<EventUIModel>;
 
     beforeEach(() => {
-      viewModelColl = new Collection((viewModel) => {
-        return viewModel.cid();
+      uiModelCollection = new Collection((uiModel) => {
+        return uiModel.cid();
       });
     });
 
-    it('fill renderStarts, renderEnds to each view model in collection.', () => {
+    it('fill renderStarts, renderEnds to each ui model in collection.', () => {
       // 5/1 10:20 ~ 5/1 10:40
-      viewModelColl.add(ScheduleViewModel.create(scheduleList[0]));
+      uiModelCollection.add(EventUIModel.create(scheduleList[0]));
 
       const limit1 = new TZDate('2015-05-01T10:30:00');
       const limit2 = new TZDate('2015-05-01T10:40:00');
 
-      limitRenderRange(limit1, limit2, viewModelColl);
+      limitRenderRange(limit1, limit2, uiModelCollection);
 
-      const viewModel = viewModelColl.single();
+      const uiModel = uiModelCollection.single();
 
-      expect(viewModel).not.toBeNull();
+      expect(uiModel).not.toBeNull();
 
-      if (viewModel) {
-        expect(viewModel.renderStarts).toEqual(limit1);
-        expect(viewModel.renderEnds).toBeUndefined();
+      if (uiModel) {
+        expect(uiModel.renderStarts).toEqual(limit1);
+        expect(uiModel.renderEnds).toBeUndefined();
       }
     });
   });
 
   describe('getScheduleInDateRangeFilter', () => {
-    let viewModelColl: Collection<ScheduleViewModel>;
+    let uiModelCollection: Collection<EventUIModel>;
 
     beforeEach(() => {
-      viewModelColl = new Collection((viewModel) => {
-        return viewModel.cid();
+      uiModelCollection = new Collection((uiModel) => {
+        return uiModel.cid();
       });
     });
 
@@ -365,77 +365,77 @@ describe('Base.Core', () => {
       // L ownStart ----------------------------------------------- ownEnd
 
       // 10:20 ~ 10:40
-      viewModelColl.add(ScheduleViewModel.create(scheduleList[0]));
+      uiModelCollection.add(EventUIModel.create(scheduleList[0]));
 
       // A: 09:30 ~ 10:10
       d1 = new TZDate('2015-05-01T09:30:00');
       d2 = new TZDate('2015-05-01T10:10:00');
       filter = getScheduleInDateRangeFilter(d1, d2);
 
-      expect(viewModelColl.find(filter).length).toBe(0);
+      expect(uiModelCollection.find(filter).length).toBe(0);
 
       // B: 09:30 ~ 10:20
       d1 = new TZDate('2015-05-01T09:30:00');
       d2 = new TZDate('2015-05-01T10:20:00');
       filter = getScheduleInDateRangeFilter(d1, d2);
 
-      expect(viewModelColl.find(filter).length).toBe(1);
+      expect(uiModelCollection.find(filter).length).toBe(1);
 
       // C: 09:30 ~ 10:30
       d1 = new TZDate('2015-05-01T09:30:00');
       d2 = new TZDate('2015-05-01T10:30:00');
       filter = getScheduleInDateRangeFilter(d1, d2);
 
-      expect(viewModelColl.find(filter).length).toBe(1);
+      expect(uiModelCollection.find(filter).length).toBe(1);
 
       // D: 10:20 ~ 10:30
       d1 = new TZDate('2015-05-01T10:20:00');
       d2 = new TZDate('2015-05-01T10:30:00');
       filter = getScheduleInDateRangeFilter(d1, d2);
 
-      expect(viewModelColl.find(filter).length).toBe(1);
+      expect(uiModelCollection.find(filter).length).toBe(1);
 
       // E: 10:25 ~ 10:35
       d1 = new TZDate('2015-05-01T10:25:00');
       d2 = new TZDate('2015-05-01T10:35:00');
       filter = getScheduleInDateRangeFilter(d1, d2);
 
-      expect(viewModelColl.find(filter).length).toBe(1);
+      expect(uiModelCollection.find(filter).length).toBe(1);
 
       // F: 10:30 ~ 10:40
       d1 = new TZDate('2015-05-01T10:30:00');
       d2 = new TZDate('2015-05-01T10:40:00');
       filter = getScheduleInDateRangeFilter(d1, d2);
 
-      expect(viewModelColl.find(filter).length).toBe(1);
+      expect(uiModelCollection.find(filter).length).toBe(1);
 
       // G: 10:30 ~ 10:50
       d1 = new TZDate('2015-05-01T10:30:00');
       d2 = new TZDate('2015-05-01T10:50:00');
       filter = getScheduleInDateRangeFilter(d1, d2);
 
-      expect(viewModelColl.find(filter).length).toBe(1);
+      expect(uiModelCollection.find(filter).length).toBe(1);
 
       // H: 10:40 ~ 10:50
       d1 = new TZDate('2015-05-01T10:40:00');
       d2 = new TZDate('2015-05-01T10:50:00');
       filter = getScheduleInDateRangeFilter(d1, d2);
 
-      expect(viewModelColl.find(filter).length).toBe(1);
+      expect(uiModelCollection.find(filter).length).toBe(1);
 
       // I: 10:50 ~ 10:55
       d1 = new TZDate('2015-05-01T10:50:00');
       d2 = new TZDate('2015-05-01T10:55:00');
       filter = getScheduleInDateRangeFilter(d1, d2);
 
-      expect(viewModelColl.find(filter).length).toBe(0);
+      expect(uiModelCollection.find(filter).length).toBe(0);
 
       // L: 10:10 ~ 10:50
       d1 = new TZDate('2015-05-01T10:10:00');
       d2 = new TZDate('2015-05-01T10:50:00');
       filter = getScheduleInDateRangeFilter(d1, d2);
 
-      expect(viewModelColl.find(filter).length).toBe(1);
+      expect(uiModelCollection.find(filter).length).toBe(1);
     });
   });
 });

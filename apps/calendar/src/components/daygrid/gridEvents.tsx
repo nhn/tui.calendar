@@ -1,7 +1,7 @@
 import { FunctionComponent, h } from 'preact';
 
 import GridEvent from '@src/components/events/gridEvent';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
+import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { EVENT_HEIGHT, isWithinHeight } from '@src/util/gridHelper';
 
@@ -10,7 +10,7 @@ interface Props {
   cells: TZDate[];
   height: number;
   eventHeight?: number;
-  events: ScheduleViewModel[];
+  events: EventUIModel[];
   narrowWeekend: boolean;
   className: string;
   headerHeight: number;
@@ -26,14 +26,14 @@ const GridEvents: FunctionComponent<Props> = ({
   headerHeight,
   eventTopMargin,
 }) => {
-  const filteredViewModels = events.filter(
+  const filteredUIModels = events.filter(
     isWithinHeight(height - headerHeight, eventHeight + eventTopMargin)
   );
 
-  const dayEvents = filteredViewModels.map((viewModel) => (
+  const dayEvents = filteredUIModels.map((uiModel) => (
     <GridEvent
-      viewModel={viewModel}
-      key={`${name}-DayEvent-${viewModel.cid()}`}
+      uiModel={uiModel}
+      key={`${name}-DayEvent-${uiModel.cid()}`}
       eventHeight={eventHeight}
       headerHeight={headerHeight}
     />

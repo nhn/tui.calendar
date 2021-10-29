@@ -4,8 +4,8 @@
  */
 import forEach from 'tui-code-snippet/collection/forEach';
 
+import EventUIModel from '@src/model/eventUIModel';
 import Schedule from '@src/model/schedule';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
 import { compare } from '@src/time/datetime';
 
 /**
@@ -79,9 +79,9 @@ function compareStringsASC(_a: any, _b: any) {
  * @returns {number} Result of comparison.
  */
 // eslint-disable-next-line complexity
-function compareSchedulesASC(a: Schedule | ScheduleViewModel, b: Schedule | ScheduleViewModel) {
-  const modelA = a instanceof ScheduleViewModel ? a.model : a;
-  const modelB = b instanceof ScheduleViewModel ? b.model : b;
+function compareSchedulesASC(a: Schedule | EventUIModel, b: Schedule | EventUIModel) {
+  const modelA = a instanceof EventUIModel ? a.model : a;
+  const modelB = b instanceof EventUIModel ? b.model : b;
   const allDayCompare = compareBooleansASC(
     modelA.isAllDay || modelA.hasMultiDates,
     modelB.isAllDay || modelB.hasMultiDates

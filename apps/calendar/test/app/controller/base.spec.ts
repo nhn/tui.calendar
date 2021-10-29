@@ -141,10 +141,10 @@ describe('controller/base', () => {
       const end = new TZDate('2015/05/02');
       const result = findByDateRange(calendarData, { start, end });
 
-      expect(result).toEqualViewModelByTitle(expected);
+      expect(result).toEqualUIModelByTitle(expected);
     });
 
-    it('return viewmodels in dates properly.', () => {
+    it('return ui models in dates properly.', () => {
       const expected = {
         '20150502': ['hunting', 'A'],
         '20150503': ['A', 'meeting', 'physical training'],
@@ -155,7 +155,7 @@ describe('controller/base', () => {
 
       const result = findByDateRange(calendarData, { start, end });
 
-      expect(result).toEqualViewModelByTitle(expected);
+      expect(result).toEqualUIModelByTitle(expected);
     });
   });
 

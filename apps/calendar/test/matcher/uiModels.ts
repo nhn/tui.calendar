@@ -3,7 +3,7 @@ import forEach from 'tui-code-snippet/collection/forEach';
 import Schedule from '@src/model/schedule';
 
 expect.extend({
-  toEqualViewModelByTitle(actual: Record<string, Schedule[]>, expected: Record<string, string[]>) {
+  toEqualUIModelByTitle(actual: Record<string, Schedule[]>, expected: Record<string, string[]>) {
     const result = {
       pass: false,
       message: () => '',

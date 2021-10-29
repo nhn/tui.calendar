@@ -1,41 +1,21 @@
-/**
- * @fileoverview Model for views
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
 import Schedule from '@src/model/schedule';
 import TZDate from '@src/time/date';
 import { collidesWith } from '@src/util/events';
 
 /**
- * Schedule ViewModel
+ * Set of UI-related properties for calendar event.
  * @class
  * @param {Schedule} schedule Schedule instance.
  */
-export default class ScheduleViewModel {
-  /**
-   * The model of schedule.
-   * @type {Schedule}
-   */
+export default class EventUIModel {
   model: Schedule;
 
-  /**
-   * @type {number}
-   */
   top = 0;
 
-  /**
-   * @type {number}
-   */
   left = 0;
 
-  /**
-   * @type {number}
-   */
   width = 0;
 
-  /**
-   * @type {number}
-   */
   height = 0;
 
   /**
@@ -45,7 +25,7 @@ export default class ScheduleViewModel {
   hasCollide = false;
 
   /**
-   * Extra space at rigth side of this schedule.
+   * Extra space at right side of this schedule.
    * @type {number}
    */
   extraSpace = 0;
@@ -53,7 +33,7 @@ export default class ScheduleViewModel {
   /**
    * represent this schedule block is not visible after rendered.
    *
-   * in month view, some viewmodel in date need to hide when already rendered before dates.
+   * in month view, some ui models in date need to hide when already rendered before dates.
    *
    * set true then it just shows empty space.
    * @type {boolean}
@@ -115,29 +95,21 @@ export default class ScheduleViewModel {
    */
   comingDurationHeight = 0;
 
-  /**
-   * Schedule ViewModel
-   * @param {Schedule} schedule Schedule instance.
-   */
   constructor(schedule: Schedule) {
     this.model = schedule;
   }
 
   /**
-   * ScheduleViewModel factory method.
-   * @param {Schedule} schedule Schedule instance.
-   * @returns {ScheduleViewModel} ScheduleViewModel instance.
+   * EventUIModel factory method.
    */
-  static create(schedule: Schedule): ScheduleViewModel {
-    return new ScheduleViewModel(schedule);
+  static create(schedule: Schedule): EventUIModel {
+    return new EventUIModel(schedule);
   }
 
   /**
    * return renderStarts property to render properly when specific schedule that exceed rendering date range.
    *
    * if renderStarts is not set. return model's start property.
-   * @override
-   * @returns {TZDate} render start date.
    */
   getStarts(): TZDate {
     if (this.renderStarts) {
@@ -151,8 +123,6 @@ export default class ScheduleViewModel {
    * return renderStarts property to render properly when specific schedule that exceed rendering date range.
    *
    * if renderEnds is not set. return model's end property.
-   * @override
-   * @returns {Date} render end date.
    */
   getEnds(): TZDate {
     if (this.renderEnds) {
@@ -171,7 +141,6 @@ export default class ScheduleViewModel {
 
   /**
    * Shadowing valueOf method for schedule sorting.
-   * @returns {Schedule} The model of schedule.
    */
   valueOf(): Schedule {
     return this.model;
@@ -185,16 +154,16 @@ export default class ScheduleViewModel {
     return this.model.duration();
   }
 
-  collidesWith(viewModel: Schedule | ScheduleViewModel, usingTravelTime = true) {
+  collidesWith(uiModel: Schedule | EventUIModel, usingTravelTime = true) {
     return collidesWith({
       start: this.getStarts().getTime(),
       end: this.getEnds().getTime(),
-      targetStart: viewModel.getStarts().getTime(),
-      targetEnd: viewModel.getEnds().getTime(),
+      targetStart: uiModel.getStarts().getTime(),
+      targetEnd: uiModel.getEnds().getTime(),
       goingDuration: this.model.goingDuration,
       comingDuration: this.model.comingDuration,
-      targetGoingDuration: viewModel.valueOf().goingDuration,
-      targetComingDuration: viewModel.valueOf().comingDuration,
+      targetGoingDuration: uiModel.valueOf().goingDuration,
+      targetComingDuration: uiModel.valueOf().comingDuration,
       usingTravelTime, // Daygrid does not use travelTime, TimeGrid uses travelTime.
     });
   }

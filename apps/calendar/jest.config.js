@@ -14,6 +14,6 @@ module.exports = {
   setupFilesAfterEnv: [
     '<rootDir>/test/jestSetup.ts',
     '<rootDir>/test/matcher/matrices.ts',
-    '<rootDir>/test/matcher/viewModels.ts',
+    '<rootDir>/test/matcher/uiModels.ts',
   ],
 };

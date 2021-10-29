@@ -19,7 +19,7 @@ import TZDate from '@src/time/date';
 import { toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
 import { getSize } from '@src/util/dom';
-import { getRenderedEventViewModels } from '@src/util/gridHelper';
+import { getRenderedEventUIModels } from '@src/util/gridHelper';
 import { toPercent } from '@src/util/units';
 
 import { GridGuideInfo } from '@t/components/daygrid/creationGuide';
@@ -97,7 +97,7 @@ const DayGrid: FunctionComponent<Props> = ({
       getMousePositionData={getMousePositionData}
     >
       {calendar.map((week, rowIndex) => {
-        const { viewModels, gridDateEventModelMap } = getRenderedEventViewModels(
+        const { uiModels, gridDateEventModelMap } = getRenderedEventUIModels(
           week,
           calendarData,
           narrowWeekend
@@ -124,7 +124,7 @@ const DayGrid: FunctionComponent<Props> = ({
               <GridEvents
                 name="month"
                 cells={week}
-                events={viewModels}
+                events={uiModels}
                 height={height}
                 narrowWeekend={narrowWeekend}
                 eventHeight={MONTH_EVENT_HEIGHT}

@@ -1,5 +1,5 @@
 /**
- * @fileoverview Model of schedule.
+ * @fileoverview Model of calendar event.
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 import extend from 'tui-code-snippet/object/extend';
@@ -7,11 +7,12 @@ import isExisty from 'tui-code-snippet/type/isExisty';
 import isString from 'tui-code-snippet/type/isString';
 
 import { DateType, ScheduleData } from '@src/model';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
+import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { compare, MS_PER_DAY, parse, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { stamp } from '@src/util';
 import { collidesWith } from '@src/util/events';
+
 /**
  * Schedule category
  * @readonly
@@ -19,12 +20,6 @@ import { collidesWith } from '@src/util/events';
  */
 export type ScheduleCategory = 'milestone' | 'task' | 'allday' | 'time' | 'background';
 
-/**
- * The model of calendar schedules.
- * @constructor
- * @mixes dirty
- * @mixes model
- */
 export default class Schedule {
   /**
    * `Optional` unique id for various use.
@@ -384,12 +379,12 @@ export default class Schedule {
   /**
    * Returns true if the given Schedule coincides with the same time as the
    * calling Schedule.
-   * @param {Schedule | ScheduleViewModel} schedule The other schedule to compare with this Schedule.
+   * @param {Schedule | EventUIModel} schedule The other schedule to compare with this Schedule.
    * @param {boolean = true} usingTravelTime When calculating collision, whether to calculate with travel time.
    * @returns {boolean} If the other schedule occurs within the same time as the first object.
    */
-  collidesWith(schedule: Schedule | ScheduleViewModel, usingTravelTime = true) {
-    schedule = schedule instanceof ScheduleViewModel ? schedule.model : schedule;
+  collidesWith(schedule: Schedule | EventUIModel, usingTravelTime = true) {
+    schedule = schedule instanceof EventUIModel ? schedule.model : schedule;
 
     return collidesWith({
       start: Number(this.getStarts()),
@@ -405,11 +400,11 @@ export default class Schedule {
   }
 }
 
-export function isBackgroundEvent({ model }: ScheduleViewModel) {
+export function isBackgroundEvent({ model }: EventUIModel) {
   return model.category === 'background';
 }
 
-export function isTimeEvent({ model }: ScheduleViewModel) {
+export function isTimeEvent({ model }: EventUIModel) {
   const { category, isAllDay, hasMultiDates } = model;
 
   return category === 'time' && isAllDay === false && hasMultiDates === false;

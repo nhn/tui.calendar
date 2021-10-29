@@ -4,11 +4,11 @@ import { BackgroundEvent } from '@src/components/events/backgroundEvent';
 import { TimeEvent } from '@src/components/events/timeEvent';
 import { CreationGuideInfo } from '@src/components/timegrid';
 import { CreationGuide } from '@src/components/timegrid/creationGuide';
-import { getViewModels, isBetween } from '@src/controller/column';
+import { getUIModels, isBetween } from '@src/controller/column';
 import { getTopHeightByTime } from '@src/controller/times';
 import { TimeUnit } from '@src/model';
+import EventUIModel from '@src/model/eventUIModel';
 import { isBackgroundEvent } from '@src/model/schedule';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
 import TZDate from '@src/time/date';
 import { first, last } from '@src/util/array';
 import { cls } from '@src/util/cssHelper';
@@ -32,7 +32,7 @@ interface Props {
   backgroundColor?: string;
   start?: number;
   end?: number;
-  events?: ScheduleViewModel[];
+  events?: EventUIModel[];
   creationGuide?: CreationGuideInfo | null;
   index?: number;
   readOnly?: boolean;
@@ -52,7 +52,7 @@ function renderGridlines(times: TZDate[], renderGridlineChild?: (time: TZDate) =
   );
 }
 
-function renderBackgroundEvents(events: ScheduleViewModel[], startTime: TZDate, endTime: TZDate) {
+function renderBackgroundEvents(events: EventUIModel[], startTime: TZDate, endTime: TZDate) {
   const backgroundEvents = events.filter(isBackgroundEvent);
 
   return (
@@ -78,15 +78,15 @@ function renderBackgroundEvents(events: ScheduleViewModel[], startTime: TZDate, 
   );
 }
 
-function renderEvents(events: ScheduleViewModel[], startTime: TZDate, endTime: TZDate) {
+function renderEvents(events: EventUIModel[], startTime: TZDate, endTime: TZDate) {
   const marginRight = 8;
   const style = { marginRight };
-  const viewModels = getViewModels(events, startTime, endTime);
+  const uiModels = getUIModels(events, startTime, endTime);
 
   return (
     <div className={classNames.events} style={style}>
-      {viewModels.map((viewModel, index) => {
-        return <TimeEvent eventModels={viewModel} key={index} />;
+      {uiModels.map((uiModel, index) => {
+        return <TimeEvent eventModels={uiModel} key={index} />;
       })}
     </div>
   );

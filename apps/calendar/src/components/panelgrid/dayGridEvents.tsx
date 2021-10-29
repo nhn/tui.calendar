@@ -12,7 +12,7 @@ import { PanelTitle } from '@src/components/panelgrid/panelTitle';
 import { WEEK_EVENT_MARGIN_TOP } from '@src/constants/style';
 import { DEFAULT_PANEL_HEIGHT } from '@src/controller/panel';
 import { WeekOption } from '@src/model';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
+import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { addDate, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
@@ -30,7 +30,7 @@ const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
 
 interface Props {
   type: DayGridEventType;
-  events: ScheduleViewModel[];
+  events: EventUIModel[];
   cells?: Cells;
   timesWidth?: number;
   timezonesCount?: number;
@@ -75,7 +75,7 @@ export const DayGridEvents: FunctionComponent<Props> = ({
   const { creationGuide, onGuideChange, onGuideEnd, onGuideCancel } =
     useCreationGuide(shouldRenderDefaultPopup);
   const gridInfoList = getGridInfoList(cells);
-  const filteredViewModels = events.filter(
+  const filteredUIModels = events.filter(
     isWithinHeight(height, EVENT_HEIGHT + WEEK_EVENT_MARGIN_TOP)
   );
 
@@ -104,10 +104,10 @@ export const DayGridEvents: FunctionComponent<Props> = ({
           />
         </GridWithMouse>
         <div className={cls(`panel-${type}-events`)}>
-          {filteredViewModels.map((viewModel) => (
+          {filteredUIModels.map((uiModel) => (
             <GridEvent
-              viewModel={viewModel}
-              key={`${type}-DayEvent-${viewModel.cid()}`}
+              uiModel={uiModel}
+              key={`${type}-DayEvent-${uiModel.cid()}`}
               eventHeight={EVENT_HEIGHT}
               headerHeight={0}
               getMousePositionData={getMousePositionData}

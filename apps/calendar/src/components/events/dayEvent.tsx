@@ -1,16 +1,16 @@
 import { FunctionComponent, h } from 'preact';
 
-import ScheduleViewModel from '@src/model/scheduleViewModel';
+import EventUIModel from '@src/model/eventUIModel';
 import { cls } from '@src/util/cssHelper';
 import { EVENT_HEIGHT } from '@src/util/gridHelper';
 import { toPercent, toPx } from '@src/util/units';
 
 interface Props {
-  viewModel: ScheduleViewModel;
+  uiModel: EventUIModel;
 }
 
-export const DayEvent: FunctionComponent<Props> = ({ viewModel }) => {
-  const { width, left, top, exceedRight } = viewModel;
+export const DayEvent: FunctionComponent<Props> = ({ uiModel }) => {
+  const { width, left, top, exceedRight } = uiModel;
 
   const style = {
     width: toPercent(width),
@@ -24,7 +24,7 @@ export const DayEvent: FunctionComponent<Props> = ({ viewModel }) => {
 
   return (
     <div className={dayEventBlockClassName} style={style}>
-      <div className={cls('weekday-event')}>{viewModel.cid()}</div>
+      <div className={cls('weekday-event')}>{uiModel.cid()}</div>
     </div>
   );
 };

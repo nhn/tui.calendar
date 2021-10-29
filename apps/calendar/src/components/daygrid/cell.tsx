@@ -13,7 +13,7 @@ import {
 import { useDispatch } from '@src/contexts/calendarStore';
 import { useTheme } from '@src/contexts/theme';
 import { Size } from '@src/controller/panel';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
+import EventUIModel from '@src/model/eventUIModel';
 import { PopupType } from '@src/slices/popup';
 import TZDate from '@src/time/date';
 import { Day } from '@src/time/datetime';
@@ -38,7 +38,7 @@ interface Props {
   };
   parentContainer?: HTMLDivElement | null;
   appContainer?: HTMLDivElement | null;
-  events?: ScheduleViewModel[];
+  events?: EventUIModel[];
   height: number;
 }
 

@@ -14,7 +14,7 @@ import { CurrentTimeLine } from '@src/components/timegrid/currentTimeLine';
 import { MultipleTimezones } from '@src/components/timegrid/multipleTimezones';
 import { getTopPercentByTime } from '@src/controller/times';
 import { TimeUnit, TimezoneConfig } from '@src/model';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
+import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import {
   addDate,
@@ -38,7 +38,7 @@ const classNames = {
 };
 
 interface Props {
-  events: ScheduleViewModel[];
+  events: EventUIModel[];
   currentTime?: TZDate;
   timesWidth?: number;
   timezones?: TimezoneConfig[];

@@ -4,7 +4,7 @@ import { useState } from 'preact/hooks';
 import { useDispatch } from '@src/contexts/calendarStore';
 import { DEFAULT_PANEL_HEIGHT } from '@src/controller/panel';
 import { WeekOption } from '@src/model';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
+import EventUIModel from '@src/model/eventUIModel';
 import { WeekGridRows } from '@src/slices/weekViewLayout';
 import { cls } from '@src/util/cssHelper';
 import {
@@ -25,7 +25,7 @@ const DEFAULT_GRID_STYLE = {
 interface Props {
   name: string;
   cells: Cells;
-  events: ScheduleViewModel[];
+  events: EventUIModel[];
   height: number;
   options?: WeekOption;
 }

@@ -29,10 +29,10 @@ const SeeMorePopup: FunctionComponent<SeeMorePopupParam> = ({ date, events = [] 
           }px)`,
         }}
       >
-        {events.map((viewModel) => (
+        {events.map((uiModel) => (
           <GridEvent
-            key={`see-more-event-item-${viewModel.cid()}`}
-            viewModel={viewModel}
+            key={`see-more-event-item-${uiModel.cid()}`}
+            uiModel={uiModel}
             eventHeight={MONTH_EVENT_HEIGHT}
             headerHeight={MONTH_MORE_VIEW_HEADER_HEIGHT}
             flat={true}

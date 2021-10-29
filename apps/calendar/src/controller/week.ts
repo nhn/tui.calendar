@@ -8,16 +8,16 @@ import pick from 'tui-code-snippet/object/pick';
 
 import { filterByCategory, getDateRange, IDS_OF_DAY } from '@src/controller/base';
 import {
-  convertToViewModel,
+  convertToUIModel,
   getCollisionGroup,
   getMatrices,
   getScheduleInDateRangeFilter,
   limitRenderRange,
-  positionViewModels,
+  positionUIModels,
 } from '@src/controller/core';
 import { CalendarData, WeekOption } from '@src/model';
+import EventUIModel from '@src/model/eventUIModel';
 import Schedule from '@src/model/schedule';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
 import TZDate from '@src/time/date';
 import {
   makeDateRange,
@@ -108,24 +108,24 @@ export function hasCollision(arr: Array<number[]>, start: number, end: number) {
 }
 
 /**
- * Initialize values to viewmodels for detect real collision at rendering phase.
+ * Initialize values to ui models for detect real collision at rendering phase.
  * @param {array[]} matrices - Matrix data.
  * @returns {array[]} matrices - Matrix data with collision information
  */
-export function getCollides(matrices: Matrix3d<ScheduleViewModel>) {
+export function getCollides(matrices: Matrix3d<EventUIModel>) {
   matrices.forEach((matrix) => {
-    const binaryMap = generateTimeArrayInRow<ScheduleViewModel>(matrix);
+    const binaryMap = generateTimeArrayInRow<EventUIModel>(matrix);
     const maxRowLength = Math.max(...matrix.map((row) => row.length));
 
     matrix.forEach((row) => {
-      row.forEach((viewModel, col) => {
-        if (!viewModel) {
+      row.forEach((uiModel, col) => {
+        if (!uiModel) {
           return;
         }
 
-        const { goingDuration, comingDuration } = viewModel.valueOf();
-        let startTime = viewModel.getStarts().getTime();
-        let endTime = viewModel.getEnds().getTime();
+        const { goingDuration, comingDuration } = uiModel.valueOf();
+        let startTime = uiModel.getStarts().getTime();
+        let endTime = uiModel.getEnds().getTime();
 
         if (Math.abs(endTime - startTime) < SCHEDULE_MIN_DURATION) {
           endTime += SCHEDULE_MIN_DURATION;
@@ -140,11 +140,11 @@ export function getCollides(matrices: Matrix3d<ScheduleViewModel>) {
           const collided = hasCollision(binaryMap[i - 1], startTime, endTime);
 
           if (collided) {
-            viewModel.hasCollide = true;
+            uiModel.hasCollide = true;
             break;
           }
 
-          viewModel.extraSpace += 1;
+          uiModel.extraSpace += 1;
         }
       });
     });
@@ -161,9 +161,9 @@ export function getCollides(matrices: Matrix3d<ScheduleViewModel>) {
  */
 export function _makeHourRangeFilter(hStart: number, hEnd: number) {
   // eslint-disable-next-line complexity
-  return (viewModel: Schedule | ScheduleViewModel) => {
-    const ownHourStart = viewModel.getStarts();
-    const ownHourEnd = viewModel.getEnds();
+  return (uiModel: Schedule | EventUIModel) => {
+    const ownHourStart = uiModel.getStarts();
+    const ownHourEnd = uiModel.getEnds();
     const ownHourStartTime = ownHourStart.getTime();
     const ownHourEndTime = ownHourEnd.getTime();
     const yyyy = ownHourStart.getFullYear();
@@ -183,25 +183,25 @@ export function _makeHourRangeFilter(hStart: number, hEnd: number) {
 }
 
 /**
- * make view model function depending on start and end hour
+ * make ui model function depending on start and end hour
  * if time view option has start or end hour condition
  * it add filter
  * @param {number} hourStart - start hour to be shown
  * @param {number} hourEnd - end hour to be shown
  * @returns {function} function
  */
-export function _makeGetViewModelFuncForTimeView(
+export function _makeGetUIModelFuncForTimeView(
   hourStart: number,
   hourEnd: number
-): (viewModelColl: Collection<ScheduleViewModel>) => ScheduleViewModel[] {
+): (uiModelColl: Collection<EventUIModel>) => EventUIModel[] {
   if (hourStart === 0 && hourEnd === 24) {
-    return (viewModelColl: Collection<ScheduleViewModel>) => {
-      return viewModelColl.sort(array.compare.schedule.asc);
+    return (uiModelColl: Collection<EventUIModel>) => {
+      return uiModelColl.sort(array.compare.schedule.asc);
     };
   }
 
-  return (viewModelColl: Collection<ScheduleViewModel>) => {
-    return viewModelColl
+  return (uiModelColl: Collection<EventUIModel>) => {
+    return uiModelColl
       .find(_makeHourRangeFilter(hourStart, hourEnd))
       .sort(array.compare.schedule.asc);
   };
@@ -211,28 +211,28 @@ export function _makeGetViewModelFuncForTimeView(
  * split schedule model by ymd.
  * @param {TZDate} start - start date
  * @param {TZDate} end - end date
- * @param {Collection<ScheduleViewModel>} viewModelColl - collection of schedule view model.
+ * @param {Collection<EventUIModel>} uiModelColl - collection of ui models.
  * @returns {object.<string, Collection>} splitted schedule model collections.
  */
 export function splitScheduleByDateRange(
   idsOfDay: IDS_OF_DAY,
   start: TZDate,
   end: TZDate,
-  viewModelColl: Collection<Schedule> | Collection<ScheduleViewModel>
+  uiModelColl: Collection<Schedule> | Collection<EventUIModel>
 ) {
-  const result: Record<string, Collection<Schedule | ScheduleViewModel>> = {};
+  const result: Record<string, Collection<Schedule | EventUIModel>> = {};
   const range = getDateRange(start, end);
 
   range.forEach((date: TZDate) => {
     const ymd = toFormat(date, 'YYYYMMDD');
     const ids = idsOfDay[ymd];
-    const collection = (result[ymd] = new Collection<Schedule | ScheduleViewModel>((schedule) => {
+    const collection = (result[ymd] = new Collection<Schedule | EventUIModel>((schedule) => {
       return schedule.cid();
     }));
 
     if (ids && ids.length) {
       ids.forEach((id) => {
-        viewModelColl.doWhenHas(id, (schedule: Schedule | ScheduleViewModel) => {
+        uiModelColl.doWhenHas(id, (schedule: Schedule | EventUIModel) => {
           collection.add(schedule);
         });
       });
@@ -243,37 +243,37 @@ export function splitScheduleByDateRange(
 }
 
 /**
- * create view model for time view part
+ * create ui model for time view part
  * @param {IDS_OF_DAY} idsOfDay - model controller
  * @param {object} condition - find option
  *  @param {TZDate} condition.start - start date.
  *  @param {TZDate} condition.end - end date.
- *  @param {Collection} condition.viewModelTimeColl - view model collection.
+ *  @param {Collection} condition.uiModelTimeColl - collection of ui models.
  *  @param {number} condition.hourStart - start hour to be shown
  *  @param {number} condition.hourEnd - end hour to be shown
- * @returns {object} view model for time part.
+ * @returns {object} ui model for time part.
  */
-export function getViewModelForTimeView(
+export function getUIModelForTimeView(
   idsOfDay: IDS_OF_DAY,
   condition: {
     start: TZDate;
     end: TZDate;
-    viewModelTimeColl: Collection<ScheduleViewModel>;
+    uiModelTimeColl: Collection<EventUIModel>;
     hourStart: number;
     hourEnd: number;
   }
 ) {
-  const { start, end, viewModelTimeColl, hourStart, hourEnd } = condition;
-  const ymdSplitted = splitScheduleByDateRange(idsOfDay, start, end, viewModelTimeColl);
-  const result: Record<string, Matrix3d<ScheduleViewModel>> = {};
+  const { start, end, uiModelTimeColl, hourStart, hourEnd } = condition;
+  const ymdSplitted = splitScheduleByDateRange(idsOfDay, start, end, uiModelTimeColl);
+  const result: Record<string, Matrix3d<EventUIModel>> = {};
 
-  const _getViewModel = _makeGetViewModelFuncForTimeView(hourStart, hourEnd);
+  const _getUIModel = _makeGetUIModelFuncForTimeView(hourStart, hourEnd);
   const usingTravelTime = true;
 
-  forEach(ymdSplitted, (viewModelColl: Collection<ScheduleViewModel>, ymd: string) => {
-    const viewModels = _getViewModel(viewModelColl);
-    const collisionGroups = getCollisionGroup(viewModels, usingTravelTime);
-    const matrices = getMatrices(viewModelColl, collisionGroups, usingTravelTime);
+  forEach(ymdSplitted, (uiModelColl: Collection<EventUIModel>, ymd: string) => {
+    const uiModels = _getUIModel(uiModelColl);
+    const collisionGroups = getCollisionGroup(uiModels, usingTravelTime);
+    const matrices = getMatrices(uiModelColl, collisionGroups, usingTravelTime);
 
     result[ymd] = getCollides(matrices);
   });
@@ -287,43 +287,43 @@ export function getViewModelForTimeView(
 
 /**
  * Set hasMultiDates flag to true and set date ranges for rendering
- * @param {Collection} viewModelColl - view model collection
+ * @param {Collection} uiModelColl - collection of ui models.
  */
-export function _addMultiDatesInfo(viewModelColl: Collection<ScheduleViewModel>) {
-  viewModelColl.each((viewModel) => {
-    const { model } = viewModel;
+export function _addMultiDatesInfo(uiModelColl: Collection<EventUIModel>) {
+  uiModelColl.each((uiModel) => {
+    const { model } = uiModel;
 
     model.hasMultiDates = true;
-    viewModel.renderStarts = toStartOfDay(model.getStarts());
-    viewModel.renderEnds = toEndOfDay(model.getEnds());
+    uiModel.renderStarts = toStartOfDay(model.getStarts());
+    uiModel.renderEnds = toEndOfDay(model.getEnds());
   });
 }
 
 /**
- * create view model for allday view part
+ * create ui model for allday view part
  * @param {TZDate} start start date.
  * @param {TZDate} end end date.
- * @param {Collection} viewModelColl - allday schedule viewModel viewModels.
- * @returns {object} allday viewModel.
+ * @param {Collection} uiModelColl - ui models of allday event.
+ * @returns {DayGridEventMatrix} matrix of allday event ui models.
  */
-export function getViewModelForAlldayView(
+export function getUIModelForAlldayView(
   start: TZDate,
   end: TZDate,
-  viewModelColl: Collection<ScheduleViewModel>
+  uiModelColl: Collection<EventUIModel>
 ): DayGridEventMatrix {
-  if (!viewModelColl || !viewModelColl.length) {
+  if (!uiModelColl || !uiModelColl.length) {
     return [];
   }
 
-  _addMultiDatesInfo(viewModelColl);
-  limitRenderRange(start, end, viewModelColl);
+  _addMultiDatesInfo(uiModelColl);
+  limitRenderRange(start, end, uiModelColl);
 
-  const viewModels = viewModelColl.sort(array.compare.schedule.asc);
+  const uiModels = uiModelColl.sort(array.compare.schedule.asc);
   const usingTravelTime = true;
-  const collisionGroups = getCollisionGroup(viewModels, usingTravelTime);
-  const matrices = getMatrices(viewModelColl, collisionGroups, usingTravelTime);
+  const collisionGroups = getCollisionGroup(uiModels, usingTravelTime);
+  const matrices = getMatrices(uiModelColl, collisionGroups, usingTravelTime);
 
-  positionViewModels(start, end, matrices);
+  positionUIModels(start, end, matrices);
 
   return matrices;
 }
@@ -350,7 +350,7 @@ export function findByDateRange(
     start: TZDate;
     end: TZDate;
     panels: Panel[];
-    andFilters: Filter<Schedule | ScheduleViewModel>[];
+    andFilters: Filter<Schedule | EventUIModel>[];
     options: WeekOption;
   }
 ) {
@@ -360,9 +360,9 @@ export function findByDateRange(
   const hourStart = pick(options, 'hourStart');
   const hourEnd = pick(options, 'hourEnd');
   const filter = Collection.and(...[getScheduleInDateRangeFilter(start, end)].concat(andFilters));
-  const viewModelColl = convertToViewModel(schedules.find(filter));
+  const uiModelColl = convertToUIModel(schedules.find(filter));
 
-  const group: Record<string, Collection<ScheduleViewModel>> = viewModelColl.groupBy(
+  const group: Record<string, Collection<EventUIModel>> = uiModelColl.groupBy(
     scheduleTypes,
     filterByCategory
   );
@@ -375,11 +375,11 @@ export function findByDateRange(
         ...acc,
         [name]:
           type === 'daygrid'
-            ? getViewModelForAlldayView(start, end, group[name])
-            : getViewModelForTimeView(idsOfDay, {
+            ? getUIModelForAlldayView(start, end, group[name])
+            : getUIModelForTimeView(idsOfDay, {
                 start,
                 end,
-                viewModelTimeColl: group[name],
+                uiModelTimeColl: group[name],
                 hourStart,
                 hourEnd,
               }),
@@ -402,13 +402,13 @@ function getYMD(date: TZDate, format = 'YYYYMMDD') {
 /**
  * Make exceed date information
  * @param {number} maxCount - exceed schedule count
- * @param {Matrix3d} eventsInDateRange  - matrix of ScheduleViewModel
+ * @param {Matrix3d} eventsInDateRange  - matrix of EventUIModel
  * @param {Array.<TZDate>} range - date range of one week
  * @returns {object} exceedDate
  */
 export function getExceedDate(
   maxCount: number,
-  eventsInDateRange: Matrix3d<ScheduleViewModel>,
+  eventsInDateRange: Matrix3d<EventUIModel>,
   range: TZDate[]
 ) {
   const exceedDate: Record<string, number> = {};
@@ -420,12 +420,12 @@ export function getExceedDate(
 
   eventsInDateRange.forEach((matrix) => {
     matrix.forEach((column) => {
-      column.forEach((viewModel) => {
-        if (!viewModel || viewModel.top < maxCount) {
+      column.forEach((uiModel) => {
+        if (!uiModel || uiModel.top < maxCount) {
           return;
         }
 
-        const period = makeDateRange(viewModel.getStarts(), viewModel.getEnds(), MS_PER_DAY);
+        const period = makeDateRange(uiModel.getStarts(), uiModel.getEnds(), MS_PER_DAY);
 
         period.forEach((date) => {
           const ymd = getYMD(date);
@@ -445,7 +445,7 @@ export function getExceedDate(
  * @returns {array} - The matrices for schedule placing except overflowed schedules.
  */
 export function excludeExceedSchedules(
-  matrices: Matrix3d<ScheduleViewModel>,
+  matrices: Matrix3d<EventUIModel>,
   visibleScheduleCount: number
 ) {
   return matrices.map((matrix) => {

@@ -6,8 +6,8 @@ import inArray from 'tui-code-snippet/array/inArray';
 import forEach from 'tui-code-snippet/collection/forEach';
 
 import { CalendarData, CalendarInfo, ScheduleData } from '@src/model';
+import EventUIModel from '@src/model/eventUIModel';
 import Schedule from '@src/model/schedule';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
 import TZDate from '@src/time/date';
 import { makeDateRange, MS_PER_DAY, toEndOfDay, toFormat, toStartOfDay } from '@src/time/datetime';
 import { isSameSchedule } from '@src/util';
@@ -19,9 +19,7 @@ export type IDS_OF_DAY = Record<string, number[]>;
  * Make a schedule collection
  * @returns {Collection<Schedule>} instance
  */
-export function createScheduleCollection<T extends Schedule | ScheduleViewModel>(
-  ...initItems: T[]
-) {
+export function createScheduleCollection<T extends Schedule | EventUIModel>(...initItems: T[]) {
   const collection = new Collection<T>((schedule) => schedule.cid());
 
   if (initItems.length) {
@@ -54,11 +52,11 @@ export function isAllDay(schedule: Schedule) {
 /**
  * function for group each schedule models.
  * @type {function}
- * @param {ScheduleViewModel} viewModel - view model instance
+ * @param {EventUIModel} uiModel - ui model instance
  * @returns {string} group key
  */
-export function filterByCategory(viewModel: ScheduleViewModel) {
-  const { model } = viewModel;
+export function filterByCategory(uiModel: EventUIModel) {
+  const { model } = uiModel;
 
   if (isAllDay(model)) {
     return 'allday';
@@ -217,15 +215,15 @@ export function findByDateRange(
   const result: Record<string, Schedule[]> = {};
   let ids;
   let ymd;
-  let viewModels: Schedule[];
+  let uiModels: Schedule[];
 
   range.forEach((date) => {
     ymd = toFormat(date, 'YYYYMMDD');
     ids = ownMatrix[ymd];
-    viewModels = result[ymd] = [];
+    uiModels = result[ymd] = [];
 
     if (ids && ids.length) {
-      viewModels.push(...ids.map((id) => ownSchedules[id]));
+      uiModels.push(...ids.map((id) => ownSchedules[id]));
     }
   });
 

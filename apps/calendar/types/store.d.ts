@@ -1,5 +1,5 @@
 import { MonthOption, WeekOption } from '@src/model';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
+import EventUIModel from '@src/model/eventUIModel';
 import { CalendarDispatchers, CalendarSlice } from '@src/slices/calendar';
 import { OptionDispatchers, OptionSlice } from '@src/slices/options';
 import { PopupDispatchers, PopupSlice } from '@src/slices/popup';
@@ -30,7 +30,7 @@ type PopupParamMap = {
 
 interface SeeMorePopupParam extends BasePopupParam {
   date: TZDate;
-  events: ScheduleViewModel[];
+  events: EventUIModel[];
 }
 
 interface CreationPopupParam extends BasePopupParam {

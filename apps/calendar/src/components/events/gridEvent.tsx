@@ -6,7 +6,7 @@ import ResizeIcon from '@src/components/events/resizeIcon';
 import { useDrag } from '@src/components/hooks/drag';
 import Template from '@src/components/template';
 import { useDispatch } from '@src/contexts/calendarStore';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
+import EventUIModel from '@src/model/eventUIModel';
 import { cls } from '@src/util/cssHelper';
 import { getGridDateIndex } from '@src/util/gridHelper';
 import { toPercent, toPx } from '@src/util/units';
@@ -16,7 +16,7 @@ import { StyleProp } from '@t/components/common';
 import { Cells } from '@t/panel';
 
 interface Props {
-  viewModel: ScheduleViewModel;
+  uiModel: EventUIModel;
   eventHeight: number;
   headerHeight: number;
   flat?: boolean;
@@ -26,7 +26,7 @@ interface Props {
 }
 
 interface StyleProps {
-  viewModel: ScheduleViewModel;
+  uiModel: EventUIModel;
   eventHeight: number;
   headerHeight: number;
   flat: boolean;
@@ -84,7 +84,7 @@ function getEventItemStyle({
       };
 }
 
-function getStyles({ viewModel, eventHeight, headerHeight, flat }: StyleProps) {
+function getStyles({ uiModel, eventHeight, headerHeight, flat }: StyleProps) {
   const {
     width,
     left,
@@ -92,7 +92,7 @@ function getStyles({ viewModel, eventHeight, headerHeight, flat }: StyleProps) {
     exceedLeft,
     exceedRight,
     model: { bgColor, borderColor },
-  } = viewModel;
+  } = uiModel;
 
   const margin = getMargin(flat);
 
@@ -126,9 +126,9 @@ function getStyles({ viewModel, eventHeight, headerHeight, flat }: StyleProps) {
   return { dayEventBlockClassName, containerStyle, eventItemStyle, resizeIconStyle };
 }
 
-function getEventColIndex(viewModel: ScheduleViewModel, cells: Cells) {
-  const start = getGridDateIndex(viewModel.getStarts(), cells);
-  const end = getGridDateIndex(viewModel.getEnds(), cells);
+function getEventColIndex(uiModel: EventUIModel, cells: Cells) {
+  const start = getGridDateIndex(uiModel.getStarts(), cells);
+  const end = getGridDateIndex(uiModel.getEnds(), cells);
 
   return { start, end };
 }
@@ -147,7 +147,7 @@ const EventItem: FunctionComponent<{
 
 const GridEvent: FunctionComponent<Props> = ({
   flat = false,
-  viewModel,
+  uiModel,
   eventHeight,
   headerHeight,
   getMousePositionData,
@@ -161,12 +161,12 @@ const GridEvent: FunctionComponent<Props> = ({
   const lastGridColIndex = useRef<number | null>(null);
 
   const { dayEventBlockClassName, containerStyle, eventItemStyle, resizeIconStyle } = getStyles({
-    viewModel,
+    uiModel,
     eventHeight,
     headerHeight,
     flat,
   });
-  const { start, end } = getEventColIndex(viewModel, cells);
+  const { start, end } = getEventColIndex(uiModel, cells);
   const resetResizing = () => {
     setResizing(false);
     setResizeGuideStyle(null);
@@ -198,7 +198,7 @@ const GridEvent: FunctionComponent<Props> = ({
       if (!isNil(start) && !isNil(gridX)) {
         if (start <= gridX && end !== gridX) {
           const targetDate = cells[gridX];
-          updateEvent({ event: viewModel.model, eventData: { end: targetDate } });
+          updateEvent({ event: uiModel.model, eventData: { end: targetDate } });
         }
       }
 
@@ -215,7 +215,7 @@ const GridEvent: FunctionComponent<Props> = ({
         className={dayEventBlockClassName}
       >
         <span className={cls('weekday-schedule-title')}>
-          <Template template="time" model={viewModel.model} />
+          <Template template="time" model={uiModel.model} />
         </span>
         {flat ? null : <ResizeIcon style={resizeIconStyle} onMouseDown={onMouseDown} />}
       </EventItem>
