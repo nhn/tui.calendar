@@ -27,7 +27,7 @@
     "recurse": true,
     "destination": "doc",
     "tutorials": "examples",
-    "template": "./node_modules/tui-jsdoc-template",
+    "template": "../../node_modules/tui-jsdoc-template",
     "package": "package.json"
   }
 }
