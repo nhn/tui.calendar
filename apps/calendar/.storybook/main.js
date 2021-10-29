@@ -2,6 +2,9 @@ const path = require('path');
 const custom = require('../webpack.dev.config.js')({}, {});
 
 module.exports = {
+  core: {
+    builder: 'webpack5',
+  },
   stories: ['../**/*.stories.@(ts|tsx)'],
   addons: [
     {
