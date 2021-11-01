@@ -1,13 +1,13 @@
 import { h } from 'preact';
 
-import DayNames from '@src/components/daygrid/dayNames';
+import GridHeader from '@src/components/dayGridCommon/gridHeader';
 import { TemplateMonthDayName } from '@src/model';
 import { getGridInfo } from '@src/time/datetime';
 
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { Story } from '@storybook/preact';
 
-export default { title: 'DayNames' };
+export default { title: 'GridHeader' };
 
 interface DayNamesStory {
   dayNames: TemplateMonthDayName[];
@@ -19,7 +19,7 @@ const Template: Story<DayNamesStory> = ({ dayNames, marginLeft }) => {
 
   return (
     <ProviderWrapper>
-      <DayNames
+      <GridHeader
         templateType="monthDayname"
         dayNames={dayNames}
         marginLeft={marginLeft}

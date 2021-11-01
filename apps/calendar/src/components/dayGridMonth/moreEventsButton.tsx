@@ -8,7 +8,7 @@ interface Props {
   className: string;
 }
 
-const ExceedCountButton: FunctionComponent<Props> = ({ number, clickHandler, className }) => {
+const MoreEventsButton: FunctionComponent<Props> = ({ number, clickHandler, className }) => {
   if (!number) {
     return null;
   }
@@ -20,4 +20,4 @@ const ExceedCountButton: FunctionComponent<Props> = ({ number, clickHandler, cla
   );
 };
 
-export default ExceedCountButton;
+export default MoreEventsButton;

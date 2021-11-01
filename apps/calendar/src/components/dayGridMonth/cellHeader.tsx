@@ -1,6 +1,6 @@
 import { FunctionComponent, h } from 'preact';
 
-import ExceedCountButton from '@src/components/daygrid/exceedCountButton';
+import MoreEventsButton from '@src/components/dayGridMonth/moreEventsButton';
 import Template from '@src/components/template';
 import TZDate from '@src/time/date';
 import { toFormat } from '@src/time/datetime';
@@ -18,7 +18,7 @@ interface Props {
   onClickExceedCount: () => void;
 }
 
-const CellBar: FunctionComponent<Props> = ({
+const CellHeader: FunctionComponent<Props> = ({
   type = CellBarType.header,
   exceedCount = 0,
   date,
@@ -42,7 +42,7 @@ const CellBar: FunctionComponent<Props> = ({
         <Template template="monthGridHeader" model={model} />
       </span>
       {exceedCount ? (
-        <ExceedCountButton
+        <MoreEventsButton
           number={exceedCount}
           clickHandler={onClickExceedCount}
           className={cls('grid-cell-more-events')}
@@ -52,4 +52,4 @@ const CellBar: FunctionComponent<Props> = ({
   );
 };
 
-export default CellBar;
+export default CellHeader;

@@ -1,7 +1,7 @@
 import { FunctionComponent, h, RefObject } from 'preact';
 import { useRef } from 'preact/hooks';
 
-import { Cell } from '@src/components/daygrid/cell';
+import { GridCell } from '@src/components/dayGridMonth/gridCell';
 import { useTheme } from '@src/contexts/theme';
 import EventUIModel from '@src/model/eventUIModel';
 import { getGridInfo, toFormat, toStartOfDay } from '@src/time/datetime';
@@ -21,7 +21,7 @@ interface Props {
   height?: number;
 }
 
-const Grid: FunctionComponent<Props> = ({
+const GridRow: FunctionComponent<Props> = ({
   cssHeight,
   narrowWeekend = false,
   startDayOfWeek = 0,
@@ -51,7 +51,7 @@ const Grid: FunctionComponent<Props> = ({
         const ymd = toFormat(toStartOfDay(date), 'YYYYMMDD');
 
         return (
-          <Cell
+          <GridCell
             key={`daygrid-cell-${dayIndex}`}
             date={date}
             dayIndex={dayIndex}
@@ -70,4 +70,4 @@ const Grid: FunctionComponent<Props> = ({
     </div>
   );
 };
-export default Grid;
+export default GridRow;

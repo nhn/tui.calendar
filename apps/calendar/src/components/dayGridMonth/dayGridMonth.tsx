@@ -1,10 +1,10 @@
 import { FunctionComponent, h, RefObject } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 
-import { CreationGuide } from '@src/components/daygrid/creationGuide';
-import Grid from '@src/components/daygrid/grid';
-import GridEvents from '@src/components/daygrid/gridEvents';
-import GridWithMouse from '@src/components/daygrid/gridWithMouse';
+import { GridSelection } from '@src/components/dayGridCommon/gridSelection';
+import GridWithMouse from '@src/components/dayGridCommon/gridWithMouse';
+import GridRow from '@src/components/dayGridMonth/gridRow';
+import MonthEvents from '@src/components/dayGridMonth/monthEvents';
 import { useCreationGuide } from '@src/components/hooks/creationGuide';
 import {
   MONTH_CELL_BAR_HEIGHT,
@@ -111,7 +111,7 @@ const DayGridMonth: FunctionComponent<Props> = ({
             ref={ref}
           >
             <div className={cls('weekday')}>
-              <Grid
+              <GridRow
                 cssHeight={toPercent(TOTAL_PERCENT_HEIGHT)}
                 gridDateEventModelMap={gridDateEventModelMap}
                 workweek={workweek}
@@ -121,7 +121,7 @@ const DayGridMonth: FunctionComponent<Props> = ({
                 appContainer={appContainer}
                 height={height}
               />
-              <GridEvents
+              <MonthEvents
                 name="month"
                 cells={week}
                 events={uiModels}
@@ -132,7 +132,7 @@ const DayGridMonth: FunctionComponent<Props> = ({
                 headerHeight={MONTH_CELL_PADDING_TOP + MONTH_CELL_BAR_HEIGHT}
                 eventTopMargin={MONTH_EVENT_MARGIN_TOP}
               />
-              <CreationGuide
+              <GridSelection
                 creationGuide={creationGuide}
                 cells={week}
                 narrowWeekend={narrowWeekend}

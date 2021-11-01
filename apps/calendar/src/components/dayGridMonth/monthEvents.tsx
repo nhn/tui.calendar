@@ -1,6 +1,6 @@
 import { FunctionComponent, h } from 'preact';
 
-import GridEvent from '@src/components/events/gridEvent';
+import HorizontalEvent from '@src/components/events/horizontalEvent';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { EVENT_HEIGHT, isWithinHeight } from '@src/util/gridHelper';
@@ -17,7 +17,7 @@ interface Props {
   eventTopMargin: number;
 }
 
-const GridEvents: FunctionComponent<Props> = ({
+const MonthEvents: FunctionComponent<Props> = ({
   height,
   eventHeight = EVENT_HEIGHT,
   events,
@@ -31,7 +31,7 @@ const GridEvents: FunctionComponent<Props> = ({
   );
 
   const dayEvents = filteredUIModels.map((uiModel) => (
-    <GridEvent
+    <HorizontalEvent
       uiModel={uiModel}
       key={`${name}-DayEvent-${uiModel.cid()}`}
       eventHeight={eventHeight}
@@ -42,4 +42,4 @@ const GridEvents: FunctionComponent<Props> = ({
   return <div className={className}>{dayEvents}</div>;
 };
 
-export default GridEvents;
+export default MonthEvents;

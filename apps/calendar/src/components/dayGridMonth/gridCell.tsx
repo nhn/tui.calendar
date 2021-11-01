@@ -1,7 +1,7 @@
 import { FunctionComponent, h } from 'preact';
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
-import CellBar from '@src/components/daygrid/cellBar';
+import CellHeader from '@src/components/dayGridMonth/cellHeader';
 import {
   MONTH_EVENT_HEIGHT,
   MONTH_EVENT_MARGIN_TOP,
@@ -176,7 +176,7 @@ function usePopupRect(
   return { popupRect, container };
 }
 
-export const Cell: FunctionComponent<Props> = ({
+export const GridCell: FunctionComponent<Props> = ({
   date,
   dayIndex,
   events = [],
@@ -216,7 +216,7 @@ export const Cell: FunctionComponent<Props> = ({
       }}
       ref={container}
     >
-      <CellBar exceedCount={exceedCount} date={date} onClickExceedCount={onOpenSeeMorePopup} />
+      <CellHeader exceedCount={exceedCount} date={date} onClickExceedCount={onOpenSeeMorePopup} />
     </div>
   );
 };

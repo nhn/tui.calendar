@@ -1,8 +1,8 @@
 import { h } from 'preact';
 
-import { Cell } from '@src/components/daygrid/cell';
-import Grid from '@src/components/daygrid/grid';
 import DayGridMonth from '@src/components/dayGridMonth/dayGridMonth';
+import { GridCell } from '@src/components/dayGridMonth/gridCell';
+import GridRow from '@src/components/dayGridMonth/gridRow';
 import Panel from '@src/components/panel';
 import { EventModelData } from '@src/model';
 import EventModel from '@src/model/eventModel';
@@ -23,7 +23,12 @@ export const cell = () => {
 
   return (
     <ProviderWrapper>
-      <Cell date={date} dayIndex={date.getDay()} style={{ width: 100, height: 100 }} height={100} />
+      <GridCell
+        date={date}
+        dayIndex={date.getDay()}
+        style={{ width: 100, height: 100 }}
+        height={100}
+      />
     </ProviderWrapper>
   );
 };
@@ -33,7 +38,7 @@ export const week = () => {
 
   return (
     <ProviderWrapper>
-      <Grid
+      <GridRow
         cssHeight={100}
         week={calendar}
         appContainer={{ current: document.createElement('div') }}
@@ -47,7 +52,7 @@ export const weekend = () => {
 
   return (
     <ProviderWrapper>
-      <Grid
+      <GridRow
         height={200}
         week={calendar}
         appContainer={{ current: document.createElement('div') }}

@@ -1,7 +1,7 @@
 import { ComponentProps, Fragment, FunctionComponent, h } from 'preact';
 import { useRef, useState } from 'preact/hooks';
 
-import GridWithMouse from '@src/components/daygrid/gridWithMouse';
+import GridWithMouse from '@src/components/dayGridCommon/gridWithMouse';
 import ResizeIcon from '@src/components/events/resizeIcon';
 import { useDrag } from '@src/components/hooks/drag';
 import Template from '@src/components/template';
@@ -145,7 +145,7 @@ const EventItem: FunctionComponent<{
   </div>
 );
 
-const GridEvent: FunctionComponent<Props> = ({
+const HorizontalEvent: FunctionComponent<Props> = ({
   flat = false,
   uiModel,
   eventHeight,
@@ -230,4 +230,4 @@ const GridEvent: FunctionComponent<Props> = ({
   );
 };
 
-export default GridEvent;
+export default HorizontalEvent;

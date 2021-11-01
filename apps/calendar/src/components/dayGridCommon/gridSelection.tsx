@@ -13,7 +13,7 @@ interface Props {
   narrowWeekend: boolean;
 }
 
-export const CreationGuide: FunctionComponent<Props> = ({
+export const GridSelection: FunctionComponent<Props> = ({
   creationGuide,
   cells,
   narrowWeekend,

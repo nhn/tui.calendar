@@ -1,6 +1,6 @@
 import { FunctionComponent, h } from 'preact';
 
-import DayNames from '@src/components/daygrid/dayNames';
+import GridHeader from '@src/components/dayGridCommon/gridHeader';
 import { Layout } from '@src/components/layout';
 import Panel from '@src/components/panel';
 import { DayGridEvents } from '@src/components/panelgrid/dayGridEvents';
@@ -71,7 +71,7 @@ const Day: FunctionComponent = () => {
   return (
     <Layout>
       <Panel name="day-daynames" height={dayNameHeight}>
-        <DayNames
+        <GridHeader
           dayNames={dayNames}
           marginLeft={120}
           templateType="weekDayname"

@@ -2,9 +2,9 @@ import { Fragment, FunctionComponent, h } from 'preact';
 
 import range from 'tui-code-snippet/array/range';
 
-import { CreationGuide } from '@src/components/daygrid/creationGuide';
-import GridWithMouse from '@src/components/daygrid/gridWithMouse';
-import GridEvent from '@src/components/events/gridEvent';
+import { GridSelection } from '@src/components/dayGridCommon/gridSelection';
+import GridWithMouse from '@src/components/dayGridCommon/gridWithMouse';
+import HorizontalEvent from '@src/components/events/horizontalEvent';
 import { useCreationGuide } from '@src/components/hooks/creationGuide';
 import { useDOMNode } from '@src/components/hooks/domNode';
 import { PanelGrid } from '@src/components/panelgrid/panelgrid';
@@ -97,7 +97,7 @@ export const DayGridEvents: FunctionComponent<Props> = ({
             height={height}
             options={{ narrowWeekend }}
           />
-          <CreationGuide
+          <GridSelection
             creationGuide={creationGuide}
             cells={cells}
             narrowWeekend={narrowWeekend}
@@ -105,7 +105,7 @@ export const DayGridEvents: FunctionComponent<Props> = ({
         </GridWithMouse>
         <div className={cls(`panel-${type}-events`)}>
           {filteredUIModels.map((uiModel) => (
-            <GridEvent
+            <HorizontalEvent
               uiModel={uiModel}
               key={`${type}-DayEvent-${uiModel.cid()}`}
               eventHeight={EVENT_HEIGHT}

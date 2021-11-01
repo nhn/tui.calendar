@@ -1,6 +1,6 @@
 import { FunctionComponent, h } from 'preact';
 
-import DayName from '@src/components/daygrid/dayName';
+import DayName from '@src/components/dayGridCommon/dayName';
 import { Template, TemplateMonthDayName, TemplateWeekDay } from '@src/model';
 import { cls } from '@src/util/cssHelper';
 import { toPercent } from '@src/util/units';
@@ -32,7 +32,7 @@ const defaultDayNameTheme = {
 };
 const defaultMarginLeft = 0;
 
-const DayNames: FunctionComponent<Props> = ({
+const GridHeader: FunctionComponent<Props> = ({
   dayNames = [],
   theme = defaultDayNameTheme,
   options = defaultDayNameOption,
@@ -69,4 +69,4 @@ const DayNames: FunctionComponent<Props> = ({
   );
 };
 
-export default DayNames;
+export default GridHeader;

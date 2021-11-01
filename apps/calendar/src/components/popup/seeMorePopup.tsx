@@ -1,6 +1,6 @@
 import { FunctionComponent, h } from 'preact';
 
-import GridEvent from '@src/components/events/gridEvent';
+import HorizontalEvent from '@src/components/events/horizontalEvent';
 import SeeMoreHeader from '@src/components/popup/seeMoreHeader';
 import {
   MONTH_EVENT_HEIGHT,
@@ -30,7 +30,7 @@ const SeeMorePopup: FunctionComponent<SeeMorePopupParam> = ({ date, events = [] 
         }}
       >
         {events.map((uiModel) => (
-          <GridEvent
+          <HorizontalEvent
             key={`see-more-event-item-${uiModel.cid()}`}
             uiModel={uiModel}
             eventHeight={MONTH_EVENT_HEIGHT}
