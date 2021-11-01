@@ -1,9 +1,9 @@
 import { FunctionComponent, h } from 'preact';
 
 import GridHeader from '@src/components/dayGridCommon/gridHeader';
+import { WeekEvents } from '@src/components/dayGridWeek/weekEvents';
 import { Layout } from '@src/components/layout';
 import Panel from '@src/components/panel';
-import { DayGridEvents } from '@src/components/panelgrid/dayGridEvents';
 import { ColumnInfo } from '@src/components/timegrid/columns';
 import { TimeGrid } from '@src/components/timegrid/timegrid';
 import { useStore } from '@src/contexts/calendarStore';
@@ -55,7 +55,7 @@ const Day: FunctionComponent = () => {
 
     return (
       <Panel key={panelType} name={panelType} resizable>
-        <DayGridEvents
+        <WeekEvents
           events={dayGridEvents[panelType]}
           cells={cells}
           type={panelType}

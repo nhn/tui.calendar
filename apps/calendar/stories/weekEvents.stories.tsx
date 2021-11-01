@@ -2,9 +2,9 @@ import { h } from 'preact';
 
 import range from 'tui-code-snippet/array/range';
 
+import { WeekEvents } from '@src/components/dayGridWeek/weekEvents';
 import { Layout } from '@src/components/layout';
 import Panel from '@src/components/panel';
-import { DayGridEvents } from '@src/components/panelgrid/dayGridEvents';
 import { PanelTitle } from '@src/components/panelgrid/panelTitle';
 import { createEventCollection } from '@src/controller/base';
 import { CalendarData } from '@src/model';
@@ -16,7 +16,7 @@ import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { createRandomEventModelsForMonth } from '@stories/util/randomEvents';
 import { Story } from '@storybook/preact';
 
-export default { title: 'Panel', component: DayGridEvents, args: { primary: true } };
+export default { title: 'WeekEvents', component: WeekEvents, args: { primary: true } };
 
 const events = createRandomEventModelsForMonth(40);
 
@@ -39,7 +39,7 @@ const Template: Story = (args) => {
     <ProviderWrapper options={args.options} events={events}>
       <Layout height={500}>
         <Panel name="milestone" resizable minHeight={20} maxHeight={args.maxHeight}>
-          <DayGridEvents
+          <WeekEvents
             events={dayGridEvents.milestone}
             type="milestone"
             options={{ narrowWeekend: false }}

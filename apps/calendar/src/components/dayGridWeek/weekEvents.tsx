@@ -52,7 +52,7 @@ function getGridInfoList(cells: Cells): GridGuideInfo[][] {
   ];
 }
 
-export const DayGridEvents: FunctionComponent<Props> = ({
+export const WeekEvents: FunctionComponent<Props> = ({
   type = 'milestone',
   events,
   cells = defaultPanelInfoList,
