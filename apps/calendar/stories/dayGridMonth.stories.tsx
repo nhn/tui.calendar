@@ -1,8 +1,8 @@
 import { h } from 'preact';
 
 import { Cell } from '@src/components/daygrid/cell';
-import DayGrid from '@src/components/daygrid/dayGrid';
 import Grid from '@src/components/daygrid/grid';
+import DayGridMonth from '@src/components/dayGridMonth/dayGridMonth';
 import Panel from '@src/components/panel';
 import { EventModelData } from '@src/model';
 import EventModel from '@src/model/eventModel';
@@ -16,7 +16,7 @@ import { ProviderWrapper } from '@stories/util/providerWrapper';
 
 import { createRandomEvents } from './util/randomEvents';
 
-export default { title: 'DayGrid' };
+export default { title: 'DayGridMonth' };
 
 export const cell = () => {
   const date = new TZDate();
@@ -88,7 +88,7 @@ export const daygrid = () => {
 
   return (
     <ProviderWrapper>
-      <DayGrid
+      <DayGridMonth
         options={options}
         calendar={calendar}
         appContainer={{ current: document.createElement('div') }}
@@ -122,7 +122,7 @@ export const randomEvents = () => {
   return (
     <ProviderWrapper events={events}>
       <Panel name="weekday" height={400}>
-        <DayGrid
+        <DayGridMonth
           options={options}
           calendar={[calendar]}
           events={events}

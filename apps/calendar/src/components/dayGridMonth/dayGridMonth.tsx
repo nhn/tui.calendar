@@ -63,7 +63,7 @@ function getGridInfoList(calendar: TZDate[][]): GridGuideInfo[][] {
   );
 }
 
-const DayGrid: FunctionComponent<Props> = ({
+const DayGridMonth: FunctionComponent<Props> = ({
   options,
   calendar = [],
   appContainer,
@@ -145,4 +145,4 @@ const DayGrid: FunctionComponent<Props> = ({
   );
 };
 
-export default DayGrid;
+export default DayGridMonth;
