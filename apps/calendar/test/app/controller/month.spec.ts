@@ -1,7 +1,7 @@
-import { addSchedule, createScheduleCollection } from '@src/controller/base';
+import { addEvent, createEventCollection } from '@src/controller/base';
 import { findByDateRange } from '@src/controller/month';
-import { CalendarData, ScheduleData } from '@src/model';
-import Schedule from '@src/model/schedule';
+import { CalendarData, EventModelData } from '@src/model';
+import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 import array from '@src/util/array';
 
@@ -9,14 +9,14 @@ describe('Base.Month', () => {
   // eslint-disable-next-line no-undefined
   const undef = undefined;
   let calendarData: CalendarData;
-  let mockData: ScheduleData[];
-  let scheduleList: Schedule[];
+  let mockData: EventModelData[];
+  let eventList: EventModel[];
   let actual;
 
   beforeEach(() => {
     calendarData = {
       calendars: [],
-      schedules: createScheduleCollection(),
+      events: createEventCollection(),
       idsOfDay: {},
     };
 
@@ -113,18 +113,18 @@ describe('Base.Month', () => {
       },
     ];
     // mock schedule list
-    scheduleList = mockData.map((data) => Schedule.create(data)).sort(array.compare.schedule.asc);
+    eventList = mockData.map((data) => EventModel.create(data)).sort(array.compare.event.asc);
   });
 
   describe('findByDateRange()', () => {
     beforeEach(() => {
       // add schedule instance to controller
-      scheduleList.forEach((schedule) => {
-        addSchedule(calendarData, schedule);
+      eventList.forEach((event) => {
+        addEvent(calendarData, event);
       });
     });
 
-    it('get schedules instance in month', () => {
+    it('get events in month', () => {
       const start = new TZDate(2015, 10, 1);
       const end = new TZDate(2015, 10, 30);
 
@@ -166,15 +166,15 @@ describe('Base.Month', () => {
     });
   });
 
-  describe('findByDateRange() by stacking time and all-day schedule', () => {
+  describe('findByDateRange() by stacking time and all-day event', () => {
     beforeEach(() => {
       // add schedule instance to controller
-      scheduleList.forEach((schedule) => {
-        addSchedule(calendarData, schedule);
+      eventList.forEach((event) => {
+        addEvent(calendarData, event);
       });
     });
 
-    it('get schedules instance in month for all-day schedule', () => {
+    it('get events in month for all-day event', () => {
       const start = new TZDate(2015, 10, 1);
       const end = new TZDate(2015, 10, 30);
 

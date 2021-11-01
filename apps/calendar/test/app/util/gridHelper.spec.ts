@@ -1,7 +1,7 @@
-import { createScheduleCollection } from '@src/controller/base';
+import { createEventCollection } from '@src/controller/base';
 import { CalendarData } from '@src/model';
+import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
-import Schedule from '@src/model/schedule';
 import TZDate from '@src/time/date';
 import {
   getExceedCount,
@@ -32,7 +32,7 @@ describe('gridHelper', () => {
   describe('getExceedCount', () => {
     it('should calculate the number of events that exceed height of container', () => {
       const uiModels = data.map((e) => {
-        const event = Schedule.create(e);
+        const event = EventModel.create(e);
         event.isAllDay = true;
 
         return EventUIModel.create(event);
@@ -52,7 +52,7 @@ describe('gridHelper', () => {
     ];
     const calendarData: CalendarData = {
       calendars: [],
-      schedules: createScheduleCollection(),
+      events: createEventCollection(),
       idsOfDay: {},
     };
 

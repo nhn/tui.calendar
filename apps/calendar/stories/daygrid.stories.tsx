@@ -4,8 +4,8 @@ import { Cell } from '@src/components/daygrid/cell';
 import DayGrid from '@src/components/daygrid/dayGrid';
 import Grid from '@src/components/daygrid/grid';
 import Panel from '@src/components/panel';
-import { ScheduleData } from '@src/model';
-import Schedule from '@src/model/schedule';
+import { EventModelData } from '@src/model';
+import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 import { range } from '@src/util/utils';
 
@@ -82,8 +82,8 @@ export const daygrid = () => {
       header: { height: 31 },
       footer: { height: 31 },
     },
-    visibleScheduleCount: 6,
-    scheduleFilter: () => true,
+    visibleEventCount: 6,
+    eventFilter: () => true,
   };
 
   return (
@@ -112,12 +112,12 @@ export const randomEvents = () => {
       header: { height: 31 },
       footer: { height: 31 },
     },
-    visibleScheduleCount: 6,
-    scheduleFilter: () => true,
+    visibleEventCount: 6,
+    eventFilter: () => true,
   };
 
   const data = createRandomEvents('month', calendar[0], calendar[6], 10);
-  const events = data.map((event: ScheduleData) => Schedule.create(event));
+  const events = data.map((event: EventModelData) => EventModel.create(event));
 
   return (
     <ProviderWrapper events={events}>

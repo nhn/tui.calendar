@@ -10,20 +10,20 @@ import { filterByCategory, getDateRange, IDS_OF_DAY } from '@src/controller/base
 import {
   convertToUIModel,
   getCollisionGroup,
+  getEventInDateRangeFilter,
   getMatrices,
-  getScheduleInDateRangeFilter,
   limitRenderRange,
   positionUIModels,
 } from '@src/controller/core';
 import { CalendarData, WeekOption } from '@src/model';
+import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
-import Schedule from '@src/model/schedule';
 import TZDate from '@src/time/date';
 import {
   makeDateRange,
   millisecondsFrom,
+  MS_EVENT_MIN_DURATION,
   MS_PER_DAY,
-  MS_SCHEDULE_MIN_DURATION,
   toEndOfDay,
   toFormat,
   toStartOfDay,
@@ -34,16 +34,16 @@ import Collection, { Filter } from '@src/util/collection';
 import type { DayGridEventMatrix, EventGroupMap, Matrix, Matrix3d } from '@t/events';
 import type { Panel } from '@t/panel';
 
-const SCHEDULE_MIN_DURATION = MS_SCHEDULE_MIN_DURATION;
+const SCHEDULE_MIN_DURATION = MS_EVENT_MIN_DURATION;
 
 /**********
  * TIME GRID VIEW
  **********/
 
 /**
- * Make array with start and end times on schedules.
+ * Make array with start and end times on events.
  * @param {Matrix} matrix - matrix from controller.
- * @returns {Matrix3d} starttime, endtime array (exclude first row's schedules)
+ * @returns {Matrix3d} starttime, endtime array (exclude first row's events)
  */
 export function generateTimeArrayInRow<T>(matrix: Matrix<T>) {
   const map: Matrix3d<number> = [];
@@ -51,18 +51,18 @@ export function generateTimeArrayInRow<T>(matrix: Matrix<T>) {
   let cursor = [];
   let row;
   let col;
-  let schedule;
+  let event;
   let start;
   let end;
 
   for (col = 1; col < maxColLen; col += 1) {
     row = 0;
-    schedule = pick(matrix, row, col);
+    event = pick(matrix, row, col);
 
-    while (schedule) {
-      const { goingDuration, comingDuration } = schedule.valueOf();
-      start = schedule.getStarts().getTime() - millisecondsFrom('minute', goingDuration);
-      end = schedule.getEnds().getTime() + millisecondsFrom('minute', comingDuration);
+    while (event) {
+      const { goingDuration, comingDuration } = event.valueOf();
+      start = event.getStarts().getTime() - millisecondsFrom('minute', goingDuration);
+      end = event.getEnds().getTime() + millisecondsFrom('minute', comingDuration);
 
       if (Math.abs(end - start) < SCHEDULE_MIN_DURATION) {
         end += SCHEDULE_MIN_DURATION;
@@ -71,7 +71,7 @@ export function generateTimeArrayInRow<T>(matrix: Matrix<T>) {
       cursor.push([start, end]);
 
       row += 1;
-      schedule = pick(matrix, row, col);
+      event = pick(matrix, row, col);
     }
 
     map.push(cursor);
@@ -88,8 +88,8 @@ function searchFunc(index: number) {
 /**
  * Get collision information from list
  * @param {array.<number[]>} arr - list to detecting collision. [[start, end], [start, end]]
- * @param {number} start - schedule start time that want to detect collisions.
- * @param {number} end - schedule end time that want to detect collisions.
+ * @param {number} start - event start time that want to detect collisions.
+ * @param {number} end - event end time that want to detect collisions.
  * @returns {boolean} target has collide in supplied array?
  */
 export function hasCollision(arr: Array<number[]>, start: number, end: number) {
@@ -161,7 +161,7 @@ export function getCollides(matrices: Matrix3d<EventUIModel>) {
  */
 export function _makeHourRangeFilter(hStart: number, hEnd: number) {
   // eslint-disable-next-line complexity
-  return (uiModel: Schedule | EventUIModel) => {
+  return (uiModel: EventModel | EventUIModel) => {
     const ownHourStart = uiModel.getStarts();
     const ownHourEnd = uiModel.getEnds();
     const ownHourStartTime = ownHourStart.getTime();
@@ -196,44 +196,42 @@ export function _makeGetUIModelFuncForTimeView(
 ): (uiModelColl: Collection<EventUIModel>) => EventUIModel[] {
   if (hourStart === 0 && hourEnd === 24) {
     return (uiModelColl: Collection<EventUIModel>) => {
-      return uiModelColl.sort(array.compare.schedule.asc);
+      return uiModelColl.sort(array.compare.event.asc);
     };
   }
 
   return (uiModelColl: Collection<EventUIModel>) => {
-    return uiModelColl
-      .find(_makeHourRangeFilter(hourStart, hourEnd))
-      .sort(array.compare.schedule.asc);
+    return uiModelColl.find(_makeHourRangeFilter(hourStart, hourEnd)).sort(array.compare.event.asc);
   };
 }
 
 /**
- * split schedule model by ymd.
+ * split event model by ymd.
  * @param {TZDate} start - start date
  * @param {TZDate} end - end date
  * @param {Collection<EventUIModel>} uiModelColl - collection of ui models.
- * @returns {object.<string, Collection>} splitted schedule model collections.
+ * @returns {object.<string, Collection>} splitted event model collections.
  */
-export function splitScheduleByDateRange(
+export function splitEventByDateRange(
   idsOfDay: IDS_OF_DAY,
   start: TZDate,
   end: TZDate,
-  uiModelColl: Collection<Schedule> | Collection<EventUIModel>
+  uiModelColl: Collection<EventModel> | Collection<EventUIModel>
 ) {
-  const result: Record<string, Collection<Schedule | EventUIModel>> = {};
+  const result: Record<string, Collection<EventModel | EventUIModel>> = {};
   const range = getDateRange(start, end);
 
   range.forEach((date: TZDate) => {
     const ymd = toFormat(date, 'YYYYMMDD');
     const ids = idsOfDay[ymd];
-    const collection = (result[ymd] = new Collection<Schedule | EventUIModel>((schedule) => {
-      return schedule.cid();
+    const collection = (result[ymd] = new Collection<EventModel | EventUIModel>((event) => {
+      return event.cid();
     }));
 
     if (ids && ids.length) {
       ids.forEach((id) => {
-        uiModelColl.doWhenHas(id, (schedule: Schedule | EventUIModel) => {
-          collection.add(schedule);
+        uiModelColl.doWhenHas(id, (event: EventModel | EventUIModel) => {
+          collection.add(event);
         });
       });
     }
@@ -264,7 +262,7 @@ export function getUIModelForTimeView(
   }
 ) {
   const { start, end, uiModelTimeColl, hourStart, hourEnd } = condition;
-  const ymdSplitted = splitScheduleByDateRange(idsOfDay, start, end, uiModelTimeColl);
+  const ymdSplitted = splitEventByDateRange(idsOfDay, start, end, uiModelTimeColl);
   const result: Record<string, Matrix3d<EventUIModel>> = {};
 
   const _getUIModel = _makeGetUIModelFuncForTimeView(hourStart, hourEnd);
@@ -318,7 +316,7 @@ export function getUIModelForAlldayView(
   _addMultiDatesInfo(uiModelColl);
   limitRenderRange(start, end, uiModelColl);
 
-  const uiModels = uiModelColl.sort(array.compare.schedule.asc);
+  const uiModels = uiModelColl.sort(array.compare.event.asc);
   const usingTravelTime = true;
   const collisionGroups = getCollisionGroup(uiModels, usingTravelTime);
   const matrices = getMatrices(uiModelColl, collisionGroups, usingTravelTime);
@@ -333,16 +331,16 @@ export function getUIModelForAlldayView(
  **********/
 
 /**
- * Populate schedules in date range.
+ * Populate events in date range.
  * @param {CalendarData} calendarData - data store
  * @param {object} condition - find option
  *  @param {IDS_OF_DAY} condition.idsOfDay - model controller
  *  @param {TZDate} condition.start start date.
  *  @param {TZDate} condition.end end date.
- *  @param {Array.<object>} condition.panels - schedule panels like 'milestone', 'task', 'allday', 'time'
+ *  @param {Array.<object>} condition.panels - event panels like 'milestone', 'task', 'allday', 'time'
  *  @param {function[]} condition.[andFilters] - optional filters to applying search query
  *  @param {Object} condition.options - week view options
- * @returns {object} schedules grouped by dates.
+ * @returns {object} events grouped by dates.
  */
 export function findByDateRange(
   calendarData: CalendarData,
@@ -350,20 +348,20 @@ export function findByDateRange(
     start: TZDate;
     end: TZDate;
     panels: Panel[];
-    andFilters: Filter<Schedule | EventUIModel>[];
+    andFilters: Filter<EventModel | EventUIModel>[];
     options: WeekOption;
   }
 ) {
   const { start, end, panels, andFilters = [], options } = condition;
-  const { schedules, idsOfDay } = calendarData;
-  const scheduleTypes = pluck(panels, 'name');
+  const { events, idsOfDay } = calendarData;
+  const eventTypes = pluck(panels, 'name');
   const hourStart = pick(options, 'hourStart');
   const hourEnd = pick(options, 'hourEnd');
-  const filter = Collection.and(...[getScheduleInDateRangeFilter(start, end)].concat(andFilters));
-  const uiModelColl = convertToUIModel(schedules.find(filter));
+  const filter = Collection.and(...[getEventInDateRangeFilter(start, end)].concat(andFilters));
+  const uiModelColl = convertToUIModel(events.find(filter));
 
   const group: Record<string, Collection<EventUIModel>> = uiModelColl.groupBy(
-    scheduleTypes,
+    eventTypes,
     filterByCategory
   );
 
@@ -401,7 +399,7 @@ function getYMD(date: TZDate, format = 'YYYYMMDD') {
 /* eslint max-nested-callbacks: 0 */
 /**
  * Make exceed date information
- * @param {number} maxCount - exceed schedule count
+ * @param {number} maxCount - exceed event count
  * @param {Matrix3d} eventsInDateRange  - matrix of EventUIModel
  * @param {Array.<TZDate>} range - date range of one week
  * @returns {object} exceedDate
@@ -439,19 +437,16 @@ export function getExceedDate(
 }
 
 /**
- * Exclude overflow schedules from matrices
- * @param {Matrix3d} matrices - The matrices for schedule placing.
- * @param {number} visibleScheduleCount - maximum visible count on panel
- * @returns {array} - The matrices for schedule placing except overflowed schedules.
+ * Exclude overflow events from matrices
+ * @param {Matrix3d} matrices - The matrices for event placing.
+ * @param {number} visibleEventCount - maximum visible count on panel
+ * @returns {array} - The matrices for event placing except overflowed events.
  */
-export function excludeExceedSchedules(
-  matrices: Matrix3d<EventUIModel>,
-  visibleScheduleCount: number
-) {
+export function excludeExceedEvents(matrices: Matrix3d<EventUIModel>, visibleEventCount: number) {
   return matrices.map((matrix) => {
     return matrix.map((row) => {
-      if (row.length > visibleScheduleCount) {
-        return row.filter((item) => item.top < visibleScheduleCount);
+      if (row.length > visibleEventCount) {
+        return row.filter((item) => item.top < visibleEventCount);
       }
 
       return row;

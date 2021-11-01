@@ -1,26 +1,26 @@
 import {
-  createSchedule,
-  createScheduleCollection,
-  deleteSchedule,
+  createEvent,
+  createEventCollection,
+  deleteEvent,
   findByDateRange,
   getDateRange,
-  updateSchedule,
+  updateEvent,
 } from '@src/controller/base';
-import { CalendarData, ScheduleData } from '@src/model';
-import Schedule from '@src/model/schedule';
+import { CalendarData, EventModelData } from '@src/model';
+import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 
 describe('controller/base', () => {
   let calendarData: CalendarData;
-  let scheduleDataList: ScheduleData[];
+  let eventDataList: EventModelData[];
 
   beforeEach(() => {
     calendarData = {
       calendars: [],
-      schedules: createScheduleCollection(),
+      events: createEventCollection(),
       idsOfDay: {},
     };
-    scheduleDataList = [
+    eventDataList = [
       {
         title: 'hunting',
         isAllDay: true,
@@ -49,56 +49,56 @@ describe('controller/base', () => {
   });
 
   describe('getDateRange()', () => {
-    let schedule: Schedule;
+    let event: EventModel;
 
-    it('calculate contain dates for specific schedules.', () => {
+    it('calculate contain dates for specific events.', () => {
       const expected = [
         new TZDate('2015/05/01'),
         new TZDate('2015/05/02'),
         new TZDate('2015/05/03'),
       ];
 
-      schedule = Schedule.create({
+      event = EventModel.create({
         title: 'A',
         isAllDay: true,
         start: '2015/05/01',
         end: '2015/05/03',
       });
 
-      expect(getDateRange(schedule.getStarts(), schedule.getEnds())).toEqual(expected);
+      expect(getDateRange(event.getStarts(), event.getEnds())).toEqual(expected);
     });
 
-    it('can calculate non all day schedule.', () => {
+    it('can calculate non all day event.', () => {
       const expected = [
         new TZDate('2015/05/01'),
         new TZDate('2015/05/02'),
         new TZDate('2015/05/03'),
       ];
 
-      schedule = Schedule.create({
+      event = EventModel.create({
         title: 'A',
         isAllDay: false,
         start: '2015/05/01 12:30:00',
         end: '2015/05/03 09:20:00',
       });
 
-      expect(getDateRange(schedule.getStarts(), schedule.getEnds())).toEqual(expected);
+      expect(getDateRange(event.getStarts(), event.getEnds())).toEqual(expected);
     });
   });
 
-  describe('createSchedule()', () => {
+  describe('createEvent()', () => {
     it('return itself for chaining pattern.', () => {
-      const schedule = Schedule.create(scheduleDataList[0]);
+      const event = EventModel.create(eventDataList[0]);
 
-      expect(schedule.equals(createSchedule(calendarData, scheduleDataList[0]))).toBe(true);
+      expect(event.equals(createEvent(calendarData, eventDataList[0]))).toBe(true);
     });
 
-    it('create schedule instance by raw schedule data.', () => {
-      const id = createSchedule(calendarData, scheduleDataList[0]).cid();
-      const id2 = createSchedule(calendarData, scheduleDataList[1]).cid();
-      const id3 = createSchedule(calendarData, scheduleDataList[3]).cid();
+    it('create event instance by raw event data.', () => {
+      const id = createEvent(calendarData, eventDataList[0]).cid();
+      const id2 = createEvent(calendarData, eventDataList[1]).cid();
+      const id3 = createEvent(calendarData, eventDataList[3]).cid();
 
-      expect(calendarData.schedules.length).toBe(3);
+      expect(calendarData.events.length).toBe(3);
       expect(calendarData.idsOfDay).toEqual({
         '20150501': [id],
         '20150502': [id, id3],
@@ -108,16 +108,16 @@ describe('controller/base', () => {
   });
 
   describe('findByDateRange()', () => {
-    let scheduleList: Schedule[];
+    let eventList: EventModel[];
     let idList: number[];
 
     beforeEach(() => {
-      scheduleList = [];
+      eventList = [];
       idList = [];
 
-      scheduleDataList.forEach((data) => {
-        const item = createSchedule(calendarData, data);
-        scheduleList.push(item);
+      eventDataList.forEach((data) => {
+        const item = createEvent(calendarData, data);
+        eventList.push(item);
         idList.push(item.cid());
       });
 
@@ -159,9 +159,9 @@ describe('controller/base', () => {
     });
   });
 
-  describe('updateSchedule()', () => {
-    it('update owned schedule and date matrix.', () => {
-      const model = createSchedule(calendarData, {
+  describe('updateEvent()', () => {
+    it('update owned event and date matrix.', () => {
+      const model = createEvent(calendarData, {
         title: 'Go to work',
         isAllDay: false,
         start: '2015/05/01 09:30:00',
@@ -169,21 +169,21 @@ describe('controller/base', () => {
       });
       const id = model.cid();
 
-      updateSchedule(calendarData, model.id, model.calendarId, {
+      updateEvent(calendarData, model.id, model.calendarId, {
         title: 'Go to work',
         isAllDay: false,
         start: '2015/05/02',
         end: '2015/05/02',
       });
 
-      const schedule = calendarData.schedules.single();
+      const event = calendarData.events.single();
 
-      expect(schedule).not.toBeNull();
+      expect(event).not.toBeNull();
 
-      type CompatableSchedule = Record<string, any>;
+      type CompatableEvent = Record<string, any>;
 
-      expect(schedule).toEqual(
-        expect.objectContaining<CompatableSchedule>({
+      expect(event).toEqual(
+        expect.objectContaining<CompatableEvent>({
           title: 'Go to work',
           isAllDay: false,
           start: new TZDate('2015/05/02'),
@@ -198,11 +198,11 @@ describe('controller/base', () => {
     });
   });
 
-  describe('deleteSchedule()', () => {
-    let schedule: Schedule;
+  describe('deleteEvent()', () => {
+    let event: EventModel;
 
     beforeEach(() => {
-      schedule = createSchedule(calendarData, {
+      event = createEvent(calendarData, {
         title: 'Go to work',
         isAllDay: false,
         start: '2015/05/01 09:30:00',
@@ -210,9 +210,9 @@ describe('controller/base', () => {
       });
     });
 
-    it('delete an schedule by model.', () => {
-      expect(deleteSchedule(calendarData, schedule)).toEqual(schedule);
-      expect(calendarData.schedules.length).toBe(0);
+    it('delete an event by model.', () => {
+      expect(deleteEvent(calendarData, event)).toEqual(event);
+      expect(calendarData.events.length).toBe(0);
       expect(calendarData.idsOfDay).toEqual({
         '20150501': [],
       });

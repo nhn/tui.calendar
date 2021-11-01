@@ -1,7 +1,7 @@
 import { h } from 'preact';
 
 import DayView from '@src/components/view/dayView';
-import Schedule from '@src/model/schedule';
+import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 import { addDate } from '@src/time/datetime';
 
@@ -16,7 +16,7 @@ function createTimeGridEvents() {
   const start = addDate(new TZDate(), -today.getDay());
   const end = addDate(start, 6);
 
-  return createRandomEvents('week', start, end).map((event) => Schedule.create(event));
+  return createRandomEvents('week', start, end).map((event) => EventModel.create(event));
 }
 
 const Template: Story = (args) => (

@@ -2,7 +2,7 @@ import { h, RenderableProps } from 'preact';
 
 import { CreationGuideInfo } from '@src/components/timegrid';
 import { Column } from '@src/components/timegrid/column';
-import { ScheduleData } from '@src/model';
+import { EventModelData } from '@src/model';
 import TZDate from '@src/time/date';
 import {
   addHours,
@@ -50,7 +50,7 @@ export const backgroundEvents = () => {
   const start = toStartOfDay(new TZDate());
   start.setHours(8);
 
-  const data: ScheduleData[] = [
+  const data: EventModelData[] = [
     {
       category: 'background',
       start,
@@ -83,7 +83,7 @@ export const showOnlyBusinessHours = () => {
   const start = toStartOfDay(new TZDate());
   start.setHours(12);
 
-  const data: ScheduleData[] = [
+  const data: EventModelData[] = [
     {
       category: 'background',
       start,
@@ -108,7 +108,7 @@ export const highlightBusinessHours = () => {
   const start = toStartOfDay(new TZDate());
   start.setHours(9);
 
-  const data: ScheduleData[] = [
+  const data: EventModelData[] = [
     {
       category: 'background',
       start,
@@ -131,7 +131,7 @@ highlightBusinessHours.story = {
 
 export const highlightOffHours = () => {
   const start = toStartOfDay(new TZDate());
-  const data: ScheduleData[] = [
+  const data: EventModelData[] = [
     {
       category: 'background',
       start,
@@ -162,7 +162,7 @@ export const monthsInAnYear = () => {
   const startOfYear = toStartOfYear(new TZDate());
   const times = range(0, 13).map((m) => addMonth(startOfYear, m));
 
-  const data: ScheduleData[] = [
+  const data: EventModelData[] = [
     {
       category: 'background',
       start: startOfYear,

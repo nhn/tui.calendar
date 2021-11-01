@@ -2,7 +2,7 @@ import forEach from 'tui-code-snippet/collection/forEach';
 import pick from 'tui-code-snippet/object/pick';
 import isExisty from 'tui-code-snippet/type/isExisty';
 
-import Schedule from '@src/model/schedule';
+import EventModel from '@src/model/eventModel';
 
 interface StampObj extends Record<string, any> {
   /* eslint-disable-next-line camelcase */
@@ -68,8 +68,8 @@ export function identity(value: any) {
   return value;
 }
 
-export function isSameSchedule(schedule: Schedule, scheduleId: string, calendarId: string) {
-  return schedule.id === scheduleId && schedule.calendarId === calendarId;
+export function isSameEvent(event: EventModel, eventId: string, calendarId: string) {
+  return event.id === eventId && event.calendarId === calendarId;
 }
 
 export function stripTags(str: string) {

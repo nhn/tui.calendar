@@ -1,1 +1,1 @@
-export type ExternalEventName = 'beforeCreateSchedule' | 'clickSchedule';
+export type ExternalEventName = 'beforeCreateEvent' | 'clickEvent';

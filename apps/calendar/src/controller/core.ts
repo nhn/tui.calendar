@@ -1,11 +1,11 @@
 /**
- * @fileoverview Core methods for schedule block placing
+ * @fileoverview Core methods for event block placing
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 import inArray from 'tui-code-snippet/array/inArray';
 
+import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
-import Schedule from '@src/model/schedule';
 import TZDate from '@src/time/date';
 import { makeDateRange, MS_PER_DAY, toEndOfDay, toFormat, toStartOfDay } from '@src/time/datetime';
 import Collection, { Filter } from '@src/util/collection';
@@ -15,41 +15,41 @@ import { CollisionGroup, Matrix, Matrix3d } from '@t/events';
 
 /**
  * Calculate collision group.
- * @param {Array<Schedule|EventUIModel>} schedules List of ui models.
+ * @param {Array<EventModel|EventUIModel>} events list of ui models.
  * @param {boolean} [usingTravelTime = true]
  * @returns {Array<number[]>} Collision Group.
  */
-export function getCollisionGroup<Events extends Schedule | EventUIModel>(
-  schedules: Events[],
+export function getCollisionGroup<Events extends EventModel | EventUIModel>(
+  events: Events[],
   usingTravelTime = true
 ) {
   const collisionGroups: CollisionGroup = [];
-  let previousScheduleList: Array<Events>;
+  let previousEventList: Array<Events>;
 
-  if (!schedules.length) {
+  if (!events.length) {
     return collisionGroups;
   }
 
-  collisionGroups[0] = [schedules[0].cid()];
-  schedules.slice(1).forEach((schedule: Events, index: number) => {
-    previousScheduleList = schedules.slice(0, index + 1).reverse();
+  collisionGroups[0] = [events[0].cid()];
+  events.slice(1).forEach((event: Events, index: number) => {
+    previousEventList = events.slice(0, index + 1).reverse();
 
-    // If overlapping previous schedules, find a Collision Group of overlapping schedules and add this schedules
-    const found = previousScheduleList.find((previous: Events) =>
-      schedule.collidesWith(previous, usingTravelTime)
+    // If overlapping previous events, find a Collision Group of overlapping events and add this events
+    const found = previousEventList.find((previous: Events) =>
+      event.collidesWith(previous, usingTravelTime)
     );
 
     if (!found) {
-      // This schedule is a schedule that does not overlap with the previous schedule, so a new Collision Group is constructed.
-      collisionGroups.push([schedule.cid()]);
+      // This event is a event that does not overlap with the previous event, so a new Collision Group is constructed.
+      collisionGroups.push([event.cid()]);
     } else {
       collisionGroups
         .slice()
         .reverse()
         .some((group) => {
           if (~inArray(found.cid(), group)) {
-            // If you find a previous schedule that overlaps, include it in the Collision Group to which it belongs.
-            group.push(schedule.cid());
+            // If you find a previous event that overlaps, include it in the Collision Group to which it belongs.
+            group.push(event.cid());
 
             return true; // returning true can stop this loop
           }
@@ -84,11 +84,11 @@ export function getLastRowInColumn(matrix: Array<any[]>, col: number) {
 /**
  * Calculate matrix for appointment block element placing.
  * @param {Collection} collection model collection.
- * @param {Array<number[]>} collisionGroups Collision groups for schedule set.
+ * @param {Array<number[]>} collisionGroups Collision groups for event set.
  * @param {boolean} [usingTravelTime = true]
  * @returns {array} matrices
  */
-export function getMatrices<T extends Schedule | EventUIModel>(
+export function getMatrices<T extends EventModel | EventUIModel>(
   collection: Collection<T>,
   collisionGroups: CollisionGroup,
   usingTravelTime = true
@@ -98,8 +98,8 @@ export function getMatrices<T extends Schedule | EventUIModel>(
   collisionGroups.forEach((group) => {
     const matrix: Matrix<T> = [[]];
 
-    group.forEach((scheduleID) => {
-      const schedule: T = collection.items[scheduleID];
+    group.forEach((eventID) => {
+      const event: T = collection.items[eventID];
       let col = 0;
       let found = false;
       let nextRow;
@@ -109,14 +109,14 @@ export function getMatrices<T extends Schedule | EventUIModel>(
         lastRowInColumn = getLastRowInColumn(matrix, col);
 
         if (lastRowInColumn === -1) {
-          matrix[0].push(schedule);
+          matrix[0].push(event);
           found = true;
-        } else if (!schedule.collidesWith(matrix[lastRowInColumn][col], usingTravelTime)) {
+        } else if (!event.collidesWith(matrix[lastRowInColumn][col], usingTravelTime)) {
           nextRow = lastRowInColumn + 1;
           if (isUndefined(matrix[nextRow])) {
             matrix[nextRow] = [];
           }
-          matrix[nextRow][col] = schedule;
+          matrix[nextRow][col] = event;
           found = true;
         }
 
@@ -131,15 +131,15 @@ export function getMatrices<T extends Schedule | EventUIModel>(
 }
 
 /**
- * Filter that get schedule model in supplied date ranges.
+ * Filter that get event model in supplied date ranges.
  * @param {TZDate} start - start date
  * @param {TZDate} end - end date
- * @returns {function} schedule filter function
+ * @returns {function} event filter function
  */
-export function getScheduleInDateRangeFilter(
+export function getEventInDateRangeFilter(
   start: TZDate,
   end: TZDate
-): Filter<Schedule | EventUIModel> {
+): Filter<EventModel | EventUIModel> {
   return (model) => {
     const ownStarts = model.getStarts();
     const ownEnds = model.getEnds();
@@ -219,8 +219,7 @@ function limit(start: TZDate, end: TZDate, uiModel: EventUIModel) {
  * Limit start, end date each ui model for render properly
  * @param {TZDate} start - start date to render
  * @param {TZDate} end - end date to render
- * @param {Collection<EventUIModel>|EventUIModel} uiModelColl - schedule view
- *  model collection or EventUIModel
+ * @param {Collection<EventUIModel>|EventUIModel} uiModelColl - collection of EventUIModel or EventUIModel
  * @returns {?EventUIModel} return ui model when third parameter is
  *  ui model
  */
@@ -243,17 +242,17 @@ export function limitRenderRange(
 }
 
 /**
- * Convert schedule model collection to ui model collection.
- * @param {Collection} scheduleCollection - collection of schedule model
- * @returns {Collection} collection of schedule ui model
+ * Convert event model collection to ui model collection.
+ * @param {Collection} eventCollection - collection of event model
+ * @returns {Collection} collection of event ui model
  */
-export function convertToUIModel(scheduleCollection: Collection<Schedule>) {
+export function convertToUIModel(eventCollection: Collection<EventModel>) {
   const uiModelColl = new Collection<EventUIModel>((uiModel) => {
     return uiModel.cid();
   });
 
-  scheduleCollection.each(function (schedule) {
-    uiModelColl.add(EventUIModel.create(schedule));
+  eventCollection.each(function (event) {
+    uiModelColl.add(EventUIModel.create(event));
   });
 
   return uiModelColl;

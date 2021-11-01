@@ -214,7 +214,7 @@ const GridEvent: FunctionComponent<Props> = ({
         eventItemStyle={eventItemStyle}
         className={dayEventBlockClassName}
       >
-        <span className={cls('weekday-schedule-title')}>
+        <span className={cls('weekday-event-title')}>
           <Template template="time" model={uiModel.model} />
         </span>
         {flat ? null : <ResizeIcon style={resizeIconStyle} onMouseDown={onMouseDown} />}

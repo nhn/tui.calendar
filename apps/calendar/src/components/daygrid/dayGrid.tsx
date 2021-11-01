@@ -13,7 +13,7 @@ import {
   MONTH_EVENT_MARGIN_TOP,
 } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
-import Schedule from '@src/model/schedule';
+import EventModel from '@src/model/eventModel';
 import { topLevelStateSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
 import { toEndOfDay, toStartOfDay } from '@src/time/datetime';
@@ -31,7 +31,7 @@ interface Props {
   options: CalendarMonthOption;
   calendar: TZDate[][];
   appContainer: RefObject<HTMLDivElement>;
-  events?: Schedule[];
+  events?: EventModel[];
   shouldRenderDefaultPopup?: boolean;
   getMousePositionData?: (e: MouseEvent) => MousePositionData | null;
 }
@@ -128,7 +128,7 @@ const DayGrid: FunctionComponent<Props> = ({
                 height={height}
                 narrowWeekend={narrowWeekend}
                 eventHeight={MONTH_EVENT_HEIGHT}
-                className={cls('weekday-schedules')}
+                className={cls('weekday-events')}
                 headerHeight={MONTH_CELL_PADDING_TOP + MONTH_CELL_BAR_HEIGHT}
                 eventTopMargin={MONTH_EVENT_MARGIN_TOP}
               />

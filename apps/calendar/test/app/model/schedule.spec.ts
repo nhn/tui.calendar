@@ -1,18 +1,18 @@
 import { advanceTo } from 'jest-date-mock';
 
-import { ScheduleData } from '@src/model';
-import Schedule from '@src/model/schedule';
+import { EventModelData } from '@src/model';
+import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 
-describe('model/schedule basic', () => {
-  let schedule: Schedule;
+describe('model/event basic', () => {
+  let event: EventModel;
 
   beforeEach(() => {
-    schedule = new Schedule();
+    event = new EventModel();
   });
 
   it('creation', () => {
-    expect(schedule.isAllDay).toBe(false);
+    expect(event.isAllDay).toBe(false);
   });
 
   describe('init()', () => {
@@ -20,7 +20,7 @@ describe('model/schedule basic', () => {
       advanceTo(new Date('2015/05/01 00:00:00').getTime());
     });
 
-    it('initialize schedule with supplied options.', () => {
+    it('initialize event with supplied options.', () => {
       const expected = {
         id: '123',
         title: 'Go home',
@@ -31,7 +31,7 @@ describe('model/schedule basic', () => {
         bgColor: '#a1b56c',
       };
 
-      schedule.init({
+      event.init({
         id: '123',
         title: 'Go home',
         isAllDay: false,
@@ -39,85 +39,85 @@ describe('model/schedule basic', () => {
         end: '2015-05-02T00:00:00',
       });
 
-      expect(schedule).toEqual(expect.objectContaining(expected));
+      expect(event).toEqual(expect.objectContaining(expected));
     });
   });
 
   describe('equals()', () => {
-    let schedule2: Schedule;
+    let event2: EventModel;
 
     beforeEach(() => {
-      schedule = new Schedule();
-      schedule2 = new Schedule();
+      event = new EventModel();
+      event2 = new EventModel();
     });
 
-    it("return true when schedule's property are same", () => {
-      schedule.title = 'dance';
-      schedule2.title = 'dance';
-      schedule.isAllDay = true;
-      schedule2.isAllDay = true;
-      schedule.start = new TZDate('2015/05/01');
-      schedule2.start = new TZDate('2015/05/01');
-      schedule.end = new TZDate('2015/05/02');
-      schedule2.end = new TZDate('2015/05/02');
+    it("return true when event's property are same", () => {
+      event.title = 'dance';
+      event2.title = 'dance';
+      event.isAllDay = true;
+      event2.isAllDay = true;
+      event.start = new TZDate('2015/05/01');
+      event2.start = new TZDate('2015/05/01');
+      event.end = new TZDate('2015/05/02');
+      event2.end = new TZDate('2015/05/02');
 
-      expect(schedule.equals(schedule2)).toBe(true);
+      expect(event.equals(event2)).toBe(true);
     });
 
     it('return false when title is not equals.', () => {
-      schedule.title = 'meeting';
-      schedule2.title = 'working';
+      event.title = 'meeting';
+      event2.title = 'working';
 
-      expect(schedule.equals(schedule2)).toBe(false);
+      expect(event.equals(event2)).toBe(false);
     });
 
-    it('return false when two schedule has different all day flags.', () => {
-      schedule.title = 'dance';
-      schedule2.title = 'dance';
-      schedule.isAllDay = true;
-      schedule2.isAllDay = false;
+    it('return false when two event has different all day flags.', () => {
+      event.title = 'dance';
+      event2.title = 'dance';
+      event.isAllDay = true;
+      event2.isAllDay = false;
 
-      expect(schedule.equals(schedule2)).toBe(false);
+      expect(event.equals(event2)).toBe(false);
     });
 
-    it('return false when two schedule has different start or end.', () => {
-      schedule.title = 'dance';
-      schedule2.title = 'dance';
-      schedule.isAllDay = true;
-      schedule2.isAllDay = true;
-      schedule.start = new TZDate('2015/05/01');
-      schedule2.start = new TZDate('2015/04/01');
+    it('return false when two event has different start or end.', () => {
+      event.title = 'dance';
+      event2.title = 'dance';
+      event.isAllDay = true;
+      event2.isAllDay = true;
+      event.start = new TZDate('2015/05/01');
+      event2.start = new TZDate('2015/04/01');
 
-      expect(schedule.equals(schedule2)).toBe(false);
+      expect(event.equals(event2)).toBe(false);
 
-      schedule2.start = new TZDate('2015/05/01');
+      event2.start = new TZDate('2015/05/01');
 
-      schedule.end = new TZDate('2015/06/01');
-      schedule2.end = new TZDate('2015/07/01');
+      event.end = new TZDate('2015/06/01');
+      event2.end = new TZDate('2015/07/01');
 
-      expect(schedule.equals(schedule2)).toBe(false);
+      expect(event.equals(event2)).toBe(false);
     });
   });
 
   describe('duration()', () => {
     beforeEach(() => {
-      schedule.start = new TZDate('2015-09-25T05:00:00');
-      schedule.end = new TZDate('2015-09-26T05:00:00');
+      event.start = new TZDate('2015-09-25T05:00:00');
+      event.end = new TZDate('2015-09-26T05:00:00');
     });
 
     it('can calculate duration between start and end.', () => {
-      expect(+Number(schedule.duration())).toBe(+Number(new TZDate('1970-01-02T00:00:00Z')));
+      expect(+Number(event.duration())).toBe(+Number(new TZDate('1970-01-02T00:00:00Z')));
     });
 
-    it('return 24 hours when schedule is all day schedule.', () => {
-      schedule.isAllDay = true;
+    it('return 24 hours when event is all day event.', () => {
+      event.isAllDay = true;
 
-      expect(+Number(schedule.duration())).toBe(+Number(new TZDate('1970-01-02T23:59:59.999Z')));
+      expect(+Number(event.duration())).toBe(+Number(new TZDate('1970-01-02T23:59:59.999Z')));
     });
   });
 
-  describe('Schedule.create()', () => {
-    it('create schedule model instance from data object.', () => {
+  describe('EventModel.create()', () => {
+    it('create event model instance from data object.', () => {
       const mock = {
         title: 'hunting',
         isAllDay: true,
@@ -125,7 +125,7 @@ describe('model/schedule basic', () => {
         end: '2015/05/02',
       };
 
-      const compare = new Schedule();
+      const compare = new EventModel();
       compare.title = 'hunting';
       compare.isAllDay = true;
       compare.start = new TZDate('2015/05/02');
@@ -133,7 +133,7 @@ describe('model/schedule basic', () => {
       compare.end = new TZDate('2015/05/02');
       compare.end.setHours(23, 59, 59);
 
-      expect(Schedule.create(mock).equals(compare)).toBe(true);
+      expect(EventModel.create(mock).equals(compare)).toBe(true);
     });
   });
 
@@ -152,13 +152,13 @@ describe('model/schedule basic', () => {
      * |---|
      */
     it('Check type A, B', () => {
-      const a = Schedule.create({
+      const a = EventModel.create({
         title: 'A',
         isAllDay: false,
         start: '2015-05-01T09:30:00',
         end: '2015-05-01T10:00:00',
       });
-      const b = Schedule.create({
+      const b = EventModel.create({
         title: 'B',
         isAllDay: false,
         start: '2015-05-01T09:40:00',
@@ -186,13 +186,13 @@ describe('model/schedule basic', () => {
      *     |---|
      */
     it('check type C, D', () => {
-      const a = Schedule.create({
+      const a = EventModel.create({
         title: 'A',
         isAllDay: false,
         start: '2015-05-01T09:30:00',
         end: '2015-05-01T10:00:00',
       });
-      const b = Schedule.create({
+      const b = EventModel.create({
         title: 'B',
         isAllDay: false,
         start: '2015-05-01T09:00:00',
@@ -221,13 +221,13 @@ describe('model/schedule basic', () => {
      * |---|
      */
     it('check type E, F', () => {
-      const a = Schedule.create({
+      const a = EventModel.create({
         title: 'A',
         isAllDay: false,
         start: '2015-05-01T09:30:00',
         end: '2015-05-01T10:00:00',
       });
-      const b = Schedule.create({
+      const b = EventModel.create({
         title: 'B',
         isAllDay: false,
         start: '2015-05-01T10:00:00',
@@ -258,13 +258,13 @@ describe('model/schedule basic', () => {
      * |---|
      */
     it('check type G, H', () => {
-      const a = Schedule.create({
+      const a = EventModel.create({
         title: 'A',
         isAllDay: false,
         start: '2015-05-01T09:30:00',
         end: '2015-05-01T09:50:00',
       });
-      const b = Schedule.create({
+      const b = EventModel.create({
         title: 'B',
         isAllDay: false,
         start: '2015-05-01T10:10:00',
@@ -277,11 +277,11 @@ describe('model/schedule basic', () => {
   });
 });
 
-describe('model/Schedule advanced', () => {
-  let scheduleData: ScheduleData[];
+describe('model/EventModel advanced', () => {
+  let eventData: EventModelData[];
 
   beforeEach(() => {
-    scheduleData = [
+    eventData = [
       {
         title: '스크럼',
         category: 'time',
@@ -314,11 +314,11 @@ describe('model/Schedule advanced', () => {
   });
 
   it('factory function (create())', () => {
-    type CompatableSchedule = Record<string, any>;
+    type CompatableEvent = Record<string, any>;
 
-    let e = Schedule.create(scheduleData[0]);
+    let e = EventModel.create(eventData[0]);
 
-    let expected: ScheduleData = {
+    let expected: EventModelData = {
       title: '스크럼',
       category: 'time',
       dueDateClass: '',
@@ -327,9 +327,9 @@ describe('model/Schedule advanced', () => {
       end: new TZDate('2015-10-26T10:00:00'),
     };
 
-    expect(e).toEqual(expect.objectContaining<CompatableSchedule>(expected));
+    expect(e).toEqual(expect.objectContaining<CompatableEvent>(expected));
 
-    e = Schedule.create(scheduleData[1]);
+    e = EventModel.create(eventData[1]);
     expected = {
       title: '[홍길동]연차',
       category: 'allday',
@@ -339,9 +339,9 @@ describe('model/Schedule advanced', () => {
       end: new TZDate(2015, 9, 26, 23, 59, 59),
     };
 
-    expect(e).toEqual(expect.objectContaining<CompatableSchedule>(expected));
+    expect(e).toEqual(expect.objectContaining<CompatableEvent>(expected));
 
-    e = Schedule.create(scheduleData[2]);
+    e = EventModel.create(eventData[2]);
     expected = {
       title: '테스트 마일스톤1',
       category: 'milestone',
@@ -351,9 +351,9 @@ describe('model/Schedule advanced', () => {
       end: new TZDate('2015-10-26T23:59:59'),
     };
 
-    expect(e).toEqual(expect.objectContaining<CompatableSchedule>(expected));
+    expect(e).toEqual(expect.objectContaining<CompatableEvent>(expected));
 
-    e = Schedule.create(scheduleData[3]);
+    e = EventModel.create(eventData[3]);
     expected = {
       title: '테스트 업무',
       category: 'task',
@@ -363,7 +363,7 @@ describe('model/Schedule advanced', () => {
       end: new TZDate('2015-10-26T23:59:59'),
     };
 
-    expect(e).toEqual(expect.objectContaining<CompatableSchedule>(expected));
+    expect(e).toEqual(expect.objectContaining<CompatableEvent>(expected));
   });
 
   it('raw data', () => {
@@ -373,7 +373,7 @@ describe('model/Schedule advanced', () => {
     } = {
       hello: 'world',
     };
-    const e = Schedule.create({
+    const e = EventModel.create({
       title: '굿',
       category: 'task',
       dueDateClass: 'morning',

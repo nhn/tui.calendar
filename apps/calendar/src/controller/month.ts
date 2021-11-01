@@ -8,34 +8,34 @@ import isUndefined from 'tui-code-snippet/type/isUndefined';
 import {
   convertToUIModel,
   getCollisionGroup,
+  getEventInDateRangeFilter,
   getMatrices,
-  getScheduleInDateRangeFilter,
   limitRenderRange,
   positionUIModels,
 } from '@src/controller/core';
 import { CalendarData } from '@src/model';
 import EventUIModel from '@src/model/eventUIModel';
-import Schedule from '@src/model/schedule';
 import TZDate from '@src/time/date';
 import { isSameDate, toEndOfDay, toFormat, toStartOfDay } from '@src/time/datetime';
 import array from '@src/util/array';
 import Collection, { Filter } from '@src/util/collection';
 
+import EventModel from '../model/eventModel';
 import { IDS_OF_DAY } from './base';
 
 /**
- * Filter function for find allday schedule
+ * Filter function for find allday event
  * @param {EventUIModel} uiModel - ui model
- * @returns {boolean} whether model is allday schedule?
+ * @returns {boolean} whether model is allday event?
  */
 function _isAllDay({ model }: EventUIModel) {
   return model.isAllDay || model.hasMultiDates;
 }
 
 /**
- * Filter function for find time schedule
+ * Filter function for find time event
  * @param {EventUIModel} uiModel - ui model
- * @returns {boolean} whether model is time schedule?
+ * @returns {boolean} whether model is time event?
  */
 function _isNotAllday(uiModel: EventUIModel) {
   return !_isAllDay(uiModel);
@@ -53,8 +53,8 @@ function _weightTopValue(uiModel: EventUIModel) {
 /**
  * Adjust render range to render properly.
  *
- * Limit start, end for each allday schedules and expand start, end for
- * each time schedules
+ * Limit start, end for each allday events and expand start, end for
+ * each time events
  * @param {TZDate} start - render start date
  * @param {TZDate} end - render end date
  * @param {Collection} uiModelColl - collection of ui model.
@@ -68,10 +68,10 @@ function _adjustRenderRange(start: TZDate, end: TZDate, uiModelColl: Collection<
 }
 
 /**
- * Get max top index value for allday schedules in specific date (YMD)
+ * Get max top index value for allday events in specific date (YMD)
  * @param idsOfDay
  * @param {string} ymd - yyyymmdd formatted value
- * @param {Collection} uiModelAlldayColl - collection of allday schedules
+ * @param {Collection} uiModelAlldayColl - collection of allday events
  * @returns {number} max top index value in date
  */
 function _getAlldayMaxTopIndexAtYMD(
@@ -101,21 +101,21 @@ function _getAlldayMaxTopIndexAtYMD(
  */
 function _adjustTimeTopIndex(idsOfDay: IDS_OF_DAY, uiModelColl: Collection<EventUIModel>) {
   const vAlldayColl = uiModelColl.find(_isAllDay);
-  const sortedTimeSchedules = uiModelColl.find(_isNotAllday).sort(array.compare.schedule.asc);
+  const sortedTimeEvents = uiModelColl.find(_isNotAllday).sort(array.compare.event.asc);
   const maxIndexInYMD: Record<string, number> = {};
 
-  sortedTimeSchedules.forEach((timeUIModel) => {
-    const scheduleYMD = toFormat(timeUIModel.getStarts(), 'YYYYMMDD');
-    let alldayMaxTopInYMD = maxIndexInYMD[scheduleYMD];
+  sortedTimeEvents.forEach((timeUIModel) => {
+    const eventYMD = toFormat(timeUIModel.getStarts(), 'YYYYMMDD');
+    let alldayMaxTopInYMD = maxIndexInYMD[eventYMD];
 
     if (isUndefined(alldayMaxTopInYMD)) {
-      alldayMaxTopInYMD = maxIndexInYMD[scheduleYMD] = _getAlldayMaxTopIndexAtYMD(
+      alldayMaxTopInYMD = maxIndexInYMD[eventYMD] = _getAlldayMaxTopIndexAtYMD(
         idsOfDay,
-        scheduleYMD,
+        eventYMD,
         vAlldayColl
       );
     }
-    maxIndexInYMD[scheduleYMD] = timeUIModel.top = alldayMaxTopInYMD + 1;
+    maxIndexInYMD[eventYMD] = timeUIModel.top = alldayMaxTopInYMD + 1;
   });
 }
 
@@ -125,16 +125,16 @@ function _adjustTimeTopIndex(idsOfDay: IDS_OF_DAY, uiModelColl: Collection<Event
  */
 function _stackTimeFromTop(idsOfDay: IDS_OF_DAY, uiModelColl: Collection<EventUIModel>) {
   const uiModelAlldayColl = uiModelColl.find(_isAllDay);
-  const sortedTimeSchedules = uiModelColl.find(_isNotAllday).sort(array.compare.schedule.asc);
+  const sortedTimeEvents = uiModelColl.find(_isNotAllday).sort(array.compare.event.asc);
   const indiceInYMD: Record<string, number[]> = {};
 
-  sortedTimeSchedules.forEach((timeUIModel) => {
-    const scheduleYMD = toFormat(timeUIModel.getStarts(), 'YYYYMMDD');
-    let topArrayInYMD = indiceInYMD[scheduleYMD];
+  sortedTimeEvents.forEach((timeUIModel) => {
+    const eventYMD = toFormat(timeUIModel.getStarts(), 'YYYYMMDD');
+    let topArrayInYMD = indiceInYMD[eventYMD];
 
     if (isUndefined(topArrayInYMD)) {
-      topArrayInYMD = indiceInYMD[scheduleYMD] = [];
-      idsOfDay[scheduleYMD].forEach((cid) => {
+      topArrayInYMD = indiceInYMD[eventYMD] = [];
+      idsOfDay[eventYMD].forEach((cid) => {
         uiModelAlldayColl.doWhenHas(cid, (uiModel) => {
           topArrayInYMD.push(uiModel.top);
         });
@@ -155,7 +155,7 @@ function _stackTimeFromTop(idsOfDay: IDS_OF_DAY, uiModelColl: Collection<EventUI
 }
 
 /**
- * Convert multi-date time schedule to all-day schedule
+ * Convert multi-date time event to all-day event
  * @param {Collection} uiModelColl - collection of ui models.
  * property.
  */
@@ -175,7 +175,7 @@ function _addMultiDatesInfo(uiModelColl: Collection<EventUIModel>) {
 }
 
 /**
- * Find schedule and get ui model for specific month
+ * Find event and get ui model for specific month
  * @returns {object} ui model data
  * @param calendarData
  * @param condition
@@ -185,19 +185,19 @@ export function findByDateRange(
   condition: {
     start: TZDate;
     end: TZDate;
-    andFilters?: Filter<Schedule | EventUIModel>[];
+    andFilters?: Filter<EventModel | EventUIModel>[];
     alldayFirstMode?: boolean;
   }
 ) {
   const { start, end, andFilters = [], alldayFirstMode = false } = condition;
-  const { schedules, idsOfDay } = calendarData;
-  const filter = Collection.and(...[getScheduleInDateRangeFilter(start, end)].concat(andFilters));
+  const { events, idsOfDay } = calendarData;
+  const filter = Collection.and(...[getEventInDateRangeFilter(start, end)].concat(andFilters));
 
-  const coll = schedules.find(filter);
+  const coll = events.find(filter);
   const uiModelColl = convertToUIModel(coll);
   _addMultiDatesInfo(uiModelColl);
   _adjustRenderRange(start, end, uiModelColl);
-  const vList = uiModelColl.sort(array.compare.schedule.asc);
+  const vList = uiModelColl.sort(array.compare.event.asc);
   const usingTravelTime = false;
   const collisionGroup = getCollisionGroup(vList, usingTravelTime);
   const matrices = getMatrices(uiModelColl, collisionGroup, usingTravelTime);

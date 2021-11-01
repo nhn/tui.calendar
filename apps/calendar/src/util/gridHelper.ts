@@ -91,10 +91,10 @@ export function getWidth(widthList: number[], start: number, end: number) {
 
 export const isInGrid = (gridDate: TZDate) => {
   return (uiModel: EventUIModel) => {
-    const scheduleStart = toStartOfDay(uiModel.getStarts());
-    const scheduleEnd = toStartOfDay(uiModel.getEnds());
+    const eventStart = toStartOfDay(uiModel.getStarts());
+    const eventEnd = toStartOfDay(uiModel.getEnds());
 
-    return scheduleStart <= gridDate && gridDate <= scheduleEnd;
+    return eventStart <= gridDate && gridDate <= eventEnd;
   };
 };
 

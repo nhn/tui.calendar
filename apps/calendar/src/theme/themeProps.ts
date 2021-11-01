@@ -3,6 +3,7 @@
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
+// @TODO: 주석과 실제 객체에 사용되는 속성 동일하게 정의하기
 /**
  * Full configuration for theme.
  * "common" prefix is for entire calendar. "common" properties can be overriden by "week", "month".

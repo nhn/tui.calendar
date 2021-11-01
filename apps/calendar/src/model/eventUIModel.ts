@@ -1,14 +1,14 @@
-import Schedule from '@src/model/schedule';
+import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 import { collidesWith } from '@src/util/events';
 
 /**
  * Set of UI-related properties for calendar event.
  * @class
- * @param {Schedule} schedule Schedule instance.
+ * @param {EventModel} event EventModel instance.
  */
 export default class EventUIModel {
-  model: Schedule;
+  model: EventModel;
 
   top = 0;
 
@@ -19,19 +19,19 @@ export default class EventUIModel {
   height = 0;
 
   /**
-   * Represent schedule has collide with other schedules when rendering.
+   * Represent event has collide with other events when rendering.
    * @type {boolean}
    */
   hasCollide = false;
 
   /**
-   * Extra space at right side of this schedule.
+   * Extra space at right side of this event.
    * @type {number}
    */
   extraSpace = 0;
 
   /**
-   * represent this schedule block is not visible after rendered.
+   * represent this event block is not visible after rendered.
    *
    * in month view, some ui models in date need to hide when already rendered before dates.
    *
@@ -95,19 +95,19 @@ export default class EventUIModel {
    */
   comingDurationHeight = 0;
 
-  constructor(schedule: Schedule) {
-    this.model = schedule;
+  constructor(event: EventModel) {
+    this.model = event;
   }
 
   /**
    * EventUIModel factory method.
    */
-  static create(schedule: Schedule): EventUIModel {
-    return new EventUIModel(schedule);
+  static create(event: EventModel): EventUIModel {
+    return new EventUIModel(event);
   }
 
   /**
-   * return renderStarts property to render properly when specific schedule that exceed rendering date range.
+   * return renderStarts property to render properly when specific event that exceed rendering date range.
    *
    * if renderStarts is not set. return model's start property.
    */
@@ -120,7 +120,7 @@ export default class EventUIModel {
   }
 
   /**
-   * return renderStarts property to render properly when specific schedule that exceed rendering date range.
+   * return renderStarts property to render properly when specific event that exceed rendering date range.
    *
    * if renderEnds is not set. return model's end property.
    */
@@ -140,21 +140,21 @@ export default class EventUIModel {
   }
 
   /**
-   * Shadowing valueOf method for schedule sorting.
+   * Shadowing valueOf method for event sorting.
    */
-  valueOf(): Schedule {
+  valueOf(): EventModel {
     return this.model;
   }
 
   /**
    * Link duration method
-   * @returns {number} Schedule#duration result.
+   * @returns {number} EventModel#duration result.
    */
   duration() {
     return this.model.duration();
   }
 
-  collidesWith(uiModel: Schedule | EventUIModel, usingTravelTime = true) {
+  collidesWith(uiModel: EventModel | EventUIModel, usingTravelTime = true) {
     return collidesWith({
       start: this.getStarts().getTime(),
       end: this.getEnds().getTime(),

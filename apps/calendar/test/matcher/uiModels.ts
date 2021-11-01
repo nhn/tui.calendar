@@ -1,9 +1,9 @@
 import forEach from 'tui-code-snippet/collection/forEach';
 
-import Schedule from '@src/model/schedule';
+import EventModel from '@src/model/eventModel';
 
 expect.extend({
-  toEqualUIModelByTitle(actual: Record<string, Schedule[]>, expected: Record<string, string[]>) {
+  toEqualUIModelByTitle(actual: Record<string, EventModel[]>, expected: Record<string, string[]>) {
     const result = {
       pass: false,
       message: () => '',

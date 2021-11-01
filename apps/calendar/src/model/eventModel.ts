@@ -6,7 +6,7 @@ import extend from 'tui-code-snippet/object/extend';
 import isExisty from 'tui-code-snippet/type/isExisty';
 import isString from 'tui-code-snippet/type/isString';
 
-import { DateType, ScheduleData } from '@src/model';
+import { DateType, EventModelData } from '@src/model';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { compare, MS_PER_DAY, parse, toEndOfDay, toStartOfDay } from '@src/time/datetime';
@@ -14,13 +14,13 @@ import { stamp } from '@src/util';
 import { collidesWith } from '@src/util/events';
 
 /**
- * Schedule category
+ * Event category
  * @readonly
  * @enum {string}
  */
-export type ScheduleCategory = 'milestone' | 'task' | 'allday' | 'time' | 'background';
+export type EventCategory = 'milestone' | 'task' | 'allday' | 'time' | 'background';
 
-export default class Schedule {
+export default class EventModel {
   /**
    * `Optional` unique id for various use.
    * @type {string}
@@ -28,61 +28,61 @@ export default class Schedule {
   id = '';
 
   /**
-   * title for schedule.
+   * title for event.
    * @type {string}
    */
   title = '';
 
   /**
-   * body for schedule.
+   * body for event.
    * @type {string}
    */
   body = '';
 
   /**
-   * is schedule is all day schedule?
+   * is event is all day event?
    * @type {boolean}
    */
   isAllDay = false;
 
   /**
-   * schedule start
+   * event start
    * @type {TZDate}
    */
   start: TZDate = new TZDate();
 
   /**
-   * schedule end
+   * event end
    * @type {TZDate}
    */
   end: TZDate = new TZDate();
 
   /**
-   * schedule text color
+   * event text color
    * @type {string}
    */
   color = '#000';
 
   /**
-   * schedule block visibility
+   * event block visibility
    * @type {boolean}
    */
   isVisible = true;
 
   /**
-   * schedule background color
+   * event background color
    * @type {string}
    */
   bgColor = '#a1b56c';
 
   /**
-   * schedule background color when dragging it
+   * event background color when dragging it
    * @type {string}
    */
   dragBgColor = '#a1b56c';
 
   /**
-   * schedule left border color
+   * event left border color
    * @type {string}
    */
   borderColor = '#000';
@@ -94,19 +94,19 @@ export default class Schedule {
   calendarId = '';
 
   /**
-   * Schedule category(milestone, task, allday, time)
+   * Event category(milestone, task, allday, time)
    * @type {string}
    */
-  category: ScheduleCategory = 'time';
+  category: EventCategory = 'time';
 
   /**
-   * Classification of work schedules (before work, before lunch, before work)
+   * Classification of work events (before work, before lunch, before work)
    * @type {string}
    */
   dueDateClass = '';
 
   /**
-   * Custom style for schedule element
+   * Custom style for event element
    * @type {string}
    */
   customStyle = '';
@@ -118,19 +118,19 @@ export default class Schedule {
   isPending = false;
 
   /**
-   * focused schedule flag
+   * focused event flag
    * @type {boolean}
    */
   isFocused = false;
 
   /**
-   * read-only schedule flag
+   * read-only event flag
    * @type {boolean}
    */
   isReadOnly = false;
 
   /**
-   * private schedule
+   * private event
    * @type {boolean}
    */
   isPrivate = false;
@@ -178,7 +178,7 @@ export default class Schedule {
   raw: any = null; // eslint-disable-line @typescript-eslint/no-explicit-any
 
   /**
-   * whether the schedule includes multiple dates
+   * whether the event includes multiple dates
    * @type {boolean}
    */
   hasMultiDates = false;
@@ -193,63 +193,63 @@ export default class Schedule {
     dateRange: ['start', 'end'],
   };
 
-  static create(data: ScheduleData) {
-    return new Schedule().init(data);
+  static create(data: EventModelData) {
+    return new EventModel().init(data);
   }
 
   /**
-   * Initialize schedule instance.
-   * @param {ScheduleData} schedule options.
+   * Initialize event instance.
+   * @param {EventModelData}  options.
    */
   // eslint-disable-next-line complexity
-  init(schedule: ScheduleData) {
-    schedule = extend({}, schedule);
-    if (schedule.category === 'allday') {
-      schedule.isAllDay = true;
+  init(event: EventModelData) {
+    event = extend({}, event);
+    if (event.category === 'allday') {
+      event.isAllDay = true;
     }
 
-    this.id = schedule.id || '';
-    this.title = schedule.title || '';
-    this.body = schedule.body || '';
-    this.isAllDay = isExisty(schedule.isAllDay) ? schedule.isAllDay : false;
-    this.isVisible = isExisty(schedule.isVisible) ? schedule.isVisible : true;
+    this.id = event.id || '';
+    this.title = event.title || '';
+    this.body = event.body || '';
+    this.isAllDay = isExisty(event.isAllDay) ? event.isAllDay : false;
+    this.isVisible = isExisty(event.isVisible) ? event.isVisible : true;
 
-    this.color = schedule.color || this.color;
-    this.bgColor = schedule.bgColor || this.bgColor;
-    this.dragBgColor = schedule.dragBgColor || this.dragBgColor;
-    this.borderColor = schedule.borderColor || this.borderColor;
-    this.calendarId = schedule.calendarId || '';
-    this.category = schedule.category || 'time';
-    this.dueDateClass = schedule.dueDateClass || '';
-    this.customStyle = schedule.customStyle || '';
-    this.location = schedule.location || '';
-    this.attendees = schedule.attendees || [];
-    this.recurrenceRule = schedule.recurrenceRule || '';
-    this.isPrivate = schedule.isPrivate || false;
-    this.isPending = schedule.isPending || false;
-    this.isFocused = schedule.isFocused || false;
-    this.isReadOnly = schedule.isReadOnly || false;
-    this.goingDuration = schedule.goingDuration || 0;
-    this.comingDuration = schedule.comingDuration || 0;
-    this.state = schedule.state || '';
+    this.color = event.color || this.color;
+    this.bgColor = event.bgColor || this.bgColor;
+    this.dragBgColor = event.dragBgColor || this.dragBgColor;
+    this.borderColor = event.borderColor || this.borderColor;
+    this.calendarId = event.calendarId || '';
+    this.category = event.category || 'time';
+    this.dueDateClass = event.dueDateClass || '';
+    this.customStyle = event.customStyle || '';
+    this.location = event.location || '';
+    this.attendees = event.attendees || [];
+    this.recurrenceRule = event.recurrenceRule || '';
+    this.isPrivate = event.isPrivate || false;
+    this.isPending = event.isPending || false;
+    this.isFocused = event.isFocused || false;
+    this.isReadOnly = event.isReadOnly || false;
+    this.goingDuration = event.goingDuration || 0;
+    this.comingDuration = event.comingDuration || 0;
+    this.state = event.state || '';
 
     if (this.isAllDay) {
-      this.setAllDayPeriod(schedule.start, schedule.end);
+      this.setAllDayPeriod(event.start, event.end);
     } else {
-      this.setTimePeriod(schedule.start, schedule.end);
+      this.setTimePeriod(event.start, event.end);
     }
 
-    if (schedule.category === 'milestone' || schedule.category === 'task') {
+    if (event.category === 'milestone' || event.category === 'task') {
       this.start = new TZDate(this.end);
     }
 
-    this.raw = isExisty(schedule.raw) ? schedule.raw : null;
+    this.raw = isExisty(event.raw) ? event.raw : null;
 
     return this;
   }
 
   setAllDayPeriod(start?: DateType, end?: DateType) {
-    // If it is an all-day schedule, only the date information of the string is used.
+    // If it is an all-day , only the date information of the string is used.
     let startedAt: TZDate;
     let endedAt: TZDate;
 
@@ -305,49 +305,49 @@ export default class Schedule {
   }
 
   /**
-   * Check two schedule are equals (means title, isAllDay, start, end are same)
-   * @param {Schedule} schedule Schedule model instance to compare.
+   * Check two  are equals (means title, isAllDay, start, end are same)
+   * @param {EventModel}  event model instance to compare.
    * @returns {boolean} Return false when not same.
    */
   // eslint-disable-next-line complexity
-  equals(schedule: Schedule) {
-    if (this.id !== schedule.id) {
+  equals(event: EventModel) {
+    if (this.id !== event.id) {
       return false;
     }
 
-    if (this.title !== schedule.title) {
+    if (this.title !== event.title) {
       return false;
     }
 
-    if (this.body !== schedule.body) {
+    if (this.body !== event.body) {
       return false;
     }
 
-    if (this.isAllDay !== schedule.isAllDay) {
+    if (this.isAllDay !== event.isAllDay) {
       return false;
     }
 
-    if (compare(this.getStarts(), schedule.getStarts()) !== 0) {
+    if (compare(this.getStarts(), event.getStarts()) !== 0) {
       return false;
     }
 
-    if (compare(this.getEnds(), schedule.getEnds()) !== 0) {
+    if (compare(this.getEnds(), event.getEnds()) !== 0) {
       return false;
     }
 
-    if (this.color !== schedule.color) {
+    if (this.color !== event.color) {
       return false;
     }
 
-    if (this.bgColor !== schedule.bgColor) {
+    if (this.bgColor !== event.bgColor) {
       return false;
     }
 
-    if (this.dragBgColor !== schedule.dragBgColor) {
+    if (this.dragBgColor !== event.dragBgColor) {
       return false;
     }
 
-    if (this.borderColor !== schedule.borderColor) {
+    if (this.borderColor !== event.borderColor) {
       return false;
     }
 
@@ -377,24 +377,24 @@ export default class Schedule {
   }
 
   /**
-   * Returns true if the given Schedule coincides with the same time as the
-   * calling Schedule.
-   * @param {Schedule | EventUIModel} schedule The other schedule to compare with this Schedule.
+   * Returns true if the given EventModel coincides with the same time as the
+   * calling EventModel.
+   * @param {EventModel | EventUIModel} event The other event to compare with this EventModel.
    * @param {boolean = true} usingTravelTime When calculating collision, whether to calculate with travel time.
-   * @returns {boolean} If the other schedule occurs within the same time as the first object.
+   * @returns {boolean} If the other event occurs within the same time as the first object.
    */
-  collidesWith(schedule: Schedule | EventUIModel, usingTravelTime = true) {
-    schedule = schedule instanceof EventUIModel ? schedule.model : schedule;
+  collidesWith(event: EventModel | EventUIModel, usingTravelTime = true) {
+    event = event instanceof EventUIModel ? event.model : event;
 
     return collidesWith({
       start: Number(this.getStarts()),
       end: Number(this.getEnds()),
-      targetStart: Number(schedule.getStarts()),
-      targetEnd: Number(schedule.getEnds()),
+      targetStart: Number(event.getStarts()),
+      targetEnd: Number(event.getEnds()),
       goingDuration: this.goingDuration,
       comingDuration: this.comingDuration,
-      targetGoingDuration: schedule.goingDuration,
-      targetComingDuration: schedule.comingDuration,
+      targetGoingDuration: event.goingDuration,
+      targetComingDuration: event.comingDuration,
       usingTravelTime, // Daygrid does not use travelTime, TimeGrid uses travelTime.
     });
   }

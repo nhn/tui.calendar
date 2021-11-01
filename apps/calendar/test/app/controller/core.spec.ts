@@ -1,13 +1,13 @@
 import {
   getCollisionGroup,
+  getEventInDateRangeFilter,
   getLastRowInColumn,
   getMatrices,
-  getScheduleInDateRangeFilter,
   limitRenderRange,
 } from '@src/controller/core';
-import { ScheduleData } from '@src/model';
+import { EventModelData } from '@src/model';
+import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
-import Schedule from '@src/model/schedule';
 import TZDate from '@src/time/date';
 import array from '@src/util/array';
 import Collection from '@src/util/collection';
@@ -15,8 +15,8 @@ import Collection from '@src/util/collection';
 import type { CollisionGroup } from '@t/events';
 
 describe('Base.Core', () => {
-  let mockData: ScheduleData[];
-  let scheduleList: Schedule[];
+  let mockData: EventModelData[];
+  let eventList: EventModel[];
   let expected;
   let actual;
 
@@ -100,33 +100,28 @@ describe('Base.Core', () => {
         category: 'time',
       },
     ];
-    scheduleList = mockData.map((data) => Schedule.create(data)).sort(array.compare.schedule.asc);
+    eventList = mockData.map((data) => EventModel.create(data)).sort(array.compare.event.asc);
   });
 
   describe('getCollisionGroup()', () => {
     it('Get collision group properly.', () => {
-      actual = getCollisionGroup(scheduleList);
+      actual = getCollisionGroup(eventList);
       expected = [
-        [
-          scheduleList[0].cid(),
-          scheduleList[1].cid(),
-          scheduleList[2].cid(),
-          scheduleList[3].cid(),
-        ],
-        [scheduleList[4].cid()],
-        [scheduleList[5].cid(), scheduleList[6].cid()],
-        [scheduleList[7].cid(), scheduleList[8].cid(), scheduleList[9].cid()],
-        [scheduleList[10].cid()],
+        [eventList[0].cid(), eventList[1].cid(), eventList[2].cid(), eventList[3].cid()],
+        [eventList[4].cid()],
+        [eventList[5].cid(), eventList[6].cid()],
+        [eventList[7].cid(), eventList[8].cid(), eventList[9].cid()],
+        [eventList[10].cid()],
       ];
 
       expect(actual).toEqual(expected);
     });
 
     describe('When calculating the collision, it is affected by the travel time.', () => {
-      let eventList: Schedule[];
+      let collisionEventList: EventModel[];
 
       beforeEach(() => {
-        const events: ScheduleData[] = [
+        const events: EventModelData[] = [
           {
             title: 'A',
             isAllDay: false,
@@ -165,20 +160,27 @@ describe('Base.Core', () => {
           },
         ];
 
-        eventList = events.map((data) => Schedule.create(data)).sort(array.compare.schedule.asc);
+        collisionEventList = events
+          .map((data) => EventModel.create(data))
+          .sort(array.compare.event.asc);
       });
 
       it('should get collision group properly with travel time.', () => {
-        expect(getCollisionGroup(eventList, true)).toEqual([
-          [eventList[0].cid(), eventList[1].cid(), eventList[2].cid(), eventList[3].cid()],
+        expect(getCollisionGroup(collisionEventList, true)).toEqual([
+          [
+            collisionEventList[0].cid(),
+            collisionEventList[1].cid(),
+            collisionEventList[2].cid(),
+            collisionEventList[3].cid(),
+          ],
         ]);
       });
 
       it('should get collision group properly without travel time.', () => {
-        expect(getCollisionGroup(eventList, false)).toEqual([
-          [eventList[0].cid()],
-          [eventList[1].cid(), eventList[2].cid()],
-          [eventList[3].cid()],
+        expect(getCollisionGroup(collisionEventList, false)).toEqual([
+          [collisionEventList[0].cid()],
+          [collisionEventList[1].cid(), collisionEventList[2].cid()],
+          [collisionEventList[3].cid()],
         ]);
       });
     });
@@ -211,25 +213,25 @@ describe('Base.Core', () => {
   });
 
   describe('getMatrices()', () => {
-    let collection: Collection<Schedule>;
+    let collection: Collection<EventModel>;
     let collisionGroup: CollisionGroup;
 
     beforeEach(() => {
-      collection = new Collection<Schedule>((model) => {
+      collection = new Collection<EventModel>((model) => {
         return model.cid();
       });
     });
 
     it('can calculate matrices accurately.', () => {
-      collection.add(...scheduleList);
-      collisionGroup = getCollisionGroup(scheduleList);
+      collection.add(...eventList);
+      collisionGroup = getCollisionGroup(eventList);
 
       expected = [
-        [[scheduleList[0], scheduleList[1]], [scheduleList[2]], [scheduleList[3]]],
-        [[scheduleList[4]]],
-        [[scheduleList[5], scheduleList[6]]],
-        [[scheduleList[7], scheduleList[8]], [scheduleList[9]]],
-        [[scheduleList[10]]],
+        [[eventList[0], eventList[1]], [eventList[2]], [eventList[3]]],
+        [[eventList[4]]],
+        [[eventList[5], eventList[6]]],
+        [[eventList[7], eventList[8]], [eventList[9]]],
+        [[eventList[10]]],
       ];
       actual = getMatrices(collection, collisionGroup);
 
@@ -237,10 +239,10 @@ describe('Base.Core', () => {
     });
 
     describe('When calculating matrices, it is affected by the travel time.', () => {
-      let eventList: Schedule[];
+      let matrixEventList: EventModel[];
 
       beforeEach(() => {
-        const events: ScheduleData[] = [
+        const events: EventModelData[] = [
           {
             title: 'A',
             isAllDay: false,
@@ -279,8 +281,10 @@ describe('Base.Core', () => {
           },
         ];
 
-        eventList = events.map((data) => Schedule.create(data)).sort(array.compare.schedule.asc);
-        collection.add(...eventList);
+        matrixEventList = events
+          .map((data) => EventModel.create(data))
+          .sort(array.compare.event.asc);
+        collection.add(...matrixEventList);
       });
 
       afterEach(() => {
@@ -289,21 +293,21 @@ describe('Base.Core', () => {
 
       it('can calculate matrices accurately with travel time', () => {
         const usingTravelTime = true;
-        collisionGroup = getCollisionGroup(eventList, usingTravelTime);
+        collisionGroup = getCollisionGroup(matrixEventList, usingTravelTime);
 
         expect(getMatrices(collection, collisionGroup, usingTravelTime)).toEqual([
-          [[eventList[0], eventList[1], eventList[2]], [eventList[3]]],
+          [[matrixEventList[0], matrixEventList[1], matrixEventList[2]], [matrixEventList[3]]],
         ]);
       });
 
       it('can calculate matrices accurately without travel time', () => {
         const usingTravelTime = false;
-        collisionGroup = getCollisionGroup(eventList, usingTravelTime);
+        collisionGroup = getCollisionGroup(matrixEventList, usingTravelTime);
 
         expect(getMatrices(collection, collisionGroup, usingTravelTime)).toEqual([
-          [[eventList[0]]],
-          [[eventList[1], eventList[2]]],
-          [[eventList[3]]],
+          [[matrixEventList[0]]],
+          [[matrixEventList[1], matrixEventList[2]]],
+          [[matrixEventList[3]]],
         ]);
       });
     });
@@ -320,7 +324,7 @@ describe('Base.Core', () => {
 
     it('fill renderStarts, renderEnds to each ui model in collection.', () => {
       // 5/1 10:20 ~ 5/1 10:40
-      uiModelCollection.add(EventUIModel.create(scheduleList[0]));
+      uiModelCollection.add(EventUIModel.create(eventList[0]));
 
       const limit1 = new TZDate('2015-05-01T10:30:00');
       const limit2 = new TZDate('2015-05-01T10:40:00');
@@ -338,7 +342,7 @@ describe('Base.Core', () => {
     });
   });
 
-  describe('getScheduleInDateRangeFilter', () => {
+  describe('getEventInDateRangeFilter', () => {
     let uiModelCollection: Collection<EventUIModel>;
 
     beforeEach(() => {
@@ -347,7 +351,7 @@ describe('Base.Core', () => {
       });
     });
 
-    it('filter schedules properly.', () => {
+    it('filter events properly.', () => {
       let filter;
       let d1;
       let d2;
@@ -365,75 +369,75 @@ describe('Base.Core', () => {
       // L ownStart ----------------------------------------------- ownEnd
 
       // 10:20 ~ 10:40
-      uiModelCollection.add(EventUIModel.create(scheduleList[0]));
+      uiModelCollection.add(EventUIModel.create(eventList[0]));
 
       // A: 09:30 ~ 10:10
       d1 = new TZDate('2015-05-01T09:30:00');
       d2 = new TZDate('2015-05-01T10:10:00');
-      filter = getScheduleInDateRangeFilter(d1, d2);
+      filter = getEventInDateRangeFilter(d1, d2);
 
       expect(uiModelCollection.find(filter).length).toBe(0);
 
       // B: 09:30 ~ 10:20
       d1 = new TZDate('2015-05-01T09:30:00');
       d2 = new TZDate('2015-05-01T10:20:00');
-      filter = getScheduleInDateRangeFilter(d1, d2);
+      filter = getEventInDateRangeFilter(d1, d2);
 
       expect(uiModelCollection.find(filter).length).toBe(1);
 
       // C: 09:30 ~ 10:30
       d1 = new TZDate('2015-05-01T09:30:00');
       d2 = new TZDate('2015-05-01T10:30:00');
-      filter = getScheduleInDateRangeFilter(d1, d2);
+      filter = getEventInDateRangeFilter(d1, d2);
 
       expect(uiModelCollection.find(filter).length).toBe(1);
 
       // D: 10:20 ~ 10:30
       d1 = new TZDate('2015-05-01T10:20:00');
       d2 = new TZDate('2015-05-01T10:30:00');
-      filter = getScheduleInDateRangeFilter(d1, d2);
+      filter = getEventInDateRangeFilter(d1, d2);
 
       expect(uiModelCollection.find(filter).length).toBe(1);
 
       // E: 10:25 ~ 10:35
       d1 = new TZDate('2015-05-01T10:25:00');
       d2 = new TZDate('2015-05-01T10:35:00');
-      filter = getScheduleInDateRangeFilter(d1, d2);
+      filter = getEventInDateRangeFilter(d1, d2);
 
       expect(uiModelCollection.find(filter).length).toBe(1);
 
       // F: 10:30 ~ 10:40
       d1 = new TZDate('2015-05-01T10:30:00');
       d2 = new TZDate('2015-05-01T10:40:00');
-      filter = getScheduleInDateRangeFilter(d1, d2);
+      filter = getEventInDateRangeFilter(d1, d2);
 
       expect(uiModelCollection.find(filter).length).toBe(1);
 
       // G: 10:30 ~ 10:50
       d1 = new TZDate('2015-05-01T10:30:00');
       d2 = new TZDate('2015-05-01T10:50:00');
-      filter = getScheduleInDateRangeFilter(d1, d2);
+      filter = getEventInDateRangeFilter(d1, d2);
 
       expect(uiModelCollection.find(filter).length).toBe(1);
 
       // H: 10:40 ~ 10:50
       d1 = new TZDate('2015-05-01T10:40:00');
       d2 = new TZDate('2015-05-01T10:50:00');
-      filter = getScheduleInDateRangeFilter(d1, d2);
+      filter = getEventInDateRangeFilter(d1, d2);
 
       expect(uiModelCollection.find(filter).length).toBe(1);
 
       // I: 10:50 ~ 10:55
       d1 = new TZDate('2015-05-01T10:50:00');
       d2 = new TZDate('2015-05-01T10:55:00');
-      filter = getScheduleInDateRangeFilter(d1, d2);
+      filter = getEventInDateRangeFilter(d1, d2);
 
       expect(uiModelCollection.find(filter).length).toBe(0);
 
       // L: 10:10 ~ 10:50
       d1 = new TZDate('2015-05-01T10:10:00');
       d2 = new TZDate('2015-05-01T10:50:00');
-      filter = getScheduleInDateRangeFilter(d1, d2);
+      filter = getEventInDateRangeFilter(d1, d2);
 
       expect(uiModelCollection.find(filter).length).toBe(1);
     });

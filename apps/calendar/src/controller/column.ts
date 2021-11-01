@@ -1,9 +1,9 @@
-import { createScheduleCollection } from '@src/controller/base';
+import { createEventCollection } from '@src/controller/base';
 import { getCollisionGroup, getMatrices } from '@src/controller/core';
 import { getTopHeightByTime } from '@src/controller/times';
 import { getCollides } from '@src/controller/week';
+import { isTimeEvent } from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
-import { isTimeEvent } from '@src/model/schedule';
 import TZDate from '@src/time/date';
 import { addMinutes, max, min } from '@src/time/datetime';
 import array from '@src/util/array';
@@ -28,7 +28,7 @@ interface RenderInfoOption {
  * Filter that get events in supplied date ranges.
  * @param {TZDate} startColumnTime - start date
  * @param {TZDate} endColumnTime - end date
- * @returns {function} schedule filter function
+ * @returns {function} event filter function
  */
 export function isBetween(startColumnTime: TZDate, endColumnTime: TZDate) {
   return (uiModel: EventUIModel) => {
@@ -147,7 +147,7 @@ function setRenderInfo(
 
 /**
  * Convert to EventUIModel and make rendering information of events
- * @param {Schedule[]} events - event list
+ * @param {EventUIModel[]} events - event list
  * @param {TZDate} startColumnTime - start date
  * @param {TZDate} endColumnTime - end date
  */
@@ -159,8 +159,8 @@ export function getUIModels(
   const uiModels: EventUIModel[] = events
     .filter(isTimeEvent)
     .filter(isBetween(startColumnTime, endColumnTime))
-    .sort(array.compare.schedule.asc);
-  const uiModelColl = createScheduleCollection(...uiModels);
+    .sort(array.compare.event.asc);
+  const uiModelColl = createEventCollection(...uiModels);
   const usingTravelTime = true;
   const collisionGroups = getCollisionGroup(uiModels, usingTravelTime);
   const matrices = getCollides(getMatrices(uiModelColl, collisionGroups, usingTravelTime));

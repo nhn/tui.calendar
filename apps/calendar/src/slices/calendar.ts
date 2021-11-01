@@ -1,20 +1,20 @@
 import {
-  clearSchedules,
-  createScheduleCollection,
-  createSchedules,
-  updateSchedule,
+  clearEvents,
+  createEventCollection,
+  createEvents,
+  updateEvent,
 } from '@src/controller/base';
-import { CalendarData, CalendarInfo, ScheduleData } from '@src/model';
-import Schedule from '@src/model/schedule';
+import { CalendarData, CalendarInfo, EventModelData } from '@src/model';
+import EventModel from '@src/model/eventModel';
 
 import { CalendarStore, SetState } from '@t/store';
 
 export type CalendarSlice = { calendar: CalendarData };
 
-type UpdateEventParams = { event: Schedule; eventData: ScheduleData };
+type UpdateEventParams = { event: EventModel; eventData: EventModelData };
 
 export type CalendarDispatchers = {
-  createEvents: (events: (Schedule | ScheduleData)[]) => void;
+  createEvents: (events: (EventModel | EventModelData)[]) => void;
   updateEvent: (params: UpdateEventParams) => void;
   clearEvents: () => void;
 };
@@ -23,7 +23,7 @@ export function createCalendarSlice(calendars: CalendarInfo[] = []): CalendarSli
   return {
     calendar: {
       calendars,
-      schedules: createScheduleCollection(),
+      events: createEventCollection(),
       idsOfDay: {},
     },
   };
@@ -31,9 +31,9 @@ export function createCalendarSlice(calendars: CalendarInfo[] = []): CalendarSli
 
 export function createCalendarDispatchers(set: SetState<CalendarStore>): CalendarDispatchers {
   return {
-    createEvents: (events: (Schedule | ScheduleData)[]) =>
+    createEvents: (events: (EventModel | EventModelData)[]) =>
       set((state) => {
-        createSchedules(state.calendar, events);
+        createEvents(state.calendar, events);
 
         return {
           calendar: {
@@ -43,7 +43,7 @@ export function createCalendarDispatchers(set: SetState<CalendarStore>): Calenda
       }),
     updateEvent: ({ event, eventData }: UpdateEventParams) =>
       set((state) => {
-        updateSchedule(state.calendar, event.id, event.calendarId, eventData);
+        updateEvent(state.calendar, event.id, event.calendarId, eventData);
 
         return {
           calendar: {
@@ -53,7 +53,7 @@ export function createCalendarDispatchers(set: SetState<CalendarStore>): Calenda
       }),
     clearEvents: () =>
       set((state) => {
-        clearSchedules(state.calendar);
+        clearEvents(state.calendar);
 
         return {
           calendar: {

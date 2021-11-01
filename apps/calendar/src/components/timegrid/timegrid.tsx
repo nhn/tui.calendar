@@ -97,7 +97,7 @@ export const TimeGrid: FunctionComponent<Props> = ({
   const forceUpdate = useForceUpdate();
 
   const onCreateEvent = (e: CreationGuideInfo) => {
-    // @TODO: beforeCreateSchedule 구현
+    // @TODO: beforeCreateEvent 구현
   };
   const onGuideStart = (e: CreationGuideInfo) => setCreationGuide(e);
   const onGuideChange = (e: CreationGuideInfo) => setCreationGuide(e);

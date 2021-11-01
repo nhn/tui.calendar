@@ -3,7 +3,7 @@ import { h } from 'preact';
 import range from 'tui-code-snippet/array/range';
 
 import { TimeGrid } from '@src/components/timegrid/timegrid';
-import { ScheduleData } from '@src/model';
+import { EventModelData } from '@src/model';
 import TZDate from '@src/time/date';
 import { addDate, addHours, toStartOfDay } from '@src/time/datetime';
 
@@ -40,7 +40,7 @@ function getNormalEvents() {
 function getEvents() {
   const start = toStartOfDay(new TZDate());
   const adjustForWeekStart = start.getDay();
-  const disabledAMEvents: ScheduleData[] = range(0, 7).map((date) => {
+  const disabledAMEvents: EventModelData[] = range(0, 7).map((date) => {
     const eventStart = addDate(start, date - adjustForWeekStart);
 
     return {
@@ -50,7 +50,7 @@ function getEvents() {
       bgColor: 'rgba(100, 100, 100, .3)',
     };
   });
-  const disabledPMEvents: ScheduleData[] = range(0, 7).map((date) => {
+  const disabledPMEvents: EventModelData[] = range(0, 7).map((date) => {
     const eventStart = addDate(start, date - adjustForWeekStart);
 
     return {
@@ -60,7 +60,7 @@ function getEvents() {
       bgColor: 'rgba(100, 100, 100, .3)',
     };
   });
-  const disabledLunchEvents: ScheduleData[] = range(0, 7).map((date) => {
+  const disabledLunchEvents: EventModelData[] = range(0, 7).map((date) => {
     const eventStart = addDate(start, date - adjustForWeekStart);
 
     return {
@@ -70,7 +70,7 @@ function getEvents() {
       bgColor: 'rgba(23, 255, 100, .3)',
     };
   });
-  const data: ScheduleData[] = disabledAMEvents.concat(
+  const data: EventModelData[] = disabledAMEvents.concat(
     disabledPMEvents,
     disabledLunchEvents,
     getNormalEvents()
@@ -93,7 +93,7 @@ export const randomEvents = () => {
   const today = new TZDate();
   const start = addDate(new TZDate(), -today.getDay());
   const end = addDate(start, 6);
-  const data: ScheduleData[] = createRandomEvents('week', start, end);
+  const data: EventModelData[] = createRandomEvents('week', start, end);
   const eventModels = createEventModels(data);
 
   return (

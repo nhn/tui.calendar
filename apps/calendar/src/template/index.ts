@@ -104,7 +104,7 @@ export function getGridWidth(uiModel: EventUIModel, grids: GridUIModel[]) {
  * @param {EventUIModel} uiModel ui model
  * @returns {string} element size css class
  */
-export function getTimeScheduleBlock(uiModel: EventUIModel) {
+export function getTimeEventBlock(uiModel: EventUIModel) {
   const top = getElSize(uiModel.top, 'px', 'top');
   const left = getElSize(uiModel.left, '%', 'left');
   const width = getElSize(uiModel.width, '%', 'width');
@@ -113,7 +113,7 @@ export function getTimeScheduleBlock(uiModel: EventUIModel) {
   return [top, left, width, height].join(';');
 }
 
-export function getMonthScheduleBlock(
+export function getMonthEventBlock(
   uiModel: EventUIModel,
   grids: GridUIModel[],
   blockHeight: number,

@@ -2,8 +2,8 @@
 import inArray from 'tui-code-snippet/array/inArray';
 import pluck from 'tui-code-snippet/collection/pluck';
 
-import { ScheduleData } from '@src/model';
-import Schedule from '@src/model/schedule';
+import { EventModelData } from '@src/model';
+import EventModel from '@src/model/eventModel';
 import array from '@src/util/array';
 
 describe('common/array', () => {
@@ -17,9 +17,9 @@ describe('common/array', () => {
       });
     });
 
-    describe('Schedule', () => {
-      let mockData: ScheduleData[];
-      let schedules: Schedule[];
+    describe('EventModel', () => {
+      let mockData: EventModelData[];
+      let events: EventModel[];
 
       beforeEach(() => {
         mockData = [
@@ -66,17 +66,17 @@ describe('common/array', () => {
             end: '2015/05/04 19:40:00',
           },
         ];
-        schedules = [];
+        events = [];
       });
 
       it('isAllDay ASC, start ASC, duration DESC, id ASC', () => {
         mockData.forEach((data) => {
-          schedules.push(Schedule.create(data));
+          events.push(EventModel.create(data));
         });
 
-        schedules.sort(array.compare.schedule.asc);
+        events.sort(array.compare.event.asc);
 
-        expect(pluck(schedules, 'title')).toEqual([
+        expect(pluck(events, 'title')).toEqual([
           'hunting',
           '평가기간',
           'drawing study',
@@ -106,12 +106,12 @@ describe('common/array', () => {
         ];
 
         fixtures.forEach((data) => {
-          schedules.push(Schedule.create(data));
+          events.push(EventModel.create(data));
         });
 
-        schedules.sort(array.compare.schedule.asc);
+        events.sort(array.compare.event.asc);
 
-        expect(pluck(schedules, 'title')).toEqual(expected);
+        expect(pluck(events, 'title')).toEqual(expected);
       });
     });
   });
