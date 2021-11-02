@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const merge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 const common = require('./webpack.common.config');
 
 module.exports = (env) => {
@@ -18,7 +18,10 @@ module.exports = (env) => {
         {
           test: /\.(ts|tsx|js)$/,
           exclude: /node_modules/,
-          loader: ['babel-loader'],
+          loader: 'babel-loader',
+          options: {
+            rootMode: 'upward',
+          },
         },
       ],
     },

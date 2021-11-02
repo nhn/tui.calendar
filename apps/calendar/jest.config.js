@@ -8,7 +8,7 @@ module.exports = {
     '^@test/(.*)$': '<rootDir>/test/$1',
     '\\.(css)$': '<rootDir>/__mocks__/styleMock.ts',
   },
-  globals: { 'ts-jest': { babelConfig: true } },
+  globals: { 'ts-jest': { babelConfig: true, tsconfig: '<rootDir>/tsconfig.test.json' } },
   watchPathIgnorePatterns: ['<rootDir>/.storybook', '<rootDir>/.stories', '/node_modules/'],
   testPathIgnorePatterns: ['/node_modules/', '/dist/', '/playwright/'],
   setupFilesAfterEnv: [

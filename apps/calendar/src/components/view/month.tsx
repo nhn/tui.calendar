@@ -1,5 +1,5 @@
-import { FunctionComponent, h } from 'preact';
-import { Ref, useLayoutEffect, useRef, useState } from 'preact/hooks';
+import { FunctionComponent, h, RefObject } from 'preact';
+import { useLayoutEffect, useRef, useState } from 'preact/hooks';
 
 import DayGrid from '@src/components/daygrid/dayGrid';
 import DayNames from '@src/components/daygrid/dayNames';
@@ -34,7 +34,7 @@ function getDayNames(option: CalendarStore['option']) {
   return dayNames;
 }
 
-function useContainerHeight(container: Ref<HTMLDivElement>, dayNameHeight: number) {
+function useContainerHeight(container: RefObject<HTMLDivElement>, dayNameHeight: number) {
   const [gridPanelHeight, setGridPanelHeight] = useState(0);
 
   useLayoutEffect(() => {

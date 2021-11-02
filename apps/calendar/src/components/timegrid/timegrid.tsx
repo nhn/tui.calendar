@@ -93,7 +93,7 @@ export const TimeGrid: FunctionComponent<Props> = ({
   const [creationGuide, setCreationGuide] = useState<CreationGuideInfo | null>(null);
   const [intervalId, setIntervalId] = useState<TimerID>(null);
   const [timerId, setTimerId] = useState<TimerID>(null);
-  const stickyContainerRef = useRef<HTMLDivElement>();
+  const stickyContainerRef = useRef<HTMLDivElement>(null);
   const forceUpdate = useForceUpdate();
 
   const onCreateEvent = (e: CreationGuideInfo) => {

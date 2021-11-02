@@ -72,9 +72,8 @@ export const DayGridEvents: FunctionComponent<Props> = ({
       ? createMousePositionDataGrabber(cells, gridInfo, panelContainer)
       : () => null;
 
-  const { creationGuide, onGuideChange, onGuideEnd, onGuideCancel } = useCreationGuide(
-    shouldRenderDefaultPopup
-  );
+  const { creationGuide, onGuideChange, onGuideEnd, onGuideCancel } =
+    useCreationGuide(shouldRenderDefaultPopup);
   const gridInfoList = getGridInfoList(cells);
   const filteredViewModels = events.filter(
     isWithinHeight(height, EVENT_HEIGHT + WEEK_EVENT_MARGIN_TOP)

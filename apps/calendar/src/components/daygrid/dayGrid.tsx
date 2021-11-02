@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { FunctionComponent, h, RefObject } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 
 import { CreationGuide } from '@src/components/daygrid/creationGuide';
@@ -30,7 +30,7 @@ const TOTAL_PERCENT_HEIGHT = 100;
 interface Props {
   options: CalendarMonthOption;
   calendar: TZDate[][];
-  appContainer: { current: HTMLDivElement };
+  appContainer: RefObject<HTMLDivElement>;
   events?: Schedule[];
   shouldRenderDefaultPopup?: boolean;
   getMousePositionData?: (e: MouseEvent) => MousePositionData | null;
@@ -41,7 +41,9 @@ function useGridHeight() {
   const [height, setHeight] = useState(0);
 
   useEffect(() => {
-    setHeight(getSize(ref.current).height);
+    if (ref.current) {
+      setHeight(getSize(ref.current).height);
+    }
   }, []);
 
   return { ref, height };
@@ -72,9 +74,8 @@ const DayGrid: FunctionComponent<Props> = ({
 
   const { ref, height } = useGridHeight();
 
-  const { creationGuide, onGuideChange, onGuideEnd, onGuideCancel } = useCreationGuide(
-    shouldRenderDefaultPopup
-  );
+  const { creationGuide, onGuideChange, onGuideEnd, onGuideCancel } =
+    useCreationGuide(shouldRenderDefaultPopup);
 
   const rowHeight =
     TOTAL_PERCENT_HEIGHT / Math.max(visibleWeeksCount === 0 ? 6 : visibleWeeksCount, 1);

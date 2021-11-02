@@ -1,23 +1,20 @@
 name: Test
 on:
   pull_request:
-    branches: [ next ]
+    branches: [next]
 jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [ 12.x ]
     env:
       WORKING_DIRECTORY: ./apps/calendar
     steps:
       - name: Checkout next branch
         uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: '16'
       - name: Setup timezone
         uses: zcong1993/setup-timezone@master
         with:
