@@ -4,25 +4,25 @@ import { cls } from '@src/util/cssHelper';
 import { getLeftAndWidth } from '@src/util/gridHelper';
 import { toPercent } from '@src/util/units';
 
-import { GridCreationGuide } from '@t/components/daygrid/gridWithMouse';
+import { GridSelectionData } from '@t/components/daygrid/gridWithMouse';
 import { Cells } from '@t/panel';
 
 interface Props {
-  creationGuide: GridCreationGuide | null;
+  gridSelectionData: GridSelectionData | null;
   cells: Cells;
   narrowWeekend: boolean;
 }
 
 export const GridSelection: FunctionComponent<Props> = ({
-  creationGuide,
+  gridSelectionData,
   cells,
   narrowWeekend,
 }) => {
-  if (!creationGuide) {
+  if (!gridSelectionData) {
     return null;
   }
 
-  const { start, end } = creationGuide;
+  const { start, end } = gridSelectionData;
   const { left, width } = getLeftAndWidth(start, end, cells, narrowWeekend);
   const style = {
     left: toPercent(left),
@@ -30,5 +30,5 @@ export const GridSelection: FunctionComponent<Props> = ({
     height: toPercent(100),
   };
 
-  return width > 0 ? <div className={cls('daygrid-creation-guide')} style={style} /> : null;
+  return width > 0 ? <div className={cls('daygrid-grid-selection')} style={style} /> : null;
 };

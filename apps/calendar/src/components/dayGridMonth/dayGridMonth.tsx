@@ -5,7 +5,7 @@ import { GridSelection } from '@src/components/dayGridCommon/gridSelection';
 import GridWithMouse from '@src/components/dayGridCommon/gridWithMouse';
 import GridRow from '@src/components/dayGridMonth/gridRow';
 import MonthEvents from '@src/components/dayGridMonth/monthEvents';
-import { useCreationGuide } from '@src/components/hooks/creationGuide';
+import { useGridSelection } from '@src/components/hooks/gridSelection';
 import {
   MONTH_CELL_BAR_HEIGHT,
   MONTH_CELL_PADDING_TOP,
@@ -22,7 +22,7 @@ import { getSize } from '@src/util/dom';
 import { getRenderedEventUIModels } from '@src/util/gridHelper';
 import { toPercent } from '@src/util/units';
 
-import { GridGuideInfo } from '@t/components/daygrid/creationGuide';
+import { CellDateRange } from '@t/components/daygrid/gridSelectionData';
 import { CalendarMonthOption } from '@t/store';
 
 const TOTAL_PERCENT_HEIGHT = 100;
@@ -49,9 +49,9 @@ function useGridHeight() {
   return { ref, height };
 }
 
-function getGridInfoList(calendar: TZDate[][]): GridGuideInfo[][] {
-  return calendar.map<GridGuideInfo[]>((week) =>
-    week.map<GridGuideInfo>((day) => {
+function getGridInfoList(calendar: TZDate[][]): CellDateRange[][] {
+  return calendar.map<CellDateRange[]>((week) =>
+    week.map<CellDateRange>((day) => {
       const start = toStartOfDay(day);
       const end = toEndOfDay(start);
 
@@ -74,8 +74,8 @@ const DayGridMonth: FunctionComponent<Props> = ({
 
   const { ref, height } = useGridHeight();
 
-  const { creationGuide, onGuideChange, onGuideEnd, onGuideCancel } =
-    useCreationGuide(shouldRenderDefaultPopup);
+  const { gridSelection, onSelectionChange, onSelectionEnd, onSelectionCancel } =
+    useGridSelection(shouldRenderDefaultPopup);
 
   const rowHeight =
     TOTAL_PERCENT_HEIGHT / Math.max(visibleWeeksCount === 0 ? 6 : visibleWeeksCount, 1);
@@ -90,9 +90,9 @@ const DayGridMonth: FunctionComponent<Props> = ({
 
   return (
     <GridWithMouse
-      onGuideChange={onGuideChange}
-      onGuideEnd={onGuideEnd}
-      onGuideCancel={onGuideCancel}
+      onSelectionChange={onSelectionChange}
+      onSelectionEnd={onSelectionEnd}
+      onSelectionCancel={onSelectionCancel}
       gridInfoList={gridInfoList}
       getMousePositionData={getMousePositionData}
     >
@@ -133,7 +133,7 @@ const DayGridMonth: FunctionComponent<Props> = ({
                 eventTopMargin={MONTH_EVENT_MARGIN_TOP}
               />
               <GridSelection
-                creationGuide={creationGuide}
+                gridSelectionData={gridSelection}
                 cells={week}
                 narrowWeekend={narrowWeekend}
               />

@@ -1,10 +1,10 @@
 import { Component, Fragment, h } from 'preact';
 import { createPortal } from 'preact/compat';
 
-import { addTimeGridPrefix } from '@src/components/timegrid';
-import { CollapseButton } from '@src/components/timegrid/collapseButton';
-import { TimeProps, Times } from '@src/components/timegrid/times';
-import { TimezoneLabel } from '@src/components/timegrid/timezoneLabel';
+import { addTimeGridPrefix } from '@src/components/timeGrid';
+import { CollapseButton } from '@src/components/timeGrid/collapseButton';
+import { TimeProps, Times } from '@src/components/timeGrid/times';
+import { TimezoneLabel } from '@src/components/timeGrid/timezoneLabel';
 import { TimezoneConfig } from '@src/model';
 import TZDate from '@src/time/date';
 import {

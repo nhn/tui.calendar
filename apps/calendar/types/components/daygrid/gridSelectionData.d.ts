@@ -1,6 +1,6 @@
 import TZDate from '@src/time/date';
 
-interface GridGuideInfo {
+interface CellDateRange {
   start: TZDate;
   end: TZDate;
 }

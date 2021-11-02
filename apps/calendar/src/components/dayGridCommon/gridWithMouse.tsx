@@ -6,36 +6,36 @@ import TZDate from '@src/time/date';
 import { isSame } from '@src/time/datetime';
 import { toPercent } from '@src/util/units';
 
-import { GridGuideInfo } from '@t/components/daygrid/creationGuide';
-import { GridCreationGuide } from '@t/components/daygrid/gridWithMouse';
+import { CellDateRange } from '@t/components/daygrid/gridSelectionData';
+import { GridSelectionData } from '@t/components/daygrid/gridWithMouse';
 
 interface Props {
-  gridInfoList: GridGuideInfo[][];
-  onGuideEnd: (guide: GridCreationGuide | null) => void;
-  onGuideChange: (guide: GridCreationGuide | null) => void;
-  onGuideCancel: () => void;
+  gridInfoList: CellDateRange[][];
+  onSelectionEnd: (gridSelectionData: GridSelectionData | null) => void;
+  onSelectionChange: (gridSelectionData: GridSelectionData | null) => void;
+  onSelectionCancel: () => void;
   getMousePositionData: (e: MouseEvent) => MousePositionData | null;
 }
 
-function getGuideTime(
-  guideStartData: GridCreationGuide | null,
+function getSelectionTime(
+  selectionStartData: GridSelectionData | null,
   { start, end }: { start: TZDate; end: TZDate }
 ) {
-  let guideStartTime = start;
-  let guideEndTime = end;
+  let selectionStartTime = start;
+  let selectionEndTime = end;
 
-  if (guideStartData) {
-    guideStartTime = guideStartData?.start ?? start;
-    guideEndTime = guideStartData?.end ?? end;
+  if (selectionStartData) {
+    selectionStartTime = selectionStartData?.start ?? start;
+    selectionEndTime = selectionStartData?.end ?? end;
   }
 
-  return { guideStartTime, guideEndTime };
+  return { selectionStartTime, selectionEndTime };
 }
 
-function getCreationGuideData(
+function getGridSelectionData(
   mouseData: MousePositionData,
-  gridInfoList: GridGuideInfo[][]
-): GridCreationGuide {
+  gridInfoList: CellDateRange[][]
+): GridSelectionData {
   const { gridX: columnIndex, gridY: rowIndex, x, y } = mouseData;
   const { start, end } = gridInfoList[rowIndex][columnIndex];
 
@@ -44,14 +44,16 @@ function getCreationGuideData(
 
 const GridWithMouse: FunctionComponent<Props> = ({
   gridInfoList,
-  onGuideEnd,
-  onGuideChange,
-  onGuideCancel,
+  onSelectionEnd,
+  onSelectionChange,
+  onSelectionCancel,
   getMousePositionData,
   children,
 }) => {
-  const [guideStartData, setGuideStartData] = useState<GridCreationGuide | null>(null);
-  const [guidePrevDragData, setGuidePrevDragData] = useState<GridCreationGuide | null>(null);
+  const [selectionStartData, setSelectionStartData] = useState<GridSelectionData | null>(null);
+  const [selectionPrevDragData, setSelectionPrevDragData] = useState<GridSelectionData | null>(
+    null
+  );
 
   const onDragStart = (e: MouseEvent) => {
     const mousePositionData = getMousePositionData(e);
@@ -60,11 +62,11 @@ const GridWithMouse: FunctionComponent<Props> = ({
       return;
     }
 
-    const guideData = getCreationGuideData(mousePositionData, gridInfoList);
+    const gridSelectionData = getGridSelectionData(mousePositionData, gridInfoList);
 
-    if (guideData) {
-      onGuideChange(guideData);
-      setGuideStartData(guideData);
+    if (gridSelectionData) {
+      onSelectionChange(gridSelectionData);
+      setSelectionStartData(gridSelectionData);
     }
   };
 
@@ -75,44 +77,47 @@ const GridWithMouse: FunctionComponent<Props> = ({
       return;
     }
 
-    const guideData = getCreationGuideData(mousePositionData, gridInfoList);
+    const gridSelectionData = getGridSelectionData(mousePositionData, gridInfoList);
 
-    const { start, end } = guideData;
-    const { guideStartTime, guideEndTime } = getGuideTime(guideStartData, { start, end });
+    const { start, end } = gridSelectionData;
+    const { selectionStartTime, selectionEndTime } = getSelectionTime(selectionStartData, {
+      start,
+      end,
+    });
 
-    let guideInfo: GridCreationGuide;
+    let nextGridSelectionData: GridSelectionData;
 
-    if (start < guideStartTime) {
-      guideInfo = {
-        ...guideData,
-        end: guideEndTime,
+    if (start < selectionStartTime) {
+      nextGridSelectionData = {
+        ...gridSelectionData,
+        end: selectionEndTime,
       };
     } else {
-      guideInfo = {
-        ...guideData,
-        start: guideStartTime,
+      nextGridSelectionData = {
+        ...gridSelectionData,
+        start: selectionStartTime,
       };
     }
 
     if (
-      guidePrevDragData &&
-      isSame(guideInfo.start, guidePrevDragData.start) &&
-      isSame(guideInfo.end, guidePrevDragData.end)
+      selectionPrevDragData &&
+      isSame(nextGridSelectionData.start, selectionPrevDragData.start) &&
+      isSame(nextGridSelectionData.end, selectionPrevDragData.end)
     ) {
       return;
     }
 
-    setGuidePrevDragData(guideInfo);
-    onGuideChange(guideInfo);
+    setSelectionPrevDragData(nextGridSelectionData);
+    onSelectionChange(nextGridSelectionData);
   };
 
   const onDragEnd = () => {
-    if (guidePrevDragData) {
-      onGuideEnd(guidePrevDragData);
+    if (selectionPrevDragData) {
+      onSelectionEnd(selectionPrevDragData);
     }
   };
 
-  const onPressESCKey = () => onGuideCancel();
+  const onPressESCKey = () => onSelectionCancel();
 
   const { onMouseDown, isDragging } = useDrag({
     onDragStart,
@@ -124,12 +129,12 @@ const GridWithMouse: FunctionComponent<Props> = ({
   const onMouseUp = (e: MouseEvent) => {
     if (!isDragging) {
       const mousePositionData = getMousePositionData(e);
-      const guideData = mousePositionData
-        ? getCreationGuideData(mousePositionData, gridInfoList)
+      const gridSelectionData = mousePositionData
+        ? getGridSelectionData(mousePositionData, gridInfoList)
         : null;
 
-      onGuideChange(guideData);
-      onGuideEnd(guideData);
+      onSelectionChange(gridSelectionData);
+      onSelectionEnd(gridSelectionData);
     }
   };
 

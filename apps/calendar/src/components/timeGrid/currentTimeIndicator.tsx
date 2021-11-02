@@ -1,6 +1,6 @@
 import { FunctionComponent, h } from 'preact';
 
-import { addTimeGridPrefix } from '@src/components/timegrid';
+import { addTimeGridPrefix } from '@src/components/timeGrid';
 import { cls } from '@src/util/cssHelper';
 import { toPercent } from '@src/util/units';
 
@@ -19,7 +19,7 @@ interface Props {
   columnIndex: number;
 }
 
-export const CurrentTimeLine: FunctionComponent<Props> = ({
+export const CurrentTimeIndicator: FunctionComponent<Props> = ({
   top,
   columnWidth,
   columnCount,

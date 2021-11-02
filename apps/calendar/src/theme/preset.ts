@@ -17,9 +17,9 @@ const theme: ThemeKeyValue = {
   'common.dayname.color': '#333',
   'common.today.color': '#333',
 
-  // creation guide style
-  'common.creationGuide.backgroundColor': 'rgba(81, 92, 230, 0.05)',
-  'common.creationGuide.border': '1px solid #515ce6',
+  // grid selection style
+  'common.gridSelection.backgroundColor': 'rgba(81, 92, 230, 0.05)',
+  'common.gridSelection.border': '1px solid #515ce6',
 
   // month header 'dayname'
   'month.dayname.borderLeft': 'none',
@@ -71,8 +71,8 @@ const theme: ThemeKeyValue = {
   'week.currentTimeLineToday.border': '1px solid #515ce6',
   'week.currentTimeLineFuture.border': 'none',
 
-  // week creation guide style
-  'week.creationGuide.color': '#515ce6',
+  // week grid selection style
+  'week.gridSelection.color': '#515ce6',
 };
 
 export default theme;

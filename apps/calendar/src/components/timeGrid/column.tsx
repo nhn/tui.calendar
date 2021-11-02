@@ -2,8 +2,8 @@ import { FunctionComponent, h, VNode } from 'preact';
 
 import { BackgroundEvent } from '@src/components/events/backgroundEvent';
 import { TimeEvent } from '@src/components/events/timeEvent';
-import { CreationGuideInfo } from '@src/components/timegrid';
-import { CreationGuide } from '@src/components/timegrid/creationGuide';
+import { GridSelectionInfo } from '@src/components/timeGrid';
+import { GridSelection } from '@src/components/timeGrid/gridSelection';
 import { getUIModels, isBetween } from '@src/controller/column';
 import { getTopHeightByTime } from '@src/controller/times';
 import { TimeUnit } from '@src/model';
@@ -33,7 +33,7 @@ interface Props {
   start?: number;
   end?: number;
   events?: EventUIModel[];
-  creationGuide?: CreationGuideInfo | null;
+  gridSelection?: GridSelectionInfo | null;
   index?: number;
   readOnly?: boolean;
   renderGridlineChild?: (time: TZDate) => VNode;
@@ -92,23 +92,23 @@ function renderEvents(events: EventUIModel[], startTime: TZDate, endTime: TZDate
   );
 }
 
-function renderCreationGuide(
-  creationGuide: CreationGuideInfo | null,
+function renderGridSelection(
+  gridSelection: GridSelectionInfo | null,
   startTime: TZDate,
   endTime: TZDate
 ) {
-  if (!creationGuide) {
+  if (!gridSelection) {
     return null;
   }
 
   const { top, height } = getTopHeightByTime(
-    creationGuide.start,
-    creationGuide.end,
+    gridSelection.start,
+    gridSelection.end,
     startTime,
     endTime
   );
 
-  return <CreationGuide {...creationGuide} top={top} height={height} />;
+  return <GridSelection {...gridSelection} top={top} height={height} />;
 }
 
 export const Column: FunctionComponent<Props> = ({
@@ -125,7 +125,7 @@ export const Column: FunctionComponent<Props> = ({
   end = times.length,
   width = '72px',
   backgroundColor = '',
-  creationGuide = null,
+  gridSelection = null,
   readOnly = false,
   index = 0,
   renderGridlineChild,
@@ -145,7 +145,7 @@ export const Column: FunctionComponent<Props> = ({
       {renderGridlines(renderedTimes, renderGridlineChild)}
       {renderBackgroundEvents(filteredEvents, startTime, endTime)}
       {renderEvents(filteredEvents, startTime, endTime)}
-      {!readOnly ? renderCreationGuide(creationGuide, startTime, endTime) : null}
+      {!readOnly ? renderGridSelection(gridSelection, startTime, endTime) : null}
     </div>
   );
 };

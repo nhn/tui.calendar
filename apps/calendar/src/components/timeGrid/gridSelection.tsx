@@ -1,16 +1,16 @@
 import { FunctionComponent, h } from 'preact';
 
-import { CreationGuideInfo, timeFormats } from '@src/components/timegrid';
+import { GridSelectionInfo, timeFormats } from '@src/components/timeGrid';
 import { toFormat } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
 import { toPercent } from '@src/util/units';
 
-interface Props extends CreationGuideInfo {
+interface Props extends GridSelectionInfo {
   top: number;
   height: number;
 }
 
-export const CreationGuide: FunctionComponent<Props> = ({
+export const GridSelection: FunctionComponent<Props> = ({
   start,
   end,
   unit,
@@ -26,11 +26,10 @@ export const CreationGuide: FunctionComponent<Props> = ({
   };
 
   return (
-    // @TODO: change classname & selector to 'timegrid-creation-guide'
-    <div className={cls('guide-creation')} style={style}>
+    <div className={cls('grid-selection')} style={style}>
       <span
-        className={cls('creation-label', {
-          'creation-label-bottom': textPosition === 'bottom',
+        className={cls('grid-selection-label', {
+          'grid-selection-label-bottom': textPosition === 'bottom',
         })}
       >
         {text}

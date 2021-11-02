@@ -13,7 +13,7 @@ export const timeFormats: Record<TimeUnit, string> = {
   year: 'YYYY.MM.DD',
 };
 
-export interface CreationGuideInfo {
+export interface GridSelectionInfo {
   start: TZDate;
   end: TZDate;
   unit: TimeUnit;

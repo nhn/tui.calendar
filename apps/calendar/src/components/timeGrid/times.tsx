@@ -7,8 +7,8 @@ import addClass from 'tui-code-snippet/domUtil/addClass';
 import removeClass from 'tui-code-snippet/domUtil/removeClass';
 
 import Template from '@src/components/template';
-import { addTimeGridPrefix } from '@src/components/timegrid';
-import { CurrentTimeLabel } from '@src/components/timegrid/currentTimeLabel';
+import { addTimeGridPrefix } from '@src/components/timeGrid';
+import { CurrentTimeLabel } from '@src/components/timeGrid/currentTimeLabel';
 import { useTheme } from '@src/contexts/theme';
 import { getTopPercentByTime } from '@src/controller/times';
 import { TimeUnit } from '@src/model';

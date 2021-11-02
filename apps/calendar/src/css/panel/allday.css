@@ -21,7 +21,7 @@
 }
 
 /* @TODO: extract background-color & border to theme */
-.allday-panel .daygrid-creation-guide {
+.allday-panel .daygrid-grid-selection {
   position: absolute;
   right: 10px;
   background-color: rgba(81, 92, 230, 0.05);

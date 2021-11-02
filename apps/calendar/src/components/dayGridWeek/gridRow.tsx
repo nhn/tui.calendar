@@ -7,8 +7,8 @@ import { GridSelection } from '@src/components/dayGridCommon/gridSelection';
 import GridWithMouse from '@src/components/dayGridCommon/gridWithMouse';
 import { GridCell } from '@src/components/dayGridWeek/gridCell';
 import HorizontalEvent from '@src/components/events/horizontalEvent';
-import { useCreationGuide } from '@src/components/hooks/creationGuide';
 import { useDOMNode } from '@src/components/hooks/domNode';
+import { useGridSelection } from '@src/components/hooks/gridSelection';
 import Panel from '@src/components/panel';
 import Template from '@src/components/template';
 import { WEEK_EVENT_MARGIN_TOP } from '@src/constants/style';
@@ -31,7 +31,7 @@ import {
 import { toPercent } from '@src/util/units';
 import { createMousePositionDataGrabber } from '@src/util/weekViewHelper';
 
-import { GridGuideInfo } from '@t/components/daygrid/creationGuide';
+import { CellDateRange } from '@t/components/daygrid/gridSelectionData';
 import { Cells, DayGridEventType } from '@t/panel';
 
 type GridRowTitleTemplate = `${DayGridEventType}Title`;
@@ -56,9 +56,9 @@ const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
   return addDate(now, day - now.getDay());
 });
 
-function getGridInfoList(cells: Cells): GridGuideInfo[][] {
+function getGridInfoList(cells: Cells): CellDateRange[][] {
   return [
-    cells.map<GridGuideInfo>((cell) => {
+    cells.map<CellDateRange>((cell) => {
       const start = toStartOfDay(cell);
       const end = toEndOfDay(cell);
 
@@ -101,8 +101,8 @@ export const GridRow: FunctionComponent<Props> = ({
       ? createMousePositionDataGrabber(cells, gridInfo, panelContainer)
       : () => null;
 
-  const { creationGuide, onGuideChange, onGuideEnd, onGuideCancel } =
-    useCreationGuide(shouldRenderDefaultPopup);
+  const { gridSelection, onSelectionChange, onSelectionEnd, onSelectionCancel } =
+    useGridSelection(shouldRenderDefaultPopup);
   const gridInfoList = getGridInfoList(cells);
 
   const onClickExceedCount = (index: number) => {
@@ -165,14 +165,14 @@ export const GridRow: FunctionComponent<Props> = ({
       <div className={cls('allday-panel')} ref={setPanelContainerRef}>
         <GridWithMouse
           gridInfoList={gridInfoList}
-          onGuideEnd={onGuideEnd}
-          onGuideChange={onGuideChange}
-          onGuideCancel={onGuideCancel}
+          onSelectionEnd={onSelectionEnd}
+          onSelectionChange={onSelectionChange}
+          onSelectionCancel={onSelectionCancel}
           getMousePositionData={getMousePositionData}
         >
           <div className={cls('panel-grid-wrapper')}>{gridCells}</div>
           <GridSelection
-            creationGuide={creationGuide}
+            gridSelectionData={gridSelection}
             cells={cells}
             narrowWeekend={narrowWeekend}
           />

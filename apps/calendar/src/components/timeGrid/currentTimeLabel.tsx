@@ -2,7 +2,7 @@ import { FunctionComponent, h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 
 import Template from '@src/components/template';
-import { addTimeGridPrefix, timeFormats } from '@src/components/timegrid';
+import { addTimeGridPrefix, timeFormats } from '@src/components/timeGrid';
 import { TimeUnit } from '@src/model';
 import TZDate from '@src/time/date';
 import { cls } from '@src/util/cssHelper';

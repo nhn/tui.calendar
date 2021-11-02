@@ -1,6 +1,6 @@
 import TZDate from '@src/time/date';
 
-interface GridCreationGuide {
+interface GridSelectionData {
   start: TZDate;
   end: TZDate;
   x: number;

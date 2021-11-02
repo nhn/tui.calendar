@@ -6,12 +6,12 @@ import pick from 'tui-code-snippet/object/pick';
 import {
   addTimeGridPrefix,
   className as timegridClassName,
-  CreationGuideInfo,
-} from '@src/components/timegrid';
-import { Column } from '@src/components/timegrid/column';
-import { ColumnInfo, ColumnsWithMouse } from '@src/components/timegrid/columns';
-import { CurrentTimeLine } from '@src/components/timegrid/currentTimeLine';
-import { MultipleTimezones } from '@src/components/timegrid/multipleTimezones';
+  GridSelectionInfo,
+} from '@src/components/timeGrid';
+import { Column } from '@src/components/timeGrid/column';
+import { ColumnInfo, ColumnWithMouse } from '@src/components/timeGrid/columnWithMouse';
+import { CurrentTimeIndicator } from '@src/components/timeGrid/currentTimeIndicator';
+import { MultipleTimezones } from '@src/components/timeGrid/multipleTimezones';
 import { getTopPercentByTime } from '@src/controller/times';
 import { TimeUnit, TimezoneConfig } from '@src/model';
 import EventUIModel from '@src/model/eventUIModel';
@@ -90,19 +90,19 @@ export const TimeGrid: FunctionComponent<Props> = ({
 }) => {
   const [stickyContainer, setStickyContainer] = useState<HTMLElement | null>(null);
   const [columnLeft, setColumnLeft] = useState(0);
-  const [creationGuide, setCreationGuide] = useState<CreationGuideInfo | null>(null);
+  const [gridSelection, setGridSelection] = useState<GridSelectionInfo | null>(null);
   const [intervalId, setIntervalId] = useState<TimerID>(null);
   const [timerId, setTimerId] = useState<TimerID>(null);
   const stickyContainerRef = useRef<HTMLDivElement>(null);
   const forceUpdate = useForceUpdate();
 
-  const onCreateEvent = (e: CreationGuideInfo) => {
+  const onCreateEvent = (e: GridSelectionInfo) => {
     // @TODO: beforeCreateEvent 구현
   };
-  const onGuideStart = (e: CreationGuideInfo) => setCreationGuide(e);
-  const onGuideChange = (e: CreationGuideInfo) => setCreationGuide(e);
-  const onGuideEnd = (e: CreationGuideInfo) => onCreateEvent(e);
-  const onGuideCancel = () => setCreationGuide(null);
+  const onSelectionStart = (e: GridSelectionInfo) => setGridSelection(e);
+  const onSelectionChange = (e: GridSelectionInfo) => setGridSelection(e);
+  const onSelectionEnd = (e: GridSelectionInfo) => onCreateEvent(e);
+  const onSelectionCancel = () => setGridSelection(null);
 
   const onChangeCollapsed = (collapsed: boolean) =>
     setColumnLeft(collapsed ? timesWidth : calculateLeft(timesWidth, timezones));
@@ -162,7 +162,7 @@ export const TimeGrid: FunctionComponent<Props> = ({
     isBetweenWithDate(now, start, end)
   );
   const showCurrentTime = columnIndex >= 0;
-  const creationGuideColumnIndex: number = pick(creationGuide, 'columnIndex');
+  const gridSelectionColumnIndex: number = pick(gridSelection, 'columnIndex');
 
   return (
     <div className={classNames.timegrid}>
@@ -175,13 +175,13 @@ export const TimeGrid: FunctionComponent<Props> = ({
           stickyContainer={stickyContainer}
           onChangeCollapsed={onChangeCollapsed}
         />
-        <ColumnsWithMouse
+        <ColumnWithMouse
           columnLeft={left}
           columnInfoList={columnInfoList}
-          onGuideStart={onGuideStart}
-          onGuideChange={onGuideChange}
-          onGuideEnd={onGuideEnd}
-          onGuideCancel={onGuideCancel}
+          onSelectionStart={onSelectionStart}
+          onSelectionChange={onSelectionChange}
+          onSelectionEnd={onSelectionEnd}
+          onSelectionCancel={onSelectionCancel}
         >
           {columnInfoList.map(({ start: startTime }, index) => (
             <Column
@@ -190,18 +190,18 @@ export const TimeGrid: FunctionComponent<Props> = ({
               width={toPercent(columnWidth)}
               times={make24Hours(startTime)}
               events={events}
-              creationGuide={creationGuideColumnIndex === index ? creationGuide : null}
+              gridSelection={gridSelectionColumnIndex === index ? gridSelection : null}
             />
           ))}
           {showCurrentTime ? (
-            <CurrentTimeLine
+            <CurrentTimeIndicator
               top={currentTimeLineTop}
               columnWidth={columnWidth}
               columnCount={columnInfoList.length}
               columnIndex={columnIndex}
             />
           ) : null}
-        </ColumnsWithMouse>
+        </ColumnWithMouse>
       </div>
       <div ref={stickyContainerRef} />
     </div>

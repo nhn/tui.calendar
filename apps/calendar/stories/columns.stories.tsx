@@ -1,7 +1,7 @@
 import { h, RenderableProps } from 'preact';
 
-import { CreationGuideInfo } from '@src/components/timegrid';
-import { Column } from '@src/components/timegrid/column';
+import { GridSelectionInfo } from '@src/components/timeGrid';
+import { Column } from '@src/components/timeGrid/column';
 import { EventModelData } from '@src/model';
 import TZDate from '@src/time/date';
 import {
@@ -228,9 +228,9 @@ columnHasBackgroundColor.story = {
   name: 'Column has background color',
 };
 
-export const columnCreationGuideWithTop = () => {
+export const gridSelectionWithTop = () => {
   const start = toStartOfDay(new TZDate());
-  const creationGuide: CreationGuideInfo = {
+  const gridSelection: GridSelectionInfo = {
     start: addHours(start, 2),
     end: addHours(start, 5),
     unit: 'minute',
@@ -238,17 +238,17 @@ export const columnCreationGuideWithTop = () => {
 
   return (
     <Wrapper>
-      <Column width="100px" creationGuide={creationGuide} />
+      <Column width="100px" gridSelection={gridSelection} />
     </Wrapper>
   );
 };
-columnCreationGuideWithTop.story = {
-  name: 'Creation Guide(text on top)',
+gridSelectionWithTop.story = {
+  name: 'Grid selection(text on top)',
 };
 
-export const columnCreationGuideWithBottom = () => {
+export const gridSelectionWithBottom = () => {
   const start = toStartOfDay(new TZDate());
-  const creationGuide: CreationGuideInfo = {
+  const gridSelection: GridSelectionInfo = {
     start: addHours(start, 3),
     end: addHours(start, 6),
     unit: 'minute',
@@ -257,10 +257,10 @@ export const columnCreationGuideWithBottom = () => {
 
   return (
     <Wrapper>
-      <Column width="100px" creationGuide={creationGuide} />
+      <Column width="100px" gridSelection={gridSelection} />
     </Wrapper>
   );
 };
-columnCreationGuideWithBottom.story = {
-  name: 'Creation Guide(text on bottom)',
+gridSelectionWithBottom.story = {
+  name: 'Grid selection(text on bottom)',
 };
