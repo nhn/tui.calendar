@@ -4,15 +4,15 @@ import CloseButton from '@src/components/popup/closeButton';
 import { toFormat } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
 
-import { CreationPopupParam } from '@t/store';
+import { EventFormPopupParam } from '@t/store';
 
-const CreationPopup: FunctionComponent<CreationPopupParam> = ({
+export const EventFormPopup: FunctionComponent<EventFormPopupParam> = ({
   start,
   end,
   isAllDay = false,
   close,
 }) => {
-  // @TODO: creation popup
+  // @TODO: form popup
   return (
     <div className={cls('popup-container')}>
       <CloseButton close={close} />
@@ -26,5 +26,3 @@ const CreationPopup: FunctionComponent<CreationPopupParam> = ({
     </div>
   );
 };
-
-export default CreationPopup;

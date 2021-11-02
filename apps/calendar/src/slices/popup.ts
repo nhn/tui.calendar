@@ -4,7 +4,7 @@ import { CalendarStore, PopupParamMap, SetState } from '@t/store';
 
 export enum PopupType {
   seeMore = 'seeMore',
-  creation = 'creation',
+  form = 'form',
   detail = 'detail',
 }
 

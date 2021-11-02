@@ -17,7 +17,7 @@ export function useCreationGuide(shouldRenderDefaultPopup = false) {
 
       // @TODO: need to calculate accurate coord of popupRect
       show({
-        type: PopupType.creation,
+        type: PopupType.form,
         param: {
           start,
           end,
