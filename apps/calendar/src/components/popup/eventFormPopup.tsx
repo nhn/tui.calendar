@@ -1,6 +1,6 @@
 import { FunctionComponent, h } from 'preact';
 
-import CloseButton from '@src/components/popup/closeButton';
+import { ClosePopupButton } from '@src/components/popup/closePopupButton';
 import { toFormat } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
 
@@ -15,7 +15,7 @@ export const EventFormPopup: FunctionComponent<EventFormPopupParam> = ({
   // @TODO: form popup
   return (
     <div className={cls('popup-container')}>
-      <CloseButton close={close} />
+      <ClosePopupButton close={close} />
       <div>
         {toFormat(start, 'YYYY-MM-DD')} ~ {toFormat(end, 'YYYY-MM-DD')}{' '}
         <label>

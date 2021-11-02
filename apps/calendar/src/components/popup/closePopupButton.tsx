@@ -8,7 +8,7 @@ interface Props {
   close?: () => void;
 }
 
-const CloseButton: FunctionComponent<Props> = ({ close }) => {
+export const ClosePopupButton: FunctionComponent<Props> = ({ close }) => {
   const { hide } = useDispatch('popup');
 
   const onClickHandler = () => {
@@ -25,5 +25,3 @@ const CloseButton: FunctionComponent<Props> = ({ close }) => {
     </button>
   );
 };
-
-export default CloseButton;

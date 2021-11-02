@@ -1,7 +1,8 @@
 import { FunctionComponent, h } from 'preact';
 
 import HorizontalEvent from '@src/components/events/horizontalEvent';
-import SeeMoreHeader from '@src/components/popup/seeMoreHeader';
+import { ClosePopupButton } from '@src/components/popup/closePopupButton';
+import Template from '@src/components/template';
 import {
   MONTH_EVENT_HEIGHT,
   MONTH_MORE_VIEW_HEADER_HEIGHT,
@@ -9,18 +10,34 @@ import {
   MONTH_MORE_VIEW_PADDING,
 } from '@src/constants/style';
 import { useTheme } from '@src/contexts/theme';
+import { toFormat } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
 
 import { SeeMorePopupParam } from '@t/store';
 
-const SeeMorePopup: FunctionComponent<SeeMorePopupParam> = ({ date, events = [] }) => {
+export const SeeMoreEventsPopup: FunctionComponent<SeeMorePopupParam> = ({ date, events = [] }) => {
   const {
-    month: { moreView },
+    month: { moreView, moreViewTitle },
   } = useTheme();
+
+  const style = {
+    height: MONTH_MORE_VIEW_HEADER_HEIGHT,
+    marginBottom: MONTH_MORE_VIEW_HEADER_MARGIN_BOTTOM,
+    backgroundColor: moreViewTitle.backgroundColor,
+  };
+
+  const moreTitle = {
+    ymd: toFormat(date, 'YYYY-MM-DD'),
+    day: date.getDay(),
+    date: date.getDate(),
+  };
 
   return (
     <div className={cls('see-more')} style={{ ...moreView, padding: MONTH_MORE_VIEW_PADDING }}>
-      <SeeMoreHeader date={date} />
+      <div className={cls('see-more-header')} style={style}>
+        <Template template="monthMoreTitleDate" model={moreTitle} />
+        <ClosePopupButton />
+      </div>
       <div
         className={cls('month-more-list')}
         style={{
@@ -42,5 +59,3 @@ const SeeMorePopup: FunctionComponent<SeeMorePopupParam> = ({ date, events = [] 
     </div>
   );
 };
-
-export default SeeMorePopup;
