@@ -1,9 +1,9 @@
-import { createScheduleCollection } from '@src/controller/base';
+import { createEventCollection } from '@src/controller/base';
 import { getCollisionGroup, getMatrices } from '@src/controller/core';
 import { getTopHeightByTime } from '@src/controller/times';
 import { getCollides } from '@src/controller/week';
-import { isTimeEvent } from '@src/model/schedule';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
+import { isTimeEvent } from '@src/model/eventModel';
+import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { addMinutes, max, min } from '@src/time/datetime';
 import array from '@src/util/array';
@@ -28,55 +28,55 @@ interface RenderInfoOption {
  * Filter that get events in supplied date ranges.
  * @param {TZDate} startColumnTime - start date
  * @param {TZDate} endColumnTime - end date
- * @returns {function} schedule filter function
+ * @returns {function} event filter function
  */
 export function isBetween(startColumnTime: TZDate, endColumnTime: TZDate) {
-  return (viewModel: ScheduleViewModel) => {
-    const { goingDuration = 0, comingDuration = 0 } = viewModel.model;
-    const ownStarts = addMinutes(viewModel.getStarts(), -goingDuration);
-    const ownEnds = addMinutes(viewModel.getEnds(), comingDuration);
+  return (uiModel: EventUIModel) => {
+    const { goingDuration = 0, comingDuration = 0 } = uiModel.model;
+    const ownStarts = addMinutes(uiModel.getStarts(), -goingDuration);
+    const ownEnds = addMinutes(uiModel.getEnds(), comingDuration);
 
     return !(ownEnds <= startColumnTime || ownStarts >= endColumnTime);
   };
 }
 
-function hasGoingDuration(viewModel: ScheduleViewModel, option: RenderInfoOption) {
+function hasGoingDuration(uiModel: EventUIModel, option: RenderInfoOption) {
   const { goingStart, startColumnTime } = option;
-  const { goingDuration = 0 } = viewModel.valueOf();
+  const { goingDuration = 0 } = uiModel.valueOf();
 
   return goingDuration && startColumnTime <= goingStart;
 }
 
-function hasComingDuration(viewModel: ScheduleViewModel, option: RenderInfoOption) {
+function hasComingDuration(uiModel: EventUIModel, option: RenderInfoOption) {
   const { comingEnd, endColumnTime } = option;
-  const { comingDuration = 0 } = viewModel.valueOf();
+  const { comingDuration = 0 } = uiModel.valueOf();
 
   return comingDuration && endColumnTime >= comingEnd;
 }
 
-function setInnerHeights(viewModel: ScheduleViewModel, option: RenderInfoOption) {
+function setInnerHeights(uiModel: EventUIModel, option: RenderInfoOption) {
   const { renderStart, renderEnd, modelStart, modelEnd } = option;
   let modelDurationHeight = 100;
 
-  if (hasGoingDuration(viewModel, option)) {
+  if (hasGoingDuration(uiModel, option)) {
     const { height: goingDurationHeight } = getTopHeightByTime(
       renderStart,
       modelStart,
       renderStart,
       renderEnd
     );
-    viewModel.goingDurationHeight = goingDurationHeight;
+    uiModel.goingDurationHeight = goingDurationHeight;
     modelDurationHeight -= goingDurationHeight;
   }
 
-  if (hasComingDuration(viewModel, option)) {
+  if (hasComingDuration(uiModel, option)) {
     const { height: comingDurationHeight } = getTopHeightByTime(
       modelEnd,
       renderEnd,
       renderStart,
       renderEnd
     );
-    viewModel.comingDurationHeight = comingDurationHeight;
+    uiModel.comingDurationHeight = comingDurationHeight;
     modelDurationHeight -= comingDurationHeight;
   }
 
@@ -84,21 +84,21 @@ function setInnerHeights(viewModel: ScheduleViewModel, option: RenderInfoOption)
     modelDurationHeight = MIN_MODEL_HEIGHT_PERCENT;
   }
 
-  viewModel.modelDurationHeight = modelDurationHeight;
+  uiModel.modelDurationHeight = modelDurationHeight;
 }
 
-function setCroppedEdges(viewModel: ScheduleViewModel, option: RenderInfoOption) {
+function setCroppedEdges(uiModel: EventUIModel, option: RenderInfoOption) {
   const { goingStart, comingEnd, startColumnTime, endColumnTime } = option;
 
   if (goingStart < startColumnTime) {
-    viewModel.croppedStart = true;
+    uiModel.croppedStart = true;
   }
   if (comingEnd > endColumnTime) {
-    viewModel.croppedEnd = true;
+    uiModel.croppedEnd = true;
   }
 }
 
-function setDimension(viewModel: ScheduleViewModel, option: RenderInfoOption) {
+function setDimension(uiModel: EventUIModel, option: RenderInfoOption) {
   const { renderStart, renderEnd, startColumnTime, endColumnTime, baseWidth, columnIndex } = option;
   const { top, height } = getTopHeightByTime(
     renderStart,
@@ -107,22 +107,22 @@ function setDimension(viewModel: ScheduleViewModel, option: RenderInfoOption) {
     endColumnTime
   );
   const left = baseWidth * columnIndex;
-  viewModel.top = top;
-  viewModel.left = left;
-  viewModel.width = baseWidth;
-  viewModel.height = height < MIN_HEIGHT_PERCENT ? MIN_HEIGHT_PERCENT : height;
+  uiModel.top = top;
+  uiModel.left = left;
+  uiModel.width = baseWidth;
+  uiModel.height = height < MIN_HEIGHT_PERCENT ? MIN_HEIGHT_PERCENT : height;
 }
 
 function setRenderInfo(
-  viewModel: ScheduleViewModel,
+  uiModel: EventUIModel,
   columnIndex: number,
   baseWidth: number,
   startColumnTime: TZDate,
   endColumnTime: TZDate
 ) {
-  const { goingDuration = 0, comingDuration = 0 } = viewModel.valueOf();
-  const modelStart = viewModel.getStarts();
-  const modelEnd = viewModel.getEnds();
+  const { goingDuration = 0, comingDuration = 0 } = uiModel.valueOf();
+  const modelStart = uiModel.getStarts();
+  const modelEnd = uiModel.getEnds();
   const goingStart = addMinutes(modelStart, -goingDuration);
   const comingEnd = addMinutes(modelEnd, comingDuration);
   const renderStart = max(goingStart, startColumnTime);
@@ -140,41 +140,41 @@ function setRenderInfo(
     endColumnTime,
   };
 
-  setDimension(viewModel, renderInfoOption);
-  setInnerHeights(viewModel, renderInfoOption);
-  setCroppedEdges(viewModel, renderInfoOption);
+  setDimension(uiModel, renderInfoOption);
+  setInnerHeights(uiModel, renderInfoOption);
+  setCroppedEdges(uiModel, renderInfoOption);
 }
 
 /**
- * Convert to ScheduleViewModel and make rendering information of events
- * @param {Schedule[]} events - event list
+ * Convert to EventUIModel and make rendering information of events
+ * @param {EventUIModel[]} events - event list
  * @param {TZDate} startColumnTime - start date
  * @param {TZDate} endColumnTime - end date
  */
-export function getViewModels(
-  events: ScheduleViewModel[],
+export function getUIModels(
+  events: EventUIModel[],
   startColumnTime: TZDate,
   endColumnTime: TZDate
 ) {
-  const viewModels: ScheduleViewModel[] = events
+  const uiModels: EventUIModel[] = events
     .filter(isTimeEvent)
     .filter(isBetween(startColumnTime, endColumnTime))
-    .sort(array.compare.schedule.asc);
-  const viewModelColl = createScheduleCollection(...viewModels);
+    .sort(array.compare.event.asc);
+  const uiModelColl = createEventCollection(...uiModels);
   const usingTravelTime = true;
-  const collisionGroups = getCollisionGroup(viewModels, usingTravelTime);
-  const matrices = getCollides(getMatrices(viewModelColl, collisionGroups, usingTravelTime));
+  const collisionGroups = getCollisionGroup(uiModels, usingTravelTime);
+  const matrices = getCollides(getMatrices(uiModelColl, collisionGroups, usingTravelTime));
 
   matrices.forEach((matrix) => {
     const maxRowLength = Math.max(...matrix.map((row) => row.length));
     const baseWidth = 100 / maxRowLength;
 
     matrix.forEach((row) => {
-      row.forEach((viewModel, col) => {
-        setRenderInfo(viewModel, col, baseWidth, startColumnTime, endColumnTime);
+      row.forEach((uiModel, col) => {
+        setRenderInfo(uiModel, col, baseWidth, startColumnTime, endColumnTime);
       });
     });
   });
 
-  return viewModels;
+  return uiModels;
 }

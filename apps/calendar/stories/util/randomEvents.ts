@@ -1,18 +1,18 @@
 import Chance from 'chance';
 import moment from 'moment-timezone';
 
-import { CalendarInfo, ScheduleData, ViewType } from '@src/model';
-import Schedule, { ScheduleCategory } from '@src/model/schedule';
+import { CalendarInfo, EventModelData, ViewType } from '@src/model';
+import EventModel, { EventCategory } from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 import { getMonthCalendar } from '@src/time/datetime';
 
 import { calendars } from '@stories/util/mockCalendars';
 
 const chance = new Chance();
-const EVENT_CATEGORY: ScheduleCategory[] = ['milestone', 'task'];
+const EVENT_CATEGORY: EventCategory[] = ['milestone', 'task'];
 
 // eslint-disable-next-line complexity
-function createTime(event: ScheduleData, renderStart: TZDate, renderEnd: TZDate) {
+function createTime(event: EventModelData, renderStart: TZDate, renderEnd: TZDate) {
   const startDate = moment(renderStart.getTime());
   let endDate = moment(renderEnd.getTime());
   const diffDate = endDate.diff(startDate, 'days');
@@ -63,7 +63,7 @@ function createNames() {
 }
 
 function createRandomEvent(calendar: CalendarInfo, renderStart: TZDate, renderEnd: TZDate) {
-  const event: ScheduleData = {
+  const event: EventModelData = {
     raw: {
       creator: {},
     },
@@ -119,7 +119,7 @@ export function createRandomEvents(
   eventCount?: number
 ) {
   const view = viewName ?? 'week';
-  const events: ScheduleData[] = [];
+  const events: EventModelData[] = [];
   const count = eventCount ?? defaultEventCount[view];
 
   calendars.forEach((calendar) => {
@@ -141,5 +141,5 @@ export function createRandomEventModelsForMonth(length = defaultEventCount.month
     length
   );
 
-  return data.map((event: ScheduleData) => Schedule.create(event));
+  return data.map((event: EventModelData) => EventModel.create(event));
 }

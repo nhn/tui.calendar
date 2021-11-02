@@ -1,11 +1,11 @@
 import { FunctionComponent, h } from 'preact';
 
-import DayNames from '@src/components/daygrid/dayNames';
+import GridHeader from '@src/components/dayGridCommon/gridHeader';
+import { GridRow } from '@src/components/dayGridWeek/gridRow';
 import { Layout } from '@src/components/layout';
 import Panel from '@src/components/panel';
-import { DayGridEvents } from '@src/components/panelgrid/dayGridEvents';
-import { ColumnInfo } from '@src/components/timegrid/columns';
-import { TimeGrid } from '@src/components/timegrid/timegrid';
+import { ColumnInfo } from '@src/components/timeGrid/columnWithMouse';
+import { TimeGrid } from '@src/components/timeGrid/timeGrid';
 import { useStore } from '@src/contexts/calendarStore';
 import { WeekOption } from '@src/model';
 import { weekViewStateSelector } from '@src/selectors';
@@ -48,10 +48,10 @@ const Week: FunctionComponent = () => {
     template,
     option,
     calendar,
-    weekViewLayout: { dayGridRows },
+    weekViewLayout: { dayGridRows: gridRowLayout },
   } = useStore(weekViewStateSelector);
 
-  if (!template || !option || !calendar || !dayGridRows) {
+  if (!template || !option || !calendar || !gridRowLayout) {
     return null;
   }
 
@@ -76,28 +76,28 @@ const Week: FunctionComponent = () => {
     (cell) =>
       ({ start: toStartOfDay(cell), end: toEndOfDay(cell), unit: 'minute', slot: 30 } as ColumnInfo)
   );
-  const allDayPanels = Object.entries(dayGridRows).map(([key, value]) => {
-    const panelType = key as DayGridEventType;
+  const gridRows = Object.entries(gridRowLayout).map(([key, value]) => {
+    const rowType = key as DayGridEventType;
 
     return (
-      <Panel key={panelType} name={panelType} resizable>
-        <DayGridEvents
-          events={dayGridEvents[panelType]}
-          cells={cells}
-          type={panelType}
-          height={value.height}
-          options={weekOptions}
-          gridInfo={gridInfo}
-          gridColWidthMap={gridColWidthMap}
-        />
-      </Panel>
+      <GridRow
+        key={rowType}
+        type={rowType}
+        events={dayGridEvents[rowType]}
+        gridInfo={gridInfo}
+        gridColWidthMap={gridColWidthMap}
+        rowName={rowType}
+        cells={cells}
+        height={value.height}
+        options={weekOptions}
+      />
     );
   });
 
   return (
     <Layout>
       <Panel name="week-daynames" height={dayNameHeight}>
-        <DayNames
+        <GridHeader
           dayNames={dayNames}
           marginLeft={120}
           templateType="weekDayname"
@@ -106,7 +106,7 @@ const Week: FunctionComponent = () => {
           type="week"
         />
       </Panel>
-      {allDayPanels}
+      {gridRows}
       <Panel name="time" autoSize={1}>
         <TimeGrid events={dayGridEvents.time} columnInfoList={columnInfoList} />
       </Panel>

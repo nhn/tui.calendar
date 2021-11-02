@@ -3,11 +3,11 @@
  * @fileoverview jest custom matcher for test
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
-import ScheduleViewModel from '@src/model/scheduleViewModel';
+import EventUIModel from '@src/model/eventUIModel';
 
 // eslint-disable-next-line no-undefined
 const undef = undefined;
-function pickTitle(matrix: ScheduleViewModel[]) {
+function pickTitle(matrix: EventUIModel[]) {
   const titleList = [];
 
   for (let i = 0, cnt = matrix.length; i < cnt; i += 1) {
@@ -29,25 +29,22 @@ function fail(message: string) {
   };
 }
 
-function titleComparator(viewModel: ScheduleViewModel, title: string | number) {
-  return viewModel.model.title === title;
+function titleComparator(uiModel: EventUIModel, title: string | number) {
+  return uiModel.model.title === title;
 }
 
-function topComparator(viewModel: ScheduleViewModel, top: string | number) {
-  return viewModel.top === top;
+function topComparator(uiModel: EventUIModel, top: string | number) {
+  return uiModel.top === top;
 }
 
-function getMatcher(comparator: (viewModel: ScheduleViewModel, value: string | number) => boolean) {
-  return function matcher(
-    actual: Array<ScheduleViewModel[]>,
-    expected: Array<string[] | number[]>
-  ) {
+function getMatcher(comparator: (uiModel: EventUIModel, value: string | number) => boolean) {
+  return function matcher(actual: Array<EventUIModel[]>, expected: Array<string[] | number[]>) {
     let aMatrix;
     let aLength;
     let bMatrix;
     let bLength;
     let aColumn;
-    let aViewModel;
+    let aUIModel;
     let bValue;
 
     if (actual.length !== expected.length) {
@@ -79,10 +76,10 @@ function getMatcher(comparator: (viewModel: ScheduleViewModel, value: string | n
           continue;
         }
 
-        aViewModel = aColumn;
+        aUIModel = aColumn;
         bValue = bMatrix[j];
 
-        if (!comparator(aViewModel, bValue)) {
+        if (!comparator(aUIModel, bValue)) {
           return fail(
             '[' +
               i +
@@ -90,7 +87,7 @@ function getMatcher(comparator: (viewModel: ScheduleViewModel, value: string | n
               j +
               '] th matrix is different\n' +
               'actual: ' +
-              aViewModel +
+              aUIModel +
               '\n' +
               'expected: ' +
               bValue

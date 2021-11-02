@@ -6,7 +6,7 @@ import isString from 'tui-code-snippet/type/isString';
 
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
 import { ThemeProvider } from '@src/contexts/theme';
-import { createScheduleCollection } from '@src/controller/base';
+import { createEventCollection } from '@src/controller/base';
 import { EventHandler } from '@src/event';
 import { ExternalEventName } from '@src/event/externalEventType';
 import { InternalEventName } from '@src/event/internalEventType';
@@ -16,8 +16,8 @@ import {
   CalendarInfo,
   CustomTimezone,
   DateType,
+  EventModelData,
   Option,
-  ScheduleData,
   ViewType,
 } from '@src/model';
 import { registerTemplateConfig } from '@src/template';
@@ -83,7 +83,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
       },
       calendarData: {
         calendars: [],
-        schedules: createScheduleCollection(),
+        events: createEventCollection(),
         idsOfDay: {},
       },
       templates: registerTemplateConfig(option.template),
@@ -116,7 +116,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
     const {
       defaultView = this._viewName,
       taskView = true,
-      scheduleView = true,
+      eventView = true,
       template = {},
       week = {},
       month = {},
@@ -131,7 +131,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
     return {
       defaultView,
       taskView,
-      scheduleView,
+      eventView,
       template,
       week,
       month,
@@ -187,16 +187,16 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    **********/
 
   /**
-   * Create schedules and render calendar.
-   * @param {Array.<Schedule>} schedules - {@link Schedule} data list
+   * Create events and render calendar.
+   * @param {Array.<EventModel>} events - {@link EventModelData} data list
    * @param {boolean} [silent=false] - no auto render after creation when set true
    * @todo implement this
    * @example
-   * calendar.createSchedules([
+   * calendar.createEvents([
    *     {
    *         id: '1',
    *         calendarId: '1',
-   *         title: 'my schedule',
+   *         title: 'my event',
    *         category: 'time',
    *         dueDateClass: '',
    *         start: '2018-01-18T22:30:00+09:00',
@@ -205,7 +205,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    *     {
    *         id: '2',
    *         calendarId: '1',
-   *         title: 'second schedule',
+   *         title: 'second event',
    *         category: 'time',
    *         dueDateClass: '',
    *         start: '2018-01-18T17:30:00+09:00',
@@ -213,60 +213,55 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    *     }
    * ]);
    */
-  createSchedules(events: ScheduleData[]) {
+  createEvents(events: EventModelData[]) {
     this.getStoreDispatchers('calendar').createEvents(events);
   }
 
   /**
-   * Get a {@link Schedule} object by schedule id and calendar id.
-   * @param {string} scheduleId - ID of schedule
-   * @param {string} calendarId - calendarId of the schedule
-   * @returns {Schedule} schedule object
+   * Get a {@link EventModel} object by event id and calendar id.
+   * @param {string} eventId - ID of event
+   * @param {string} calendarId - calendarId of the event
+   * @returns {EventModel} event model object
    * @todo implement this
    * @example
-   * var schedule = calendar.getSchedule(scheduleId, calendarId);
-   * console.log(schedule.title);
+   * var event = calendar.getEvent(eventId, calendarId);
+   * console.log(event.title);
    */
-  getSchedule(scheduleId: string, calendarId: string) {
-    // console.log('getSchedule', scheduleId, calendarId);
+  getEvent(eventId: string, calendarId: string) {
+    // console.log('getEvent', eventId, calendarId);
   }
 
   /**
-   * Update the schedule
-   * @param {string} scheduleId - ID of a schedule to update
-   * @param {string} calendarId - The calendarId of the schedule to update
-   * @param {Schedule} scheduleData - The {@link Schedule} data to update
+   * Update the event
+   * @param {string} eventId - ID of a event to update
+   * @param {string} calendarId - The calendarId of the event to update
+   * @param {EventModelData} eventData - The {@link EventModelData} data to update
    * @param {boolean} [silent=false] - No auto render after creation when set true
    * @todo implement this
    * @example
-   * calendar.on('beforeUpdateSchedule', function(event) {
-   *     var schedule = event.schedule;
+   * calendar.on('beforeUpdateEvent', function(event) {
+   *     var event = event.event;
    *     var startTime = event.start;
    *     var endTime = event.end;
-   *     calendar.updateSchedule(schedule.id, schedule.calendarId, {
+   *     calendar.updateEvent(event.id, event.calendarId, {
    *         start: startTime,
    *         end: endTime
    *     });
    * });
    */
-  updateSchedule(
-    scheduleId: string,
-    calendarId: string,
-    scheduleData: ScheduleData,
-    silent = false
-  ) {
-    // console.log('updateSchedule', scheduleId, calendarId, scheduleData, silent);
+  updateEvent(eventId: string, calendarId: string, eventData: EventModelData, silent = false) {
+    // console.log('updateEvent', eventId, calendarId, eventData, silent);
   }
 
   /**
-   * Delete a schedule.
-   * @param {string} scheduleId - ID of schedule to delete
-   * @param {string} calendarId - The CalendarId of the schedule to delete
+   * Delete a event.
+   * @param {string} eventId - ID of event to delete
+   * @param {string} calendarId - The CalendarId of the event to delete
    * @param {boolean} [silent=false] - No auto render after creation when set true
    * @todo implement this
    */
-  deleteSchedule(scheduleId: string, calendarId: string, silent = false) {
-    // console.log('deleteSchedule', scheduleId, calendarId, silent);
+  deleteEvent(eventId: string, calendarId: string, silent = false) {
+    // console.log('deleteEvent', eventId, calendarId, silent);
   }
 
   /**********
@@ -274,14 +269,14 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    **********/
 
   /**
-   * Toggle schedules' visibility by calendar ID
+   * Toggle events' visibility by calendar ID
    * @param {string} calendarId - The calendar id value
-   * @param {boolean} toHide - Set true to hide schedules
+   * @param {boolean} toHide - Set true to hide events
    * @param {boolean} [renderImmediately=true] - set true then render after change visible property each models
    * @todo implement this
    */
-  toggleSchedules(calendarId: string, toHide: boolean, renderImmediately = true) {
-    // console.log('toggleSchedules', calendarId, toHide, renderImmediately);
+  toggleEvents(calendarId: string, toHide: boolean, renderImmediately = true) {
+    // console.log('toggleEvents', calendarId, toHide, renderImmediately);
   }
 
   /**
@@ -289,7 +284,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * @example
    * var silent = true;
    * calendar.clear();
-   * calendar.createSchedules(schedules, silent);
+   * calendar.createEvents(events, silent);
    * calendar.render();
    * @example
    * // Render a calendar when resizing a window.
@@ -325,11 +320,11 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
   }
 
   /**
-   * Delete all schedules and clear view.
+   * Delete all events and clear view.
    * @todo implement this
    * @example
    * calendar.clear();
-   * calendar.createSchedules(schedules, true);
+   * calendar.createEvents(events, true);
    * calendar.render();
    */
   clear() {
@@ -340,8 +335,8 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    * Scroll to current time on today in case of daily, weekly view
    * @todo implement this
    * @example
-   * function onNewSchedules(schedules) {
-   *     calendar.createSchedules(schedules);
+   * function onNewEvents(events) {
+   *     calendar.createEvents(events);
    *     if (calendar.getViewName() !== 'month') {
    *         calendar.scrollToNow();
    *     }
@@ -412,7 +407,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
   }
 
   /**
-   * Change calendar's schedule color with option
+   * Change calendar's event color with option
    * @param {string} calendarId - The calendar ID
    * @param {CalendarColor} option - The {@link CalendarColor} object
    * @param {boolean} [silent=false] - No auto render after creation when set true
@@ -506,32 +501,32 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
 
   /**
    * @deprecated
-   * Toggle schedule view('AllDay', TimeGrid') panel
+   * Toggle event view('AllDay', TimeGrid') panel
    * @param {boolean} enabled - use task view
    * @todo remove this
    * @example
    * // hide those view panel to show only 'Milestone', 'Task'
-   * calendar.toggleScheduleView(false);
+   * calendar.toggleEventView(false);
    *
    * // show those view panel.
-   * calendar.toggleScheduleView(true);
+   * calendar.toggleEventView(true);
    */
-  toggleScheduleView(enabled: boolean) {
-    // console.log('toggleScheduleView', enabled);
+  toggleEventView(enabled: boolean) {
+    // console.log('toggleEventView', enabled);
   }
 
   /**
-   * Get a schedule element by schedule id and calendar id.
-   * @param {string} scheduleId - ID of schedule
-   * @param {string} calendarId - calendarId of schedule
-   * @returns {HTMLElement} schedule element if found or null
+   * Get a event element by event id and calendar id.
+   * @param {string} eventId - ID of event
+   * @param {string} calendarId - calendarId of event
+   * @returns {HTMLElement} event element if found or null
    * @todo implement this
    * @example
-   * var element = calendar.getElement(scheduleId, calendarId);
+   * var element = calendar.getElement(eventId, calendarId);
    * console.log(element);
    */
-  getElement(scheduleId: string, calendarId: string) {
-    // console.log('getElement', scheduleId, calendarId);
+  getElement(eventId: string, calendarId: string) {
+    // console.log('getElement', eventId, calendarId);
 
     return null;
   }
@@ -628,11 +623,11 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
   }
 
   /**
-   * Open schedule creation popup
-   * @param {Schedule} schedule - The preset {@link Schedule} data
+   * Open event creation popup
+   * @param {EventModelData} event - The preset {@link EventModelData} data
    * @todo implement this
    */
-  openCreationPopup(schedule: ScheduleData) {
-    // console.log('openCreationPopup', schedule);
+  openCreationPopup(event: EventModelData) {
+    // console.log('openCreationPopup', event);
   }
 }

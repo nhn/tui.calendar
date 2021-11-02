@@ -11,7 +11,7 @@ import {
   TemplateTimezone,
   TemplateWeekDay,
 } from '@src/model';
-import Schedule, { ScheduleCategory } from '@src/model/schedule';
+import EventModel, { EventCategory } from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 import { isSameDate, leadingZero, toFormat } from '@src/time/datetime';
 import { stripTags } from '@src/util';
@@ -21,7 +21,7 @@ import { capitalizeDayName, getDayName } from '@src/util/dayName';
 const SIXTY_MINUTES = 60;
 
 export const templates: Template = {
-  milestone(model: Schedule) {
+  milestone(model: EventModel) {
     const icon = cls('icon');
     const iconName = cls('ic-milestone');
 
@@ -34,7 +34,7 @@ export const templates: Template = {
     return <span className={cls('left-content')}>Milestone</span>;
   },
 
-  task(model: Schedule) {
+  task(model: EventModel) {
     return `#${model.title}`;
   },
 
@@ -46,11 +46,11 @@ export const templates: Template = {
     return <span className={cls('left-content')}>All Day</span>;
   },
 
-  allday(model: Schedule) {
+  allday(model: EventModel) {
     return stripTags(model.title);
   },
 
-  time(model: Schedule) {
+  time(model: EventModel) {
     const { start, title } = model;
 
     if (start) {
@@ -64,7 +64,7 @@ export const templates: Template = {
     return stripTags(title);
   },
 
-  goingDuration(model: Schedule) {
+  goingDuration(model: EventModel) {
     const { goingDuration } = model;
     const hour = Math.floor(goingDuration / SIXTY_MINUTES);
     const minutes = goingDuration % SIXTY_MINUTES;
@@ -72,7 +72,7 @@ export const templates: Template = {
     return `GoingTime ${leadingZero(hour, 2)}:${leadingZero(minutes, 2)}`;
   },
 
-  comingDuration(model: Schedule) {
+  comingDuration(model: EventModel) {
     const { comingDuration } = model;
     const hour = Math.floor(comingDuration / SIXTY_MINUTES);
     const minutes = comingDuration % SIXTY_MINUTES;
@@ -105,17 +105,17 @@ export const templates: Template = {
     return <span className={classNames.join(' ')}>{date}</span>;
   },
 
-  monthGridHeaderExceed(hiddenSchedules: number) {
-    const className = cls('weekday-grid-more-schedules');
+  monthGridHeaderExceed(hiddenEvents: number) {
+    const className = cls('weekday-grid-more-events');
 
-    return <span className={className}>{hiddenSchedules} more</span>;
+    return <span className={className}>{hiddenEvents} more</span>;
   },
 
   monthGridFooter(model: TemplateMonthGrid) {
     return '';
   },
 
-  monthGridFooterExceed(hiddenSchedules: number) {
+  monthGridFooterExceed(hiddenEvents: number) {
     return '';
   },
 
@@ -130,11 +130,11 @@ export const templates: Template = {
     return `<span class="${classDate}">${model.date}</span>&nbsp;&nbsp;<span class="${className}">${model.dayName}</span>`;
   },
 
-  weekGridFooterExceed(hiddenSchedules: number) {
-    return `+${hiddenSchedules}`;
+  weekGridFooterExceed(hiddenEvents: number) {
+    return `+${hiddenEvents}`;
   },
 
-  dayGridTitle(viewName: ScheduleCategory) {
+  dayGridTitle(viewName: EventCategory) {
     if (viewName === 'milestone') {
       return templates.milestoneTitle();
     }
@@ -150,7 +150,7 @@ export const templates: Template = {
     return viewName;
   },
 
-  schedule(model: Schedule) {
+  event(model: EventModel) {
     const { category } = model;
     if (category === 'milestone') {
       return templates.milestone(model);

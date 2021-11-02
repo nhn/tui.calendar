@@ -173,10 +173,10 @@ export const MS_PER_HOUR = 3600000;
 export const MS_PER_MINUTES = 60000;
 
 /**
- * The number of milliseconds 20 minutes for schedule min duration
+ * The number of milliseconds 20 minutes for event min duration
  * @type {number}
  */
-export const MS_SCHEDULE_MIN_DURATION = 20 * MS_PER_MINUTES;
+export const MS_EVENT_MIN_DURATION = 20 * MS_PER_MINUTES;
 
 export const SIXTY_SECONDS = 60;
 

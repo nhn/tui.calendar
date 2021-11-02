@@ -1,7 +1,7 @@
 import { findByDateRange } from '@src/controller/month';
 import { findByDateRange as findByDateRangeForWeek } from '@src/controller/week';
 import { CalendarData, WeekOption } from '@src/model';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
+import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import {
   convertStartDayToLastDay,
@@ -29,19 +29,19 @@ function forEachMatrix3d<T>(matrices: Matrix3d<T>, iteratee: (target: T, index?:
 }
 
 export function isWithinHeight(containerHeight: number, eventHeight: number) {
-  return ({ top }: ScheduleViewModel) => containerHeight >= top * eventHeight;
+  return ({ top }: EventUIModel) => containerHeight >= top * eventHeight;
 }
 
 export function isExceededHeight(containerHeight: number, eventHeight: number) {
-  return ({ top }: ScheduleViewModel) => containerHeight < top * eventHeight;
+  return ({ top }: EventUIModel) => containerHeight < top * eventHeight;
 }
 
 export function getExceedCount(
-  viewModels: ScheduleViewModel[],
+  uiModel: EventUIModel[],
   containerHeight: number,
   eventHeight: number
 ) {
-  return viewModels.filter(isExceededHeight(containerHeight, eventHeight)).length;
+  return uiModel.filter(isExceededHeight(containerHeight, eventHeight)).length;
 }
 
 const getWeekendCount = (cells: Cells) => cells.filter((cell) => isWeekend(cell.getDay())).length;
@@ -90,11 +90,11 @@ export function getWidth(widthList: number[], start: number, end: number) {
 }
 
 export const isInGrid = (gridDate: TZDate) => {
-  return (viewModel: ScheduleViewModel) => {
-    const scheduleStart = toStartOfDay(viewModel.getStarts());
-    const scheduleEnd = toStartOfDay(viewModel.getEnds());
+  return (uiModel: EventUIModel) => {
+    const eventStart = toStartOfDay(uiModel.getStarts());
+    const eventEnd = toStartOfDay(uiModel.getEnds());
 
-    return scheduleStart <= gridDate && gridDate <= scheduleEnd;
+    return eventStart <= gridDate && gridDate <= eventEnd;
   };
 };
 
@@ -149,39 +149,39 @@ export const getEventLeftAndWidth = (
   };
 };
 
-function getEventViewModelWithPosition(
-  viewModel: ScheduleViewModel,
+function getEventUIModelWithPosition(
+  uiModel: EventUIModel,
   cells: Cells,
   narrowWeekend = false
-): ScheduleViewModel {
-  const modelStart = viewModel.getStarts();
-  const modelEnd = viewModel.getEnds();
+): EventUIModel {
+  const modelStart = uiModel.getStarts();
+  const modelEnd = uiModel.getEnds();
   const { width, left } = getEventLeftAndWidth(modelStart, modelEnd, cells, narrowWeekend);
 
-  viewModel.width = width;
-  viewModel.left = left;
+  uiModel.width = width;
+  uiModel.left = left;
 
-  return viewModel;
+  return uiModel;
 }
 
-export function getRenderedEventViewModels(
+export function getRenderedEventUIModels(
   cells: TZDate[],
   calendarData: CalendarData,
   narrowWeekend: boolean
 ) {
   const { idsOfDay } = calendarData;
-  const eventViewModels = findByDateRange(calendarData, {
+  const eventUIModels = findByDateRange(calendarData, {
     start: cells[0],
     end: cells[cells.length - 1],
   });
-  const idEventModelMap: Record<number, ScheduleViewModel> = [];
+  const idEventModelMap: Record<number, EventUIModel> = [];
 
-  forEachMatrix3d(eventViewModels, (viewModel) => {
-    const cid = viewModel.model.cid();
-    idEventModelMap[cid] = getEventViewModelWithPosition(viewModel, cells, narrowWeekend);
+  forEachMatrix3d(eventUIModels, (uiModel) => {
+    const cid = uiModel.model.cid();
+    idEventModelMap[cid] = getEventUIModelWithPosition(uiModel, cells, narrowWeekend);
   });
 
-  const gridDateEventModelMap = Object.keys(idsOfDay).reduce<Record<string, ScheduleViewModel[]>>(
+  const gridDateEventModelMap = Object.keys(idsOfDay).reduce<Record<string, EventUIModel[]>>(
     (acc, ymd) => {
       const ids = idsOfDay[ymd];
 
@@ -193,7 +193,7 @@ export function getRenderedEventViewModels(
   );
 
   return {
-    viewModels: Object.values(idEventModelMap),
+    uiModels: Object.values(idEventModelMap),
     gridDateEventModelMap,
   };
 }
@@ -202,27 +202,27 @@ const getDayGridEventModels = (
   eventModels: DayGridEventMatrix,
   cells: Cells,
   narrowWeekend = false
-): ScheduleViewModel[] => {
-  forEachMatrix3d(eventModels, (viewModel) => {
-    const modelStart = viewModel.getStarts();
-    const modelEnd = viewModel.getEnds();
+): EventUIModel[] => {
+  forEachMatrix3d(eventModels, (uiModel) => {
+    const modelStart = uiModel.getStarts();
+    const modelEnd = uiModel.getEnds();
     const { width, left } = getEventLeftAndWidth(modelStart, modelEnd, cells, narrowWeekend);
 
-    viewModel.width = width;
-    viewModel.left = left;
-    viewModel.top += 1;
+    uiModel.width = width;
+    uiModel.left = left;
+    uiModel.top += 1;
   });
 
   return flattenMatrix3d(eventModels);
 };
 
-const getModels = (models: ScheduleViewModel[]) => models.filter((model) => !!model);
+const getModels = (models: EventUIModel[]) => models.filter((model) => !!model);
 
-export function flattenMatrix3d(matrices: DayGridEventMatrix): ScheduleViewModel[] {
+export function flattenMatrix3d(matrices: DayGridEventMatrix): EventUIModel[] {
   return matrices.flatMap((matrix) => matrix.flatMap((models) => getModels(models)));
 }
 
-export function setTopForDayGridEvents(models: ScheduleViewModel[]) {
+export function setTopForDayGridEvents(models: EventUIModel[]) {
   models.forEach((model) => {
     model.top += 1;
   });
@@ -232,8 +232,8 @@ const getTimeGridEventModels = (
   eventModels: TimeGridEventMatrix,
   cells: Cells,
   narrowWeekend = false
-): ScheduleViewModel[] => {
-  const result: ScheduleViewModel[] = [];
+): EventUIModel[] => {
+  const result: EventUIModel[] = [];
 
   Object.values(eventModels).forEach((matrices) => result.push(...flattenMatrix3d(matrices)));
 

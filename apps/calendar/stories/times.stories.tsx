@@ -2,8 +2,8 @@ import { h } from 'preact';
 
 import range from 'tui-code-snippet/array/range';
 
-import { MultipleTimezones } from '@src/components/timegrid/multipleTimezones';
-import { Times } from '@src/components/timegrid/times';
+import { MultipleTimezones } from '@src/components/timeGrid/multipleTimezones';
+import { Times } from '@src/components/timeGrid/times';
 import TZDate from '@src/time/date';
 import {
   addDate,

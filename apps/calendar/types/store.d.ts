@@ -1,5 +1,5 @@
 import { MonthOption, WeekOption } from '@src/model';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
+import EventUIModel from '@src/model/eventUIModel';
 import { CalendarDispatchers, CalendarSlice } from '@src/slices/calendar';
 import { OptionDispatchers, OptionSlice } from '@src/slices/options';
 import { PopupDispatchers, PopupSlice } from '@src/slices/popup';
@@ -24,16 +24,16 @@ interface BasePopupParam {
 
 type PopupParamMap = {
   seeMore: SeeMorePopupParam;
-  creation: CreationPopupParam;
+  form: EventFormPopupParam;
   detail: DetailPopupParam;
 };
 
 interface SeeMorePopupParam extends BasePopupParam {
   date: TZDate;
-  events: ScheduleViewModel[];
+  events: EventUIModel[];
 }
 
-interface CreationPopupParam extends BasePopupParam {
+interface EventFormPopupParam extends BasePopupParam {
   // @TODO: 팝업 작성 시 타입 정의
   start: TZDate;
   end: TZDate;

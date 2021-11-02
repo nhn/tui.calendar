@@ -4,7 +4,7 @@ import { IDS_OF_DAY } from '@src/controller/base';
 import { EventHandler } from '@src/event';
 import { ExternalEventName } from '@src/event/externalEventType';
 import { InternalEventName } from '@src/event/internalEventType';
-import Schedule, { ScheduleCategory } from '@src/model/schedule';
+import EventModel, { EventCategory } from '@src/model/eventModel';
 import { ThemeKeyValue } from '@src/theme/themeProps';
 import TZDate from '@src/time/date';
 import Collection from '@src/util/collection';
@@ -13,7 +13,7 @@ import { TuiDateConstructor } from '@toast-ui/date';
 
 export type DateType = Date | string | number | TZDate;
 
-export interface ScheduleData {
+export interface EventModelData {
   id?: string;
   calendarId?: string;
   title?: string;
@@ -23,7 +23,7 @@ export interface ScheduleData {
   goingDuration?: number;
   comingDuration?: number;
   isAllDay?: boolean;
-  category?: ScheduleCategory;
+  category?: EventCategory;
   dueDateClass?: string;
   location?: string;
   attendees?: string[];
@@ -44,7 +44,7 @@ export interface ScheduleData {
 
 export interface CalendarData {
   calendars: CalendarInfo[];
-  schedules: Collection<Schedule>;
+  events: Collection<EventModel>;
   idsOfDay: IDS_OF_DAY;
 }
 
@@ -56,7 +56,7 @@ export interface AppContext {
   externalEvent: EventHandler<ExternalEventName>;
 }
 
-export interface GridViewModel {
+export interface GridUIModel {
   day: number;
   width: number;
   left: number;
@@ -113,25 +113,25 @@ export type TemplateReturnType = string | VNode;
 
 export interface Template {
   milestoneTitle: () => TemplateReturnType;
-  milestone: (schedule: Schedule) => TemplateReturnType;
+  milestone: (event: EventModel) => TemplateReturnType;
   taskTitle: () => TemplateReturnType;
-  task: (schedule: Schedule) => TemplateReturnType;
+  task: (event: EventModel) => TemplateReturnType;
   alldayTitle: () => TemplateReturnType;
-  allday: (schedule: Schedule) => TemplateReturnType;
-  time: (schedule: Schedule) => TemplateReturnType;
-  goingDuration: (schedule: Schedule) => TemplateReturnType;
-  comingDuration: (schedule: Schedule) => TemplateReturnType;
+  allday: (event: EventModel) => TemplateReturnType;
+  time: (event: EventModel) => TemplateReturnType;
+  goingDuration: (event: EventModel) => TemplateReturnType;
+  comingDuration: (event: EventModel) => TemplateReturnType;
   monthMoreTitleDate: (moreTitle: TemplateMoreTitleDate) => TemplateReturnType;
   monthMoreClose: () => TemplateReturnType;
   monthGridHeader: (model: TemplateMonthGrid) => TemplateReturnType;
-  monthGridHeaderExceed: (hiddenSchedules: number) => TemplateReturnType;
+  monthGridHeaderExceed: (hiddenEvents: number) => TemplateReturnType;
   monthGridFooter: (model: TemplateMonthGrid) => TemplateReturnType;
-  monthGridFooterExceed: (hiddenSchedules: number) => TemplateReturnType;
+  monthGridFooterExceed: (hiddenEvents: number) => TemplateReturnType;
   monthDayname: (model: TemplateMonthDayName) => TemplateReturnType;
   weekDayname: (model: TemplateWeekDay) => TemplateReturnType;
-  weekGridFooterExceed: (hiddenSchedules: number) => TemplateReturnType;
-  dayGridTitle: (viewName: ScheduleCategory) => TemplateReturnType;
-  schedule: (schedule: Schedule) => TemplateReturnType;
+  weekGridFooterExceed: (hiddenEvents: number) => TemplateReturnType;
+  dayGridTitle: (viewName: EventCategory) => TemplateReturnType;
+  event: (event: EventModel) => TemplateReturnType;
   collapseBtnTitle: () => TemplateReturnType;
   timezoneDisplayLabel: (props: TemplateTimezone) => TemplateReturnType;
   timegridDisplayPrimaryTime: (props: TemplateCurrentTime) => TemplateReturnType;
@@ -147,11 +147,11 @@ export interface Template {
   popupSave: () => TemplateReturnType;
   popupUpdate: () => TemplateReturnType;
   popupDetailDate: (isAllDay: boolean, start: TZDate, end: TZDate) => TemplateReturnType;
-  popupDetailLocation: (schedule: Schedule) => TemplateReturnType;
-  popupDetailUser: (schedule: Schedule) => TemplateReturnType;
-  popupDetailState: (schedule: Schedule) => TemplateReturnType;
-  popupDetailRepeat: (schedule: Schedule) => TemplateReturnType;
-  popupDetailBody: (schedule: Schedule) => TemplateReturnType;
+  popupDetailLocation: (event: EventModel) => TemplateReturnType;
+  popupDetailUser: (event: EventModel) => TemplateReturnType;
+  popupDetailState: (event: EventModel) => TemplateReturnType;
+  popupDetailRepeat: (event: EventModel) => TemplateReturnType;
+  popupDetailBody: (event: EventModel) => TemplateReturnType;
   popupEdit: () => TemplateReturnType;
   popupDelete: () => TemplateReturnType;
 }
@@ -177,7 +177,7 @@ export interface MonthOption {
   visibleWeeksCount?: number;
   isAlways6Week?: boolean;
   workweek?: boolean;
-  visibleScheduleCount?: number;
+  visibleEventCount?: number;
   moreLayerSize?: {
     width?: string | null;
     height?: string | null;
@@ -190,7 +190,7 @@ export interface MonthOption {
       height?: number;
     };
   };
-  scheduleFilter?: (schedule: Required<ScheduleData>) => boolean;
+  eventFilter?: (event: Required<EventModelData>) => boolean;
 }
 
 export interface CustomTimezone {
@@ -223,7 +223,7 @@ export type ViewType = 'month' | 'week' | 'day';
 export interface Option {
   defaultView?: ViewType;
   taskView?: boolean | string[];
-  scheduleView?: boolean | string[];
+  eventView?: boolean | string[];
   theme?: ThemeKeyValue;
   template?: TemplateConfig;
   week?: WeekOption;

@@ -1,31 +1,31 @@
-import { addToMatrix, createSchedule, createScheduleCollection } from '@src/controller/base';
+import { addToMatrix, createEvent, createEventCollection } from '@src/controller/base';
 import {
   _makeHourRangeFilter,
   findByDateRange,
   generateTimeArrayInRow,
   hasCollision,
-  splitScheduleByDateRange,
+  splitEventByDateRange,
 } from '@src/controller/week';
-import { CalendarData, ScheduleData } from '@src/model';
-import Schedule from '@src/model/schedule';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
+import { CalendarData, EventModelData } from '@src/model';
+import EventModel from '@src/model/eventModel';
+import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
-import { MS_SCHEDULE_MIN_DURATION } from '@src/time/datetime';
+import { MS_EVENT_MIN_DURATION } from '@src/time/datetime';
 import Collection from '@src/util/collection';
 
 import type { Matrix3d, TimeGridEventMatrix } from '@t/events';
 import type { Panel } from '@t/panel';
 
-const SCHEDULE_MIN_DURATION = MS_SCHEDULE_MIN_DURATION;
+const SCHEDULE_MIN_DURATION = MS_EVENT_MIN_DURATION;
 
 describe('Base.Week', () => {
   let calendarData: CalendarData;
-  let mockData: ScheduleData[];
+  let mockData: EventModelData[];
 
   beforeEach(() => {
     calendarData = {
       calendars: [],
-      schedules: createScheduleCollection(),
+      events: createEventCollection(),
       idsOfDay: {},
     };
     mockData = [
@@ -146,11 +146,11 @@ describe('Base.Week', () => {
      * ]
      */
 
-    let supplied: Array<Schedule[]>;
+    let supplied: Array<EventModel[]>;
     let expected: Array<Array<number[]>>;
 
     function getTime(start: number, end: number) {
-      return new Schedule().init({ start, end });
+      return new EventModel().init({ start, end });
     }
 
     beforeEach(() => {
@@ -183,7 +183,7 @@ describe('Base.Week', () => {
       ];
 
       mockData.forEach((data) => {
-        createSchedule(calendarData, data);
+        createEvent(calendarData, data);
       });
 
       /*
@@ -225,9 +225,9 @@ describe('Base.Week', () => {
         start,
         end,
         panels,
-        andFilters: [(model: Schedule | ScheduleViewModel) => (model as Schedule).title === 'J'],
+        andFilters: [(model: EventModel | EventUIModel) => (model as EventModel).title === 'J'],
         options: { hourStart: 0, hourEnd: 24 },
-      }) as Record<string, Record<string, Matrix3d<ScheduleViewModel>>>;
+      }) as Record<string, Record<string, Matrix3d<EventUIModel>>>;
 
       // One collision block in the timeline group
       expect(result.time['20150501'].length).toBe(1);
@@ -235,83 +235,83 @@ describe('Base.Week', () => {
   });
 
   describe('_getHourRangeFilter()', () => {
-    let hourRangeFilter: (schedule: Schedule) => boolean;
-    let schedule: Schedule;
+    let hourRangeFilter: (event: EventModel) => boolean;
+    let event: EventModel;
 
     beforeEach(() => {
       // 8:00 ~ 20:00
       hourRangeFilter = _makeHourRangeFilter(10, 12);
-      schedule = new Schedule();
+      event = new EventModel();
     });
 
-    it('filter schedule by start, end date visible', () => {
-      schedule.start = new TZDate('2018-05-02T09:30:00');
-      schedule.end = new TZDate('2018-05-02T13:30:00');
+    it('filter event by start, end date visible', () => {
+      event.start = new TZDate('2018-05-02T09:30:00');
+      event.end = new TZDate('2018-05-02T13:30:00');
 
-      expect(hourRangeFilter(schedule)).toBe(true);
+      expect(hourRangeFilter(event)).toBe(true);
 
-      schedule.start = new TZDate('2018-05-02T00:00:00');
-      schedule.end = new TZDate('2018-05-02T10:30:00');
+      event.start = new TZDate('2018-05-02T00:00:00');
+      event.end = new TZDate('2018-05-02T10:30:00');
 
-      expect(hourRangeFilter(schedule)).toBe(true);
+      expect(hourRangeFilter(event)).toBe(true);
 
-      schedule.start = new TZDate('2018-05-02T10:30:00');
-      schedule.end = new TZDate('2018-05-02T11:30:00');
+      event.start = new TZDate('2018-05-02T10:30:00');
+      event.end = new TZDate('2018-05-02T11:30:00');
 
-      expect(hourRangeFilter(schedule)).toBe(true);
+      expect(hourRangeFilter(event)).toBe(true);
 
-      schedule.start = new TZDate('2018-05-02T11:30:00');
-      schedule.end = new TZDate('2018-05-02T15:00:00');
+      event.start = new TZDate('2018-05-02T11:30:00');
+      event.end = new TZDate('2018-05-02T15:00:00');
 
-      expect(hourRangeFilter(schedule)).toBe(true);
+      expect(hourRangeFilter(event)).toBe(true);
 
-      schedule.start = new TZDate('2018-05-02T00:00:00');
-      schedule.end = new TZDate('2018-05-02T10:00:00');
+      event.start = new TZDate('2018-05-02T00:00:00');
+      event.end = new TZDate('2018-05-02T10:00:00');
 
-      expect(hourRangeFilter(schedule)).toBe(false);
+      expect(hourRangeFilter(event)).toBe(false);
 
-      schedule.start = new TZDate('2018-05-02T10:00:00');
-      schedule.end = new TZDate('2018-05-02T12:00:00');
+      event.start = new TZDate('2018-05-02T10:00:00');
+      event.end = new TZDate('2018-05-02T12:00:00');
 
-      expect(hourRangeFilter(schedule)).toBe(true);
+      expect(hourRangeFilter(event)).toBe(true);
 
-      schedule.start = new TZDate('2018-05-02T12:00:00');
-      schedule.end = new TZDate('2018-05-02T15:00:00');
+      event.start = new TZDate('2018-05-02T12:00:00');
+      event.end = new TZDate('2018-05-02T15:00:00');
 
-      expect(hourRangeFilter(schedule)).toBe(false);
+      expect(hourRangeFilter(event)).toBe(false);
 
-      schedule.start = new TZDate('2018-05-02T09:00:00');
-      schedule.end = new TZDate('2018-05-02T15:00:00');
+      event.start = new TZDate('2018-05-02T09:00:00');
+      event.end = new TZDate('2018-05-02T15:00:00');
 
-      expect(hourRangeFilter(schedule)).toBe(true);
+      expect(hourRangeFilter(event)).toBe(true);
 
-      schedule.start = new TZDate('2018-05-02T09:00:00');
-      schedule.end = new TZDate('2018-05-02T15:00:00');
+      event.start = new TZDate('2018-05-02T09:00:00');
+      event.end = new TZDate('2018-05-02T15:00:00');
 
-      expect(hourRangeFilter(schedule)).toBe(true);
+      expect(hourRangeFilter(event)).toBe(true);
 
-      schedule.start = new TZDate('2018-05-02T09:00:00');
-      schedule.end = new TZDate('2018-05-03T09:00:00');
+      event.start = new TZDate('2018-05-02T09:00:00');
+      event.end = new TZDate('2018-05-03T09:00:00');
 
-      expect(hourRangeFilter(schedule)).toBe(true); // true, false??
+      expect(hourRangeFilter(event)).toBe(true); // true, false??
 
-      schedule.start = new TZDate('2018-05-02T11:00:00');
-      schedule.end = new TZDate('2018-05-03T09:00:00');
+      event.start = new TZDate('2018-05-02T11:00:00');
+      event.end = new TZDate('2018-05-03T09:00:00');
 
-      expect(hourRangeFilter(schedule)).toBe(true);
+      expect(hourRangeFilter(event)).toBe(true);
     });
   });
 
-  describe('splitScheduleByDateRange()', () => {
-    let schedules: Schedule[];
-    let collection: Collection<Schedule>;
+  describe('splitEventByDateRange()', () => {
+    let events: EventModel[];
+    let collection: Collection<EventModel>;
 
     beforeEach(() => {
       collection = new Collection((item) => {
         return item.cid();
       });
 
-      schedules = [
+      events = [
         {
           title: 'A',
           isAllDay: false,
@@ -330,35 +330,35 @@ describe('Base.Week', () => {
           start: '2015/05/01 09:00:00',
           end: '2015/05/02 09:00:00',
         },
-      ].map((scheduleData) => Schedule.create(scheduleData));
+      ].map((eventData) => EventModel.create(eventData));
 
-      collection.add(...schedules);
+      collection.add(...events);
 
-      schedules.forEach((schedule) => {
-        calendarData.schedules.add(schedule);
-        addToMatrix(calendarData.idsOfDay, schedule);
+      events.forEach((event) => {
+        calendarData.events.add(event);
+        addToMatrix(calendarData.idsOfDay, event);
       });
     });
 
-    it('split schedule by ymd.', () => {
-      const result = splitScheduleByDateRange(
+    it('split event by ymd.', () => {
+      const result = splitEventByDateRange(
         calendarData.idsOfDay,
         new TZDate('2015-05-01T00:00:00'),
         new TZDate('2015-05-03T23:59:59'),
         collection
       );
 
-      const getter = (item: Schedule) => item.cid();
+      const getter = (item: EventModel) => item.cid();
       const expected = {
         '20150501': new Collection(getter),
         '20150502': new Collection(getter),
         '20150503': new Collection(getter),
       };
 
-      expected['20150501'].add(schedules[0]);
-      expected['20150501'].add(schedules[2]);
-      expected['20150502'].add(schedules[1]);
-      expected['20150502'].add(schedules[2]);
+      expected['20150501'].add(events[0]);
+      expected['20150501'].add(events[2]);
+      expected['20150502'].add(events[1]);
+      expected['20150502'].add(events[2]);
 
       expect(result['20150501'].items).toEqual(expected['20150501'].items);
       expect(result['20150502'].items).toEqual(expected['20150502'].items);

@@ -1,8 +1,8 @@
 import { FunctionComponent, h, RefObject } from 'preact';
 import { useLayoutEffect, useRef, useState } from 'preact/hooks';
 
-import DayGrid from '@src/components/daygrid/dayGrid';
-import DayNames from '@src/components/daygrid/dayNames';
+import GridHeader from '@src/components/dayGridCommon/gridHeader';
+import DayGridMonth from '@src/components/dayGridMonth/dayGridMonth';
 import { usePanelContainer } from '@src/components/hooks/panelContainer';
 import Panel from '@src/components/panel';
 import { MONTH_DAY_NAME_HEIGHT } from '@src/constants/style';
@@ -76,7 +76,7 @@ const Month: FunctionComponent = () => {
     // @TODO: change to layout component
     <div className={cls('month')} ref={containerRef}>
       <Panel name="month-daynames" height={MONTH_DAY_NAME_HEIGHT}>
-        <DayNames
+        <GridHeader
           templateType="monthDayname"
           dayNames={dayNames}
           theme={theme.month.dayname}
@@ -86,7 +86,7 @@ const Month: FunctionComponent = () => {
         />
       </Panel>
       <Panel name="month-daygrid" height={gridPanelHeight}>
-        <DayGrid
+        <DayGridMonth
           options={monthOptions}
           calendar={calendar}
           appContainer={containerRef}

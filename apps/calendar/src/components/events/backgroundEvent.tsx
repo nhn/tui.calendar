@@ -1,6 +1,6 @@
 import { FunctionComponent, h } from 'preact';
 
-import ScheduleViewModel from '@src/model/scheduleViewModel';
+import EventUIModel from '@src/model/eventUIModel';
 import { cls } from '@src/util/cssHelper';
 
 const classNames = {
@@ -8,7 +8,7 @@ const classNames = {
 };
 
 interface Props {
-  eventModels: ScheduleViewModel;
+  eventModels: EventUIModel;
   width?: string;
   height?: string;
   top?: string;

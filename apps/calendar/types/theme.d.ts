@@ -1,7 +1,7 @@
 type CommonTheme = {
   backgroundColor: string;
   border: string;
-  creationGuide: {
+  gridSelection: {
     backgroundColor: string;
     border: string;
   };

@@ -1,8 +1,8 @@
 import { h } from 'preact';
 
 import MonthView from '@src/components/view/monthView';
-import { ScheduleData } from '@src/model';
-import Schedule from '@src/model/schedule';
+import { EventModelData } from '@src/model';
+import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 import { addDate } from '@src/time/datetime';
 
@@ -26,7 +26,7 @@ function createMonthEvents() {
   const secondThursday = addDate(secondTuesday, 2);
   const thirdThursday = addDate(secondThursday, DAYS_OF_WEEK);
   const thirdSaturday = addDate(thirdThursday, 2);
-  const events: ScheduleData[] = [
+  const events: EventModelData[] = [
     {
       title: 'event1',
       start: firstSunday,
@@ -44,7 +44,7 @@ function createMonthEvents() {
     },
   ];
 
-  return events.map((event) => Schedule.create(event));
+  return events.map((event) => EventModel.create(event));
 }
 
 const Template: Story = (args) => (

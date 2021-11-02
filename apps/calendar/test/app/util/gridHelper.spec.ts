@@ -1,13 +1,13 @@
-import { createScheduleCollection } from '@src/controller/base';
+import { createEventCollection } from '@src/controller/base';
 import { CalendarData } from '@src/model';
-import Schedule from '@src/model/schedule';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
+import EventModel from '@src/model/eventModel';
+import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import {
   getExceedCount,
   getGridWidthAndLeftPercentValues,
   getLeftAndWidth,
-  getRenderedEventViewModels,
+  getRenderedEventUIModels,
   getWidth,
   isWithinHeight,
 } from '@src/util/gridHelper';
@@ -24,25 +24,25 @@ const data = [
 describe('gridHelper', () => {
   describe('isWithinHeight', () => {
     it('should return a callback function that checks whether do not exceed height of container', () => {
-      expect(isWithinHeight(100, 20)({ top: 1 } as ScheduleViewModel)).toBe(true);
-      expect(isWithinHeight(100, 20)({ top: 6 } as ScheduleViewModel)).toBe(false);
+      expect(isWithinHeight(100, 20)({ top: 1 } as EventUIModel)).toBe(true);
+      expect(isWithinHeight(100, 20)({ top: 6 } as EventUIModel)).toBe(false);
     });
   });
 
   describe('getExceedCount', () => {
     it('should calculate the number of events that exceed height of container', () => {
-      const viewModels = data.map((e) => {
-        const event = Schedule.create(e);
+      const uiModels = data.map((e) => {
+        const event = EventModel.create(e);
         event.isAllDay = true;
 
-        return ScheduleViewModel.create(event);
+        return EventUIModel.create(event);
       });
 
-      expect(getExceedCount(viewModels, 200, 30)).toBe(0);
+      expect(getExceedCount(uiModels, 200, 30)).toBe(0);
     });
   });
 
-  it('getRenderedEventViewModels', () => {
+  it('getRenderedEventUIModels', () => {
     const narrowWeekend = false;
     const cells: Cells = [
       new TZDate(2021, 5, 2),
@@ -52,12 +52,12 @@ describe('gridHelper', () => {
     ];
     const calendarData: CalendarData = {
       calendars: [],
-      schedules: createScheduleCollection(),
+      events: createEventCollection(),
       idsOfDay: {},
     };
 
-    expect(getRenderedEventViewModels(cells, calendarData, narrowWeekend)).toEqual({
-      viewModels: [],
+    expect(getRenderedEventUIModels(cells, calendarData, narrowWeekend)).toEqual({
+      uiModels: [],
       gridDateEventModelMap: {},
     });
   });

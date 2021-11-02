@@ -1,11 +1,11 @@
 import { FunctionComponent, h } from 'preact';
 
-import DayNames from '@src/components/daygrid/dayNames';
+import GridHeader from '@src/components/dayGridCommon/gridHeader';
+import { GridRow } from '@src/components/dayGridWeek/gridRow';
 import { Layout } from '@src/components/layout';
 import Panel from '@src/components/panel';
-import { DayGridEvents } from '@src/components/panelgrid/dayGridEvents';
-import { ColumnInfo } from '@src/components/timegrid/columns';
-import { TimeGrid } from '@src/components/timegrid/timegrid';
+import { ColumnInfo } from '@src/components/timeGrid/columnWithMouse';
+import { TimeGrid } from '@src/components/timeGrid/timeGrid';
 import { useStore } from '@src/contexts/calendarStore';
 import { WeekOption } from '@src/model';
 import { weekViewStateSelector } from '@src/selectors';
@@ -55,10 +55,11 @@ const Day: FunctionComponent = () => {
 
     return (
       <Panel key={panelType} name={panelType} resizable>
-        <DayGridEvents
+        <GridRow
           events={dayGridEvents[panelType]}
           cells={cells}
           type={panelType}
+          rowName={panelType}
           height={value.height}
           options={option.week}
           gridInfo={gridInfo}
@@ -71,7 +72,7 @@ const Day: FunctionComponent = () => {
   return (
     <Layout>
       <Panel name="day-daynames" height={dayNameHeight}>
-        <DayNames
+        <GridHeader
           dayNames={dayNames}
           marginLeft={120}
           templateType="weekDayname"

@@ -4,8 +4,8 @@
  */
 import forEach from 'tui-code-snippet/collection/forEach';
 
-import Schedule from '@src/model/schedule';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
+import EventModel from '@src/model/eventModel';
+import EventUIModel from '@src/model/eventUIModel';
 import { compare } from '@src/time/datetime';
 
 /**
@@ -68,20 +68,20 @@ function compareStringsASC(_a: any, _b: any) {
 }
 
 /**
- * Compare schedule models for sort.
+ * Compare event models for sort.
  *
- * 1. all day schedule first.
+ * 1. all day event first.
  * 2. early start.
  * 3. longest duration.
  * 4. early created.
- * @param {Schedule} a The object schedule instance.
- * @param {Schedule} b The object schedule instance.
+ * @param {EventModel} a The object event instance.
+ * @param {EventModel} b The object event instance.
  * @returns {number} Result of comparison.
  */
 // eslint-disable-next-line complexity
-function compareSchedulesASC(a: Schedule | ScheduleViewModel, b: Schedule | ScheduleViewModel) {
-  const modelA = a instanceof ScheduleViewModel ? a.model : a;
-  const modelB = b instanceof ScheduleViewModel ? b.model : b;
+function compareEventsASC(a: EventModel | EventUIModel, b: EventModel | EventUIModel) {
+  const modelA = a instanceof EventUIModel ? a.model : a;
+  const modelB = b instanceof EventUIModel ? b.model : b;
   const allDayCompare = compareBooleansASC(
     modelA.isAllDay || modelA.hasMultiDates,
     modelB.isAllDay || modelB.hasMultiDates
@@ -172,8 +172,8 @@ export function bsearch(
 export default {
   bsearch,
   compare: {
-    schedule: {
-      asc: compareSchedulesASC,
+    event: {
+      asc: compareEventsASC,
     },
     num: {
       asc: compareNumbersASC,

@@ -5,24 +5,22 @@
 import inArray from 'tui-code-snippet/array/inArray';
 import forEach from 'tui-code-snippet/collection/forEach';
 
-import { CalendarData, CalendarInfo, ScheduleData } from '@src/model';
-import Schedule from '@src/model/schedule';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
+import { CalendarData, CalendarInfo, EventModelData } from '@src/model';
+import EventModel from '@src/model/eventModel';
+import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { makeDateRange, MS_PER_DAY, toEndOfDay, toFormat, toStartOfDay } from '@src/time/datetime';
-import { isSameSchedule } from '@src/util';
+import { isSameEvent } from '@src/util';
 import Collection from '@src/util/collection';
 
 export type IDS_OF_DAY = Record<string, number[]>;
 
 /**
- * Make a schedule collection
- * @returns {Collection<Schedule>} instance
+ * Make a event collection
+ * @returns {Collection<EventModel>} instance
  */
-export function createScheduleCollection<T extends Schedule | ScheduleViewModel>(
-  ...initItems: T[]
-) {
-  const collection = new Collection<T>((schedule) => schedule.cid());
+export function createEventCollection<T extends EventModel | EventUIModel>(...initItems: T[]) {
+  const collection = new Collection<T>((event) => event.cid());
 
   if (initItems.length) {
     collection.add(...initItems);
@@ -31,7 +29,7 @@ export function createScheduleCollection<T extends Schedule | ScheduleViewModel>
   return collection;
 }
 /**
- * Calculate contain dates in schedule.
+ * Calculate contain dates in event.
  * @param {TZDate} start - start date of range
  * @param {TZDate} end - end date of range
  * @returns {array} contain dates.
@@ -40,10 +38,10 @@ export function getDateRange(start: TZDate, end: TZDate) {
   return makeDateRange(toStartOfDay(start), toEndOfDay(end), MS_PER_DAY);
 }
 
-export function isAllDay(schedule: Schedule) {
+export function isAllDay(event: EventModel) {
   if (
-    schedule.isAllDay ||
-    (schedule.category === 'time' && Number(schedule.end) - Number(schedule.start) > MS_PER_DAY)
+    event.isAllDay ||
+    (event.category === 'time' && Number(event.end) - Number(event.start) > MS_PER_DAY)
   ) {
     return true;
   }
@@ -52,13 +50,13 @@ export function isAllDay(schedule: Schedule) {
 }
 
 /**
- * function for group each schedule models.
+ * function for group each event models.
  * @type {function}
- * @param {ScheduleViewModel} viewModel - view model instance
+ * @param {EventUIModel} uiModel - ui model instance
  * @returns {string} group key
  */
-export function filterByCategory(viewModel: ScheduleViewModel) {
-  const { model } = viewModel;
+export function filterByCategory(uiModel: EventUIModel) {
+  const { model } = uiModel;
 
   if (isAllDay(model)) {
     return 'allday';
@@ -68,32 +66,32 @@ export function filterByCategory(viewModel: ScheduleViewModel) {
 }
 
 /****************
- * CRUD Schedule
+ * Events CRUD
  ****************/
 
 /**
- * Set date matrix to supplied schedule instance.
+ * Set date matrix to supplied event model instance.
  * @param {IDS_OF_DAY} idsOfDay - ids of day
- * @param {Schedule} schedule - instance of schedule.
+ * @param {EventModel} event - instance of event model.
  */
-export function addToMatrix(idsOfDay: IDS_OF_DAY, schedule: Schedule) {
-  const containDates = getDateRange(schedule.getStarts(), schedule.getEnds());
+export function addToMatrix(idsOfDay: IDS_OF_DAY, event: EventModel) {
+  const containDates = getDateRange(event.getStarts(), event.getEnds());
 
   containDates.forEach((date) => {
     const ymd = toFormat(date, 'YYYYMMDD');
     const matrix = (idsOfDay[ymd] = idsOfDay[ymd] || []);
 
-    matrix.push(schedule.cid());
+    matrix.push(event.cid());
   });
 }
 
 /**
- * Remove schedule's id from matrix.
+ * Remove event's id from matrix.
  * @param {IDS_OF_DAY} idsOfDay - ids of day
- * @param {Schedule} schedule - instance of schedule
+ * @param {EventModel} event - instance of event model
  */
-export function removeFromMatrix(idsOfDay: IDS_OF_DAY, schedule: Schedule) {
-  const modelID = schedule.cid();
+export function removeFromMatrix(idsOfDay: IDS_OF_DAY, event: EventModel) {
+  const modelID = event.cid();
 
   forEach(idsOfDay, (ids: number[]) => {
     const index = inArray(modelID, ids);
@@ -105,87 +103,85 @@ export function removeFromMatrix(idsOfDay: IDS_OF_DAY, schedule: Schedule) {
 }
 
 /**
- * Add an schedule instance.
+ * Add an event instance.
  * @param {CalendarData} calendarData - data of calendar
- * @param {Schedule} schedule The instance of Schedule.
- * @returns {Schedule} The instance of Schedule that added.
+ * @param {EventModel} event The instance of EventModel.
+ * @returns {EventModel} The instance of EventModel that added.
  */
-export function addSchedule(calendarData: CalendarData, schedule: Schedule) {
-  calendarData.schedules.add(schedule);
-  addToMatrix(calendarData.idsOfDay, schedule);
+export function addEvent(calendarData: CalendarData, event: EventModel) {
+  calendarData.events.add(event);
+  addToMatrix(calendarData.idsOfDay, event);
 
-  return schedule;
+  return event;
 }
 
 /**
- * Create an schedule instance from raw data.
+ * Create an event instance from raw data.
  * @param {CalendarData} calendarData - data of calendar
- * @param {ScheduleData} scheduleData - Data object to create schedule.
- * @returns {Schedule[]} The instance of Schedule that created.
+ * @param {EventModelData} eventData - Data object to create event.
+ * @returns {EventModel[]} The instance of EventModel that created.
  */
-export function createSchedule(calendarData: CalendarData, scheduleData: ScheduleData) {
-  const schedule = Schedule.create(scheduleData);
+export function createEvent(calendarData: CalendarData, eventData: EventModelData) {
+  const event = EventModel.create(eventData);
 
-  return addSchedule(calendarData, schedule);
+  return addEvent(calendarData, event);
 }
 
 /**
- * Create schedules from raw data.
+ * Create events from raw data.
  * @param {CalendarData} calendarData - data of calendar
- * @param {ScheduleData[]} schedules - schedule data list to create schedule.
- * @returns {Schedule[]} The instance list of Schedule that created.
+ * @param {EventModelData[]} events - event data list to create event.
+ * @returns {EventModel[]} The instance list of EventModel that created.
  */
-export function createSchedules(calendarData: CalendarData, schedules: ScheduleData[] = []) {
-  return schedules.map((scheduleData) => createSchedule(calendarData, scheduleData));
+export function createEvents(calendarData: CalendarData, events: EventModelData[] = []) {
+  return events.map((eventData) => createEvent(calendarData, eventData));
 }
 
 /**
- * Update an schedule.
+ * Update an event.
  * @param {CalendarData} calendarData - data of calendar
- * @param {string} scheduleId - schedule id
+ * @param {string} eventId - event id
  * @param {string} calendarId - calendar id
- * @param {ScheduleData} scheduleData - schedule data
+ * @param {EventModelData} eventData - event data
  * @returns {boolean} success or failure
  */
-export function updateSchedule(
+export function updateEvent(
   calendarData: CalendarData,
-  scheduleId: string,
+  eventId: string,
   calendarId: string,
-  scheduleData: ScheduleData
+  eventData: EventModelData
 ) {
   const { idsOfDay } = calendarData;
-  const schedule = calendarData.schedules.single((item) =>
-    isSameSchedule(item, scheduleId, calendarId)
-  );
+  const event = calendarData.events.single((item) => isSameEvent(item, eventId, calendarId));
 
-  if (!schedule) {
+  if (!event) {
     return false;
   }
 
-  schedule.init({ ...schedule, ...scheduleData });
+  event.init({ ...event, ...eventData });
 
-  removeFromMatrix(idsOfDay, schedule);
-  addToMatrix(idsOfDay, schedule);
+  removeFromMatrix(idsOfDay, event);
+  addToMatrix(idsOfDay, event);
 
   return true;
 }
 
 /**
- * Delete schedule instance from controller.
+ * Delete event instance from controller.
  * @param {CalendarData} calendarData - data of calendar
- * @param {Schedule} schedule - schedule instance to delete
- * @returns {Schedule} deleted model instance.
+ * @param {EventModel} event - event model instance to delete
+ * @returns {EventModel} deleted model instance.
  */
-export function deleteSchedule(calendarData: CalendarData, schedule: Schedule) {
-  removeFromMatrix(calendarData.idsOfDay, schedule);
-  calendarData.schedules.remove(schedule);
+export function deleteEvent(calendarData: CalendarData, event: EventModel) {
+  removeFromMatrix(calendarData.idsOfDay, event);
+  calendarData.events.remove(event);
 
-  return schedule;
+  return event;
 }
 
-export function clearSchedules(calendarData: CalendarData) {
+export function clearEvents(calendarData: CalendarData) {
   calendarData.idsOfDay = {};
-  calendarData.schedules.clear();
+  calendarData.events.clear();
 }
 
 /**
@@ -198,34 +194,34 @@ export function setCalendars(calendarData: CalendarData, calendars: CalendarInfo
 }
 
 /**
- * Return schedules in supplied date range.
+ * Return events in supplied date range.
  *
  * available only YMD.
  * @param {CalendarData} calendarData - data of calendar
  * @param {{start: TZDate, end: TZDate}} condition - condition of find range
- * @returns {object.<string, Collection>} schedule collection grouped by dates.
+ * @returns {object.<string, Collection>} event collection grouped by dates.
  */
 export function findByDateRange(
   calendarData: CalendarData,
   condition: { start: TZDate; end: TZDate }
-): Record<string, Schedule[]> {
+): Record<string, EventModel[]> {
   const { start, end } = condition;
-  const { schedules, idsOfDay } = calendarData;
+  const { events, idsOfDay } = calendarData;
   const range = getDateRange(start, end);
-  const ownSchedules = schedules.items;
+  const ownEvents = events.items;
   const ownMatrix = idsOfDay;
-  const result: Record<string, Schedule[]> = {};
+  const result: Record<string, EventModel[]> = {};
   let ids;
   let ymd;
-  let viewModels: Schedule[];
+  let uiModels: EventModel[];
 
   range.forEach((date) => {
     ymd = toFormat(date, 'YYYYMMDD');
     ids = ownMatrix[ymd];
-    viewModels = result[ymd] = [];
+    uiModels = result[ymd] = [];
 
     if (ids && ids.length) {
-      viewModels.push(...ids.map((id) => ownSchedules[id]));
+      uiModels.push(...ids.map((id) => ownEvents[id]));
     }
   });
 

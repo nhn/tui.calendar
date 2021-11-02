@@ -11,8 +11,8 @@ const doorayTheme: ThemeKeyValue = {
   'common.saturday.color': '#333',
   'common.dayname.color': '#333',
   'common.today.color': '#135de6',
-  'common.creationGuide.backgroundColor': 'rgba(19, 93, 230, 0.1)',
-  'common.creationGuide.border': '1px solid #135de6',
+  'common.gridSelection.backgroundColor': 'rgba(19, 93, 230, 0.1)',
+  'common.gridSelection.border': '1px solid #135de6',
   'month.dayname.borderLeft': '1px solid #ddd',
   'month.dayname.backgroundColor': 'inherit',
   'month.holidayExceptThisMonth.color': '#f3acac',
@@ -38,7 +38,7 @@ const doorayTheme: ThemeKeyValue = {
   'week.currentTimeLineBullet.backgroundColor': '#135de6',
   'week.currentTimeLineToday.border': '1px solid #135de6',
   'week.currentTimeLineFuture.border': '1px solid #135de6',
-  'week.creationGuide.color': '#135de6',
+  'week.gridSelection.color': '#135de6',
 };
 
 describe('Theme', () => {

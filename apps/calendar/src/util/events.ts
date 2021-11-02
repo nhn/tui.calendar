@@ -1,4 +1,4 @@
-import { millisecondsFrom, MS_SCHEDULE_MIN_DURATION } from '@src/time/datetime';
+import { millisecondsFrom, MS_EVENT_MIN_DURATION } from '@src/time/datetime';
 
 type CollisionParam = {
   start: number;
@@ -31,12 +31,12 @@ export function collidesWith({
   targetComingDuration,
   usingTravelTime,
 }: CollisionParam) {
-  if (Math.abs(end - start) < MS_SCHEDULE_MIN_DURATION) {
-    end += MS_SCHEDULE_MIN_DURATION;
+  if (Math.abs(end - start) < MS_EVENT_MIN_DURATION) {
+    end += MS_EVENT_MIN_DURATION;
   }
 
-  if (Math.abs(end - start) < MS_SCHEDULE_MIN_DURATION) {
-    end += MS_SCHEDULE_MIN_DURATION;
+  if (Math.abs(end - start) < MS_EVENT_MIN_DURATION) {
+    end += MS_EVENT_MIN_DURATION;
   }
 
   if (usingTravelTime) {

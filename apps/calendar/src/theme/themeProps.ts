@@ -3,6 +3,7 @@
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 
+// @TODO: 주석과 실제 객체에 사용되는 속성 동일하게 정의하기
 /**
  * Full configuration for theme.
  * "common" prefix is for entire calendar. "common" properties can be overriden by "week", "month".
@@ -139,9 +140,9 @@ export const defaultProps = {
   'common.dayname.color': '#333',
   'common.today.color': '#333',
 
-  // creation guide style
-  'common.creationGuide.backgroundColor': 'rgba(81, 92, 230, 0.05)',
-  'common.creationGuide.border': '1px solid #515ce6',
+  // grid selection style
+  'common.gridSelection.backgroundColor': 'rgba(81, 92, 230, 0.05)',
+  'common.gridSelection.border': '1px solid #515ce6',
 
   // month header 'dayname'
   'month.dayname.borderLeft': '1px solid #e5e5e5',
@@ -198,8 +199,8 @@ export const defaultProps = {
   'week.currentTimeLineToday.border': '1px solid #515ce6',
   'week.currentTimeLineFuture.border': 'none',
 
-  // week creation guide style
-  'week.creationGuide.color': '#515ce6',
+  // week grid selection style
+  'week.gridSelection.color': '#515ce6',
 };
 
 export type ThemePropKeys = keyof typeof defaultProps;

@@ -6,87 +6,84 @@ import inArray from 'tui-code-snippet/array/inArray';
 import isUndefined from 'tui-code-snippet/type/isUndefined';
 
 import {
-  convertToViewModel,
+  convertToUIModel,
   getCollisionGroup,
+  getEventInDateRangeFilter,
   getMatrices,
-  getScheduleInDateRangeFilter,
   limitRenderRange,
-  positionViewModels,
+  positionUIModels,
 } from '@src/controller/core';
 import { CalendarData } from '@src/model';
-import Schedule from '@src/model/schedule';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
+import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { isSameDate, toEndOfDay, toFormat, toStartOfDay } from '@src/time/datetime';
 import array from '@src/util/array';
 import Collection, { Filter } from '@src/util/collection';
 
+import EventModel from '../model/eventModel';
 import { IDS_OF_DAY } from './base';
 
 /**
- * Filter function for find allday schedule
- * @param {ScheduleViewModel} viewModel - schedule view model
- * @returns {boolean} whether model is allday schedule?
+ * Filter function for find allday event
+ * @param {EventUIModel} uiModel - ui model
+ * @returns {boolean} whether model is allday event?
  */
-function _isAllDay({ model }: ScheduleViewModel) {
+function _isAllDay({ model }: EventUIModel) {
   return model.isAllDay || model.hasMultiDates;
 }
 
 /**
- * Filter function for find time schedule
- * @param {ScheduleViewModel} viewModel - schedule view model
- * @returns {boolean} whether model is time schedule?
+ * Filter function for find time event
+ * @param {EventUIModel} uiModel - ui model
+ * @returns {boolean} whether model is time event?
  */
-function _isNotAllday(viewModel: ScheduleViewModel) {
-  return !_isAllDay(viewModel);
+function _isNotAllday(uiModel: EventUIModel) {
+  return !_isAllDay(uiModel);
 }
 
 /**
  * Weight top value +1 for month view render
- * @param {ScheduleViewModel} viewModel - schedule view model
+ * @param {EventUIModel} uiModel - ui model
  */
-function _weightTopValue(viewModel: ScheduleViewModel) {
-  viewModel.top = viewModel.top || 0;
-  viewModel.top += 1;
+function _weightTopValue(uiModel: EventUIModel) {
+  uiModel.top = uiModel.top || 0;
+  uiModel.top += 1;
 }
 
 /**
  * Adjust render range to render properly.
  *
- * Limit start, end for each allday schedules and expand start, end for
- * each time schedules
+ * Limit start, end for each allday events and expand start, end for
+ * each time events
  * @param {TZDate} start - render start date
  * @param {TZDate} end - render end date
- * @param {Collection} viewModelColl - view model collection property.
+ * @param {Collection} uiModelColl - collection of ui model.
  */
-function _adjustRenderRange(
-  start: TZDate,
-  end: TZDate,
-  viewModelColl: Collection<ScheduleViewModel>
-) {
-  viewModelColl.each((viewModel) => {
-    if (viewModel.model.isAllDay || viewModel.model.hasMultiDates) {
-      limitRenderRange(toStartOfDay(start), toEndOfDay(end), viewModel);
+function _adjustRenderRange(start: TZDate, end: TZDate, uiModelColl: Collection<EventUIModel>) {
+  uiModelColl.each((uiModel) => {
+    if (uiModel.model.isAllDay || uiModel.model.hasMultiDates) {
+      limitRenderRange(toStartOfDay(start), toEndOfDay(end), uiModel);
     }
   });
 }
 
 /**
- * Get max top index value for allday schedules in specific date (YMD)
+ * Get max top index value for allday events in specific date (YMD)
+ * @param idsOfDay
  * @param {string} ymd - yyyymmdd formatted value
- * @param {Collection} viewModelAlldayColl - collection of allday schedules
+ * @param {Collection} uiModelAlldayColl - collection of allday events
  * @returns {number} max top index value in date
  */
 function _getAlldayMaxTopIndexAtYMD(
   idsOfDay: IDS_OF_DAY,
   ymd: string,
-  viewModelAlldayColl: Collection<ScheduleViewModel>
+  uiModelAlldayColl: Collection<EventUIModel>
 ) {
   const topIndexesInDate: number[] = [];
 
   idsOfDay[ymd].forEach((cid) => {
-    viewModelAlldayColl.doWhenHas(cid, (viewModel) => {
-      topIndexesInDate.push(viewModel.top);
+    uiModelAlldayColl.doWhenHas(cid, (uiModel) => {
+      topIndexesInDate.push(uiModel.top);
     });
   });
 
@@ -98,120 +95,118 @@ function _getAlldayMaxTopIndexAtYMD(
 }
 
 /**
- * Adjust time view model's top index value
- * @param {Collection} viewModelColl - collection of schedule view model
+ * Adjust time ui model's top index value
+ * @param idsOfDay
+ * @param {Collection} uiModelColl - collection of ui ui model
  */
-function _adjustTimeTopIndex(idsOfDay: IDS_OF_DAY, viewModelColl: Collection<ScheduleViewModel>) {
-  const vAlldayColl = viewModelColl.find(_isAllDay);
-  const sortedTimeSchedules = viewModelColl.find(_isNotAllday).sort(array.compare.schedule.asc);
+function _adjustTimeTopIndex(idsOfDay: IDS_OF_DAY, uiModelColl: Collection<EventUIModel>) {
+  const vAlldayColl = uiModelColl.find(_isAllDay);
+  const sortedTimeEvents = uiModelColl.find(_isNotAllday).sort(array.compare.event.asc);
   const maxIndexInYMD: Record<string, number> = {};
 
-  sortedTimeSchedules.forEach((timeViewModel) => {
-    const scheduleYMD = toFormat(timeViewModel.getStarts(), 'YYYYMMDD');
-    let alldayMaxTopInYMD = maxIndexInYMD[scheduleYMD];
+  sortedTimeEvents.forEach((timeUIModel) => {
+    const eventYMD = toFormat(timeUIModel.getStarts(), 'YYYYMMDD');
+    let alldayMaxTopInYMD = maxIndexInYMD[eventYMD];
 
     if (isUndefined(alldayMaxTopInYMD)) {
-      alldayMaxTopInYMD = maxIndexInYMD[scheduleYMD] = _getAlldayMaxTopIndexAtYMD(
+      alldayMaxTopInYMD = maxIndexInYMD[eventYMD] = _getAlldayMaxTopIndexAtYMD(
         idsOfDay,
-        scheduleYMD,
+        eventYMD,
         vAlldayColl
       );
     }
-    maxIndexInYMD[scheduleYMD] = timeViewModel.top = alldayMaxTopInYMD + 1;
+    maxIndexInYMD[eventYMD] = timeUIModel.top = alldayMaxTopInYMD + 1;
   });
 }
 
 /**
- * Adjust time view model's top index value
- * @param {Collection} viewModelColl - collection of schedule view model
+ * Adjust time ui model's top index value
+ * @param {Collection} uiModelColl - collection of ui ui model
  */
-function _stackTimeFromTop(idsOfDay: IDS_OF_DAY, viewModelColl: Collection<ScheduleViewModel>) {
-  const viewModelAlldayColl = viewModelColl.find(_isAllDay);
-  const sortedTimeSchedules = viewModelColl.find(_isNotAllday).sort(array.compare.schedule.asc);
+function _stackTimeFromTop(idsOfDay: IDS_OF_DAY, uiModelColl: Collection<EventUIModel>) {
+  const uiModelAlldayColl = uiModelColl.find(_isAllDay);
+  const sortedTimeEvents = uiModelColl.find(_isNotAllday).sort(array.compare.event.asc);
   const indiceInYMD: Record<string, number[]> = {};
 
-  sortedTimeSchedules.forEach((timeViewModel) => {
-    const scheduleYMD = toFormat(timeViewModel.getStarts(), 'YYYYMMDD');
-    let topArrayInYMD = indiceInYMD[scheduleYMD];
+  sortedTimeEvents.forEach((timeUIModel) => {
+    const eventYMD = toFormat(timeUIModel.getStarts(), 'YYYYMMDD');
+    let topArrayInYMD = indiceInYMD[eventYMD];
 
     if (isUndefined(topArrayInYMD)) {
-      topArrayInYMD = indiceInYMD[scheduleYMD] = [];
-      idsOfDay[scheduleYMD].forEach((cid) => {
-        viewModelAlldayColl.doWhenHas(cid, (viewModel) => {
-          topArrayInYMD.push(viewModel.top);
+      topArrayInYMD = indiceInYMD[eventYMD] = [];
+      idsOfDay[eventYMD].forEach((cid) => {
+        uiModelAlldayColl.doWhenHas(cid, (uiModel) => {
+          topArrayInYMD.push(uiModel.top);
         });
       });
     }
 
-    if (inArray(timeViewModel.top, topArrayInYMD) >= 0) {
+    if (inArray(timeUIModel.top, topArrayInYMD) >= 0) {
       const maxTopInYMD = Math.max(...topArrayInYMD) + 1;
       for (let i = 1; i <= maxTopInYMD; i += 1) {
-        timeViewModel.top = i;
-        if (inArray(timeViewModel.top, topArrayInYMD) < 0) {
+        timeUIModel.top = i;
+        if (inArray(timeUIModel.top, topArrayInYMD) < 0) {
           break;
         }
       }
     }
-    topArrayInYMD.push(timeViewModel.top);
+    topArrayInYMD.push(timeUIModel.top);
   });
 }
 
 /**
- * Convert multi-date time schedule to all-day schedule
- * @param {Collection} viewModelColl - view model collection
+ * Convert multi-date time event to all-day event
+ * @param {Collection} uiModelColl - collection of ui models.
  * property.
  */
-function _addMultiDatesInfo(viewModelColl: Collection<ScheduleViewModel>) {
-  viewModelColl.each((viewModel) => {
-    const { model } = viewModel;
+function _addMultiDatesInfo(uiModelColl: Collection<EventUIModel>) {
+  uiModelColl.each((uiModel) => {
+    const { model } = uiModel;
     const start = model.getStarts();
     const end = model.getEnds();
 
     model.hasMultiDates = !isSameDate(start, end);
 
     if (!model.isAllDay && model.hasMultiDates) {
-      viewModel.renderStarts = toStartOfDay(start);
-      viewModel.renderEnds = toEndOfDay(end);
+      uiModel.renderStarts = toStartOfDay(start);
+      uiModel.renderEnds = toEndOfDay(end);
     }
   });
 }
 
 /**
- * Find schedule and get view model for specific month
- * @param {Collection<Schedule>} schedules - model controller
- * @param {TZDate} start - start date to find schedules
- * @param {TZDate} end - end date to find schedules
- * @param {Filter[]} [andFilters] - optional filters to applying search query
- * @param {boolean} [alldayFirstMode=false] if true, time schedule is lower than all-day schedule. Or stack schedules from the top.
- * @returns {object} view model data
+ * Find event and get ui model for specific month
+ * @returns {object} ui model data
+ * @param calendarData
+ * @param condition
  */
 export function findByDateRange(
   calendarData: CalendarData,
   condition: {
     start: TZDate;
     end: TZDate;
-    andFilters?: Filter<Schedule | ScheduleViewModel>[];
+    andFilters?: Filter<EventModel | EventUIModel>[];
     alldayFirstMode?: boolean;
   }
 ) {
   const { start, end, andFilters = [], alldayFirstMode = false } = condition;
-  const { schedules, idsOfDay } = calendarData;
-  const filter = Collection.and(...[getScheduleInDateRangeFilter(start, end)].concat(andFilters));
+  const { events, idsOfDay } = calendarData;
+  const filter = Collection.and(...[getEventInDateRangeFilter(start, end)].concat(andFilters));
 
-  const coll = schedules.find(filter);
-  const viewModelColl = convertToViewModel(coll);
-  _addMultiDatesInfo(viewModelColl);
-  _adjustRenderRange(start, end, viewModelColl);
-  const vList = viewModelColl.sort(array.compare.schedule.asc);
+  const coll = events.find(filter);
+  const uiModelColl = convertToUIModel(coll);
+  _addMultiDatesInfo(uiModelColl);
+  _adjustRenderRange(start, end, uiModelColl);
+  const vList = uiModelColl.sort(array.compare.event.asc);
   const usingTravelTime = false;
   const collisionGroup = getCollisionGroup(vList, usingTravelTime);
-  const matrices = getMatrices(viewModelColl, collisionGroup, usingTravelTime);
-  positionViewModels(start, end, matrices, _weightTopValue);
+  const matrices = getMatrices(uiModelColl, collisionGroup, usingTravelTime);
+  positionUIModels(start, end, matrices, _weightTopValue);
 
   if (alldayFirstMode) {
-    _adjustTimeTopIndex(idsOfDay, viewModelColl);
+    _adjustTimeTopIndex(idsOfDay, uiModelColl);
   } else {
-    _stackTimeFromTop(idsOfDay, viewModelColl);
+    _stackTimeFromTop(idsOfDay, uiModelColl);
   }
 
   return matrices;

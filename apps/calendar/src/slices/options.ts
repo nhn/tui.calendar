@@ -1,4 +1,4 @@
-import { Option, ScheduleData } from '@src/model';
+import { EventModelData, Option } from '@src/model';
 import { Day } from '@src/time/datetime';
 import { getDayName } from '@src/util/dayName';
 import { deepMergedCopy, includes, range } from '@src/util/utils';
@@ -45,9 +45,9 @@ function initializeMonthOption(monthOption: Option['month']): CalendarMonthOptio
       header: { height: 31 },
       footer: { height: 31 },
     },
-    visibleScheduleCount: 6,
-    scheduleFilter: (schedule: Required<ScheduleData>) =>
-      schedule.isVisible && includes(['allday', 'time'], schedule.category),
+    visibleEventCount: 6,
+    eventFilter: (event: Required<EventModelData>) =>
+      event.isVisible && includes(['allday', 'time'], event.category),
     ...monthOption,
   };
 
@@ -78,7 +78,7 @@ export function createOptionSlice(option: Option = {}): OptionSlice {
     option: {
       defaultView: option?.defaultView ?? 'week',
       taskView: option?.taskView ?? true,
-      scheduleView: option?.scheduleView ?? true,
+      eventView: option?.eventView ?? true,
       useCreationPopup: option?.useCreationPopup ?? false,
       useDetailPopup: option?.useDetailPopup ?? false,
       disableDblClick: option?.disableDblClick ?? false,

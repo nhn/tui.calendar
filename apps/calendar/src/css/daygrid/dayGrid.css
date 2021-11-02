@@ -46,7 +46,7 @@
   background-color: transparent;
 }
 
-.weekday-schedules {
+.weekday-events {
   position: absolute;
   top: 0;
   left: 0;
@@ -57,7 +57,7 @@
   height: 100%;
 }
 
-.weekday .daygrid-creation-guide {
+.weekday .daygrid-grid-selection {
   position: absolute;
   right: 10px;
   background-color: rgba(81, 92, 230, 0.05);

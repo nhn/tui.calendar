@@ -2,7 +2,7 @@ import { h, RenderableProps } from 'preact';
 
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
 import { ThemeProvider } from '@src/contexts/theme';
-import Schedule from '@src/model/schedule';
+import EventModel from '@src/model/eventModel';
 import Theme from '@src/theme';
 import { cls } from '@src/util/cssHelper';
 
@@ -18,7 +18,7 @@ const style = {
 
 type Props = {
   options?: Options;
-  events?: Schedule[];
+  events?: EventModel[];
 };
 
 export function ProviderWrapper({

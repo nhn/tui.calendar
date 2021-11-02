@@ -1,8 +1,8 @@
 import { h, RenderableProps } from 'preact';
 
-import { CreationGuideInfo } from '@src/components/timegrid';
-import { Column } from '@src/components/timegrid/column';
-import { ScheduleData } from '@src/model';
+import { GridSelectionInfo } from '@src/components/timeGrid';
+import { Column } from '@src/components/timeGrid/column';
+import { EventModelData } from '@src/model';
 import TZDate from '@src/time/date';
 import {
   addHours,
@@ -50,7 +50,7 @@ export const backgroundEvents = () => {
   const start = toStartOfDay(new TZDate());
   start.setHours(8);
 
-  const data: ScheduleData[] = [
+  const data: EventModelData[] = [
     {
       category: 'background',
       start,
@@ -83,7 +83,7 @@ export const showOnlyBusinessHours = () => {
   const start = toStartOfDay(new TZDate());
   start.setHours(12);
 
-  const data: ScheduleData[] = [
+  const data: EventModelData[] = [
     {
       category: 'background',
       start,
@@ -108,7 +108,7 @@ export const highlightBusinessHours = () => {
   const start = toStartOfDay(new TZDate());
   start.setHours(9);
 
-  const data: ScheduleData[] = [
+  const data: EventModelData[] = [
     {
       category: 'background',
       start,
@@ -131,7 +131,7 @@ highlightBusinessHours.story = {
 
 export const highlightOffHours = () => {
   const start = toStartOfDay(new TZDate());
-  const data: ScheduleData[] = [
+  const data: EventModelData[] = [
     {
       category: 'background',
       start,
@@ -162,7 +162,7 @@ export const monthsInAnYear = () => {
   const startOfYear = toStartOfYear(new TZDate());
   const times = range(0, 13).map((m) => addMonth(startOfYear, m));
 
-  const data: ScheduleData[] = [
+  const data: EventModelData[] = [
     {
       category: 'background',
       start: startOfYear,
@@ -228,9 +228,9 @@ columnHasBackgroundColor.story = {
   name: 'Column has background color',
 };
 
-export const columnCreationGuideWithTop = () => {
+export const gridSelectionWithTop = () => {
   const start = toStartOfDay(new TZDate());
-  const creationGuide: CreationGuideInfo = {
+  const gridSelection: GridSelectionInfo = {
     start: addHours(start, 2),
     end: addHours(start, 5),
     unit: 'minute',
@@ -238,17 +238,17 @@ export const columnCreationGuideWithTop = () => {
 
   return (
     <Wrapper>
-      <Column width="100px" creationGuide={creationGuide} />
+      <Column width="100px" gridSelection={gridSelection} />
     </Wrapper>
   );
 };
-columnCreationGuideWithTop.story = {
-  name: 'Creation Guide(text on top)',
+gridSelectionWithTop.story = {
+  name: 'Grid selection(text on top)',
 };
 
-export const columnCreationGuideWithBottom = () => {
+export const gridSelectionWithBottom = () => {
   const start = toStartOfDay(new TZDate());
-  const creationGuide: CreationGuideInfo = {
+  const gridSelection: GridSelectionInfo = {
     start: addHours(start, 3),
     end: addHours(start, 6),
     unit: 'minute',
@@ -257,10 +257,10 @@ export const columnCreationGuideWithBottom = () => {
 
   return (
     <Wrapper>
-      <Column width="100px" creationGuide={creationGuide} />
+      <Column width="100px" gridSelection={gridSelection} />
     </Wrapper>
   );
 };
-columnCreationGuideWithBottom.story = {
-  name: 'Creation Guide(text on bottom)',
+gridSelectionWithBottom.story = {
+  name: 'Grid selection(text on bottom)',
 };

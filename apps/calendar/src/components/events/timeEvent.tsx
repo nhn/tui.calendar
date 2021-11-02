@@ -1,7 +1,7 @@
 import { FunctionComponent, h } from 'preact';
 
 import Template from '@src/components/template';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
+import EventUIModel from '@src/model/eventUIModel';
 import { cls } from '@src/util/cssHelper';
 import { toPercent } from '@src/util/units';
 
@@ -13,10 +13,10 @@ const classNames = {
 };
 
 interface Props {
-  eventModels: ScheduleViewModel;
+  eventModels: EventUIModel;
 }
 
-function getStyles(viewModel: ScheduleViewModel) {
+function getStyles(uiModel: EventUIModel) {
   const {
     top,
     left,
@@ -28,7 +28,7 @@ function getStyles(viewModel: ScheduleViewModel) {
     comingDurationHeight,
     croppedStart,
     croppedEnd,
-  } = viewModel;
+  } = uiModel;
   // get theme values
   const travelBorderColor = 'white';
   const borderRadius = 2;

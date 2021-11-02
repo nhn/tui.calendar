@@ -5,7 +5,7 @@ export type EventHandlerType = IEvents[keyof IEvents];
 export type CustomEventType = keyof IEvents;
 
 export interface IEventObject {
-  schedule: ISchedule;
+  eventData: EventModelData;
   end: TZDate;
   start: TZDate;
   calendar?: ICalendarInfo;
@@ -21,20 +21,20 @@ export interface IEventMoreObject {
   target: Element;
 }
 
-export interface IEventScheduleObject {
+export interface IEventEventObject {
   calendar: ICalendarInfo;
   event: MouseEvent;
-  schedule: ISchedule;
+  eventData: EventModelData;
 }
 
 export interface IEvents {
-  afterRenderSchedule?: (eventObj: { schedule: ISchedule }) => void;
-  beforeCreateSchedule?: (schedule: ISchedule) => void;
-  beforeDeleteSchedule?: (eventObj: IEventScheduleObject) => void;
-  beforeUpdateSchedule?: (eventObj: IEventObject) => void;
+  afterRenderEvent?: (eventObj: { eventData: EventModelData }) => void;
+  beforeCreateEvent?: (eventData: EventModelData) => void;
+  beforeDeleteEvent?: (eventObj: IEventEventObject) => void;
+  beforeUpdateEvent?: (eventObj: IEventObject) => void;
   clickDayname?: (eventObj: IEventDateObject) => void;
   clickMore?: (eventObj: IEventMoreObject) => void;
-  clickSchedule?: (eventObj: IEventScheduleObject) => void;
+  clickEvent?: (eventObj: IEventEventObject) => void;
   clickTimezonesCollapseBtn?: (timezonesCollapsed: boolean) => void;
 }
 
@@ -68,7 +68,7 @@ export interface ITimezoneHourMarker {
 export interface IGridDateModel {
   date: string;
   day: number;
-  hiddenSchedules: number;
+  hiddenEvents: number;
   isOtherMonth: boolean;
   isToday: boolean;
   month: number;
@@ -90,25 +90,25 @@ export interface IMonthDayNameInfo {
 
 export interface ITemplateConfig {
   milestoneTitle?: () => string;
-  milestone?: (schedule: ISchedule) => string;
+  milestone?: (eventData: EventModelData) => string;
   taskTitle?: () => string;
-  task?: (schedule: ISchedule) => string;
+  task?: (eventData: EventModelData) => string;
   alldayTitle?: () => string;
-  allday?: (schedule: ISchedule) => string;
-  time?: (schedule: ISchedule) => string;
-  goingDuration?: (schedule: ISchedule) => string;
-  comingDuration?: (schedule: ISchedule) => string;
+  allday?: (eventData: EventModelData) => string;
+  time?: (eventData: EventModelData) => string;
+  goingDuration?: (eventData: EventModelData) => string;
+  comingDuration?: (eventData: EventModelData) => string;
   monthMoreTitleDate?: (date: string, dayname: string) => string;
   monthMoreClose?: () => string;
   monthGridHeader?: (model: IGridDateModel) => string;
-  monthGridHeaderExceed?: (hiddenSchedules: number) => string;
+  monthGridHeaderExceed?: (hiddenEvents: number) => string;
   monthGridFooter?: (model: IGridDateModel) => string;
-  monthGridFooterExceed?: (hiddenSchedules: number) => string;
+  monthGridFooterExceed?: (hiddenEvents: number) => string;
   monthDayname?: (model: IMonthDayNameInfo) => string;
   weekDayname?: (model: IWeekDayNameInfo) => string;
-  weekGridFooterExceed?: (hiddenSchedules: number) => string;
+  weekGridFooterExceed?: (hiddenEvents: number) => string;
   dayGridTitle?: (viewName: string) => string;
-  schedule?: (schedule: ISchedule) => string;
+  eventData?: (eventData: EventModelData) => string;
   collapseBtnTitle?: () => string;
   timezoneDisplayLabel?: (timezoneOffset: number, displayLabel: string) => string;
   timegridDisplayPrimayTime?: (time: ITimeGridHourLabel) => string;
@@ -125,11 +125,11 @@ export interface ITemplateConfig {
   popupSave?: () => string;
   popupUpdate?: () => string;
   popupDetailDate?: (isAllDay: boolean, start: DateType, end: DateType) => string;
-  popupDetailLocation?: (schedule: ISchedule) => string;
-  popupDetailUser?: (schedule: ISchedule) => string;
-  popupDetailState?: (schedule: ISchedule) => string;
-  popupDetailRepeat?: (schedule: ISchedule) => string;
-  popupDetailBody?: (schedule: ISchedule) => string;
+  popupDetailLocation?: (eventData: EventModelData) => string;
+  popupDetailUser?: (eventData: EventModelData) => string;
+  popupDetailState?: (eventData: EventModelData) => string;
+  popupDetailRepeat?: (eventData: EventModelData) => string;
+  popupDetailBody?: (eventData: EventModelData) => string;
   popupEdit?: () => string;
   popupDelete?: () => string;
 }
@@ -153,7 +153,7 @@ export interface IMonthOptions {
   visibleWeeksCount?: number;
   isAlways6Week?: boolean;
   workweek?: boolean;
-  visibleScheduleCount?: number;
+  visibleEventCount?: number;
   moreLayerSize?: {
     width?: string | null;
     height?: string | null;
@@ -166,10 +166,10 @@ export interface IMonthOptions {
       height?: number;
     };
   };
-  scheduleFilter?: (schedule: ISchedule) => boolean;
+  eventFilter?: (eventData: EventModelData) => boolean;
 }
 
-export interface ISchedule {
+export interface EventModelData {
   id?: string;
   calendarId?: string;
   title?: string;
@@ -229,7 +229,7 @@ export interface ITheme {
 export interface IOptions {
   defaultView?: string;
   taskView?: boolean | string[];
-  scheduleView?: boolean | string[];
+  eventView?: boolean | string[];
   theme?: ITheme;
   template?: ITemplateConfig;
   week?: IWeekOptions;
@@ -251,9 +251,9 @@ export default class Calendar {
 
   public clear(immediately?: boolean): void;
 
-  public createSchedules(schedules: ISchedule[], silent?: boolean): void;
+  public createEvents(events: EventModelData[], silent?: boolean): void;
 
-  public deleteSchedule(scheduleId: string, calendarId: string, silent?: boolean): void;
+  public deleteEvent(eventId: string, calendarId: string, silent?: boolean): void;
 
   public destroy(): void;
 
@@ -263,11 +263,11 @@ export default class Calendar {
 
   public getDateRangeStart(): TZDate;
 
-  public getElement(scheduleId: string, calendarId: string): Element;
+  public getElement(eventId: string, calendarId: string): Element;
 
   public getOptions(): IOptions;
 
-  public getSchedule(scheduleId: string, calendarId: string): ISchedule;
+  public getEvent(eventId: string, calendarId: string): EventModelData;
 
   public getViewName(): string;
 
@@ -275,7 +275,7 @@ export default class Calendar {
 
   public next(): void;
 
-  public openCreationPopup(schedule: ISchedule): void;
+  public openCreationPopup(eventData: EventModelData): void;
 
   public prev(): void;
 
@@ -295,16 +295,16 @@ export default class Calendar {
 
   public today(): void;
 
-  public toggleSchedules(calendarId: string, toHide: boolean, render?: boolean): void;
+  public toggleEvents(calendarId: string, toHide: boolean, render?: boolean): void;
 
-  public toggleScheduleView(enabled: boolean): void;
+  public toggleEventView(enabled: boolean): void;
 
   public toggleTaskView(enabled: boolean): void;
 
-  public updateSchedule(
-    scheduleId: string,
+  public updateEvent(
+    eventId: string,
     calendarId: string,
-    scheduleData: ISchedule,
+    eventData: EventModelData,
     silent?: boolean
   ): void;
 

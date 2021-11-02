@@ -13,7 +13,7 @@
   height: 26px;
   border-bottom: 1px dotted #f9f9f9;
 }
-.column .guide-creation {
+.column .grid-selection {
   position: absolute;
   right: 10px;
   left: 1px;
@@ -21,12 +21,12 @@
   background-color: rgba(81, 92, 230, 0.05);
   border: 1px solid #515ce6;
 }
-.column .guide-creation .creation-label {
+.column .grid-selection .grid-selection-label {
   color: #515ce6;
   font-size: 11px;
   font-weight: bold;
 }
-.column .guide-creation .creation-label.creation-label-bottom {
+.column .grid-selection .grid-selection-label.grid-selection-label-bottom {
   position: absolute;
   bottom: 3px;
 }

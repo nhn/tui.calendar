@@ -59,13 +59,13 @@ stories.add('Simple Example', () => {
 
     onAfterRenderSchedule(res) {
       console.group('onAfterRenderSchedule');
-      console.log('Schedule Info : ', res.schedule);
+      console.log('EventModel Info : ', res.schedule);
       console.groupEnd();
     }
 
     onBeforeDeleteSchedule(res) {
       console.group('onBeforeDeleteSchedule');
-      console.log('Schedule Info : ', res.schedule);
+      console.log('EventModel Info : ', res.schedule);
       console.groupEnd();
 
       const {id, calendarId} = res.schedule;
@@ -101,7 +101,7 @@ stories.add('Simple Example', () => {
       console.group('onClickSchedule');
       console.log('MouseEvent : ', res.event);
       console.log('Calendar Info : ', res.calendar);
-      console.log('Schedule Info : ', res.schedule);
+      console.log('EventModel Info : ', res.schedule);
       console.groupEnd();
     }
 

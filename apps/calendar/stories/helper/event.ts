@@ -1,7 +1,7 @@
-import { ScheduleData } from '@src/model';
-import Schedule from '@src/model/schedule';
-import ScheduleViewModel from '@src/model/scheduleViewModel';
+import { EventModelData } from '@src/model';
+import EventModel from '@src/model/eventModel';
+import EventUIModel from '@src/model/eventUIModel';
 
-export function createEventModels(data: ScheduleData[]): ScheduleViewModel[] {
-  return data.map((datum) => ScheduleViewModel.create(Schedule.create(datum)));
+export function createEventModels(data: EventModelData[]): EventUIModel[] {
+  return data.map((datum) => EventUIModel.create(EventModel.create(datum)));
 }
