@@ -2,10 +2,9 @@ import { h } from 'preact';
 
 import range from 'tui-code-snippet/array/range';
 
-import { WeekEvents } from '@src/components/dayGridWeek/weekEvents';
+import { GridRow } from '@src/components/dayGridWeek/gridRow';
 import { Layout } from '@src/components/layout';
 import Panel from '@src/components/panel';
-import { PanelTitle } from '@src/components/panelgrid/panelTitle';
 import { createEventCollection } from '@src/controller/base';
 import { CalendarData } from '@src/model';
 import TZDate from '@src/time/date';
@@ -16,7 +15,7 @@ import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { createRandomEventModelsForMonth } from '@stories/util/randomEvents';
 import { Story } from '@storybook/preact';
 
-export default { title: 'WeekEvents', component: WeekEvents, args: { primary: true } };
+export default { title: 'GridRow', component: GridRow, args: { primary: true } };
 
 const events = createRandomEventModelsForMonth(40);
 
@@ -39,8 +38,9 @@ const Template: Story = (args) => {
     <ProviderWrapper options={args.options} events={events}>
       <Layout height={500}>
         <Panel name="milestone" resizable minHeight={20} maxHeight={args.maxHeight}>
-          <WeekEvents
+          <GridRow
             events={dayGridEvents.milestone}
+            rowName="milestone"
             type="milestone"
             options={{ narrowWeekend: false }}
             gridInfo={gridInfo}
@@ -55,15 +55,3 @@ const Template: Story = (args) => {
 export const milestone = Template.bind({});
 
 milestone.storyName = 'random events milestone';
-
-export const title: Story = () => {
-  const type = 'milestone';
-
-  return (
-    <ProviderWrapper>
-      <PanelTitle width={120} template={type} model={type} />
-    </ProviderWrapper>
-  );
-};
-
-title.storyName = 'panel title';

@@ -1,7 +1,7 @@
 import { FunctionComponent, h } from 'preact';
 
 import GridHeader from '@src/components/dayGridCommon/gridHeader';
-import { WeekEvents } from '@src/components/dayGridWeek/weekEvents';
+import { GridRow } from '@src/components/dayGridWeek/gridRow';
 import { Layout } from '@src/components/layout';
 import Panel from '@src/components/panel';
 import { ColumnInfo } from '@src/components/timegrid/columns';
@@ -55,10 +55,11 @@ const Day: FunctionComponent = () => {
 
     return (
       <Panel key={panelType} name={panelType} resizable>
-        <WeekEvents
+        <GridRow
           events={dayGridEvents[panelType]}
           cells={cells}
           type={panelType}
+          rowName={panelType}
           height={value.height}
           options={option.week}
           gridInfo={gridInfo}
