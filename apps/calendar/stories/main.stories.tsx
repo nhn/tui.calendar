@@ -1,5 +1,6 @@
 import { FunctionComponent, h } from 'preact';
 
+import FloatingLayer from '@src/components/floatingLayer';
 import { Main } from '@src/components/view/main';
 import { useDispatch } from '@src/contexts/calendarStore';
 import { cls } from '@src/util/cssHelper';
@@ -43,6 +44,7 @@ const Template: Story = (args) => (
     <Wrapper>
       <Toolbar />
       <Main />
+      <FloatingLayer />
     </Wrapper>
   </ProviderWrapper>
 );

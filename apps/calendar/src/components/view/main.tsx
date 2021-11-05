@@ -1,9 +1,9 @@
 import { FunctionComponent, h } from 'preact';
 import { useMemo } from 'preact/hooks';
 
-import DayView from '@src/components/view/dayView';
-import MonthView from '@src/components/view/monthView';
-import WeekView from '@src/components/view/weekView';
+import DayView from '@src/components/view/day';
+import MonthView from '@src/components/view/month';
+import WeekView from '@src/components/view/week';
 import { useStore } from '@src/contexts/calendarStore';
 import { ViewType } from '@src/model';
 import { topLevelStateSelector } from '@src/selectors';

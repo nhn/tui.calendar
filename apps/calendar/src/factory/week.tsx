@@ -1,6 +1,6 @@
 import { h } from 'preact';
 
-import WeekView from '@src/components/view/weekView';
+import WeekView from '@src/components/view/week';
 import CalendarControl from '@src/factory/calendarControl';
 
 export default class Week extends CalendarControl {
