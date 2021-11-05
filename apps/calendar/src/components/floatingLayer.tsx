@@ -23,8 +23,9 @@ const renderPopup = (popupType: PopupType | null, param: PopupParamMap[PopupType
   }
 };
 
+const popupSelector = topLevelStateSelector('popup');
 const FloatingLayer: FunctionComponent = () => {
-  const popupState = useStore(topLevelStateSelector('popup'));
+  const popupState = useStore(popupSelector);
   const { type, param } = popupState;
 
   if (!type || !param) {

@@ -16,8 +16,10 @@ const views: {
   day: DayView,
 };
 
+const viewSelector = topLevelStateSelector('view');
+
 export const Main: FunctionComponent = () => {
-  const { currentView } = useStore(topLevelStateSelector('view'));
+  const { currentView } = useStore(viewSelector);
   const CurrentViewComponent = useMemo(() => views[currentView] || null, [currentView]);
 
   return <CurrentViewComponent />;

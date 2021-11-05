@@ -63,6 +63,7 @@ function getGridInfoList(calendar: TZDate[][]): CellDateRange[][] {
   );
 }
 
+const calendarSelector = topLevelStateSelector('calendar');
 const DayGridMonth: FunctionComponent<Props> = ({
   options,
   calendar = [],
@@ -80,7 +81,7 @@ const DayGridMonth: FunctionComponent<Props> = ({
   const rowHeight =
     TOTAL_PERCENT_HEIGHT / Math.max(visibleWeeksCount === 0 ? 6 : visibleWeeksCount, 1);
 
-  const calendarData = useStore(topLevelStateSelector('calendar'));
+  const calendarData = useStore(calendarSelector);
 
   if (!calendarData) {
     return null;

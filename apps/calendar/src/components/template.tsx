@@ -12,8 +12,9 @@ interface Props {
   model: any;
 }
 
+const templateSelector = topLevelStateSelector('template');
 const Template: FunctionComponent<Props> = ({ template, model }) => {
-  const templates = useStore(topLevelStateSelector('template'));
+  const templates = useStore(templateSelector);
   const templateFunc: Function = templates[template] || identity;
   const htmlOrVnode = templateFunc(model, h);
 

@@ -48,10 +48,11 @@ function useContainerHeight(container: RefObject<HTMLDivElement>, dayNameHeight:
   return gridPanelHeight;
 }
 
+const optionSelector = topLevelStateSelector('option');
 const Month: FunctionComponent = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const option = useStore(topLevelStateSelector('option'));
+  const option = useStore(optionSelector);
   const theme = useTheme();
 
   const gridPanelHeight = useContainerHeight(containerRef, MONTH_DAY_NAME_HEIGHT);

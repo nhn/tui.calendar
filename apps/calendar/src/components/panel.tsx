@@ -31,6 +31,7 @@ export interface Props extends PanelInfo {
 
 type Child = VNode<any> | string | number;
 
+const weekViewLayoutSelector = topLevelStateSelector('weekViewLayout');
 const Panel: FunctionComponent<Props> = (props) => {
   const {
     direction = Direction.COLUMN,
@@ -47,7 +48,7 @@ const Panel: FunctionComponent<Props> = (props) => {
   const panelRef = useRef<HTMLDivElement>(null);
   const resizerRef = useRef<{ base: HTMLDivElement }>(null);
   const [resizerRect, setResizerRect] = useState<Size>({ width: 0, height: 0 });
-  const { dayGridRows } = useStore(topLevelStateSelector('weekViewLayout'));
+  const { dayGridRows } = useStore(weekViewLayoutSelector);
   const { updateDayGridRowHeight } = useDispatch('weekViewLayout');
 
   const panelResizeEnd = (resizeInfo: DragPositionInfo) => {
