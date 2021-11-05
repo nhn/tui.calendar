@@ -409,7 +409,7 @@ ScheduleCreationPopup.prototype._setDatepickerState = function(newState) {
 };
 
 /**
- * Set popup position and arrow direction to apear near guide element
+ * Set popup position and arrow direction to appear near guide element
  * @param {MonthCreationGuide|TimeCreationGuide|DayGridCreationGuide} guideBound - creation guide element
  */
 ScheduleCreationPopup.prototype._setPopupPositionAndArrowDirection = function(guideBound) {

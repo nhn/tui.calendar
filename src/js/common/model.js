@@ -19,7 +19,7 @@ model = {
     /**
      * string trim
      * @param {string} str string to trim
-     * @returns {string} trimed string
+     * @returns {string} trimmed string
      */
     trim: function(str) {
         return str.replace(spaceRx, '');

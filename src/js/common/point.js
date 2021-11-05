@@ -242,7 +242,7 @@ Point.prototype.ceil = function() {
 };
 
 /**
- * Ceil self coodinates.
+ * Ceil self coordinates.
  * @returns {Point} Point calculated.
  */
 Point.prototype._ceil = function() {
@@ -330,7 +330,7 @@ Point.prototype.toString = function() {
 };
 
 /**
- * Return coodinates to array. [x, y]
+ * Return coordinates to array. [x, y]
  * @returns {number[]} coordinate array.
  */
 Point.prototype.toArray = function() {
