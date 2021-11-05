@@ -1,7 +1,7 @@
 {
   "name": "@toast-ui/calendar",
   "author": "NHN FE Development Lab <dl_javascript@nhn.com>",
-  "version": "1.13.0-next",
+  "version": "2.0.0-dev",
   "main": "dist/toastui-calendar.js",
   "types": "types/index.d.ts",
   "sideEffects": [
