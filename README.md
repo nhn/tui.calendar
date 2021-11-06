@@ -284,7 +284,7 @@ $ npm run test
 
 ### Pull Request
 
-Before PR, first check to test updates then check for any errors.
+Before uploading your PR, run test one last time to check if there are any errors. 
 If it has no errors, commit and then push it!
 
 For more information on PR's steps, please see links in the Contributing section.
