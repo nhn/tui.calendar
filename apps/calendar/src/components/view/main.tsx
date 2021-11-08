@@ -20,7 +20,7 @@ const viewSelector = topLevelStateSelector('view');
 
 export const Main: FunctionComponent = () => {
   const { currentView } = useStore(viewSelector);
-  const CurrentViewComponent = useMemo(() => views[currentView] || null, [currentView]);
+  const CurrentViewComponent = useMemo(() => views[currentView] || (() => null), [currentView]);
 
   return <CurrentViewComponent />;
 };
