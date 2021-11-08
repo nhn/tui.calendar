@@ -4,7 +4,7 @@ import { EventDetailPopup } from '@src/components/popup/eventDetailPopup';
 import { EventFormPopup } from '@src/components/popup/eventFormPopup';
 import { SeeMoreEventsPopup } from '@src/components/popup/seeMoreEventsPopup';
 import { useStore } from '@src/contexts/calendarStore';
-import { topLevelStateSelector } from '@src/selectors';
+import { popupSelector } from '@src/selectors';
 import { PopupType } from '@src/slices/popup';
 import { cls } from '@src/util/cssHelper';
 
@@ -23,7 +23,6 @@ const renderPopup = (popupType: PopupType | null, param: PopupParamMap[PopupType
   }
 };
 
-const popupSelector = topLevelStateSelector('popup');
 const FloatingLayer: FunctionComponent = () => {
   const popupState = useStore(popupSelector);
   const { type, param } = popupState;

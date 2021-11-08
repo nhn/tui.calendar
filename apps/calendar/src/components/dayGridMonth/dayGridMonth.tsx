@@ -14,7 +14,7 @@ import {
 } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
 import EventModel from '@src/model/eventModel';
-import { topLevelStateSelector } from '@src/selectors';
+import { calendarSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
 import { toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
@@ -63,7 +63,6 @@ function getGridInfoList(calendar: TZDate[][]): CellDateRange[][] {
   );
 }
 
-const calendarSelector = topLevelStateSelector('calendar');
 const DayGridMonth: FunctionComponent<Props> = ({
   options,
   calendar = [],

@@ -9,7 +9,7 @@ import { MONTH_DAY_NAME_HEIGHT } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
 import { useTheme } from '@src/contexts/theme';
 import { MonthOption, TemplateMonthDayName } from '@src/model';
-import { topLevelStateSelector } from '@src/selectors';
+import { optionSelector } from '@src/selectors';
 import { getGridInfo, getMonthCalendar, isWeekend } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
 import { capitalizeDayName } from '@src/util/dayName';
@@ -48,7 +48,6 @@ function useContainerHeight(container: RefObject<HTMLDivElement>, dayNameHeight:
   return gridPanelHeight;
 }
 
-const optionSelector = topLevelStateSelector('option');
 export const Month: FunctionComponent = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 

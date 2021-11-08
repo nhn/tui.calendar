@@ -6,7 +6,7 @@ import { Month } from '@src/components/view/month';
 import { Week } from '@src/components/view/week';
 import { useStore } from '@src/contexts/calendarStore';
 import { ViewType } from '@src/model';
-import { topLevelStateSelector } from '@src/selectors';
+import { viewSelector } from '@src/selectors';
 
 const views: {
   [k in ViewType]: FunctionComponent;
@@ -15,8 +15,6 @@ const views: {
   week: Week,
   day: Day,
 };
-
-const viewSelector = topLevelStateSelector('view');
 
 export const Main: FunctionComponent = () => {
   const { currentView } = useStore(viewSelector);

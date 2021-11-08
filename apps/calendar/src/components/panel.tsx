@@ -18,7 +18,7 @@ import {
   PanelRect,
   Size,
 } from '@src/controller/panel';
-import { topLevelStateSelector } from '@src/selectors';
+import { weekViewLayoutSelector } from '@src/selectors';
 import { WeekGridRows } from '@src/slices/weekViewLayout';
 import { noop } from '@src/util';
 import { cls } from '@src/util/cssHelper';
@@ -31,7 +31,6 @@ export interface Props extends PanelInfo {
 
 type Child = VNode<any> | string | number;
 
-const weekViewLayoutSelector = topLevelStateSelector('weekViewLayout');
 const Panel: FunctionComponent<Props> = (props) => {
   const {
     direction = Direction.COLUMN,
