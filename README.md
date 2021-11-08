@@ -255,7 +255,7 @@ Run npm scripts and develop yourself with the following process.
 
 Fork `develop` branch into your personal repository.
 Clone it to local computer. Install node modules.
-Before starting development, you should check to haveany errors.
+Before starting development, you should check if there are any errors.
 
 ``` sh
 $ git clone https://github.com/{owner}/tui.calendar.git
@@ -267,7 +267,7 @@ $ npm run test
 ### Develop
 
 Let's start development!
-You can see your code is reflected as soon as you saving the codes by running a server.
+You can see your code reflected as soon as you save the code by running a server.
 Don't miss adding test cases and then make green rights.
 
 #### Run webpack-dev-server
@@ -284,10 +284,10 @@ $ npm run test
 
 ### Pull Request
 
-Before PR, check to test lastly and then check any errors.
-If it has no error, commit and then push it!
+Before uploading your PR, run test one last time to check if there are any errors. 
+If it has no errors, commit and then push it!
 
-For more information on PR's step, please see links of Contributing section.
+For more information on PR's steps, please see links in the Contributing section.
 
 ## 💬 Contributing
 
