@@ -59,7 +59,6 @@ const Day: FunctionComponent = () => {
           events={dayGridEvents[panelType]}
           cells={cells}
           type={panelType}
-          rowName={panelType}
           height={value.height}
           options={option.week}
           gridInfo={gridInfo}

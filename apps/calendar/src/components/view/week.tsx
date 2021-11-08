@@ -80,17 +80,18 @@ const Week: FunctionComponent = () => {
     const rowType = key as DayGridEventType;
 
     return (
-      <GridRow
-        key={rowType}
-        type={rowType}
-        events={dayGridEvents[rowType]}
-        gridInfo={gridInfo}
-        gridColWidthMap={gridColWidthMap}
-        rowName={rowType}
-        cells={cells}
-        height={value.height}
-        options={weekOptions}
-      />
+      <Panel name={rowType} key={rowType} resizable>
+        <GridRow
+          key={rowType}
+          type={rowType}
+          events={dayGridEvents[rowType]}
+          gridInfo={gridInfo}
+          gridColWidthMap={gridColWidthMap}
+          cells={cells}
+          height={value.height}
+          options={weekOptions}
+        />
+      </Panel>
     );
   });
 

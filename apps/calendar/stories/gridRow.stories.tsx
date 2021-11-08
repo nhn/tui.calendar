@@ -40,7 +40,6 @@ const Template: Story = (args) => {
         <Panel name="milestone" resizable minHeight={20} maxHeight={args.maxHeight}>
           <GridRow
             events={dayGridEvents.milestone}
-            rowName="milestone"
             type="milestone"
             options={{ narrowWeekend: false }}
             gridInfo={gridInfo}
