@@ -18,7 +18,7 @@ import EventUIModel from '@src/model/eventUIModel';
 import { WeekGridRows } from '@src/slices/weekViewLayout';
 import TZDate from '@src/time/date';
 import { addDate, toEndOfDay, toStartOfDay } from '@src/time/datetime';
-import { cls } from '@src/util/cssHelper';
+import { cls, toPercent } from '@src/util/cssHelper';
 import {
   EVENT_HEIGHT,
   getExceedCount,
@@ -27,7 +27,6 @@ import {
   isWithinHeight,
   TOTAL_WIDTH,
 } from '@src/util/gridHelper';
-import { toPercent } from '@src/util/units';
 import { createMousePositionDataGrabber } from '@src/util/weekViewHelper';
 
 import { CellDateRange } from '@t/components/daygrid/gridSelectionData';

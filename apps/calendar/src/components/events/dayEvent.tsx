@@ -1,9 +1,8 @@
 import { FunctionComponent, h } from 'preact';
 
 import EventUIModel from '@src/model/eventUIModel';
-import { cls } from '@src/util/cssHelper';
+import { cls, toPercent, toPx } from '@src/util/cssHelper';
 import { EVENT_HEIGHT } from '@src/util/gridHelper';
-import { toPercent, toPx } from '@src/util/units';
 
 interface Props {
   uiModel: EventUIModel;

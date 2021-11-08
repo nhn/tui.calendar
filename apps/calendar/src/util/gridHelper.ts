@@ -10,7 +10,6 @@ import {
   toStartOfDay,
   withinRangeDate,
 } from '@src/time/datetime';
-import { isNil } from '@src/util/utils';
 
 import type { DayGridEventMatrix, EventModelMap, Matrix3d, TimeGridEventMatrix } from '@t/events';
 import type { Cells, Panel } from '@t/panel';

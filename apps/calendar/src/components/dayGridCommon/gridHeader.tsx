@@ -2,8 +2,7 @@ import { FunctionComponent, h } from 'preact';
 
 import DayName from '@src/components/dayGridCommon/dayName';
 import { Template, TemplateMonthDayName, TemplateWeekDay } from '@src/model';
-import { cls } from '@src/util/cssHelper';
-import { toPercent } from '@src/util/units';
+import { cls, toPercent } from '@src/util/cssHelper';
 
 import { CalendarViewType } from '@t/components/common';
 import type { CalendarMonthOption, CalendarWeekOption } from '@t/store';

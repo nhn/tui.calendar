@@ -11,8 +11,7 @@ import { isBackgroundEvent } from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { first, last } from '@src/util/array';
-import { cls } from '@src/util/cssHelper';
-import { toPercent } from '@src/util/units';
+import { cls, toPercent } from '@src/util/cssHelper';
 import { range } from '@src/util/utils';
 
 const classNames = {

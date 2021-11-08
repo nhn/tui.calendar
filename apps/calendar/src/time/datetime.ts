@@ -5,7 +5,7 @@ import forEachOwnProperties from 'tui-code-snippet/collection/forEachOwnProperti
 
 import { MonthOption, TimeUnit } from '@src/model';
 import TZDate from '@src/time/date';
-import { toPercent } from '@src/util/units';
+import { toPercent } from '@src/util/cssHelper';
 import { fill } from '@src/util/utils';
 
 export enum Day {

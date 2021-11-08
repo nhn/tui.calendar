@@ -7,9 +7,8 @@ import { useDrag } from '@src/components/hooks/drag';
 import Template from '@src/components/template';
 import { useDispatch } from '@src/contexts/calendarStore';
 import EventUIModel from '@src/model/eventUIModel';
-import { cls } from '@src/util/cssHelper';
+import { cls, toPercent, toPx } from '@src/util/cssHelper';
 import { getGridDateIndex } from '@src/util/gridHelper';
-import { toPercent, toPx } from '@src/util/units';
 import { isNil } from '@src/util/utils';
 
 import { StyleProp } from '@t/components/common';

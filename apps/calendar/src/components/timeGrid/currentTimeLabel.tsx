@@ -5,9 +5,8 @@ import Template from '@src/components/template';
 import { addTimeGridPrefix, timeFormats } from '@src/components/timeGrid';
 import { TimeUnit } from '@src/model';
 import TZDate from '@src/time/date';
-import { cls } from '@src/util/cssHelper';
+import { cls, toPercent } from '@src/util/cssHelper';
 import { getSize } from '@src/util/dom';
-import { toPercent } from '@src/util/units';
 
 const classNames = {
   currentTime: addTimeGridPrefix('current-time'),

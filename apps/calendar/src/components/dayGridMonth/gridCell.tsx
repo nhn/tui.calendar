@@ -17,11 +17,10 @@ import EventUIModel from '@src/model/eventUIModel';
 import { PopupType } from '@src/slices/popup';
 import TZDate from '@src/time/date';
 import { Day } from '@src/time/datetime';
-import { cls } from '@src/util/cssHelper';
+import { cls, toPercent } from '@src/util/cssHelper';
 import { getPosition, getRelativePosition, getSize } from '@src/util/dom';
 import { getExceedCount } from '@src/util/gridHelper';
 import { ratio } from '@src/util/math';
-import { toPercent } from '@src/util/units';
 
 import { PopupRect } from '@t/store';
 

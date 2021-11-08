@@ -4,7 +4,7 @@ import { useState } from 'preact/hooks';
 import { useDrag } from '@src/components/hooks/drag';
 import TZDate from '@src/time/date';
 import { isSame } from '@src/time/datetime';
-import { toPercent } from '@src/util/units';
+import { toPercent } from '@src/util/cssHelper';
 
 import { CellDateRange } from '@t/components/daygrid/gridSelectionData';
 import { GridSelectionData } from '@t/components/daygrid/gridWithMouse';

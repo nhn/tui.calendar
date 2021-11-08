@@ -5,8 +5,7 @@ import { GridCell } from '@src/components/dayGridMonth/gridCell';
 import { useTheme } from '@src/contexts/theme';
 import EventUIModel from '@src/model/eventUIModel';
 import { getGridInfo, toFormat, toStartOfDay } from '@src/time/datetime';
-import { cls } from '@src/util/cssHelper';
-import { toPercent } from '@src/util/units';
+import { cls, toPercent } from '@src/util/cssHelper';
 
 import { Cells } from '@t/panel';
 

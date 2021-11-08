@@ -1,4 +1,4 @@
-import { convertPxToNum } from '@src/util/units';
+import { convertPxToNum } from '@src/util/cssHelper';
 
 describe('Unit utils', () => {
   it('convertPxToNum', () => {

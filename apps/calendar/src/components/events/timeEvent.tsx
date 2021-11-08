@@ -2,8 +2,7 @@ import { FunctionComponent, h } from 'preact';
 
 import Template from '@src/components/template';
 import EventUIModel from '@src/model/eventUIModel';
-import { cls } from '@src/util/cssHelper';
-import { toPercent } from '@src/util/units';
+import { cls, toPercent } from '@src/util/cssHelper';
 
 const classNames = {
   time: cls('event-time'),

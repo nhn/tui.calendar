@@ -17,10 +17,9 @@ import EventModel from '@src/model/eventModel';
 import { calendarSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
 import { toEndOfDay, toStartOfDay } from '@src/time/datetime';
-import { cls } from '@src/util/cssHelper';
+import { cls, toPercent } from '@src/util/cssHelper';
 import { getSize } from '@src/util/dom';
 import { getRenderedEventUIModels } from '@src/util/gridHelper';
-import { toPercent } from '@src/util/units';
 
 import { CellDateRange } from '@t/components/daygrid/gridSelectionData';
 import { CalendarMonthOption } from '@t/store';

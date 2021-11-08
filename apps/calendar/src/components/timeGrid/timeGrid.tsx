@@ -26,8 +26,7 @@ import {
   toStartOfDay,
 } from '@src/time/datetime';
 import { findIndex } from '@src/util/array';
-import { cls } from '@src/util/cssHelper';
-import { toPercent, toPx } from '@src/util/units';
+import { cls, toPercent, toPx } from '@src/util/cssHelper';
 import { range } from '@src/util/utils';
 
 const REFRESH_INTERVAL = 1000 * SIXTY_SECONDS;
