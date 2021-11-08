@@ -2,8 +2,6 @@ import {
   deepCopy,
   deepCopyArray,
   deepMergedCopy,
-  findIndex,
-  includes,
   isFunction,
   isNil,
   isNumber,
@@ -67,12 +65,6 @@ describe('utils', () => {
     });
   });
 
-  it('includes', () => {
-    expect(includes([1, 2, 3], 1)).toBe(true);
-    expect(includes([1, 2, 3], 1, 2)).toBe(false);
-    expect(includes([1, 2, 3], 1, 0)).toBe(true);
-  });
-
   it('pick', () => {
     const obj = { a: 1, b: { c: 2 }, d: 2 };
 
@@ -98,15 +90,5 @@ describe('utils', () => {
     expect(isNil(null)).toBe(true);
     expect(isNil([])).toBe(false);
     expect(isNil(1)).toBe(false);
-  });
-
-  it('findIndex', () => {
-    const arr = [
-      { id: 1, title: 'todo1' },
-      { id: 2, title: 'todo2' },
-      { id: 3, title: 'todo3' },
-    ];
-
-    expect(findIndex(arr, (item) => item.id === 2)).toBe(1);
   });
 });

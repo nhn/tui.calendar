@@ -1,7 +1,7 @@
 import { EventModelData, Option } from '@src/model';
 import { Day } from '@src/time/datetime';
 import { getDayName } from '@src/util/dayName';
-import { deepMergedCopy, includes, range } from '@src/util/utils';
+import { deepMergedCopy, range } from '@src/util/utils';
 
 import { CalendarMonthOption, CalendarStore, CalendarWeekOption, SetState } from '@t/store';
 
@@ -47,7 +47,7 @@ function initializeMonthOption(monthOption: Option['month']): CalendarMonthOptio
     },
     visibleEventCount: 6,
     eventFilter: (event: Required<EventModelData>) =>
-      event.isVisible && includes(['allday', 'time'], event.category),
+      event.isVisible && ['allday', 'time'].includes(event.category),
     ...monthOption,
   };
 

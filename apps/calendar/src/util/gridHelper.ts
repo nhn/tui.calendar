@@ -10,7 +10,7 @@ import {
   toStartOfDay,
   withinRangeDate,
 } from '@src/time/datetime';
-import { findIndex, isNil } from '@src/util/utils';
+import { isNil } from '@src/util/utils';
 
 import type { DayGridEventMatrix, EventModelMap, Matrix3d, TimeGridEventMatrix } from '@t/events';
 import type { Cells, Panel } from '@t/panel';
@@ -99,7 +99,7 @@ export const isInGrid = (gridDate: TZDate) => {
 };
 
 export function getGridDateIndex(date: TZDate, cells: TZDate[]) {
-  return findIndex(cells, (item) => date >= toStartOfDay(item) && date <= toEndOfDay(item));
+  return cells.findIndex((item) => date >= toStartOfDay(item) && date <= toEndOfDay(item));
 }
 
 export const getLeftAndWidth = (

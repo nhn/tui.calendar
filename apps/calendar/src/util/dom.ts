@@ -4,7 +4,6 @@ import isNull from 'tui-code-snippet/type/isNull';
 import isString from 'tui-code-snippet/type/isString';
 
 import { noop } from '.';
-import { includes, toArray } from './utils';
 
 const CSS_AUTO_REGEX = /^auto$|^$|%/;
 
@@ -119,7 +118,7 @@ const matchSelector =
   elProto.webkitMatchesSelector ||
   elProto.msMatchesSelector ||
   function (this: Element, selector: string) {
-    return includes(toArray(document.querySelectorAll(selector)), this);
+    return Array.from(document.querySelectorAll(selector)).includes(this);
   };
 
 function matches(element: Node & ParentNode, selector: string) {

@@ -4,8 +4,16 @@ export function isUndefined(value: unknown): value is undefined {
   return typeof value === 'undefined';
 }
 
+export function isNil(value: unknown): value is null | undefined {
+  return isUndefined(value) || value === null;
+}
+
 export function isObject(obj: unknown): obj is object {
   return typeof obj === 'object' && obj !== null;
+}
+
+export function isFunction(value: unknown): value is Function {
+  return typeof value === 'function';
 }
 
 export function isString(value: unknown): value is string {
@@ -14,25 +22,6 @@ export function isString(value: unknown): value is string {
 
 export function isNumber(value: unknown): value is number {
   return typeof value === 'number';
-}
-
-export function isFunction(value: unknown): value is Function {
-  return typeof value === 'function';
-}
-
-export function isNil(value: unknown): value is null | undefined {
-  return isUndefined(value) || value === null;
-}
-
-export function forEach<T extends object, K extends Extract<keyof T, string>, V extends T[K]>(
-  obj: T,
-  cb: (item: V, key: K) => void
-) {
-  for (const key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      cb(obj[key as K] as V, key as K);
-    }
-  }
 }
 
 export function deepMergedCopy<T1 extends Record<string, any>, T2 extends Record<string, any>>(
@@ -111,65 +100,14 @@ export function range(start: number, stop?: number, step?: number) {
 
 export function pick<T extends object, K extends keyof T>(obj: T, ...propNames: K[]) {
   const resultMap = {} as Pick<T, K>;
+
   Object.keys(obj).forEach((key) => {
-    if (includes(propNames, key as K)) {
+    if (propNames.includes(key as K)) {
       resultMap[key as PickedKey<T, K>] = obj[key as PickedKey<T, K>];
     }
   });
 
   return resultMap;
-}
-
-export function includes<T>(arr: T[], searchItem: T, searchIndex?: number) {
-  if (isNumber(searchIndex) && arr[searchIndex] !== searchItem) {
-    return false;
-  }
-  for (const item of arr) {
-    if (item === searchItem) {
-      return true;
-    }
-  }
-
-  return false;
-}
-export function findIndex<T>(arr: T[], predicate: (item: T) => boolean) {
-  const { length } = arr;
-
-  for (let i = 0; i < length; i += 1) {
-    if (predicate(arr[i])) {
-      return i;
-    }
-  }
-
-  return null;
-}
-
-export function toArray<T>(arrayLike: T[] | NodeListOf<Element>) {
-  let arr;
-  try {
-    arr = Array.prototype.slice.call(arrayLike);
-  } catch (e) {
-    arr = [];
-    forEachArray(arrayLike, (value) => {
-      arr.push(value);
-    });
-  }
-
-  return arr;
-}
-
-export function forEachArray<T>(
-  arr: T[] | NodeListOf<Element>,
-  iteratee: (value: T | Element, index?: number, arr?: T[] | NodeListOf<Element>) => boolean | void
-) {
-  let index = 0;
-  const len = arr.length;
-
-  for (; index < len; index += 1) {
-    if (iteratee(arr[index], index, arr) === false) {
-      break;
-    }
-  }
 }
 
 export function fill<T>(size: number, value: T): T[] {
