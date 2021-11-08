@@ -111,7 +111,7 @@ export const getLeftAndWidth = (
   const gridStartIndex = getGridDateIndex(start, cells);
   const gridEndIndex = getGridDateIndex(convertStartDayToLastDay(end), cells);
 
-  if (isNil(gridStartIndex) && isNil(gridEndIndex)) {
+  if (gridStartIndex < 0 && gridEndIndex < 0) {
     return { left: 0, width: withinRangeDate(start, end, cells) ? 100 : 0 };
   }
 
@@ -119,7 +119,11 @@ export const getLeftAndWidth = (
 
   return {
     left: !gridStartIndex ? 0 : getWidth(widthList, 0, gridStartIndex - 1),
-    width: getWidth(widthList, gridStartIndex ?? 0, gridEndIndex ?? cells.length - 1),
+    width: getWidth(
+      widthList,
+      gridStartIndex ?? 0,
+      gridEndIndex < 0 ? cells.length - 1 : gridEndIndex
+    ),
   };
 };
 
