@@ -1,7 +1,3 @@
-/**
- * @fileoverview datetime utility module
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
 import inArray from 'tui-code-snippet/array/inArray';
 import range from 'tui-code-snippet/array/range';
 import forEachArray from 'tui-code-snippet/collection/forEachArray';

@@ -1,9 +1,4 @@
 /**
- * @fileoverview Utility module for Math
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
-
-/**
  * Limit supplied value base on `minArr`, `maxArr`
  * @param {number} value - value
  * @param {array} minArr - min

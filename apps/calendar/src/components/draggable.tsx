@@ -1,7 +1,3 @@
-/**
- * @fileoverview Drag handler for calendar.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
 import {
   cloneElement,
   Component,

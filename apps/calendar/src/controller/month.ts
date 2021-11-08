@@ -1,7 +1,3 @@
-/**
- * @fileoverview Controller for Month View
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
 import inArray from 'tui-code-snippet/array/inArray';
 import isUndefined from 'tui-code-snippet/type/isUndefined';
 

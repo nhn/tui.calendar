@@ -1,7 +1,3 @@
-/**
- * @fileoverview Controller modules for day views.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
 import forEach from 'tui-code-snippet/collection/forEach';
 import pluck from 'tui-code-snippet/collection/pluck';
 import pick from 'tui-code-snippet/object/pick';

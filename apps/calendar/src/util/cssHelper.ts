@@ -1,8 +1,3 @@
-/**
- * @fileoverview Global configuration object module.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
-
 import { isString } from './utils';
 
 export const CSS_PREFIX = 'toastui-calendar-';

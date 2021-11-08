@@ -1,7 +1,3 @@
-/**
- * @fileoverview Model of calendar event.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
 import extend from 'tui-code-snippet/object/extend';
 import isExisty from 'tui-code-snippet/type/isExisty';
 import isString from 'tui-code-snippet/type/isString';

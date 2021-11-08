@@ -1,7 +1,3 @@
-/**
- * @fileoverview Utility module for manipulating DOM
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
 import getMousePosition from 'tui-code-snippet/domEvent/getMousePosition';
 import getTarget from 'tui-code-snippet/domEvent/getTarget';
 import isNull from 'tui-code-snippet/type/isNull';

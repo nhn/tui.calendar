@@ -1,7 +1,3 @@
-/**
- * @fileoverview Utility module for array sort, binary search.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
 import forEach from 'tui-code-snippet/collection/forEach';
 
 import EventModel from '@src/model/eventModel';

@@ -1,7 +1,3 @@
-/**
- * @fileoverview TOAST UI Calendar React wrapper component
- * @author NHN. FE Development Lab <dl_javascript@nhn.com>
- */
 import React from 'react';
 import TuiCalendar from 'tui-calendar';
 
@@ -18,7 +14,7 @@ const optionProps = [
   'theme',
   'timezones',
   'week',
-  'template'
+  'template',
 ];
 
 export default class Calendar extends React.Component {
@@ -26,17 +22,17 @@ export default class Calendar extends React.Component {
 
   static defaultProps = {
     height: '800px',
-    view: 'week'
+    view: 'week',
   };
 
   calendarInst = null;
 
   componentDidMount() {
-    const {schedules = [], view} = this.props;
+    const { schedules = [], view } = this.props;
 
     this.calendarInst = new TuiCalendar(this.rootEl.current, {
       ...this.props,
-      defaultView: view
+      defaultView: view,
     });
 
     this.setSchedules(schedules);
@@ -45,7 +41,7 @@ export default class Calendar extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    const {calendars, height, schedules, theme, view} = this.props;
+    const { calendars, height, schedules, theme, view } = this.props;
 
     if (height !== nextProps.height) {
       this.getRootElement().style.height = height;
@@ -100,7 +96,7 @@ export default class Calendar extends React.Component {
   }
 
   setOptions(propKey, prop) {
-    this.calendarInst.setOptions({[propKey]: prop});
+    this.calendarInst.setOptions({ [propKey]: prop });
   }
 
   getInstance() {
@@ -122,6 +118,6 @@ export default class Calendar extends React.Component {
   };
 
   render() {
-    return <div ref={this.rootEl} style={{height: this.props.height}} />;
+    return <div ref={this.rootEl} style={{ height: this.props.height }} />;
   }
 }

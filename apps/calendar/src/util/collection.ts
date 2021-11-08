@@ -1,7 +1,3 @@
-/**
- * @fileoverview Common collections.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
 import forEachArray from 'tui-code-snippet/collection/forEachArray';
 import forEachOwnProperties from 'tui-code-snippet/collection/forEachOwnProperties';
 import isArray from 'tui-code-snippet/type/isArray';

@@ -1,7 +1,3 @@
-/**
- * @fileoverview Core methods for event block placing
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
 import inArray from 'tui-code-snippet/array/inArray';
 
 import EventModel from '@src/model/eventModel';
