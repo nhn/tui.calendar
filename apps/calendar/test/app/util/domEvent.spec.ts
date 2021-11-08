@@ -1,4 +1,4 @@
-import { getMousePosition } from '@src/util/domEvent';
+import { getRelativePosition } from '@src/util/dom';
 
 describe('domEvent', () => {
   const el = document.createElement('div');
@@ -21,6 +21,6 @@ describe('domEvent', () => {
     );
     el.getBoundingClientRect = getBoundingClientRectSpy;
 
-    expect(getMousePosition([30, 50], el)).toEqual([20, 40]);
+    expect(getRelativePosition([30, 50], el)).toEqual([20, 40]);
   });
 });

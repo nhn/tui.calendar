@@ -18,8 +18,7 @@ import { PopupType } from '@src/slices/popup';
 import TZDate from '@src/time/date';
 import { Day } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
-import { getPosition, getSize } from '@src/util/dom';
-import { getMousePosition } from '@src/util/domEvent';
+import { getPosition, getRelativePosition, getSize } from '@src/util/dom';
 import { getExceedCount } from '@src/util/gridHelper';
 import { ratio } from '@src/util/math';
 import { toPercent } from '@src/util/units';
@@ -122,7 +121,7 @@ function getDateColor(dayIndex: Day, commonTheme: CommonTheme) {
 function getSeeMorePopupRect({ appContainer, grid, cell, popupSize }: SeeMoreRectParam): PopupRect {
   const appContainerSize = getSize(appContainer);
 
-  const pos = getMousePosition(
+  const pos = getRelativePosition(
     {
       clientX: getPosition(cell).x,
       clientY: getPosition(grid).y,
