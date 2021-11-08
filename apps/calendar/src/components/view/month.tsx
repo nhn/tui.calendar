@@ -49,7 +49,7 @@ function useContainerHeight(container: RefObject<HTMLDivElement>, dayNameHeight:
 }
 
 const optionSelector = topLevelStateSelector('option');
-const Month: FunctionComponent = () => {
+export const Month: FunctionComponent = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const option = useStore(optionSelector);
@@ -98,5 +98,3 @@ const Month: FunctionComponent = () => {
     </div>
   );
 };
-
-export default Month;

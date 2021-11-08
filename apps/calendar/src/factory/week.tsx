@@ -1,6 +1,6 @@
 import { h } from 'preact';
 
-import WeekView from '@src/components/view/week';
+import { Week as WeekComponent } from '@src/components/view/week';
 import CalendarControl from '@src/factory/calendarControl';
 import { Option } from '@src/model';
 
@@ -10,6 +10,6 @@ export default class Week extends CalendarControl {
   }
 
   protected getComponent() {
-    return <WeekView />;
+    return <WeekComponent />;
   }
 }

@@ -43,7 +43,7 @@ function getCells(renderDate: TZDate, { startDayOfWeek = 0, workweek }: WeekOpti
 
 const dayNameHeight = 42;
 
-const Week: FunctionComponent = () => {
+export const Week: FunctionComponent = () => {
   const {
     template,
     option,
@@ -114,5 +114,3 @@ const Week: FunctionComponent = () => {
     </Layout>
   );
 };
-
-export default Week;

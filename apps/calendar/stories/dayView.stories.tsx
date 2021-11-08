@@ -1,7 +1,7 @@
 import { h } from 'preact';
 
 import FloatingLayer from '@src/components/floatingLayer';
-import DayView from '@src/components/view/day';
+import { Day } from '@src/components/view/day';
 import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 import { addDate } from '@src/time/datetime';
@@ -22,7 +22,7 @@ function createTimeGridEvents() {
 
 const Template: Story = (args) => (
   <ProviderWrapper options={args.options} events={args.events}>
-    <DayView />
+    <Day />
     <FloatingLayer />
   </ProviderWrapper>
 );
