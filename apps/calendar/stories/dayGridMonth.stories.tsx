@@ -13,8 +13,7 @@ import { CalendarMonthOption } from '@t/store';
 
 import { getWeekDates, getWeekendDates } from '@stories/util/mockCalendarDates';
 import { ProviderWrapper } from '@stories/util/providerWrapper';
-
-import { createRandomEvents } from './util/randomEvents';
+import { createRandomEvents } from '@stories/util/randomEvents';
 
 export default { title: 'DayGridMonth' };
 

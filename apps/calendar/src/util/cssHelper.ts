@@ -1,4 +1,4 @@
-import { isString } from './utils';
+import { isString } from '@src/util/utils';
 
 export const CSS_PREFIX = 'toastui-calendar-';
 const weekdayGetViewID = new RegExp(`^${CSS_PREFIX}weekday[\\s]tui-view-(\\d+)`);
