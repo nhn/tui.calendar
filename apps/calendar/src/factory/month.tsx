@@ -1,7 +1,3 @@
-/**
- * @fileoverview Utility module for handling DOM events.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
 import { h } from 'preact';
 
 import MonthView from '@src/components/view/month';
