@@ -1,39 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // type
-declare module 'tui-code-snippet/type/isString' {
-  export default function isString(obj: any): obj is string;
-}
-
 declare module 'tui-code-snippet/type/isUndefined' {
-  export default function isUndefined(obj: any): obj is undefined;
-}
-
-declare module 'tui-code-snippet/type/isNull' {
-  export default function isNull(obj: any): obj is null;
-}
-
-declare module 'tui-code-snippet/type/isBoolean' {
-  export default function isBoolean(obj: any): obj is boolean;
-}
-
-declare module 'tui-code-snippet/type/isExisty' {
-  export default function isExisty(obj: any): obj is boolean;
-}
-
-declare module 'tui-code-snippet/type/isFunction' {
-  export default function isFunction(obj: any): obj is Function;
-}
-
-declare module 'tui-code-snippet/type/isNumber' {
-  export default function isNumber(obj: any): obj is number;
+  export default function isUndefined(value: unknown): value is undefined;
 }
 
 declare module 'tui-code-snippet/type/isObject' {
-  export default function isObject(obj: any): obj is object;
+  export default function isObject(value: unknown): value is object;
 }
 
-declare module 'tui-code-snippet/type/isArray' {
-  export default function isArray(obj: any): obj is Array<any>;
+declare module 'tui-code-snippet/type/isString' {
+  export default function isString(value: unknown): value is string;
+}
+
+declare module 'tui-code-snippet/type/isNumber' {
+  export default function isNumber(value: unknown): value is number;
 }
 
 // object

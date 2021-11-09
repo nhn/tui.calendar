@@ -1,5 +1,4 @@
 import extend from 'tui-code-snippet/object/extend';
-import isExisty from 'tui-code-snippet/type/isExisty';
 import isString from 'tui-code-snippet/type/isString';
 
 import { DateType, EventModelData } from '@src/model';
@@ -195,7 +194,7 @@ export default class EventModel {
 
   /**
    * Initialize event instance.
-   * @param {EventModelData}  options.
+   * @param {EventModelData} event - event model data.
    */
   // eslint-disable-next-line complexity
   init(event: EventModelData) {
@@ -207,8 +206,8 @@ export default class EventModel {
     this.id = event.id || '';
     this.title = event.title || '';
     this.body = event.body || '';
-    this.isAllDay = isExisty(event.isAllDay) ? event.isAllDay : false;
-    this.isVisible = isExisty(event.isVisible) ? event.isVisible : true;
+    this.isAllDay = event.isAllDay ?? false;
+    this.isVisible = event.isVisible ?? true;
 
     this.color = event.color || this.color;
     this.bgColor = event.bgColor || this.bgColor;
@@ -239,7 +238,7 @@ export default class EventModel {
       this.start = new TZDate(this.end);
     }
 
-    this.raw = isExisty(event.raw) ? event.raw : null;
+    this.raw = event.raw ?? null;
 
     return this;
   }

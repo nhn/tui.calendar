@@ -1,9 +1,8 @@
 import getMousePosition from 'tui-code-snippet/domEvent/getMousePosition';
 import getTarget from 'tui-code-snippet/domEvent/getTarget';
-import isNull from 'tui-code-snippet/type/isNull';
 import isString from 'tui-code-snippet/type/isString';
 
-import { noop } from '.';
+import { noop } from '@src/util';
 
 const CSS_AUTO_REGEX = /^auto$|^$|%/;
 
@@ -54,7 +53,7 @@ function invalidateSizeValue(value: SizeValue) {
     return CSS_AUTO_REGEX.test(value);
   }
 
-  return isNull(value);
+  return value === null;
 }
 
 export function getSize(el: HTMLElement): { width: number; height: number } {

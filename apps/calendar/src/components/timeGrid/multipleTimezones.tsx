@@ -1,6 +1,8 @@
 import { Component, Fragment, h } from 'preact';
 import { createPortal } from 'preact/compat';
 
+import isNumber from 'tui-code-snippet/type/isNumber';
+
 import { addTimeGridPrefix } from '@src/components/timeGrid';
 import { CollapseButton } from '@src/components/timeGrid/collapseButton';
 import { TimeProps, Times } from '@src/components/timeGrid/times';
@@ -19,7 +21,7 @@ import {
 } from '@src/time/datetime';
 import { noop } from '@src/util';
 import { cls } from '@src/util/cssHelper';
-import { isNumber, range } from '@src/util/utils';
+import { range } from '@src/util/utils';
 
 interface Props {
   currentTime: TZDate;

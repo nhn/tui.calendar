@@ -1,3 +1,5 @@
+import isObject from 'tui-code-snippet/type/isObject';
+
 type PickedKey<T, K extends keyof T> = keyof Pick<T, K>;
 
 export function isUndefined(value: unknown): value is undefined {
@@ -8,20 +10,8 @@ export function isNil(value: unknown): value is null | undefined {
   return isUndefined(value) || value === null;
 }
 
-export function isObject(obj: unknown): obj is object {
-  return typeof obj === 'object' && obj !== null;
-}
-
 export function isFunction(value: unknown): value is Function {
   return typeof value === 'function';
-}
-
-export function isString(value: unknown): value is string {
-  return typeof value === 'string';
-}
-
-export function isNumber(value: unknown): value is number {
-  return typeof value === 'number';
 }
 
 export function deepMergedCopy<T1 extends Record<string, any>, T2 extends Record<string, any>>(
@@ -47,7 +37,7 @@ export function deepMergedCopy<T1 extends Record<string, any>, T2 extends Record
   return resultObj;
 }
 
-export function deepCopyArray<T extends Array<any>>(items: T): T {
+function deepCopyArray<T extends Array<any>>(items: T): T {
   return items.map((item: T[number]) => {
     if (isObject(item)) {
       return Array.isArray(item) ? deepCopyArray(item) : deepCopy(item);
@@ -57,7 +47,7 @@ export function deepCopyArray<T extends Array<any>>(items: T): T {
   }) as T;
 }
 
-export function deepCopy<T extends Record<string, any>>(obj: T) {
+function deepCopy<T extends Record<string, any>>(obj: T) {
   const resultObj = {} as T;
   const keys: Array<keyof T> = Object.keys(obj);
 

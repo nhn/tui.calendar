@@ -6,8 +6,8 @@ export interface BaseEvent {
   end: TZDate;
 }
 
-export type Matrix<T> = Array<T[]>;
-export type Matrix3d<T> = Array<Matrix<T>>;
+export type Matrix<T> = T[][];
+export type Matrix3d<T> = Matrix<T>[];
 export type CollisionGroup = Matrix<number>;
 
 export type DayGridEventMatrix = Matrix3d<EventUIModel>;

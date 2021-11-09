@@ -1,5 +1,3 @@
-import pick from 'tui-code-snippet/object/pick';
-
 import Theme from '@src/theme';
 import preset from '@src/theme/preset';
 import { ThemeKeyValue, ThemePropKeys } from '@src/theme/themeProps';
@@ -80,10 +78,6 @@ describe('Theme', () => {
     const value = theme.getStyle(key as ThemePropKeys);
 
     expect(value).toBe('');
-  });
-
-  it('no value through property path', () => {
-    expect(pick(theme, 'wrong', 'border')).toBeUndefined();
   });
 
   it('return true to set a style by right key', () => {

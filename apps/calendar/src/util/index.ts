@@ -1,8 +1,8 @@
 import forEach from 'tui-code-snippet/collection/forEach';
 import pick from 'tui-code-snippet/object/pick';
-import isExisty from 'tui-code-snippet/type/isExisty';
 
 import EventModel from '@src/model/eventModel';
+import { isNil } from '@src/util/utils';
 
 interface StampObj extends Record<string, any> {
   /* eslint-disable-next-line camelcase */
@@ -58,7 +58,7 @@ export function stamp(obj: StampObj): number {
  * @returns {boolean}
  */
 export function hasStamp(obj: StampObj): boolean {
-  return isExisty(pick(obj, '__fe_id'));
+  return !isNil(pick(obj, '__fe_id'));
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
