@@ -2,7 +2,6 @@ import { FunctionComponent, h } from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
 
 import range from 'tui-code-snippet/array/range';
-import toArray from 'tui-code-snippet/collection/toArray';
 import addClass from 'tui-code-snippet/domUtil/addClass';
 import removeClass from 'tui-code-snippet/domUtil/removeClass';
 
@@ -66,10 +65,10 @@ function isPastByUnit(time: TZDate, now: TZDate, unit: TimeUnit) {
 }
 
 function hideOverlappedTime(timesElement: HTMLElement) {
-  const timeLabelElements = toArray<HTMLElement>(
+  const timeLabelElements = Array.from(
     timesElement.getElementsByClassName(cls(classNames.timeLabel))
   );
-  const [currentElement] = toArray<HTMLElement>(
+  const [currentElement] = Array.from(
     timesElement.getElementsByClassName(cls(classNames.currentTime))
   );
 

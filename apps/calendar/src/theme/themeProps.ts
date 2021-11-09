@@ -151,6 +151,5 @@ export const defaultProps = {
 };
 
 export type ThemePropKeys = keyof typeof defaultProps;
-export type ThemeKeyValue = {
-  [K in ThemePropKeys]?: string;
-};
+
+export type ThemeKeyValue = Partial<typeof defaultProps>;

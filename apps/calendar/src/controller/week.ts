@@ -1,4 +1,3 @@
-import forEach from 'tui-code-snippet/collection/forEach';
 import pluck from 'tui-code-snippet/collection/pluck';
 
 import { filterByCategory, getDateRange, IDS_OF_DAY } from '@src/controller/base';
@@ -264,12 +263,12 @@ export function getUIModelForTimeView(
   const _getUIModel = _makeGetUIModelFuncForTimeView(hourStart, hourEnd);
   const usingTravelTime = true;
 
-  forEach(ymdSplitted, (uiModelColl: Collection<EventUIModel>, ymd: string) => {
-    const uiModels = _getUIModel(uiModelColl);
+  Object.entries(ymdSplitted).forEach(([ymd, uiModelColl]) => {
+    const uiModels = _getUIModel(uiModelColl as Collection<EventUIModel>);
     const collisionGroups = getCollisionGroup(uiModels, usingTravelTime);
     const matrices = getMatrices(uiModelColl, collisionGroups, usingTravelTime);
 
-    result[ymd] = getCollides(matrices);
+    result[ymd] = getCollides(matrices as Matrix3d<EventUIModel>);
   });
 
   return result;

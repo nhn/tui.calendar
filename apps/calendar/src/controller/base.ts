@@ -1,5 +1,4 @@
 import inArray from 'tui-code-snippet/array/inArray';
-import forEach from 'tui-code-snippet/collection/forEach';
 
 import { CalendarData, CalendarInfo, EventModelData } from '@src/model';
 import EventModel from '@src/model/eventModel';
@@ -89,7 +88,7 @@ export function addToMatrix(idsOfDay: IDS_OF_DAY, event: EventModel) {
 export function removeFromMatrix(idsOfDay: IDS_OF_DAY, event: EventModel) {
   const modelID = event.cid();
 
-  forEach(idsOfDay, (ids: number[]) => {
+  Object.values(idsOfDay).forEach((ids: number[]) => {
     const index = inArray(modelID, ids);
 
     if (~index) {

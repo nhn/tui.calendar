@@ -1,5 +1,3 @@
-import forEach from 'tui-code-snippet/collection/forEach';
-
 import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import { compare } from '@src/time/datetime';
@@ -117,7 +115,7 @@ function compareEventsASC(a: EventModel | EventUIModel, b: EventModel | EventUIM
  * @param {array} arr array to search.
  * @param {(string|number|boolean)} search value to search.
  * @param {function} [fn] iteratee for retrieve each element's value to search.
- * @param {function} [compare] compare function for specific sort status. default is string ascending.
+ * @param {function} [compareFn] compare function for specific sort status. default is string ascending.
  * @returns {number} The number of item index searched. return negative number when no exist that item.
  * It can use insert index after Math.abs()
  * @example
@@ -191,7 +189,7 @@ export function findIndex<T>(array: Array<T>, iteratee: (item: T) => boolean) {
   }
 
   let foundIndex = -1;
-  forEach(array, (item: T, index: number) => {
+  array.forEach((item, index) => {
     if (iteratee(item)) {
       foundIndex = index;
 

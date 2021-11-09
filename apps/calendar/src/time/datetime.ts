@@ -1,7 +1,5 @@
 import inArray from 'tui-code-snippet/array/inArray';
 import range from 'tui-code-snippet/array/range';
-import forEachArray from 'tui-code-snippet/collection/forEachArray';
-import forEachOwnProperties from 'tui-code-snippet/collection/forEachOwnProperties';
 
 import { MonthOption, TimeUnit } from '@src/model';
 import TZDate from '@src/time/date';
@@ -193,7 +191,8 @@ export const SIXTY_MINUTES = 60;
  */
 export function toFormat(date: TZDate, strFormat: string): string {
   let result = strFormat;
-  forEachOwnProperties(tokenFunc, (converter: Function, token: string) => {
+
+  Object.entries(tokenFunc).forEach(([token, converter]: [string, (d: TZDate) => string]) => {
     result = result.replace(token, converter(date));
   });
 
@@ -597,7 +596,6 @@ export function toEndOfYear(d: TZDate): TZDate {
  * @param {boolean} options.isAlways6Week - whether the number of weeks are always 6
  * @param {number} options.visibleWeeksCount visible weeks count
  * @param {boolean} options.workweek - only show work week
- * @param {function} [iteratee] - iteratee for customizing calendar object
  * @returns {Array.<TZDate[]>} calendar 2d array
  */
 export function arr2dCalendar(
@@ -641,10 +639,10 @@ export function arr2dCalendar(
   }
   const cursor = toStartOfDay(start).addDate(-startIndex);
   // iteratee all dates to render
-  forEachArray(range(totalDate), (i: number) => {
-    if (!(i % 7)) {
+  range(totalDate).forEach((day: number) => {
+    if (!(day % 7)) {
       // group each date by week
-      week = calendar[i / 7] = [];
+      week = calendar[day / 7] = [];
     }
 
     const date = toStartOfDay(cursor);

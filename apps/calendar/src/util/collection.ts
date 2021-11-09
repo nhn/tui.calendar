@@ -1,5 +1,3 @@
-import forEachArray from 'tui-code-snippet/collection/forEachArray';
-import forEachOwnProperties from 'tui-code-snippet/collection/forEachOwnProperties';
 import isNumber from 'tui-code-snippet/type/isNumber';
 import isObject from 'tui-code-snippet/type/isObject';
 import isString from 'tui-code-snippet/type/isString';
@@ -275,7 +273,7 @@ export default class Collection<T extends Record<string | number, any>> {
     let baseValue;
 
     if (Array.isArray(key)) {
-      forEachArray(key, (k: string | number) => {
+      key.forEach((k) => {
         result[String(k)] = new Collection<T>(getItemIDFn);
       });
 
@@ -359,8 +357,14 @@ export default class Collection<T extends Record<string | number, any>> {
    * when iteratee return false then break the loop.
    * @param {function} iteratee iteratee(item, index, items)
    */
-  each(iteratee: (item: T) => boolean | void) {
-    forEachOwnProperties(this.items, iteratee, this);
+  each(iteratee: (item: T, key: keyof T, items: Record<string | number, T>) => boolean | void) {
+    for (const key in this.items) {
+      if (this.items.hasOwnProperty(key)) {
+        if (iteratee.call(this, this.items[key], key, this.items) === false) {
+          break;
+        }
+      }
+    }
   }
 
   /**

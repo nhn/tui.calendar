@@ -15,33 +15,8 @@ declare module 'tui-code-snippet/type/isNumber' {
   export default function isNumber(value: unknown): value is number;
 }
 
-// collection
-declare module 'tui-code-snippet/collection/forEach' {
-  export default function forEach(
-    obj: object | Record<string, any>,
-    iteratee: Function,
-    context?: any
-  ): void;
-}
-
-declare module 'tui-code-snippet/collection/forEachOwnProperties' {
-  export default function forEachOwnProperties<T>(
-    obj: object,
-    iteratee: (value: T, key: string, obj: object) => boolean | void,
-    context?: any
-  ): void;
-}
-
-declare module 'tui-code-snippet/collection/forEachArray' {
-  export default function forEachArray(arr: any[], iteratee: Function, context?: any): void;
-}
-
 declare module 'tui-code-snippet/collection/pluck' {
-  export default function pluck(arr: any[], property: string): any[];
-}
-
-declare module 'tui-code-snippet/collection/toArray' {
-  export default function toArray<T>(arrayLike: any): T[];
+  export default function pluck<T, K extends keyof T>(arr: T[], property: K): T[K][];
 }
 
 // array
@@ -71,15 +46,15 @@ declare module 'tui-code-snippet/domEvent/getTarget' {
 
 // domUtil
 declare module 'tui-code-snippet/domUtil/toggleClass' {
-  export default function toggleClass(element: HTMLElement, ...classes: string[]): void;
+  export default function toggleClass(element: Element, ...classes: string[]): void;
 }
 
 declare module 'tui-code-snippet/domUtil/addClass' {
-  export default function addClass(element: HTMLElement, ...classes: string[]): void;
+  export default function addClass(element: Element, ...classes: string[]): void;
 }
 
 declare module 'tui-code-snippet/domUtil/removeClass' {
-  export default function removeClass(element: HTMLElement, ...classes: string[]): void;
+  export default function removeClass(element: Element, ...classes: string[]): void;
 }
 
 // browser

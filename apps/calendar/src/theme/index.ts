@@ -1,4 +1,3 @@
-import forEach from 'tui-code-snippet/collection/forEach';
 import isUndefined from 'tui-code-snippet/type/isUndefined';
 
 import preset from '@src/theme/preset';
@@ -58,19 +57,19 @@ export default class Theme {
   setStyles(styles: ThemeKeyValue): string[] {
     const errors: ThemePropKeys[] = [];
 
-    forEach(styles, (style: string, key: ThemePropKeys) => {
-      if (isUndefined(defaultProps[key])) {
-        errors.push(key);
+    Object.entries(styles).forEach(([key, style]) => {
+      if (isUndefined(defaultProps[key as ThemePropKeys])) {
+        errors.push(key as ThemePropKeys);
       } else {
-        this.props[key] = style;
+        this.props[key as ThemePropKeys] = style;
         set(this, key, style);
       }
     });
 
     // apply missing styles which have to be default
-    forEach(defaultProps, (style: string, key: ThemePropKeys) => {
-      if (!this.getStyle(key)) {
-        this.props[key] = style;
+    Object.entries(defaultProps).forEach(([key, style]) => {
+      if (!this.getStyle(key as ThemePropKeys)) {
+        this.props[key as ThemePropKeys] = style;
         set(this, key, style);
       }
     });
@@ -84,17 +83,16 @@ export default class Theme {
   clear() {
     const categories: Record<string, string> = {};
 
-    forEach(this.props, (style: string, key: ThemePropKeys) => {
+    Object.keys(this.props).forEach((key) => {
       const [category] = key.split('.');
       if (!categories[category]) {
         categories[category] = category;
       }
     });
 
-    // [TODO] Typescript
-    // forEach(categories, (categoryProp: string) => {
-    //   delete this[categoryProp];
-    // });
+    Object.values(categories).forEach((prop) => {
+      delete this[prop as 'common' | 'month' | 'week'];
+    });
 
     this.props = {};
   }

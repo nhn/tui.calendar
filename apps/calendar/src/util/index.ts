@@ -1,5 +1,3 @@
-import forEach from 'tui-code-snippet/collection/forEach';
-
 import EventModel from '@src/model/eventModel';
 import { isNil } from '@src/util/utils';
 
@@ -25,7 +23,7 @@ export function set(object: Record<string, any>, path: string, value: any) {
   const names = path.split('.');
   let store = object;
 
-  forEach(names, (name: string, index: number) => {
+  names.forEach((name: string, index: number) => {
     store[name] = store[name] || {};
 
     if (index === names.length - 1) {
