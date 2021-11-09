@@ -1,5 +1,7 @@
 import { FunctionComponent, h, VNode } from 'preact';
 
+import range from 'tui-code-snippet/array/range';
+
 import { BackgroundEvent } from '@src/components/events/backgroundEvent';
 import { TimeEvent } from '@src/components/events/timeEvent';
 import { GridSelectionInfo } from '@src/components/timeGrid';
@@ -12,7 +14,6 @@ import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { first, last } from '@src/util/array';
 import { cls, toPercent } from '@src/util/cssHelper';
-import { range } from '@src/util/utils';
 
 const classNames = {
   column: cls('column'),

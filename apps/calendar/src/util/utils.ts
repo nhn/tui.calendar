@@ -66,28 +66,6 @@ function deepCopy<T extends Record<string, any>>(obj: T) {
   return resultObj;
 }
 
-export function range(start: number, stop?: number, step?: number) {
-  if (isUndefined(stop)) {
-    stop = start || 0;
-    start = 0;
-  }
-
-  step = step || 1;
-
-  const arr: number[] = [];
-
-  if (stop) {
-    const flag = step < 0 ? -1 : 1;
-    stop *= flag;
-
-    for (; start * flag < stop; start += step) {
-      arr.push(start);
-    }
-  }
-
-  return arr;
-}
-
 export function pick<T extends object, K extends keyof T>(obj: T, ...propNames: K[]) {
   const resultMap = {} as Pick<T, K>;
 

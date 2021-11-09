@@ -1,4 +1,3 @@
-import inArray from 'tui-code-snippet/array/inArray';
 import isUndefined from 'tui-code-snippet/type/isUndefined';
 
 import { IDS_OF_DAY } from '@src/controller/base';
@@ -116,6 +115,7 @@ function _adjustTimeTopIndex(idsOfDay: IDS_OF_DAY, uiModelColl: Collection<Event
 
 /**
  * Adjust time ui model's top index value
+ * @param {IDS_OF_DAY} idsOfDay - ids of days
  * @param {Collection} uiModelColl - collection of ui ui model
  */
 function _stackTimeFromTop(idsOfDay: IDS_OF_DAY, uiModelColl: Collection<EventUIModel>) {
@@ -136,11 +136,11 @@ function _stackTimeFromTop(idsOfDay: IDS_OF_DAY, uiModelColl: Collection<EventUI
       });
     }
 
-    if (inArray(timeUIModel.top, topArrayInYMD) >= 0) {
+    if (topArrayInYMD.indexOf(timeUIModel.top) >= 0) {
       const maxTopInYMD = Math.max(...topArrayInYMD) + 1;
       for (let i = 1; i <= maxTopInYMD; i += 1) {
         timeUIModel.top = i;
-        if (inArray(timeUIModel.top, topArrayInYMD) < 0) {
+        if (topArrayInYMD.indexOf(timeUIModel.top) < 0) {
           break;
         }
       }

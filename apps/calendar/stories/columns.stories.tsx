@@ -1,5 +1,7 @@
 import { h, RenderableProps } from 'preact';
 
+import range from 'tui-code-snippet/array/range';
+
 import { GridSelectionInfo } from '@src/components/timeGrid';
 import { Column } from '@src/components/timeGrid/column';
 import { EventModelData } from '@src/model';
@@ -13,7 +15,6 @@ import {
   toStartOfYear,
 } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
-import { range } from '@src/util/utils';
 
 import { createEventModels } from '@stories/helper/event';
 

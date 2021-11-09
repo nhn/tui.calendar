@@ -1,4 +1,3 @@
-import inArray from 'tui-code-snippet/array/inArray';
 import range from 'tui-code-snippet/array/range';
 
 import { MonthOption, TimeUnit } from '@src/model';
@@ -627,8 +626,8 @@ export function arr2dCalendar(
   // 4 -> [4, 5, 6, 0, 1, 2, 3]
   // 2 -> [2, 3, 4, 5, 6, 0, 1]
   const weekArr = range(startDayOfWeek, 7).concat(range(7)).slice(0, 7);
-  const startIndex = inArray(start.getDay(), weekArr);
-  const endIndex = inArray(end.getDay(), weekArr);
+  const startIndex = weekArr.indexOf(start.getDay());
+  const endIndex = weekArr.indexOf(end.getDay());
   // free dates after last date of this month
   const afterDates = 7 - (endIndex + 1);
 

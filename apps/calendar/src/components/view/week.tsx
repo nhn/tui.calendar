@@ -1,5 +1,7 @@
 import { FunctionComponent, h } from 'preact';
 
+import range from 'tui-code-snippet/array/range';
+
 import GridHeader from '@src/components/dayGridCommon/gridHeader';
 import { GridRow } from '@src/components/dayGridWeek/gridRow';
 import { Layout } from '@src/components/layout';
@@ -20,7 +22,6 @@ import {
 } from '@src/time/datetime';
 import { getDayNames } from '@src/util/dayName';
 import { getDayGridEvents } from '@src/util/gridHelper';
-import { range } from '@src/util/utils';
 
 import type { Cells, DayGridEventType } from '@t/panel';
 

@@ -1,5 +1,4 @@
 /* eslint-disable no-undefined */
-import inArray from 'tui-code-snippet/array/inArray';
 import pluck from 'tui-code-snippet/collection/pluck';
 
 import { EventModelData } from '@src/model';
@@ -139,7 +138,7 @@ describe('common/array', () => {
     it('can be used to insert the element.', () => {
       arr.splice(Math.abs(array.bsearch(arr, 'g')), 0, 'g');
 
-      expect(inArray('g', arr)).toBe(7);
+      expect(arr.indexOf('g')).toBe(7);
     });
 
     it('search by custom functions.', () => {

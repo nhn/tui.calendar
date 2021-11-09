@@ -19,13 +19,8 @@ declare module 'tui-code-snippet/collection/pluck' {
   export default function pluck<T, K extends keyof T>(arr: T[], property: K): T[K][];
 }
 
-// array
 declare module 'tui-code-snippet/array/range' {
   export default function range(start: number, stop?: number, step?: number): number[];
-}
-
-declare module 'tui-code-snippet/array/inArray' {
-  export default function inArray(searchElement: any, array: any[], startIndex?: number): number;
 }
 
 // domEvent

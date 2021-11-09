@@ -1,4 +1,3 @@
-import inArray from 'tui-code-snippet/array/inArray';
 import isUndefined from 'tui-code-snippet/type/isUndefined';
 
 import EventModel from '@src/model/eventModel';
@@ -43,7 +42,7 @@ export function getCollisionGroup<Events extends EventModel | EventUIModel>(
         .slice()
         .reverse()
         .some((group) => {
-          if (~inArray(found.cid(), group)) {
+          if (~group.indexOf(found.cid())) {
             // If you find a previous event that overlaps, include it in the Collision Group to which it belongs.
             group.push(event.cid());
 
@@ -181,7 +180,7 @@ export function positionUIModels(
         ).length;
 
         uiModel.top = index;
-        uiModel.left = inArray(ymd, ymdListToRender);
+        uiModel.left = ymdListToRender.indexOf(ymd);
         uiModel.width = dateLength;
 
         iteratee?.(uiModel);

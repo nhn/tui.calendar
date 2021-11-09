@@ -1,5 +1,3 @@
-import inArray from 'tui-code-snippet/array/inArray';
-
 import { CalendarData, CalendarInfo, EventModelData } from '@src/model';
 import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
@@ -89,7 +87,7 @@ export function removeFromMatrix(idsOfDay: IDS_OF_DAY, event: EventModel) {
   const modelID = event.cid();
 
   Object.values(idsOfDay).forEach((ids: number[]) => {
-    const index = inArray(modelID, ids);
+    const index = ids.indexOf(modelID);
 
     if (~index) {
       ids.splice(index, 1);

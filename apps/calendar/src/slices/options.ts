@@ -1,14 +1,14 @@
+import range from 'tui-code-snippet/array/range';
+
 import { EventModelData, Option } from '@src/model';
 import { Day } from '@src/time/datetime';
 import { getDayName } from '@src/util/dayName';
-import { deepMergedCopy, range } from '@src/util/utils';
+import { deepMergedCopy } from '@src/util/utils';
 
 import { CalendarMonthOption, CalendarStore, CalendarWeekOption, SetState } from '@t/store';
 
 function initializeDayNames(startDayOfWeek = 0) {
-  return range(startDayOfWeek, 7)
-    .concat(range(startDayOfWeek))
-    .map((day) => getDayName(day));
+  return [...range(startDayOfWeek, 7), ...range(startDayOfWeek)].map((day) => getDayName(day));
 }
 
 function initializeWeekOption(weekOption: Option['week'] = {}): CalendarWeekOption {

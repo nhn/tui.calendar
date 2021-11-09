@@ -1,6 +1,8 @@
 import { FunctionComponent, h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 
+import range from 'tui-code-snippet/array/range';
+
 import {
   addTimeGridPrefix,
   className as timegridClassName,
@@ -25,7 +27,6 @@ import {
 } from '@src/time/datetime';
 import { findIndex } from '@src/util/array';
 import { cls, toPercent, toPx } from '@src/util/cssHelper';
-import { range } from '@src/util/utils';
 
 const REFRESH_INTERVAL = 1000 * SIXTY_SECONDS;
 
