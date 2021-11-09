@@ -2,7 +2,6 @@ import { ComponentChildren, FunctionComponent, h } from 'preact';
 import { useState } from 'preact/hooks';
 
 import getTarget from 'tui-code-snippet/domEvent/getTarget';
-import pick from 'tui-code-snippet/object/pick';
 
 import { useDrag } from '@src/components/hooks/drag';
 import { GridSelectionInfo } from '@src/components/timeGrid';
@@ -79,8 +78,8 @@ export const ColumnWithMouse: FunctionComponent<Props> = (props: Props) => {
   const onDrag = (e: MouseEvent) => {
     const selectionData = getGridSelectionDataFromMouse(e);
     const { start, end } = selectionData;
-    const selectionStartTime = pick(selectionStartData, 'start') || start;
-    const selectionEndTime = pick(selectionStartData, 'end') || end;
+    const selectionStartTime = selectionStartData?.start ?? start;
+    const selectionEndTime = selectionStartData?.end ?? end;
     let timeGridSelectionInfo: TimeGridSelectionInfo;
 
     if (start < selectionStartTime) {

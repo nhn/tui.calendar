@@ -1,6 +1,5 @@
 import forEach from 'tui-code-snippet/collection/forEach';
 import pluck from 'tui-code-snippet/collection/pluck';
-import pick from 'tui-code-snippet/object/pick';
 
 import { filterByCategory, getDateRange, IDS_OF_DAY } from '@src/controller/base';
 import {
@@ -41,7 +40,7 @@ const SCHEDULE_MIN_DURATION = MS_EVENT_MIN_DURATION;
  * @param {Matrix} matrix - matrix from controller.
  * @returns {Matrix3d} starttime, endtime array (exclude first row's events)
  */
-export function generateTimeArrayInRow<T>(matrix: Matrix<T>) {
+export function generateTimeArrayInRow(matrix: Matrix<EventModel | EventUIModel>) {
   const map: Matrix3d<number> = [];
   const maxColLen = Math.max(...matrix.map((col) => col.length));
   let cursor = [];
@@ -53,7 +52,7 @@ export function generateTimeArrayInRow<T>(matrix: Matrix<T>) {
 
   for (col = 1; col < maxColLen; col += 1) {
     row = 0;
-    event = pick(matrix, row, col);
+    event = matrix?.[row]?.[col];
 
     while (event) {
       const { goingDuration, comingDuration } = event.valueOf();
@@ -67,7 +66,7 @@ export function generateTimeArrayInRow<T>(matrix: Matrix<T>) {
       cursor.push([start, end]);
 
       row += 1;
-      event = pick(matrix, row, col);
+      event = matrix?.[row]?.[col];
     }
 
     map.push(cursor);
@@ -110,7 +109,7 @@ export function hasCollision(arr: Array<number[]>, start: number, end: number) {
  */
 export function getCollides(matrices: Matrix3d<EventUIModel>) {
   matrices.forEach((matrix) => {
-    const binaryMap = generateTimeArrayInRow<EventUIModel>(matrix);
+    const binaryMap = generateTimeArrayInRow(matrix);
     const maxRowLength = Math.max(...matrix.map((row) => row.length));
 
     matrix.forEach((row) => {
@@ -203,6 +202,7 @@ export function _makeGetUIModelFuncForTimeView(
 
 /**
  * split event model by ymd.
+ * @param {IDS_OF_DAY} idsOfDay - ids of days
  * @param {TZDate} start - start date
  * @param {TZDate} end - end date
  * @param {Collection<EventUIModel>} uiModelColl - collection of ui models.
@@ -351,8 +351,8 @@ export function findByDateRange(
   const { start, end, panels, andFilters = [], options } = condition;
   const { events, idsOfDay } = calendarData;
   const eventTypes = pluck(panels, 'name');
-  const hourStart = pick(options, 'hourStart');
-  const hourEnd = pick(options, 'hourEnd');
+  const hourStart = options?.hourStart ?? 0;
+  const hourEnd = options?.hourEnd ?? 24;
   const filter = Collection.and(...[getEventInDateRangeFilter(start, end)].concat(andFilters));
   const uiModelColl = convertToUIModel(events.find(filter));
 

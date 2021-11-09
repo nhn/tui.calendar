@@ -1,5 +1,4 @@
 import forEach from 'tui-code-snippet/collection/forEach';
-import pick from 'tui-code-snippet/object/pick';
 
 import EventModel from '@src/model/eventModel';
 import { isNil } from '@src/util/utils';
@@ -58,7 +57,7 @@ export function stamp(obj: StampObj): number {
  * @returns {boolean}
  */
 export function hasStamp(obj: StampObj): boolean {
-  return !isNil(pick(obj, '__fe_id'));
+  return !isNil(obj.__fe_id);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars

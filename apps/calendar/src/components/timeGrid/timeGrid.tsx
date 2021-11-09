@@ -1,8 +1,6 @@
 import { FunctionComponent, h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 
-import pick from 'tui-code-snippet/object/pick';
-
 import {
   addTimeGridPrefix,
   className as timegridClassName,
@@ -161,7 +159,7 @@ export const TimeGrid: FunctionComponent<Props> = ({
     isBetweenWithDate(now, start, end)
   );
   const showCurrentTime = columnIndex >= 0;
-  const gridSelectionColumnIndex: number = pick(gridSelection, 'columnIndex');
+  const gridSelectionColumnIndex = gridSelection?.columnIndex ?? 0;
 
   return (
     <div className={classNames.timegrid}>

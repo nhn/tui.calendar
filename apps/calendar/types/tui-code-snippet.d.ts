@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// type
 declare module 'tui-code-snippet/type/isUndefined' {
   export default function isUndefined(value: unknown): value is undefined;
 }
@@ -14,15 +13,6 @@ declare module 'tui-code-snippet/type/isString' {
 
 declare module 'tui-code-snippet/type/isNumber' {
   export default function isNumber(value: unknown): value is number;
-}
-
-// object
-declare module 'tui-code-snippet/object/extend' {
-  export default function extend<T>(obj: T, ...objects: T[]): T;
-}
-
-declare module 'tui-code-snippet/object/pick' {
-  export default function pick(obj: any, ...paths: string[] | number[]): any;
 }
 
 // collection

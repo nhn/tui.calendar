@@ -1,4 +1,3 @@
-import extend from 'tui-code-snippet/object/extend';
 import isString from 'tui-code-snippet/type/isString';
 
 import { DateType, EventModelData } from '@src/model';
@@ -198,7 +197,7 @@ export default class EventModel {
    */
   // eslint-disable-next-line complexity
   init(event: EventModelData) {
-    event = extend({}, event);
+    event = { ...event };
     if (event.category === 'allday') {
       event.isAllDay = true;
     }
