@@ -6,14 +6,7 @@ import { compare, MS_PER_DAY, parse, toEndOfDay, toStartOfDay } from '@src/time/
 import { collidesWith } from '@src/util/events';
 import { stamp } from '@src/util/stamp';
 
-import { DateType, EventModelData } from '@t/events';
-
-/**
- * Event category
- * @readonly
- * @enum {string}
- */
-export type EventCategory = 'milestone' | 'task' | 'allday' | 'time' | 'background';
+import { DateType, EventCategory, EventModelData } from '@t/events';
 
 export default class EventModel {
   /**

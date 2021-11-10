@@ -1,11 +1,11 @@
 import Chance from 'chance';
 import moment from 'moment-timezone';
 
-import EventModel, { EventCategory } from '@src/model/eventModel';
+import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 import { getMonthCalendar } from '@src/time/datetime';
 
-import { EventModelData } from '@t/events';
+import { EventCategory, EventModelData } from '@t/events';
 import { CalendarInfo, ViewType } from '@t/option';
 
 import { calendars } from '@stories/util/mockCalendars';

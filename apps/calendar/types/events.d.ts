@@ -1,15 +1,9 @@
-import { IDS_OF_DAY } from '@src/controller/base';
-import EventModel, { EventCategory } from '@src/model/eventModel';
+import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import Collection from '@src/util/collection';
 
 import { CalendarInfo } from '@t/option';
-
-export interface BaseEvent {
-  start: TZDate;
-  end: TZDate;
-}
 
 export type Matrix<T> = T[][];
 export type Matrix3d<T> = Matrix<T>[];
@@ -29,11 +23,15 @@ export type EventGroupMap = Record<keyof EventModelMap, DayGridEventMatrix | Tim
 
 export type DateType = Date | string | number | TZDate;
 
+export type IDS_OF_DAY = Record<string, number[]>;
+
 export interface CalendarData {
   calendars: CalendarInfo[];
   events: Collection<EventModel>;
   idsOfDay: IDS_OF_DAY;
 }
+
+export type EventCategory = 'milestone' | 'task' | 'allday' | 'time' | 'background';
 
 export interface EventModelData {
   id?: string;

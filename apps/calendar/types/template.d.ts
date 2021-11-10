@@ -1,9 +1,9 @@
 import { VNode } from 'preact';
 
-import EventModel, { EventCategory } from '@src/model/eventModel';
+import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 
-import { TimeUnit } from '@t/events';
+import { EventCategory, TimeUnit } from '@t/events';
 import { TimezoneConfig } from '@t/option';
 
 export interface TemplateTimeGridHourLabel {

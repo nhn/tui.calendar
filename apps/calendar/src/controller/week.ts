@@ -1,6 +1,6 @@
 import pluck from 'tui-code-snippet/collection/pluck';
 
-import { filterByCategory, getDateRange, IDS_OF_DAY } from '@src/controller/base';
+import { filterByCategory, getDateRange } from '@src/controller/base';
 import {
   convertToUIModel,
   getCollisionGroup,
@@ -24,7 +24,14 @@ import {
 import array from '@src/util/array';
 import Collection, { Filter } from '@src/util/collection';
 
-import { CalendarData, DayGridEventMatrix, EventGroupMap, Matrix, Matrix3d } from '@t/events';
+import {
+  CalendarData,
+  DayGridEventMatrix,
+  EventGroupMap,
+  IDS_OF_DAY,
+  Matrix,
+  Matrix3d,
+} from '@t/events';
 import { WeekOption } from '@t/option';
 import { Panel } from '@t/panel';
 

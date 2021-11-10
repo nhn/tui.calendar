@@ -5,10 +5,8 @@ import { makeDateRange, MS_PER_DAY, toEndOfDay, toFormat, toStartOfDay } from '@
 import Collection from '@src/util/collection';
 import { isSameEvent } from '@src/util/events';
 
-import { CalendarData, EventModelData } from '@t/events';
+import { CalendarData, EventModelData, IDS_OF_DAY } from '@t/events';
 import { CalendarInfo } from '@t/option';
-
-export type IDS_OF_DAY = Record<string, number[]>;
 
 /**
  * Make a event collection

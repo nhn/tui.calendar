@@ -1,6 +1,5 @@
 import isUndefined from 'tui-code-snippet/type/isUndefined';
 
-import { IDS_OF_DAY } from '@src/controller/base';
 import {
   convertToUIModel,
   getCollisionGroup,
@@ -16,7 +15,7 @@ import { isSameDate, toEndOfDay, toFormat, toStartOfDay } from '@src/time/dateti
 import array from '@src/util/array';
 import Collection, { Filter } from '@src/util/collection';
 
-import { CalendarData } from '@t/events';
+import { CalendarData, IDS_OF_DAY } from '@t/events';
 
 /**
  * Filter function for find allday event
