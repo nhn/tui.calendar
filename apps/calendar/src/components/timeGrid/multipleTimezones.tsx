@@ -20,8 +20,8 @@ import {
   toFormat,
   toStartOfDay,
 } from '@src/time/datetime';
-import { noop } from '@src/util';
 import { cls } from '@src/util/cssHelper';
+import { noop } from '@src/util/utils';
 
 interface Props {
   currentTime: TZDate;

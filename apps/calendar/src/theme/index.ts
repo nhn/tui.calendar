@@ -2,7 +2,7 @@ import isUndefined from 'tui-code-snippet/type/isUndefined';
 
 import preset from '@src/theme/preset';
 import { defaultProps, ThemeKeyValue, ThemePropKeys } from '@src/theme/themeProps';
-import { set } from '@src/util';
+import { setThemeObject } from '@src/util/utils';
 
 /**
  * Theme model class
@@ -62,7 +62,7 @@ export default class Theme {
         errors.push(key as ThemePropKeys);
       } else {
         this.props[key as ThemePropKeys] = style;
-        set(this, key, style);
+        setThemeObject(this, key, style);
       }
     });
 
@@ -70,7 +70,7 @@ export default class Theme {
     Object.entries(defaultProps).forEach(([key, style]) => {
       if (!this.getStyle(key as ThemePropKeys)) {
         this.props[key as ThemePropKeys] = style;
-        set(this, key, style);
+        setThemeObject(this, key, style);
       }
     });
 

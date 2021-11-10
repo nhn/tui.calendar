@@ -14,9 +14,9 @@ import {
 import EventModel, { EventCategory } from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 import { isSameDate, leadingZero, toFormat } from '@src/time/datetime';
-import { stripTags } from '@src/util';
 import { cls } from '@src/util/cssHelper';
 import { capitalizeDayName, getDayName } from '@src/util/dayName';
+import { stripTags } from '@src/util/dom';
 
 const SIXTY_MINUTES = 60;
 

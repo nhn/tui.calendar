@@ -4,8 +4,8 @@ import { DateType, EventModelData } from '@src/model';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { compare, MS_PER_DAY, parse, toEndOfDay, toStartOfDay } from '@src/time/datetime';
-import { stamp } from '@src/util';
 import { collidesWith } from '@src/util/events';
+import { stamp } from '@src/util/stamp';
 
 /**
  * Event category

@@ -90,3 +90,27 @@ export function fill<T>(size: number, value: T): T[] {
 
   return result;
 }
+
+export function setThemeObject(object: Record<string, any>, path: string, value: any) {
+  const names = path.split('.');
+  let store = object;
+
+  names.forEach((name: string, index: number) => {
+    store[name] = store[name] || {};
+
+    if (index === names.length - 1) {
+      store[name] = value;
+    } else {
+      store = store[name];
+    }
+  });
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function noop(..._args: unknown[]) {
+  // do nothing
+}
+
+export function identity(value: unknown) {
+  return value;
+}

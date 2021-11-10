@@ -2,7 +2,7 @@ import getMousePosition from 'tui-code-snippet/domEvent/getMousePosition';
 import getTarget from 'tui-code-snippet/domEvent/getTarget';
 import isString from 'tui-code-snippet/type/isString';
 
-import { noop } from '@src/util';
+import { noop } from '@src/util/utils';
 
 const CSS_AUTO_REGEX = /^auto$|^$|%/;
 
@@ -153,4 +153,8 @@ export function getRelativePosition(position: MouseEvent | number[], relativeEle
   const { left, top } = relativeElement.getBoundingClientRect();
 
   return [clientX - left - relativeElement.clientLeft, clientY - top - relativeElement.clientTop];
+}
+
+export function stripTags(str: string) {
+  return str.replace(/<([^>]+)>/gi, '');
 }
