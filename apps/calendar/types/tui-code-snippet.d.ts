@@ -42,7 +42,6 @@ declare module 'tui-code-snippet/domUtil/removeClass' {
   export default function removeClass(element: Element, ...classes: string[]): void;
 }
 
-// browser
 declare module 'tui-code-snippet/browser/browser' {
   interface Browser {
     chrome: boolean;
@@ -58,7 +57,6 @@ declare module 'tui-code-snippet/browser/browser' {
   export default browser;
 }
 
-// customEvents
 declare module 'tui-code-snippet/customEvents/customEvents' {
   export default class CustomEvents {
     public static mixin(func: Function): void;
