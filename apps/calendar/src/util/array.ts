@@ -2,23 +2,6 @@ import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import { compare } from '@src/time/datetime';
 
-/**
- * A module for sorting array.
- * @module array
- */
-
-/**********
- * Compare Functions
- **********/
-
-/**
- * compare function for array sort.
- *
- * sort array by ascending.
- * @param {boolean} a The boolean to compare
- * @param {boolean} b The boolean to compare.
- * @returns {number} Result of comparison.
- */
 function compareBooleansASC(a: boolean, b: boolean) {
   if (a !== b) {
     return a ? -1 : 1;
@@ -27,51 +10,21 @@ function compareBooleansASC(a: boolean, b: boolean) {
   return 0;
 }
 
-/**
- * compare function for array sort.
- *
- * sort array by number ascending.
- * @param {number} a The number to compare.
- * @param {number} b The number to compare.
- * @returns {number} Result of comparison.
- */
 function compareNumbersASC(a: any, b: any) {
   return Number(a) - Number(b);
 }
 
-/**
- * compare function for array sort.
- *
- * sort array by string ascending
- * @param {string} _a The string to compare.
- * @param {string} _b The string to compare.
- * @returns {number} Result of comparison.
- */
 function compareStringsASC(_a: any, _b: any) {
-  const a = String(_a),
-    b = String(_b);
+  const a = String(_a);
+  const b = String(_b);
 
-  if (a > b) {
-    return 1;
-  }
-  if (a < b) {
-    return -1;
+  if (a === b) {
+    return 0;
   }
 
-  return 0;
+  return a > b ? 1 : -1;
 }
 
-/**
- * Compare event models for sort.
- *
- * 1. all day event first.
- * 2. early start.
- * 3. longest duration.
- * 4. early created.
- * @param {EventModel} a The object event instance.
- * @param {EventModel} b The object event instance.
- * @returns {number} Result of comparison.
- */
 // eslint-disable-next-line complexity
 function compareEventsASC(a: EventModel | EventUIModel, b: EventModel | EventUIModel) {
   const modelA = a instanceof EventUIModel ? a.model : a;
@@ -104,34 +57,6 @@ function compareEventsASC(a: EventModel | EventUIModel, b: EventModel | EventUIM
   return modelA.cid() - modelB.cid();
 }
 
-/**********
- * Search
- **********/
-
-/**
- * search item index using binary search algorithm.
- *
- * the array must be sorted.
- * @param {array} arr array to search.
- * @param {(string|number|boolean)} search value to search.
- * @param {function} [fn] iteratee for retrieve each element's value to search.
- * @param {function} [compareFn] compare function for specific sort status. default is string ascending.
- * @returns {number} The number of item index searched. return negative number when no exist that item.
- * It can use insert index after Math.abs()
- * @example
- *
- * var arr = [1, 3, 7, 11, 15, 23];
- *
- * function sortNumber(a, b) {
- *     return a - b;
- * }
- *
- * bsearch(arr, 15, null, sortNumber);    // 4
- * bsearch(arr, 21, null, sortNumber);    // -5
- *
- * arr.splice(Math.abs(bsearch(arr, 21, null, sortNumber)), 0, 21);
- * // [1, 2, 7, 11, 15, 21, 23]
- */
 export function bsearch(
   arr: any[],
   search: any,
@@ -181,23 +106,4 @@ export function first<T>(array: Array<T>) {
 
 export function last<T>(array: Array<T>) {
   return array[array.length - 1];
-}
-
-export function findIndex<T>(array: Array<T>, iteratee: (item: T) => boolean) {
-  if (Array.prototype.findIndex) {
-    return Array.prototype.findIndex.call(array, iteratee);
-  }
-
-  let foundIndex = -1;
-  array.forEach((item, index) => {
-    if (iteratee(item)) {
-      foundIndex = index;
-
-      return false;
-    }
-
-    return true;
-  });
-
-  return foundIndex;
 }

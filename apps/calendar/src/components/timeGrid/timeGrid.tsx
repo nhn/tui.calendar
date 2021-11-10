@@ -25,7 +25,6 @@ import {
   toEndOfDay,
   toStartOfDay,
 } from '@src/time/datetime';
-import { findIndex } from '@src/util/array';
 import { cls, toPercent, toPx } from '@src/util/cssHelper';
 
 const REFRESH_INTERVAL = 1000 * SIXTY_SECONDS;
@@ -156,7 +155,7 @@ export const TimeGrid: FunctionComponent<Props> = ({
   const left = columnLeft || calculateLeft(timesWidth, timezones);
   const now = new TZDate();
   const currentTimeLineTop = getTopPercentByTime(now, toStartOfDay(now), toEndOfDay(now));
-  const columnIndex = findIndex(columnInfoList, ({ start, end }) =>
+  const columnIndex = columnInfoList.findIndex(({ start, end }) =>
     isBetweenWithDate(now, start, end)
   );
   const showCurrentTime = columnIndex >= 0;
