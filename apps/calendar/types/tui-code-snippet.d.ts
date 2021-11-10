@@ -34,11 +34,6 @@ declare module 'tui-code-snippet/domEvent/getTarget' {
   export default function getTarget(event: Event): HTMLElement;
 }
 
-// domUtil
-declare module 'tui-code-snippet/domUtil/toggleClass' {
-  export default function toggleClass(element: Element, ...classes: string[]): void;
-}
-
 declare module 'tui-code-snippet/domUtil/addClass' {
   export default function addClass(element: Element, ...classes: string[]): void;
 }
