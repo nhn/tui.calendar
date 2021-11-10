@@ -43,7 +43,7 @@ function getCells(renderDate: TZDate, { startDayOfWeek = 0, workweek }: WeekOpti
 
 const dayNameHeight = 42;
 
-const Week: FunctionComponent = () => {
+export const Week: FunctionComponent = () => {
   const {
     template,
     option,
@@ -80,17 +80,18 @@ const Week: FunctionComponent = () => {
     const rowType = key as DayGridEventType;
 
     return (
-      <GridRow
-        key={rowType}
-        type={rowType}
-        events={dayGridEvents[rowType]}
-        gridInfo={gridInfo}
-        gridColWidthMap={gridColWidthMap}
-        rowName={rowType}
-        cells={cells}
-        height={value.height}
-        options={weekOptions}
-      />
+      <Panel name={rowType} key={rowType} resizable>
+        <GridRow
+          key={rowType}
+          type={rowType}
+          events={dayGridEvents[rowType]}
+          gridInfo={gridInfo}
+          gridColWidthMap={gridColWidthMap}
+          cells={cells}
+          height={value.height}
+          options={weekOptions}
+        />
+      </Panel>
     );
   });
 
@@ -113,5 +114,3 @@ const Week: FunctionComponent = () => {
     </Layout>
   );
 };
-
-export default Week;

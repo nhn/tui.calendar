@@ -1,10 +1,10 @@
 import { h } from 'preact';
 
-import DayView from '@src/components/view/dayView';
+import { Day as DayComponent } from '@src/components/view/day';
 import CalendarControl from '@src/factory/calendarControl';
 
 export default class Day extends CalendarControl {
   protected getComponent() {
-    return <DayView />;
+    return <DayComponent />;
   }
 }

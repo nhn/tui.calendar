@@ -4,6 +4,7 @@ import renderToString from 'preact-render-to-string';
 import isNumber from 'tui-code-snippet/type/isNumber';
 import isString from 'tui-code-snippet/type/isString';
 
+import { CalendarContainer } from '@src/calendarContainer';
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
 import { ThemeProvider } from '@src/contexts/theme';
 import { createEventCollection } from '@src/controller/base';
@@ -296,9 +297,9 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
   render() {
     if (this._container) {
       render(
-        <ThemeProvider theme={this.theme}>
-          <StoreProvider store={this.store}>{this.getComponent()}</StoreProvider>
-        </ThemeProvider>,
+        <CalendarContainer theme={this.theme} store={this.store}>
+          {this.getComponent()}
+        </CalendarContainer>,
         this._container
       );
     }

@@ -1,6 +1,7 @@
 import { h } from 'preact';
 
-import MonthView from '@src/components/view/monthView';
+import FloatingLayer from '@src/components/floatingLayer';
+import { Month } from '@src/components/view/month';
 import { EventModelData } from '@src/model';
 import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
@@ -49,7 +50,8 @@ function createMonthEvents() {
 
 const Template: Story = (args) => (
   <ProviderWrapper options={args.options} events={args.events}>
-    <MonthView />
+    <Month />
+    <FloatingLayer />
   </ProviderWrapper>
 );
 

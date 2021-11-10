@@ -18,7 +18,7 @@ import type { DayGridEventType } from '@t/panel';
 
 const dayNameHeight = 42;
 
-const Day: FunctionComponent = () => {
+export const Day: FunctionComponent = () => {
   const {
     template,
     calendar: calendarData,
@@ -59,7 +59,6 @@ const Day: FunctionComponent = () => {
           events={dayGridEvents[panelType]}
           cells={cells}
           type={panelType}
-          rowName={panelType}
           height={value.height}
           options={option.week}
           gridInfo={gridInfo}
@@ -87,5 +86,3 @@ const Day: FunctionComponent = () => {
     </Layout>
   );
 };
-
-export default Day;

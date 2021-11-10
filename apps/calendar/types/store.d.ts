@@ -4,6 +4,7 @@ import { CalendarDispatchers, CalendarSlice } from '@src/slices/calendar';
 import { OptionDispatchers, OptionSlice } from '@src/slices/options';
 import { PopupDispatchers, PopupSlice } from '@src/slices/popup';
 import { TemplateSlice } from '@src/slices/template';
+import { ViewDispatchers, ViewSlice } from '@src/slices/view';
 import { WeekViewLayoutDispatchers, WeekViewLayoutSlice } from '@src/slices/weekViewLayout';
 import TZDate from '@src/time/date';
 
@@ -92,13 +93,15 @@ export type CalendarState = OptionSlice &
   TemplateSlice &
   PopupSlice &
   WeekViewLayoutSlice &
-  CalendarSlice;
+  CalendarSlice &
+  ViewSlice;
 
 export type Dispatchers = {
   option: OptionDispatchers;
   popup: PopupDispatchers;
   weekViewLayout: WeekViewLayoutDispatchers;
   calendar: CalendarDispatchers;
+  view: ViewDispatchers;
 };
 
 export type CalendarStore = CalendarState & {

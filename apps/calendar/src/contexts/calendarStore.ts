@@ -5,6 +5,7 @@ import { createCalendarDispatchers, createCalendarSlice } from '@src/slices/cale
 import { createOptionDispatchers, createOptionSlice } from '@src/slices/options';
 import { createPopupDispatchers, createPopupSlice } from '@src/slices/popup';
 import { createTemplateSlice } from '@src/slices/template';
+import { createViewDispatchers, createViewSlice } from '@src/slices/view';
 import {
   createWeekViewLayoutDispatchers,
   createWeekViewLayoutSlice,
@@ -23,11 +24,13 @@ export const initCalendarStore = (option: Option = {}) =>
       ...createPopupSlice(),
       ...createWeekViewLayoutSlice(),
       ...createCalendarSlice(option.calendars),
+      ...createViewSlice(option.defaultView),
       dispatch: {
         option: createOptionDispatchers(set),
         popup: createPopupDispatchers(set),
         weekViewLayout: createWeekViewLayoutDispatchers(set),
         calendar: createCalendarDispatchers(set),
+        view: createViewDispatchers(set),
       },
     };
   });

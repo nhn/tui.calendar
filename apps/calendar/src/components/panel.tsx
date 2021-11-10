@@ -18,7 +18,7 @@ import {
   PanelRect,
   Size,
 } from '@src/controller/panel';
-import { topLevelStateSelector } from '@src/selectors';
+import { weekViewLayoutSelector } from '@src/selectors';
 import { WeekGridRows } from '@src/slices/weekViewLayout';
 import { noop } from '@src/util';
 import { cls } from '@src/util/cssHelper';
@@ -47,7 +47,7 @@ const Panel: FunctionComponent<Props> = (props) => {
   const panelRef = useRef<HTMLDivElement>(null);
   const resizerRef = useRef<{ base: HTMLDivElement }>(null);
   const [resizerRect, setResizerRect] = useState<Size>({ width: 0, height: 0 });
-  const { dayGridRows } = useStore(topLevelStateSelector('weekViewLayout'));
+  const { dayGridRows } = useStore(weekViewLayoutSelector);
   const { updateDayGridRowHeight } = useDispatch('weekViewLayout');
 
   const panelResizeEnd = (resizeInfo: DragPositionInfo) => {

@@ -85,7 +85,7 @@
     "prepare": "husky install && ts-patch install -s"
   },
   "workspaces": [
-    "apps/*",
+    "apps/calendar",
     "libs/*"
   ]
 }

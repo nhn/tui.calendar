@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { Fragment, FunctionComponent, h } from 'preact';
 import { useState } from 'preact/hooks';
 
 import range from 'tui-code-snippet/array/range';
@@ -9,7 +9,6 @@ import { GridCell } from '@src/components/dayGridWeek/gridCell';
 import HorizontalEvent from '@src/components/events/horizontalEvent';
 import { useDOMNode } from '@src/components/hooks/domNode';
 import { useGridSelection } from '@src/components/hooks/gridSelection';
-import Panel from '@src/components/panel';
 import Template from '@src/components/template';
 import { WEEK_EVENT_MARGIN_TOP } from '@src/constants/style';
 import { useDispatch } from '@src/contexts/calendarStore';
@@ -47,7 +46,6 @@ interface Props {
   shouldRenderDefaultPopup?: boolean;
   gridInfo: GridInfo[];
   gridColWidthMap: string[][];
-  rowName: string;
 }
 
 const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
@@ -68,7 +66,6 @@ function getGridInfoList(cells: Cells): CellDateRange[][] {
 }
 
 export const GridRow: FunctionComponent<Props> = ({
-  rowName,
   events,
   cells = defaultPanelInfoList,
   type,
@@ -158,7 +155,7 @@ export const GridRow: FunctionComponent<Props> = ({
     ));
 
   return (
-    <Panel name={rowName} resizable>
+    <Fragment>
       <div className={cls('panel-title')} style={{ width: columnWidth }}>
         <Template template={rowTitleTemplate} model={type} />
       </div>
@@ -179,6 +176,6 @@ export const GridRow: FunctionComponent<Props> = ({
         </GridWithMouse>
         <div className={cls(`panel-${type}-events`)}>{horizontalEvents}</div>
       </div>
-    </Panel>
+    </Fragment>
   );
 };

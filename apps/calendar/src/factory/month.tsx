@@ -1,10 +1,6 @@
-/**
- * @fileoverview Utility module for handling DOM events.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
 import { h } from 'preact';
 
-import MonthView from '@src/components/view/monthView';
+import { Month as MonthComponent } from '@src/components/view/month';
 import CalendarControl from '@src/factory/calendarControl';
 import { Option } from '@src/model';
 
@@ -18,7 +14,7 @@ export default class Month extends CalendarControl {
   }
 
   protected getComponent() {
-    return <MonthView />;
+    return <MonthComponent />;
   }
 
   private onRender() {

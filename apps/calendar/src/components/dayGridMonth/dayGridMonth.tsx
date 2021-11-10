@@ -14,7 +14,7 @@ import {
 } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
 import EventModel from '@src/model/eventModel';
-import { topLevelStateSelector } from '@src/selectors';
+import { calendarSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
 import { toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
@@ -80,7 +80,7 @@ const DayGridMonth: FunctionComponent<Props> = ({
   const rowHeight =
     TOTAL_PERCENT_HEIGHT / Math.max(visibleWeeksCount === 0 ? 6 : visibleWeeksCount, 1);
 
-  const calendarData = useStore(topLevelStateSelector('calendar'));
+  const calendarData = useStore(calendarSelector);
 
   if (!calendarData) {
     return null;

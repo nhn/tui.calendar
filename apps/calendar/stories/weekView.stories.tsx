@@ -1,6 +1,7 @@
 import { h } from 'preact';
 
-import WeekView from '@src/components/view/weekView';
+import FloatingLayer from '@src/components/floatingLayer';
+import { Week } from '@src/components/view/week';
 import { EventModelData } from '@src/model';
 import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
@@ -49,7 +50,8 @@ function createWeekEvents() {
 
 const Template: Story = (args) => (
   <ProviderWrapper options={args.options} events={args.events}>
-    <WeekView />
+    <Week />
+    <FloatingLayer />
   </ProviderWrapper>
 );
 
