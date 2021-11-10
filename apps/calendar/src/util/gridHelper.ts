@@ -1,6 +1,5 @@
 import { findByDateRange } from '@src/controller/month';
 import { findByDateRange as findByDateRangeForWeek } from '@src/controller/week';
-import { CalendarData, WeekOption } from '@src/model';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import {
@@ -11,8 +10,15 @@ import {
   withinRangeDate,
 } from '@src/time/datetime';
 
-import type { DayGridEventMatrix, EventModelMap, Matrix3d, TimeGridEventMatrix } from '@t/events';
-import type { Cells, Panel } from '@t/panel';
+import {
+  CalendarData,
+  DayGridEventMatrix,
+  EventModelMap,
+  Matrix3d,
+  TimeGridEventMatrix,
+} from '@t/events';
+import { WeekOption } from '@t/option';
+import { Cells, Panel } from '@t/panel';
 
 export const EVENT_HEIGHT = 22;
 export const TOTAL_WIDTH = 100;

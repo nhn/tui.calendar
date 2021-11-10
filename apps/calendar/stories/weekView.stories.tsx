@@ -1,11 +1,11 @@
 import { h } from 'preact';
 
-import FloatingLayer from '@src/components/floatingLayer';
 import { Week } from '@src/components/view/week';
-import { EventModelData } from '@src/model';
 import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 import { addDate, Day } from '@src/time/datetime';
+
+import { EventModelData } from '@t/events';
 
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { createRandomEventModelsForMonth, createRandomEvents } from '@stories/util/randomEvents';
@@ -51,7 +51,6 @@ function createWeekEvents() {
 const Template: Story = (args) => (
   <ProviderWrapper options={args.options} events={args.events}>
     <Week />
-    <FloatingLayer />
   </ProviderWrapper>
 );
 

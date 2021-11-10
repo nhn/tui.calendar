@@ -7,11 +7,12 @@ import { useDrag } from '@src/components/hooks/drag';
 import { GridSelectionInfo } from '@src/components/timeGrid';
 import { TimeProps } from '@src/components/timeGrid/times';
 import { getNextGridTime, getPrevGridTimeFromMouseEvent } from '@src/controller/times';
-import { TimeUnit } from '@src/model';
 import TZDate from '@src/time/date';
 import { addMilliseconds, isSame } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
 import { closest } from '@src/util/dom';
+
+import { TimeUnit } from '@t/events';
 
 const classNames = {
   columns: cls('columns'),

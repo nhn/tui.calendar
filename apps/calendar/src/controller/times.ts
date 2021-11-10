@@ -2,11 +2,12 @@ import getMousePosition from 'tui-code-snippet/domEvent/getMousePosition';
 import getTarget from 'tui-code-snippet/domEvent/getTarget';
 
 import { ColumnInfo } from '@src/components/timeGrid/columnWithMouse';
-import { TimeUnit } from '@src/model';
 import TZDate from '@src/time/date';
 import { addMilliseconds, addSeconds, clone, millisecondsTo } from '@src/time/datetime';
 import { closest, getSize } from '@src/util/dom';
 import { limit, ratio } from '@src/util/math';
+
+import { TimeUnit } from '@t/events';
 
 const DEFAULT_SLOT = 30;
 

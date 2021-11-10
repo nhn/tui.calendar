@@ -8,12 +8,13 @@ import { GridSelectionInfo } from '@src/components/timeGrid';
 import { GridSelection } from '@src/components/timeGrid/gridSelection';
 import { getUIModels, isBetween } from '@src/controller/column';
 import { getTopHeightByTime } from '@src/controller/times';
-import { TimeUnit } from '@src/model';
 import { isBackgroundEvent } from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { first, last } from '@src/util/array';
 import { cls, toPercent } from '@src/util/cssHelper';
+
+import { TimeUnit } from '@t/events';
 
 const classNames = {
   column: cls('column'),

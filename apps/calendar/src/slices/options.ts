@@ -1,10 +1,11 @@
 import range from 'tui-code-snippet/array/range';
 
-import { EventModelData, Option } from '@src/model';
 import { Day } from '@src/time/datetime';
 import { getDayName } from '@src/util/dayName';
 import { deepMergedCopy } from '@src/util/utils';
 
+import { EventModelData } from '@t/events';
+import { Option } from '@t/option';
 import { CalendarMonthOption, CalendarStore, CalendarWeekOption, SetState } from '@t/store';
 
 function initializeDayNames(startDayOfWeek = 0) {

@@ -2,8 +2,9 @@ import { FunctionComponent, h, VNode } from 'preact';
 
 import Template from '@src/components/template';
 import { addTimeGridPrefix } from '@src/components/timeGrid';
-import { TimezoneConfig } from '@src/model';
 import { cls } from '@src/util/cssHelper';
+
+import { TimezoneConfig } from '@t/option';
 
 interface Props {
   timezone: TimezoneConfig;

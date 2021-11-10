@@ -1,5 +1,6 @@
-import { TimeUnit } from '@src/model';
 import TZDate from '@src/time/date';
+
+import { TimeUnit } from '@t/events';
 
 export const className = 'timegrid';
 export const addTimeGridPrefix = (selector: string) => `${className}-${selector}`;

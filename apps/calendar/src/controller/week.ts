@@ -9,7 +9,6 @@ import {
   limitRenderRange,
   positionUIModels,
 } from '@src/controller/core';
-import { CalendarData, WeekOption } from '@src/model';
 import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
@@ -25,8 +24,9 @@ import {
 import array from '@src/util/array';
 import Collection, { Filter } from '@src/util/collection';
 
-import type { DayGridEventMatrix, EventGroupMap, Matrix, Matrix3d } from '@t/events';
-import type { Panel } from '@t/panel';
+import { CalendarData, DayGridEventMatrix, EventGroupMap, Matrix, Matrix3d } from '@t/events';
+import { WeekOption } from '@t/option';
+import { Panel } from '@t/panel';
 
 const SCHEDULE_MIN_DURATION = MS_EVENT_MIN_DURATION;
 

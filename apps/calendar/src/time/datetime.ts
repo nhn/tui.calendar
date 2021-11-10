@@ -1,9 +1,11 @@
 import range from 'tui-code-snippet/array/range';
 
-import { MonthOption, TimeUnit } from '@src/model';
 import TZDate from '@src/time/date';
 import { toPercent } from '@src/util/cssHelper';
 import { fill } from '@src/util/utils';
+
+import { TimeUnit } from '@t/events';
+import { MonthOption } from '@t/option';
 
 export enum Day {
   SUN,

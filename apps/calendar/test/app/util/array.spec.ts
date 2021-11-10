@@ -1,9 +1,10 @@
 /* eslint-disable no-undefined */
 import pluck from 'tui-code-snippet/collection/pluck';
 
-import { EventModelData } from '@src/model';
 import EventModel from '@src/model/eventModel';
 import array from '@src/util/array';
+
+import { EventModelData } from '@t/events';
 
 describe('common/array', () => {
   describe('common compare methods', () => {

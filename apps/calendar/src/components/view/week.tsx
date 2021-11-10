@@ -9,7 +9,6 @@ import Panel from '@src/components/panel';
 import { ColumnInfo } from '@src/components/timeGrid/columnWithMouse';
 import { TimeGrid } from '@src/components/timeGrid/timeGrid';
 import { useStore } from '@src/contexts/calendarStore';
-import { WeekOption } from '@src/model';
 import { weekViewStateSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
 import {
@@ -23,7 +22,8 @@ import {
 import { getDayNames } from '@src/util/dayName';
 import { getDayGridEvents } from '@src/util/gridHelper';
 
-import type { Cells, DayGridEventType } from '@t/panel';
+import { WeekOption } from '@t/option';
+import { Cells, DayGridEventType } from '@t/panel';
 
 function getCells(renderDate: TZDate, { startDayOfWeek = 0, workweek }: WeekOption): Cells {
   const renderDay = renderDate.getDay();

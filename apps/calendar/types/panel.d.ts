@@ -1,4 +1,4 @@
-import type TZDate from '@src/time/date';
+import TZDate from '@src/time/date';
 
 export type DayGridEventType = 'milestone' | 'allday' | 'task';
 

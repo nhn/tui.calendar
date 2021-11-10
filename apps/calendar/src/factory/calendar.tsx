@@ -3,7 +3,8 @@ import { h } from 'preact';
 import { Main } from '@src/components/view/main';
 import { VIEW_TYPE } from '@src/constants/view';
 import CalendarControl from '@src/factory/calendarControl';
-import { Option, ViewType } from '@src/model';
+
+import { Option, ViewType } from '@t/option';
 
 // @TODO: move this function to a separate file such as util
 function isValidViewType(viewType: string): viewType is ViewType {

@@ -13,7 +13,6 @@ import Template from '@src/components/template';
 import { WEEK_EVENT_MARGIN_TOP } from '@src/constants/style';
 import { useDispatch } from '@src/contexts/calendarStore';
 import { DEFAULT_PANEL_HEIGHT } from '@src/controller/panel';
-import { WeekOption } from '@src/model';
 import EventUIModel from '@src/model/eventUIModel';
 import { WeekGridRows } from '@src/slices/weekViewLayout';
 import TZDate from '@src/time/date';
@@ -30,6 +29,7 @@ import {
 import { createMousePositionDataGrabberWeek } from '@src/util/viewHelper';
 
 import { CellDateRange } from '@t/components/daygrid/gridSelectionData';
+import { WeekOption } from '@t/option';
 import { Cells, DayGridEventType } from '@t/panel';
 
 type GridRowTitleTemplate = `${DayGridEventType}Title`;

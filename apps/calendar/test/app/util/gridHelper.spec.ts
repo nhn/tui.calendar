@@ -1,5 +1,4 @@
 import { createEventCollection } from '@src/controller/base';
-import { CalendarData } from '@src/model';
 import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
@@ -12,6 +11,7 @@ import {
   isWithinHeight,
 } from '@src/util/gridHelper';
 
+import { CalendarData } from '@t/events';
 import { Cells } from '@t/panel';
 import { createDate } from '@test/helper';
 

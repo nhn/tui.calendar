@@ -1,11 +1,12 @@
 import isString from 'tui-code-snippet/type/isString';
 
-import { DateType, EventModelData } from '@src/model';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { compare, MS_PER_DAY, parse, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { collidesWith } from '@src/util/events';
 import { stamp } from '@src/util/stamp';
+
+import { DateType, EventModelData } from '@t/events';
 
 /**
  * Event category

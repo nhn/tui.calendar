@@ -1,9 +1,10 @@
 import { addEvent, createEventCollection } from '@src/controller/base';
 import { findByDateRange } from '@src/controller/month';
-import { CalendarData, EventModelData } from '@src/model';
 import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 import array from '@src/util/array';
+
+import { CalendarData, EventModelData } from '@t/events';
 
 describe('Base.Month', () => {
   // eslint-disable-next-line no-undefined

@@ -1,11 +1,11 @@
 import { FunctionComponent, h } from 'preact';
 
 import DayName from '@src/components/dayGridCommon/dayName';
-import { Template, TemplateMonthDayName, TemplateWeekDay } from '@src/model';
 import { cls, toPercent } from '@src/util/cssHelper';
 
 import { CalendarViewType } from '@t/components/common';
-import type { CalendarMonthOption, CalendarWeekOption } from '@t/store';
+import { CalendarMonthOption, CalendarWeekOption } from '@t/store';
+import { Template, TemplateMonthDayName, TemplateWeekDay } from '@t/template';
 
 type TemplateDayNames = (TemplateWeekDay | TemplateMonthDayName)[];
 

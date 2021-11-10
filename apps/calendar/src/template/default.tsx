@@ -2,6 +2,13 @@ import { h } from 'preact';
 
 import isUndefined from 'tui-code-snippet/type/isUndefined';
 
+import EventModel, { EventCategory } from '@src/model/eventModel';
+import TZDate from '@src/time/date';
+import { isSameDate, leadingZero, toFormat } from '@src/time/datetime';
+import { cls } from '@src/util/cssHelper';
+import { capitalizeDayName, getDayName } from '@src/util/dayName';
+import { stripTags } from '@src/util/dom';
+
 import {
   Template,
   TemplateCurrentTime,
@@ -10,13 +17,7 @@ import {
   TemplateMoreTitleDate,
   TemplateTimezone,
   TemplateWeekDay,
-} from '@src/model';
-import EventModel, { EventCategory } from '@src/model/eventModel';
-import TZDate from '@src/time/date';
-import { isSameDate, leadingZero, toFormat } from '@src/time/datetime';
-import { cls } from '@src/util/cssHelper';
-import { capitalizeDayName, getDayName } from '@src/util/dayName';
-import { stripTags } from '@src/util/dom';
+} from '@t/template';
 
 const SIXTY_MINUTES = 60;
 

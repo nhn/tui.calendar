@@ -8,7 +8,6 @@ import { addTimeGridPrefix } from '@src/components/timeGrid';
 import { CollapseButton } from '@src/components/timeGrid/collapseButton';
 import { TimeProps, Times } from '@src/components/timeGrid/times';
 import { TimezoneLabel } from '@src/components/timeGrid/timezoneLabel';
-import { TimezoneConfig } from '@src/model';
 import TZDate from '@src/time/date';
 import {
   addHours,
@@ -22,6 +21,8 @@ import {
 } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
 import { noop } from '@src/util/utils';
+
+import { TimezoneConfig } from '@t/option';
 
 interface Props {
   currentTime: TZDate;

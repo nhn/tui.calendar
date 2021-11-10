@@ -2,7 +2,8 @@ import { h } from 'preact';
 
 import { Month as MonthComponent } from '@src/components/view/month';
 import CalendarControl from '@src/factory/calendarControl';
-import { Option } from '@src/model';
+
+import { Option } from '@t/option';
 
 export default class Month extends CalendarControl {
   constructor(container: Element, options: Option = {}) {

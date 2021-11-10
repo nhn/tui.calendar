@@ -7,14 +7,14 @@ import Panel from '@src/components/panel';
 import { ColumnInfo } from '@src/components/timeGrid/columnWithMouse';
 import { TimeGrid } from '@src/components/timeGrid/timeGrid';
 import { useStore } from '@src/contexts/calendarStore';
-import { WeekOption } from '@src/model';
 import { weekViewStateSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
 import { getGridInfo, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { getDayNames } from '@src/util/dayName';
 import { getDayGridEvents } from '@src/util/gridHelper';
 
-import type { DayGridEventType } from '@t/panel';
+import { WeekOption } from '@t/option';
+import { DayGridEventType } from '@t/panel';
 
 const dayNameHeight = 42;
 

@@ -11,24 +11,25 @@ import { createEventCollection } from '@src/controller/base';
 import { EventHandler } from '@src/event';
 import { ExternalEventName } from '@src/event/externalEventType';
 import { InternalEventName } from '@src/event/internalEventType';
-import {
-  AppContext,
-  CalendarColor,
-  CalendarInfo,
-  CustomTimezone,
-  DateType,
-  EventModelData,
-  Option,
-  ViewType,
-} from '@src/model';
 import { registerTemplateConfig } from '@src/template';
 import Theme from '@src/theme';
 import { ThemeKeyValue } from '@src/theme/themeProps';
 import TZDate from '@src/time/date';
 import { toStartOfDay } from '@src/time/datetime';
 
+import { CalendarData, DateType, EventModelData } from '@t/events';
+import { CalendarColor, CalendarInfo, CustomTimezone, Option, ViewType } from '@t/option';
 import { CalendarStore, Dispatchers, InternalStoreAPI } from '@t/store';
+import { Template } from '@t/template';
 import { DateInterface, LocalDate } from '@toast-ui/date';
+
+export interface AppContext {
+  options: Option;
+  calendarData: CalendarData;
+  templates: Template;
+  internalEvent: EventHandler<InternalEventName>;
+  externalEvent: EventHandler<ExternalEventName>;
+}
 
 export default abstract class CalendarControl extends EventHandler<ExternalEventName> {
   protected _container: Element | null;

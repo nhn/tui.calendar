@@ -1,4 +1,4 @@
-import type { h } from 'preact';
+import { h } from 'preact';
 
 type StyleProp = h.JSX.CSSProperties;
 

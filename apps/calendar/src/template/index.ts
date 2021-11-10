@@ -1,11 +1,13 @@
 import isNumber from 'tui-code-snippet/type/isNumber';
 
-import { GridUIModel, Template, TemplateConfig } from '@src/model';
 import EventUIModel from '@src/model/eventUIModel';
 import { templates } from '@src/template/default';
 import TZDate from '@src/time/date';
 import { toFormat } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
+
+import { GridUIModel } from '@t/grid';
+import { Template, TemplateConfig } from '@t/template';
 
 export function registerTemplateConfig(templateConfig: TemplateConfig = {}): Template {
   return {

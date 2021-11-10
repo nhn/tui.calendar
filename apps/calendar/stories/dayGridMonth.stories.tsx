@@ -6,10 +6,10 @@ import DayGridMonth from '@src/components/dayGridMonth/dayGridMonth';
 import { GridCell } from '@src/components/dayGridMonth/gridCell';
 import GridRow from '@src/components/dayGridMonth/gridRow';
 import Panel from '@src/components/panel';
-import { EventModelData } from '@src/model';
 import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 
+import { EventModelData } from '@t/events';
 import { CalendarMonthOption } from '@t/store';
 
 import { getWeekDates, getWeekendDates } from '@stories/util/mockCalendarDates';

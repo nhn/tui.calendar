@@ -4,9 +4,10 @@ import {
   createEvents,
   updateEvent,
 } from '@src/controller/base';
-import { CalendarData, CalendarInfo, EventModelData } from '@src/model';
 import EventModel from '@src/model/eventModel';
 
+import { CalendarData, EventModelData } from '@t/events';
+import { CalendarInfo } from '@t/option';
 import { CalendarStore, SetState } from '@t/store';
 
 export type CalendarSlice = { calendar: CalendarData };

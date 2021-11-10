@@ -5,14 +5,13 @@ import {
   getMatrices,
   limitRenderRange,
 } from '@src/controller/core';
-import { EventModelData } from '@src/model';
 import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import array from '@src/util/array';
 import Collection from '@src/util/collection';
 
-import type { CollisionGroup } from '@t/events';
+import { CollisionGroup, EventModelData } from '@t/events';
 
 describe('Base.Core', () => {
   let mockData: EventModelData[];
