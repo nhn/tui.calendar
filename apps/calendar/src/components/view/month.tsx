@@ -14,7 +14,7 @@ import { getGridInfo, getMonthCalendar, isWeekend } from '@src/time/datetime';
 import { cls } from '@src/util/cssHelper';
 import { capitalizeDayName } from '@src/util/dayName';
 import { getSize } from '@src/util/dom';
-import { createMousePositionDataGrabber } from '@src/util/monthViewHelper';
+import { createMousePositionDataGrabberMonth } from '@src/util/viewHelper';
 
 import { CalendarStore } from '@t/store';
 
@@ -69,7 +69,7 @@ export const Month: FunctionComponent = () => {
   const { gridInfo } = getGridInfo(dayNames.length, narrowWeekend, startDayOfWeek, workweek);
 
   const getMouseDataOnMonth = panelContainer
-    ? createMousePositionDataGrabber(calendar, gridInfo, panelContainer)
+    ? createMousePositionDataGrabberMonth(calendar, gridInfo, panelContainer)
     : () => null;
 
   return (

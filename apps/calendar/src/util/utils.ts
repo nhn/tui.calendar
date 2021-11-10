@@ -1,10 +1,7 @@
 import isObject from 'tui-code-snippet/type/isObject';
+import isUndefined from 'tui-code-snippet/type/isUndefined';
 
 type PickedKey<T, K extends keyof T> = keyof Pick<T, K>;
-
-export function isUndefined(value: unknown): value is undefined {
-  return typeof value === 'undefined';
-}
 
 export function isNil(value: unknown): value is null | undefined {
   return isUndefined(value) || value === null;

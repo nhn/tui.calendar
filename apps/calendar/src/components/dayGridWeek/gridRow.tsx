@@ -27,7 +27,7 @@ import {
   isWithinHeight,
   TOTAL_WIDTH,
 } from '@src/util/gridHelper';
-import { createMousePositionDataGrabber } from '@src/util/weekViewHelper';
+import { createMousePositionDataGrabberWeek } from '@src/util/viewHelper';
 
 import { CellDateRange } from '@t/components/daygrid/gridSelectionData';
 import { Cells, DayGridEventType } from '@t/panel';
@@ -94,7 +94,7 @@ export const GridRow: FunctionComponent<Props> = ({
   const columnWidth = timesWidth * timezonesCount;
   const getMousePositionData =
     type === 'allday' && panelContainer
-      ? createMousePositionDataGrabber(cells, gridInfo, panelContainer)
+      ? createMousePositionDataGrabberWeek(cells, gridInfo, panelContainer)
       : () => null;
 
   const { gridSelection, onSelectionChange, onSelectionEnd, onSelectionCancel } =
