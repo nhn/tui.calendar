@@ -38,13 +38,13 @@ function initialize() {
     '#ff4040',
   ];
 
-  calendarNames.forEach(function (name, idx) {
+  calendarNames.forEach((name, idx) => {
     const color = calendarColors[idx];
     addCalendar({
       id: String(generateCalendarId()),
       name,
       color: '#000',
-      bgColor: `${color}33`,
+      bgColor: color,
       borderColor: color,
       dragBgColor: color,
     });

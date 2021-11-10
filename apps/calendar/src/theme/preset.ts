@@ -1,11 +1,7 @@
-/**
- * @fileoverview The standard theme
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
 import { ThemeKeyValue } from '@src/theme/themeProps';
 
 /**
- * "common" prefix is for entire calendar. "common" properties can be overriden by "week", "month".
+ * "common" prefix is for entire calendar. "common" properties can be overridden by "week", "month".
  * "week" prefix is for weekly and daily view.
  * "month" prefix is for monthly view.
  */
@@ -21,7 +17,7 @@ const theme: ThemeKeyValue = {
   'common.gridSelection.backgroundColor': 'rgba(81, 92, 230, 0.05)',
   'common.gridSelection.border': '1px solid #515ce6',
 
-  // month header 'dayname'
+  // month grid header 'dayname'
   'month.dayname.borderLeft': 'none',
   'month.dayname.backgroundColor': 'inherit',
 
@@ -30,12 +26,13 @@ const theme: ThemeKeyValue = {
   'month.dayExceptThisMonth.color': 'rgba(51, 51, 51, 0.4)',
   'month.weekend.backgroundColor': 'inherit',
 
-  // month more view
+  // month see more events popup
   'month.moreView.border': '1px solid #d5d5d5',
   'month.moreView.boxShadow': '0 2px 6px 0 rgba(0, 0, 0, 0.1)',
   'month.moreView.backgroundColor': 'white',
+  'month.moreViewTitle.backgroundColor': 'inherit',
 
-  // week header 'dayname'
+  // week grid header 'dayname'
   'week.dayname.borderTop': '1px solid #e5e5e5',
   'week.dayname.borderBottom': '1px solid #e5e5e5',
   'week.dayname.borderLeft': 'none',
@@ -58,6 +55,7 @@ const theme: ThemeKeyValue = {
   // week timegrid 'timegrid'
   'week.timegridLeft.backgroundColor': 'inherit',
   'week.timegridLeft.borderRight': '1px solid #e5e5e5',
+  'week.timegridLeftAdditionalTimezone.backgroundColor': 'white',
 
   'week.timegridHalfHour.borderBottom': 'none',
   'week.timegridHorizontalLine.borderBottom': '1px solid #e5e5e5',
@@ -65,6 +63,10 @@ const theme: ThemeKeyValue = {
   'week.timegrid.borderRight': '1px solid #e5e5e5',
 
   'week.currentTime.color': '#515ce6',
+
+  'week.pastTime.color': '#bbb',
+
+  'week.futureTime.color': '#333',
 
   'week.currentTimeLinePast.border': '1px dashed #515ce6',
   'week.currentTimeLineBullet.backgroundColor': '#515ce6',
