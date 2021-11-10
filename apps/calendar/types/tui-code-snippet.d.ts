@@ -23,16 +23,11 @@ declare module 'tui-code-snippet/array/range' {
   export default function range(start: number, stop?: number, step?: number): number[];
 }
 
-// domEvent
-declare module 'tui-code-snippet/domEvent/getMouseButton' {
-  export default function getMouseButton(event: MouseEvent): number;
-}
-
 declare module 'tui-code-snippet/domEvent/getMousePosition' {
   export default function getMousePosition(
     event: MouseEvent,
     relativeElement?: HTMLElement | null
-  ): number[];
+  ): [number, number];
 }
 
 declare module 'tui-code-snippet/domEvent/getTarget' {
