@@ -11,7 +11,7 @@ import {
 } from '@src/slices/weekViewLayout';
 import { createStoreContext } from '@src/store';
 import { createStore } from '@src/store/internal';
-import { pick } from '@src/util/utils';
+import { pick } from '@src/utils/object';
 
 import { Option } from '@t/option';
 import { CalendarStore, Dispatchers } from '@t/store';

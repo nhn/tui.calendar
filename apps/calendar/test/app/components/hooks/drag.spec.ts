@@ -1,5 +1,5 @@
 import { DragListeners, MINIMUM_MOVE_DISTANCE, useDrag } from '@src/components/hooks/drag';
-import { noop } from '@src/util/utils';
+import { noop } from '@src/utils/noop';
 
 import { createKeyboardEvent, createMouseEvent, spyOnDragEvent } from '@test/helper';
 import { act, renderHook } from '@testing-library/preact-hooks';

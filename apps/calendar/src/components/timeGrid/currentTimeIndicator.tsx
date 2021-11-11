@@ -1,7 +1,7 @@
 import { FunctionComponent, h } from 'preact';
 
 import { addTimeGridPrefix } from '@src/components/timeGrid';
-import { cls, toPercent } from '@src/util/cssHelper';
+import { cls, toPercent } from '@src/helpers/css';
 
 const classNames = {
   line: cls(addTimeGridPrefix('current-time-line')),

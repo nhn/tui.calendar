@@ -1,4 +1,4 @@
-import { cls, CSS_PREFIX, matchViewIDRegExp } from '@src/util/cssHelper';
+import { cls, CSS_PREFIX, matchViewIDRegExp } from '@src/helpers/css';
 
 describe('cssHelper', () => {
   describe('cls', () => {

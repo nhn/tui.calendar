@@ -18,10 +18,10 @@ import {
   PanelRect,
   Size,
 } from '@src/controller/panel';
+import { cls } from '@src/helpers/css';
 import { weekViewLayoutSelector } from '@src/selectors';
 import { WeekGridRows } from '@src/slices/weekViewLayout';
-import { cls } from '@src/util/cssHelper';
-import { noop } from '@src/util/utils';
+import { noop } from '@src/utils/noop';
 
 export interface Props extends PanelInfo {
   onResizeStart?: (panelName: string) => void;

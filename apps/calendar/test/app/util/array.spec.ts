@@ -2,7 +2,7 @@
 import pluck from 'tui-code-snippet/collection/pluck';
 
 import EventModel from '@src/model/eventModel';
-import array from '@src/util/array';
+import array from '@src/utils/array';
 
 import { EventModelData } from '@t/events';
 

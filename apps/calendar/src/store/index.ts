@@ -3,7 +3,7 @@ import { useContext, useEffect, useLayoutEffect, useMemo, useReducer, useRef } f
 
 import isUndefined from 'tui-code-snippet/type/isUndefined';
 
-import { isNil } from '@src/util/utils';
+import { isNil } from '@src/utils/object';
 
 import { EqualityChecker, InternalStoreAPI, StateSelector, StateWithActions } from '@t/store';
 

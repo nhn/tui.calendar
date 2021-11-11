@@ -1,8 +1,8 @@
 import range from 'tui-code-snippet/array/range';
 
+import { getDayName } from '@src/helpers/dayName';
 import { Day } from '@src/time/datetime';
-import { getDayName } from '@src/util/dayName';
-import { deepMergedCopy } from '@src/util/utils';
+import { deepMergedCopy } from '@src/utils/object';
 
 import { EventModelData } from '@t/events';
 import { Option } from '@t/option';

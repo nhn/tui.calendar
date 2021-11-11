@@ -1,10 +1,10 @@
 import isString from 'tui-code-snippet/type/isString';
 
+import { collidesWith } from '@src/helpers/events';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { compare, MS_PER_DAY, parse, toEndOfDay, toStartOfDay } from '@src/time/datetime';
-import { collidesWith } from '@src/util/events';
-import { stamp } from '@src/util/stamp';
+import { stamp } from '@src/utils/stamp';
 
 import { DateType, EventCategory, EventModelData } from '@t/events';
 

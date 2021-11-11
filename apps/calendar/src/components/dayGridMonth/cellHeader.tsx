@@ -2,9 +2,9 @@ import { FunctionComponent, h } from 'preact';
 
 import MoreEventsButton from '@src/components/dayGridMonth/moreEventsButton';
 import Template from '@src/components/template';
+import { cls } from '@src/helpers/css';
 import TZDate from '@src/time/date';
 import { toFormat } from '@src/time/datetime';
-import { cls } from '@src/util/cssHelper';
 
 enum CellBarType {
   header = 'header',

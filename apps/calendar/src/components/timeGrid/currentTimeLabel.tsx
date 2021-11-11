@@ -3,9 +3,9 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 
 import Template from '@src/components/template';
 import { addTimeGridPrefix, timeFormats } from '@src/components/timeGrid';
+import { cls, toPercent } from '@src/helpers/css';
 import TZDate from '@src/time/date';
-import { cls, toPercent } from '@src/util/cssHelper';
-import { getSize } from '@src/util/dom';
+import { getSize } from '@src/utils/dom';
 
 import { TimeUnit } from '@t/events';
 

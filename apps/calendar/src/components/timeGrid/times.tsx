@@ -10,12 +10,12 @@ import { addTimeGridPrefix } from '@src/components/timeGrid';
 import { CurrentTimeLabel } from '@src/components/timeGrid/currentTimeLabel';
 import { useTheme } from '@src/contexts/theme';
 import { getTopPercentByTime } from '@src/controller/times';
+import { cls } from '@src/helpers/css';
 import { TemplateName } from '@src/template/default';
 import TZDate from '@src/time/date';
 import { isSameDate, isSameMonth, isSameYear, toFormat } from '@src/time/datetime';
-import { first, last } from '@src/util/array';
-import { cls } from '@src/util/cssHelper';
-import { isOverlapped } from '@src/util/dom';
+import { first, last } from '@src/utils/array';
+import { isOverlapped } from '@src/utils/dom';
 
 import { TimeUnit } from '@t/events';
 

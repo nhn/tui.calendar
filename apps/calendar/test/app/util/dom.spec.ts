@@ -1,4 +1,4 @@
-import { closest } from '@src/util/dom';
+import { closest } from '@src/utils/dom';
 
 describe('Dom Util', () => {
   it('closest', () => {

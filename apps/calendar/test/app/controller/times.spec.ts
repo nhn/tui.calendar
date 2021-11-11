@@ -4,8 +4,8 @@ import {
   getPrevGridTimeFromMouseEvent,
   getTopPercentByTime,
 } from '@src/controller/times';
+import { cls } from '@src/helpers/css';
 import TZDate from '@src/time/date';
-import { cls } from '@src/util/cssHelper';
 
 import { TimeUnit } from '@t/events';
 import { createMouseEvent } from '@test/helper';

@@ -13,6 +13,7 @@ import { ColumnInfo, ColumnWithMouse } from '@src/components/timeGrid/columnWith
 import { CurrentTimeIndicator } from '@src/components/timeGrid/currentTimeIndicator';
 import { MultipleTimezones } from '@src/components/timeGrid/multipleTimezones';
 import { getTopPercentByTime } from '@src/controller/times';
+import { cls, toPercent, toPx } from '@src/helpers/css';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import {
@@ -24,7 +25,6 @@ import {
   toEndOfDay,
   toStartOfDay,
 } from '@src/time/datetime';
-import { cls, toPercent, toPx } from '@src/util/cssHelper';
 
 import { TimeUnit } from '@t/events';
 import { TimezoneConfig } from '@t/option';

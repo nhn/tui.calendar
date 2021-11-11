@@ -1,9 +1,9 @@
+import { isSameEvent } from '@src/helpers/events';
 import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { makeDateRange, MS_PER_DAY, toEndOfDay, toFormat, toStartOfDay } from '@src/time/datetime';
-import Collection from '@src/util/collection';
-import { isSameEvent } from '@src/util/events';
+import Collection from '@src/utils/collection';
 
 import { CalendarData, EventModelData, IDS_OF_DAY } from '@t/events';
 import { CalendarInfo } from '@t/option';

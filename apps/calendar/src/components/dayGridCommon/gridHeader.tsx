@@ -1,7 +1,7 @@
 import { FunctionComponent, h } from 'preact';
 
 import DayName from '@src/components/dayGridCommon/dayName';
-import { cls, toPercent } from '@src/util/cssHelper';
+import { cls, toPercent } from '@src/helpers/css';
 
 import { CalendarViewType } from '@t/components/common';
 import { CalendarMonthOption, CalendarWeekOption } from '@t/store';

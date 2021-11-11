@@ -2,9 +2,9 @@ import { h, RenderableProps } from 'preact';
 
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
 import { ThemeProvider } from '@src/contexts/theme';
+import { cls } from '@src/helpers/css';
 import EventModel from '@src/model/eventModel';
 import Theme from '@src/theme';
-import { cls } from '@src/util/cssHelper';
 
 import { Options } from '@t/option';
 

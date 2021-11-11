@@ -2,7 +2,7 @@ import { createContext, FunctionComponent, h } from 'preact';
 import { useContext } from 'preact/hooks';
 
 import Theme from '@src/theme';
-import { isNil } from '@src/util/utils';
+import { isNil } from '@src/utils/object';
 
 export const ThemeContext = createContext<Theme | null>(null);
 

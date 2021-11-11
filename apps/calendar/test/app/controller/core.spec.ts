@@ -8,8 +8,8 @@ import {
 import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
-import array from '@src/util/array';
-import Collection from '@src/util/collection';
+import array from '@src/utils/array';
+import Collection from '@src/utils/collection';
 
 import { CollisionGroup, EventModelData } from '@t/events';
 

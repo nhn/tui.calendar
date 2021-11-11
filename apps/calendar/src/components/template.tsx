@@ -5,11 +5,14 @@ import isString from 'tui-code-snippet/type/isString';
 import { useStore } from '@src/contexts/calendarStore';
 import { templateSelector } from '@src/selectors';
 import { TemplateName } from '@src/template/default';
-import { identity } from '@src/util/utils';
 
 interface Props {
   template: TemplateName;
   model: any;
+}
+
+function identity(value: unknown) {
+  return value;
 }
 
 const Template: FunctionComponent<Props> = ({ template, model }) => {

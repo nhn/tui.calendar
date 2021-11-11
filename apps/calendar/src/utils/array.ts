@@ -107,3 +107,17 @@ export function first<T>(array: Array<T>) {
 export function last<T>(array: Array<T>) {
   return array[array.length - 1];
 }
+
+export function fill<T>(length: number, value: T): T[] {
+  if (length > 0) {
+    return Array.from<T, T>({ length }, () => {
+      if (Array.isArray(value)) {
+        return value.slice() as unknown as T;
+      }
+
+      return value;
+    });
+  }
+
+  return [];
+}

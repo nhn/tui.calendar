@@ -4,8 +4,8 @@ import getTarget from 'tui-code-snippet/domEvent/getTarget';
 import { ColumnInfo } from '@src/components/timeGrid/columnWithMouse';
 import TZDate from '@src/time/date';
 import { addMilliseconds, addSeconds, clone, millisecondsTo } from '@src/time/datetime';
-import { closest, getSize } from '@src/util/dom';
-import { limit, ratio } from '@src/util/math';
+import { closest, getSize } from '@src/utils/dom';
+import { limit, ratio } from '@src/utils/math';
 
 import { TimeUnit } from '@t/events';
 
@@ -14,7 +14,7 @@ const DEFAULT_SLOT = 30;
 type GridColumnInfo = Omit<ColumnInfo, 'times'>;
 
 /**
- * @param {TZDate} [time] - target time which is converted to percent value
+ * @param date
  * @param {TZDate} [start] - start time
  * @param {TZDate} [end] - end time
  * @returns {number} The percent value represent current time between start and end
@@ -76,6 +76,8 @@ function setValueByUnit(time: TZDate, value: number, unit: TimeUnit) {
 /**
  * Get a previous grid time before the time
  * @param {TZDate} time - target time
+ * @param slot
+ * @param unit
  * @returns {TZDate} - next grid time
  */
 export function getPrevGridTime(time: TZDate, slot: number, unit: TimeUnit) {
@@ -99,6 +101,8 @@ export function getPrevGridTime(time: TZDate, slot: number, unit: TimeUnit) {
 /**
  * Get a next grid time after the time
  * @param {TZDate} time - target time
+ * @param slot
+ * @param unit
  * @returns {TZDate} - next grid time
  */
 export function getNextGridTime(time: TZDate, slot: number, unit: TimeUnit) {
@@ -130,8 +134,7 @@ function convertYPosToTime(startTime: TZDate, y: number, height: number, baseMs:
 /**
  * Get a nearest grid time from mouseEvent between startTime and endTime
  * @param {MouseEvent} mouseEvent - mouse event
- * @param {TZDate} startGridTime - start time
- * @param {TZDate} endGridTime - end time
+ * @param gridColumnInfo
  * @param {string} containerSelector - a selector of container element to limit
  * @returns {number} nearestGridTimeY - nearest grid time of yAxis
  */

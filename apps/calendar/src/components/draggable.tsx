@@ -10,8 +10,8 @@ import {
 } from 'preact';
 
 import { Direction } from '@src/controller/layout';
-import { getOffsetParentPos, getOffsetParentRect } from '@src/util/dom';
-import { limit } from '@src/util/math';
+import { getOffsetParentPos, getOffsetParentRect } from '@src/utils/dom';
+import { limit } from '@src/utils/math';
 
 const DISTANCE = 10;
 

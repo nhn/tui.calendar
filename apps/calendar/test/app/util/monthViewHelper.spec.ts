@@ -1,6 +1,6 @@
+import { createMousePositionDataGrabberMonth } from '@src/helpers/view';
 import TZDate from '@src/time/date';
 import { getGridInfo } from '@src/time/datetime';
-import { createMousePositionDataGrabberMonth } from '@src/util/viewHelper';
 
 describe('monthView Helper', function () {
   let container: HTMLElement;

@@ -4,6 +4,7 @@ import range from 'tui-code-snippet/array/range';
 
 import { GridSelectionInfo } from '@src/components/timeGrid';
 import { Column } from '@src/components/timeGrid/column';
+import { cls } from '@src/helpers/css';
 import TZDate from '@src/time/date';
 import {
   addHours,
@@ -13,7 +14,6 @@ import {
   toStartOfDay,
   toStartOfYear,
 } from '@src/time/datetime';
-import { cls } from '@src/util/cssHelper';
 
 import { EventModelData } from '@t/events';
 

@@ -1,4 +1,4 @@
-import { getRelativePosition } from '@src/util/dom';
+import { getRelativePosition } from '@src/utils/dom';
 
 describe('domEvent', () => {
   const el = document.createElement('div');

@@ -1,8 +1,8 @@
 import { FunctionComponent, h } from 'preact';
 
 import { GridSelectionInfo, timeFormats } from '@src/components/timeGrid';
+import { cls, toPercent } from '@src/helpers/css';
 import { toFormat } from '@src/time/datetime';
-import { cls, toPercent } from '@src/util/cssHelper';
 
 interface Props extends GridSelectionInfo {
   top: number;

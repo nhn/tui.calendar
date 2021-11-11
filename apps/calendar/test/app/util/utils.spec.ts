@@ -1,4 +1,4 @@
-import { deepMergedCopy, isFunction, isNil } from '@src/util/utils';
+import { deepMergedCopy, isFunction, isNil } from '@src/utils/object';
 
 describe('utils', () => {
   it('deepMergedCopy', () => {

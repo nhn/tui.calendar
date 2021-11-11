@@ -1,6 +1,6 @@
+import { collidesWith } from '@src/helpers/events';
 import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
-import { collidesWith } from '@src/util/events';
 
 /**
  * Set of UI-related properties for calendar event.

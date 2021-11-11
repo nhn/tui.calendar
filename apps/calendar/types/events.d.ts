@@ -1,7 +1,7 @@
 import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
-import Collection from '@src/util/collection';
+import Collection from '@src/utils/collection';
 
 import { CalendarInfo } from '@t/option';
 

@@ -1,4 +1,4 @@
-import { deepMergedCopy } from '@src/util/utils';
+import { deepMergedCopy } from '@src/utils/object';
 
 import { ViewType } from '@t/option';
 import { CalendarStore, SetState } from '@t/store';

@@ -1,5 +1,5 @@
+import { collidesWith } from '@src/helpers/events';
 import TZDate from '@src/time/date';
-import { collidesWith } from '@src/util/events';
 
 import { createDate } from '@test/helper';
 

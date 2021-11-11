@@ -13,8 +13,8 @@ import {
   ResizeMode,
 } from '@src/controller/layout';
 import { PanelElementRectMap, PanelInfo, PanelRect } from '@src/controller/panel';
-import { cls } from '@src/util/cssHelper';
-import { getSize } from '@src/util/dom';
+import { cls } from '@src/helpers/css';
+import { getSize } from '@src/utils/dom';
 
 interface Props {
   direction?: Direction;

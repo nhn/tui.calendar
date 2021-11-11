@@ -2,7 +2,21 @@ import isUndefined from 'tui-code-snippet/type/isUndefined';
 
 import preset from '@src/theme/preset';
 import { defaultProps, ThemeKeyValue, ThemePropKeys } from '@src/theme/themeProps';
-import { setThemeObject } from '@src/util/utils';
+
+function setThemeObject(object: Record<string, any>, path: string, value: any) {
+  const names = path.split('.');
+  let store = object;
+
+  names.forEach((name: string, index: number) => {
+    store[name] = store[name] || {};
+
+    if (index === names.length - 1) {
+      store[name] = value;
+    } else {
+      store = store[name];
+    }
+  });
+}
 
 /**
  * Theme model class

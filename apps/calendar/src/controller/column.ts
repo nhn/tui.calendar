@@ -6,7 +6,7 @@ import { isTimeEvent } from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { addMinutes, max, min } from '@src/time/datetime';
-import array from '@src/util/array';
+import array from '@src/utils/array';
 
 const MIN_HEIGHT_PERCENT = 1;
 const MIN_MODEL_HEIGHT_PERCENT = 20;

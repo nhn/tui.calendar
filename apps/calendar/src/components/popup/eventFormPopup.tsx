@@ -1,8 +1,8 @@
 import { FunctionComponent, h } from 'preact';
 
 import { ClosePopupButton } from '@src/components/popup/closePopupButton';
+import { cls } from '@src/helpers/css';
 import { toFormat } from '@src/time/datetime';
-import { cls } from '@src/util/cssHelper';
 
 import { EventFormPopupParam } from '@t/store';
 

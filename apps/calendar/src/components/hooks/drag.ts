@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
-import { isEscapePressed } from '@src/util/keyboard';
-import { noop } from '@src/util/utils';
+import { isEscapePressed } from '@src/utils/keyboard';
+import { noop } from '@src/utils/noop';
 
 export interface DragListeners {
   onDragStart?: MouseEventListener;

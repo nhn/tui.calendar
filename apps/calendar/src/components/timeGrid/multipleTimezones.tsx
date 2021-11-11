@@ -8,6 +8,7 @@ import { addTimeGridPrefix } from '@src/components/timeGrid';
 import { CollapseButton } from '@src/components/timeGrid/collapseButton';
 import { TimeProps, Times } from '@src/components/timeGrid/times';
 import { TimezoneLabel } from '@src/components/timeGrid/timezoneLabel';
+import { cls } from '@src/helpers/css';
 import TZDate from '@src/time/date';
 import {
   addHours,
@@ -19,8 +20,7 @@ import {
   toFormat,
   toStartOfDay,
 } from '@src/time/datetime';
-import { cls } from '@src/util/cssHelper';
-import { noop } from '@src/util/utils';
+import { noop } from '@src/utils/noop';
 
 import { TimezoneConfig } from '@t/option';
 

@@ -10,7 +10,7 @@ import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { MS_EVENT_MIN_DURATION } from '@src/time/datetime';
-import Collection from '@src/util/collection';
+import Collection from '@src/utils/collection';
 
 import { CalendarData, EventModelData, Matrix3d, TimeGridEventMatrix } from '@t/events';
 import { Panel } from '@t/panel';

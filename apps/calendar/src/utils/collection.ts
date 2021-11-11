@@ -2,7 +2,7 @@ import isNumber from 'tui-code-snippet/type/isNumber';
 import isObject from 'tui-code-snippet/type/isObject';
 import isString from 'tui-code-snippet/type/isString';
 
-import { isFunction, isNil } from '@src/util/utils';
+import { isFunction, isNil } from '@src/utils/object';
 
 export type Filter<T> = (item: T) => boolean;
 

@@ -2,7 +2,7 @@ import getMousePosition from 'tui-code-snippet/domEvent/getMousePosition';
 import getTarget from 'tui-code-snippet/domEvent/getTarget';
 import isString from 'tui-code-snippet/type/isString';
 
-import { noop } from '@src/util/utils';
+import { noop } from '@src/utils/noop';
 
 const CSS_AUTO_REGEX = /^auto$|^$|%/;
 

@@ -5,8 +5,8 @@ import {
   PanelElementRectMap,
   PanelInfo,
 } from '@src/controller/panel';
-import { toPercent } from '@src/util/cssHelper';
-import { limit } from '@src/util/math';
+import { toPercent } from '@src/helpers/css';
+import { limit } from '@src/utils/math';
 
 export type Styles = Record<string, string | number>;
 export enum Direction {

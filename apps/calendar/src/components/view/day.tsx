@@ -7,11 +7,11 @@ import Panel from '@src/components/panel';
 import { ColumnInfo } from '@src/components/timeGrid/columnWithMouse';
 import { TimeGrid } from '@src/components/timeGrid/timeGrid';
 import { useStore } from '@src/contexts/calendarStore';
+import { getDayNames } from '@src/helpers/dayName';
+import { getDayGridEvents } from '@src/helpers/grid';
 import { weekViewStateSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
 import { getGridInfo, toEndOfDay, toStartOfDay } from '@src/time/datetime';
-import { getDayNames } from '@src/util/dayName';
-import { getDayGridEvents } from '@src/util/gridHelper';
 
 import { WeekOption } from '@t/option';
 import { DayGridEventType } from '@t/panel';

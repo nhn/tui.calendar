@@ -2,7 +2,7 @@ import { FunctionComponent, h, VNode } from 'preact';
 
 import Template from '@src/components/template';
 import { addTimeGridPrefix } from '@src/components/timeGrid';
-import { cls } from '@src/util/cssHelper';
+import { cls } from '@src/helpers/css';
 
 import { TimezoneConfig } from '@t/option';
 

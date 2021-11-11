@@ -1,5 +1,5 @@
-import { limit, ratio } from '@src/util/math';
-import { getRelativeMousePosition, getX } from '@src/util/mouse';
+import { limit, ratio } from '@src/utils/math';
+import { getRelativeMousePosition, getX } from '@src/utils/mouse';
 
 import { Cells } from '@t/panel';
 

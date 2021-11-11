@@ -21,8 +21,8 @@ import {
   toFormat,
   toStartOfDay,
 } from '@src/time/datetime';
-import array from '@src/util/array';
-import Collection, { Filter } from '@src/util/collection';
+import array from '@src/utils/array';
+import Collection, { Filter } from '@src/utils/collection';
 
 import {
   CalendarData,
