@@ -1,34 +1,31 @@
 import { AnyComponent, ComponentChild, h, render } from 'preact';
 import renderToString from 'preact-render-to-string';
 
-import isNumber from 'tui-code-snippet/type/isNumber';
-import isString from 'tui-code-snippet/type/isString';
-
 import { CalendarContainer } from '@src/calendarContainer';
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
 import { ThemeProvider } from '@src/contexts/theme';
 import { createEventCollection } from '@src/controller/base';
-import { EventHandler } from '@src/event';
-import { ExternalEventName } from '@src/event/externalEventType';
-import { InternalEventName } from '@src/event/internalEventType';
-import {
-  AppContext,
-  CalendarColor,
-  CalendarInfo,
-  CustomTimezone,
-  DateType,
-  EventModelData,
-  Option,
-  ViewType,
-} from '@src/model';
+import { EventHandler, ExternalEventName, InternalEventName } from '@src/event';
 import { registerTemplateConfig } from '@src/template';
 import Theme from '@src/theme';
 import { ThemeKeyValue } from '@src/theme/themeProps';
 import TZDate from '@src/time/date';
 import { toStartOfDay } from '@src/time/datetime';
+import { isNumber, isString } from '@src/utils/type';
 
+import { CalendarData, DateType, EventModelData } from '@t/events';
+import { CalendarColor, CalendarInfo, CustomTimezone, Option, ViewType } from '@t/option';
 import { CalendarStore, Dispatchers, InternalStoreAPI } from '@t/store';
+import { Template } from '@t/template';
 import { DateInterface, LocalDate } from '@toast-ui/date';
+
+interface AppContext {
+  options: Option;
+  calendarData: CalendarData;
+  templates: Template;
+  internalEvent: EventHandler<InternalEventName>;
+  externalEvent: EventHandler<ExternalEventName>;
+}
 
 export default abstract class CalendarControl extends EventHandler<ExternalEventName> {
   protected _container: Element | null;

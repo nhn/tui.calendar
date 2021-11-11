@@ -1,5 +1,6 @@
-import { Template, TemplateConfig } from '@src/model';
 import { templates } from '@src/template/default';
+
+import { Template, TemplateConfig } from '@t/template';
 
 export type TemplateSlice = { template: Template };
 

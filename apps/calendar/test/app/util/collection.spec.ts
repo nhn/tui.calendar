@@ -1,4 +1,4 @@
-import Collection from '@src/util/collection';
+import Collection from '@src/utils/collection';
 
 type Item = Record<string, any>;
 

@@ -3,9 +3,10 @@ import { h } from 'preact';
 import range from 'tui-code-snippet/array/range';
 
 import { TimeGrid } from '@src/components/timeGrid/timeGrid';
-import { EventModelData } from '@src/model';
 import TZDate from '@src/time/date';
 import { addDate, addHours, toStartOfDay } from '@src/time/datetime';
+
+import { EventModelData } from '@t/events';
 
 import normalEvents from '@stories/data/events.json';
 import { createEventModels } from '@stories/helper/event';

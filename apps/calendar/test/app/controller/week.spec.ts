@@ -6,15 +6,14 @@ import {
   hasCollision,
   splitEventByDateRange,
 } from '@src/controller/week';
-import { CalendarData, EventModelData } from '@src/model';
 import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { MS_EVENT_MIN_DURATION } from '@src/time/datetime';
-import Collection from '@src/util/collection';
+import Collection from '@src/utils/collection';
 
-import type { Matrix3d, TimeGridEventMatrix } from '@t/events';
-import type { Panel } from '@t/panel';
+import { CalendarData, EventModelData, Matrix3d, TimeGridEventMatrix } from '@t/events';
+import { Panel } from '@t/panel';
 
 const SCHEDULE_MIN_DURATION = MS_EVENT_MIN_DURATION;
 

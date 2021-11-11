@@ -1,19 +1,20 @@
 import { FunctionComponent, h, VNode } from 'preact';
 
+import range from 'tui-code-snippet/array/range';
+
 import { BackgroundEvent } from '@src/components/events/backgroundEvent';
 import { TimeEvent } from '@src/components/events/timeEvent';
-import { GridSelectionInfo } from '@src/components/timeGrid';
 import { GridSelection } from '@src/components/timeGrid/gridSelection';
 import { getUIModels, isBetween } from '@src/controller/column';
 import { getTopHeightByTime } from '@src/controller/times';
-import { TimeUnit } from '@src/model';
+import { cls, toPercent } from '@src/helpers/css';
 import { isBackgroundEvent } from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
-import { first, last } from '@src/util/array';
-import { cls } from '@src/util/cssHelper';
-import { toPercent } from '@src/util/units';
-import { range } from '@src/util/utils';
+import { first, last } from '@src/utils/array';
+
+import { TimeGridSelectionInfo } from '@t/components/timeGrid/gridSelection';
+import { TimeUnit } from '@t/events';
 
 const classNames = {
   column: cls('column'),
@@ -33,7 +34,7 @@ interface Props {
   start?: number;
   end?: number;
   events?: EventUIModel[];
-  gridSelection?: GridSelectionInfo | null;
+  gridSelection?: TimeGridSelectionInfo | null;
   index?: number;
   readOnly?: boolean;
   renderGridlineChild?: (time: TZDate) => VNode;
@@ -93,7 +94,7 @@ function renderEvents(events: EventUIModel[], startTime: TZDate, endTime: TZDate
 }
 
 function renderGridSelection(
-  gridSelection: GridSelectionInfo | null,
+  gridSelection: TimeGridSelectionInfo | null,
   startTime: TZDate,
   endTime: TZDate
 ) {

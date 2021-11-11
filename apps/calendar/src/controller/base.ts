@@ -1,19 +1,12 @@
-/**
- * @fileoverview Base calendar controller
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
-import inArray from 'tui-code-snippet/array/inArray';
-import forEach from 'tui-code-snippet/collection/forEach';
-
-import { CalendarData, CalendarInfo, EventModelData } from '@src/model';
+import { isSameEvent } from '@src/helpers/events';
 import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { makeDateRange, MS_PER_DAY, toEndOfDay, toFormat, toStartOfDay } from '@src/time/datetime';
-import { isSameEvent } from '@src/util';
-import Collection from '@src/util/collection';
+import Collection from '@src/utils/collection';
 
-export type IDS_OF_DAY = Record<string, number[]>;
+import { CalendarData, EventModelData, IDS_OF_DAY } from '@t/events';
+import { CalendarInfo } from '@t/option';
 
 /**
  * Make a event collection
@@ -93,8 +86,8 @@ export function addToMatrix(idsOfDay: IDS_OF_DAY, event: EventModel) {
 export function removeFromMatrix(idsOfDay: IDS_OF_DAY, event: EventModel) {
   const modelID = event.cid();
 
-  forEach(idsOfDay, (ids: number[]) => {
-    const index = inArray(modelID, ids);
+  Object.values(idsOfDay).forEach((ids: number[]) => {
+    const index = ids.indexOf(modelID);
 
     if (~index) {
       ids.splice(index, 1);

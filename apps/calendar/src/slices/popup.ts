@@ -1,4 +1,4 @@
-import { deepMergedCopy } from '@src/util/utils';
+import { deepMergedCopy } from '@src/utils/object';
 
 import { CalendarStore, PopupParamMap, SetState } from '@t/store';
 

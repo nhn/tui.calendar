@@ -1,9 +1,4 @@
-/**
- * @fileoverview Global configuration object module.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
-
-import { isString } from './utils';
+import { isString } from '@src/utils/type';
 
 export const CSS_PREFIX = 'toastui-calendar-';
 const weekdayGetViewID = new RegExp(`^${CSS_PREFIX}weekday[\\s]tui-view-(\\d+)`);
@@ -49,4 +44,23 @@ export function cls(...args: ClassNameValue[]): string {
   });
 
   return result.map(addPrefix).join(' ');
+}
+
+export function toPercent(value: number) {
+  return `${value}%`;
+}
+
+export function toPx(value: number) {
+  return `${value}px`;
+}
+
+export function convertPxToNum(pxString: string) {
+  const isPxString = /^\d+px$/.test(pxString);
+  if (!isPxString) {
+    throw new Error(
+      '[convertPxToNum] you should pass a pixel string value as argument - i.e., "18px"'
+    );
+  }
+
+  return parseFloat(pxString);
 }

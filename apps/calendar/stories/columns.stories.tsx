@@ -1,8 +1,9 @@
 import { h, RenderableProps } from 'preact';
 
-import { GridSelectionInfo } from '@src/components/timeGrid';
+import range from 'tui-code-snippet/array/range';
+
 import { Column } from '@src/components/timeGrid/column';
-import { EventModelData } from '@src/model';
+import { cls } from '@src/helpers/css';
 import TZDate from '@src/time/date';
 import {
   addHours,
@@ -12,8 +13,9 @@ import {
   toStartOfDay,
   toStartOfYear,
 } from '@src/time/datetime';
-import { cls } from '@src/util/cssHelper';
-import { range } from '@src/util/utils';
+
+import { TimeGridSelectionInfo } from '@t/components/timeGrid/gridSelection';
+import { EventModelData } from '@t/events';
 
 import { createEventModels } from '@stories/helper/event';
 
@@ -230,7 +232,7 @@ columnHasBackgroundColor.story = {
 
 export const gridSelectionWithTop = () => {
   const start = toStartOfDay(new TZDate());
-  const gridSelection: GridSelectionInfo = {
+  const gridSelection: TimeGridSelectionInfo = {
     start: addHours(start, 2),
     end: addHours(start, 5),
     unit: 'minute',
@@ -248,7 +250,7 @@ gridSelectionWithTop.story = {
 
 export const gridSelectionWithBottom = () => {
   const start = toStartOfDay(new TZDate());
-  const gridSelection: GridSelectionInfo = {
+  const gridSelection: TimeGridSelectionInfo = {
     start: addHours(start, 3),
     end: addHours(start, 6),
     unit: 'minute',

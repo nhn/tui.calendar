@@ -1,4 +1,4 @@
-import { pick } from '@src/util/utils';
+import { pick } from '@src/utils/object';
 
 import { CalendarStore } from '@t/store';
 

@@ -1,19 +1,15 @@
 import { FunctionComponent, h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 
-import pick from 'tui-code-snippet/object/pick';
+import range from 'tui-code-snippet/array/range';
 
-import {
-  addTimeGridPrefix,
-  className as timegridClassName,
-  GridSelectionInfo,
-} from '@src/components/timeGrid';
+import { addTimeGridPrefix, className as timegridClassName } from '@src/components/timeGrid';
 import { Column } from '@src/components/timeGrid/column';
 import { ColumnInfo, ColumnWithMouse } from '@src/components/timeGrid/columnWithMouse';
 import { CurrentTimeIndicator } from '@src/components/timeGrid/currentTimeIndicator';
 import { MultipleTimezones } from '@src/components/timeGrid/multipleTimezones';
 import { getTopPercentByTime } from '@src/controller/times';
-import { TimeUnit, TimezoneConfig } from '@src/model';
+import { cls, toPercent, toPx } from '@src/helpers/css';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import {
@@ -25,10 +21,10 @@ import {
   toEndOfDay,
   toStartOfDay,
 } from '@src/time/datetime';
-import { findIndex } from '@src/util/array';
-import { cls } from '@src/util/cssHelper';
-import { toPercent, toPx } from '@src/util/units';
-import { range } from '@src/util/utils';
+
+import { TimeGridSelectionInfo } from '@t/components/timeGrid/gridSelection';
+import { TimeUnit } from '@t/events';
+import { TimezoneConfig } from '@t/option';
 
 const REFRESH_INTERVAL = 1000 * SIXTY_SECONDS;
 
@@ -90,18 +86,18 @@ export const TimeGrid: FunctionComponent<Props> = ({
 }) => {
   const [stickyContainer, setStickyContainer] = useState<HTMLElement | null>(null);
   const [columnLeft, setColumnLeft] = useState(0);
-  const [gridSelection, setGridSelection] = useState<GridSelectionInfo | null>(null);
+  const [gridSelection, setGridSelection] = useState<TimeGridSelectionInfo | null>(null);
   const [intervalId, setIntervalId] = useState<TimerID>(null);
   const [timerId, setTimerId] = useState<TimerID>(null);
   const stickyContainerRef = useRef<HTMLDivElement>(null);
   const forceUpdate = useForceUpdate();
 
-  const onCreateEvent = (e: GridSelectionInfo) => {
+  const onCreateEvent = (e: TimeGridSelectionInfo) => {
     // @TODO: beforeCreateEvent 구현
   };
-  const onSelectionStart = (e: GridSelectionInfo) => setGridSelection(e);
-  const onSelectionChange = (e: GridSelectionInfo) => setGridSelection(e);
-  const onSelectionEnd = (e: GridSelectionInfo) => onCreateEvent(e);
+  const onSelectionStart = (e: TimeGridSelectionInfo) => setGridSelection(e);
+  const onSelectionChange = (e: TimeGridSelectionInfo) => setGridSelection(e);
+  const onSelectionEnd = (e: TimeGridSelectionInfo) => onCreateEvent(e);
   const onSelectionCancel = () => setGridSelection(null);
 
   const onChangeCollapsed = (collapsed: boolean) =>
@@ -158,11 +154,11 @@ export const TimeGrid: FunctionComponent<Props> = ({
   const left = columnLeft || calculateLeft(timesWidth, timezones);
   const now = new TZDate();
   const currentTimeLineTop = getTopPercentByTime(now, toStartOfDay(now), toEndOfDay(now));
-  const columnIndex = findIndex(columnInfoList, ({ start, end }) =>
+  const columnIndex = columnInfoList.findIndex(({ start, end }) =>
     isBetweenWithDate(now, start, end)
   );
   const showCurrentTime = columnIndex >= 0;
-  const gridSelectionColumnIndex: number = pick(gridSelection, 'columnIndex');
+  const gridSelectionColumnIndex = gridSelection?.columnIndex ?? 0;
 
   return (
     <div className={classNames.timegrid}>

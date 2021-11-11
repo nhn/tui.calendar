@@ -1,7 +1,3 @@
-/**
- * @fileoverview Drag handler for calendar.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
 import {
   cloneElement,
   Component,
@@ -13,13 +9,14 @@ import {
   VNode,
 } from 'preact';
 
-import { Direction } from '@src/controller/layout';
-import { getOffsetParentPos, getOffsetParentRect } from '@src/util/dom';
-import { limit } from '@src/util/math';
+import { Direction } from '@src/constants/layout';
+import { getOffsetParentPos, getOffsetParentRect } from '@src/utils/dom';
+import { limit } from '@src/utils/math';
+
+import { StyleProp } from '@t/components/common';
 
 const DISTANCE = 10;
 
-type Styles = Record<string, string | number>;
 export interface DragPositionInfo {
   startX: number;
   startY: number;
@@ -197,7 +194,7 @@ export class Draggable extends Component<Props, State> {
   render() {
     const { children, renderDragElement } = this.props;
 
-    const draggingStyles: Styles = {
+    const draggingStyles: StyleProp = {
       position: 'absolute',
     };
 

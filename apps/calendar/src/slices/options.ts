@@ -1,14 +1,15 @@
-import { EventModelData, Option } from '@src/model';
-import { Day } from '@src/time/datetime';
-import { getDayName } from '@src/util/dayName';
-import { deepMergedCopy, includes, range } from '@src/util/utils';
+import range from 'tui-code-snippet/array/range';
 
+import { getDayName } from '@src/helpers/dayName';
+import { Day } from '@src/time/datetime';
+import { deepMergedCopy } from '@src/utils/object';
+
+import { EventModelData } from '@t/events';
+import { Option } from '@t/option';
 import { CalendarMonthOption, CalendarStore, CalendarWeekOption, SetState } from '@t/store';
 
 function initializeDayNames(startDayOfWeek = 0) {
-  return range(startDayOfWeek, 7)
-    .concat(range(startDayOfWeek))
-    .map((day) => getDayName(day));
+  return [...range(startDayOfWeek, 7), ...range(startDayOfWeek)].map((day) => getDayName(day));
 }
 
 function initializeWeekOption(weekOption: Option['week'] = {}): CalendarWeekOption {
@@ -47,7 +48,7 @@ function initializeMonthOption(monthOption: Option['month']): CalendarMonthOptio
     },
     visibleEventCount: 6,
     eventFilter: (event: Required<EventModelData>) =>
-      event.isVisible && includes(['allday', 'time'], event.category),
+      event.isVisible && ['allday', 'time'].includes(event.category),
     ...monthOption,
   };
 

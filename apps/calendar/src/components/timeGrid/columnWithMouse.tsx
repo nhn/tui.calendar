@@ -2,17 +2,17 @@ import { ComponentChildren, FunctionComponent, h } from 'preact';
 import { useState } from 'preact/hooks';
 
 import getTarget from 'tui-code-snippet/domEvent/getTarget';
-import pick from 'tui-code-snippet/object/pick';
 
 import { useDrag } from '@src/components/hooks/drag';
-import { GridSelectionInfo } from '@src/components/timeGrid';
 import { TimeProps } from '@src/components/timeGrid/times';
 import { getNextGridTime, getPrevGridTimeFromMouseEvent } from '@src/controller/times';
-import { TimeUnit } from '@src/model';
+import { cls } from '@src/helpers/css';
 import TZDate from '@src/time/date';
 import { addMilliseconds, isSame } from '@src/time/datetime';
-import { cls } from '@src/util/cssHelper';
-import { closest } from '@src/util/dom';
+import { closest } from '@src/utils/dom';
+
+import { TimeGridSelectionInfo } from '@t/components/timeGrid/gridSelection';
+import { TimeUnit } from '@t/events';
 
 const classNames = {
   columns: cls('columns'),
@@ -22,9 +22,9 @@ const classNames = {
 interface Props {
   columnLeft: number;
   columnInfoList: ColumnInfo[];
-  onSelectionStart?: (e: GridSelectionInfo) => void;
-  onSelectionChange?: (e: GridSelectionInfo) => void;
-  onSelectionEnd?: (e: GridSelectionInfo) => void;
+  onSelectionStart?: (e: TimeGridSelectionInfo) => void;
+  onSelectionChange?: (e: TimeGridSelectionInfo) => void;
+  onSelectionEnd?: (e: TimeGridSelectionInfo) => void;
   onSelectionCancel?: () => void;
   children?: ComponentChildren;
 }
@@ -37,15 +37,13 @@ export interface ColumnInfo {
   times: TimeProps[];
 }
 
-interface TimeGridSelectionInfo extends GridSelectionInfo {
+interface SelectionData extends TimeGridSelectionInfo {
   columnIndex: number;
 }
 
 export const ColumnWithMouse: FunctionComponent<Props> = (props: Props) => {
-  const [selectionStartData, setSelectionStartData] = useState<TimeGridSelectionInfo | null>(null);
-  const [selectionPrevDragData, setSelectionPrevDragData] = useState<TimeGridSelectionInfo | null>(
-    null
-  );
+  const [selectionStartData, setSelectionStartData] = useState<SelectionData | null>(null);
+  const [selectionPrevDragData, setSelectionPrevDragData] = useState<SelectionData | null>(null);
 
   const getColumnIndexFromMouse = (e: MouseEvent) => {
     const target = getTarget(e);
@@ -55,7 +53,7 @@ export const ColumnWithMouse: FunctionComponent<Props> = (props: Props) => {
     return columnIndex;
   };
 
-  const getGridSelectionDataFromMouse = (e: MouseEvent): TimeGridSelectionInfo => {
+  const getGridSelectionDataFromMouse = (e: MouseEvent): SelectionData => {
     const columnIndex = selectionStartData
       ? selectionStartData.columnIndex
       : getColumnIndexFromMouse(e);
@@ -79,9 +77,9 @@ export const ColumnWithMouse: FunctionComponent<Props> = (props: Props) => {
   const onDrag = (e: MouseEvent) => {
     const selectionData = getGridSelectionDataFromMouse(e);
     const { start, end } = selectionData;
-    const selectionStartTime = pick(selectionStartData, 'start') || start;
-    const selectionEndTime = pick(selectionStartData, 'end') || end;
-    let timeGridSelectionInfo: TimeGridSelectionInfo;
+    const selectionStartTime = selectionStartData?.start ?? start;
+    const selectionEndTime = selectionStartData?.end ?? end;
+    let timeGridSelectionInfo: SelectionData;
 
     if (start < selectionStartTime) {
       timeGridSelectionInfo = {

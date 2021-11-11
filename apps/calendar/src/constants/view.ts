@@ -1,4 +1,4 @@
-import { ViewType } from '@src/model';
+import { ViewType } from '@t/option';
 
 export const VIEW_TYPE: {
   [key: string]: ViewType;

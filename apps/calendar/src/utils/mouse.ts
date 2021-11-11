@@ -1,5 +1,3 @@
-import { findIndex } from '@src/util/utils';
-
 export type ContainerPosition = {
   left: number;
   top: number;
@@ -8,9 +6,7 @@ export type ContainerPosition = {
 };
 
 export function getX(grids: GridInfo[], left: number) {
-  return (
-    findIndex<GridInfo>(grids, (item) => item.left <= left && left <= item.left + item.width) ?? -1
-  );
+  return grids.findIndex((item) => item.left <= left && left <= item.left + item.width) ?? -1;
 }
 
 export function getRelativeMousePosition(

@@ -1,5 +1,7 @@
 import { FunctionComponent, h } from 'preact';
 
+import range from 'tui-code-snippet/array/range';
+
 import GridHeader from '@src/components/dayGridCommon/gridHeader';
 import { GridRow } from '@src/components/dayGridWeek/gridRow';
 import { Layout } from '@src/components/layout';
@@ -7,7 +9,8 @@ import Panel from '@src/components/panel';
 import { ColumnInfo } from '@src/components/timeGrid/columnWithMouse';
 import { TimeGrid } from '@src/components/timeGrid/timeGrid';
 import { useStore } from '@src/contexts/calendarStore';
-import { WeekOption } from '@src/model';
+import { getDayNames } from '@src/helpers/dayName';
+import { getDayGridEvents } from '@src/helpers/grid';
 import { weekViewStateSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
 import {
@@ -18,11 +21,9 @@ import {
   toStartOfDay,
   WEEK_DAYS,
 } from '@src/time/datetime';
-import { getDayNames } from '@src/util/dayName';
-import { getDayGridEvents } from '@src/util/gridHelper';
-import { range } from '@src/util/utils';
 
-import type { Cells, DayGridEventType } from '@t/panel';
+import { WeekOption } from '@t/option';
+import { Cells, DayGridEventType } from '@t/panel';
 
 function getCells(renderDate: TZDate, { startDayOfWeek = 0, workweek }: WeekOption): Cells {
   const renderDay = renderDate.getDay();

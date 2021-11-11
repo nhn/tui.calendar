@@ -6,10 +6,11 @@ import { GridRow } from '@src/components/dayGridWeek/gridRow';
 import { Layout } from '@src/components/layout';
 import Panel from '@src/components/panel';
 import { createEventCollection } from '@src/controller/base';
-import { CalendarData } from '@src/model';
+import { getDayGridEvents } from '@src/helpers/grid';
 import TZDate from '@src/time/date';
 import { addDate, getGridInfo, toStartOfDay } from '@src/time/datetime';
-import { getDayGridEvents } from '@src/util/gridHelper';
+
+import { CalendarData } from '@t/events';
 
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { createRandomEventModelsForMonth } from '@stories/util/randomEvents';

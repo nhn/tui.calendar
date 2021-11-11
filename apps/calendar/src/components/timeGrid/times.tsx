@@ -2,7 +2,6 @@ import { FunctionComponent, h } from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
 
 import range from 'tui-code-snippet/array/range';
-import toArray from 'tui-code-snippet/collection/toArray';
 import addClass from 'tui-code-snippet/domUtil/addClass';
 import removeClass from 'tui-code-snippet/domUtil/removeClass';
 
@@ -11,13 +10,14 @@ import { addTimeGridPrefix } from '@src/components/timeGrid';
 import { CurrentTimeLabel } from '@src/components/timeGrid/currentTimeLabel';
 import { useTheme } from '@src/contexts/theme';
 import { getTopPercentByTime } from '@src/controller/times';
-import { TimeUnit } from '@src/model';
+import { cls } from '@src/helpers/css';
 import { TemplateName } from '@src/template/default';
 import TZDate from '@src/time/date';
 import { isSameDate, isSameMonth, isSameYear, toFormat } from '@src/time/datetime';
-import { first, last } from '@src/util/array';
-import { cls } from '@src/util/cssHelper';
-import { isOverlapped } from '@src/util/dom';
+import { first, last } from '@src/utils/array';
+import { isOverlapped } from '@src/utils/dom';
+
+import { TimeUnit } from '@t/events';
 
 const classNames = {
   times: addTimeGridPrefix('times'),
@@ -66,10 +66,10 @@ function isPastByUnit(time: TZDate, now: TZDate, unit: TimeUnit) {
 }
 
 function hideOverlappedTime(timesElement: HTMLElement) {
-  const timeLabelElements = toArray<HTMLElement>(
+  const timeLabelElements = Array.from(
     timesElement.getElementsByClassName(cls(classNames.timeLabel))
   );
-  const [currentElement] = toArray<HTMLElement>(
+  const [currentElement] = Array.from(
     timesElement.getElementsByClassName(cls(classNames.currentTime))
   );
 

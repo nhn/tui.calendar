@@ -1,6 +1,5 @@
-import { TemplateWeekDay } from '@src/model';
-
-import type { Cells } from '@t/panel';
+import { Cells } from '@t/panel';
+import { TemplateWeekDay } from '@t/template';
 
 export const getDayName = (dayIndex: number) => {
   return ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][dayIndex];

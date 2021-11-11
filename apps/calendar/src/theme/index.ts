@@ -1,13 +1,21 @@
-/**
- * @fileoverview The all configuration of a theme
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
-import forEach from 'tui-code-snippet/collection/forEach';
-import isUndefined from 'tui-code-snippet/type/isUndefined';
-
 import preset from '@src/theme/preset';
 import { defaultProps, ThemeKeyValue, ThemePropKeys } from '@src/theme/themeProps';
-import { set } from '@src/util';
+import { isUndefined } from '@src/utils/type';
+
+function setThemeObject(object: Record<string, any>, path: string, value: any) {
+  const names = path.split('.');
+  let store = object;
+
+  names.forEach((name: string, index: number) => {
+    store[name] = store[name] || {};
+
+    if (index === names.length - 1) {
+      store[name] = value;
+    } else {
+      store = store[name];
+    }
+  });
+}
 
 /**
  * Theme model class
@@ -62,20 +70,20 @@ export default class Theme {
   setStyles(styles: ThemeKeyValue): string[] {
     const errors: ThemePropKeys[] = [];
 
-    forEach(styles, (style: string, key: ThemePropKeys) => {
-      if (isUndefined(defaultProps[key])) {
-        errors.push(key);
+    Object.entries(styles).forEach(([key, style]) => {
+      if (isUndefined(defaultProps[key as ThemePropKeys])) {
+        errors.push(key as ThemePropKeys);
       } else {
-        this.props[key] = style;
-        set(this, key, style);
+        this.props[key as ThemePropKeys] = style;
+        setThemeObject(this, key, style);
       }
     });
 
     // apply missing styles which have to be default
-    forEach(defaultProps, (style: string, key: ThemePropKeys) => {
-      if (!this.getStyle(key)) {
-        this.props[key] = style;
-        set(this, key, style);
+    Object.entries(defaultProps).forEach(([key, style]) => {
+      if (!this.getStyle(key as ThemePropKeys)) {
+        this.props[key as ThemePropKeys] = style;
+        setThemeObject(this, key, style);
       }
     });
 
@@ -88,17 +96,16 @@ export default class Theme {
   clear() {
     const categories: Record<string, string> = {};
 
-    forEach(this.props, (style: string, key: ThemePropKeys) => {
+    Object.keys(this.props).forEach((key) => {
       const [category] = key.split('.');
       if (!categories[category]) {
         categories[category] = category;
       }
     });
 
-    // [TODO] Typescript
-    // forEach(categories, (categoryProp: string) => {
-    //   delete this[categoryProp];
-    // });
+    Object.values(categories).forEach((prop) => {
+      delete this[prop as 'common' | 'month' | 'week'];
+    });
 
     this.props = {};
   }

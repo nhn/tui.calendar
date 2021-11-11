@@ -3,18 +3,17 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks'
 
 import { DragPositionInfo } from '@src/components/draggable';
 import { filterPanels, getPanelPropsList, Props as PanelProps } from '@src/components/panel';
+import { Direction, ResizeMode } from '@src/constants/layout';
 import {
-  Direction,
   getLayoutStylesFromInfo,
   layoutPanels,
-  PanelSize,
   resizeByAbsoluteMode,
   resizeByRelativeMode,
-  ResizeMode,
 } from '@src/controller/layout';
-import { PanelElementRectMap, PanelInfo, PanelRect } from '@src/controller/panel';
-import { cls } from '@src/util/cssHelper';
-import { getSize } from '@src/util/dom';
+import { cls } from '@src/helpers/css';
+import { getSize } from '@src/utils/dom';
+
+import { PanelElementRectMap, PanelInfo, PanelRect, PanelSize } from '@t/layout';
 
 interface Props {
   direction?: Direction;

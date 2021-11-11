@@ -3,11 +3,11 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 
 import Template from '@src/components/template';
 import { addTimeGridPrefix, timeFormats } from '@src/components/timeGrid';
-import { TimeUnit } from '@src/model';
+import { cls, toPercent } from '@src/helpers/css';
 import TZDate from '@src/time/date';
-import { cls } from '@src/util/cssHelper';
-import { getSize } from '@src/util/dom';
-import { toPercent } from '@src/util/units';
+import { getSize } from '@src/utils/dom';
+
+import { TimeUnit } from '@t/events';
 
 const classNames = {
   currentTime: addTimeGridPrefix('current-time'),

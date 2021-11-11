@@ -2,9 +2,9 @@ import { FunctionComponent, h } from 'preact';
 import { useState } from 'preact/hooks';
 
 import { useDrag } from '@src/components/hooks/drag';
+import { toPercent } from '@src/helpers/css';
 import TZDate from '@src/time/date';
 import { isSame } from '@src/time/datetime';
-import { toPercent } from '@src/util/units';
 
 import { CellDateRange } from '@t/components/daygrid/gridSelectionData';
 import { GridSelectionData } from '@t/components/daygrid/gridWithMouse';

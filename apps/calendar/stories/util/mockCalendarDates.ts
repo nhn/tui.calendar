@@ -1,5 +1,6 @@
+import range from 'tui-code-snippet/array/range';
+
 import TZDate from '@src/time/date';
-import { range } from '@src/util/utils';
 
 function getMockCurrentDate() {
   const current = new Date();

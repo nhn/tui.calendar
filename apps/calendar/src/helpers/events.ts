@@ -1,3 +1,4 @@
+import EventModel from '@src/model/eventModel';
 import { millisecondsFrom, MS_EVENT_MIN_DURATION } from '@src/time/datetime';
 
 type CollisionParam = {
@@ -47,4 +48,8 @@ export function collidesWith({
   }
 
   return hasCollision(start, end, targetStart, targetEnd);
+}
+
+export function isSameEvent(event: EventModel, eventId: string, calendarId: string) {
+  return event.id === eventId && event.calendarId === calendarId;
 }

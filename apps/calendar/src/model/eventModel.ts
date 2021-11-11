@@ -1,24 +1,11 @@
-/**
- * @fileoverview Model of calendar event.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
-import extend from 'tui-code-snippet/object/extend';
-import isExisty from 'tui-code-snippet/type/isExisty';
-import isString from 'tui-code-snippet/type/isString';
-
-import { DateType, EventModelData } from '@src/model';
+import { collidesWith } from '@src/helpers/events';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { compare, MS_PER_DAY, parse, toEndOfDay, toStartOfDay } from '@src/time/datetime';
-import { stamp } from '@src/util';
-import { collidesWith } from '@src/util/events';
+import { stamp } from '@src/utils/stamp';
+import { isString } from '@src/utils/type';
 
-/**
- * Event category
- * @readonly
- * @enum {string}
- */
-export type EventCategory = 'milestone' | 'task' | 'allday' | 'time' | 'background';
+import { DateType, EventCategory, EventModelData } from '@t/events';
 
 export default class EventModel {
   /**
@@ -199,11 +186,11 @@ export default class EventModel {
 
   /**
    * Initialize event instance.
-   * @param {EventModelData}  options.
+   * @param {EventModelData} event - event model data.
    */
   // eslint-disable-next-line complexity
   init(event: EventModelData) {
-    event = extend({}, event);
+    event = { ...event };
     if (event.category === 'allday') {
       event.isAllDay = true;
     }
@@ -211,8 +198,8 @@ export default class EventModel {
     this.id = event.id || '';
     this.title = event.title || '';
     this.body = event.body || '';
-    this.isAllDay = isExisty(event.isAllDay) ? event.isAllDay : false;
-    this.isVisible = isExisty(event.isVisible) ? event.isVisible : true;
+    this.isAllDay = event.isAllDay ?? false;
+    this.isVisible = event.isVisible ?? true;
 
     this.color = event.color || this.color;
     this.bgColor = event.bgColor || this.bgColor;
@@ -243,7 +230,7 @@ export default class EventModel {
       this.start = new TZDate(this.end);
     }
 
-    this.raw = isExisty(event.raw) ? event.raw : null;
+    this.raw = event.raw ?? null;
 
     return this;
   }

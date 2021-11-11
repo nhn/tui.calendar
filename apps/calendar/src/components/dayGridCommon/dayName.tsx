@@ -1,12 +1,12 @@
 import { FunctionComponent, h } from 'preact';
 
 import Template from '@src/components/template';
-import { Template as TemplateType, TemplateMonthDayName, TemplateWeekDay } from '@src/model';
+import { cls } from '@src/helpers/css';
+import { getDayName } from '@src/helpers/dayName';
 import { Day, isWeekend } from '@src/time/datetime';
-import { cls } from '@src/util/cssHelper';
-import { getDayName } from '@src/util/dayName';
 
 import { CalendarViewType } from '@t/components/common';
+import { Template as TemplateType, TemplateMonthDayName, TemplateWeekDay } from '@t/template';
 
 interface Props {
   dayname: TemplateWeekDay | TemplateMonthDayName;

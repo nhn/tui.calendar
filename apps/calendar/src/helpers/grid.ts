@@ -1,6 +1,5 @@
 import { findByDateRange } from '@src/controller/month';
 import { findByDateRange as findByDateRangeForWeek } from '@src/controller/week';
-import { CalendarData, WeekOption } from '@src/model';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import {
@@ -10,10 +9,16 @@ import {
   toStartOfDay,
   withinRangeDate,
 } from '@src/time/datetime';
-import { findIndex, isNil } from '@src/util/utils';
 
-import type { DayGridEventMatrix, EventModelMap, Matrix3d, TimeGridEventMatrix } from '@t/events';
-import type { Cells, Panel } from '@t/panel';
+import {
+  CalendarData,
+  DayGridEventMatrix,
+  EventModelMap,
+  Matrix3d,
+  TimeGridEventMatrix,
+} from '@t/events';
+import { WeekOption } from '@t/option';
+import { Cells, Panel } from '@t/panel';
 
 export const EVENT_HEIGHT = 22;
 export const TOTAL_WIDTH = 100;
@@ -99,7 +104,7 @@ export const isInGrid = (gridDate: TZDate) => {
 };
 
 export function getGridDateIndex(date: TZDate, cells: TZDate[]) {
-  return findIndex(cells, (item) => date >= toStartOfDay(item) && date <= toEndOfDay(item));
+  return cells.findIndex((item) => date >= toStartOfDay(item) && date <= toEndOfDay(item));
 }
 
 export const getLeftAndWidth = (
@@ -111,7 +116,7 @@ export const getLeftAndWidth = (
   const gridStartIndex = getGridDateIndex(start, cells);
   const gridEndIndex = getGridDateIndex(convertStartDayToLastDay(end), cells);
 
-  if (isNil(gridStartIndex) && isNil(gridEndIndex)) {
+  if (gridStartIndex < 0 && gridEndIndex < 0) {
     return { left: 0, width: withinRangeDate(start, end, cells) ? 100 : 0 };
   }
 
@@ -119,7 +124,11 @@ export const getLeftAndWidth = (
 
   return {
     left: !gridStartIndex ? 0 : getWidth(widthList, 0, gridStartIndex - 1),
-    width: getWidth(widthList, gridStartIndex ?? 0, gridEndIndex ?? cells.length - 1),
+    width: getWidth(
+      widthList,
+      gridStartIndex ?? 0,
+      gridEndIndex < 0 ? cells.length - 1 : gridEndIndex
+    ),
   };
 };
 

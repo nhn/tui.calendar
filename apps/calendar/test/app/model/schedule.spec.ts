@@ -1,8 +1,9 @@
 import { advanceTo } from 'jest-date-mock';
 
-import { EventModelData } from '@src/model';
 import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
+
+import { EventModelData } from '@t/events';
 
 describe('model/event basic', () => {
   let event: EventModel;

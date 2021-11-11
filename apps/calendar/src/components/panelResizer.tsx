@@ -1,8 +1,8 @@
 import { FunctionComponent, h } from 'preact';
 
 import { Draggable, DragPositionInfo } from '@src/components/draggable';
-import { Direction } from '@src/controller/layout';
-import { cls } from '@src/util/cssHelper';
+import { Direction } from '@src/constants/layout';
+import { cls } from '@src/helpers/css';
 
 const BORDER = '1px solid #e5e5e5';
 const DEFAULT_LENGTH = 3;

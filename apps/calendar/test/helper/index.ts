@@ -1,8 +1,8 @@
 import browser from 'tui-code-snippet/browser/browser';
 
 import { DragListeners } from '@src/components/hooks/drag';
+import { KEY, KEYCODE } from '@src/constants/keyboard';
 import TZDate from '@src/time/date';
-import { keyAndKeyCodeMap } from '@src/util/keycode';
 
 export function createMouseEvent(name: string, eventInitDic: MouseEventInit = {}) {
   const primaryButton = 0;
@@ -58,7 +58,7 @@ export function createKeyboardEvent(name: string, eventInitDict: KeyboardEventIn
       true,
       window,
       eventInitDict.key,
-      keyAndKeyCodeMap[eventInitDict.key || ''],
+      KEYCODE[(eventInitDict.key as KEY) || ''],
       false,
       false,
       false

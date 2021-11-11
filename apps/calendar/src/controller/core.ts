@@ -1,15 +1,9 @@
-/**
- * @fileoverview Core methods for event block placing
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
-import inArray from 'tui-code-snippet/array/inArray';
-
 import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { makeDateRange, MS_PER_DAY, toEndOfDay, toFormat, toStartOfDay } from '@src/time/datetime';
-import Collection, { Filter } from '@src/util/collection';
-import { isUndefined } from '@src/util/utils';
+import Collection, { Filter } from '@src/utils/collection';
+import { isUndefined } from '@src/utils/type';
 
 import { CollisionGroup, Matrix, Matrix3d } from '@t/events';
 
@@ -47,7 +41,7 @@ export function getCollisionGroup<Events extends EventModel | EventUIModel>(
         .slice()
         .reverse()
         .some((group) => {
-          if (~inArray(found.cid(), group)) {
+          if (~group.indexOf(found.cid())) {
             // If you find a previous event that overlaps, include it in the Collision Group to which it belongs.
             group.push(event.cid());
 
@@ -185,7 +179,7 @@ export function positionUIModels(
         ).length;
 
         uiModel.top = index;
-        uiModel.left = inArray(ymd, ymdListToRender);
+        uiModel.left = ymdListToRender.indexOf(ymd);
         uiModel.width = dateLength;
 
         iteratee?.(uiModel);

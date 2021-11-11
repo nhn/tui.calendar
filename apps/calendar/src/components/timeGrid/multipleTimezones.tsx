@@ -1,11 +1,13 @@
 import { Component, Fragment, h } from 'preact';
 import { createPortal } from 'preact/compat';
 
+import range from 'tui-code-snippet/array/range';
+
 import { addTimeGridPrefix } from '@src/components/timeGrid';
 import { CollapseButton } from '@src/components/timeGrid/collapseButton';
 import { TimeProps, Times } from '@src/components/timeGrid/times';
 import { TimezoneLabel } from '@src/components/timeGrid/timezoneLabel';
-import { TimezoneConfig } from '@src/model';
+import { cls } from '@src/helpers/css';
 import TZDate from '@src/time/date';
 import {
   addHours,
@@ -17,9 +19,10 @@ import {
   toFormat,
   toStartOfDay,
 } from '@src/time/datetime';
-import { noop } from '@src/util';
-import { cls } from '@src/util/cssHelper';
-import { isNumber, range } from '@src/util/utils';
+import { noop } from '@src/utils/noop';
+import { isNumber } from '@src/utils/type';
+
+import { TimezoneConfig } from '@t/option';
 
 interface Props {
   currentTime: TZDate;

@@ -1,16 +1,11 @@
-/**
- * @fileoverview datetime utility module
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
-import inArray from 'tui-code-snippet/array/inArray';
 import range from 'tui-code-snippet/array/range';
-import forEachArray from 'tui-code-snippet/collection/forEachArray';
-import forEachOwnProperties from 'tui-code-snippet/collection/forEachOwnProperties';
 
-import { MonthOption, TimeUnit } from '@src/model';
+import { toPercent } from '@src/helpers/css';
 import TZDate from '@src/time/date';
-import { toPercent } from '@src/util/units';
-import { fill } from '@src/util/utils';
+import { fill } from '@src/utils/array';
+
+import { TimeUnit } from '@t/events';
+import { MonthOption } from '@t/option';
 
 export enum Day {
   SUN,
@@ -197,7 +192,8 @@ export const SIXTY_MINUTES = 60;
  */
 export function toFormat(date: TZDate, strFormat: string): string {
   let result = strFormat;
-  forEachOwnProperties(tokenFunc, (converter: Function, token: string) => {
+
+  Object.entries(tokenFunc).forEach(([token, converter]: [string, (d: TZDate) => string]) => {
     result = result.replace(token, converter(date));
   });
 
@@ -601,7 +597,6 @@ export function toEndOfYear(d: TZDate): TZDate {
  * @param {boolean} options.isAlways6Week - whether the number of weeks are always 6
  * @param {number} options.visibleWeeksCount visible weeks count
  * @param {boolean} options.workweek - only show work week
- * @param {function} [iteratee] - iteratee for customizing calendar object
  * @returns {Array.<TZDate[]>} calendar 2d array
  */
 export function arr2dCalendar(
@@ -633,8 +628,8 @@ export function arr2dCalendar(
   // 4 -> [4, 5, 6, 0, 1, 2, 3]
   // 2 -> [2, 3, 4, 5, 6, 0, 1]
   const weekArr = range(startDayOfWeek, 7).concat(range(7)).slice(0, 7);
-  const startIndex = inArray(start.getDay(), weekArr);
-  const endIndex = inArray(end.getDay(), weekArr);
+  const startIndex = weekArr.indexOf(start.getDay());
+  const endIndex = weekArr.indexOf(end.getDay());
   // free dates after last date of this month
   const afterDates = 7 - (endIndex + 1);
 
@@ -645,10 +640,10 @@ export function arr2dCalendar(
   }
   const cursor = toStartOfDay(start).addDate(-startIndex);
   // iteratee all dates to render
-  forEachArray(range(totalDate), (i: number) => {
-    if (!(i % 7)) {
+  range(totalDate).forEach((day: number) => {
+    if (!(day % 7)) {
       // group each date by week
-      week = calendar[i / 7] = [];
+      week = calendar[day / 7] = [];
     }
 
     const date = toStartOfDay(cursor);

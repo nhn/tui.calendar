@@ -1,12 +1,6 @@
-/**
- * @fileoverview Controller modules for day views.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
-import forEach from 'tui-code-snippet/collection/forEach';
 import pluck from 'tui-code-snippet/collection/pluck';
-import pick from 'tui-code-snippet/object/pick';
 
-import { filterByCategory, getDateRange, IDS_OF_DAY } from '@src/controller/base';
+import { filterByCategory, getDateRange } from '@src/controller/base';
 import {
   convertToUIModel,
   getCollisionGroup,
@@ -15,7 +9,6 @@ import {
   limitRenderRange,
   positionUIModels,
 } from '@src/controller/core';
-import { CalendarData, WeekOption } from '@src/model';
 import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
@@ -28,13 +21,19 @@ import {
   toFormat,
   toStartOfDay,
 } from '@src/time/datetime';
-import array from '@src/util/array';
-import Collection, { Filter } from '@src/util/collection';
+import array from '@src/utils/array';
+import Collection, { Filter } from '@src/utils/collection';
 
-import type { DayGridEventMatrix, EventGroupMap, Matrix, Matrix3d } from '@t/events';
-import type { Panel } from '@t/panel';
-
-const SCHEDULE_MIN_DURATION = MS_EVENT_MIN_DURATION;
+import {
+  CalendarData,
+  DayGridEventMatrix,
+  EventGroupMap,
+  IDS_OF_DAY,
+  Matrix,
+  Matrix3d,
+} from '@t/events';
+import { WeekOption } from '@t/option';
+import { Panel } from '@t/panel';
 
 /**********
  * TIME GRID VIEW
@@ -45,7 +44,7 @@ const SCHEDULE_MIN_DURATION = MS_EVENT_MIN_DURATION;
  * @param {Matrix} matrix - matrix from controller.
  * @returns {Matrix3d} starttime, endtime array (exclude first row's events)
  */
-export function generateTimeArrayInRow<T>(matrix: Matrix<T>) {
+export function generateTimeArrayInRow(matrix: Matrix<EventModel | EventUIModel>) {
   const map: Matrix3d<number> = [];
   const maxColLen = Math.max(...matrix.map((col) => col.length));
   let cursor = [];
@@ -57,21 +56,21 @@ export function generateTimeArrayInRow<T>(matrix: Matrix<T>) {
 
   for (col = 1; col < maxColLen; col += 1) {
     row = 0;
-    event = pick(matrix, row, col);
+    event = matrix?.[row]?.[col];
 
     while (event) {
       const { goingDuration, comingDuration } = event.valueOf();
       start = event.getStarts().getTime() - millisecondsFrom('minute', goingDuration);
       end = event.getEnds().getTime() + millisecondsFrom('minute', comingDuration);
 
-      if (Math.abs(end - start) < SCHEDULE_MIN_DURATION) {
-        end += SCHEDULE_MIN_DURATION;
+      if (Math.abs(end - start) < MS_EVENT_MIN_DURATION) {
+        end += MS_EVENT_MIN_DURATION;
       }
 
       cursor.push([start, end]);
 
       row += 1;
-      event = pick(matrix, row, col);
+      event = matrix?.[row]?.[col];
     }
 
     map.push(cursor);
@@ -114,7 +113,7 @@ export function hasCollision(arr: Array<number[]>, start: number, end: number) {
  */
 export function getCollides(matrices: Matrix3d<EventUIModel>) {
   matrices.forEach((matrix) => {
-    const binaryMap = generateTimeArrayInRow<EventUIModel>(matrix);
+    const binaryMap = generateTimeArrayInRow(matrix);
     const maxRowLength = Math.max(...matrix.map((row) => row.length));
 
     matrix.forEach((row) => {
@@ -127,8 +126,8 @@ export function getCollides(matrices: Matrix3d<EventUIModel>) {
         let startTime = uiModel.getStarts().getTime();
         let endTime = uiModel.getEnds().getTime();
 
-        if (Math.abs(endTime - startTime) < SCHEDULE_MIN_DURATION) {
-          endTime += SCHEDULE_MIN_DURATION;
+        if (Math.abs(endTime - startTime) < MS_EVENT_MIN_DURATION) {
+          endTime += MS_EVENT_MIN_DURATION;
         }
 
         startTime -= millisecondsFrom('minute', goingDuration);
@@ -207,6 +206,7 @@ export function _makeGetUIModelFuncForTimeView(
 
 /**
  * split event model by ymd.
+ * @param {IDS_OF_DAY} idsOfDay - ids of days
  * @param {TZDate} start - start date
  * @param {TZDate} end - end date
  * @param {Collection<EventUIModel>} uiModelColl - collection of ui models.
@@ -268,12 +268,12 @@ export function getUIModelForTimeView(
   const _getUIModel = _makeGetUIModelFuncForTimeView(hourStart, hourEnd);
   const usingTravelTime = true;
 
-  forEach(ymdSplitted, (uiModelColl: Collection<EventUIModel>, ymd: string) => {
-    const uiModels = _getUIModel(uiModelColl);
+  Object.entries(ymdSplitted).forEach(([ymd, uiModelColl]) => {
+    const uiModels = _getUIModel(uiModelColl as Collection<EventUIModel>);
     const collisionGroups = getCollisionGroup(uiModels, usingTravelTime);
     const matrices = getMatrices(uiModelColl, collisionGroups, usingTravelTime);
 
-    result[ymd] = getCollides(matrices);
+    result[ymd] = getCollides(matrices as Matrix3d<EventUIModel>);
   });
 
   return result;
@@ -355,8 +355,8 @@ export function findByDateRange(
   const { start, end, panels, andFilters = [], options } = condition;
   const { events, idsOfDay } = calendarData;
   const eventTypes = pluck(panels, 'name');
-  const hourStart = pick(options, 'hourStart');
-  const hourEnd = pick(options, 'hourEnd');
+  const hourStart = options?.hourStart ?? 0;
+  const hourEnd = options?.hourEnd ?? 24;
   const filter = Collection.and(...[getEventInDateRangeFilter(start, end)].concat(andFilters));
   const uiModelColl = convertToUIModel(events.find(filter));
 

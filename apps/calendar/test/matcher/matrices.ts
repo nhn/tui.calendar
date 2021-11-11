@@ -1,8 +1,4 @@
 /* eslint-disable prefer-template */
-/**
- * @fileoverview jest custom matcher for test
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
 import EventUIModel from '@src/model/eventUIModel';
 
 // eslint-disable-next-line no-undefined

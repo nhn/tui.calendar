@@ -1,10 +1,3 @@
-/**
- * @fileoverview Controller for Month View
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
-import inArray from 'tui-code-snippet/array/inArray';
-import isUndefined from 'tui-code-snippet/type/isUndefined';
-
 import {
   convertToUIModel,
   getCollisionGroup,
@@ -13,15 +6,15 @@ import {
   limitRenderRange,
   positionUIModels,
 } from '@src/controller/core';
-import { CalendarData } from '@src/model';
+import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { isSameDate, toEndOfDay, toFormat, toStartOfDay } from '@src/time/datetime';
-import array from '@src/util/array';
-import Collection, { Filter } from '@src/util/collection';
+import array from '@src/utils/array';
+import Collection, { Filter } from '@src/utils/collection';
+import { isUndefined } from '@src/utils/type';
 
-import EventModel from '../model/eventModel';
-import { IDS_OF_DAY } from './base';
+import { CalendarData, IDS_OF_DAY } from '@t/events';
 
 /**
  * Filter function for find allday event
@@ -121,6 +114,7 @@ function _adjustTimeTopIndex(idsOfDay: IDS_OF_DAY, uiModelColl: Collection<Event
 
 /**
  * Adjust time ui model's top index value
+ * @param {IDS_OF_DAY} idsOfDay - ids of days
  * @param {Collection} uiModelColl - collection of ui ui model
  */
 function _stackTimeFromTop(idsOfDay: IDS_OF_DAY, uiModelColl: Collection<EventUIModel>) {
@@ -141,11 +135,11 @@ function _stackTimeFromTop(idsOfDay: IDS_OF_DAY, uiModelColl: Collection<EventUI
       });
     }
 
-    if (inArray(timeUIModel.top, topArrayInYMD) >= 0) {
+    if (topArrayInYMD.indexOf(timeUIModel.top) >= 0) {
       const maxTopInYMD = Math.max(...topArrayInYMD) + 1;
       for (let i = 1; i <= maxTopInYMD; i += 1) {
         timeUIModel.top = i;
-        if (inArray(timeUIModel.top, topArrayInYMD) < 0) {
+        if (topArrayInYMD.indexOf(timeUIModel.top) < 0) {
           break;
         }
       }

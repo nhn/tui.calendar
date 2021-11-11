@@ -1,5 +1,3 @@
-import forEach from 'tui-code-snippet/collection/forEach';
-
 import EventModel from '@src/model/eventModel';
 
 expect.extend({
@@ -10,7 +8,7 @@ expect.extend({
     };
     let isEqual = true;
 
-    forEach(expected, (_compareTo: any, ymd: string) => {
+    Object.keys(expected).findIndex((ymd) => {
       const models = actual[ymd];
 
       if (!models) {

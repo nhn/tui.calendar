@@ -1,8 +1,8 @@
 import { FunctionComponent, h } from 'preact';
 
 import { useDispatch } from '@src/contexts/calendarStore';
-import { cls } from '@src/util/cssHelper';
-import { isFunction } from '@src/util/utils';
+import { cls } from '@src/helpers/css';
+import { isFunction } from '@src/utils/type';
 
 interface Props {
   close?: () => void;

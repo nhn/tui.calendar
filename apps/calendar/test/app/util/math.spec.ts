@@ -1,4 +1,4 @@
-import { isBetween, limit, ratio } from '@src/util/math';
+import { isBetween, limit, ratio } from '@src/utils/math';
 
 describe('math util test', () => {
   it('should return a number between minArr and maxArr', () => {

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
-import { noop } from '@src/util';
-import { ESCAPE, isKey } from '@src/util/keycode';
+import { isEscapePressed } from '@src/utils/keyboard';
+import { noop } from '@src/utils/noop';
 
 export interface DragListeners {
   onDragStart?: MouseEventListener;
@@ -84,7 +84,7 @@ export function useDrag({
 
   const onKeydown = useCallback<KeyboardEventListener>(
     (e) => {
-      if (isKey(e, ESCAPE)) {
+      if (isEscapePressed(e)) {
         onPressESCKey(e);
         resetState();
       }

@@ -1,14 +1,8 @@
-/**
- * @fileoverview Utility module for manipulating DOM
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
 import getMousePosition from 'tui-code-snippet/domEvent/getMousePosition';
 import getTarget from 'tui-code-snippet/domEvent/getTarget';
-import isNull from 'tui-code-snippet/type/isNull';
-import isString from 'tui-code-snippet/type/isString';
 
-import { noop } from '.';
-import { includes, toArray } from './utils';
+import { noop } from '@src/utils/noop';
+import { isString } from '@src/utils/type';
 
 const CSS_AUTO_REGEX = /^auto$|^$|%/;
 
@@ -59,7 +53,7 @@ function invalidateSizeValue(value: SizeValue) {
     return CSS_AUTO_REGEX.test(value);
   }
 
-  return isNull(value);
+  return value === null;
 }
 
 export function getSize(el: HTMLElement): { width: number; height: number } {
@@ -123,7 +117,7 @@ const matchSelector =
   elProto.webkitMatchesSelector ||
   elProto.msMatchesSelector ||
   function (this: Element, selector: string) {
-    return includes(toArray(document.querySelectorAll(selector)), this);
+    return Array.from(document.querySelectorAll(selector)).includes(this);
   };
 
 function matches(element: Node & ParentNode, selector: string) {
@@ -146,4 +140,21 @@ export function closest(element: HTMLElement, selector: string) {
   }
 
   return null;
+}
+
+export function getRelativePosition(position: MouseEvent | number[], relativeElement: HTMLElement) {
+  const clientX = Array.isArray(position) ? position[0] : position.clientX;
+  const clientY = Array.isArray(position) ? position[1] : position.clientY;
+
+  if (!relativeElement) {
+    return [clientX, clientY];
+  }
+
+  const { left, top } = relativeElement.getBoundingClientRect();
+
+  return [clientX - left - relativeElement.clientLeft, clientY - top - relativeElement.clientTop];
+}
+
+export function stripTags(str: string) {
+  return str.replace(/<([^>]+)>/gi, '');
 }

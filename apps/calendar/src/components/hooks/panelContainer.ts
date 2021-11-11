@@ -1,7 +1,7 @@
 import { RefObject } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
-import { cls } from '@src/util/cssHelper';
+import { cls } from '@src/helpers/css';
 
 // @TODO: merge 'usePanel' hooks after apply layout component to month component
 export function usePanelContainer(containerRef: RefObject<HTMLDivElement>, selector: string) {

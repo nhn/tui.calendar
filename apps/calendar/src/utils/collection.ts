@@ -1,15 +1,4 @@
-/**
- * @fileoverview Common collections.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
- */
-import forEachArray from 'tui-code-snippet/collection/forEachArray';
-import forEachOwnProperties from 'tui-code-snippet/collection/forEachOwnProperties';
-import isArray from 'tui-code-snippet/type/isArray';
-import isExisty from 'tui-code-snippet/type/isExisty';
-import isFunction from 'tui-code-snippet/type/isFunction';
-import isNumber from 'tui-code-snippet/type/isNumber';
-import isObject from 'tui-code-snippet/type/isObject';
-import isString from 'tui-code-snippet/type/isString';
+import { isFunction, isNil, isNumber, isObject, isString } from '@src/utils/type';
 
 export type Filter<T> = (item: T) => boolean;
 
@@ -92,7 +81,7 @@ export default class Collection<T extends Record<string | number, any>> {
 
   /**
    * add models.
-   * @param {...*} item models to add this collection.
+   * @param {...*} items - models to add this collection.
    */
   add(...items: T[]) {
     items.forEach((item) => {
@@ -177,7 +166,7 @@ export default class Collection<T extends Record<string | number, any>> {
       });
     } else {
       id = isObject(id) ? this.getItemID(id) : id;
-      has = isExisty(this.items[id]);
+      has = !isNil(this.items[id]);
     }
 
     return has;
@@ -187,12 +176,11 @@ export default class Collection<T extends Record<string | number, any>> {
    * invoke callback when model exist in collection.
    * @param {(string|number)} id model unique id.
    * @param {function} callback the callback.
-   * @param {*} [context] callback context.
    */
   doWhenHas(id: string | number, callback?: (item: T) => void) {
     const item = this.items[id];
 
-    if (!isExisty(item) || !callback) {
+    if (isNil(item) || !callback) {
       return;
     }
 
@@ -280,8 +268,8 @@ export default class Collection<T extends Record<string | number, any>> {
     let collection;
     let baseValue;
 
-    if (isArray(key)) {
-      forEachArray(key, (k: string | number) => {
+    if (Array.isArray(key)) {
+      key.forEach((k) => {
         result[String(k)] = new Collection<T>(getItemIDFn);
       });
 
@@ -365,8 +353,14 @@ export default class Collection<T extends Record<string | number, any>> {
    * when iteratee return false then break the loop.
    * @param {function} iteratee iteratee(item, index, items)
    */
-  each(iteratee: (item: T) => boolean | void) {
-    forEachOwnProperties(this.items, iteratee, this);
+  each(iteratee: (item: T, key: keyof T, items: Record<string | number, T>) => boolean | void) {
+    for (const key in this.items) {
+      if (this.items.hasOwnProperty(key)) {
+        if (iteratee.call(this, this.items[key], key, this.items) === false) {
+          break;
+        }
+      }
+    }
   }
 
   /**

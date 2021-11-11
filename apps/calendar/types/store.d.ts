@@ -1,4 +1,3 @@
-import { MonthOption, WeekOption } from '@src/model';
 import EventUIModel from '@src/model/eventUIModel';
 import { CalendarDispatchers, CalendarSlice } from '@src/slices/calendar';
 import { OptionDispatchers, OptionSlice } from '@src/slices/options';
@@ -7,6 +6,8 @@ import { TemplateSlice } from '@src/slices/template';
 import { ViewDispatchers, ViewSlice } from '@src/slices/view';
 import { WeekViewLayoutDispatchers, WeekViewLayoutSlice } from '@src/slices/weekViewLayout';
 import TZDate from '@src/time/date';
+
+import { MonthOption, WeekOption } from '@t/option';
 
 type CalendarMonthOption = Required<MonthOption>;
 type CalendarWeekOption = Required<WeekOption>;
