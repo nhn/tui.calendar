@@ -2,7 +2,7 @@ import { FunctionComponent, h } from 'preact';
 
 import { useDispatch } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
-import { isFunction } from '@src/utils/object';
+import { isFunction } from '@src/utils/type';
 
 interface Props {
   close?: () => void;

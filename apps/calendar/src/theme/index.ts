@@ -1,7 +1,6 @@
-import isUndefined from 'tui-code-snippet/type/isUndefined';
-
 import preset from '@src/theme/preset';
 import { defaultProps, ThemeKeyValue, ThemePropKeys } from '@src/theme/themeProps';
+import { isUndefined } from '@src/utils/type';
 
 function setThemeObject(object: Record<string, any>, path: string, value: any) {
   const names = path.split('.');

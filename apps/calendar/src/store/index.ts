@@ -1,9 +1,7 @@
 import { createContext, createElement, FunctionComponent } from 'preact';
 import { useContext, useEffect, useLayoutEffect, useMemo, useReducer, useRef } from 'preact/hooks';
 
-import isUndefined from 'tui-code-snippet/type/isUndefined';
-
-import { isNil } from '@src/utils/object';
+import { isNil, isUndefined } from '@src/utils/type';
 
 import { EqualityChecker, InternalStoreAPI, StateSelector, StateWithActions } from '@t/store';
 

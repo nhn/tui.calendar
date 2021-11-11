@@ -9,7 +9,7 @@ import { useDispatch } from '@src/contexts/calendarStore';
 import { cls, toPercent, toPx } from '@src/helpers/css';
 import { getGridDateIndex } from '@src/helpers/grid';
 import EventUIModel from '@src/model/eventUIModel';
-import { isNil } from '@src/utils/object';
+import { isNil } from '@src/utils/type';
 
 import { StyleProp } from '@t/components/common';
 import { Cells } from '@t/panel';

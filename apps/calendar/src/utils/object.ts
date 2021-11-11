@@ -1,15 +1,6 @@
-import isObject from 'tui-code-snippet/type/isObject';
-import isUndefined from 'tui-code-snippet/type/isUndefined';
+import { isObject } from '@src/utils/type';
 
 type PickedKey<T, K extends keyof T> = keyof Pick<T, K>;
-
-export function isNil(value: unknown): value is null | undefined {
-  return isUndefined(value) || value === null;
-}
-
-export function isFunction(value: unknown): value is Function {
-  return typeof value === 'function';
-}
 
 export function deepMergedCopy<T1 extends Record<string, any>, T2 extends Record<string, any>>(
   targetObj: T1,

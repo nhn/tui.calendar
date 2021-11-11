@@ -1,5 +1,3 @@
-import isUndefined from 'tui-code-snippet/type/isUndefined';
-
 import {
   convertToUIModel,
   getCollisionGroup,
@@ -14,6 +12,7 @@ import TZDate from '@src/time/date';
 import { isSameDate, toEndOfDay, toFormat, toStartOfDay } from '@src/time/datetime';
 import array from '@src/utils/array';
 import Collection, { Filter } from '@src/utils/collection';
+import { isUndefined } from '@src/utils/type';
 
 import { CalendarData, IDS_OF_DAY } from '@t/events';
 

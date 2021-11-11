@@ -2,7 +2,6 @@ import { Component, Fragment, h } from 'preact';
 import { createPortal } from 'preact/compat';
 
 import range from 'tui-code-snippet/array/range';
-import isNumber from 'tui-code-snippet/type/isNumber';
 
 import { addTimeGridPrefix } from '@src/components/timeGrid';
 import { CollapseButton } from '@src/components/timeGrid/collapseButton';
@@ -21,6 +20,7 @@ import {
   toStartOfDay,
 } from '@src/time/datetime';
 import { noop } from '@src/utils/noop';
+import { isNumber } from '@src/utils/type';
 
 import { TimezoneConfig } from '@t/option';
 

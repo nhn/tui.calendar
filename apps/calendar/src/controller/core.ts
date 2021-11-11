@@ -1,10 +1,9 @@
-import isUndefined from 'tui-code-snippet/type/isUndefined';
-
 import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { makeDateRange, MS_PER_DAY, toEndOfDay, toFormat, toStartOfDay } from '@src/time/datetime';
 import Collection, { Filter } from '@src/utils/collection';
+import { isUndefined } from '@src/utils/type';
 
 import { CollisionGroup, Matrix, Matrix3d } from '@t/events';
 

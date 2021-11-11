@@ -1,4 +1,4 @@
-import { isNil } from '@src/utils/object';
+import { isNil } from '@src/utils/type';
 
 interface StampObj extends Record<string, any> {
   // eslint-disable-next-line camelcase

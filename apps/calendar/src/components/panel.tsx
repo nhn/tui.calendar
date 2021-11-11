@@ -1,9 +1,6 @@
 import { Fragment, FunctionComponent, h, VNode } from 'preact';
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
-import isNumber from 'tui-code-snippet/type/isNumber';
-import isString from 'tui-code-snippet/type/isString';
-
 import { DragPositionInfo } from '@src/components/draggable';
 import { PanelResizer } from '@src/components/panelResizer';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
@@ -22,6 +19,7 @@ import { cls } from '@src/helpers/css';
 import { weekViewLayoutSelector } from '@src/selectors';
 import { WeekGridRows } from '@src/slices/weekViewLayout';
 import { noop } from '@src/utils/noop';
+import { isNumber, isString } from '@src/utils/type';
 
 export interface Props extends PanelInfo {
   onResizeStart?: (panelName: string) => void;

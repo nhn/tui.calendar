@@ -1,10 +1,9 @@
 import { FunctionComponent, h } from 'preact';
 
-import isString from 'tui-code-snippet/type/isString';
-
 import { useStore } from '@src/contexts/calendarStore';
 import { templateSelector } from '@src/selectors';
 import { TemplateName } from '@src/template/default';
+import { isString } from '@src/utils/type';
 
 interface Props {
   template: TemplateName;

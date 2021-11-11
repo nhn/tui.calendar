@@ -1,4 +1,4 @@
-import isNumber from 'tui-code-snippet/type/isNumber';
+import { isNumber } from '@src/utils/type';
 
 import { LocalDate, TuiDateConstructor, UTCDate } from '@toast-ui/date';
 

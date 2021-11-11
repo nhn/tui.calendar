@@ -1,9 +1,6 @@
 import { AnyComponent, ComponentChild, h, render } from 'preact';
 import renderToString from 'preact-render-to-string';
 
-import isNumber from 'tui-code-snippet/type/isNumber';
-import isString from 'tui-code-snippet/type/isString';
-
 import { CalendarContainer } from '@src/calendarContainer';
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
 import { ThemeProvider } from '@src/contexts/theme';
@@ -16,6 +13,7 @@ import Theme from '@src/theme';
 import { ThemeKeyValue } from '@src/theme/themeProps';
 import TZDate from '@src/time/date';
 import { toStartOfDay } from '@src/time/datetime';
+import { isNumber, isString } from '@src/utils/type';
 
 import { CalendarData, DateType, EventModelData } from '@t/events';
 import { CalendarColor, CalendarInfo, CustomTimezone, Option, ViewType } from '@t/option';
