@@ -1,4 +1,6 @@
-import { getResizeInfoByGrowth, PanelInfo, PanelRect } from '@src/controller/panel';
+import { getResizeInfoByGrowth } from '@src/controller/panel';
+
+import { PanelInfo, PanelRect } from '@t/layout';
 
 describe('panel controller', () => {
   it('getResizeInfoByGrowth() calculate new size and remain size by supplied growth value', () => {

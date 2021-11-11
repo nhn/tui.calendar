@@ -3,23 +3,16 @@ import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
 import { DragPositionInfo } from '@src/components/draggable';
 import { PanelResizer } from '@src/components/panelResizer';
+import { DEFAULT_PANEL_HEIGHT, Direction, panelInfoKeys } from '@src/constants/layout';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
-import { Direction } from '@src/controller/layout';
-import {
-  DEFAULT_PANEL_HEIGHT,
-  getElementRect,
-  getPanelStylesFromInfo,
-  isPanelShown,
-  PanelInfo,
-  panelInfoKeys,
-  PanelRect,
-  Size,
-} from '@src/controller/panel';
+import { getElementRect, getPanelStylesFromInfo, isPanelShown } from '@src/controller/panel';
 import { cls } from '@src/helpers/css';
 import { weekViewLayoutSelector } from '@src/selectors';
 import { WeekGridRows } from '@src/slices/weekViewLayout';
 import { noop } from '@src/utils/noop';
 import { isNumber, isString } from '@src/utils/type';
+
+import { PanelInfo, PanelRect, RectSize } from '@t/layout';
 
 export interface Props extends PanelInfo {
   onResizeStart?: (panelName: string) => void;
@@ -44,7 +37,7 @@ const Panel: FunctionComponent<Props> = (props) => {
 
   const panelRef = useRef<HTMLDivElement>(null);
   const resizerRef = useRef<{ base: HTMLDivElement }>(null);
-  const [resizerRect, setResizerRect] = useState<Size>({ width: 0, height: 0 });
+  const [resizerRect, setResizerRect] = useState<RectSize>({ width: 0, height: 0 });
   const { dayGridRows } = useStore(weekViewLayoutSelector);
   const { updateDayGridRowHeight } = useDispatch('weekViewLayout');
 

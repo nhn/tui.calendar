@@ -35,8 +35,6 @@ import {
 import { WeekOption } from '@t/option';
 import { Panel } from '@t/panel';
 
-const SCHEDULE_MIN_DURATION = MS_EVENT_MIN_DURATION;
-
 /**********
  * TIME GRID VIEW
  **********/
@@ -65,8 +63,8 @@ export function generateTimeArrayInRow(matrix: Matrix<EventModel | EventUIModel>
       start = event.getStarts().getTime() - millisecondsFrom('minute', goingDuration);
       end = event.getEnds().getTime() + millisecondsFrom('minute', comingDuration);
 
-      if (Math.abs(end - start) < SCHEDULE_MIN_DURATION) {
-        end += SCHEDULE_MIN_DURATION;
+      if (Math.abs(end - start) < MS_EVENT_MIN_DURATION) {
+        end += MS_EVENT_MIN_DURATION;
       }
 
       cursor.push([start, end]);
@@ -128,8 +126,8 @@ export function getCollides(matrices: Matrix3d<EventUIModel>) {
         let startTime = uiModel.getStarts().getTime();
         let endTime = uiModel.getEnds().getTime();
 
-        if (Math.abs(endTime - startTime) < SCHEDULE_MIN_DURATION) {
-          endTime += SCHEDULE_MIN_DURATION;
+        if (Math.abs(endTime - startTime) < MS_EVENT_MIN_DURATION) {
+          endTime += MS_EVENT_MIN_DURATION;
         }
 
         startTime -= millisecondsFrom('minute', goingDuration);

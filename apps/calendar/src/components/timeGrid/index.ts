@@ -1,5 +1,3 @@
-import TZDate from '@src/time/date';
-
 import { TimeUnit } from '@t/events';
 
 export const className = 'timegrid';
@@ -13,11 +11,3 @@ export const timeFormats: Record<TimeUnit, string> = {
   month: 'MM.DD',
   year: 'YYYY.MM.DD',
 };
-
-export interface GridSelectionInfo {
-  start: TZDate;
-  end: TZDate;
-  unit: TimeUnit;
-  textPosition?: 'top' | 'bottom'; // top is default
-  columnIndex?: number;
-}

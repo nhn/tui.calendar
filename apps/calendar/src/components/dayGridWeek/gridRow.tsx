@@ -10,9 +10,9 @@ import HorizontalEvent from '@src/components/events/horizontalEvent';
 import { useDOMNode } from '@src/components/hooks/domNode';
 import { useGridSelection } from '@src/components/hooks/gridSelection';
 import Template from '@src/components/template';
+import { DEFAULT_PANEL_HEIGHT } from '@src/constants/layout';
 import { WEEK_EVENT_MARGIN_TOP } from '@src/constants/style';
 import { useDispatch } from '@src/contexts/calendarStore';
-import { DEFAULT_PANEL_HEIGHT } from '@src/controller/panel';
 import { cls, toPercent } from '@src/helpers/css';
 import {
   EVENT_HEIGHT,

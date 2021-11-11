@@ -25,3 +25,7 @@ export class EventHandler<T extends string> extends CustomEvents {
     return this;
   }
 }
+
+export type ExternalEventName = 'beforeCreateEvent' | 'clickEvent';
+
+export type InternalEventName = 'click' | 'dblclick' | 'render';

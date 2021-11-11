@@ -1,10 +1,12 @@
 import { FunctionComponent, h } from 'preact';
 
-import { GridSelectionInfo, timeFormats } from '@src/components/timeGrid';
+import { timeFormats } from '@src/components/timeGrid';
 import { cls, toPercent } from '@src/helpers/css';
 import { toFormat } from '@src/time/datetime';
 
-interface Props extends GridSelectionInfo {
+import { TimeGridSelectionInfo } from '@t/components/timeGrid/gridSelection';
+
+interface Props extends TimeGridSelectionInfo {
   top: number;
   height: number;
 }

@@ -1,4 +1,5 @@
-import { Direction, layoutPanels, limitPanelSize } from '@src/controller/layout';
+import { Direction } from '@src/constants/layout';
+import { layoutPanels, limitPanelSize } from '@src/controller/layout';
 
 describe('layout controller', () => {
   it('limitPanelSize() return length between (value, min, max) which can be null.', () => {

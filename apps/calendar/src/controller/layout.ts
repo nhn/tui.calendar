@@ -1,33 +1,18 @@
 import { DragPositionInfo } from '@src/components/draggable';
-import {
-  getResizeInfoByGrowth,
-  isPanelShown,
-  PanelElementRectMap,
-  PanelInfo,
-} from '@src/controller/panel';
+import { Direction } from '@src/constants/layout';
+import { getResizeInfoByGrowth, isPanelShown } from '@src/controller/panel';
 import { toPercent } from '@src/helpers/css';
 import { limit } from '@src/utils/math';
 
-export type Styles = Record<string, string | number>;
-export enum Direction {
-  COLUMN,
-  ROW,
-}
-export enum ResizeMode {
-  RELATIVE,
-  ABSOLUTE,
-}
-export interface LayoutConstraints {
+import { StyleProp } from '@t/components/common';
+import { PanelElementRectMap, PanelInfo, PanelSize } from '@t/layout';
+
+interface LayoutConstraints {
   direction: Direction;
   width?: number;
   height?: number;
 }
-export interface PanelSize {
-  width: number | null;
-  height: number | null;
-  resizerWidth: number | null;
-  resizerHeight: number | null;
-}
+
 interface PanelSizeInfo extends PanelSize {
   direction: Direction;
   autoSize: number;
@@ -193,7 +178,7 @@ export function layoutPanels(panels: PanelInfo[], constraint: LayoutConstraints)
 }
 
 export function getLayoutStylesFromInfo(width?: number, height?: number) {
-  const styles: Styles = { height: toPercent(100) };
+  const styles: StyleProp = { height: toPercent(100) };
 
   if (width) {
     styles.width = width;

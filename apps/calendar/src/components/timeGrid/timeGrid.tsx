@@ -3,11 +3,7 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 
 import range from 'tui-code-snippet/array/range';
 
-import {
-  addTimeGridPrefix,
-  className as timegridClassName,
-  GridSelectionInfo,
-} from '@src/components/timeGrid';
+import { addTimeGridPrefix, className as timegridClassName } from '@src/components/timeGrid';
 import { Column } from '@src/components/timeGrid/column';
 import { ColumnInfo, ColumnWithMouse } from '@src/components/timeGrid/columnWithMouse';
 import { CurrentTimeIndicator } from '@src/components/timeGrid/currentTimeIndicator';
@@ -26,6 +22,7 @@ import {
   toStartOfDay,
 } from '@src/time/datetime';
 
+import { TimeGridSelectionInfo } from '@t/components/timeGrid/gridSelection';
 import { TimeUnit } from '@t/events';
 import { TimezoneConfig } from '@t/option';
 
@@ -89,18 +86,18 @@ export const TimeGrid: FunctionComponent<Props> = ({
 }) => {
   const [stickyContainer, setStickyContainer] = useState<HTMLElement | null>(null);
   const [columnLeft, setColumnLeft] = useState(0);
-  const [gridSelection, setGridSelection] = useState<GridSelectionInfo | null>(null);
+  const [gridSelection, setGridSelection] = useState<TimeGridSelectionInfo | null>(null);
   const [intervalId, setIntervalId] = useState<TimerID>(null);
   const [timerId, setTimerId] = useState<TimerID>(null);
   const stickyContainerRef = useRef<HTMLDivElement>(null);
   const forceUpdate = useForceUpdate();
 
-  const onCreateEvent = (e: GridSelectionInfo) => {
+  const onCreateEvent = (e: TimeGridSelectionInfo) => {
     // @TODO: beforeCreateEvent 구현
   };
-  const onSelectionStart = (e: GridSelectionInfo) => setGridSelection(e);
-  const onSelectionChange = (e: GridSelectionInfo) => setGridSelection(e);
-  const onSelectionEnd = (e: GridSelectionInfo) => onCreateEvent(e);
+  const onSelectionStart = (e: TimeGridSelectionInfo) => setGridSelection(e);
+  const onSelectionChange = (e: TimeGridSelectionInfo) => setGridSelection(e);
+  const onSelectionEnd = (e: TimeGridSelectionInfo) => onCreateEvent(e);
   const onSelectionCancel = () => setGridSelection(null);
 
   const onChangeCollapsed = (collapsed: boolean) =>

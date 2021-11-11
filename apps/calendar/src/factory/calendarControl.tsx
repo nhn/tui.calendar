@@ -5,9 +5,7 @@ import { CalendarContainer } from '@src/calendarContainer';
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
 import { ThemeProvider } from '@src/contexts/theme';
 import { createEventCollection } from '@src/controller/base';
-import { EventHandler } from '@src/event';
-import { ExternalEventName } from '@src/event/externalEventType';
-import { InternalEventName } from '@src/event/internalEventType';
+import { EventHandler, ExternalEventName, InternalEventName } from '@src/event';
 import { registerTemplateConfig } from '@src/template';
 import Theme from '@src/theme';
 import { ThemeKeyValue } from '@src/theme/themeProps';
@@ -21,7 +19,7 @@ import { CalendarStore, Dispatchers, InternalStoreAPI } from '@t/store';
 import { Template } from '@t/template';
 import { DateInterface, LocalDate } from '@toast-ui/date';
 
-export interface AppContext {
+interface AppContext {
   options: Option;
   calendarData: CalendarData;
   templates: Template;
