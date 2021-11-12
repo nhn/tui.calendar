@@ -8,7 +8,9 @@ import { Layout } from '@src/components/layout';
 import Panel from '@src/components/panel';
 import { ColumnInfo } from '@src/components/timeGrid/columnWithMouse';
 import { TimeGrid } from '@src/components/timeGrid/timeGrid';
+import { WEEK_DAYNAME_BORDER, WEEK_DAYNAME_HEIGHT } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
+import { cls } from '@src/helpers/css';
 import { getDayNames } from '@src/helpers/dayName';
 import { getDayGridEvents } from '@src/helpers/grid';
 import { weekViewStateSelector } from '@src/selectors';
@@ -41,8 +43,6 @@ function getCells(renderDate: TZDate, { startDayOfWeek = 0, workweek }: WeekOpti
     return acc;
   }, []);
 }
-
-const dayNameHeight = 42;
 
 export const Week: FunctionComponent = () => {
   const {
@@ -97,8 +97,8 @@ export const Week: FunctionComponent = () => {
   });
 
   return (
-    <Layout>
-      <Panel name="week-daynames" height={dayNameHeight}>
+    <Layout classNames={[cls('week-view')]}>
+      <Panel name="week-view-daynames" height={WEEK_DAYNAME_HEIGHT + WEEK_DAYNAME_BORDER}>
         <GridHeader
           dayNames={dayNames}
           marginLeft={120}

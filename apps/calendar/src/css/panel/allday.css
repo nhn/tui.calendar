@@ -97,3 +97,8 @@
   border-right: 4px solid transparent;
   border-bottom: 5px solid #4f5959;
 }
+
+.day-view .panel:not(.time),
+.week-view .panel:not(.time) {
+  overflow-y: scroll;
+}

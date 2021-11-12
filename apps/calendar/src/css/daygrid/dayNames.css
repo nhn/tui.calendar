@@ -18,7 +18,8 @@
   line-height: 31px;
 }
 
-.week-daynames {
+.day-view-daynames,
+.week-view-daynames {
   border-bottom: 1px solid #e5e5e5;
 }
 
