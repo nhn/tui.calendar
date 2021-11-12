@@ -367,12 +367,11 @@ ScheduleCreationPopup.prototype.render = function(viewModel) {
 ScheduleCreationPopup.prototype._makeEditModeData = function(viewModel) {
     var schedule = viewModel.schedule;
     var title, isPrivate, location, startDate, endDate, isAllDay, state;
-    var raw = schedule.raw || {};
     var calendars = this.calendars;
 
     var id = schedule.id;
     title = schedule.title;
-    isPrivate = raw['class'] === 'private';
+    isPrivate = schedule.isPrivate;
     location = schedule.location;
     startDate = schedule.start;
     endDate = schedule.end;
@@ -396,9 +395,6 @@ ScheduleCreationPopup.prototype._makeEditModeData = function(viewModel) {
         state: state,
         start: startDate,
         end: endDate,
-        raw: {
-            class: isPrivate ? 'private' : 'public'
-        },
         zIndex: this.layer.zIndex + 5,
         isEditMode: this._isEditMode
     };

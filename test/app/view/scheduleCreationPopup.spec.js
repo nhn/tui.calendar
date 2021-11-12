@@ -91,12 +91,15 @@ describe('ScheduleCreationPopup date range picker', function() {
     });
 });
 
-fdescribe('ScheduleCreationPopup private schedule', function() {
+describe('ScheduleCreationPopup private schedule', function() {
     var container, popup;
 
+    function getPrivateButton() {
+        return document.getElementById('tui-full-calendar-schedule-private');
+    }
+
     function togglePrivateButton() {
-        var privateButton = document.getElementById('tui-full-calendar-schedule-private');
-        privateButton.click();
+        getPrivateButton().click();
     }
 
     function clickSaveButton() {
@@ -157,6 +160,22 @@ fdescribe('ScheduleCreationPopup private schedule', function() {
         result = spy.calls.argsFor(0)[0];
 
         expect(result.changes.isPrivate).toBe(true);
+    });
+
+    it('should render private status activated when editing private schedule', function() {
+        var mockEditModeViewModel = {
+            schedule: {
+                id: '1',
+                title: 'mock schedule',
+                start: new TZDate('2015-05-01T09:00:00'),
+                end: new TZDate('2015-05-01T10:00:00'),
+                guide: jasmine.createSpyObj('guide', ['clearGuideElement']),
+                isPrivate: true
+            }
+        };
+        popup.render(mockEditModeViewModel);
+
+        expect(getPrivateButton().classList.contains('tui-full-calendar-public')).toBe(false);
     });
 });
 
