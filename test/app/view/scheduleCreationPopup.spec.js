@@ -15,13 +15,13 @@ describe('ScheduleCreationPopup date range picker', function() {
     var mockTimedViewModel = {
         start: '2015-05-01T09:00:00',
         end: '2015-05-01T10:00:00',
-        guide: []
+        guide: jasmine.createSpyObj('guide', ['clearGuideElement'])
     };
     var mockAllDayViewModel = {
         start: '2015-05-01T09:00:00',
         end: '2015-05-01T10:00:00',
         isAllDay: true,
-        guide: []
+        guide: jasmine.createSpyObj('guide', ['clearGuideElement'])
     };
 
     function getInputValue(inputId) {
@@ -88,6 +88,54 @@ describe('ScheduleCreationPopup date range picker', function() {
 
         expect(getInputValue(startPickerId)).toBe('2015-05-01 12:00');
         expect(getInputValue(endPickerId)).toBe('2015-05-01 13:00');
+    });
+});
+
+describe('ScheduleCreationPopup private schedule', function() {
+    var container, popup;
+    var mockViewModel = {
+        title: 'mock schedule',
+        start: '2015-05-01T09:00:00',
+        end: '2015-05-01T10:00:00',
+        guide: jasmine.createSpyObj('guide', ['clearGuideElement'])
+    };
+    var clickEvent = new MouseEvent('click', {bubbles: true});
+
+    function togglePrivateButton() {
+        var privateButton = document.getElementById('tui-full-calendar-schedule-private');
+
+        privateButton.dispatchEvent(clickEvent);
+    }
+
+    function clickSaveButton() {
+        var saveButton = document.querySelector('.tui-full-calendar-popup-save');
+
+        saveButton.dispatchEvent(clickEvent);
+    }
+
+    beforeEach(function() {
+        fixture.load('view.html');
+        container = document.getElementById('container');
+        popup = new ScheduleCreationPopup(container, [], false);
+    });
+
+    afterEach(function() {
+        fixture.cleanup();
+        popup.destroy();
+    });
+
+    it('should be able to create private schedule', function() {
+        var result;
+        var spy = jasmine.createSpy('beforeCreateSchedule');
+        popup.on('beforeCreateSchedule', spy);
+        popup.render(mockViewModel);
+
+        togglePrivateButton();
+        clickSaveButton();
+
+        result = spy.calls.argsFor(0)[0];
+
+        expect(result.isPrivate).toBe(true);
     });
 });
 

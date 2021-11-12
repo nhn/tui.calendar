@@ -799,9 +799,7 @@ ScheduleCreationPopup.prototype._onClickCreateSchedule = function(form) {
         calendarId: form.calendarId,
         title: form.title.value,
         location: form.location.value,
-        raw: {
-            class: form.isPrivate ? 'private' : 'public'
-        },
+        isPrivate: form.isPrivate,
         start: form.start,
         end: form.end,
         isAllDay: form.isAllDay,
