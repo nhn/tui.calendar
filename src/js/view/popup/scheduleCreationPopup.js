@@ -745,7 +745,7 @@ ScheduleCreationPopup.prototype._getRangeDate = function(startDate, endDate, isA
 ScheduleCreationPopup.prototype._onClickUpdateSchedule = function(form) {
     var changes = common.getScheduleChanges(
         this._schedule,
-        ['calendarId', 'title', 'location', 'start', 'end', 'isAllDay', 'state'],
+        ['calendarId', 'title', 'location', 'start', 'end', 'isAllDay', 'state', 'isPrivate'],
         {
             calendarId: form.calendarId,
             title: form.title.value,
@@ -753,7 +753,8 @@ ScheduleCreationPopup.prototype._onClickUpdateSchedule = function(form) {
             start: form.start,
             end: form.end,
             isAllDay: form.isAllDay,
-            state: form.state
+            state: form.state,
+            isPrivate: form.isPrivate
         }
     );
 
@@ -763,11 +764,7 @@ ScheduleCreationPopup.prototype._onClickUpdateSchedule = function(form) {
      * @property {Schedule} schedule - schedule object to be updated
      */
     this.fire('beforeUpdateSchedule', {
-        schedule: util.extend({
-            raw: {
-                class: form.isPrivate ? 'private' : 'public'
-            }
-        }, this._schedule),
+        schedule: this._schedule,
         changes: changes,
         start: form.start,
         end: form.end,
