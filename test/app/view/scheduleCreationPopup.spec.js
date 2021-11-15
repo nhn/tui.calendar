@@ -119,7 +119,7 @@ describe('ScheduleCreationPopup private schedule', function() {
     });
 
     it('should be able to create private schedule', function() {
-        var result;
+        var creationEventData;
         var mockViewModel = {
             title: 'mock schedule',
             start: new TZDate('2015-05-01T09:00:00'),
@@ -133,13 +133,13 @@ describe('ScheduleCreationPopup private schedule', function() {
         togglePrivateButton();
         clickSaveButton();
 
-        result = spy.calls.argsFor(0)[0];
+        creationEventData = spy.calls.argsFor(0)[0];
 
-        expect(result.isPrivate).toBe(true);
+        expect(creationEventData.isPrivate).toBe(true);
     });
 
     it('should be able to update public schedule to private schedule', function() {
-        var result;
+        var updateEventData;
         var mockEditModeViewModel = {
             schedule: {
                 id: '1',
@@ -156,12 +156,13 @@ describe('ScheduleCreationPopup private schedule', function() {
         togglePrivateButton();
         clickSaveButton();
 
-        result = spy.calls.argsFor(0)[0];
+        updateEventData = spy.calls.argsFor(0)[0];
 
-        expect(result.changes.isPrivate).toBe(true);
+        expect(updateEventData.changes.isPrivate).toBe(true);
     });
 
     it('should render private status activated when editing private schedule', function() {
+        var isPrivateEnabled;
         var mockEditModeViewModel = {
             schedule: {
                 id: '1',
@@ -174,7 +175,8 @@ describe('ScheduleCreationPopup private schedule', function() {
         };
         popup.render(mockEditModeViewModel);
 
-        expect(getPrivateButton().classList.contains('tui-full-calendar-public')).toBe(false);
+        isPrivateEnabled = !getPrivateButton().classList.contains('tui-full-calendar-public');
+        expect(isPrivateEnabled).toBe(true);
     });
 });
 
