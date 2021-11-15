@@ -1,7 +1,9 @@
 'use strict';
 
-var ScheduleCreationPopup = require('../../../src/js/view/popup/scheduleCreationPopup');
+var config = require('config');
+var domutil = require('common/domutil');
 var TZDate = require('common/timezone').Date;
+var ScheduleCreationPopup = require('../../../src/js/view/popup/scheduleCreationPopup');
 
 /**
  * NOTE: Due to external dependency(tui-date-picker) and testing environment,
@@ -10,8 +12,8 @@ var TZDate = require('common/timezone').Date;
  */
 describe('ScheduleCreationPopup date range picker', function() {
     var container, popup;
-    var startPickerId = 'tui-full-calendar-schedule-start-date';
-    var endPickerId = 'tui-full-calendar-schedule-end-date';
+    var startPickerId = config.cssPrefix + 'schedule-start-date';
+    var endPickerId = config.cssPrefix + 'schedule-end-date';
     var mockTimedViewModel = {
         start: new TZDate('2015-05-01T09:00:00'),
         end: new TZDate('2015-05-01T10:00:00'),
@@ -31,10 +33,9 @@ describe('ScheduleCreationPopup date range picker', function() {
     }
 
     function clickAllDaySection() {
-        var allDaySectionClassName = 'tui-full-calendar-section-allday';
         var clickEvent = new MouseEvent('click', {bubbles: true});
 
-        document.querySelector('.' + allDaySectionClassName).dispatchEvent(clickEvent);
+        document.querySelector(config.classname('.section-allday')).dispatchEvent(clickEvent);
     }
 
     beforeEach(function() {
@@ -49,8 +50,7 @@ describe('ScheduleCreationPopup date range picker', function() {
     });
 
     it('should render start & end dates on the date range picker', function() {
-        var popupClassName = 'tui-full-calendar-popup-container';
-        var popupNode = document.getElementsByClassName(popupClassName);
+        var popupNode = document.querySelector(config.classname('.popup-container'));
         popup.render(mockTimedViewModel);
 
         expect(popupNode).toBeDefined();
@@ -95,7 +95,7 @@ describe('ScheduleCreationPopup private schedule', function() {
     var container, popup;
 
     function getPrivateButton() {
-        return document.getElementById('tui-full-calendar-schedule-private');
+        return document.getElementById(config.cssPrefix + 'schedule-private');
     }
 
     function togglePrivateButton() {
@@ -103,7 +103,7 @@ describe('ScheduleCreationPopup private schedule', function() {
     }
 
     function clickSaveButton() {
-        var saveButton = document.querySelector('.tui-full-calendar-popup-save');
+        var saveButton = document.querySelector(config.classname('.popup-save'));
         saveButton.click();
     }
 
@@ -175,7 +175,7 @@ describe('ScheduleCreationPopup private schedule', function() {
         };
         popup.render(mockEditModeViewModel);
 
-        isPrivateEnabled = !getPrivateButton().classList.contains('tui-full-calendar-public');
+        isPrivateEnabled = !domutil.hasClass(getPrivateButton(), config.cssPrefix + 'public');
         expect(isPrivateEnabled).toBe(true);
     });
 });
