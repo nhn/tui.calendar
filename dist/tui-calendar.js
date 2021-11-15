@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.15.0 | Thu Oct 21 2021
+ * @version 1.15.1 | Mon Nov 15 2021
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -6937,7 +6937,7 @@ model = {
     /**
      * string trim
      * @param {string} str string to trim
-     * @returns {string} trimed string
+     * @returns {string} trimmed string
      */
     trim: function(str) {
         return str.replace(spaceRx, '');
@@ -7323,7 +7323,7 @@ Point.prototype.ceil = function() {
 };
 
 /**
- * Ceil self coodinates.
+ * Ceil self coordinates.
  * @returns {Point} Point calculated.
  */
 Point.prototype._ceil = function() {
@@ -7411,7 +7411,7 @@ Point.prototype.toString = function() {
 };
 
 /**
- * Return coodinates to array. [x, y]
+ * Return coordinates to array. [x, y]
  * @returns {number[]} coordinate array.
  */
 Point.prototype.toArray = function() {
@@ -7620,7 +7620,7 @@ var STANDARD_TO_DST = 1;
 var DST_TO_STANDARD = -1;
 
 /**
- * Get the timezone offset by timestampe
+ * Get the timezone offset by timestamp
  * @param {number} timestamp - timestamp
  * @returns {number} timezone offset
  * @private
@@ -7632,7 +7632,7 @@ function getTimezoneOffset(timestamp) {
 }
 
 /**
- * Get the custome timezone offset by timestampe
+ * Get the custom timezone offset by timestamp
  * @param {number} timestamp - timestamp
  * @returns {number} timezone offset
  * @private
@@ -9079,6 +9079,10 @@ Base.prototype.updateSchedule = function(schedule, options) {
 
     if (!util.isUndefined(options.isReadOnly)) {
         schedule.set('isReadOnly', options.isReadOnly);
+    }
+
+    if (!util.isUndefined(options.isPrivate)) {
+        schedule.set('isPrivate', options.isPrivate);
     }
 
     if (options.location) {
@@ -16014,9 +16018,9 @@ MonthGuide.prototype._getCoordByDate = function(date) {
 };
 
 /**
- * Get limited coordinate by supplied coodinates
+ * Get limited coordinate by supplied coordinates
  * @param {number[]} coord - coordinate need to limit
- * @param {number[]} [min] - minimum limitaion of coordinate
+ * @param {number[]} [min] - minimum limitation of coordinate
  * @param {number[]} [max] - maximum limitation of coordinate
  * @returns {number[]} limited coordiate
  */
@@ -16209,7 +16213,7 @@ MonthGuide.prototype._removeGuideElements = function(yCoords) {
 
 /**
  * Get excluded numbers in range
- * @param {number[]} range - the range. value must be sequencial.
+ * @param {number[]} range - the range. value must be sequential.
  * @param {number[]} numbers - numbers to check
  * @returns {number[]} excluded numbers
  */
@@ -22085,12 +22089,11 @@ ScheduleCreationPopup.prototype.render = function(viewModel) {
 ScheduleCreationPopup.prototype._makeEditModeData = function(viewModel) {
     var schedule = viewModel.schedule;
     var title, isPrivate, location, startDate, endDate, isAllDay, state;
-    var raw = schedule.raw || {};
     var calendars = this.calendars;
 
     var id = schedule.id;
     title = schedule.title;
-    isPrivate = raw['class'] === 'private';
+    isPrivate = schedule.isPrivate;
     location = schedule.location;
     startDate = schedule.start;
     endDate = schedule.end;
@@ -22114,9 +22117,6 @@ ScheduleCreationPopup.prototype._makeEditModeData = function(viewModel) {
         state: state,
         start: startDate,
         end: endDate,
-        raw: {
-            class: isPrivate ? 'private' : 'public'
-        },
         zIndex: this.layer.zIndex + 5,
         isEditMode: this._isEditMode
     };
@@ -22127,7 +22127,7 @@ ScheduleCreationPopup.prototype._setDatepickerState = function(newState) {
 };
 
 /**
- * Set popup position and arrow direction to apear near guide element
+ * Set popup position and arrow direction to appear near guide element
  * @param {MonthCreationGuide|TimeCreationGuide|DayGridCreationGuide} guideBound - creation guide element
  */
 ScheduleCreationPopup.prototype._setPopupPositionAndArrowDirection = function(guideBound) {
@@ -22463,7 +22463,7 @@ ScheduleCreationPopup.prototype._getRangeDate = function(startDate, endDate, isA
 ScheduleCreationPopup.prototype._onClickUpdateSchedule = function(form) {
     var changes = common.getScheduleChanges(
         this._schedule,
-        ['calendarId', 'title', 'location', 'start', 'end', 'isAllDay', 'state'],
+        ['calendarId', 'title', 'location', 'start', 'end', 'isAllDay', 'state', 'isPrivate'],
         {
             calendarId: form.calendarId,
             title: form.title.value,
@@ -22471,7 +22471,8 @@ ScheduleCreationPopup.prototype._onClickUpdateSchedule = function(form) {
             start: form.start,
             end: form.end,
             isAllDay: form.isAllDay,
-            state: form.state
+            state: form.state,
+            isPrivate: form.isPrivate
         }
     );
 
@@ -22481,11 +22482,7 @@ ScheduleCreationPopup.prototype._onClickUpdateSchedule = function(form) {
      * @property {Schedule} schedule - schedule object to be updated
      */
     this.fire('beforeUpdateSchedule', {
-        schedule: util.extend({
-            raw: {
-                class: form.isPrivate ? 'private' : 'public'
-            }
-        }, this._schedule),
+        schedule: this._schedule,
         changes: changes,
         start: form.start,
         end: form.end,
@@ -22517,9 +22514,7 @@ ScheduleCreationPopup.prototype._onClickCreateSchedule = function(form) {
         calendarId: form.calendarId,
         title: form.title.value,
         location: form.location.value,
-        raw: {
-            class: form.isPrivate ? 'private' : 'public'
-        },
+        isPrivate: form.isPrivate,
         start: form.start,
         end: form.end,
         isAllDay: form.isAllDay,
@@ -22751,7 +22746,7 @@ ScheduleDetailPopup.prototype._getScheduleModel = function(scheduleViewModel) {
 };
 
 /**
- * Set popup position and arrow direction to apear near guide element
+ * Set popup position and arrow direction to appear near guide element
  * @param {Event} event - creation guide element
  */
 ScheduleDetailPopup.prototype._setPopupPositionAndArrowDirection = function(event) {
@@ -26360,7 +26355,7 @@ var mmax = Math.max,
 
 /**
  * @constructor
- * @extends {Weekday}
+ * @extends {View}
  * @param {string} name - view name
  * @param {object} options - options for DayGridSchedule view
  * @param {number} [options.heightPercent] - height percent of view
