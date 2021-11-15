@@ -15,6 +15,7 @@ function ScheduleInfo() {
 
     this.title = null;
     this.body = null;
+    this.location = null;
     this.isAllday = false;
     this.start = null;
     this.end = null;
@@ -31,6 +32,7 @@ function ScheduleInfo() {
     this.isPending = false;
     this.isVisible = true;
     this.isReadOnly = false;
+    this.isPrivate = false;
     this.goingDuration = 0;
     this.comingDuration = 0;
     this.recurrenceRule = '';
@@ -41,7 +43,6 @@ function ScheduleInfo() {
         hasToOrCc: false,
         hasRecurrenceRule: false,
         location: null,
-        class: 'public', // or 'private'
         creator: {
             name: '',
             avatar: '',
