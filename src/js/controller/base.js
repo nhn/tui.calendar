@@ -289,6 +289,10 @@ Base.prototype.updateSchedule = function(schedule, options) {
         schedule.set('isReadOnly', options.isReadOnly);
     }
 
+    if (!util.isUndefined(options.isPrivate)) {
+        schedule.set('isPrivate', options.isPrivate);
+    }
+
     if (options.location) {
         schedule.set('location', options.location);
     }

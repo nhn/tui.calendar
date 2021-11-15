@@ -1,7 +1,9 @@
 'use strict';
 
-var ScheduleCreationPopup = require('../../../src/js/view/popup/scheduleCreationPopup');
+var config = require('config');
+var domutil = require('common/domutil');
 var TZDate = require('common/timezone').Date;
+var ScheduleCreationPopup = require('../../../src/js/view/popup/scheduleCreationPopup');
 
 /**
  * NOTE: Due to external dependency(tui-date-picker) and testing environment,
@@ -10,18 +12,18 @@ var TZDate = require('common/timezone').Date;
  */
 describe('ScheduleCreationPopup date range picker', function() {
     var container, popup;
-    var startPickerId = 'tui-full-calendar-schedule-start-date';
-    var endPickerId = 'tui-full-calendar-schedule-end-date';
+    var startPickerId = config.cssPrefix + 'schedule-start-date';
+    var endPickerId = config.cssPrefix + 'schedule-end-date';
     var mockTimedViewModel = {
-        start: '2015-05-01T09:00:00',
-        end: '2015-05-01T10:00:00',
-        guide: []
+        start: new TZDate('2015-05-01T09:00:00'),
+        end: new TZDate('2015-05-01T10:00:00'),
+        guide: jasmine.createSpyObj('guide', ['clearGuideElement'])
     };
     var mockAllDayViewModel = {
-        start: '2015-05-01T09:00:00',
-        end: '2015-05-01T10:00:00',
+        start: new TZDate('2015-05-01T09:00:00'),
+        end: new TZDate('2015-05-01T10:00:00'),
         isAllDay: true,
-        guide: []
+        guide: jasmine.createSpyObj('guide', ['clearGuideElement'])
     };
 
     function getInputValue(inputId) {
@@ -31,10 +33,9 @@ describe('ScheduleCreationPopup date range picker', function() {
     }
 
     function clickAllDaySection() {
-        var allDaySectionClassName = 'tui-full-calendar-section-allday';
         var clickEvent = new MouseEvent('click', {bubbles: true});
 
-        document.querySelector('.' + allDaySectionClassName).dispatchEvent(clickEvent);
+        document.querySelector(config.classname('.section-allday')).dispatchEvent(clickEvent);
     }
 
     beforeEach(function() {
@@ -49,8 +50,7 @@ describe('ScheduleCreationPopup date range picker', function() {
     });
 
     it('should render start & end dates on the date range picker', function() {
-        var popupClassName = 'tui-full-calendar-popup-container';
-        var popupNode = document.getElementsByClassName(popupClassName);
+        var popupNode = document.querySelector(config.classname('.popup-container'));
         popup.render(mockTimedViewModel);
 
         expect(popupNode).toBeDefined();
@@ -88,6 +88,95 @@ describe('ScheduleCreationPopup date range picker', function() {
 
         expect(getInputValue(startPickerId)).toBe('2015-05-01 12:00');
         expect(getInputValue(endPickerId)).toBe('2015-05-01 13:00');
+    });
+});
+
+describe('ScheduleCreationPopup private schedule', function() {
+    var container, popup;
+
+    function getPrivateButton() {
+        return document.getElementById(config.cssPrefix + 'schedule-private');
+    }
+
+    function togglePrivateButton() {
+        getPrivateButton().click();
+    }
+
+    function clickSaveButton() {
+        var saveButton = document.querySelector(config.classname('.popup-save'));
+        saveButton.click();
+    }
+
+    beforeEach(function() {
+        fixture.load('view.html');
+        container = document.getElementById('container');
+        popup = new ScheduleCreationPopup(container, [], false);
+    });
+
+    afterEach(function() {
+        fixture.cleanup();
+        popup.destroy();
+    });
+
+    it('should be able to create private schedule', function() {
+        var creationEventData;
+        var mockViewModel = {
+            title: 'mock schedule',
+            start: new TZDate('2015-05-01T09:00:00'),
+            end: new TZDate('2015-05-01T10:00:00'),
+            guide: jasmine.createSpyObj('guide', ['clearGuideElement'])
+        };
+        var spy = jasmine.createSpy('beforeCreateSchedule');
+        popup.on('beforeCreateSchedule', spy);
+        popup.render(mockViewModel);
+
+        togglePrivateButton();
+        clickSaveButton();
+
+        creationEventData = spy.calls.argsFor(0)[0];
+
+        expect(creationEventData.isPrivate).toBe(true);
+    });
+
+    it('should be able to update public schedule to private schedule', function() {
+        var updateEventData;
+        var mockEditModeViewModel = {
+            schedule: {
+                id: '1',
+                title: 'mock schedule',
+                start: new TZDate('2015-05-01T09:00:00'),
+                end: new TZDate('2015-05-01T10:00:00'),
+                guide: jasmine.createSpyObj('guide', ['clearGuideElement'])
+            }
+        };
+        var spy = jasmine.createSpy('beforeUpdateSchedule');
+        popup.on('beforeUpdateSchedule', spy);
+        popup.render(mockEditModeViewModel);
+
+        togglePrivateButton();
+        clickSaveButton();
+
+        updateEventData = spy.calls.argsFor(0)[0];
+
+        expect(updateEventData.changes.isPrivate).toBe(true);
+    });
+
+    it('should render private status activated when editing private schedule', function() {
+        var isPrivateEnabled;
+        var mockEditModeViewModel = {
+            schedule: {
+                id: '1',
+                title: 'mock schedule',
+                start: new TZDate('2015-05-01T09:00:00'),
+                end: new TZDate('2015-05-01T10:00:00'),
+                guide: jasmine.createSpyObj('guide', ['clearGuideElement']),
+                isPrivate: true
+            }
+        };
+        popup.render(mockEditModeViewModel);
+
+        isPrivateEnabled = !domutil.hasClass(getPrivateButton(), config.cssPrefix + 'public');
+        expect(isPrivateEnabled).toBe(true);
     });
 });
 

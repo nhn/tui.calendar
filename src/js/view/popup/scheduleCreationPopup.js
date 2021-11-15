@@ -367,12 +367,11 @@ ScheduleCreationPopup.prototype.render = function(viewModel) {
 ScheduleCreationPopup.prototype._makeEditModeData = function(viewModel) {
     var schedule = viewModel.schedule;
     var title, isPrivate, location, startDate, endDate, isAllDay, state;
-    var raw = schedule.raw || {};
     var calendars = this.calendars;
 
     var id = schedule.id;
     title = schedule.title;
-    isPrivate = raw['class'] === 'private';
+    isPrivate = schedule.isPrivate;
     location = schedule.location;
     startDate = schedule.start;
     endDate = schedule.end;
@@ -396,9 +395,6 @@ ScheduleCreationPopup.prototype._makeEditModeData = function(viewModel) {
         state: state,
         start: startDate,
         end: endDate,
-        raw: {
-            class: isPrivate ? 'private' : 'public'
-        },
         zIndex: this.layer.zIndex + 5,
         isEditMode: this._isEditMode
     };
@@ -745,7 +741,7 @@ ScheduleCreationPopup.prototype._getRangeDate = function(startDate, endDate, isA
 ScheduleCreationPopup.prototype._onClickUpdateSchedule = function(form) {
     var changes = common.getScheduleChanges(
         this._schedule,
-        ['calendarId', 'title', 'location', 'start', 'end', 'isAllDay', 'state'],
+        ['calendarId', 'title', 'location', 'start', 'end', 'isAllDay', 'state', 'isPrivate'],
         {
             calendarId: form.calendarId,
             title: form.title.value,
@@ -753,7 +749,8 @@ ScheduleCreationPopup.prototype._onClickUpdateSchedule = function(form) {
             start: form.start,
             end: form.end,
             isAllDay: form.isAllDay,
-            state: form.state
+            state: form.state,
+            isPrivate: form.isPrivate
         }
     );
 
@@ -763,11 +760,7 @@ ScheduleCreationPopup.prototype._onClickUpdateSchedule = function(form) {
      * @property {Schedule} schedule - schedule object to be updated
      */
     this.fire('beforeUpdateSchedule', {
-        schedule: util.extend({
-            raw: {
-                class: form.isPrivate ? 'private' : 'public'
-            }
-        }, this._schedule),
+        schedule: this._schedule,
         changes: changes,
         start: form.start,
         end: form.end,
@@ -799,9 +792,7 @@ ScheduleCreationPopup.prototype._onClickCreateSchedule = function(form) {
         calendarId: form.calendarId,
         title: form.title.value,
         location: form.location.value,
-        raw: {
-            class: form.isPrivate ? 'private' : 'public'
-        },
+        isPrivate: form.isPrivate,
         start: form.start,
         end: form.end,
         isAllDay: form.isAllDay,
