@@ -136,7 +136,6 @@ describe('ScheduleCreationPopup private schedule', function() {
         result = spy.calls.argsFor(0)[0];
 
         expect(result.isPrivate).toBe(true);
-        expect(spy.calls.any()).toBe(true);
     });
 
     it('should be able to update public schedule to private schedule', function() {
