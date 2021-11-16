@@ -3,7 +3,8 @@ import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
 import { DragPositionInfo } from '@src/components/draggable';
 import { PanelResizer } from '@src/components/panelResizer';
-import { DEFAULT_PANEL_HEIGHT, Direction, panelInfoKeys } from '@src/constants/layout';
+import { Direction, panelInfoKeys } from '@src/constants/layout';
+import { PANEL_HEIGHT } from '@src/constants/style';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { getElementRect, getPanelStylesFromInfo, isPanelShown } from '@src/controller/panel';
 import { cls } from '@src/helpers/css';
@@ -45,7 +46,7 @@ const Panel: FunctionComponent<Props> = (props) => {
     onResizeEnd(name, resizeInfo);
 
     const panelHeight = Math.max(
-      props.minHeight ?? DEFAULT_PANEL_HEIGHT,
+      props.minHeight ?? PANEL_HEIGHT,
       getElementRect(panelRef.current).height + resizeInfo.endY - resizeInfo.startY
     );
     updateDayGridRowHeight({
@@ -109,10 +110,8 @@ const Panel: FunctionComponent<Props> = (props) => {
     updateElementRect();
   }, [updateElementRect]);
 
-  const panelHeight =
-    dayGridRows[name as WeekGridRows]?.height ?? props.height ?? DEFAULT_PANEL_HEIGHT;
-  const panelWidth =
-    dayGridRows[name as WeekGridRows]?.height ?? props.width ?? DEFAULT_PANEL_HEIGHT;
+  const panelHeight = dayGridRows[name as WeekGridRows]?.height ?? props.height ?? PANEL_HEIGHT;
+  const panelWidth = dayGridRows[name as WeekGridRows]?.height ?? props.width ?? PANEL_HEIGHT;
   const styleWithDirection =
     direction === Direction.COLUMN ? { height: panelHeight } : { width: panelWidth };
   const styles = getPanelStylesFromInfo({ ...props, ...styleWithDirection });

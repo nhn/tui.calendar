@@ -6,7 +6,9 @@ import { Layout } from '@src/components/layout';
 import Panel from '@src/components/panel';
 import { ColumnInfo } from '@src/components/timeGrid/columnWithMouse';
 import { TimeGrid } from '@src/components/timeGrid/timeGrid';
+import { WEEK_DAYNAME_BORDER, WEEK_DAYNAME_HEIGHT } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
+import { cls } from '@src/helpers/css';
 import { getDayNames } from '@src/helpers/dayName';
 import { getDayGridEvents } from '@src/helpers/grid';
 import { weekViewStateSelector } from '@src/selectors';
@@ -15,8 +17,6 @@ import { getGridInfo, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 
 import { WeekOption } from '@t/option';
 import { DayGridEventType } from '@t/panel';
-
-const dayNameHeight = 42;
 
 export const Day: FunctionComponent = () => {
   const {
@@ -69,8 +69,8 @@ export const Day: FunctionComponent = () => {
   });
 
   return (
-    <Layout>
-      <Panel name="day-daynames" height={dayNameHeight}>
+    <Layout classNames={[cls('day-view')]}>
+      <Panel name="day-view-daynames" height={WEEK_DAYNAME_HEIGHT + WEEK_DAYNAME_BORDER}>
         <GridHeader
           dayNames={dayNames}
           marginLeft={120}

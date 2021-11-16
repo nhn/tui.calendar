@@ -30,5 +30,3 @@ export const panelInfoKeys: Array<keyof PanelInfo> = [
   'resizerHeight',
   'resizerWidth',
 ];
-
-export const DEFAULT_PANEL_HEIGHT = 72;

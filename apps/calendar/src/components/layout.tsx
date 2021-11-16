@@ -44,14 +44,14 @@ export const Layout: FunctionComponent<Props> = ({
   const ref = useRef<HTMLDivElement>(null);
   const filteredPanels = filterPanels(toChildArray(children));
 
-  const getClassNames = () => {
+  const className = useMemo(() => {
     const layoutClassNames = [cls('layout')];
     if (direction === Direction.ROW) {
       layoutClassNames.push(cls('horizontal'));
     }
 
     return layoutClassNames.concat(classNames).join(' ');
-  };
+  }, [classNames, direction]);
   const updatePanels = useCallback(
     (isResizeMode = false) => {
       const getPanelInfoList = () => {
@@ -123,7 +123,7 @@ export const Layout: FunctionComponent<Props> = ({
   }, [updatePanels]);
 
   return (
-    <div ref={ref} className={getClassNames()} style={getLayoutStylesFromInfo(width, height)}>
+    <div ref={ref} className={className} style={getLayoutStylesFromInfo(width, height)}>
       {filteredPanels.map((panel, index) => renderPanel(panel, panels[index]))}
     </div>
   );

@@ -10,8 +10,7 @@ import HorizontalEvent from '@src/components/events/horizontalEvent';
 import { useDOMNode } from '@src/components/hooks/domNode';
 import { useGridSelection } from '@src/components/hooks/gridSelection';
 import Template from '@src/components/template';
-import { DEFAULT_PANEL_HEIGHT } from '@src/constants/layout';
-import { WEEK_EVENT_MARGIN_TOP } from '@src/constants/style';
+import { PANEL_HEIGHT, WEEK_EVENT_MARGIN_TOP } from '@src/constants/style';
 import { useDispatch } from '@src/contexts/calendarStore';
 import { cls, toPercent } from '@src/helpers/css';
 import {
@@ -68,7 +67,7 @@ export const GridRow: FunctionComponent<Props> = ({
   events,
   cells = defaultPanelInfoList,
   type,
-  height = DEFAULT_PANEL_HEIGHT,
+  height = PANEL_HEIGHT,
   options = {},
   gridInfo,
   gridColWidthMap,
@@ -113,7 +112,7 @@ export const GridRow: FunctionComponent<Props> = ({
     setClickedCount(false);
     updateDayGridRowHeight({
       rowName: type as WeekGridRows,
-      height: DEFAULT_PANEL_HEIGHT,
+      height: PANEL_HEIGHT,
     });
   };
 
