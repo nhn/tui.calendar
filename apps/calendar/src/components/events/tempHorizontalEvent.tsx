@@ -1,27 +1,19 @@
-import { ComponentProps, Fragment, FunctionComponent, h } from 'preact';
-import { useRef, useState } from 'preact/hooks';
+import { FunctionComponent, h } from 'preact';
 
-import type GridWithMouse from '@src/components/dayGridCommon/gridWithMouse';
 import ResizeIcon from '@src/components/events/resizeIcon';
 import { useDrag } from '@src/components/hooks/drag';
 import Template from '@src/components/template';
 import { useDispatch } from '@src/contexts/calendarStore';
 import { cls, toPercent, toPx } from '@src/helpers/css';
-import { getGridDateIndex } from '@src/helpers/grid';
 import EventUIModel from '@src/model/eventUIModel';
-import { isNil } from '@src/utils/type';
 
 import { StyleProp } from '@t/components/common';
-import { Cells } from '@t/panel';
 
 interface Props {
   uiModel: EventUIModel;
   eventHeight: number;
   headerHeight: number;
   flat?: boolean;
-  getMousePositionData?: ComponentProps<typeof GridWithMouse>['getMousePositionData'];
-  gridColWidthMap?: string[][];
-  cells?: Cells;
 }
 
 interface StyleProps {
@@ -125,13 +117,6 @@ function getStyles({ uiModel, eventHeight, headerHeight, flat }: StyleProps) {
   return { dayEventBlockClassName, containerStyle, eventItemStyle, resizeIconStyle };
 }
 
-function getEventColIndex(uiModel: EventUIModel, cells: Cells) {
-  const start = getGridDateIndex(uiModel.getStarts(), cells);
-  const end = getGridDateIndex(uiModel.getEnds(), cells);
-
-  return { start, end };
-}
-
 const EventItem: FunctionComponent<{
   containerStyle: StyleProp;
   eventItemStyle: StyleProp;
@@ -144,87 +129,48 @@ const EventItem: FunctionComponent<{
   </div>
 );
 
-const HorizontalEvent: FunctionComponent<Props> = ({
+export const TempHorizontalEvent: FunctionComponent<Props> = ({
   flat = false,
   uiModel,
   eventHeight,
   headerHeight,
-  getMousePositionData,
-  gridColWidthMap,
-  cells = [],
 }) => {
-  const { updateEvent } = useDispatch('calendar');
-
-  const [isResizing, setResizing] = useState(false);
-  const [resizeGuideStyle, setResizeGuideStyle] = useState<StyleProp | null>(null);
-  const lastGridColIndex = useRef<number | null>(null);
-
+  const { setDraggingState, reset } = useDispatch('dnd');
   const { dayEventBlockClassName, containerStyle, eventItemStyle, resizeIconStyle } = getStyles({
     uiModel,
     eventHeight,
     headerHeight,
     flat,
   });
-  const { start, end } = getEventColIndex(uiModel, cells);
-  const resetResizing = () => {
-    setResizing(false);
-    setResizeGuideStyle(null);
-    lastGridColIndex.current = null;
-  };
 
   const { onMouseDown } = useDrag({
-    onDragStart: () => {
-      lastGridColIndex.current = end;
-      setResizing(true);
-    },
     onDrag: (e) => {
-      const mousePositionData = getMousePositionData?.(e);
-      if (!mousePositionData || !gridColWidthMap || isNil(start)) {
-        return;
-      }
-
-      const { gridX } = mousePositionData;
-      lastGridColIndex.current = gridX;
-
-      if (start <= gridX) {
-        setResizeGuideStyle({
-          width: gridColWidthMap[start][gridX],
-        });
-      }
+      setDraggingState({
+        draggingItemType: `horizontalEvent/${uiModel.cid()}`,
+        x: e.clientX,
+        y: e.clientY,
+        isDragging: true,
+      });
     },
     onDragEnd: () => {
-      const { current: gridX } = lastGridColIndex;
-      if (!isNil(start) && !isNil(gridX) && start <= gridX && end !== gridX) {
-        const targetDate = cells[gridX];
-        updateEvent({ event: uiModel.model, eventData: { end: targetDate } });
-      }
-
-      resetResizing();
+      setDraggingState({
+        isDragEnd: true,
+        isDragging: false,
+      });
     },
-    onPressESCKey: resetResizing,
+    onPressESCKey: reset,
   });
 
   return (
-    <Fragment>
-      <EventItem
-        containerStyle={containerStyle}
-        eventItemStyle={eventItemStyle}
-        className={dayEventBlockClassName}
-      >
-        <span className={cls('weekday-event-title')}>
-          <Template template="time" model={uiModel.model} />
-        </span>
-        {flat ? null : <ResizeIcon style={resizeIconStyle} onMouseDown={onMouseDown} />}
-      </EventItem>
-      {isResizing ? (
-        <EventItem
-          containerStyle={{ ...containerStyle, ...resizeGuideStyle }}
-          eventItemStyle={eventItemStyle}
-          className={dayEventBlockClassName}
-        />
-      ) : null}
-    </Fragment>
+    <EventItem
+      containerStyle={containerStyle}
+      eventItemStyle={eventItemStyle}
+      className={dayEventBlockClassName}
+    >
+      <span className={cls('weekday-event-title')}>
+        <Template template="time" model={uiModel.model} />
+      </span>
+      {flat ? null : <ResizeIcon style={resizeIconStyle} onMouseDown={onMouseDown} />}
+    </EventItem>
   );
 };
-
-export default HorizontalEvent;

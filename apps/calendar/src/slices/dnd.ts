@@ -5,13 +5,14 @@ export interface DndSlice {
     draggingItemType: string | null;
     isDragging: boolean;
     isDragEnd: boolean;
+    shouldReset: boolean;
     x: number;
     y: number;
   };
 }
 
 export interface DndDispatchers {
-  setDraggingState: (itemType: string, newState: DndSlice) => void;
+  setDraggingState: (newState: Partial<DndSlice['dnd']>) => void;
   reset: () => void;
 }
 
@@ -21,6 +22,7 @@ export function createDndSlice(): DndSlice {
       draggingItemType: null,
       isDragging: false,
       isDragEnd: false,
+      shouldReset: false,
       x: 0,
       y: 0,
     },
@@ -29,7 +31,7 @@ export function createDndSlice(): DndSlice {
 
 export function createDndDispatchers(set: SetState<CalendarStore>): DndDispatchers {
   return {
-    setDraggingState: (itemType, newState) => {
+    setDraggingState: (newState) => {
       set((state) => ({
         dnd: {
           ...state.dnd,

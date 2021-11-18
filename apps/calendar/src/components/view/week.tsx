@@ -4,6 +4,7 @@ import range from 'tui-code-snippet/array/range';
 
 import GridHeader from '@src/components/dayGridCommon/gridHeader';
 import { GridRow } from '@src/components/dayGridWeek/gridRow';
+import { TempAlldayGridRow } from '@src/components/dayGridWeek/tempAlldayGridRow';
 import { Layout } from '@src/components/layout';
 import Panel from '@src/components/panel';
 import { ColumnInfo } from '@src/components/timeGrid/columnWithMouse';
@@ -82,16 +83,29 @@ export const Week: FunctionComponent = () => {
 
     return (
       <Panel name={rowType} key={rowType} resizable>
-        <GridRow
-          key={rowType}
-          type={rowType}
-          events={dayGridEvents[rowType]}
-          gridInfo={gridInfo}
-          gridColWidthMap={gridColWidthMap}
-          cells={cells}
-          height={value.height}
-          options={weekOptions}
-        />
+        {rowType === 'allday' ? (
+          <TempAlldayGridRow
+            key={rowType}
+            type={rowType}
+            events={dayGridEvents[rowType]}
+            gridInfo={gridInfo}
+            gridColWidthMap={gridColWidthMap}
+            cells={cells}
+            height={value.height}
+            options={weekOptions}
+          />
+        ) : (
+          <GridRow
+            key={rowType}
+            type={rowType}
+            events={dayGridEvents[rowType]}
+            gridInfo={gridInfo}
+            gridColWidthMap={gridColWidthMap}
+            cells={cells}
+            height={value.height}
+            options={weekOptions}
+          />
+        )}
       </Panel>
     );
   });

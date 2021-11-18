@@ -14,6 +14,7 @@ export const weekViewLayoutSelector = topLevelStateSelector('weekViewLayout');
 export const templateSelector = topLevelStateSelector('template');
 export const viewSelector = topLevelStateSelector('view');
 export const optionSelector = topLevelStateSelector('option');
+export const dndSelector = topLevelStateSelector('dnd');
 
 export const weekViewStateSelector = (state: CalendarStore) =>
   pick(state, 'template', 'option', 'calendar', 'weekViewLayout');
