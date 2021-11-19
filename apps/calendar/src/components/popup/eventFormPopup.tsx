@@ -30,6 +30,17 @@ const TitleInputBox: FunctionComponent = () => {
   );
 };
 
+const LocationInputBox: FunctionComponent = () => {
+  return (
+    <PopupSection>
+      <div className={cls('popup-section-item', 'popup-section-location')}>
+        <span className={cls('icon', 'ic-location')} />
+        <input className={cls('content')} placeholder="Location" />
+      </div>
+    </PopupSection>
+  );
+};
+
 export const EventFormPopup: FunctionComponent<EventFormPopupParam> = ({
   start,
   end,
@@ -41,6 +52,8 @@ export const EventFormPopup: FunctionComponent<EventFormPopupParam> = ({
     <div className={cls('popup-container')}>
       <CalendarSelector />
       <TitleInputBox />
+      <LocationInputBox />
+
       <ClosePopupButton close={close} />
       <div>
         {toFormat(start, 'YYYY-MM-DD')} ~ {toFormat(end, 'YYYY-MM-DD')}{' '}

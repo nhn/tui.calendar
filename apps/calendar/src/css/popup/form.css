@@ -48,6 +48,10 @@
   width: calc(100% - 36px);
 }
 
+.popup-section-location input {
+  width: 400px;
+}
+
 .popup-button {
   background: #fff;
   border: 1px solid #d5d5d5;
