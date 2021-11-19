@@ -16,7 +16,6 @@ export default {
 const PopupContainer: FunctionComponent = ({ children }) => (
   <div
     style={{
-      boxShadow: '0 2px 6px 0 rgba(0 0 0 / 10%)',
       zIndex: 1005,
       margin: '30px auto 0',
       width: 474,
