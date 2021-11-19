@@ -4,24 +4,78 @@
   display: inline-block;
   vertical-align: middle;
 }
-.icon.ic-title { background: url("./image/ic-subject.png") no-repeat; }
-.icon.ic-location { background: url("./image/ic-location.png") no-repeat; }
-.icon.ic-date { background: url("./image/ic-date.png") no-repeat; }
-.icon.ic-state { background: url("./image/ic-state.png") no-repeat; }
-.icon.ic-private { background: url("./image/ic-lock.png") no-repeat; }
-.icon.ic-public { background: url("./image/ic-unlock.png") no-repeat; }
-.icon.ic-close { background: url("./image/ic-close.png") no-repeat; }
-.icon.ic-user-b { background-image: url("./image/ic-user-b.png"); }
-.icon.ic-edit { background-image: url("./image/ic-edit.png"); }
-.icon.ic-delete { background-image: url("./image/ic-delete.png"); }
-.icon.ic-arrow-solid-top { background: url("./image/ic-arrow-solid-top.png") no-repeat; }
-.icon.ic-milestone { background: url("./image/ic-milestone.png") no-repeat; }
-.icon.ic-arrow-left { background: url("./image/ic-arrow-left.png") no-repeat; }
-.icon.ic-arrow-right { background: url("./image/ic-arrow-right.png") no-repeat; }
-.icon.ic-handle-y { background: url("./image/handler-y.png") center no-repeat; }
+.icon.ic-title {
+  background: url('./image/ic-subject.png') no-repeat;
+}
 
-.ic-location-b { background: url("./image/ic-location-b.png"); }
+.icon.ic-location {
+  background: url('./image/ic-location.png') no-repeat;
+}
 
-.ic-state-b { background: url("./image/ic-state-b.png"); }
+.icon.ic-date {
+  background: url('./image/ic-date.png') no-repeat;
+}
 
-.ic-repeat-b { background: url("./image/ic-repeat-b.png"); }
+.icon.ic-state {
+  background: url('./image/ic-state.png') no-repeat;
+}
+
+.icon.ic-private {
+  background: url('./image/ic-lock.png') no-repeat;
+}
+
+.icon.ic-public {
+  background: url('./image/ic-unlock.png') no-repeat;
+}
+
+.icon.ic-close {
+  background: url('./image/ic-close.png') no-repeat;
+}
+
+.icon.ic-user-b {
+  background-image: url('./image/ic-user-b.png');
+}
+
+.icon.ic-edit {
+  background-image: url('./image/ic-edit.png');
+}
+
+.icon.ic-delete {
+  background-image: url('./image/ic-delete.png');
+}
+
+.icon.ic-arrow-solid-top {
+  background: url('./image/ic-arrow-solid-top.png') no-repeat;
+}
+
+.icon.ic-milestone {
+  background: url('./image/ic-milestone.png') no-repeat;
+}
+
+.icon.ic-arrow-left {
+  background: url('./image/ic-arrow-left.png') no-repeat;
+}
+
+.icon.ic-arrow-right {
+  background: url('./image/ic-arrow-right.png') no-repeat;
+}
+
+.icon.ic-handle-y {
+  background: url('./image/handler-y.png') center no-repeat;
+}
+
+.icon.ic-checkbox-normal {
+  background: url('./image/ic-checkbox-normal.png') no-repeat;
+}
+
+.ic-location-b {
+  background: url('./image/ic-location-b.png');
+}
+
+.ic-state-b {
+  background: url('./image/ic-state-b.png');
+}
+
+.ic-repeat-b {
+  background: url('./image/ic-repeat-b.png');
+}

@@ -1,6 +1,7 @@
 import { FunctionComponent, h } from 'preact';
 
 import { ClosePopupButton } from '@src/components/popup/closePopupButton';
+import { ConfirmPopupButton } from '@src/components/popup/confirmPopupButton';
 import { cls } from '@src/helpers/css';
 import { toFormat } from '@src/time/datetime';
 
@@ -41,6 +42,32 @@ const LocationInputBox: FunctionComponent = () => {
   );
 };
 
+const DatePicker: FunctionComponent = () => {
+  return (
+    <PopupSection>
+      <div className={cls('popup-section-item', 'popup-start-date-picker')}>
+        <span className={cls('icon', 'ic-date')} />
+        <input className={cls('content')} placeholder="Start date" />
+      </div>
+      <span className={cls('popup-date-dash')}>-</span>
+      <div className={cls('popup-section-item', 'popup-end-date-picker')}>
+        <span className={cls('icon', 'ic-date')} />
+        <input className={cls('content')} placeholder="End date" />
+      </div>
+      <div className={cls('popup-section-item', 'popup-section-allday')}>
+        <span className={cls('icon', 'ic-checkbox-normal')} />
+        <span className={cls('content')}>All day</span>
+      </div>
+    </PopupSection>
+  );
+};
+
+const EventState: FunctionComponent = () => (
+  <PopupSection>
+    <div>{'이벤트 상태 선택 드롭다운'}</div>
+  </PopupSection>
+);
+
 export const EventFormPopup: FunctionComponent<EventFormPopupParam> = ({
   start,
   end,
@@ -53,15 +80,19 @@ export const EventFormPopup: FunctionComponent<EventFormPopupParam> = ({
       <CalendarSelector />
       <TitleInputBox />
       <LocationInputBox />
-
+      <DatePicker />
+      <EventState />
       <ClosePopupButton close={close} />
-      <div>
-        {toFormat(start, 'YYYY-MM-DD')} ~ {toFormat(end, 'YYYY-MM-DD')}{' '}
-        <label>
-          <input type="checkbox" checked={isAllDay} />
-          All day
-        </label>
-      </div>
+      <PopupSection>
+        <ConfirmPopupButton />
+      </PopupSection>
+      {/* <div>*/}
+      {/*  {toFormat(start, 'YYYY-MM-DD')} ~ {toFormat(end, 'YYYY-MM-DD')}{' '}*/}
+      {/*  <label>*/}
+      {/*    <input type="checkbox" checked={isAllDay} />*/}
+      {/*    All day*/}
+      {/*  </label>*/}
+      {/* </div>*/}
     </div>
   );
 };

@@ -5,23 +5,23 @@ import { cls } from '@src/helpers/css';
 import { isFunction } from '@src/utils/type';
 
 interface Props {
-  close?: () => void;
+  confirm?: () => void;
 }
 
-export const ClosePopupButton: FunctionComponent<Props> = ({ close }) => {
+export const ConfirmPopupButton: FunctionComponent<Props> = ({ confirm }) => {
   const { hide } = useDispatch('popup');
 
   const onClickHandler = () => {
     hide();
 
-    if (isFunction(close)) {
-      close();
+    if (isFunction(confirm)) {
+      confirm();
     }
   };
 
   return (
-    <button type="button" className={cls('popup-button', 'popup-close')} onClick={onClickHandler}>
-      <i className={cls('icon', 'ic-close')} />
+    <button type="button" className={cls('popup-button', 'popup-confirm')} onClick={onClickHandler}>
+      <span>Save</span>
     </button>
   );
 };

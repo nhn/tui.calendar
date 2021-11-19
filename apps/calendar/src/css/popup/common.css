@@ -1,11 +1,20 @@
-.popup-close {
+.popup-button.popup-close {
   position: absolute;
-  right: 0;
-  outline: 0;
-  background: none;
-  border: 0;
-  font-size: 14px;
-  line-height: 28px;
-  padding-right: 17px;
-  cursor: pointer;
+  top: 10px;
+  right: 10px;
+  background-color: #fff;
+  padding: 2px;
+  border: none;
+}
+
+.popup-button.popup-confirm {
+  float: right;
+  width: 96px;
+  height: 36px;
+  border-radius: 40px;
+  background-color: #ff6618;
+  font-size: 12px;
+  font-weight: bold;
+  color: #fff;
+  border: none;
 }
