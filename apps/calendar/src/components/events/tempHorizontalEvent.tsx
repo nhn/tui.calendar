@@ -173,7 +173,15 @@ export const TempHorizontalEvent: FunctionComponent<Props> = ({
       <span className={cls('weekday-event-title')}>
         <Template template="time" model={uiModel.model} />
       </span>
-      {flat || isResizing ? null : <ResizeIcon style={resizeIconStyle} onMouseDown={onMouseDown} />}
+      {flat || isResizing ? null : (
+        <ResizeIcon
+          style={resizeIconStyle}
+          onMouseDown={(e) => {
+            e.stopPropagation();
+            onMouseDown(e);
+          }}
+        />
+      )}
     </EventItem>
   );
 };

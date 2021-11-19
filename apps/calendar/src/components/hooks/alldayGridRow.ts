@@ -2,7 +2,6 @@ import { useEffect, useMemo } from 'preact/hooks';
 
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { getGridDateIndex } from '@src/helpers/grid';
-import { createMousePositionDataGrabberWeek } from '@src/helpers/view';
 import EventUIModel from '@src/model/eventUIModel';
 import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
@@ -18,19 +17,17 @@ function getEventColIndex(uiModel: EventUIModel, cells: Cells) {
 }
 
 interface UseAlldayGridRowDndParams {
-  panelRef: HTMLElement | null;
   events: EventUIModel[];
   cells: any;
-  gridInfo: any;
   gridColWidthMap: string[][];
+  mousePositionDataGrabber: (e: MouseEvent) => any;
 }
 
 export function useAlldayGridRowDnd({
-  panelRef,
   events,
   cells,
-  gridInfo,
   gridColWidthMap,
+  mousePositionDataGrabber,
 }: UseAlldayGridRowDndParams) {
   const { draggingItemType, x, y, draggingState } = useStore(dndSelector);
   const {
@@ -39,11 +36,6 @@ export function useAlldayGridRowDnd({
   } = useDispatch(['dnd', 'calendar']);
 
   const isDragging = draggingState > DraggingState.IDLE;
-
-  const mousePositionDataGrabber = useMemo(
-    () => (panelRef ? createMousePositionDataGrabberWeek(cells, gridInfo, panelRef) : () => null),
-    [cells, gridInfo, panelRef]
-  );
 
   const targetEvent = useMemo(() => {
     const eventId = draggingItemType?.split('/')[1];

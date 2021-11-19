@@ -1,15 +1,15 @@
 import { Fragment, FunctionComponent, h } from 'preact';
-import { useState } from 'preact/hooks';
+import { useMemo, useState } from 'preact/hooks';
 
 import range from 'tui-code-snippet/array/range';
 
 import { GridSelection } from '@src/components/dayGridCommon/gridSelection';
-import GridWithMouse from '@src/components/dayGridCommon/gridWithMouse';
 import { GridCell } from '@src/components/dayGridWeek/gridCell';
 import { TempHorizontalEvent } from '@src/components/events/tempHorizontalEvent';
 import { useAlldayGridRowDnd } from '@src/components/hooks/alldayGridRow';
 import { useDOMNode } from '@src/components/hooks/domNode';
-import { useGridSelection } from '@src/components/hooks/gridSelection';
+import { useDrag } from '@src/components/hooks/drag';
+import { useGridSelectionGridRow } from '@src/components/hooks/gridSelectionGridRow';
 import Template from '@src/components/template';
 import { PANEL_HEIGHT, WEEK_EVENT_MARGIN_TOP } from '@src/constants/style';
 import { useDispatch } from '@src/contexts/calendarStore';
@@ -22,12 +22,12 @@ import {
   isWithinHeight,
   TOTAL_WIDTH,
 } from '@src/helpers/grid';
+import { createMousePositionDataGrabberWeek } from '@src/helpers/view';
 import EventUIModel from '@src/model/eventUIModel';
 import { WeekGridRows } from '@src/slices/weekViewLayout';
 import TZDate from '@src/time/date';
-import { addDate, toEndOfDay, toStartOfDay } from '@src/time/datetime';
+import { addDate } from '@src/time/datetime';
 
-import { CellDateRange } from '@t/components/daygrid/gridSelectionData';
 import { WeekOption } from '@t/option';
 import { Cells, DayGridEventType } from '@t/panel';
 
@@ -52,17 +52,6 @@ const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
   return addDate(now, day - now.getDay());
 });
 
-function getGridInfoList(cells: Cells): CellDateRange[][] {
-  return [
-    cells.map<CellDateRange>((cell) => {
-      const start = toStartOfDay(cell);
-      const end = toEndOfDay(cell);
-
-      return { start, end };
-    }),
-  ];
-}
-
 export const TempAlldayGridRow: FunctionComponent<Props> = ({
   events,
   cells = defaultPanelInfoList,
@@ -73,11 +62,11 @@ export const TempAlldayGridRow: FunctionComponent<Props> = ({
   gridColWidthMap,
   timesWidth = 120,
   timezonesCount = 1,
-  shouldRenderDefaultPopup = false,
 }) => {
   const [panelContainer, setPanelContainerRef] = useDOMNode<HTMLDivElement>();
   const [clickedIndex, setClickedIndex] = useState(0);
   const [isClickedCount, setClickedCount] = useState(false);
+  const { setDraggingState, endDrag } = useDispatch('dnd');
   const { updateDayGridRowHeight } = useDispatch('weekViewLayout');
   // @TODO: get margin value dynamically
   const eventTopMargin = 2;
@@ -92,17 +81,40 @@ export const TempAlldayGridRow: FunctionComponent<Props> = ({
   );
   const columnWidth = timesWidth * timezonesCount;
 
+  const mousePositionDataGrabber = useMemo(
+    () =>
+      panelContainer
+        ? createMousePositionDataGrabberWeek(cells, gridInfo, panelContainer)
+        : () => null,
+    [cells, gridInfo, panelContainer]
+  );
+
   const { dragTargetEvent, resizingWidth } = useAlldayGridRowDnd({
     events,
     cells,
-    gridInfo,
     gridColWidthMap,
-    panelRef: panelContainer,
+    mousePositionDataGrabber,
   });
 
-  const { gridSelection, onSelectionChange, onSelectionEnd, onSelectionCancel } =
-    useGridSelection(shouldRenderDefaultPopup);
-  const gridInfoList = getGridInfoList(cells);
+  const gridSelection = useGridSelectionGridRow(mousePositionDataGrabber, cells);
+
+  const { onMouseDown } = useDrag({
+    onDragStart: (e) => {
+      setDraggingState({
+        draggingItemType: 'grid-selection',
+        initX: e.clientX,
+        initY: e.clientY,
+      });
+    },
+    onDrag: (e) => {
+      setDraggingState({
+        draggingItemType: 'grid-selection',
+        x: e.clientX,
+        y: e.clientY,
+      });
+    },
+    onDragEnd: endDrag,
+  });
 
   const onClickExceedCount = (index: number) => {
     setClickedCount(true);
@@ -159,21 +171,13 @@ export const TempAlldayGridRow: FunctionComponent<Props> = ({
       <div className={cls('panel-title')} style={{ width: columnWidth }}>
         <Template template={rowTitleTemplate} model={type} />
       </div>
-      <div className={cls('allday-panel')} ref={setPanelContainerRef}>
-        <GridWithMouse
-          gridInfoList={gridInfoList}
-          onSelectionEnd={onSelectionEnd}
-          onSelectionChange={onSelectionChange}
-          onSelectionCancel={onSelectionCancel}
-          getMousePositionData={(() => null) as any}
-        >
-          <div className={cls('panel-grid-wrapper')}>{gridCells}</div>
-          <GridSelection
-            gridSelectionData={gridSelection}
-            cells={cells}
-            narrowWeekend={narrowWeekend}
-          />
-        </GridWithMouse>
+      <div className={cls('allday-panel')} ref={setPanelContainerRef} onMouseDown={onMouseDown}>
+        <div className={cls('panel-grid-wrapper')}>{gridCells}</div>
+        <GridSelection
+          gridSelectionData={gridSelection}
+          cells={cells}
+          narrowWeekend={narrowWeekend}
+        />
         <div className={cls(`panel-${type}-events`)}>{horizontalEvents}</div>
         {dragTargetEvent && (
           <TempHorizontalEvent
