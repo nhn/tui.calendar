@@ -11,8 +11,10 @@ export interface DndSlice {
     draggingItemType: string | null;
     draggingState: DraggingState;
     shouldReset: boolean;
-    x: number;
-    y: number;
+    initX: number | null;
+    initY: number | null;
+    x: number | null;
+    y: number | null;
   };
 }
 
@@ -28,8 +30,10 @@ export function createDndSlice(): DndSlice {
       draggingItemType: null,
       draggingState: DraggingState.IDLE,
       shouldReset: false,
-      x: 0,
-      y: 0,
+      initX: null,
+      initY: null,
+      x: null,
+      y: null,
     },
   };
 }
