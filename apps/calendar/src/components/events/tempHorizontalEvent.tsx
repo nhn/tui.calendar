@@ -13,6 +13,8 @@ interface Props {
   uiModel: EventUIModel;
   eventHeight: number;
   headerHeight: number;
+  isResizing?: boolean;
+  resizingWidth?: string | null;
   flat?: boolean;
 }
 
@@ -21,6 +23,7 @@ interface StyleProps {
   eventHeight: number;
   headerHeight: number;
   flat: boolean;
+  isResizing: boolean;
 }
 
 function getMargin(flat: boolean) {
@@ -51,6 +54,7 @@ function getEventItemStyle({
   exceedLeft,
   exceedRight,
   eventHeight,
+  isResizing,
 }: EventItemStyleParam) {
   const defaultItemStyle = {
     color: '#333',
@@ -60,6 +64,7 @@ function getEventItemStyle({
     overflow: 'hidden',
     height: eventHeight,
     lineHeight: toPx(eventHeight),
+    opacity: isResizing ? 0.5 : 1,
   };
   const margin = getMargin(flat);
 
@@ -75,7 +80,7 @@ function getEventItemStyle({
       };
 }
 
-function getStyles({ uiModel, eventHeight, headerHeight, flat }: StyleProps) {
+function getStyles({ uiModel, eventHeight, headerHeight, flat, isResizing }: StyleProps) {
   const {
     width,
     left,
@@ -103,6 +108,7 @@ function getStyles({ uiModel, eventHeight, headerHeight, flat }: StyleProps) {
     bgColor,
     borderColor,
     eventHeight,
+    isResizing,
   });
 
   const resizeIconStyle = {
@@ -134,13 +140,16 @@ export const TempHorizontalEvent: FunctionComponent<Props> = ({
   uiModel,
   eventHeight,
   headerHeight,
+  isResizing = false,
+  resizingWidth = null,
 }) => {
-  const { setDraggingState, reset } = useDispatch('dnd');
+  const { setDraggingState, reset, endDrag } = useDispatch('dnd');
   const { dayEventBlockClassName, containerStyle, eventItemStyle, resizeIconStyle } = getStyles({
     uiModel,
     eventHeight,
     headerHeight,
     flat,
+    isResizing,
   });
 
   const { onMouseDown } = useDrag({
@@ -149,28 +158,22 @@ export const TempHorizontalEvent: FunctionComponent<Props> = ({
         draggingItemType: `horizontalEvent/${uiModel.cid()}`,
         x: e.clientX,
         y: e.clientY,
-        isDragging: true,
       });
     },
-    onDragEnd: () => {
-      setDraggingState({
-        isDragEnd: true,
-        isDragging: false,
-      });
-    },
+    onDragEnd: endDrag,
     onPressESCKey: reset,
   });
 
   return (
     <EventItem
-      containerStyle={containerStyle}
+      containerStyle={resizingWidth ? { ...containerStyle, width: resizingWidth } : containerStyle}
       eventItemStyle={eventItemStyle}
       className={dayEventBlockClassName}
     >
       <span className={cls('weekday-event-title')}>
         <Template template="time" model={uiModel.model} />
       </span>
-      {flat ? null : <ResizeIcon style={resizeIconStyle} onMouseDown={onMouseDown} />}
+      {flat || isResizing ? null : <ResizeIcon style={resizeIconStyle} onMouseDown={onMouseDown} />}
     </EventItem>
   );
 };

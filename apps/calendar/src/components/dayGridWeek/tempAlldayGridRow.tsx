@@ -92,7 +92,7 @@ export const TempAlldayGridRow: FunctionComponent<Props> = ({
   );
   const columnWidth = timesWidth * timezonesCount;
 
-  useAlldayGridRowDnd({
+  const { dragTargetEvent, resizingWidth } = useAlldayGridRowDnd({
     events,
     cells,
     gridInfo,
@@ -146,8 +146,9 @@ export const TempAlldayGridRow: FunctionComponent<Props> = ({
     .filter(isWithinHeight(height, EVENT_HEIGHT + WEEK_EVENT_MARGIN_TOP))
     .map((uiModel) => (
       <TempHorizontalEvent
-        uiModel={uiModel}
         key={`${type}-DayEvent-${uiModel.cid()}`}
+        uiModel={uiModel}
+        isResizing={uiModel.cid() === dragTargetEvent?.cid()}
         eventHeight={EVENT_HEIGHT}
         headerHeight={0}
       />
@@ -174,6 +175,14 @@ export const TempAlldayGridRow: FunctionComponent<Props> = ({
           />
         </GridWithMouse>
         <div className={cls(`panel-${type}-events`)}>{horizontalEvents}</div>
+        {dragTargetEvent && (
+          <TempHorizontalEvent
+            uiModel={dragTargetEvent}
+            eventHeight={EVENT_HEIGHT}
+            headerHeight={0}
+            resizingWidth={resizingWidth}
+          />
+        )}
       </div>
     </Fragment>
   );

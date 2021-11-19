@@ -72,7 +72,7 @@ export function useAlldayGridRowDnd({
     return null;
   }, [isDragging, mousePositionDataGrabber, x, y]);
 
-  const resizeGuideWidth = useMemo(() => {
+  const resizingWidth = useMemo(() => {
     if (isDragging && targetEventGridIndices.start > -1 && !isNil(currentGridX)) {
       return gridColWidthMap[0][currentGridX];
     }
@@ -119,8 +119,8 @@ export function useAlldayGridRowDnd({
   return useMemo(
     () => ({
       dragTargetEvent: targetEvent,
-      resizeGuideWidth,
+      resizingWidth,
     }),
-    [resizeGuideWidth, targetEvent]
+    [resizingWidth, targetEvent]
   );
 }
