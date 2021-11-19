@@ -45,11 +45,37 @@
   padding-left: 8px;
 }
 
+.dropdown-section {
+  position: relative;
+}
+
+.dropdown-section.calendar-section {
+  width: 176px;
+}
+
+.dropdown-section .content {
+  line-height: 30px;
+}
+
 .popup-section-title {
   width: calc(100% - 36px);
 }
 
-.popup-section-location input {
+.dot {
+  border-radius: 8px;
+  width: 12px;
+  height: 12px;
+  margin: 1px;
+}
+
+.content.event-calendar {
+  width: 125px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  top: -1px;
+}
+
+.popup-section-location .content {
   width: 400px;
 }
 
@@ -102,4 +128,33 @@
   padding: 8px;
   font-size: 0;
   margin-left: 4px;
+}
+
+.popup-button .event-state {
+  width: 58px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.dropdown-section.state-section {
+  width: 109px;
+}
+
+.state-section .content {
+  width: 58px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.popup-section-item.dropdown-menu-item {
+  display: block;
+  height: 30px;
+  border: none;
+  cursor: pointer;
+}
+
+.popup-section-item.popup-button {
+  height: 32px;
+  font-size: 0;
+  top: -1px;
 }

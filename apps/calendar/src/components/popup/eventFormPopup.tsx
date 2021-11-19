@@ -1,21 +1,52 @@
-import { FunctionComponent, h } from 'preact';
+import { Fragment, FunctionComponent, h } from 'preact';
+import { useState } from 'preact/hooks';
 
+import { CalendarDropdownMenu } from '@src/components/popup/calendarDropdownMenu';
 import { ClosePopupButton } from '@src/components/popup/closePopupButton';
 import { ConfirmPopupButton } from '@src/components/popup/confirmPopupButton';
+import { StateDropdownMenu } from '@src/components/popup/stateDropdownMenu';
+import { useStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
 import { toFormat } from '@src/time/datetime';
+import { noop } from '@src/utils/noop';
 
+import { EventState } from '@t/events';
+import { CalendarInfo } from '@t/option';
 import { EventFormPopupParam } from '@t/store';
 
-const PopupSection: FunctionComponent = ({ children }) => (
-  <div className={cls('popup-section')}>{children}</div>
+const PopupSection: FunctionComponent<{ classNames?: string[]; onClick?: () => void }> = ({
+  children,
+  classNames = [],
+  onClick = noop,
+}) => (
+  <div className={cls('popup-section', ...classNames)} onClick={onClick}>
+    {children}
+  </div>
 );
 
-const CalendarSelector: FunctionComponent = () => (
-  <PopupSection>
-    <div>{'캘린더 선택 드롭다운'}</div>
-  </PopupSection>
-);
+const CalendarSelector: FunctionComponent<{ calendars: CalendarInfo[]; calendarId?: string }> = ({
+  calendars,
+  calendarId,
+}) => {
+  const [isOpened, setOpened] = useState(false);
+  const onClick = () => setOpened(!isOpened);
+  const index = calendars.findIndex(({ id }) => id === calendarId);
+
+  return (
+    <PopupSection onClick={onClick} classNames={['dropdown-section', 'calendar-section']}>
+      {index !== -1 && calendars.length && (
+        <Fragment>
+          <button className={cls('popup-section-item', 'popup-button')}>
+            <span className={cls('icon', 'dot')} style={{ backgroundColor: 'rgb(158, 95, 255)' }} />
+            <span className={cls('content', 'event-calendar')}>My Calendar</span>
+            <span className={cls('icon', 'ic-dropdown-arrow')} />
+          </button>
+          <CalendarDropdownMenu menus={['menu1', 'menu2']} open={isOpened} calendars={calendars} />
+        </Fragment>
+      )}
+    </PopupSection>
+  );
+};
 
 const TitleInputBox: FunctionComponent = () => {
   return (
@@ -62,11 +93,22 @@ const DatePicker: FunctionComponent = () => {
   );
 };
 
-const EventState: FunctionComponent = () => (
-  <PopupSection>
-    <div>{'이벤트 상태 선택 드롭다운'}</div>
-  </PopupSection>
-);
+const EventStateSelector: FunctionComponent = () => {
+  const [isOpened, setOpened] = useState(false);
+  const [eventState, setEventState] = useState<EventState>('Busy');
+  const onClick = () => setOpened(!isOpened);
+
+  return (
+    <PopupSection onClick={onClick} classNames={['dropdown-section', 'state-section']}>
+      <button className={cls('popup-section-item', 'popup-button')}>
+        <span className={cls('icon', 'ic-state')} />
+        <span className={cls('content', 'event-state')}>{eventState}</span>
+        <span className={cls('icon', 'ic-dropdown-arrow')} />
+      </button>
+      {isOpened && <StateDropdownMenu setOpened={setOpened} setEventState={setEventState} />}
+    </PopupSection>
+  );
+};
 
 export const EventFormPopup: FunctionComponent<EventFormPopupParam> = ({
   start,
@@ -75,13 +117,15 @@ export const EventFormPopup: FunctionComponent<EventFormPopupParam> = ({
   close,
 }) => {
   // @TODO: form popup
+  const { calendars } = useStore((state) => state.calendar);
+
   return (
     <div className={cls('popup-container')}>
-      <CalendarSelector />
+      <CalendarSelector calendars={calendars} />
       <TitleInputBox />
       <LocationInputBox />
       <DatePicker />
-      <EventState />
+      <EventStateSelector />
       <ClosePopupButton close={close} />
       <PopupSection>
         <ConfirmPopupButton />
