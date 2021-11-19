@@ -1,10 +1,15 @@
 import { CalendarStore, SetState } from '@t/store';
 
+export enum DraggingState {
+  IDLE,
+  DRAGGING,
+  END_DRAG,
+}
+
 export interface DndSlice {
   dnd: {
     draggingItemType: string | null;
-    isDragging: boolean;
-    isDragEnd: boolean;
+    draggingState: DraggingState;
     shouldReset: boolean;
     x: number;
     y: number;
@@ -12,7 +17,8 @@ export interface DndSlice {
 }
 
 export interface DndDispatchers {
-  setDraggingState: (newState: Partial<DndSlice['dnd']>) => void;
+  setDraggingState: (newState: Partial<Omit<DndSlice['dnd'], 'draggingState'>>) => void;
+  endDrag: () => void;
   reset: () => void;
 }
 
@@ -20,8 +26,7 @@ export function createDndSlice(): DndSlice {
   return {
     dnd: {
       draggingItemType: null,
-      isDragging: false,
-      isDragEnd: false,
+      draggingState: DraggingState.IDLE,
       shouldReset: false,
       x: 0,
       y: 0,
@@ -36,6 +41,15 @@ export function createDndDispatchers(set: SetState<CalendarStore>): DndDispatche
         dnd: {
           ...state.dnd,
           ...newState,
+          draggingState: DraggingState.DRAGGING,
+        },
+      }));
+    },
+    endDrag: () => {
+      set((state) => ({
+        dnd: {
+          ...state.dnd,
+          draggingState: DraggingState.END_DRAG,
         },
       }));
     },

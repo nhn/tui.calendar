@@ -5,12 +5,10 @@ import { getGridDateIndex } from '@src/helpers/grid';
 import { createMousePositionDataGrabberWeek } from '@src/helpers/view';
 import EventUIModel from '@src/model/eventUIModel';
 import { dndSelector } from '@src/selectors';
+import { DraggingState } from '@src/slices/dnd';
+import { isNil } from '@src/utils/type';
 
 import { Cells } from '@t/panel';
-
-// function isValidDragging(targetItemType: string, currentItemType: string) {
-//   return currentItemType.startsWith(targetItemType);
-// }
 
 function getEventColIndex(uiModel: EventUIModel, cells: Cells) {
   const start = getGridDateIndex(uiModel.getStarts(), cells);
@@ -34,11 +32,13 @@ export function useAlldayGridRowDnd({
   gridInfo,
   gridColWidthMap,
 }: UseAlldayGridRowDndParams) {
-  const { draggingItemType, x, y, isDragging, isDragEnd } = useStore(dndSelector);
+  const { draggingItemType, x, y, draggingState } = useStore(dndSelector);
   const {
     dnd: { reset },
     calendar: { updateEvent },
   } = useDispatch(['dnd', 'calendar']);
+
+  const isDragging = draggingState > DraggingState.IDLE;
 
   const mousePositionDataGrabber = useMemo(
     () => (panelRef ? createMousePositionDataGrabberWeek(cells, gridInfo, panelRef) : () => null),
@@ -47,12 +47,12 @@ export function useAlldayGridRowDnd({
 
   const targetEvent = useMemo(() => {
     const eventId = draggingItemType?.split('/')[1];
-    if ((isDragging || isDragEnd) && eventId) {
+    if (isDragging && eventId) {
       return events.find((event) => event.cid() === Number(eventId));
     }
 
     return null;
-  }, [draggingItemType, events, isDragging, isDragEnd]);
+  }, [draggingItemType, events, isDragging]);
 
   const targetEventGridIndices = useMemo(() => {
     if (targetEvent) {
@@ -63,39 +63,49 @@ export function useAlldayGridRowDnd({
   }, [cells, targetEvent]);
 
   const currentGridX = useMemo(() => {
-    if (isDragging || isDragEnd) {
+    if (isDragging) {
       const data = mousePositionDataGrabber({ clientX: x, clientY: y } as MouseEvent);
 
       return data?.gridX ?? null;
     }
 
     return null;
-  }, [isDragEnd, isDragging, mousePositionDataGrabber, x, y]);
+  }, [isDragging, mousePositionDataGrabber, x, y]);
 
   const resizeGuideWidth = useMemo(() => {
-    if (isDragging && targetEventGridIndices.start > -1 && currentGridX) {
-      return gridColWidthMap[targetEventGridIndices.start][currentGridX];
+    if (isDragging && targetEventGridIndices.start > -1 && !isNil(currentGridX)) {
+      return gridColWidthMap[0][currentGridX];
     }
 
     return null;
   }, [currentGridX, gridColWidthMap, isDragging, targetEventGridIndices.start]);
 
   const shouldUpdateEventEnd = useMemo(() => {
-    return (
-      targetEvent &&
-      isDragEnd &&
-      currentGridX &&
-      targetEventGridIndices.start <= currentGridX &&
-      targetEventGridIndices.end !== currentGridX
+    return Boolean(
+      draggingState === DraggingState.END_DRAG &&
+        !isNil(targetEvent) &&
+        !isNil(currentGridX) &&
+        targetEventGridIndices.start <= currentGridX &&
+        targetEventGridIndices.end !== currentGridX
     );
-  }, [currentGridX, isDragEnd, targetEvent, targetEventGridIndices]);
+  }, [
+    currentGridX,
+    draggingState,
+    targetEvent,
+    targetEventGridIndices.end,
+    targetEventGridIndices.start,
+  ]);
 
   useEffect(() => {
     if (shouldUpdateEventEnd) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const targetDate = cells[currentGridX!];
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      updateEvent({ event: targetEvent!.model, eventData: { end: targetDate } });
+
+      updateEvent({
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        event: targetEvent!.model,
+        eventData: { end: targetDate },
+      });
       reset();
     }
   }, [cells, currentGridX, shouldUpdateEventEnd, targetEvent, updateEvent, reset]);
@@ -106,7 +116,11 @@ export function useAlldayGridRowDnd({
     [reset]
   );
 
-  return {
-    resizeGuideWidth,
-  };
+  return useMemo(
+    () => ({
+      dragTargetEvent: targetEvent,
+      resizeGuideWidth,
+    }),
+    [resizeGuideWidth, targetEvent]
+  );
 }
