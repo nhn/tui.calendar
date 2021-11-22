@@ -86,10 +86,13 @@ export interface InternalStoreAPI<State extends StateWithActions> {
   getState: GetState<State>;
   subscribe: Subscribe<State>;
   clearListeners: () => void;
-  debug: () => void;
 }
 
-export type StoreCreator<State extends StateWithActions> = (set: SetState<State>) => State;
+export type StoreCreator<State extends StateWithActions> = (
+  set: SetState<State>,
+  get: GetState<State>,
+  api: InternalStoreAPI<State>
+) => State;
 
 export type CalendarState = OptionSlice &
   TemplateSlice &
