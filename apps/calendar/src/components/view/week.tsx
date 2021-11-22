@@ -1,11 +1,11 @@
 import { FunctionComponent, h } from 'preact';
+import { useMemo } from 'preact/hooks';
 
 import range from 'tui-code-snippet/array/range';
 
 import GridHeader from '@src/components/dayGridCommon/gridHeader';
 import { GridRow } from '@src/components/dayGridWeek/gridRow';
 import { TempAlldayGridRow } from '@src/components/dayGridWeek/tempAlldayGridRow';
-import { Layout } from '@src/components/layout';
 import Panel from '@src/components/panel';
 import { ColumnInfo } from '@src/components/timeGrid/columnWithMouse';
 import { TimeGrid } from '@src/components/timeGrid/timeGrid';
@@ -14,7 +14,12 @@ import { useStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
 import { getDayNames } from '@src/helpers/dayName';
 import { getDayGridEvents } from '@src/helpers/grid';
-import { weekViewStateSelector } from '@src/selectors';
+import {
+  calendarSelector,
+  optionSelector,
+  templateSelector,
+  weekViewLayoutSelector,
+} from '@src/selectors';
 import TZDate from '@src/time/date';
 import {
   addDate,
@@ -45,13 +50,25 @@ function getCells(renderDate: TZDate, { startDayOfWeek = 0, workweek }: WeekOpti
   }, []);
 }
 
+function useWeekViewState() {
+  const template = useStore(templateSelector);
+  const option = useStore(optionSelector);
+  const calendar = useStore(calendarSelector);
+  const { dayGridRows: gridRowLayout } = useStore(weekViewLayoutSelector);
+
+  return useMemo(
+    () => ({
+      template,
+      option,
+      calendar,
+      gridRowLayout,
+    }),
+    [calendar, gridRowLayout, option, template]
+  );
+}
+
 export const Week: FunctionComponent = () => {
-  const {
-    template,
-    option,
-    calendar,
-    weekViewLayout: { dayGridRows: gridRowLayout },
-  } = useStore(weekViewStateSelector);
+  const { template, option, calendar, gridRowLayout } = useWeekViewState();
 
   if (!template || !option || !calendar || !gridRowLayout) {
     return null;
@@ -111,7 +128,8 @@ export const Week: FunctionComponent = () => {
   });
 
   return (
-    <Layout classNames={[cls('week-view')]}>
+    // @TODO: refactor Layout component
+    <div className={cls('week-view')}>
       <Panel name="week-view-daynames" height={WEEK_DAYNAME_HEIGHT + WEEK_DAYNAME_BORDER}>
         <GridHeader
           dayNames={dayNames}
@@ -126,6 +144,6 @@ export const Week: FunctionComponent = () => {
       <Panel name="time" autoSize={1}>
         <TimeGrid events={dayGridEvents.time} columnInfoList={columnInfoList} />
       </Panel>
-    </Layout>
+    </div>
   );
 };

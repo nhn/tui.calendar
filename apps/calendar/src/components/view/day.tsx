@@ -1,4 +1,5 @@
 import { FunctionComponent, h } from 'preact';
+import { useMemo } from 'preact/hooks';
 
 import GridHeader from '@src/components/dayGridCommon/gridHeader';
 import { GridRow } from '@src/components/dayGridWeek/gridRow';
@@ -11,20 +12,37 @@ import { useStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
 import { getDayNames } from '@src/helpers/dayName';
 import { getDayGridEvents } from '@src/helpers/grid';
-import { weekViewStateSelector } from '@src/selectors';
+import {
+  calendarSelector,
+  optionSelector,
+  templateSelector,
+  weekViewLayoutSelector,
+} from '@src/selectors';
 import TZDate from '@src/time/date';
 import { getGridInfo, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 
 import { WeekOption } from '@t/option';
 import { DayGridEventType } from '@t/panel';
 
+function useDayViewState() {
+  const template = useStore(templateSelector);
+  const calendar = useStore(calendarSelector);
+  const option = useStore(optionSelector);
+  const weekViewLayout = useStore(weekViewLayoutSelector);
+
+  return useMemo(
+    () => ({
+      template,
+      calendarData: calendar,
+      option,
+      weekViewLayout,
+    }),
+    [calendar, option, template, weekViewLayout]
+  );
+}
+
 export const Day: FunctionComponent = () => {
-  const {
-    template,
-    calendar: calendarData,
-    option,
-    weekViewLayout,
-  } = useStore(weekViewStateSelector);
+  const { template, calendarData, option, weekViewLayout } = useDayViewState();
 
   if (!template || !option || !calendarData || !weekViewLayout) {
     return null;
