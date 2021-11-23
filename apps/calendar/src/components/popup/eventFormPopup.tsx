@@ -1,5 +1,7 @@
 import { Fragment, FunctionComponent, h } from 'preact';
-import { useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
+
+import DatePicker from 'tui-date-picker';
 
 import { CalendarDropdownMenu } from '@src/components/popup/calendarDropdownMenu';
 import { ClosePopupButton } from '@src/components/popup/closePopupButton';
@@ -7,7 +9,7 @@ import { ConfirmPopupButton } from '@src/components/popup/confirmPopupButton';
 import { StateDropdownMenu } from '@src/components/popup/stateDropdownMenu';
 import { useStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
-import { toFormat } from '@src/time/datetime';
+import TZDate from '@src/time/date';
 import { noop } from '@src/utils/noop';
 
 import { EventState } from '@t/events';
@@ -82,19 +84,59 @@ const LocationInputBox: FunctionComponent = () => {
   );
 };
 
-const DatePicker: FunctionComponent = () => {
-  const [isAllday, setAllday] = useState(false);
+const DateSelector: FunctionComponent<{ start: TZDate; end: TZDate; isAllday: boolean }> = ({
+  start,
+  end,
+  isAllday: initialIsAllday,
+}) => {
+  const [isAllday, setAllday] = useState(initialIsAllday);
+  const startPickerContainerRef = useRef<HTMLDivElement>(null);
+  const startPickerInputRef = useRef<HTMLInputElement>(null);
+  const endPickerContainerRef = useRef<HTMLDivElement>(null);
+  const endPickerInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (
+      startPickerContainerRef.current &&
+      startPickerInputRef.current &&
+      endPickerContainerRef.current &&
+      endPickerInputRef.current
+    ) {
+      DatePicker.createRangePicker({
+        startpicker: {
+          date: start.toDate(),
+          input: startPickerInputRef.current,
+          container: startPickerContainerRef.current,
+        },
+        endpicker: {
+          date: end.toDate(),
+          input: endPickerInputRef.current,
+          container: endPickerContainerRef.current,
+        },
+        format: isAllday ? 'yyyy-MM-dd' : 'yyyy-MM-dd HH:mm',
+        timePicker: isAllday
+          ? false
+          : {
+              showMeridiem: false,
+              usageStatistics: false,
+            },
+        usageStatistics: false,
+      });
+    }
+  }, [start, end, isAllday]);
 
   return (
     <PopupSection>
       <div className={cls('popup-section-item', 'popup-start-date-picker')}>
         <span className={cls('icon', 'ic-date')} />
-        <input className={cls('content')} placeholder="Start date" />
+        <input className={cls('content')} placeholder="Start date" ref={startPickerInputRef} />
+        <div className={cls('startpicker-container')} ref={startPickerContainerRef} />
       </div>
       <span className={cls('popup-date-dash')}>-</span>
       <div className={cls('popup-section-item', 'popup-end-date-picker')}>
         <span className={cls('icon', 'ic-date')} />
-        <input className={cls('content')} placeholder="End date" />
+        <input className={cls('content')} placeholder="End date" ref={endPickerInputRef} />
+        <div className={cls('endpicker-container')} ref={endPickerContainerRef} />
       </div>
       <div
         className={cls('popup-section-item', 'popup-section-allday')}
@@ -132,10 +174,9 @@ const EventStateSelector: FunctionComponent = () => {
 export const EventFormPopup: FunctionComponent<EventFormPopupParam> = ({
   start,
   end,
-  isAllDay = false,
+  isAllday = false,
   close,
 }) => {
-  // @TODO: form popup
   const { calendars } = useStore((state) => state.calendar);
 
   return (
@@ -143,19 +184,12 @@ export const EventFormPopup: FunctionComponent<EventFormPopupParam> = ({
       <CalendarSelector calendars={calendars} />
       <TitleInputBox />
       <LocationInputBox />
-      <DatePicker />
+      <DateSelector start={start} end={end} isAllday={isAllday} />
       <EventStateSelector />
       <ClosePopupButton close={close} />
       <PopupSection>
         <ConfirmPopupButton />
       </PopupSection>
-      {/* <div>*/}
-      {/*  {toFormat(start, 'YYYY-MM-DD')} ~ {toFormat(end, 'YYYY-MM-DD')}{' '}*/}
-      {/*  <label>*/}
-      {/*    <input type="checkbox" checked={isAllDay} />*/}
-      {/*    All day*/}
-      {/*  </label>*/}
-      {/* </div>*/}
     </div>
   );
 };

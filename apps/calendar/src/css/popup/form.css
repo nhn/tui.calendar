@@ -108,6 +108,11 @@
   width: 176px;
 }
 
+.startpicker-container > div,
+.endpicker-container > div {
+  z-index: 1;
+}
+
 .popup-date-dash {
   font-size: 12px;
   color: #d5d5d5;

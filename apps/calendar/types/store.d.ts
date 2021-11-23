@@ -39,7 +39,7 @@ interface EventFormPopupParam extends BasePopupParam {
   // @TODO: 팝업 작성 시 타입 정의
   start: TZDate;
   end: TZDate;
-  isAllDay: boolean;
+  isAllday: boolean;
 }
 
 interface DetailPopupParam extends BasePopupParam {
