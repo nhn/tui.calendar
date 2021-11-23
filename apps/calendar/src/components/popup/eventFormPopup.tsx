@@ -24,24 +24,28 @@ const PopupSection: FunctionComponent<{ classNames?: string[]; onClick?: () => v
   </div>
 );
 
-const CalendarSelector: FunctionComponent<{ calendars: CalendarInfo[]; calendarId?: string }> = ({
-  calendars,
-  calendarId,
-}) => {
+const CalendarSelector: FunctionComponent<{ calendars: CalendarInfo[] }> = ({ calendars }) => {
   const [isOpened, setOpened] = useState(false);
+  const [calendarIndex, setCalendarIndex] = useState(0);
   const onClick = () => setOpened(!isOpened);
-  const index = calendars.findIndex(({ id }) => id === calendarId);
+  const { name, bgColor } = calendars[calendarIndex];
 
   return (
     <PopupSection onClick={onClick} classNames={['dropdown-section', 'calendar-section']}>
-      {index !== -1 && calendars.length && (
+      {calendars.length && (
         <Fragment>
           <button className={cls('popup-section-item', 'popup-button')}>
-            <span className={cls('icon', 'dot')} style={{ backgroundColor: 'rgb(158, 95, 255)' }} />
-            <span className={cls('content', 'event-calendar')}>My Calendar</span>
-            <span className={cls('icon', 'ic-dropdown-arrow')} />
+            <span className={cls('icon', 'dot')} style={{ backgroundColor: bgColor }} />
+            <span className={cls('content', 'event-calendar')}>{name}</span>
+            <span className={cls('icon', 'ic-dropdown-arrow', { open: isOpened })} />
           </button>
-          <CalendarDropdownMenu menus={['menu1', 'menu2']} open={isOpened} calendars={calendars} />
+          {isOpened && (
+            <CalendarDropdownMenu
+              calendars={calendars}
+              setOpened={setOpened}
+              setCalendarIndex={setCalendarIndex}
+            />
+          )}
         </Fragment>
       )}
     </PopupSection>

@@ -72,6 +72,10 @@
   background: url('./image/ic-arrow-solid-bottom.png') no-repeat;
 }
 
+.icon.open.ic-dropdown-arrow {
+  background: url('./image/ic-arrow-solid-top.png') no-repeat;
+}
+
 .ic-location-b {
   background: url('./image/ic-location-b.png');
 }

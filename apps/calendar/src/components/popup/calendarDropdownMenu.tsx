@@ -1,36 +1,57 @@
 import { FunctionComponent, h } from 'preact';
 
-import { useDispatch } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
-import { isFunction, isUndefined } from '@src/utils/type';
 
 import { CalendarInfo } from '@t/option';
 
 interface Props {
-  menus: string[];
-  open: boolean;
-  calendarColor?: string;
+  open?: boolean;
   calendars: CalendarInfo[];
+  setOpened: (isOpened: boolean) => void;
+  setCalendarIndex: (index: number) => void;
 }
 
+interface DropdownMenuItemProps {
+  index: number;
+  name: string;
+  bgColor: string;
+  onClick: (e: MouseEvent, index: number) => void;
+}
+
+const DropdownMenuItem: FunctionComponent<DropdownMenuItemProps> = ({
+  index,
+  name,
+  bgColor,
+  onClick,
+}) => (
+  <li className={cls('dropdown-menu-item')} onClick={(e) => onClick(e, index)}>
+    <span className={cls('icon', 'dot')} style={{ backgroundColor: bgColor }} />
+    <span className={cls('content')}>{name}</span>
+  </li>
+);
+
 export const CalendarDropdownMenu: FunctionComponent<Props> = ({
-  menus,
-  open,
-  calendarColor,
   calendars,
+  setOpened,
+  setCalendarIndex,
 }) => {
-  return calendars.length ? (
-    <ul
-      className={cls('dropdown-menu', {
-        open,
-      })}
-    >
-      {calendars.map(({ name }, index) => (
-        <li key={`dropdown-${name}`} className={cls('dropdown-menu-item')}>
-          <span className={cls({ dot: !!name })} style={{ backgroundColor: calendarColor }} />
-          <span>menu</span>
-        </li>
+  const onClickDropdownMenuItem = (e: MouseEvent, index: number) => {
+    e.stopPropagation();
+    setOpened(false);
+    setCalendarIndex(index);
+  };
+
+  return (
+    <ul className={cls('dropdown-menu')}>
+      {calendars.map(({ name, bgColor = '000' }, index) => (
+        <DropdownMenuItem
+          key={`dropdown-${name}-${index}`}
+          index={index}
+          name={name}
+          bgColor={bgColor}
+          onClick={onClickDropdownMenuItem}
+        />
       ))}
     </ul>
-  ) : null;
+  );
 };

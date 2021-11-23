@@ -61,6 +61,10 @@
   width: calc(100% - 36px);
 }
 
+.popup-section-title input {
+  width: 365px;
+}
+
 .dot {
   border-radius: 8px;
   width: 12px;
@@ -151,6 +155,15 @@
   height: 30px;
   border: none;
   cursor: pointer;
+}
+
+.dropdown-menu-item .content {
+  display: inline-block;
+  position: relative;
+  padding-left: 8px;
+  text-align: left;
+  font-size: 12px;
+  vertical-align: middle;
 }
 
 .popup-section-item.popup-button {
