@@ -63,10 +63,7 @@ function initializeMonthOption(monthOption: Option['month']): CalendarMonthOptio
 // But it needs a complex type such as `DeepRequired`.
 // maybe leveraging library like `ts-essential` might be helpful.
 export type OptionSlice = {
-  option: Omit<
-    Required<Option>,
-    'template' | 'calendars' | 'theme' | 'usageStatistics' | 'timezone'
-  >;
+  option: Omit<Required<Option>, 'template' | 'calendars' | 'theme' | 'timezone'>;
 };
 
 export type OptionDispatchers = {
@@ -87,6 +84,7 @@ export function createOptionSlice(option: Option = {}): OptionSlice {
       isReadOnly: option?.isReadOnly ?? false,
       week: initializeWeekOption(option.week),
       month: initializeMonthOption(option.month),
+      usageStatistics: option?.usageStatistics ?? true,
     },
   };
 }

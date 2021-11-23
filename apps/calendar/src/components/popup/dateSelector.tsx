@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 import DatePicker from 'tui-date-picker';
 
 import { PopupSection } from '@src/components/popup/popupSection';
+import { useStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
 import TZDate from '@src/time/date';
 
@@ -27,6 +28,7 @@ export const DateSelector: FunctionComponent<Props> = ({
   end,
   isAllday: initialIsAllday,
 }) => {
+  const usageStatistics = useStore((state) => state.option.usageStatistics);
   const [isAllday, setAllday] = useState(initialIsAllday);
   const startPickerContainerRef = useRef<HTMLDivElement>(null);
   const startPickerInputRef = useRef<HTMLInputElement>(null);
@@ -56,12 +58,12 @@ export const DateSelector: FunctionComponent<Props> = ({
           ? false
           : {
               showMeridiem: false,
-              usageStatistics: false,
+              usageStatistics,
             },
-        usageStatistics: false,
+        usageStatistics,
       });
     }
-  }, [start, end, isAllday]);
+  }, [start, end, isAllday, usageStatistics]);
 
   return (
     <PopupSection>
