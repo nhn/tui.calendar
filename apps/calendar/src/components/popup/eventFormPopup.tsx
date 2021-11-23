@@ -13,21 +13,26 @@ import { cls } from '@src/helpers/css';
 
 import { EventFormPopupParam } from '@t/store';
 
+const classNames = {
+  popupContainer: cls('popup-container'),
+};
+
 export const EventFormPopup: FunctionComponent<EventFormPopupParam> = ({
   start,
   end,
   isAllday = false,
+  eventState = 'Busy',
   close,
 }) => {
   const { calendars } = useStore((state) => state.calendar);
 
   return (
-    <div className={cls('popup-container')}>
+    <div className={classNames.popupContainer}>
       <CalendarSelector calendars={calendars} />
       <TitleInputBox />
       <LocationInputBox />
       <DateSelector start={start} end={end} isAllday={isAllday} />
-      <EventStateSelector />
+      <EventStateSelector eventState={eventState} />
       <ClosePopupButton close={close} />
       <PopupSection>
         <ConfirmPopupButton />

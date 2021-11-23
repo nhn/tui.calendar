@@ -103,13 +103,11 @@
   padding-left: 4px;
 }
 
-.popup-start-date-picker,
-.popup-end-date-picker {
+.popup-date-picker {
   width: 176px;
 }
 
-.startpicker-container > div,
-.endpicker-container > div {
+.datepicker-container > div {
   z-index: 1;
 }
 

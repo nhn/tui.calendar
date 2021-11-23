@@ -13,6 +13,15 @@ interface Props {
   isAllday: boolean;
 }
 
+const classNames = {
+  datePickerContainer: cls('datepicker-container'),
+  datePicker: cls('popup-section-item', 'popup-date-picker'),
+  allday: cls('popup-section-item', 'popup-section-allday'),
+  dateIcon: cls('icon', 'ic-date'),
+  dateDash: cls('popup-date-dash'),
+  content: cls('content'),
+};
+
 export const DateSelector: FunctionComponent<Props> = ({
   start,
   end,
@@ -56,28 +65,25 @@ export const DateSelector: FunctionComponent<Props> = ({
 
   return (
     <PopupSection>
-      <div className={cls('popup-section-item', 'popup-start-date-picker')}>
-        <span className={cls('icon', 'ic-date')} />
-        <input className={cls('content')} placeholder="Start date" ref={startPickerInputRef} />
-        <div className={cls('startpicker-container')} ref={startPickerContainerRef} />
+      <div className={classNames.datePicker}>
+        <span className={classNames.dateIcon} />
+        <input className={classNames.content} placeholder="Start date" ref={startPickerInputRef} />
+        <div className={classNames.datePickerContainer} ref={startPickerContainerRef} />
       </div>
-      <span className={cls('popup-date-dash')}>-</span>
-      <div className={cls('popup-section-item', 'popup-end-date-picker')}>
-        <span className={cls('icon', 'ic-date')} />
-        <input className={cls('content')} placeholder="End date" ref={endPickerInputRef} />
-        <div className={cls('endpicker-container')} ref={endPickerContainerRef} />
+      <span className={classNames.dateDash}>-</span>
+      <div className={classNames.datePicker}>
+        <span className={classNames.dateIcon} />
+        <input className={classNames.content} placeholder="End date" ref={endPickerInputRef} />
+        <div className={classNames.datePickerContainer} ref={endPickerContainerRef} />
       </div>
-      <div
-        className={cls('popup-section-item', 'popup-section-allday')}
-        onClick={() => setAllday((prev) => !prev)}
-      >
+      <div className={classNames.allday} onClick={() => setAllday((prev) => !prev)}>
         <span
           className={cls('icon', {
             'ic-checkbox-normal': !isAllday,
             'ic-checkbox-checked': isAllday,
           })}
         />
-        <span className={cls('content')}>All day</span>
+        <span className={classNames.content}>All day</span>
       </div>
     </PopupSection>
   );

@@ -8,6 +8,11 @@ interface Props {
   close?: () => void;
 }
 
+const classNames = {
+  closeButton: cls('popup-button', 'popup-close'),
+  closeIcon: cls('icon', 'ic-close'),
+};
+
 export const ClosePopupButton: FunctionComponent<Props> = ({ close }) => {
   const { hide } = useDispatch('popup');
 
@@ -20,8 +25,8 @@ export const ClosePopupButton: FunctionComponent<Props> = ({ close }) => {
   };
 
   return (
-    <button type="button" className={cls('popup-button', 'popup-close')} onClick={onClickHandler}>
-      <i className={cls('icon', 'ic-close')} />
+    <button type="button" className={classNames.closeButton} onClick={onClickHandler}>
+      <i className={classNames.closeIcon} />
     </button>
   );
 };

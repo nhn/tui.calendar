@@ -8,6 +8,10 @@ interface Props {
   confirm?: () => void;
 }
 
+const classNames = {
+  confirmButton: cls('popup-button', 'popup-confirm'),
+};
+
 export const ConfirmPopupButton: FunctionComponent<Props> = ({ confirm }) => {
   const { hide } = useDispatch('popup');
 
@@ -20,7 +24,7 @@ export const ConfirmPopupButton: FunctionComponent<Props> = ({ confirm }) => {
   };
 
   return (
-    <button type="button" className={cls('popup-button', 'popup-confirm')} onClick={onClickHandler}>
+    <button type="button" className={classNames.confirmButton} onClick={onClickHandler}>
       <span>Save</span>
     </button>
   );

@@ -7,7 +7,8 @@ import { ViewDispatchers, ViewSlice } from '@src/slices/view';
 import { WeekViewLayoutDispatchers, WeekViewLayoutSlice } from '@src/slices/weekViewLayout';
 import TZDate from '@src/time/date';
 
-import { MonthOption, WeekOption } from '@t/option';
+import type { EventState } from '@t/events';
+import type { MonthOption, WeekOption } from '@t/option';
 
 type CalendarMonthOption = Required<MonthOption>;
 type CalendarWeekOption = Required<WeekOption>;
@@ -40,6 +41,7 @@ interface EventFormPopupParam extends BasePopupParam {
   start: TZDate;
   end: TZDate;
   isAllday: boolean;
+  eventState?: EventState;
 }
 
 interface DetailPopupParam extends BasePopupParam {

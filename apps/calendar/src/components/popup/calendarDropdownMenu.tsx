@@ -18,15 +18,22 @@ interface DropdownMenuItemProps {
   onClick: (e: MouseEvent, index: number) => void;
 }
 
+const classNames = {
+  dropdownMenu: cls('dropdown-menu'),
+  dropdownMenuItem: cls('dropdown-menu-item'),
+  dotIcon: cls('icon', 'dot'),
+  content: cls('content'),
+};
+
 const DropdownMenuItem: FunctionComponent<DropdownMenuItemProps> = ({
   index,
   name,
   bgColor,
   onClick,
 }) => (
-  <li className={cls('dropdown-menu-item')} onClick={(e) => onClick(e, index)}>
-    <span className={cls('icon', 'dot')} style={{ backgroundColor: bgColor }} />
-    <span className={cls('content')}>{name}</span>
+  <li className={classNames.dropdownMenuItem} onClick={(e) => onClick(e, index)}>
+    <span className={classNames.dotIcon} style={{ backgroundColor: bgColor }} />
+    <span className={classNames.content}>{name}</span>
   </li>
 );
 
@@ -42,7 +49,7 @@ export const CalendarDropdownMenu: FunctionComponent<Props> = ({
   };
 
   return (
-    <ul className={cls('dropdown-menu')}>
+    <ul className={classNames.dropdownMenu}>
       {calendars.map(({ name, bgColor = '000' }, index) => (
         <DropdownMenuItem
           key={`dropdown-${name}-${index}`}

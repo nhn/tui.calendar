@@ -10,6 +10,12 @@ interface Props {
 }
 
 const EVENT_STATES: EventState[] = ['Busy', 'Free'];
+const classNames = {
+  popupSectionItem: cls('popup-section-item', 'dropdown-menu-item'),
+  dropdownMenu: cls('dropdown-menu'),
+  icon: cls('icon'),
+  content: cls('content'),
+};
 
 export const StateDropdownMenu: FunctionComponent<Props> = ({ setOpened, setEventState }) => {
   const onClickDropdown = (e: MouseEvent, state: EventState) => {
@@ -19,15 +25,15 @@ export const StateDropdownMenu: FunctionComponent<Props> = ({ setOpened, setEven
   };
 
   return (
-    <ul className={cls('dropdown-menu')}>
+    <ul className={classNames.dropdownMenu}>
       {EVENT_STATES.map((state) => (
         <li
           key={state}
-          className={cls('popup-section-item', 'dropdown-menu-item')}
+          className={classNames.popupSectionItem}
           onClick={(e) => onClickDropdown(e, state)}
         >
-          <span className={cls('icon')} />
-          <span className={cls('content')}>{state}</span>
+          <span className={classNames.icon} />
+          <span className={classNames.content}>{state}</span>
         </li>
       ))}
     </ul>

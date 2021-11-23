@@ -11,6 +11,12 @@ interface Props {
   calendars: CalendarInfo[];
 }
 
+const classNames = {
+  popupSectionItem: cls('popup-section-item', 'popup-button'),
+  dotIcon: cls('icon', 'dot'),
+  content: cls('content', 'event-calendar'),
+};
+
 export const CalendarSelector: FunctionComponent<Props> = ({ calendars }) => {
   const [isOpened, setOpened] = useState(false);
   const [calendarIndex, setCalendarIndex] = useState(0);
@@ -21,9 +27,9 @@ export const CalendarSelector: FunctionComponent<Props> = ({ calendars }) => {
     <PopupSection onClick={onClick} classNames={['dropdown-section', 'calendar-section']}>
       {calendars.length && (
         <Fragment>
-          <button className={cls('popup-section-item', 'popup-button')}>
-            <span className={cls('icon', 'dot')} style={{ backgroundColor: bgColor }} />
-            <span className={cls('content', 'event-calendar')}>{name}</span>
+          <button className={classNames.popupSectionItem}>
+            <span className={classNames.dotIcon} style={{ backgroundColor: bgColor }} />
+            <span className={classNames.content}>{name}</span>
             <span className={cls('icon', 'ic-dropdown-arrow', { open: isOpened })} />
           </button>
           {isOpened && (
