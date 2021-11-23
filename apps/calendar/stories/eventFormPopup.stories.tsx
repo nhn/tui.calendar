@@ -1,13 +1,13 @@
 import { FunctionComponent, h } from 'preact';
 
 import { EventFormPopup } from '@src/components/popup/eventFormPopup';
-import type EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 
+import { CalendarInfo } from '@t/option';
 import { EventFormPopupParam } from '@t/store';
 
+import { calendars } from '@stories/util/mockCalendars';
 import { ProviderWrapper } from '@stories/util/providerWrapper';
-import { createRandomEventModelsForMonth } from '@stories/util/randomEvents';
 import { Story } from '@storybook/preact';
 
 export default {
@@ -16,7 +16,7 @@ export default {
 };
 
 interface EventFormPopupStoryProps extends EventFormPopupParam {
-  events?: EventModel[];
+  calendars?: CalendarInfo[];
 }
 
 const PopupContainer: FunctionComponent = ({ children }) => (
@@ -32,38 +32,8 @@ const PopupContainer: FunctionComponent = ({ children }) => (
   </div>
 );
 
-const calendarNames = [
-  'My Calendar',
-  'Company',
-  'Family',
-  'Friend',
-  'Travel',
-  'etc',
-  'Birthdays',
-  'National Holidays',
-];
-const calendarColors = [
-  '#9e5fff',
-  '#00a9ff',
-  '#ff5583',
-  '#03bd9e',
-  '#bbdc00',
-  '#9d9d9d',
-  '#ffbb3b',
-  '#ff4040',
-];
-
 const Template: Story<EventFormPopupStoryProps> = (args) => (
-  <ProviderWrapper
-    events={args.events}
-    options={{
-      calendars: calendarNames.map((name, index) => ({
-        name,
-        id: name,
-        bgColor: calendarColors[index],
-      })),
-    }}
-  >
+  <ProviderWrapper options={{ calendars: args.calendars }}>
     <PopupContainer>
       <EventFormPopup {...args} />
     </PopupContainer>
@@ -74,5 +44,11 @@ export const EventFormPopupWithCalendars = Template.bind({});
 EventFormPopupWithCalendars.args = {
   start: new TZDate(),
   end: new TZDate(),
-  events: createRandomEventModelsForMonth(40),
+  calendars,
+};
+
+export const EventFormPopupWithoutCalendars = Template.bind({});
+EventFormPopupWithoutCalendars.args = {
+  start: new TZDate(),
+  end: new TZDate(),
 };

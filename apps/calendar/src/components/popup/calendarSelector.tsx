@@ -21,15 +21,18 @@ export const CalendarSelector: FunctionComponent<Props> = ({ calendars }) => {
   const [isOpened, setOpened] = useState(false);
   const [calendarIndex, setCalendarIndex] = useState(0);
   const onClick = () => setOpened((prev) => !prev);
-  const { name, bgColor } = calendars[calendarIndex];
+  const selectedCalendar = calendars[calendarIndex];
 
   return (
     <PopupSection onClick={onClick} classNames={['dropdown-section', 'calendar-section']}>
-      {calendars.length && (
+      {calendars && calendars.length && (
         <Fragment>
           <button className={classNames.popupSectionItem}>
-            <span className={classNames.dotIcon} style={{ backgroundColor: bgColor }} />
-            <span className={classNames.content}>{name}</span>
+            <span
+              className={classNames.dotIcon}
+              style={{ backgroundColor: selectedCalendar.bgColor }}
+            />
+            <span className={classNames.content}>{selectedCalendar.name}</span>
             <span className={cls('icon', 'ic-dropdown-arrow', { open: isOpened })} />
           </button>
           {isOpened && (
