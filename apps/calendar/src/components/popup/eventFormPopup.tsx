@@ -27,7 +27,7 @@ const PopupSection: FunctionComponent<{ classNames?: string[]; onClick?: () => v
 const CalendarSelector: FunctionComponent<{ calendars: CalendarInfo[] }> = ({ calendars }) => {
   const [isOpened, setOpened] = useState(false);
   const [calendarIndex, setCalendarIndex] = useState(0);
-  const onClick = () => setOpened(!isOpened);
+  const onClick = () => setOpened((prev) => !prev);
   const { name, bgColor } = calendars[calendarIndex];
 
   return (
@@ -53,14 +53,19 @@ const CalendarSelector: FunctionComponent<{ calendars: CalendarInfo[] }> = ({ ca
 };
 
 const TitleInputBox: FunctionComponent = () => {
+  const [isPrivate, setPrivate] = useState(false);
+
   return (
     <PopupSection>
       <div className={cls('popup-section-item', 'popup-section-title')}>
         <span className={cls('icon', 'ic-title')} />
         <input className={cls('content')} placeholder="Subject" />
       </div>
-      <button className={cls('popup-section-item', 'popup-section-private', 'popup-button')}>
-        <span className={cls('icon', 'ic-private')} />
+      <button
+        className={cls('popup-section-item', 'popup-section-private', 'popup-button')}
+        onClick={() => setPrivate((prev) => !prev)}
+      >
+        <span className={cls('icon', { 'ic-private': isPrivate, 'ic-public': !isPrivate })} />
       </button>
     </PopupSection>
   );
@@ -78,6 +83,8 @@ const LocationInputBox: FunctionComponent = () => {
 };
 
 const DatePicker: FunctionComponent = () => {
+  const [isAllday, setAllday] = useState(false);
+
   return (
     <PopupSection>
       <div className={cls('popup-section-item', 'popup-start-date-picker')}>
@@ -89,8 +96,16 @@ const DatePicker: FunctionComponent = () => {
         <span className={cls('icon', 'ic-date')} />
         <input className={cls('content')} placeholder="End date" />
       </div>
-      <div className={cls('popup-section-item', 'popup-section-allday')}>
-        <span className={cls('icon', 'ic-checkbox-normal')} />
+      <div
+        className={cls('popup-section-item', 'popup-section-allday')}
+        onClick={() => setAllday((prev) => !prev)}
+      >
+        <span
+          className={cls('icon', {
+            'ic-checkbox-normal': !isAllday,
+            'ic-checkbox-checked': isAllday,
+          })}
+        />
         <span className={cls('content')}>All day</span>
       </div>
     </PopupSection>

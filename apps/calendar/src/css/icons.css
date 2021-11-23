@@ -68,6 +68,10 @@
   background: url('./image/ic-checkbox-normal.png') no-repeat;
 }
 
+.icon.ic-checkbox-checked {
+  background: url('./image/ic-checkbox-checked.png') no-repeat;
+}
+
 .icon.ic-dropdown-arrow {
   background: url('./image/ic-arrow-solid-bottom.png') no-repeat;
 }
