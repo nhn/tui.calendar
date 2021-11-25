@@ -13,6 +13,7 @@ const classNames = {
 
 export const TitleInputBox: FunctionComponent = () => {
   const [isPrivate, setPrivate] = useState(false);
+  const togglePrivate = () => setPrivate((prev) => !prev);
 
   return (
     <PopupSection>
@@ -20,7 +21,7 @@ export const TitleInputBox: FunctionComponent = () => {
         <span className={classNames.titleIcon} />
         <input className={classNames.content} placeholder="Subject" />
       </div>
-      <button className={classNames.privateButton} onClick={() => setPrivate((prev) => !prev)}>
+      <button className={classNames.privateButton} onClick={togglePrivate}>
         <span className={cls('icon', { 'ic-private': isPrivate, 'ic-public': !isPrivate })} />
       </button>
     </PopupSection>
