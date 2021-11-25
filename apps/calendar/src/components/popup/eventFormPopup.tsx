@@ -10,6 +10,7 @@ import { PopupSection } from '@src/components/popup/popupSection';
 import { TitleInputBox } from '@src/components/popup/titleInputBox';
 import { useStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
+import { calendarSelector } from '@src/selectors';
 
 import { EventFormPopupParam } from '@t/store';
 
@@ -24,7 +25,7 @@ export const EventFormPopup: FunctionComponent<EventFormPopupParam> = ({
   eventState = 'Busy',
   close,
 }) => {
-  const { calendars } = useStore((state) => state.calendar);
+  const { calendars } = useStore(calendarSelector);
 
   return (
     <div className={classNames.popupContainer}>
