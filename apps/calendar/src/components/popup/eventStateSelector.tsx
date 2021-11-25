@@ -7,6 +7,8 @@ import { cls } from '@src/helpers/css';
 
 import { EventState } from '@t/events';
 
+import { useDropdownState } from '../hooks/dropdownState';
+
 interface Props {
   eventState: EventState;
 }
@@ -20,12 +22,11 @@ const classNames = {
 };
 
 export const EventStateSelector: FunctionComponent<Props> = ({ eventState: initialEventState }) => {
-  const [isOpened, setOpened] = useState(false);
   const [eventState, setEventState] = useState<EventState>(initialEventState);
-  const onClick = () => setOpened(!isOpened);
+  const { isOpened, setOpened, toggleDropdown } = useDropdownState();
 
   return (
-    <PopupSection onClick={onClick} classNames={classNames.popupSection}>
+    <PopupSection onClick={toggleDropdown} classNames={classNames.popupSection}>
       <button className={classNames.popupSectionItem}>
         <span className={classNames.stateIcon} />
         <span className={classNames.content}>{eventState}</span>

@@ -1,6 +1,7 @@
 import { FunctionComponent, h } from 'preact';
 import { useState } from 'preact/hooks';
 
+import { useDropdownState } from '@src/components/hooks/dropdownState';
 import { CalendarDropdownMenu } from '@src/components/popup/calendarDropdownMenu';
 import { PopupSection } from '@src/components/popup/popupSection';
 import { cls } from '@src/helpers/css';
@@ -19,13 +20,12 @@ const classNames = {
 };
 
 export const CalendarSelector: FunctionComponent<Props> = ({ calendars }) => {
-  const [isOpened, setOpened] = useState(false);
   const [calendarIndex, setCalendarIndex] = useState(0);
-  const onClick = () => setOpened((prev) => !prev);
+  const { isOpened, setOpened, toggleDropdown } = useDropdownState();
   const { bgColor, name } = calendars[calendarIndex];
 
   return (
-    <PopupSection onClick={onClick} classNames={classNames.popupSection}>
+    <PopupSection onClick={toggleDropdown} classNames={classNames.popupSection}>
       <button className={classNames.popupSectionItem}>
         <span className={classNames.dotIcon} style={{ backgroundColor: bgColor }} />
         <span className={classNames.content}>{name}</span>
