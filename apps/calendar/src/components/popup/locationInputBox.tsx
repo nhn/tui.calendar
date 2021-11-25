@@ -9,13 +9,11 @@ const classNames = {
   content: cls('content'),
 };
 
-export const LocationInputBox: FunctionComponent = () => {
-  return (
-    <PopupSection>
-      <div className={classNames.popupSectionItem}>
-        <span className={classNames.locationIcon} />
-        <input className={classNames.content} placeholder="Location" />
-      </div>
-    </PopupSection>
-  );
-};
+export const LocationInputBox: FunctionComponent = () => (
+  <PopupSection>
+    <div className={classNames.popupSectionItem}>
+      <span className={classNames.locationIcon} />
+      <input className={classNames.content} placeholder="Location" />
+    </div>
+  </PopupSection>
+);

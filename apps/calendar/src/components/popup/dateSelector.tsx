@@ -31,6 +31,7 @@ export const DateSelector: FunctionComponent<Props> = ({
 }) => {
   const { usageStatistics } = useStore(optionSelector);
   const [isAllday, setAllday] = useState(initialIsAllday);
+  const toggleAllday = () => setAllday((prev) => !prev);
   const startPickerContainerRef = useRef<HTMLDivElement>(null);
   const startPickerInputRef = useRef<HTMLInputElement>(null);
   const endPickerContainerRef = useRef<HTMLDivElement>(null);
@@ -79,7 +80,7 @@ export const DateSelector: FunctionComponent<Props> = ({
         <input className={classNames.content} placeholder="End date" ref={endPickerInputRef} />
         <div className={classNames.datePickerContainer} ref={endPickerContainerRef} />
       </div>
-      <div className={classNames.allday} onClick={() => setAllday((prev) => !prev)}>
+      <div className={classNames.allday} onClick={toggleAllday}>
         <span
           className={cls('icon', {
             'ic-checkbox-normal': !isAllday,
