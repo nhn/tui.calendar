@@ -1,4 +1,4 @@
-import { Fragment, FunctionComponent, h } from 'preact';
+import { FunctionComponent, h } from 'preact';
 import { useState } from 'preact/hooks';
 
 import { CalendarDropdownMenu } from '@src/components/popup/calendarDropdownMenu';
@@ -25,24 +25,20 @@ export const CalendarSelector: FunctionComponent<Props> = ({ calendars }) => {
 
   return (
     <PopupSection onClick={onClick} classNames={['dropdown-section', 'calendar-section']}>
-      {calendars && calendars.length && (
-        <Fragment>
-          <button className={classNames.popupSectionItem}>
-            <span
-              className={classNames.dotIcon}
-              style={{ backgroundColor: selectedCalendar.bgColor }}
-            />
-            <span className={classNames.content}>{selectedCalendar.name}</span>
-            <span className={cls('icon', 'ic-dropdown-arrow', { open: isOpened })} />
-          </button>
-          {isOpened && (
-            <CalendarDropdownMenu
-              calendars={calendars}
-              setOpened={setOpened}
-              setCalendarIndex={setCalendarIndex}
-            />
-          )}
-        </Fragment>
+      <button className={classNames.popupSectionItem}>
+        <span
+          className={classNames.dotIcon}
+          style={{ backgroundColor: selectedCalendar.bgColor }}
+        />
+        <span className={classNames.content}>{selectedCalendar.name}</span>
+        <span className={cls('icon', 'ic-dropdown-arrow', { open: isOpened })} />
+      </button>
+      {isOpened && (
+        <CalendarDropdownMenu
+          calendars={calendars}
+          setOpened={setOpened}
+          setCalendarIndex={setCalendarIndex}
+        />
       )}
     </PopupSection>
   );

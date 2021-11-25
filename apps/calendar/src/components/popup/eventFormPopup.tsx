@@ -28,7 +28,7 @@ export const EventFormPopup: FunctionComponent<EventFormPopupParam> = ({
 
   return (
     <div className={classNames.popupContainer}>
-      <CalendarSelector calendars={calendars} />
+      {calendars?.length ? <CalendarSelector calendars={calendars} /> : <PopupSection />}
       <TitleInputBox />
       <LocationInputBox />
       <DateSelector start={start} end={end} isAllday={isAllday} />
