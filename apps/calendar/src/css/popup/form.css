@@ -75,6 +75,7 @@
 .content.event-calendar {
   width: 125px;
   text-overflow: ellipsis;
+  white-space: nowrap;
   overflow: hidden;
   top: -1px;
 }
@@ -140,6 +141,7 @@
 .popup-button .event-state {
   width: 58px;
   text-overflow: ellipsis;
+  white-space: nowrap;
   overflow: hidden;
 }
 
@@ -150,6 +152,7 @@
 .state-section .content {
   width: 58px;
   text-overflow: ellipsis;
+  white-space: nowrap;
   overflow: hidden;
 }
 
