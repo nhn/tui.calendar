@@ -37,6 +37,13 @@ export const DateSelector: FunctionComponent<Props> = ({
   const endPickerContainerRef = useRef<HTMLDivElement>(null);
   const endPickerInputRef = useRef<HTMLInputElement>(null);
 
+  // NOTE: Setting default start/end time when editing allday event first time.
+  // This logic refers to Apple calendar's behavior.
+  if (initialIsAllday) {
+    start.setHours(12, 0, 0);
+    end.setHours(13, 0, 0);
+  }
+
   useEffect(() => {
     if (
       startPickerContainerRef.current &&
