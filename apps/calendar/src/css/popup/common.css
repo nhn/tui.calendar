@@ -1,11 +1,46 @@
-.popup-close {
+.popup-button.popup-close {
   position: absolute;
-  right: 0;
-  outline: 0;
-  background: none;
-  border: 0;
-  font-size: 14px;
-  line-height: 28px;
-  padding-right: 17px;
+  top: 10px;
+  right: 10px;
+  background-color: #fff;
+  padding: 2px;
+  border: none;
+}
+
+.popup-button.popup-confirm {
+  float: right;
+  width: 96px;
+  height: 36px;
+  border-radius: 40px;
+  background-color: #ff6618;
+  font-size: 12px;
+  font-weight: bold;
+  color: #fff;
+  border: none;
+}
+
+.dropdown-menu {
+  position: absolute;
+  width: 100%;
+  top: 31px;
+  z-index: 1;
+  padding: 4px 0;
+  background-color: #fff;
+  border: 1px solid #d5d5d5;
+  border-top: none;
+  border-radius: 0 0 2px 2px;
+}
+
+.dropdown-menu.open {
+  display: block;
+}
+
+.dropdown-menu-item {
+  width: 100%;
+  height: 30px;
+  border: none;
+  padding: 0 9px 0 12px;
+  font-size: 0;
+  border-radius: 2px;
   cursor: pointer;
 }

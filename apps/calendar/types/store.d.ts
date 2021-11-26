@@ -7,7 +7,8 @@ import { ViewDispatchers, ViewSlice } from '@src/slices/view';
 import { WeekViewLayoutDispatchers, WeekViewLayoutSlice } from '@src/slices/weekViewLayout';
 import TZDate from '@src/time/date';
 
-import { MonthOption, WeekOption } from '@t/option';
+import type { EventState } from '@t/events';
+import type { MonthOption, WeekOption } from '@t/option';
 
 type CalendarMonthOption = Required<MonthOption>;
 type CalendarWeekOption = Required<WeekOption>;
@@ -39,7 +40,8 @@ interface EventFormPopupParam extends BasePopupParam {
   // @TODO: 팝업 작성 시 타입 정의
   start: TZDate;
   end: TZDate;
-  isAllDay: boolean;
+  isAllday: boolean;
+  eventState?: EventState;
 }
 
 interface DetailPopupParam extends BasePopupParam {
