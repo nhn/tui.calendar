@@ -20,6 +20,20 @@ module.exports = (env, argv) => {
         },
         {
           test: /\.css$/,
+          include: /node_modules/,
+          use: [
+            'style-loader',
+            {
+              loader: 'css-loader',
+              options: {
+                importLoaders: 1,
+              },
+            },
+          ],
+        },
+        {
+          test: /\.css$/,
+          exclude: /node_modules/,
           use: [
             'style-loader',
             {

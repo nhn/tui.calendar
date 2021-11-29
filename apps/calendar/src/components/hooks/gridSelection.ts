@@ -21,7 +21,7 @@ export function useGridSelection(shouldRenderDefaultPopup = false) {
         param: {
           start,
           end,
-          isAllDay: true,
+          isAllday: true,
           popupRect: {
             left: x,
             top: y,

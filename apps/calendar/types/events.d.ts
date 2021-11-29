@@ -63,3 +63,5 @@ export interface EventModelData {
 }
 
 export type TimeUnit = 'second' | 'minute' | 'hour' | 'date' | 'month' | 'year';
+
+export type EventState = 'Busy' | 'Free';
