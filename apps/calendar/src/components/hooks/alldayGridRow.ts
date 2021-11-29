@@ -5,6 +5,7 @@ import { getGridDateIndex } from '@src/helpers/grid';
 import EventUIModel from '@src/model/eventUIModel';
 import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
+import TZDate from '@src/time/date';
 import { isNil } from '@src/utils/type';
 
 import { Cells } from '@t/panel';
@@ -18,9 +19,9 @@ function getEventColIndex(uiModel: EventUIModel, cells: Cells) {
 
 interface UseAlldayGridRowDndParams {
   events: EventUIModel[];
-  cells: any;
+  cells: TZDate[];
   gridColWidthMap: string[][];
-  mousePositionDataGrabber: (e: MouseEvent) => any;
+  mousePositionDataGrabber: (e: MouseEvent) => MousePositionData | null;
 }
 
 export function useAlldayGridRowDnd({
