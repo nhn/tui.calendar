@@ -4,8 +4,8 @@ import { useMemo } from 'preact/hooks';
 import range from 'tui-code-snippet/array/range';
 
 import GridHeader from '@src/components/dayGridCommon/gridHeader';
+import { AlldayGridRow } from '@src/components/dayGridWeek/alldayGridRow';
 import { GridRow } from '@src/components/dayGridWeek/gridRow';
-import { TempAlldayGridRow } from '@src/components/dayGridWeek/tempAlldayGridRow';
 import Panel from '@src/components/panel';
 import { ColumnInfo } from '@src/components/timeGrid/columnWithMouse';
 import { TimeGrid } from '@src/components/timeGrid/timeGrid';
@@ -31,7 +31,7 @@ import {
 } from '@src/time/datetime';
 
 import { WeekOption } from '@t/option';
-import { Cells, DayGridEventType } from '@t/panel';
+import { AlldayEventCategory, Cells } from '@t/panel';
 
 function getCells(renderDate: TZDate, { startDayOfWeek = 0, workweek }: WeekOption): Cells {
   const renderDay = renderDate.getDay();
@@ -96,14 +96,14 @@ export const Week: FunctionComponent = () => {
       ({ start: toStartOfDay(cell), end: toEndOfDay(cell), unit: 'minute', slot: 30 } as ColumnInfo)
   );
   const gridRows = Object.entries(gridRowLayout).map(([key, value]) => {
-    const rowType = key as DayGridEventType;
+    const rowType = key as AlldayEventCategory;
 
     return (
       <Panel name={rowType} key={rowType} resizable>
         {rowType === 'allday' ? (
-          <TempAlldayGridRow
+          <AlldayGridRow
             key={rowType}
-            type={rowType}
+            category={rowType}
             events={dayGridEvents[rowType]}
             gridInfo={gridInfo}
             gridColWidthMap={gridColWidthMap}

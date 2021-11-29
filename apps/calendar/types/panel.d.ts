@@ -1,6 +1,6 @@
 import TZDate from '@src/time/date';
 
-export type DayGridEventType = 'milestone' | 'allday' | 'task';
+export type AlldayEventCategory = 'milestone' | 'allday' | 'task';
 
 export type PanelType = 'daygrid' | 'timegrid';
 

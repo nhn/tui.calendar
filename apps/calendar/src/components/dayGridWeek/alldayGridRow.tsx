@@ -29,12 +29,12 @@ import TZDate from '@src/time/date';
 import { addDate } from '@src/time/datetime';
 
 import { WeekOption } from '@t/option';
-import { Cells, DayGridEventType } from '@t/panel';
+import { AlldayEventCategory, Cells } from '@t/panel';
 
-type GridRowTitleTemplate = `${DayGridEventType}Title`;
+type GridRowTitleTemplate = `${Props['category']}Title`;
 
 interface Props {
-  type: DayGridEventType;
+  category: Exclude<AlldayEventCategory, 'milestone' | 'task'>;
   events: EventUIModel[];
   cells?: Cells;
   timesWidth?: number;
@@ -52,10 +52,10 @@ const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
   return addDate(now, day - now.getDay());
 });
 
-export const TempAlldayGridRow: FunctionComponent<Props> = ({
+export const AlldayGridRow: FunctionComponent<Props> = ({
   events,
   cells = defaultPanelInfoList,
-  type,
+  category,
   height = PANEL_HEIGHT,
   options = {},
   gridInfo,
@@ -71,7 +71,7 @@ export const TempAlldayGridRow: FunctionComponent<Props> = ({
   const eventTopMargin = 2;
   const maxTop = Math.max(0, ...events.map(({ top }) => top));
   const { narrowWeekend = false } = options;
-  const rowTitleTemplate: GridRowTitleTemplate = `${type}Title`;
+  const rowTitleTemplate: GridRowTitleTemplate = `${category}Title`;
 
   const { widthList, leftList } = getGridWidthAndLeftPercentValues(
     cells,
@@ -103,14 +103,14 @@ export const TempAlldayGridRow: FunctionComponent<Props> = ({
     setClickedCount(true);
     setClickedIndex(index);
     updateDayGridRowHeight({
-      rowName: type as WeekGridRows,
+      rowName: category as WeekGridRows,
       height: (maxTop + 1) * EVENT_HEIGHT,
     });
   };
   const onClickCollapseButton = () => {
     setClickedCount(false);
     updateDayGridRowHeight({
-      rowName: type as WeekGridRows,
+      rowName: category as WeekGridRows,
       height: PANEL_HEIGHT,
     });
   };
@@ -141,7 +141,7 @@ export const TempAlldayGridRow: FunctionComponent<Props> = ({
     .filter(isWithinHeight(height, EVENT_HEIGHT + WEEK_EVENT_MARGIN_TOP))
     .map((uiModel) => (
       <HorizontalEvent
-        key={`${type}-DayEvent-${uiModel.cid()}`}
+        key={`${category}-DayEvent-${uiModel.cid()}`}
         uiModel={uiModel}
         isResizing={uiModel.cid() === dragTargetEvent?.cid()}
         eventHeight={EVENT_HEIGHT}
@@ -152,7 +152,7 @@ export const TempAlldayGridRow: FunctionComponent<Props> = ({
   return (
     <Fragment>
       <div className={cls('panel-title')} style={{ width: columnWidth }}>
-        <Template template={rowTitleTemplate} model={type} />
+        <Template template={rowTitleTemplate} model={category} />
       </div>
       <div className={cls('allday-panel')} ref={setPanelContainerRef} onMouseDown={onMouseDown}>
         <div className={cls('panel-grid-wrapper')}>{gridCells}</div>
@@ -161,7 +161,7 @@ export const TempAlldayGridRow: FunctionComponent<Props> = ({
           cells={cells}
           narrowWeekend={narrowWeekend}
         />
-        <div className={cls(`panel-${type}-events`)}>{horizontalEvents}</div>
+        <div className={cls(`panel-${category}-events`)}>{horizontalEvents}</div>
         {dragTargetEvent && (
           <HorizontalEvent
             uiModel={dragTargetEvent}

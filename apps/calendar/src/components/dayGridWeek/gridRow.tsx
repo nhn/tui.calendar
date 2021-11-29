@@ -29,12 +29,12 @@ import { addDate, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 
 import { CellDateRange } from '@t/components/daygrid/gridSelectionData';
 import { WeekOption } from '@t/option';
-import { Cells, DayGridEventType } from '@t/panel';
+import { AlldayEventCategory, Cells } from '@t/panel';
 
-type GridRowTitleTemplate = `${DayGridEventType}Title`;
+type GridRowTitleTemplate = `${AlldayEventCategory}Title`;
 
 interface Props {
-  type: DayGridEventType;
+  type: AlldayEventCategory;
   events: EventUIModel[];
   cells?: Cells;
   timesWidth?: number;

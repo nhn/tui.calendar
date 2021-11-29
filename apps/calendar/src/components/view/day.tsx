@@ -22,7 +22,7 @@ import TZDate from '@src/time/date';
 import { getGridInfo, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 
 import { WeekOption } from '@t/option';
-import { DayGridEventType } from '@t/panel';
+import { AlldayEventCategory } from '@t/panel';
 
 function useDayViewState() {
   const template = useStore(templateSelector);
@@ -69,7 +69,7 @@ export const Day: FunctionComponent = () => {
       ({ start: toStartOfDay(cell), end: toEndOfDay(cell), unit: 'minute', slot: 30 } as ColumnInfo)
   );
   const allDayPanels = Object.entries(weekViewLayout.dayGridRows).map(([key, value]) => {
-    const panelType = key as DayGridEventType;
+    const panelType = key as AlldayEventCategory;
 
     return (
       <Panel key={panelType} name={panelType} resizable>
