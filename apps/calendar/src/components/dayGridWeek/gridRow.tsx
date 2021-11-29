@@ -6,7 +6,7 @@ import range from 'tui-code-snippet/array/range';
 import { GridSelection } from '@src/components/dayGridCommon/gridSelection';
 import GridWithMouse from '@src/components/dayGridCommon/gridWithMouse';
 import { GridCell } from '@src/components/dayGridWeek/gridCell';
-import HorizontalEvent from '@src/components/events/horizontalEvent';
+import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import { useDOMNode } from '@src/components/hooks/domNode';
 import { useGridSelection } from '@src/components/hooks/gridSelection';
 import Template from '@src/components/template';
@@ -70,7 +70,6 @@ export const GridRow: FunctionComponent<Props> = ({
   height = PANEL_HEIGHT,
   options = {},
   gridInfo,
-  gridColWidthMap,
   timesWidth = 120,
   timezonesCount = 1,
   shouldRenderDefaultPopup = false,
@@ -142,13 +141,10 @@ export const GridRow: FunctionComponent<Props> = ({
     .filter(isWithinHeight(height, EVENT_HEIGHT + WEEK_EVENT_MARGIN_TOP))
     .map((uiModel) => (
       <HorizontalEvent
-        uiModel={uiModel}
         key={`${type}-DayEvent-${uiModel.cid()}`}
+        uiModel={uiModel}
         eventHeight={EVENT_HEIGHT}
         headerHeight={0}
-        getMousePositionData={getMousePositionData}
-        gridColWidthMap={gridColWidthMap}
-        cells={cells}
       />
     ));
 

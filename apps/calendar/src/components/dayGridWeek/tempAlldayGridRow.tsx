@@ -5,7 +5,7 @@ import range from 'tui-code-snippet/array/range';
 
 import { GridSelection } from '@src/components/dayGridCommon/gridSelection';
 import { GridCell } from '@src/components/dayGridWeek/gridCell';
-import { TempHorizontalEvent } from '@src/components/events/tempHorizontalEvent';
+import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import { useAlldayGridRowDnd } from '@src/components/hooks/alldayGridRow';
 import { useDOMNode } from '@src/components/hooks/domNode';
 import { useDrag } from '@src/components/hooks/drag';
@@ -140,7 +140,7 @@ export const TempAlldayGridRow: FunctionComponent<Props> = ({
   const horizontalEvents = events
     .filter(isWithinHeight(height, EVENT_HEIGHT + WEEK_EVENT_MARGIN_TOP))
     .map((uiModel) => (
-      <TempHorizontalEvent
+      <HorizontalEvent
         key={`${type}-DayEvent-${uiModel.cid()}`}
         uiModel={uiModel}
         isResizing={uiModel.cid() === dragTargetEvent?.cid()}
@@ -163,7 +163,7 @@ export const TempAlldayGridRow: FunctionComponent<Props> = ({
         />
         <div className={cls(`panel-${type}-events`)}>{horizontalEvents}</div>
         {dragTargetEvent && (
-          <TempHorizontalEvent
+          <HorizontalEvent
             uiModel={dragTargetEvent}
             eventHeight={EVENT_HEIGHT}
             headerHeight={0}

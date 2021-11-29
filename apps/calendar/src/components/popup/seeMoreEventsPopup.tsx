@@ -1,6 +1,6 @@
 import { FunctionComponent, h } from 'preact';
 
-import HorizontalEvent from '@src/components/events/horizontalEvent';
+import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import { ClosePopupButton } from '@src/components/popup/closePopupButton';
 import Template from '@src/components/template';
 import {
