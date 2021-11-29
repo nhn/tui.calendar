@@ -66,7 +66,6 @@ export const TempAlldayGridRow: FunctionComponent<Props> = ({
   const [panelContainer, setPanelContainerRef] = useDOMNode<HTMLDivElement>();
   const [clickedIndex, setClickedIndex] = useState(0);
   const [isClickedCount, setClickedCount] = useState(false);
-  const { setDraggingState, endDrag } = useDispatch('dnd');
   const { updateDayGridRowHeight } = useDispatch('weekViewLayout');
   // @TODO: get margin value dynamically
   const eventTopMargin = 2;
@@ -98,23 +97,7 @@ export const TempAlldayGridRow: FunctionComponent<Props> = ({
 
   const gridSelection = useGridSelectionGridRow(mousePositionDataGrabber, cells);
 
-  const { onMouseDown } = useDrag({
-    onDragStart: (e) => {
-      setDraggingState({
-        draggingItemType: 'grid-selection',
-        initX: e.clientX,
-        initY: e.clientY,
-      });
-    },
-    onDrag: (e) => {
-      setDraggingState({
-        draggingItemType: 'grid-selection',
-        x: e.clientX,
-        y: e.clientY,
-      });
-    },
-    onDragEnd: endDrag,
-  });
+  const { onMouseDown } = useDrag('grid-selection');
 
   const onClickExceedCount = (index: number) => {
     setClickedCount(true);

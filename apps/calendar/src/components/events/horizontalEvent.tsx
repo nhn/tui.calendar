@@ -172,7 +172,7 @@ const HorizontalEvent: FunctionComponent<Props> = ({
     lastGridColIndex.current = null;
   };
 
-  const { onMouseDown } = useDrag({
+  const { onMouseDown } = useDrag('horizontal-event', {
     onDragStart: () => {
       lastGridColIndex.current = end;
       setResizing(true);

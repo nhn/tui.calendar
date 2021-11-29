@@ -1,4 +1,7 @@
+import { FunctionComponent, h } from 'preact';
+
 import { DragListeners, MINIMUM_MOVE_DISTANCE, useDrag } from '@src/components/hooks/drag';
+import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
 import { noop } from '@src/utils/noop';
 
 import { createKeyboardEvent, createMouseEvent, spyOnDragEvent } from '@test/helper';
@@ -11,8 +14,13 @@ describe('drag hook', () => {
   let mouseMoveEvent: MouseEvent;
   let mouseUpEvent: MouseEvent;
   let listeners: DragListeners;
+  const wrapper: FunctionComponent = ({ children }) => {
+    const store = initCalendarStore();
+
+    return <StoreProvider store={store}>{children}</StoreProvider>;
+  };
   const setup = () => {
-    const { result } = renderHook(() => useDrag(listeners));
+    const { result } = renderHook(() => useDrag('drag-test', listeners), { wrapper });
     act(() => {
       result.current?.onMouseDown(mouseDownEvent);
     });

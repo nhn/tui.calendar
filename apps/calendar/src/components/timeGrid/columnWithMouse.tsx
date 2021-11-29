@@ -124,7 +124,7 @@ export const ColumnWithMouse: FunctionComponent<Props> = (props: Props) => {
     }
   };
 
-  const { onMouseDown, isDragging } = useDrag({
+  const { onMouseDown, isDragging } = useDrag('column-selection', {
     onDragStart,
     onDrag,
     onDragEnd,

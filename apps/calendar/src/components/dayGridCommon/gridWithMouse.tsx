@@ -119,7 +119,7 @@ const GridWithMouse: FunctionComponent<Props> = ({
 
   const onPressESCKey = () => onSelectionCancel();
 
-  const { onMouseDown, isDragging } = useDrag({
+  const { onMouseDown, isDragging } = useDrag('grid-with-mouse', {
     onDragStart,
     onDrag,
     onDragEnd,

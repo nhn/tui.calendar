@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 
-import { useDispatch, useStore } from '@src/contexts/calendarStore';
+import { useStore } from '@src/contexts/calendarStore';
 import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import TZDate from '@src/time/date';
@@ -59,7 +59,6 @@ export function useGridSelectionGridRow(
   const initSelectionDataRef = useRef<GridSelectionData | null>(null);
   const prevSelectionDataRef = useRef<GridSelectionData | null>(null);
   const { draggingItemType, draggingState, x, y, initX, initY } = useStore(dndSelector);
-  const { reset } = useDispatch('dnd');
   const isSelectingGrid =
     draggingItemType === 'grid-selection' && draggingState > DraggingState.IDLE;
   const hasCurrentCoords = !isNil(x) && !isNil(y);
@@ -128,10 +127,9 @@ export function useGridSelectionGridRow(
   useEffect(() => {
     if (isDraggingEnd && !isNil(prevSelectionDataRef.current)) {
       setGridSelection(prevSelectionDataRef.current);
-      reset();
       prevSelectionDataRef.current = null;
     }
-  }, [isDraggingEnd, reset]);
+  }, [isDraggingEnd]);
 
   return gridSelection;
 }

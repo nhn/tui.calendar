@@ -30,10 +30,7 @@ export function useAlldayGridRowDnd({
   mousePositionDataGrabber,
 }: UseAlldayGridRowDndParams) {
   const { draggingItemType, x, y, draggingState } = useStore(dndSelector);
-  const {
-    dnd: { reset },
-    calendar: { updateEvent },
-  } = useDispatch(['dnd', 'calendar']);
+  const { updateEvent } = useDispatch('calendar');
 
   const isDragging = draggingState > DraggingState.IDLE;
 
@@ -98,15 +95,8 @@ export function useAlldayGridRowDnd({
         event: targetEvent!.model,
         eventData: { end: targetDate },
       });
-      reset();
     }
-  }, [cells, currentGridX, shouldUpdateEventEnd, targetEvent, updateEvent, reset]);
-
-  useEffect(
-    () => reset,
-
-    [reset]
-  );
+  }, [cells, currentGridX, shouldUpdateEventEnd, targetEvent, updateEvent]);
 
   return useMemo(
     () => ({

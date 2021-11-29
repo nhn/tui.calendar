@@ -3,7 +3,6 @@ import { FunctionComponent, h } from 'preact';
 import ResizeIcon from '@src/components/events/resizeIcon';
 import { useDrag } from '@src/components/hooks/drag';
 import Template from '@src/components/template';
-import { useDispatch } from '@src/contexts/calendarStore';
 import { cls, toPercent, toPx } from '@src/helpers/css';
 import EventUIModel from '@src/model/eventUIModel';
 
@@ -143,7 +142,6 @@ export const TempHorizontalEvent: FunctionComponent<Props> = ({
   isResizing = false,
   resizingWidth = null,
 }) => {
-  const { setDraggingState, reset, endDrag } = useDispatch('dnd');
   const { dayEventBlockClassName, containerStyle, eventItemStyle, resizeIconStyle } = getStyles({
     uiModel,
     eventHeight,
@@ -152,17 +150,7 @@ export const TempHorizontalEvent: FunctionComponent<Props> = ({
     isResizing,
   });
 
-  const { onMouseDown } = useDrag({
-    onDrag: (e) => {
-      setDraggingState({
-        draggingItemType: `horizontalEvent/${uiModel.cid()}`,
-        x: e.clientX,
-        y: e.clientY,
-      });
-    },
-    onDragEnd: endDrag,
-    onPressESCKey: reset,
-  });
+  const { onMouseDown } = useDrag(`horizontalEvent/${uiModel.cid()}`);
 
   return (
     <EventItem
