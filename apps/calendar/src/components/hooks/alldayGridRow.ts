@@ -63,7 +63,7 @@ export function useAlldayGridRowDnd({
 
   const resizingWidth = useMemo(() => {
     if (isDragging && targetEventGridIndices.start > -1 && !isNil(currentGridX)) {
-      return gridColWidthMap[0][currentGridX];
+      return gridColWidthMap[targetEventGridIndices.start][currentGridX];
     }
 
     return null;
