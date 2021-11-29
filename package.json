@@ -6,7 +6,7 @@
     "@babel/plugin-transform-react-jsx": "^7.14.9",
     "@babel/preset-env": "^7.15.8",
     "@babel/preset-typescript": "^7.15.0",
-    "@playwright/test": "^1.16.2",
+    "@playwright/test": "^1.17.0-rc1",
     "@storybook/addon-postcss": "^2.0.0",
     "@storybook/addons": "^6.3.12",
     "@storybook/builder-webpack5": "^6.3.12",
