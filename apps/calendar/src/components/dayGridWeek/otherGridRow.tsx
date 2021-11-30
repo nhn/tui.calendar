@@ -1,5 +1,4 @@
 import { Fragment, FunctionComponent, h } from 'preact';
-import { useState } from 'preact/hooks';
 
 import range from 'tui-code-snippet/array/range';
 
@@ -7,21 +6,21 @@ import { GridCells } from '@src/components/dayGridWeek/gridCells';
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import Template from '@src/components/template';
 import { PANEL_HEIGHT, WEEK_EVENT_MARGIN_TOP } from '@src/constants/style';
-import { useDispatch } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
 import { EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
 import EventUIModel from '@src/model/eventUIModel';
-import { WeekGridRows } from '@src/slices/weekViewLayout';
 import TZDate from '@src/time/date';
 import { addDate } from '@src/time/datetime';
 
 import { WeekOption } from '@t/option';
 import { AlldayEventCategory, Cells } from '@t/panel';
 
+import { useHeightController } from '../hooks/heightController';
+
 type GridRowTitleTemplate = `${AlldayEventCategory}Title`;
 
 interface Props {
-  category: AlldayEventCategory;
+  category: Exclude<AlldayEventCategory, 'allday'>;
   events: EventUIModel[];
   cells?: Cells;
   timesWidth?: number;
@@ -46,30 +45,14 @@ export const OtherGridRow: FunctionComponent<Props> = ({
   timesWidth = 120,
   timezonesCount = 1,
 }) => {
-  const [clickedIndex, setClickedIndex] = useState(0);
-  const [isClickedCount, setClickedCount] = useState(false);
-  const { updateDayGridRowHeight } = useDispatch('weekViewLayout');
   const maxTop = Math.max(0, ...events.map(({ top }) => top));
   const { narrowWeekend = false } = options;
   const rowTitleTemplate: GridRowTitleTemplate = `${category}Title`;
 
   const columnWidth = timesWidth * timezonesCount;
 
-  const onClickExceedCount = (index: number) => {
-    setClickedCount(true);
-    setClickedIndex(index);
-    updateDayGridRowHeight({
-      rowName: category as WeekGridRows,
-      height: (maxTop + 1) * EVENT_HEIGHT,
-    });
-  };
-  const onClickCollapseButton = () => {
-    setClickedCount(false);
-    updateDayGridRowHeight({
-      rowName: category as WeekGridRows,
-      height: PANEL_HEIGHT,
-    });
-  };
+  const { clickedIndex, isClickedCount, onClickExceedCount, onClickCollapseButton } =
+    useHeightController(maxTop, category);
 
   const horizontalEvents = events
     .filter(isWithinHeight(height, EVENT_HEIGHT + WEEK_EVENT_MARGIN_TOP))
