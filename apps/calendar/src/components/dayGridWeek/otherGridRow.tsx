@@ -16,8 +16,6 @@ import { addDate } from '@src/time/datetime';
 import { WeekOption } from '@t/option';
 import { AlldayEventCategory, Cells } from '@t/panel';
 
-import { useHeightController } from '../hooks/heightController';
-
 type GridRowTitleTemplate = `${AlldayEventCategory}Title`;
 
 interface Props {
