@@ -4,6 +4,7 @@ import range from 'tui-code-snippet/array/range';
 
 import { GridCells } from '@src/components/dayGridWeek/gridCells';
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
+import { useHeightController } from '@src/components/hooks/heightController';
 import Template from '@src/components/template';
 import { PANEL_HEIGHT, WEEK_EVENT_MARGIN_TOP } from '@src/constants/style';
 import { cls } from '@src/helpers/css';
