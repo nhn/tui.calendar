@@ -5,7 +5,7 @@ import range from 'tui-code-snippet/array/range';
 
 import GridHeader from '@src/components/dayGridCommon/gridHeader';
 import { AlldayGridRow } from '@src/components/dayGridWeek/alldayGridRow';
-import { GridRow } from '@src/components/dayGridWeek/gridRow';
+import { OtherGridRow } from '@src/components/dayGridWeek/otherGridRow';
 import Panel from '@src/components/panel';
 import { ColumnInfo } from '@src/components/timeGrid/columnWithMouse';
 import { TimeGrid } from '@src/components/timeGrid/timeGrid';
@@ -102,7 +102,6 @@ export const Week: FunctionComponent = () => {
       <Panel name={rowType} key={rowType} resizable>
         {rowType === 'allday' ? (
           <AlldayGridRow
-            key={rowType}
             category={rowType}
             events={dayGridEvents[rowType]}
             gridInfo={gridInfo}
@@ -112,15 +111,13 @@ export const Week: FunctionComponent = () => {
             options={weekOptions}
           />
         ) : (
-          <GridRow
-            key={rowType}
-            type={rowType}
+          <OtherGridRow
+            category={rowType}
             events={dayGridEvents[rowType]}
-            gridInfo={gridInfo}
-            gridColWidthMap={gridColWidthMap}
             cells={cells}
             height={value.height}
             options={weekOptions}
+            gridColWidthMap={gridColWidthMap}
           />
         )}
       </Panel>
