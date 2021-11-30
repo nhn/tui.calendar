@@ -1,7 +1,7 @@
 import { FunctionComponent, h } from 'preact';
 
-import { DragListeners, useDrag } from '@src/components/hooks/drag';
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
+import { DragListeners, useDrag } from '@src/hooks/common/drag';
 import { noop } from '@src/utils/noop';
 
 import { createKeyboardEvent, createMouseEvent, spyOnDragEvent } from '@test/helper';

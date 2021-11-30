@@ -6,16 +6,16 @@ import range from 'tui-code-snippet/array/range';
 import { GridSelection } from '@src/components/dayGridCommon/gridSelection';
 import { GridCells } from '@src/components/dayGridWeek/gridCells';
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
-import { useAlldayGridRowDnd } from '@src/components/hooks/alldayGridRow';
-import { useDOMNode } from '@src/components/hooks/domNode';
-import { useDrag } from '@src/components/hooks/drag';
-import { useGridSelectionGridRow } from '@src/components/hooks/gridSelectionGridRow';
-import { useHeightController } from '@src/components/hooks/heightController';
 import Template from '@src/components/template';
 import { PANEL_HEIGHT, WEEK_EVENT_MARGIN_TOP } from '@src/constants/style';
 import { cls } from '@src/helpers/css';
 import { EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
 import { createMousePositionDataGrabberWeek } from '@src/helpers/view';
+import { useDOMNode } from '@src/hooks/common/domNode';
+import { useDrag } from '@src/hooks/common/drag';
+import { useAlldayGridRowEventResize } from '@src/hooks/dayGridWeek/alldayGridRowEventResize';
+import { useAlldayGridRowSelection } from '@src/hooks/dayGridWeek/alldayGridRowSelection';
+import { useGridRowHeightController } from '@src/hooks/dayGridWeek/gridRowHeightController';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { addDate } from '@src/time/datetime';
@@ -70,19 +70,19 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
     [cells, gridInfo, panelContainer]
   );
 
-  const { dragTargetEvent, resizingWidth } = useAlldayGridRowDnd({
+  const { dragTargetEvent, resizingWidth } = useAlldayGridRowEventResize({
     events,
     cells,
     gridColWidthMap,
     mousePositionDataGrabber,
   });
 
-  const gridSelection = useGridSelectionGridRow(mousePositionDataGrabber, cells);
+  const gridSelection = useAlldayGridRowSelection(mousePositionDataGrabber, cells);
 
   const { onMouseDown } = useDrag('grid-selection');
 
   const { clickedIndex, isClickedCount, onClickExceedCount, onClickCollapseButton } =
-    useHeightController(maxTop, category);
+    useGridRowHeightController(maxTop, category);
 
   const horizontalEvents = events
     .filter(isWithinHeight(height, EVENT_HEIGHT + WEEK_EVENT_MARGIN_TOP))

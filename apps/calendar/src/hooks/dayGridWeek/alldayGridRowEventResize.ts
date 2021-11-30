@@ -17,19 +17,19 @@ function getEventColIndex(uiModel: EventUIModel, cells: Cells) {
   return { start, end };
 }
 
-interface UseAlldayGridRowDndParams {
+interface Params {
   events: EventUIModel[];
   cells: TZDate[];
   gridColWidthMap: string[][];
   mousePositionDataGrabber: (e: MouseEvent) => MousePositionData | null;
 }
 
-export function useAlldayGridRowDnd({
+export function useAlldayGridRowEventResize({
   events,
   cells,
   gridColWidthMap,
   mousePositionDataGrabber,
-}: UseAlldayGridRowDndParams) {
+}: Params) {
   const { draggingItemType, x, y, draggingState } = useStore(dndSelector);
   const { updateEvent } = useDispatch('calendar');
 

@@ -1,9 +1,9 @@
 import { FunctionComponent, h } from 'preact';
 
 import ResizeIcon from '@src/components/events/resizeIcon';
-import { useDrag } from '@src/components/hooks/drag';
 import Template from '@src/components/template';
 import { cls, toPercent, toPx } from '@src/helpers/css';
+import { useDrag } from '@src/hooks/common/drag';
 import EventUIModel from '@src/model/eventUIModel';
 
 import { StyleProp } from '@t/components/common';

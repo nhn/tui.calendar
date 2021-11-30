@@ -51,7 +51,7 @@ interface MousePositionDataGrabber {
   (mouseEvent: MouseEvent): any;
 }
 
-export function useGridSelectionGridRow(
+export function useAlldayGridRowSelection(
   mousePositionDataGrabber: MousePositionDataGrabber,
   cells: any
 ) {

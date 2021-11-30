@@ -3,10 +3,10 @@ import { useState } from 'preact/hooks';
 
 import getTarget from 'tui-code-snippet/domEvent/getTarget';
 
-import { useDrag } from '@src/components/hooks/drag';
 import { TimeProps } from '@src/components/timeGrid/times';
 import { getNextGridTime, getPrevGridTimeFromMouseEvent } from '@src/controller/times';
 import { cls } from '@src/helpers/css';
+import { useDrag } from '@src/hooks/common/drag';
 import TZDate from '@src/time/date';
 import { addMilliseconds, isSame } from '@src/time/datetime';
 import { closest } from '@src/utils/dom';

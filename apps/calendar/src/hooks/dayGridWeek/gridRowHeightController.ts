@@ -7,7 +7,7 @@ import { WeekGridRows } from '@src/slices/weekViewLayout';
 
 import { AlldayEventCategory } from '@t/panel';
 
-export function useHeightController(maxTop: number, category: AlldayEventCategory) {
+export function useGridRowHeightController(maxTop: number, category: AlldayEventCategory) {
   const [clickedIndex, setClickedIndex] = useState(0);
   const [isClickedCount, setClickedCount] = useState(false);
   const { updateDayGridRowHeight } = useDispatch('weekViewLayout');
