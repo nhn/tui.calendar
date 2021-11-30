@@ -1,6 +1,6 @@
 import { FunctionComponent, h } from 'preact';
 
-import { DragListeners, MINIMUM_MOVE_DISTANCE, useDrag } from '@src/components/hooks/drag';
+import { DragListeners, useDrag } from '@src/components/hooks/drag';
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
 import { noop } from '@src/utils/noop';
 
@@ -46,17 +46,6 @@ describe('drag hook', () => {
   it('fires onDragStart', () => {
     const result = setup();
 
-    // do not fire until distance is DISTANCE
-    for (let i = 0; i < MINIMUM_MOVE_DISTANCE; i += 1) {
-      // eslint-disable-next-line no-loop-func
-      act(() => {
-        result.current?.onMouseMove(mouseMoveEvent);
-      });
-
-      expect(listeners.onDragStart).not.toHaveBeenCalledWith(mouseMoveEvent);
-    }
-
-    // fire it after fulfilling distance
     act(() => {
       result.current?.onMouseMove(mouseMoveEvent);
     });
@@ -64,16 +53,12 @@ describe('drag hook', () => {
     expect(listeners.onDragStart).toHaveBeenCalledWith(mouseMoveEvent);
   });
 
-  it('fires onDrag', () => {
+  it('fires onDrag when onMouseMove invoked more than twice', () => {
     const result = setup();
 
-    // fire it after fulfilling distance
-    for (let i = 0; i <= MINIMUM_MOVE_DISTANCE; i += 1) {
-      // eslint-disable-next-line no-loop-func
-      act(() => {
-        result.current?.onMouseMove(mouseMoveEvent);
-      });
-    }
+    act(() => {
+      result.current?.onMouseMove(mouseMoveEvent);
+    });
 
     act(() => {
       result.current?.onMouseMove(mouseMoveEvent);
@@ -85,13 +70,9 @@ describe('drag hook', () => {
   it('fires onDragEnd', () => {
     const result = setup();
 
-    // fire onDragStart after fulfilling distance
-    for (let i = 0; i <= MINIMUM_MOVE_DISTANCE; i += 1) {
-      // eslint-disable-next-line no-loop-func
-      act(() => {
-        result.current?.onMouseMove(mouseMoveEvent);
-      });
-    }
+    act(() => {
+      result.current?.onMouseMove(mouseMoveEvent);
+    });
 
     // fire onDrag
     act(() => {
@@ -110,13 +91,9 @@ describe('drag hook', () => {
     const keyEvent = createKeyboardEvent('keydown', { key: 'Escape' });
     const result = setup();
 
-    // fire onDragStart after fulfilling distance
-    for (let i = 0; i <= MINIMUM_MOVE_DISTANCE; i += 1) {
-      // eslint-disable-next-line no-loop-func
-      act(() => {
-        result.current?.onMouseMove(mouseMoveEvent);
-      });
-    }
+    act(() => {
+      result.current?.onMouseMove(mouseMoveEvent);
+    });
 
     act(() => {
       result.current?.onKeydown(keyEvent);

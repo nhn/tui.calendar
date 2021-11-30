@@ -2,6 +2,7 @@ import { CalendarStore, SetState } from '@t/store';
 
 export enum DraggingState {
   IDLE,
+  INIT,
   DRAGGING,
   END_DRAG,
 }
@@ -48,6 +49,7 @@ export function createDndDispatchers(set: SetState<CalendarStore>): DndDispatche
           draggingItemType,
           initX,
           initY,
+          draggingState: DraggingState.INIT,
         },
       }));
     },
