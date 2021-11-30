@@ -3,6 +3,7 @@ import { FunctionComponent, h } from 'preact';
 import ResizeIcon from '@src/components/events/resizeIcon';
 import Template from '@src/components/template';
 import { cls, toPercent, toPx } from '@src/helpers/css';
+import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/drag';
 import EventUIModel from '@src/model/eventUIModel';
 
@@ -150,7 +151,7 @@ export const HorizontalEvent: FunctionComponent<Props> = ({
     isResizing,
   });
 
-  const { onMouseDown } = useDrag(`horizontalEvent/${uiModel.cid()}`);
+  const { onMouseDown } = useDrag(DRAGGING_TYPE_CREATORS.hEventResizeWithId(`${uiModel.cid()}`));
   const onResizeStart = (e: MouseEvent) => {
     e.stopPropagation();
     onMouseDown(e);

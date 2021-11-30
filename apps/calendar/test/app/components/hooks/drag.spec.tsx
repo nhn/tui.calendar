@@ -4,6 +4,7 @@ import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
 import { DragListeners, useDrag } from '@src/hooks/common/drag';
 import { noop } from '@src/utils/noop';
 
+import { DraggingTypes } from '@t/drag';
 import { createKeyboardEvent, createMouseEvent, spyOnDragEvent } from '@test/helper';
 import { act, renderHook } from '@testing-library/preact-hooks';
 
@@ -20,7 +21,9 @@ describe('drag hook', () => {
     return <StoreProvider store={store}>{children}</StoreProvider>;
   };
   const setup = () => {
-    const { result } = renderHook(() => useDrag('drag-test', listeners), { wrapper });
+    const { result } = renderHook(() => useDrag('drag-test' as DraggingTypes, listeners), {
+      wrapper,
+    });
     act(() => {
       result.current?.onMouseDown(mouseDownEvent);
     });

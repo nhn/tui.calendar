@@ -6,6 +6,7 @@ import getTarget from 'tui-code-snippet/domEvent/getTarget';
 import { TimeProps } from '@src/components/timeGrid/times';
 import { getNextGridTime, getPrevGridTimeFromMouseEvent } from '@src/controller/times';
 import { cls } from '@src/helpers/css';
+import { DRAGGING_TYPE_CONSTANTS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/drag';
 import TZDate from '@src/time/date';
 import { addMilliseconds, isSame } from '@src/time/datetime';
@@ -124,7 +125,7 @@ export const ColumnWithMouse: FunctionComponent<Props> = (props: Props) => {
     }
   };
 
-  const { onMouseDown, isDragging } = useDrag('column-selection', {
+  const { onMouseDown, isDragging } = useDrag(DRAGGING_TYPE_CONSTANTS.timeGridColumnSelection, {
     onDragStart,
     onDrag,
     onDragEnd,

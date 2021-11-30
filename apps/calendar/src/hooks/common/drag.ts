@@ -7,6 +7,8 @@ import { isEscapePressed } from '@src/utils/keyboard';
 import { noop } from '@src/utils/noop';
 import { isNil } from '@src/utils/type';
 
+import { DraggingTypes } from '@t/drag';
+
 export interface DragListeners {
   onDragStart?: MouseEventListener;
   onDrag?: MouseEventListener;
@@ -19,7 +21,7 @@ function isLeftClick(buttonNum: number) {
 }
 
 export function useDrag(
-  draggingItemType: string,
+  draggingItemType: DraggingTypes,
   { onDragStart = noop, onDrag = noop, onDragEnd = noop, onPressESCKey = noop }: DragListeners = {}
 ) {
   const { initDrag, setDraggingState, endDrag, reset } = useDispatch('dnd');

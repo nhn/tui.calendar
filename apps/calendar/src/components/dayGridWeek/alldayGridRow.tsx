@@ -9,6 +9,7 @@ import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import Template from '@src/components/template';
 import { PANEL_HEIGHT, WEEK_EVENT_MARGIN_TOP } from '@src/constants/style';
 import { cls } from '@src/helpers/css';
+import { DRAGGING_TYPE_CONSTANTS } from '@src/helpers/drag';
 import { EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
 import { createMousePositionDataGrabberWeek } from '@src/helpers/view';
 import { useDOMNode } from '@src/hooks/common/domNode';
@@ -79,7 +80,7 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
 
   const gridSelection = useAlldayGridRowSelection(mousePositionDataGrabber, cells);
 
-  const { onMouseDown } = useDrag('grid-selection');
+  const { onMouseDown } = useDrag(DRAGGING_TYPE_CONSTANTS.alldayGridRowSelection);
 
   const { clickedIndex, isClickedCount, onClickExceedCount, onClickCollapseButton } =
     useGridRowHeightController(maxTop, category);
