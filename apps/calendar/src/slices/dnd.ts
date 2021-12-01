@@ -11,7 +11,6 @@ export interface DndSlice {
   dnd: {
     draggingItemType: string | null;
     draggingState: DraggingState;
-    shouldReset: boolean;
     initX: number | null;
     initY: number | null;
     x: number | null;
@@ -31,7 +30,6 @@ export function createDndSlice(): DndSlice {
     dnd: {
       draggingItemType: null,
       draggingState: DraggingState.IDLE,
-      shouldReset: false,
       initX: null,
       initY: null,
       x: null,

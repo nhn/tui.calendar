@@ -31,9 +31,12 @@ export function useAlldayGridRowEventResize({
   mousePositionDataGrabber,
 }: Params) {
   const { draggingItemType, x, y, draggingState } = useStore(dndSelector);
-  const { updateEvent } = useDispatch('calendar');
+  const {
+    dnd: { reset },
+    calendar: { updateEvent },
+  } = useDispatch(['dnd', 'calendar']);
 
-  const isDragging = draggingState > DraggingState.IDLE;
+  const isDragging = draggingState > DraggingState.INIT;
 
   const targetEvent = useMemo(() => {
     const eventId = draggingItemType?.split('/')[1];
@@ -96,8 +99,9 @@ export function useAlldayGridRowEventResize({
         event: targetEvent!.model,
         eventData: { end: targetDate },
       });
+      reset();
     }
-  }, [cells, currentGridX, shouldUpdateEventEnd, targetEvent, updateEvent]);
+  }, [cells, currentGridX, shouldUpdateEventEnd, targetEvent, updateEvent, reset]);
 
   return useMemo(
     () => ({

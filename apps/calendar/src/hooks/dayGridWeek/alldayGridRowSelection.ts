@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 
 import { useStore } from '@src/contexts/calendarStore';
+import { DRAGGING_TYPE_CONSTANTS } from '@src/helpers/drag';
 import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import TZDate from '@src/time/date';
@@ -53,14 +54,15 @@ interface MousePositionDataGrabber {
 
 export function useAlldayGridRowSelection(
   mousePositionDataGrabber: MousePositionDataGrabber,
-  cells: any
+  cells: TZDate[]
 ) {
   const [gridSelection, setGridSelection] = useState<GridSelectionData | null>(null);
   const initSelectionDataRef = useRef<GridSelectionData | null>(null);
   const prevSelectionDataRef = useRef<GridSelectionData | null>(null);
   const { draggingItemType, draggingState, x, y, initX, initY } = useStore(dndSelector);
   const isSelectingGrid =
-    draggingItemType === 'grid-selection' && draggingState > DraggingState.IDLE;
+    draggingItemType === DRAGGING_TYPE_CONSTANTS.alldayGridRowSelection &&
+    draggingState > DraggingState.INIT;
   const hasCurrentCoords = !isNil(x) && !isNil(y);
   const isDraggingEnd = draggingState === DraggingState.END_DRAG;
 

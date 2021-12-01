@@ -1,11 +1,10 @@
-import { useCallback, useEffect, useRef } from 'preact/hooks';
+import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import { isEscapePressed } from '@src/utils/keyboard';
 import { noop } from '@src/utils/noop';
-import { isNil } from '@src/utils/type';
 
 import { DraggingTypes } from '@t/drag';
 
@@ -26,10 +25,9 @@ export function useDrag(
 ) {
   const { initDrag, setDraggingState, endDrag, reset } = useDispatch('dnd');
 
-  const { draggingState, initX, initY } = useStore(dndSelector);
+  const { draggingState } = useStore(dndSelector);
   const isDragging = draggingState > DraggingState.INIT;
-  const isDraggingStarted =
-    !isNil(initX) && !isNil(initY) && draggingState < DraggingState.END_DRAG;
+  const [isStarted, setStarted] = useState(false);
 
   const onMouseMoveRef = useRef<MouseEventListener | null>(null);
   const onMouseUpRef = useRef<MouseEventListener | null>(null);
@@ -41,6 +39,7 @@ export function useDrag(
         return;
       }
 
+      setStarted(true);
       initDrag({
         draggingItemType,
         initX: e.clientX,
@@ -57,22 +56,23 @@ export function useDrag(
 
       if (!isDragging) {
         onDragStart(e);
-        setDraggingState({});
+        setDraggingState({ x: e.clientX, y: e.clientY });
 
         return;
       }
 
-      setDraggingState({ draggingItemType, x: e.clientX, y: e.clientY });
+      setDraggingState({ x: e.clientX, y: e.clientY });
       onDrag(e);
     },
-    [draggingItemType, isDragging, onDrag, onDragStart, setDraggingState]
+    [isDragging, onDrag, onDragStart, setDraggingState]
   );
 
   const onMouseUp = useCallback<MouseEventListener>(
     (e) => {
       if (isDragging) {
-        endDrag();
         onDragEnd(e);
+        endDrag();
+        setStarted(false);
       }
     },
     [endDrag, isDragging, onDragEnd]
@@ -83,6 +83,7 @@ export function useDrag(
       if (isEscapePressed(e)) {
         onPressESCKey(e);
         reset();
+        setStarted(false);
       }
     },
     [onPressESCKey, reset]
@@ -99,13 +100,12 @@ export function useDrag(
     const handleMouseUp: MouseEventListener = (e) => onMouseUpRef.current?.(e);
     const handleKeydown: KeyboardEventListener = (e) => onKeyDownRef.current?.(e);
 
-    if (isDraggingStarted) {
+    if (isStarted) {
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
       document.addEventListener('keydown', handleKeydown);
 
       return () => {
-        reset();
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
         document.removeEventListener('keydown', handleKeydown);
@@ -113,7 +113,7 @@ export function useDrag(
     }
 
     return noop;
-  }, [isDraggingStarted, reset]);
+  }, [isStarted, reset]);
 
   return {
     isDragging,
