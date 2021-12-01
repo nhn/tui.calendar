@@ -9,12 +9,12 @@ import Panel from '@src/components/panel';
 import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 
-import { EventModelData } from '@t/events';
-import { CalendarMonthOption } from '@t/store';
-
 import { getWeekDates, getWeekendDates } from '@stories/util/mockCalendarDates';
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { createRandomEvents } from '@stories/util/randomEvents';
+
+import { EventModelData } from '@t/events';
+import { CalendarMonthOption } from '@t/store';
 
 export default { title: 'DayGridMonth' };
 

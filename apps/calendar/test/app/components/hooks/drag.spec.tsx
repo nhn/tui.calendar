@@ -1,12 +1,14 @@
 import { FunctionComponent, h } from 'preact';
 
+import { act, renderHook } from '@testing-library/preact-hooks';
+
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
 import { DragListeners, useDrag } from '@src/hooks/common/drag';
 import { noop } from '@src/utils/noop';
 
-import { DraggingTypes } from '@t/drag';
 import { createKeyboardEvent, createMouseEvent, spyOnDragEvent } from '@test/helper';
-import { act, renderHook } from '@testing-library/preact-hooks';
+
+import { DraggingTypes } from '@t/drag';
 
 const primaryButton = 0;
 

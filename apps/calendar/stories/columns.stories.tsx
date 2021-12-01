@@ -14,10 +14,10 @@ import {
   toStartOfYear,
 } from '@src/time/datetime';
 
+import { createEventModels } from '@stories/helper/event';
+
 import { TimeGridSelectionInfo } from '@t/components/timeGrid/gridSelection';
 import { EventModelData } from '@t/events';
-
-import { createEventModels } from '@stories/helper/event';
 
 export default { title: 'Column' };
 

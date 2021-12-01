@@ -11,9 +11,10 @@ import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 
+import { createDate } from '@test/helper';
+
 import { CalendarData } from '@t/events';
 import { Cells } from '@t/panel';
-import { createDate } from '@test/helper';
 
 const data = [
   { start: createDate(2021, 4, 30), end: createDate(2021, 5, 2) }, // Fri ~ Sun
