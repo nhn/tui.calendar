@@ -1,0 +1,15 @@
+.detail-popup-container {
+  font-weight: 2.5;
+  width: 301px;
+  min-width: 301px;
+  padding-bottom: 0;
+}
+
+.popup-top-line {
+  position: absolute;
+  border-radius: 2px 2px 0 0;
+  width: 100%;
+  height: 4px;
+  border: none;
+  top: 0;
+}

@@ -8,7 +8,12 @@ import { cls } from '@src/helpers/css';
 import { popupSelector } from '@src/selectors';
 import { PopupType } from '@src/slices/popup';
 
-import { DetailPopupParam, EventFormPopupParam, PopupParamMap, SeeMorePopupParam } from '@t/store';
+import {
+  EventDetailPopupParam,
+  EventFormPopupParam,
+  PopupParamMap,
+  SeeMorePopupParam,
+} from '@t/store';
 
 const renderPopup = (popupType: PopupType | null, param: PopupParamMap[PopupType]) => {
   switch (popupType) {
@@ -17,7 +22,7 @@ const renderPopup = (popupType: PopupType | null, param: PopupParamMap[PopupType
     case PopupType.form:
       return <EventFormPopup {...(param as EventFormPopupParam)} />;
     case PopupType.detail:
-      return <EventDetailPopup {...(param as DetailPopupParam)} />;
+      return <EventDetailPopup {...(param as EventDetailPopupParam)} />;
     default:
       return null;
   }

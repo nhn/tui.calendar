@@ -9,7 +9,7 @@ import { WeekViewLayoutDispatchers, WeekViewLayoutSlice } from '@src/slices/week
 import TZDate from '@src/time/date';
 
 import type { EventState } from '@t/events';
-import type { MonthOption, WeekOption } from '@t/option';
+import type { CalendarInfo, MonthOption, WeekOption } from '@t/option';
 
 type CalendarMonthOption = Required<MonthOption>;
 type CalendarWeekOption = Required<WeekOption>;
@@ -29,7 +29,7 @@ interface BasePopupParam {
 type PopupParamMap = {
   seeMore: SeeMorePopupParam;
   form: EventFormPopupParam;
-  detail: DetailPopupParam;
+  detail: EventDetailPopupParam;
 };
 
 interface SeeMorePopupParam extends BasePopupParam {
@@ -45,9 +45,8 @@ interface EventFormPopupParam extends BasePopupParam {
   eventState?: EventState;
 }
 
-interface DetailPopupParam extends BasePopupParam {
-  // @TODO: 팝업 작성 시 타입 정의
-  date: TZDate | Date;
+interface EventDetailPopupParam extends BasePopupParam {
+  event: CalendarInfo;
 }
 
 type PopupRect = {
