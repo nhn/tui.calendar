@@ -1,3 +1,10 @@
+.popup-container {
+  position: absolute;
+  font-weight: 2.5;
+  box-shadow: 0 2px 6px 0 rgb(0 0 0 / 10%);
+  clear: both;
+}
+
 .popup-button.popup-close {
   position: absolute;
   top: 10px;
