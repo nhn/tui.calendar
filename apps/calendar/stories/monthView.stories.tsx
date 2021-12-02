@@ -1,15 +1,16 @@
 import { h } from 'preact';
 
+import { Story } from '@storybook/preact';
+
 import { Month } from '@src/components/view/month';
 import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 import { addDate } from '@src/time/datetime';
 
-import { EventModelData } from '@t/events';
-
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { createRandomEventModelsForMonth } from '@stories/util/randomEvents';
-import { Story } from '@storybook/preact';
+
+import { EventModelData } from '@t/events';
 
 export default { title: 'MonthView' };
 

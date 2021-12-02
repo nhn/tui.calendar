@@ -1,5 +1,6 @@
 import { h } from 'preact';
 
+import { Story } from '@storybook/preact';
 import range from 'tui-code-snippet/array/range';
 
 import { OtherGridRow } from '@src/components/dayGridWeek/otherGridRow';
@@ -10,11 +11,10 @@ import { getDayGridEvents } from '@src/helpers/grid';
 import TZDate from '@src/time/date';
 import { addDate, getGridInfo, toStartOfDay } from '@src/time/datetime';
 
-import { CalendarData } from '@t/events';
-
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { createRandomEventModelsForMonth } from '@stories/util/randomEvents';
-import { Story } from '@storybook/preact';
+
+import { CalendarData } from '@t/events';
 
 export default { title: 'GridRow', component: OtherGridRow, args: { primary: true } };
 

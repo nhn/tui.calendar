@@ -1,14 +1,15 @@
 import { FunctionComponent, h } from 'preact';
 
+import { Story } from '@storybook/preact';
+
 import { EventFormPopup } from '@src/components/popup/eventFormPopup';
 import TZDate from '@src/time/date';
 
-import { CalendarInfo } from '@t/option';
-import { EventFormPopupParam } from '@t/store';
-
 import { calendars } from '@stories/util/mockCalendars';
 import { ProviderWrapper } from '@stories/util/providerWrapper';
-import { Story } from '@storybook/preact';
+
+import { CalendarInfo } from '@t/option';
+import { EventFormPopupParam } from '@t/store';
 
 export default {
   component: EventFormPopup,

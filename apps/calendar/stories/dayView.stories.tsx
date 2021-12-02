@@ -1,5 +1,7 @@
 import { h } from 'preact';
 
+import { Story } from '@storybook/preact';
+
 import FloatingLayer from '@src/components/floatingLayer';
 import { Day } from '@src/components/view/day';
 import EventModel from '@src/model/eventModel';
@@ -8,7 +10,6 @@ import { addDate } from '@src/time/datetime';
 
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { createRandomEventModelsForMonth, createRandomEvents } from '@stories/util/randomEvents';
-import { Story } from '@storybook/preact';
 
 export default { title: 'DayView' };
 

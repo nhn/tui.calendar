@@ -6,12 +6,12 @@ import { TimeGrid } from '@src/components/timeGrid/timeGrid';
 import TZDate from '@src/time/date';
 import { addDate, addHours, toStartOfDay } from '@src/time/datetime';
 
-import { EventModelData } from '@t/events';
-
 import normalEvents from '@stories/data/events.json';
 import { createEventModels } from '@stories/helper/event';
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { createRandomEvents } from '@stories/util/randomEvents';
+
+import { EventModelData } from '@t/events';
 
 export default { title: 'TimeGrid' };
 

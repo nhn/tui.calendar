@@ -1,12 +1,13 @@
 import { h } from 'preact';
 
+import { fireEvent, render, screen } from '@testing-library/preact';
+
 import { EventFormPopup } from '@src/components/popup/eventFormPopup';
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
 import TZDate from '@src/time/date';
 
 import { CalendarStore, InternalStoreAPI } from '@t/store';
-import { fireEvent, render, screen } from '@testing-library/preact';
 
 const selectors = {
   calendarSection: `.${cls('calendar-section')}`,

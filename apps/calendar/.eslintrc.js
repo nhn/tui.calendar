@@ -51,11 +51,15 @@ module.exports = {
           // Preact.
           ['^preact'],
           // Any other packages.
-          ['^\\w'],
+          ['^(\\w|@)(?!src/|test/|stories/|t/)'],
           // Source files.
-          ['^@src'],
+          ['^@src/'],
+          // test files
+          ['^@test/'],
+          // stories files
+          ['^@stories/'],
           // Types.
-          ['^@t'],
+          ['^@t/'],
           // Absolute imports and other imports such as Vue-style `@/foo`.
           // Anything not matched in another group.
           ['^'],
