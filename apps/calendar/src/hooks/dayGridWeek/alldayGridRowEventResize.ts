@@ -2,6 +2,7 @@ import { useEffect, useMemo } from 'preact/hooks';
 
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { getGridDateIndex } from '@src/helpers/grid';
+import { useDraggingEvent } from '@src/hooks/event/draggingEvent';
 import EventUIModel from '@src/model/eventUIModel';
 import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
@@ -30,7 +31,7 @@ export function useAlldayGridRowEventResize({
   gridColWidthMap,
   mousePositionDataGrabber,
 }: Params) {
-  const { draggingItemType, x, y, draggingState } = useStore(dndSelector);
+  const { x, y, draggingState } = useStore(dndSelector);
   const {
     dnd: { reset },
     calendar: { updateEvent },
@@ -38,14 +39,7 @@ export function useAlldayGridRowEventResize({
 
   const isDragging = draggingState > DraggingState.INIT;
 
-  const targetEvent = useMemo(() => {
-    const eventId = draggingItemType?.split('/')[1];
-    if (isDragging && eventId) {
-      return events.find((event) => event.cid() === Number(eventId));
-    }
-
-    return null;
-  }, [draggingItemType, events, isDragging]);
+  const targetEvent = useDraggingEvent(events);
 
   const targetEventGridIndices = useMemo(() => {
     if (targetEvent) {
