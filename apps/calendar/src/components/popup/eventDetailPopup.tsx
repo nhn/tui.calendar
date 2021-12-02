@@ -1,8 +1,8 @@
 import { FunctionComponent, h } from 'preact';
 
+import { EventDetailSectionHeader } from '@src/components/popup/eventDetailSectionHeader';
 import { cls } from '@src/helpers/css';
 import TZDate from '@src/time/date';
-import { isSameDate, toFormat } from '@src/time/datetime';
 
 import { EventDetailPopupParam } from '@t/store';
 
@@ -29,23 +29,9 @@ const classNames = {
   verticalLine: cls('vertical-line'),
 };
 
-function getDetailDate(isAllday: boolean, start: TZDate, end: TZDate) {
-  const dayFormat = 'YYYY.MM.DD';
-  const timeFormat = 'hh:mm tt';
-  const detailFormat = `${dayFormat} ${timeFormat}`;
-  const startDate = toFormat(start, isAllday ? dayFormat : timeFormat);
-  const endDateFormat = isSameDate(start, end) ? timeFormat : detailFormat;
-
-  if (isAllday) {
-    return `${startDate}${isSameDate(start, end) ? '' : toFormat(end, dayFormat)}}`;
-  }
-
-  return `${toFormat(start, detailFormat)} - ${toFormat(end, endDateFormat)}`;
-}
-
 export const EventDetailPopup: FunctionComponent<EventDetailPopupParam> = ({ event = {} }) => {
   const {
-    title,
+    title = '',
     isAllDay = false,
     start = new TZDate(),
     end = new TZDate(),
@@ -62,12 +48,7 @@ export const EventDetailPopup: FunctionComponent<EventDetailPopupParam> = ({ eve
   return (
     <div className={classNames.popupContainer}>
       <div className={classNames.detailContainer}>
-        <div className={classNames.sectionHeader}>
-          <div>
-            <span className={classNames.eventTitle}>{title}</span>
-          </div>
-          <div className={classNames.content}>{getDetailDate(isAllDay, start, end)}</div>
-        </div>
+        <EventDetailSectionHeader title={title} isAllday={isAllDay} start={start} end={end} />
         <div className={classNames.sectionDetail}>
           <div className={classNames.detailItem}>
             <span className={classNames.locationIcon} />
