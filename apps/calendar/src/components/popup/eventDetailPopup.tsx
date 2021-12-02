@@ -1,5 +1,6 @@
 import { FunctionComponent, h } from 'preact';
 
+import { EventDetailSectionDetail } from '@src/components/popup/eventDetailSectionDetail';
 import { EventDetailSectionHeader } from '@src/components/popup/eventDetailSectionHeader';
 import { cls } from '@src/helpers/css';
 import TZDate from '@src/time/date';
@@ -49,31 +50,14 @@ export const EventDetailPopup: FunctionComponent<EventDetailPopupParam> = ({ eve
     <div className={classNames.popupContainer}>
       <div className={classNames.detailContainer}>
         <EventDetailSectionHeader title={title} isAllday={isAllDay} start={start} end={end} />
-        <div className={classNames.sectionDetail}>
-          <div className={classNames.detailItem}>
-            <span className={classNames.locationIcon} />
-            <span className={classNames.content}>{location}</span>
-          </div>
-          <div className={classNames.detailItem}>
-            <span className={classNames.repeatIcon} />
-            <span className={classNames.content}>{recurrenceRule}</span>
-          </div>
-          <div className={classNames.detailItemIndent}>
-            <span className={classNames.userIcon} />
-            <span className={classNames.content}>{attendees.join(',')}</span>
-          </div>
-          <div className={classNames.detailItem}>
-            <span className={classNames.stateIcon} />
-            <span className={classNames.content}>{state}</span>
-          </div>
-          <div className={classNames.detailItem}>
-            <span className={classNames.calendarDotIcon} />
-            <span className={classNames.content}>{calendarId}</span>
-          </div>
-          <div className={classNames.detailItemSeparate}>
-            <span className={classNames.content}>{body}</span>
-          </div>
-        </div>
+        <EventDetailSectionDetail
+          location={location}
+          recurrenceRule={recurrenceRule}
+          attendees={attendees}
+          state={state}
+          calendarId={calendarId}
+          body={body}
+        />
         {!isReadOnly && (
           <div className={classNames.sectionButton}>
             <button className={classNames.editButton}>
