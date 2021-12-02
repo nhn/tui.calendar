@@ -1,6 +1,6 @@
-import { date as newDate, getTimezoneFactory, setDateConstructor } from '@src/time/timezone';
-
 import { DateInterface } from '@toast-ui/date';
+
+import { date as newDate, getTimezoneFactory, setDateConstructor } from '@src/time/timezone';
 
 let createDate = newDate;
 

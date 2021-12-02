@@ -7,8 +7,9 @@ import {
 import { cls } from '@src/helpers/css';
 import TZDate from '@src/time/date';
 
-import { TimeUnit } from '@t/events';
 import { createMouseEvent } from '@test/helper';
+
+import { TimeUnit } from '@t/events';
 
 interface TestData {
   unit: TimeUnit;

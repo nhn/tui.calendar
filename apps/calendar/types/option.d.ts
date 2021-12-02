@@ -1,10 +1,11 @@
 import { ComponentType } from 'preact';
 
+import { TuiDateConstructor } from '@toast-ui/date';
+
 import { ThemeKeyValue } from '@src/theme/themeProps';
 
 import { EventModelData } from '@t/events';
 import { TemplateConfig } from '@t/template';
-import { TuiDateConstructor } from '@toast-ui/date';
 
 export interface WeekOption {
   startDayOfWeek?: number;

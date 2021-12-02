@@ -1,5 +1,7 @@
 import { FunctionComponent, h } from 'preact';
 
+import { Story } from '@storybook/preact';
+
 import FloatingLayer from '@src/components/floatingLayer';
 import { Main } from '@src/components/view/main';
 import { useDispatch } from '@src/contexts/calendarStore';
@@ -7,7 +9,6 @@ import { cls } from '@src/helpers/css';
 
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { createRandomEventModelsForMonth } from '@stories/util/randomEvents';
-import { Story } from '@storybook/preact';
 
 export default { title: 'Main' };
 

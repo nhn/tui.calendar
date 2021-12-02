@@ -1,6 +1,8 @@
 import { AnyComponent, ComponentChild, h, render } from 'preact';
 import renderToString from 'preact-render-to-string';
 
+import { DateInterface, LocalDate } from '@toast-ui/date';
+
 import { CalendarContainer } from '@src/calendarContainer';
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
 import { ThemeProvider } from '@src/contexts/theme';
@@ -17,7 +19,6 @@ import { CalendarData, DateType, EventModelData } from '@t/events';
 import { CalendarColor, CalendarInfo, CustomTimezone, Option, ViewType } from '@t/option';
 import { CalendarStore, Dispatchers, InternalStoreAPI } from '@t/store';
 import { Template } from '@t/template';
-import { DateInterface, LocalDate } from '@toast-ui/date';
 
 interface AppContext {
   options: Option;

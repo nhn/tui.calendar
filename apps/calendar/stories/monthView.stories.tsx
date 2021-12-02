@@ -1,15 +1,16 @@
 import { h } from 'preact';
 
+import { Story } from '@storybook/preact';
+
 import { Month } from '@src/components/view/month';
 import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 import { addDate } from '@src/time/datetime';
 
-import { EventModelData } from '@t/events';
-
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { createRandomEventModelsForMonth } from '@stories/util/randomEvents';
-import { Story } from '@storybook/preact';
+
+import { EventModelData } from '@t/events';
 
 export default { title: 'MonthView' };
 
@@ -18,9 +19,14 @@ function createMonthEvents() {
   const today = new TZDate();
   const thisSunday = addDate(today, -today.getDay());
   const sundayDate = thisSunday.getDate();
-  const weekCount = Math.floor(
-    sundayDate % DAYS_OF_WEEK ? sundayDate / DAYS_OF_WEEK : (sundayDate - 1) / DAYS_OF_WEEK
-  );
+  const sundayMonth = thisSunday.getMonth();
+  const todayMonth = today.getMonth();
+  const weekCount =
+    sundayMonth !== todayMonth
+      ? -1
+      : Math.floor(
+          sundayDate % DAYS_OF_WEEK ? sundayDate / DAYS_OF_WEEK : (sundayDate - 1) / DAYS_OF_WEEK
+        );
   const firstSunday = addDate(thisSunday, -weekCount * DAYS_OF_WEEK);
   const firstTuesday = addDate(firstSunday, 2);
   const secondTuesday = addDate(firstTuesday, DAYS_OF_WEEK);

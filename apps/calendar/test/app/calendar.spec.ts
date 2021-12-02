@@ -1,9 +1,8 @@
+import { LocalDate, MomentDate, UTCDate } from '@toast-ui/date';
 import moment from 'moment-timezone';
 
 import Calendar from '@src/factory/calendar';
 import { setDateConstructor } from '@src/time/timezone';
-
-import { LocalDate, MomentDate, UTCDate } from '@toast-ui/date';
 
 describe('Calendar', () => {
   describe('Timezone', () => {

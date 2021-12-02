@@ -5,10 +5,10 @@ import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 import { getMonthCalendar } from '@src/time/datetime';
 
+import { calendars } from '@stories/util/mockCalendars';
+
 import { EventCategory, EventModelData } from '@t/events';
 import { CalendarInfo, ViewType } from '@t/option';
-
-import { calendars } from '@stories/util/mockCalendars';
 
 const chance = new Chance();
 const EVENT_CATEGORY: EventCategory[] = ['milestone', 'task'];
