@@ -5,5 +5,5 @@ type EventItemStyleParam = {
   exceedLeft: boolean;
   exceedRight: boolean;
   eventHeight: number;
-  isResizing?: boolean;
+  isDraggingTarget?: boolean;
 };

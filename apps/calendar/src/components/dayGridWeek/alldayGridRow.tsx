@@ -14,6 +14,7 @@ import { EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
 import { createMousePositionDataGrabberWeek } from '@src/helpers/view';
 import { useDOMNode } from '@src/hooks/common/domNode';
 import { useDrag } from '@src/hooks/common/drag';
+import { useAlldayGridRowEventMove } from '@src/hooks/dayGridWeek/alldayGridRowEventMove';
 import { useAlldayGridRowEventResize } from '@src/hooks/dayGridWeek/alldayGridRowEventResize';
 import { useAlldayGridRowSelection } from '@src/hooks/dayGridWeek/alldayGridRowSelection';
 import { useGridRowHeightController } from '@src/hooks/dayGridWeek/gridRowHeightController';
@@ -77,6 +78,12 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
     gridColWidthMap,
     mousePositionDataGrabber,
   });
+  const { moveTargetEvent, movingLeft } = useAlldayGridRowEventMove({
+    events,
+    cells,
+    gridInfo,
+    mousePositionDataGrabber,
+  });
 
   const gridSelection = useAlldayGridRowSelection(mousePositionDataGrabber, cells);
 
@@ -91,7 +98,9 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
       <HorizontalEvent
         key={`${category}-DayEvent-${uiModel.cid()}`}
         uiModel={uiModel}
-        isResizing={uiModel.cid() === dragTargetEvent?.cid()}
+        isDraggingTarget={
+          uiModel.cid() === dragTargetEvent?.cid() || uiModel.cid() === moveTargetEvent?.cid()
+        }
         eventHeight={EVENT_HEIGHT}
         headerHeight={0}
       />
@@ -127,6 +136,14 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
             eventHeight={EVENT_HEIGHT}
             headerHeight={0}
             resizingWidth={resizingWidth}
+          />
+        )}
+        {moveTargetEvent && (
+          <HorizontalEvent
+            uiModel={moveTargetEvent}
+            eventHeight={EVENT_HEIGHT}
+            headerHeight={0}
+            movingLeft={movingLeft}
           />
         )}
       </div>
