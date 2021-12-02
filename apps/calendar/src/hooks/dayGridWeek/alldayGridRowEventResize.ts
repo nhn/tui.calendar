@@ -39,7 +39,7 @@ export function useAlldayGridRowEventResize({
 
   const isDragging = draggingState > DraggingState.INIT;
 
-  const targetEvent = useDraggingEvent(events);
+  const targetEvent = useDraggingEvent(events, 'resize');
 
   const targetEventGridIndices = useMemo(() => {
     if (targetEvent) {

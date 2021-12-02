@@ -4,13 +4,13 @@ import { useStore } from '@src/contexts/calendarStore';
 import EventUIModel from '@src/model/eventUIModel';
 import { isNil } from '@src/utils/type';
 
-import { EventDragging } from '@t/drag';
+import { EventDragging, EventDraggingBehavior } from '@t/drag';
 
-function isEventDraggingType(itemType: string): itemType is EventDragging {
-  return /^event\/(move|resize)\/\d+$/.test(itemType);
-}
+const getTargetEventId = (itemType: string | null, behavior: EventDraggingBehavior) => {
+  function isEventDraggingType(_itemType: string): _itemType is EventDragging {
+    return new RegExp(`^event/${behavior}/\\d+$`).test(_itemType);
+  }
 
-const getTargetEventId = (itemType: string | null) => {
   if (isNil(itemType)) {
     return null;
   }
@@ -18,12 +18,12 @@ const getTargetEventId = (itemType: string | null) => {
   return isEventDraggingType(itemType) ? itemType.split('/')[2] : null;
 };
 
-export function useDraggingEvent(events: EventUIModel[]) {
+export function useDraggingEvent(events: EventUIModel[], behavior: EventDraggingBehavior) {
   return useStore(
     useCallback(
       (state) => {
         const { draggingItemType } = state.dnd;
-        const targetEventId = getTargetEventId(draggingItemType);
+        const targetEventId = getTargetEventId(draggingItemType, behavior);
 
         if (isNil(targetEventId)) {
           return null;
@@ -31,7 +31,7 @@ export function useDraggingEvent(events: EventUIModel[]) {
 
         return events.find((event) => event.cid() === Number(targetEventId)) ?? null;
       },
-      [events]
+      [behavior, events]
     )
   );
 }
