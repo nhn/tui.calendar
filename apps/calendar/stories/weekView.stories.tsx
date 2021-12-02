@@ -29,17 +29,29 @@ function createWeekEvents() {
   const saturday = addDate(sunday, 6);
   const events: EventModelData[] = [
     {
+      id: '1',
+      calendarId: 'cal1',
       title: 'event1',
+      category: 'allday',
+      isAllDay: true,
       start: sunday,
       end: tuesday,
     },
     {
+      id: '2',
+      calendarId: 'cal1',
       title: 'event2',
+      category: 'allday',
+      isAllDay: true,
       start: tuesday,
       end: thursday,
     },
     {
+      id: '3',
+      calendarId: 'cal1',
       title: 'event3',
+      category: 'allday',
+      isAllDay: true,
       start: thursday,
       end: saturday,
     },

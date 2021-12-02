@@ -1,7 +1,7 @@
 import browser from 'tui-code-snippet/browser/browser';
 
-import { DragListeners } from '@src/components/hooks/drag';
 import { KEY, KEYCODE } from '@src/constants/keyboard';
+import { DragListeners } from '@src/hooks/common/drag';
 import TZDate from '@src/time/date';
 
 export function createMouseEvent(name: string, eventInitDic: MouseEventInit = {}) {

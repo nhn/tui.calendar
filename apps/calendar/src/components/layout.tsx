@@ -42,7 +42,7 @@ export const Layout: FunctionComponent<Props> = ({
     return {};
   }, []);
   const ref = useRef<HTMLDivElement>(null);
-  const filteredPanels = filterPanels(toChildArray(children));
+  const filteredPanels = useMemo(() => filterPanels(toChildArray(children)), [children]);
 
   const className = useMemo(() => {
     const layoutClassNames = [cls('layout')];

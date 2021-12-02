@@ -1,6 +1,6 @@
 import { FunctionComponent, h } from 'preact';
 
-import HorizontalEvent from '@src/components/events/horizontalEvent';
+import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import { EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';

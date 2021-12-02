@@ -1,12 +1,17 @@
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
+import { useDispatch, useStore } from '@src/contexts/calendarStore';
+import { DraggingState } from '@src/slices/dnd';
 import { isEscapePressed } from '@src/utils/keyboard';
 import { noop } from '@src/utils/noop';
 
+import { DraggingTypes } from '@t/drag';
+import { CalendarState } from '@t/store';
+
 export interface DragListeners {
   onDragStart?: MouseEventListener;
-  onDrag: MouseEventListener;
-  onDragEnd: MouseEventListener;
+  onDrag?: MouseEventListener;
+  onDragEnd?: MouseEventListener;
   onPressESCKey?: KeyboardEventListener;
 }
 
@@ -14,38 +19,37 @@ function isLeftClick(buttonNum: number) {
   return buttonNum === 0;
 }
 
-export const MINIMUM_MOVE_DISTANCE = 3;
+function isDraggingSelector(state: CalendarState) {
+  return state.dnd.draggingState > DraggingState.INIT;
+}
 
-export function useDrag({
-  onDragStart = noop,
-  onDrag = noop,
-  onDragEnd = noop,
-  onPressESCKey = noop,
-}: DragListeners) {
+export function useDrag(
+  draggingItemType: DraggingTypes,
+  { onDragStart = noop, onDrag = noop, onDragEnd = noop, onPressESCKey = noop }: DragListeners = {}
+) {
+  const { initDrag, setDraggingState, endDrag, reset } = useDispatch('dnd');
+
+  const isDragging = useStore(isDraggingSelector);
   const [isStarted, setStarted] = useState(false);
-  const [isDragging, setDragging] = useState(false);
-  const movedDistanceRef = useRef(0);
 
   const onMouseMoveRef = useRef<MouseEventListener | null>(null);
   const onMouseUpRef = useRef<MouseEventListener | null>(null);
   const onKeyDownRef = useRef<KeyboardEventListener | null>(null);
 
-  const resetState = useCallback(() => {
-    movedDistanceRef.current = 0;
-    setStarted(false);
-    setDragging(false);
-  }, []);
-
   const onMouseDown = useCallback<MouseEventListener>(
-    ({ button }) => {
-      if (!isLeftClick(button)) {
+    (e) => {
+      if (!isLeftClick(e.button)) {
         return;
       }
 
-      resetState();
       setStarted(true);
+      initDrag({
+        draggingItemType,
+        initX: e.clientX,
+        initY: e.clientY,
+      });
     },
-    [resetState]
+    [draggingItemType, initDrag]
   );
 
   const onMouseMove = useCallback<MouseEventListener>(
@@ -53,43 +57,39 @@ export function useDrag({
       // prevent text selection on dragging
       e.preventDefault();
 
-      if (movedDistanceRef.current < MINIMUM_MOVE_DISTANCE) {
-        movedDistanceRef.current += 1;
-
-        return;
-      }
-
       if (!isDragging) {
-        setDragging(true);
         onDragStart(e);
+        setDraggingState({ x: e.clientX, y: e.clientY });
 
         return;
       }
 
+      setDraggingState({ x: e.clientX, y: e.clientY });
       onDrag(e);
     },
-    [isDragging, onDrag, onDragStart]
+    [isDragging, onDrag, onDragStart, setDraggingState]
   );
 
   const onMouseUp = useCallback<MouseEventListener>(
     (e) => {
       if (isDragging) {
         onDragEnd(e);
+        endDrag();
+        setStarted(false);
       }
-
-      resetState();
     },
-    [isDragging, onDragEnd, resetState]
+    [endDrag, isDragging, onDragEnd]
   );
 
   const onKeydown = useCallback<KeyboardEventListener>(
     (e) => {
       if (isEscapePressed(e)) {
         onPressESCKey(e);
-        resetState();
+        reset();
+        setStarted(false);
       }
     },
-    [onPressESCKey, resetState]
+    [onPressESCKey, reset]
   );
 
   useEffect(() => {
@@ -116,7 +116,7 @@ export function useDrag({
     }
 
     return noop;
-  }, [isStarted]);
+  }, [isStarted, reset]);
 
   return {
     isDragging,

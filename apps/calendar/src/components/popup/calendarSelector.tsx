@@ -1,10 +1,10 @@
 import { FunctionComponent, h } from 'preact';
 import { useState } from 'preact/hooks';
 
-import { useDropdownState } from '@src/components/hooks/dropdownState';
 import { CalendarDropdownMenu } from '@src/components/popup/calendarDropdownMenu';
 import { PopupSection } from '@src/components/popup/popupSection';
 import { cls } from '@src/helpers/css';
+import { useDropdownState } from '@src/hooks/common/dropdownState';
 
 import { CalendarInfo } from '@t/option';
 

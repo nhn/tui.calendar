@@ -3,14 +3,12 @@ import { useLayoutEffect, useRef, useState } from 'preact/hooks';
 
 import GridHeader from '@src/components/dayGridCommon/gridHeader';
 import DayGridMonth from '@src/components/dayGridMonth/dayGridMonth';
-import { usePanelContainer } from '@src/components/hooks/panelContainer';
 import Panel from '@src/components/panel';
 import { MONTH_DAY_NAME_HEIGHT } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
 import { useTheme } from '@src/contexts/theme';
 import { cls } from '@src/helpers/css';
 import { capitalizeDayName } from '@src/helpers/dayName';
-import { createMousePositionDataGrabberMonth } from '@src/helpers/view';
 import { optionSelector } from '@src/selectors';
 import { getGridInfo, getMonthCalendar, isWeekend } from '@src/time/datetime';
 import { getSize } from '@src/utils/dom';
@@ -56,7 +54,6 @@ export const Month: FunctionComponent = () => {
   const theme = useTheme();
 
   const gridPanelHeight = useContainerHeight(containerRef, MONTH_DAY_NAME_HEIGHT);
-  const panelContainer = usePanelContainer(containerRef, cls('month-daygrid'));
 
   if (!theme || !option) {
     return null;
@@ -68,10 +65,6 @@ export const Month: FunctionComponent = () => {
   const calendar = getMonthCalendar(renderMonthDate, monthOptions);
   const { narrowWeekend, startDayOfWeek, workweek } = monthOptions;
   const { gridInfo } = getGridInfo(dayNames.length, narrowWeekend, startDayOfWeek, workweek);
-
-  const getMouseDataOnMonth = panelContainer
-    ? createMousePositionDataGrabberMonth(calendar, gridInfo, panelContainer)
-    : () => null;
 
   return (
     // @TODO: change to layout component
@@ -87,13 +80,7 @@ export const Month: FunctionComponent = () => {
         />
       </Panel>
       <Panel name="month-daygrid" height={gridPanelHeight}>
-        <DayGridMonth
-          options={monthOptions}
-          calendar={calendar}
-          appContainer={containerRef}
-          shouldRenderDefaultPopup={option.useCreationPopup}
-          getMousePositionData={getMouseDataOnMonth}
-        />
+        <DayGridMonth options={monthOptions} calendar={calendar} appContainer={containerRef} />
       </Panel>
     </div>
   );

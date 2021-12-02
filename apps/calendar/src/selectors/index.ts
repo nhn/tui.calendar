@@ -1,5 +1,3 @@
-import { pick } from '@src/utils/object';
-
 import { CalendarStore } from '@t/store';
 
 export function topLevelStateSelector<Group extends keyof CalendarStore>(
@@ -14,6 +12,4 @@ export const weekViewLayoutSelector = topLevelStateSelector('weekViewLayout');
 export const templateSelector = topLevelStateSelector('template');
 export const viewSelector = topLevelStateSelector('view');
 export const optionSelector = topLevelStateSelector('option');
-
-export const weekViewStateSelector = (state: CalendarStore) =>
-  pick(state, 'template', 'option', 'calendar', 'weekViewLayout');
+export const dndSelector = topLevelStateSelector('dnd');

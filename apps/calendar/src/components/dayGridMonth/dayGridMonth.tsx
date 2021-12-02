@@ -1,11 +1,9 @@
-import { FunctionComponent, h, RefObject } from 'preact';
+import { Fragment, FunctionComponent, h, RefObject } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 
 import { GridSelection } from '@src/components/dayGridCommon/gridSelection';
-import GridWithMouse from '@src/components/dayGridCommon/gridWithMouse';
 import GridRow from '@src/components/dayGridMonth/gridRow';
 import MonthEvents from '@src/components/dayGridMonth/monthEvents';
-import { useGridSelection } from '@src/components/hooks/gridSelection';
 import {
   MONTH_CELL_BAR_HEIGHT,
   MONTH_CELL_PADDING_TOP,
@@ -18,10 +16,8 @@ import { getRenderedEventUIModels } from '@src/helpers/grid';
 import EventModel from '@src/model/eventModel';
 import { calendarSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
-import { toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { getSize } from '@src/utils/dom';
 
-import { CellDateRange } from '@t/components/daygrid/gridSelectionData';
 import { CalendarMonthOption } from '@t/store';
 
 const TOTAL_PERCENT_HEIGHT = 100;
@@ -31,8 +27,6 @@ interface Props {
   calendar: TZDate[][];
   appContainer: RefObject<HTMLDivElement>;
   events?: EventModel[];
-  shouldRenderDefaultPopup?: boolean;
-  getMousePositionData?: (e: MouseEvent) => MousePositionData | null;
 }
 
 function useGridHeight() {
@@ -48,33 +42,10 @@ function useGridHeight() {
   return { ref, height };
 }
 
-function getGridInfoList(calendar: TZDate[][]): CellDateRange[][] {
-  return calendar.map<CellDateRange[]>((week) =>
-    week.map<CellDateRange>((day) => {
-      const start = toStartOfDay(day);
-      const end = toEndOfDay(start);
-
-      return {
-        start,
-        end,
-      };
-    })
-  );
-}
-
-const DayGridMonth: FunctionComponent<Props> = ({
-  options,
-  calendar = [],
-  appContainer,
-  shouldRenderDefaultPopup = false,
-  getMousePositionData = () => null,
-}) => {
+const DayGridMonth: FunctionComponent<Props> = ({ options, calendar = [], appContainer }) => {
   const { visibleWeeksCount, workweek, startDayOfWeek, narrowWeekend } = options;
 
   const { ref, height } = useGridHeight();
-
-  const { gridSelection, onSelectionChange, onSelectionEnd, onSelectionCancel } =
-    useGridSelection(shouldRenderDefaultPopup);
 
   const rowHeight =
     TOTAL_PERCENT_HEIGHT / Math.max(visibleWeeksCount === 0 ? 6 : visibleWeeksCount, 1);
@@ -85,16 +56,8 @@ const DayGridMonth: FunctionComponent<Props> = ({
     return null;
   }
 
-  const gridInfoList = getGridInfoList(calendar);
-
   return (
-    <GridWithMouse
-      onSelectionChange={onSelectionChange}
-      onSelectionEnd={onSelectionEnd}
-      onSelectionCancel={onSelectionCancel}
-      gridInfoList={gridInfoList}
-      getMousePositionData={getMousePositionData}
-    >
+    <Fragment>
       {calendar.map((week, rowIndex) => {
         const { uiModels, gridDateEventModelMap } = getRenderedEventUIModels(
           week,
@@ -131,16 +94,12 @@ const DayGridMonth: FunctionComponent<Props> = ({
                 headerHeight={MONTH_CELL_PADDING_TOP + MONTH_CELL_BAR_HEIGHT}
                 eventTopMargin={MONTH_EVENT_MARGIN_TOP}
               />
-              <GridSelection
-                gridSelectionData={gridSelection}
-                cells={week}
-                narrowWeekend={narrowWeekend}
-              />
+              <GridSelection gridSelectionData={null} cells={week} narrowWeekend={narrowWeekend} />
             </div>
           </div>
         );
       })}
-    </GridWithMouse>
+    </Fragment>
   );
 };
 

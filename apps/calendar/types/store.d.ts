@@ -1,5 +1,6 @@
 import EventUIModel from '@src/model/eventUIModel';
 import { CalendarDispatchers, CalendarSlice } from '@src/slices/calendar';
+import { DndDispatchers, DndSlice } from '@src/slices/dnd';
 import { OptionDispatchers, OptionSlice } from '@src/slices/options';
 import { PopupDispatchers, PopupSlice } from '@src/slices/popup';
 import { TemplateSlice } from '@src/slices/template';
@@ -87,17 +88,21 @@ export interface InternalStoreAPI<State extends StateWithActions> {
   getState: GetState<State>;
   subscribe: Subscribe<State>;
   clearListeners: () => void;
-  debug: () => void;
 }
 
-export type StoreCreator<State extends StateWithActions> = (set: SetState<State>) => State;
+export type StoreCreator<State extends StateWithActions> = (
+  set: SetState<State>,
+  get: GetState<State>,
+  api: InternalStoreAPI<State>
+) => State;
 
 export type CalendarState = OptionSlice &
   TemplateSlice &
   PopupSlice &
   WeekViewLayoutSlice &
   CalendarSlice &
-  ViewSlice;
+  ViewSlice &
+  DndSlice;
 
 export type Dispatchers = {
   option: OptionDispatchers;
@@ -105,6 +110,7 @@ export type Dispatchers = {
   weekViewLayout: WeekViewLayoutDispatchers;
   calendar: CalendarDispatchers;
   view: ViewDispatchers;
+  dnd: DndDispatchers;
 };
 
 export type CalendarStore = CalendarState & {
