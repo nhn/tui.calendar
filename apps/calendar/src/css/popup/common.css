@@ -5,6 +5,11 @@
   clear: both;
 }
 
+.popup-section {
+  font-size: 0;
+  min-height: 40px;
+}
+
 .popup-button.popup-close {
   position: absolute;
   top: 10px;

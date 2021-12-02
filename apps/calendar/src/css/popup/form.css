@@ -12,11 +12,6 @@
   font-weight: bold;
 }
 
-.popup-section {
-  font-size: 0;
-  min-height: 40px;
-}
-
 .popup-section-item {
   height: 32px;
   padding: 0 9px 0 12px;

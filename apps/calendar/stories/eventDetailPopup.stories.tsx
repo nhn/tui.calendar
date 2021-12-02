@@ -1,33 +1,41 @@
 import { h } from 'preact';
 
-import { EventDetailPopup } from '@src/components/popup/eventDetailPopup';
+import { Story } from '@storybook/preact';
 
-import { CalendarInfo } from '@t/option';
-import { EventDetailPopupParam } from '@t/store';
+import { EventDetailPopup } from '@src/components/popup/eventDetailPopup';
+import EventModel from '@src/model/eventModel';
+import TZDate from '@src/time/date';
 
 import { ProviderWrapper } from '@stories/util/providerWrapper';
-import { Story } from '@storybook/preact';
+
+import { EventDetailPopupParam } from '@t/store';
 
 export default {
   component: EventDetailPopup,
   title: 'Popup/EventDetailPopup',
 };
 
-interface EventDetailPopupStoryProps extends EventDetailPopupParam {
-  calendars?: CalendarInfo[];
-}
-
-const Template: Story<EventDetailPopupStoryProps> = (args) => (
-  <ProviderWrapper options={{ calendars: args.calendars }}>
+const Template: Story<EventDetailPopupParam> = (args) => (
+  <ProviderWrapper>
     <EventDetailPopup {...args} />
   </ProviderWrapper>
 );
 
 export const EventDetailPopupWithCalendars = Template.bind({});
 EventDetailPopupWithCalendars.args = {
-  event: {
+  event: EventModel.create({
     id: 'id',
-    name: 'name',
+    calendarId: 'calendar id',
+    title: 'title',
+    body: 'body',
+    start: new TZDate(),
+    end: new TZDate(),
+    isAllDay: false,
+    location: 'location',
+    attendees: ['attendee1', 'attendee2'],
+    recurrenceRule: 'recurrence rule',
+    isReadOnly: false,
     bgColor: '#03bd9e',
-  },
+    state: 'Busy',
+  }),
 };

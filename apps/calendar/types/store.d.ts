@@ -1,3 +1,4 @@
+import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import { CalendarDispatchers, CalendarSlice } from '@src/slices/calendar';
 import { DndDispatchers, DndSlice } from '@src/slices/dnd';
@@ -9,7 +10,7 @@ import { WeekViewLayoutDispatchers, WeekViewLayoutSlice } from '@src/slices/week
 import TZDate from '@src/time/date';
 
 import type { EventState } from '@t/events';
-import type { CalendarInfo, MonthOption, WeekOption } from '@t/option';
+import type { MonthOption, WeekOption } from '@t/option';
 
 type CalendarMonthOption = Required<MonthOption>;
 type CalendarWeekOption = Required<WeekOption>;
@@ -46,7 +47,7 @@ interface EventFormPopupParam extends BasePopupParam {
 }
 
 interface EventDetailPopupParam extends BasePopupParam {
-  event: CalendarInfo;
+  event: EventModel;
 }
 
 type PopupRect = {
