@@ -1,5 +1,6 @@
 import { FunctionComponent, h } from 'preact';
 
+import { EventDetailSectionButton } from '@src/components/popup/eventDetailSectionButton';
 import { EventDetailSectionDetail } from '@src/components/popup/eventDetailSectionDetail';
 import { EventDetailSectionHeader } from '@src/components/popup/eventDetailSectionHeader';
 import { cls } from '@src/helpers/css';
@@ -10,24 +11,6 @@ import { EventDetailPopupParam } from '@t/store';
 const classNames = {
   popupContainer: cls('popup-container'),
   detailContainer: cls('detail-container'),
-  detailItem: cls('detail-item'),
-  detailItemIndent: cls('detail-item', 'detail-item-indent'),
-  detailItemSeparate: cls('detail-item', 'detail-item-separate'),
-  sectionHeader: cls('popup-section', 'section-header'),
-  sectionDetail: cls('popup-section', 'section-detail'),
-  sectionButton: cls('popup-section', 'section-button'),
-  content: cls('content'),
-  eventTitle: cls('event-title'),
-  locationIcon: cls('icon', 'ic-location-b'),
-  repeatIcon: cls('icon', 'ic-repeat-b'),
-  userIcon: cls('icon', 'ic-user-b'),
-  stateIcon: cls('icon', 'ic-state-b'),
-  calendarDotIcon: cls('icon', 'calendar-dot'),
-  editIcon: cls('icon', 'ic-edit'),
-  deleteIcon: cls('icon', 'ic-delete'),
-  editButton: cls('edit-button'),
-  deleteButton: cls('delete-button'),
-  verticalLine: cls('vertical-line'),
 };
 
 export const EventDetailPopup: FunctionComponent<EventDetailPopupParam> = ({ event = {} }) => {
@@ -38,7 +21,7 @@ export const EventDetailPopup: FunctionComponent<EventDetailPopupParam> = ({ eve
     end = new TZDate(),
     location,
     recurrenceRule,
-    attendees = [],
+    attendees,
     state,
     calendarId,
     bgColor,
@@ -58,19 +41,7 @@ export const EventDetailPopup: FunctionComponent<EventDetailPopupParam> = ({ eve
           calendarId={calendarId}
           body={body}
         />
-        {!isReadOnly && (
-          <div className={classNames.sectionButton}>
-            <button className={classNames.editButton}>
-              <span className={classNames.editIcon} />
-              <span className={classNames.content}>Edit</span>
-            </button>
-            <div className={classNames.verticalLine} />
-            <button className={classNames.deleteButton}>
-              <span className={classNames.deleteIcon} />
-              <span className={classNames.content}>Delete</span>
-            </button>
-          </div>
-        )}
+        {!isReadOnly && <EventDetailSectionButton />}
       </div>
       <div className={cls('popup-top-line')} style={{ backgroundColor: bgColor }} />
     </div>
