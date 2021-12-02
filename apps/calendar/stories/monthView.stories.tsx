@@ -18,9 +18,14 @@ function createMonthEvents() {
   const today = new TZDate();
   const thisSunday = addDate(today, -today.getDay());
   const sundayDate = thisSunday.getDate();
-  const weekCount = Math.floor(
-    sundayDate % DAYS_OF_WEEK ? sundayDate / DAYS_OF_WEEK : (sundayDate - 1) / DAYS_OF_WEEK
-  );
+  const sundayMonth = thisSunday.getMonth();
+  const todayMonth = today.getMonth();
+  const weekCount =
+    sundayMonth !== todayMonth
+      ? -1
+      : Math.floor(
+          sundayDate % DAYS_OF_WEEK ? sundayDate / DAYS_OF_WEEK : (sundayDate - 1) / DAYS_OF_WEEK
+        );
   const firstSunday = addDate(thisSunday, -weekCount * DAYS_OF_WEEK);
   const firstTuesday = addDate(firstSunday, 2);
   const secondTuesday = addDate(firstTuesday, DAYS_OF_WEEK);
