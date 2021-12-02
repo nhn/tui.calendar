@@ -151,7 +151,7 @@ export const HorizontalEvent: FunctionComponent<Props> = ({
     isResizing,
   });
 
-  const { onMouseDown } = useDrag(DRAGGING_TYPE_CREATORS.hEventResizeWithId(`${uiModel.cid()}`));
+  const { onMouseDown } = useDrag(DRAGGING_TYPE_CREATORS.resizeEvent(`${uiModel.cid()}`));
   const onResizeStart = (e: MouseEvent) => {
     e.stopPropagation();
     onMouseDown(e);
