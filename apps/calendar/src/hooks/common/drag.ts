@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
-import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import { isEscapePressed } from '@src/utils/keyboard';
 import { noop } from '@src/utils/noop';
 
 import { DraggingTypes } from '@t/drag';
+import { CalendarState } from '@t/store';
 
 export interface DragListeners {
   onDragStart?: MouseEventListener;
@@ -19,14 +19,17 @@ function isLeftClick(buttonNum: number) {
   return buttonNum === 0;
 }
 
+function isDraggingSelector(state: CalendarState) {
+  return state.dnd.draggingState > DraggingState.INIT;
+}
+
 export function useDrag(
   draggingItemType: DraggingTypes,
   { onDragStart = noop, onDrag = noop, onDragEnd = noop, onPressESCKey = noop }: DragListeners = {}
 ) {
   const { initDrag, setDraggingState, endDrag, reset } = useDispatch('dnd');
 
-  const { draggingState } = useStore(dndSelector);
-  const isDragging = draggingState > DraggingState.INIT;
+  const isDragging = useStore(isDraggingSelector);
   const [isStarted, setStarted] = useState(false);
 
   const onMouseMoveRef = useRef<MouseEventListener | null>(null);
