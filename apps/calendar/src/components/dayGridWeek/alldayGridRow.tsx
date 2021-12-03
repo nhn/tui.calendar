@@ -72,13 +72,13 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
     [cells, gridInfo, panelContainer]
   );
 
-  const { dragTargetEvent, resizingWidth } = useAlldayGridRowEventResize({
+  const { resizingEvent, resizingWidth } = useAlldayGridRowEventResize({
     events,
     cells,
     gridColWidthMap,
     mousePositionDataGrabber,
   });
-  const { moveTargetEvent, movingLeft } = useAlldayGridRowEventMove({
+  const { movingEvent, movingLeft } = useAlldayGridRowEventMove({
     events,
     cells,
     gridInfo,
@@ -99,7 +99,7 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
         key={`${category}-DayEvent-${uiModel.cid()}`}
         uiModel={uiModel}
         isDraggingTarget={
-          uiModel.cid() === dragTargetEvent?.cid() || uiModel.cid() === moveTargetEvent?.cid()
+          uiModel.cid() === resizingEvent?.cid() || uiModel.cid() === movingEvent?.cid()
         }
         eventHeight={EVENT_HEIGHT}
         headerHeight={0}
@@ -130,17 +130,17 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
           narrowWeekend={narrowWeekend}
         />
         <div className={cls(`panel-${category}-events`)}>{horizontalEvents}</div>
-        {dragTargetEvent && (
+        {resizingEvent && (
           <HorizontalEvent
-            uiModel={dragTargetEvent}
+            uiModel={resizingEvent}
             eventHeight={EVENT_HEIGHT}
             headerHeight={0}
             resizingWidth={resizingWidth}
           />
         )}
-        {moveTargetEvent && (
+        {movingEvent && (
           <HorizontalEvent
-            uiModel={moveTargetEvent}
+            uiModel={movingEvent}
             eventHeight={EVENT_HEIGHT}
             headerHeight={0}
             movingLeft={movingLeft}

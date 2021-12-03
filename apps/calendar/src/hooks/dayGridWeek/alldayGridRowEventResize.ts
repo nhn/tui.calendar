@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'preact/hooks';
+import { useEffect, useMemo, useState } from 'preact/hooks';
 
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { getGridDateIndex } from '@src/helpers/grid';
@@ -32,76 +32,72 @@ export function useAlldayGridRowEventResize({
   mousePositionDataGrabber,
 }: Params) {
   const { x, y, draggingState } = useStore(dndSelector);
-  const {
-    dnd: { reset },
-    calendar: { updateEvent },
-  } = useDispatch(['dnd', 'calendar']);
+  const { updateEvent } = useDispatch('calendar');
 
-  const isDragging = draggingState > DraggingState.INIT;
+  const { draggingEvent: resizingEvent, clearDraggingEvent } = useDraggingEvent(events, 'resize');
 
-  const targetEvent = useDraggingEvent(events, 'resize');
+  const [currentGridX, setCurrentGridX] = useState<number | null>(null);
+
+  const hasDraggingCoords = !isNil(x) && !isNil(y);
 
   const targetEventGridIndices = useMemo(() => {
-    if (targetEvent) {
-      return getEventColIndex(targetEvent, cells);
+    if (resizingEvent) {
+      return getEventColIndex(resizingEvent, cells);
     }
 
     return { start: -1, end: -1 };
-  }, [cells, targetEvent]);
-
-  const currentGridX = useMemo(() => {
-    if (isDragging) {
-      const data = mousePositionDataGrabber({ clientX: x, clientY: y } as MouseEvent);
-
-      return data?.gridX ?? null;
-    }
-
-    return null;
-  }, [isDragging, mousePositionDataGrabber, x, y]);
+  }, [cells, resizingEvent]);
 
   const resizingWidth = useMemo(() => {
-    if (isDragging && targetEventGridIndices.start > -1 && !isNil(currentGridX)) {
+    if (targetEventGridIndices.start > -1 && !isNil(currentGridX)) {
       return gridColWidthMap[targetEventGridIndices.start][currentGridX];
     }
 
     return null;
-  }, [currentGridX, gridColWidthMap, isDragging, targetEventGridIndices.start]);
-
-  const shouldUpdateEventEnd = useMemo(() => {
-    return Boolean(
-      draggingState === DraggingState.END_DRAG &&
-        !isNil(targetEvent) &&
-        !isNil(currentGridX) &&
-        targetEventGridIndices.start <= currentGridX &&
-        targetEventGridIndices.end !== currentGridX
-    );
-  }, [
-    currentGridX,
-    draggingState,
-    targetEvent,
-    targetEventGridIndices.end,
-    targetEventGridIndices.start,
-  ]);
+  }, [currentGridX, gridColWidthMap, targetEventGridIndices.start]);
 
   useEffect(() => {
+    if (!isNil(resizingEvent) && hasDraggingCoords) {
+      const data = mousePositionDataGrabber({ clientX: x, clientY: y } as MouseEvent);
+
+      setCurrentGridX(data?.gridX ?? null);
+    }
+  }, [hasDraggingCoords, mousePositionDataGrabber, resizingEvent, x, y]);
+
+  useEffect(() => {
+    const shouldUpdateEventEnd =
+      draggingState === DraggingState.IDLE &&
+      !isNil(resizingEvent) &&
+      !isNil(currentGridX) &&
+      targetEventGridIndices.start <= currentGridX &&
+      targetEventGridIndices.end !== currentGridX;
+
     if (shouldUpdateEventEnd) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const targetDate = cells[currentGridX!];
+      const targetDate = cells[currentGridX];
 
       updateEvent({
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        event: targetEvent!.model,
+        event: resizingEvent.model,
         eventData: { end: targetDate },
       });
-      reset();
+      setCurrentGridX(null);
+      clearDraggingEvent();
     }
-  }, [cells, currentGridX, shouldUpdateEventEnd, targetEvent, updateEvent, reset]);
+  }, [
+    cells,
+    currentGridX,
+    resizingEvent,
+    updateEvent,
+    clearDraggingEvent,
+    targetEventGridIndices.start,
+    targetEventGridIndices.end,
+    draggingState,
+  ]);
 
   return useMemo(
     () => ({
-      dragTargetEvent: targetEvent,
+      resizingEvent,
       resizingWidth,
     }),
-    [resizingWidth, targetEvent]
+    [resizingWidth, resizingEvent]
   );
 }

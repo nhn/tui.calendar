@@ -1,4 +1,4 @@
-import { useCallback } from 'preact/hooks';
+import { useCallback, useEffect, useState } from 'preact/hooks';
 
 import { useStore } from '@src/contexts/calendarStore';
 import EventUIModel from '@src/model/eventUIModel';
@@ -19,7 +19,8 @@ const getTargetEventId = (itemType: string | null, behavior: EventDraggingBehavi
 };
 
 export function useDraggingEvent(events: EventUIModel[], behavior: EventDraggingBehavior) {
-  return useStore(
+  const [draggingEvent, setDraggingEvent] = useState<EventUIModel | null>(null);
+  const currentDraggingEvent = useStore(
     useCallback(
       (state) => {
         const { draggingItemType } = state.dnd;
@@ -34,4 +35,17 @@ export function useDraggingEvent(events: EventUIModel[], behavior: EventDragging
       [behavior, events]
     )
   );
+
+  const clearDraggingEvent = () => setDraggingEvent(null);
+
+  useEffect(() => {
+    if (isNil(draggingEvent) && !isNil(currentDraggingEvent)) {
+      setDraggingEvent(currentDraggingEvent);
+    }
+  }, [currentDraggingEvent, draggingEvent]);
+
+  return {
+    draggingEvent,
+    clearDraggingEvent,
+  };
 }

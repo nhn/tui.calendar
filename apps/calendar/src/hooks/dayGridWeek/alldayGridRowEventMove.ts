@@ -1,8 +1,9 @@
-import { useCallback, useEffect } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useDraggingEvent } from '@src/hooks/event/draggingEvent';
 import EventUIModel from '@src/model/eventUIModel';
+import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import TZDate from '@src/time/date';
 import { isSame } from '@src/time/datetime';
@@ -23,76 +24,63 @@ export function useAlldayGridRowEventMove({
   gridInfo,
   mousePositionDataGrabber,
 }: Params) {
-  const targetEvent = useDraggingEvent(events, 'move');
-  const {
-    dnd: { reset },
-    calendar: { updateEvent },
-  } = useDispatch(['dnd', 'calendar']);
-  const isDraggingEnd = useStore(
-    useCallback((state) => state.dnd.draggingState === DraggingState.END_DRAG, [])
-  );
-  const currentGridX = useStore(
-    useCallback(
-      ({ dnd }) => {
-        if (!targetEvent || isNil(dnd.x) || isNil(dnd.y)) {
-          return null;
-        }
+  const { x, y, draggingState } = useStore(dndSelector);
+  const { draggingEvent: movingEvent, clearDraggingEvent } = useDraggingEvent(events, 'move');
+  const { updateEvent } = useDispatch('calendar');
 
-        const posData = mousePositionDataGrabber({
-          clientX: dnd.x,
-          clientY: dnd.y,
-        } as MouseEvent);
-        if (isNil(posData)) {
-          return null;
-        }
+  const [currentGridX, setCurrentGridX] = useState<number | null>(null);
 
-        return posData.gridX;
-      },
-      [mousePositionDataGrabber, targetEvent]
-    )
-  );
+  const hasDraggingCoords = !isNil(x) && !isNil(y);
 
-  const targetEventStartGridX = isNil(targetEvent)
+  useEffect(() => {
+    if (!isNil(movingEvent) && hasDraggingCoords) {
+      const posData = mousePositionDataGrabber({ clientX: x, clientY: y } as MouseEvent);
+
+      setCurrentGridX(posData?.gridX ?? null);
+    }
+  }, [hasDraggingCoords, mousePositionDataGrabber, movingEvent, x, y]);
+
+  const targetEventStartGridX = isNil(movingEvent)
     ? null
-    : cells.findIndex((cell) => isSame(cell, targetEvent.getStarts()));
+    : cells.findIndex((cell) => isSame(cell, movingEvent.getStarts()));
   const currentMovingLeft = isNil(currentGridX) ? null : gridInfo[currentGridX].left;
 
   useEffect(() => {
     const shouldUpdate =
-      !isNil(targetEvent) &&
+      draggingState === DraggingState.IDLE &&
+      !isNil(movingEvent) &&
       !isNil(currentGridX) &&
       !isNil(currentMovingLeft) &&
-      !isNil(targetEventStartGridX) &&
-      isDraggingEnd;
+      !isNil(targetEventStartGridX);
 
     if (shouldUpdate) {
       const dateOffset = currentGridX - targetEventStartGridX;
-      let newStartDate = new TZDate(targetEvent.getStarts());
-      let newEndDate = new TZDate(targetEvent.getEnds());
+      let newStartDate = new TZDate(movingEvent.getStarts());
+      let newEndDate = new TZDate(movingEvent.getEnds());
       newStartDate = newStartDate.addDate(dateOffset);
       newEndDate = newEndDate.addDate(dateOffset);
 
       updateEvent({
-        event: targetEvent.model,
+        event: movingEvent.model,
         eventData: {
           start: newStartDate,
           end: newEndDate,
         },
       });
-      reset();
+      clearDraggingEvent();
     }
   }, [
     currentGridX,
     currentMovingLeft,
-    isDraggingEnd,
-    reset,
-    targetEvent,
+    movingEvent,
     targetEventStartGridX,
     updateEvent,
+    clearDraggingEvent,
+    draggingState,
   ]);
 
   return {
-    moveTargetEvent: targetEvent,
+    movingEvent,
     movingLeft: currentMovingLeft,
   };
 }
