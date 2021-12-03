@@ -82,6 +82,7 @@
     "test": "jest --detectOpenHandles --forceExit",
     "test:watch": "jest --watch",
     "test:playwright": "playwright test --browser=all",
+    "test:playwright:inspect": "playwright test --browser=chromium --debug",
     "prepare": "husky install && ts-patch install -s"
   },
   "workspaces": [
