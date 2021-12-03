@@ -42,9 +42,11 @@ export function useDrag(
         return;
       }
 
-      (e.currentTarget as HTMLElement).ondragstart = function () {
-        return false;
-      };
+      if (e.currentTarget) {
+        (e.currentTarget as HTMLElement).ondragstart = function () {
+          return false;
+        };
+      }
 
       setStarted(true);
       initDrag({
