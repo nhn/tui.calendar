@@ -27,7 +27,7 @@ export function useDrag(
   draggingItemType: DraggingTypes,
   { onDragStart = noop, onDrag = noop, onDragEnd = noop, onPressESCKey = noop }: DragListeners = {}
 ) {
-  const { initDrag, setDraggingState, endDrag, reset } = useDispatch('dnd');
+  const { initDrag, setDraggingState, reset } = useDispatch('dnd');
 
   const isDragging = useStore(isDraggingSelector);
   const [isStarted, setStarted] = useState(false);
@@ -41,6 +41,10 @@ export function useDrag(
       if (!isLeftClick(e.button)) {
         return;
       }
+
+      (e.currentTarget as HTMLElement).ondragstart = function () {
+        return false;
+      };
 
       setStarted(true);
       initDrag({
@@ -72,24 +76,22 @@ export function useDrag(
 
   const onMouseUp = useCallback<MouseEventListener>(
     (e) => {
-      if (isDragging) {
+      if (isStarted) {
         onDragEnd(e);
-        endDrag();
         setStarted(false);
       }
     },
-    [endDrag, isDragging, onDragEnd]
+    [isStarted, onDragEnd]
   );
 
   const onKeydown = useCallback<KeyboardEventListener>(
     (e) => {
       if (isEscapePressed(e)) {
         onPressESCKey(e);
-        reset();
         setStarted(false);
       }
     },
-    [onPressESCKey, reset]
+    [onPressESCKey]
   );
 
   useEffect(() => {
@@ -109,6 +111,7 @@ export function useDrag(
       document.addEventListener('keydown', handleKeydown);
 
       return () => {
+        reset();
         document.removeEventListener('mousemove', handleMouseMove);
         document.removeEventListener('mouseup', handleMouseUp);
         document.removeEventListener('keydown', handleKeydown);
