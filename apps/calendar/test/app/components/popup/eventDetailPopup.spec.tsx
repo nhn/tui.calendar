@@ -38,39 +38,46 @@ describe('event detail popup', () => {
   });
 
   it('should display location when `event.location` is exists', () => {
-    const locationElement = screen.getByText(event.location);
+    const { location } = event;
+    const locationText = screen.getByText(location).textContent;
 
-    expect(locationElement).not.toBeNull();
+    expect(locationText).toBe(location);
   });
 
   it('should display recurrence rule when `event.recurrenceRule` is exists', () => {
-    const recurrenceRuleElement = screen.getByText(event.recurrenceRule);
+    const { recurrenceRule } = event;
+    const recurrenceRuleText = screen.getByText(recurrenceRule).textContent;
 
-    expect(recurrenceRuleElement).not.toBeNull();
+    expect(recurrenceRuleText).toBe(recurrenceRule);
   });
 
   it('should display attendees when `event.attendees` is exists', () => {
-    const attendeesElement = screen.getByText(event.attendees.join(','));
+    const { attendees } = event;
+    const text = attendees.join(',');
+    const attendeesText = screen.getByText(text).textContent;
 
-    expect(attendeesElement).not.toBeNull();
+    expect(attendeesText).toBe(text);
   });
 
   it('should display state when `event.state` is exists', () => {
-    const stateElement = screen.getByText(event.state);
+    const { state } = event;
+    const stateText = screen.getByText(state).textContent;
 
-    expect(stateElement).not.toBeNull();
+    expect(stateText).toBe(state);
   });
 
   it('should display calendar id when `event.calendarId` is exists', () => {
-    const calendarIdElement = screen.getByText(event.calendarId);
+    const { calendarId } = event;
+    const calendarIdText = screen.getByText(calendarId).textContent;
 
-    expect(calendarIdElement).not.toBeNull();
+    expect(calendarIdText).toBe(calendarId);
   });
 
   it('should display body when `event.body` is exists', () => {
-    const bodyElement = screen.getByText(event.body);
+    const { body } = event;
+    const bodyText = screen.getByText(body).textContent;
 
-    expect(bodyElement).not.toBeNull();
+    expect(bodyText).toBe(body);
   });
 
   it('should display edit and delete buttons when event is not read only', () => {
