@@ -42,13 +42,14 @@ export function createDndSlice(): DndSlice {
 
 export function createDndDispatchers(set: SetState<CalendarStore>): DndDispatchers {
   return {
-    initDrag: ({ draggingItemType, initX, initY }) => {
+    initDrag: (initState) => {
       set(
         produce((state) => {
-          state.dnd.draggingItemType = draggingItemType;
-          state.dnd.initX = initX;
-          state.dnd.initY = initY;
-          state.dnd.draggingState = DraggingState.INIT;
+          state.dnd = {
+            ...state.dnd,
+            ...initState,
+            draggingState: DraggingState.INIT,
+          };
         })
       );
     },
@@ -73,12 +74,7 @@ export function createDndDispatchers(set: SetState<CalendarStore>): DndDispatche
     reset: () => {
       set(
         produce((state) => {
-          state.dnd.draggingItemType = null;
-          state.dnd.draggingState = DraggingState.IDLE;
-          state.dnd.initX = null;
-          state.dnd.initY = null;
-          state.dnd.x = null;
-          state.dnd.y = null;
+          state.dnd = createDndSlice().dnd;
         })
       );
     },
