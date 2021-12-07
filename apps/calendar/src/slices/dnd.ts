@@ -1,3 +1,5 @@
+import produce from 'immer';
+
 import { CalendarStore, SetState } from '@t/store';
 
 export enum DraggingState {
@@ -41,35 +43,44 @@ export function createDndSlice(): DndSlice {
 export function createDndDispatchers(set: SetState<CalendarStore>): DndDispatchers {
   return {
     initDrag: ({ draggingItemType, initX, initY }) => {
-      set((state) => ({
-        dnd: {
-          ...state.dnd,
-          draggingItemType,
-          initX,
-          initY,
-          draggingState: DraggingState.INIT,
-        },
-      }));
+      set(
+        produce((state) => {
+          state.dnd.draggingItemType = draggingItemType;
+          state.dnd.initX = initX;
+          state.dnd.initY = initY;
+          state.dnd.draggingState = DraggingState.INIT;
+        })
+      );
     },
     setDraggingState: (newState) => {
-      set((state) => ({
-        dnd: {
-          ...state.dnd,
-          ...newState,
-          draggingState: DraggingState.DRAGGING,
-        },
-      }));
+      set(
+        produce((state) => {
+          state.dnd = {
+            ...state.dnd,
+            ...newState,
+            draggingState: DraggingState.DRAGGING,
+          };
+        })
+      );
     },
     endDrag: () => {
-      set((state) => ({
-        dnd: {
-          ...state.dnd,
-          draggingState: DraggingState.END_DRAG,
-        },
-      }));
+      set(
+        produce((state) => {
+          state.dnd.draggingState = DraggingState.END_DRAG;
+        })
+      );
     },
     reset: () => {
-      set(createDndSlice);
+      set(
+        produce((state) => {
+          state.dnd.draggingItemType = null;
+          state.dnd.draggingState = DraggingState.IDLE;
+          state.dnd.initX = null;
+          state.dnd.initY = null;
+          state.dnd.x = null;
+          state.dnd.y = null;
+        })
+      );
     },
   };
 }

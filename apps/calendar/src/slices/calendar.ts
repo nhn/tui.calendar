@@ -1,3 +1,5 @@
+import produce from 'immer';
+
 import {
   clearEvents,
   createEventCollection,
@@ -33,34 +35,22 @@ export function createCalendarSlice(calendars: CalendarInfo[] = []): CalendarSli
 export function createCalendarDispatchers(set: SetState<CalendarStore>): CalendarDispatchers {
   return {
     createEvents: (events: (EventModel | EventModelData)[]) =>
-      set((state) => {
-        createEvents(state.calendar, events);
-
-        return {
-          calendar: {
-            ...state.calendar,
-          },
-        };
-      }),
+      set(
+        produce((state) => {
+          createEvents(state.calendar, events);
+        })
+      ),
     updateEvent: ({ event, eventData }: UpdateEventParams) =>
-      set((state) => {
-        updateEvent(state.calendar, event.id, event.calendarId, eventData);
-
-        return {
-          calendar: {
-            ...state.calendar,
-          },
-        };
-      }),
+      set(
+        produce((state) => {
+          updateEvent(state.calendar, event.id, event.calendarId, eventData);
+        })
+      ),
     clearEvents: () =>
-      set((state) => {
-        clearEvents(state.calendar);
-
-        return {
-          calendar: {
-            ...state.calendar,
-          },
-        };
-      }),
+      set(
+        produce((state) => {
+          clearEvents(state.calendar);
+        })
+      ),
   };
 }

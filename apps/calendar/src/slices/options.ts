@@ -1,8 +1,8 @@
+import produce from 'immer';
 import range from 'tui-code-snippet/array/range';
 
 import { getDayName } from '@src/helpers/dayName';
 import { Day } from '@src/time/datetime';
-import { deepMergedCopy } from '@src/utils/object';
 
 import { EventModelData } from '@t/events';
 import { Option } from '@t/option';
@@ -92,8 +92,10 @@ export function createOptionSlice(option: Option = {}): OptionSlice {
 export function createOptionDispatchers(set: SetState<CalendarStore>): OptionDispatchers {
   return {
     setOptions: (newOption: Partial<OptionSlice['option']> = {}) =>
-      set((state) => ({
-        option: deepMergedCopy(state.option, newOption),
-      })),
+      set(
+        produce((state) => {
+          state.option = { ...state.option, ...newOption };
+        })
+      ),
   };
 }

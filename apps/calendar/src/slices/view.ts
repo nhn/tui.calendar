@@ -1,4 +1,4 @@
-import { deepMergedCopy } from '@src/utils/object';
+import produce from 'immer';
 
 import { ViewType } from '@t/option';
 import { CalendarStore, SetState } from '@t/store';
@@ -24,10 +24,10 @@ export function createViewSlice(initialView: ViewType = 'month'): ViewSlice {
 export function createViewDispatchers(set: SetState<CalendarStore>): ViewDispatchers {
   return {
     changeView: (nextView: ViewType) =>
-      set((state) => ({
-        view: deepMergedCopy(state.view, {
-          currentView: nextView,
-        }),
-      })),
+      set(
+        produce((state) => {
+          state.view.currentView = nextView;
+        })
+      ),
   };
 }
