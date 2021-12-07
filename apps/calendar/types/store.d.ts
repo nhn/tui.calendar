@@ -1,3 +1,4 @@
+import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import { CalendarDispatchers, CalendarSlice } from '@src/slices/calendar';
 import { DndDispatchers, DndSlice } from '@src/slices/dnd';
@@ -29,7 +30,7 @@ interface BasePopupParam {
 type PopupParamMap = {
   seeMore: SeeMorePopupParam;
   form: EventFormPopupParam;
-  detail: DetailPopupParam;
+  detail: EventDetailPopupParam;
 };
 
 interface SeeMorePopupParam extends BasePopupParam {
@@ -45,9 +46,8 @@ interface EventFormPopupParam extends BasePopupParam {
   eventState?: EventState;
 }
 
-interface DetailPopupParam extends BasePopupParam {
-  // @TODO: 팝업 작성 시 타입 정의
-  date: TZDate | Date;
+interface EventDetailPopupParam extends BasePopupParam {
+  event: EventModel;
 }
 
 type PopupRect = {
