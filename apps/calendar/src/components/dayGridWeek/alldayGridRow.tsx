@@ -37,6 +37,7 @@ interface Props {
   timezonesCount?: number;
   height?: number;
   options?: WeekOption;
+  useCreationPopup: boolean;
   shouldRenderDefaultPopup?: boolean;
   gridInfo: GridInfo[];
   gridColWidthMap: string[][];
@@ -54,6 +55,7 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
   category,
   height = PANEL_HEIGHT,
   options = {},
+  useCreationPopup,
   gridInfo,
   gridColWidthMap,
   timesWidth = 120,
@@ -94,7 +96,7 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
       };
     },
     onDragEnd: (e) => {
-      if (!gridSelection || !dragStartPos.current) {
+      if (!gridSelection || !useCreationPopup || !dragStartPos.current) {
         return;
       }
 

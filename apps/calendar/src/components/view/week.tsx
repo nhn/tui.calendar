@@ -74,6 +74,7 @@ export const Week: FunctionComponent = () => {
     return null;
   }
 
+  const { useCreationPopup = false } = option;
   const weekOptions = option.week as Required<WeekOption>;
   const { narrowWeekend, startDayOfWeek, workweek, hourStart, hourEnd } = weekOptions;
   // @TODO: calculate based on today(need to calculate date when prev & next used)
@@ -109,6 +110,7 @@ export const Week: FunctionComponent = () => {
             cells={cells}
             height={value.height}
             options={weekOptions}
+            useCreationPopup={useCreationPopup}
           />
         ) : (
           <OtherGridRow
