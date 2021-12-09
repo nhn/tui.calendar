@@ -40,4 +40,19 @@ test.describe('basic test', () => {
 
     expect(eventWidthBeforeResizing).toBeLessThan(eventWidthAfterResizing);
   });
+
+  test('event form popup with grid selection', async ({ page }) => {
+    const startCellLocator = page.locator(
+      '.toastui-calendar-allday .toastui-calendar-panel-grid >> nth=0'
+    );
+
+    await startCellLocator.hover();
+    await page.mouse.down();
+    await page.mouse.move(1000, 0, { steps: 15 });
+    await page.mouse.up();
+
+    const floatingLayer = page.locator('.toastui-calendar-floating-layer');
+
+    expect(floatingLayer).not.toBeNull();
+  });
 });

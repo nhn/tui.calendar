@@ -2,6 +2,7 @@ import { h } from 'preact';
 
 import { Story } from '@storybook/preact';
 
+import FloatingLayer from '@src/components/floatingLayer';
 import { Week } from '@src/components/view/week';
 import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
@@ -64,6 +65,7 @@ function createWeekEvents() {
 const Template: Story = (args) => (
   <ProviderWrapper options={args.options} events={args.events}>
     <Week />
+    <FloatingLayer />
   </ProviderWrapper>
 );
 
@@ -94,5 +96,8 @@ RandomEvents.args = {
 
 export const FixedEvents = Template.bind({});
 FixedEvents.args = {
+  options: {
+    useCreationPopup: true,
+  },
   events: createWeekEvents(),
 };
