@@ -1,4 +1,4 @@
-import { deepMergedCopy } from '@src/utils/object';
+import produce from 'immer';
 
 import { CalendarStore, SetState } from '@t/store';
 
@@ -41,14 +41,10 @@ export function createWeekViewLayoutDispatchers(
 ): WeekViewLayoutDispatchers {
   return {
     updateDayGridRowHeight: ({ rowName, height }: UpdateGridRowHeightParams) =>
-      set((state) => ({
-        weekViewLayout: deepMergedCopy(state.weekViewLayout, {
-          dayGridRows: {
-            [rowName]: {
-              height,
-            },
-          },
-        }),
-      })),
+      set(
+        produce((state) => {
+          state.weekViewLayout.dayGridRows[rowName].height = height;
+        })
+      ),
   };
 }

@@ -1,17 +1,6 @@
-import { deepMergedCopy } from '@src/utils/object';
 import { isFunction, isNil } from '@src/utils/type';
 
 describe('utils', () => {
-  it('deepMergedCopy', () => {
-    const obj1 = { a: { b: { d: 2 } }, c: 1 };
-    const obj2 = { a: { b: { e: { f: 1 } } }, c: 2 };
-
-    expect(deepMergedCopy(obj1, obj2)).toEqual({
-      a: { b: { d: 2, e: { f: 1 } } },
-      c: 2,
-    });
-  });
-
   it('isFunction', () => {
     expect(isFunction(() => 'test')).toBe(true);
     expect(isFunction(1)).toBe(false);
