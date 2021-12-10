@@ -1,17 +1,17 @@
-import { Fragment, FunctionComponent, h, VNode } from 'preact';
+import { Fragment, FunctionComponent, h } from 'preact';
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
 import { DragPositionInfo } from '@src/components/draggable';
 import { PanelResizer } from '@src/components/panelResizer';
-import { Direction, panelInfoKeys } from '@src/constants/layout';
+import { Direction } from '@src/constants/layout';
 import { PANEL_HEIGHT } from '@src/constants/style';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
-import { getElementRect, getPanelStylesFromInfo, isPanelShown } from '@src/controller/panel';
+import { getElementRect, getPanelStylesFromInfo } from '@src/controller/panel';
 import { cls } from '@src/helpers/css';
 import { weekViewLayoutSelector } from '@src/selectors';
 import { WeekGridRows } from '@src/slices/weekViewLayout';
 import { noop } from '@src/utils/noop';
-import { isNumber, isString } from '@src/utils/type';
+import { isNumber } from '@src/utils/type';
 
 import { PanelInfo, PanelRect, RectSize } from '@t/layout';
 
@@ -19,9 +19,10 @@ export interface Props extends PanelInfo {
   onResizeStart?: (panelName: string) => void;
   onResizeEnd?: (panelName: string, dragPositionInfo: DragPositionInfo) => void;
   onPanelRectUpdated?: (name: string, rect: PanelRect) => void;
+  isLast?: boolean;
 }
 
-type Child = VNode<any> | string | number;
+// type Child = VNode | string | number;
 
 const Panel: FunctionComponent<Props> = (props) => {
   const {
@@ -34,7 +35,10 @@ const Panel: FunctionComponent<Props> = (props) => {
     resizerHeight,
     resizable,
     children,
+    isLast,
   } = props;
+
+  console.log(isLast);
 
   const panelRef = useRef<HTMLDivElement>(null);
   const resizerRef = useRef<{ base: HTMLDivElement }>(null);
@@ -128,31 +132,37 @@ const Panel: FunctionComponent<Props> = (props) => {
 
 export default Panel;
 
-function isPanel(child: Child): child is VNode<PanelInfo> {
-  if (isString(child) || isNumber(child)) {
-    return false;
-  }
+// function isPanel(child: Child): child is VNode<PanelInfo> {
+//   if (isString(child) || isNumber(child)) {
+//     return false;
+//   }
+//
+//   return child.type === Panel;
+// }
 
-  return child.type === Panel;
-}
+// function getPanelInfo(panel: Child): PanelInfo {
+//   if (isString(panel) || isNumber(panel)) {
+//     return {} as PanelInfo;
+//   }
+//
+//   const { props } = panel;
+//   const panelInfo = {} as PanelInfo;
+//
+//   panelInfoKeys.forEach((key) => {
+//     if (props) {
+//       panelInfo[key] = props[key];
+//     }
+//   });
+//
+//   return panelInfo;
+// }
 
-function getPanelInfo(panel: VNode<PanelInfo>): PanelInfo {
-  const { props } = panel;
-  const panelInfo: any = {};
+// export function filterPanels(children: Child[] = []): VNode<PanelInfo>[] {
+//   return children.filter(isPanel).filter((child) => isPanelShown(child.props));
+// }
 
-  panelInfoKeys.forEach((key) => {
-    if (props) {
-      panelInfo[key] = props[key];
-    }
-  });
-
-  return panelInfo;
-}
-
-export function filterPanels(children: Child[] = []): VNode<PanelInfo>[] {
-  return children.filter(isPanel).filter((child) => isPanelShown(child.props));
-}
-
-export function getPanelPropsList(panels: VNode<PanelInfo>[]) {
-  return panels.map((panel) => getPanelInfo(panel));
-}
+// export function getPanelPropsList(children: ComponentChildren) {
+//   const panels = toChildArray(children);
+//
+//   return panels?.map((panel) => getPanelInfo(panel));
+// }

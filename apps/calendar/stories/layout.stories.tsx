@@ -11,22 +11,21 @@ export default { title: 'Layout' };
 export const vertical = () => (
   <ProviderWrapper>
     <Layout height={500}>
-      <Panel name="DayName" height={50}>
+      <Panel name="dayName" height={50}>
         <div style="border-bottom: 1px solid #bbb; height: 100%;">DayName Panel</div>
       </Panel>
-      <Panel name="Milestone" resizable height={50}>
+      <Panel name="milestone" resizable height={50}>
         <div>Milestone Panel</div>
       </Panel>
-      <Panel name="Task" resizable>
+      <Panel name="task" resizable>
         <div>Task Panel</div>
       </Panel>
-      <Panel name="All Day" resizable minHeight={30}>
+      <Panel name="allday" resizable minHeight={30}>
         <div>All Day Panel</div>
       </Panel>
-      <Panel name="Time" autoSize={1}>
+      <Panel name="time" autoSize={1}>
         <div style="height: 100%; border-bottom: 1px solid #bbb">Time Panel</div>
       </Panel>
-      <span>dk</span>
     </Layout>
   </ProviderWrapper>
 );
@@ -34,25 +33,25 @@ export const vertical = () => (
 export const horizontal = () => (
   <ProviderWrapper>
     <Layout direction={Direction.ROW} height={300}>
-      <Panel name="Mon" resizable>
+      <Panel name="mon" resizable>
         <div>Mon</div>
       </Panel>
-      <Panel name="Tue" width={200} resizable>
+      <Panel name="tue" width={200} resizable>
         <div>Tue</div>
       </Panel>
-      <Panel name="Wed" resizable>
+      <Panel name="wed" resizable>
         <div>Wed</div>
       </Panel>
-      <Panel name="Thu" resizable>
+      <Panel name="thu" resizable>
         <div>Thu</div>
       </Panel>
-      <Panel name="Fri" resizable>
+      <Panel name="fri" resizable>
         <div>Fri</div>
       </Panel>
-      <Panel name="Sat" resizable>
+      <Panel name="sat" resizable>
         <div>Sat</div>
       </Panel>
-      <Panel name="Sun" resizable autoSize={1}>
+      <Panel name="sun" resizable autoSize={1}>
         <div>Sun</div>
       </Panel>
     </Layout>
@@ -62,7 +61,7 @@ export const horizontal = () => (
 export const verticalWithOverflow = () => (
   <ProviderWrapper>
     <Layout>
-      <Panel name="DayName" height={50} overflowY>
+      <Panel name="dayName" height={50} overflowY>
         <div style="border-bottom: 1px solid #bbb; height: 300px;">Overflow-Y Panel</div>
       </Panel>
     </Layout>
@@ -72,7 +71,7 @@ export const verticalWithOverflow = () => (
 export const horizontalWithOverflow = () => (
   <ProviderWrapper>
     <Layout direction={Direction.ROW}>
-      <Panel name="DayName" width={200} height={200} overflowX>
+      <Panel name="dayName" width={200} height={200} overflowX>
         <div style="border-right: 1px solid #bbb; width: 300px;">Overflow-X Panel</div>
       </Panel>
     </Layout>

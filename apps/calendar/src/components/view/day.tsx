@@ -101,7 +101,7 @@ export const Day: FunctionComponent = () => {
   });
 
   return (
-    <Layout classNames={[cls('day-view')]}>
+    <Layout classNames={['day-view']}>
       <Panel name="day-view-daynames" height={WEEK_DAYNAME_HEIGHT + WEEK_DAYNAME_BORDER}>
         <GridHeader
           dayNames={dayNames}
