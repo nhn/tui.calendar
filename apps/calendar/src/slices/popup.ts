@@ -1,4 +1,4 @@
-import { deepMergedCopy } from '@src/utils/object';
+import produce from 'immer';
 
 import { CalendarStore, PopupParamMap, SetState } from '@t/store';
 
@@ -36,12 +36,16 @@ export function createPopupSlice(): PopupSlice {
 export function createPopupDispatchers(set: SetState<CalendarStore>): PopupDispatchers {
   return {
     show: <T extends PopupType>({ type, param }: ShowPopupParams<T>) =>
-      set((state) => ({
-        popup: deepMergedCopy(state.popup, { type, param }),
-      })),
+      set(
+        produce((state) => {
+          state.popup = { type, param };
+        })
+      ),
     hide: () =>
-      set(() => ({
-        popup: { type: null, param: null },
-      })),
+      set(
+        produce((state) => {
+          state.popup = { type: null, param: null };
+        })
+      ),
   };
 }

@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 
 import { Story } from '@storybook/preact';
 
@@ -20,24 +20,9 @@ interface EventFormPopupStoryProps extends EventFormPopupParam {
   calendars?: CalendarInfo[];
 }
 
-const PopupContainer: FunctionComponent = ({ children }) => (
-  <div
-    style={{
-      zIndex: 1005,
-      margin: '30px auto 0',
-      width: 474,
-      height: 272,
-    }}
-  >
-    {children}
-  </div>
-);
-
 const Template: Story<EventFormPopupStoryProps> = (args) => (
   <ProviderWrapper options={{ calendars: args.calendars }}>
-    <PopupContainer>
-      <EventFormPopup {...args} />
-    </PopupContainer>
+    <EventFormPopup {...args} />
   </ProviderWrapper>
 );
 

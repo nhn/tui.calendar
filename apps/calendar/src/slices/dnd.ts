@@ -1,3 +1,5 @@
+import produce from 'immer';
+
 import { CalendarStore, SetState } from '@t/store';
 
 export enum DraggingState {
@@ -38,28 +40,34 @@ export function createDndSlice(): DndSlice {
 
 export function createDndDispatchers(set: SetState<CalendarStore>): DndDispatchers {
   return {
-    initDrag: ({ draggingItemType, initX, initY }) => {
-      set((state) => ({
-        dnd: {
-          ...state.dnd,
-          draggingItemType,
-          initX,
-          initY,
-          draggingState: DraggingState.INIT,
-        },
-      }));
+    initDrag: (initState) => {
+      set(
+        produce((state) => {
+          state.dnd = {
+            ...state.dnd,
+            ...initState,
+            draggingState: DraggingState.INIT,
+          };
+        })
+      );
     },
     setDraggingState: (newState) => {
-      set((state) => ({
-        dnd: {
-          ...state.dnd,
-          ...newState,
-          draggingState: DraggingState.DRAGGING,
-        },
-      }));
+      set(
+        produce((state) => {
+          state.dnd = {
+            ...state.dnd,
+            ...newState,
+            draggingState: DraggingState.DRAGGING,
+          };
+        })
+      );
     },
     reset: () => {
-      set(createDndSlice);
+      set(
+        produce((state) => {
+          state.dnd = createDndSlice().dnd;
+        })
+      );
     },
   };
 }

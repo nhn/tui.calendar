@@ -16,6 +16,7 @@ import { EventFormPopupParam } from '@t/store';
 
 const classNames = {
   popupContainer: cls('popup-container'),
+  formContainer: cls('form-container'),
 };
 
 export const EventFormPopup: FunctionComponent<EventFormPopupParam> = ({
@@ -29,15 +30,17 @@ export const EventFormPopup: FunctionComponent<EventFormPopupParam> = ({
 
   return (
     <div className={classNames.popupContainer}>
-      {calendars?.length ? <CalendarSelector calendars={calendars} /> : <PopupSection />}
-      <TitleInputBox />
-      <LocationInputBox />
-      <DateSelector start={start} end={end} isAllday={isAllday} />
-      <EventStateSelector eventState={eventState} />
-      <ClosePopupButton close={close} />
-      <PopupSection>
-        <ConfirmPopupButton />
-      </PopupSection>
+      <div className={classNames.formContainer}>
+        {calendars?.length ? <CalendarSelector calendars={calendars} /> : <PopupSection />}
+        <TitleInputBox />
+        <LocationInputBox />
+        <DateSelector start={start} end={end} isAllday={isAllday} />
+        <EventStateSelector eventState={eventState} />
+        <ClosePopupButton close={close} />
+        <PopupSection>
+          <ConfirmPopupButton />
+        </PopupSection>
+      </div>
     </div>
   );
 };
