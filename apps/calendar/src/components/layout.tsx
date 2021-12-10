@@ -1,7 +1,8 @@
 import { cloneElement, ComponentChildren, FunctionComponent, h, toChildArray } from 'preact';
-import { useMemo, useRef, useState } from 'preact/hooks';
+import { useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
 
 import { Direction, ResizeMode } from '@src/constants/layout';
+import { useDispatch } from '@src/contexts/calendarStore';
 import { getLayoutStylesFromInfo } from '@src/controller/layout';
 import { cls } from '@src/helpers/css';
 import { isNil, isNumber, isString } from '@src/utils/type';
@@ -34,7 +35,8 @@ export const Layout: FunctionComponent<Props> = ({
   const panelElementRectMap: PanelElementRectMap = useMemo(() => {
     return {};
   }, []);
-  const ref = useRef<HTMLDivElement>(null);
+  const layoutRef = useRef<HTMLDivElement>(null);
+  const { updateLayoutHeight } = useDispatch('weekViewLayout');
   // const filteredPanels = useMemo(() => filterPanels(toChildArray(children)), [children]);
 
   const className = useMemo(
@@ -44,6 +46,12 @@ export const Layout: FunctionComponent<Props> = ({
       }),
     [classNames, direction]
   );
+
+  useLayoutEffect(() => {
+    if (layoutRef.current) {
+      updateLayoutHeight(layoutRef.current.offsetHeight);
+    }
+  }, [updateLayoutHeight]);
 
   // const updatePanels = useCallback(
   //   (isResizeMode = false) => {
@@ -140,10 +148,8 @@ export const Layout: FunctionComponent<Props> = ({
   };
 
   return (
-    <div ref={ref} className={className} style={getLayoutStylesFromInfo(width, height)}>
-      {/* {children}*/}
+    <div ref={layoutRef} className={className} style={getLayoutStylesFromInfo(width, height)}>
       {renderChildren(children)}
-      {/* {filteredPanels.map((panel, index) => renderPanel(panel, panels[index]))}*/}
     </div>
   );
 };
