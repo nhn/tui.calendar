@@ -1,4 +1,3 @@
-import { DragPositionInfo } from '@src/components/draggable';
 import { Direction } from '@src/constants/layout';
 import { getResizeInfoByGrowth, isPanelShown } from '@src/controller/panel';
 import { toPercent } from '@src/helpers/css';
@@ -16,6 +15,13 @@ interface LayoutConstraints {
 interface PanelSizeInfo extends PanelSize {
   direction: Direction;
   autoSize: number;
+}
+
+interface DragPositionInfo {
+  startX: number;
+  startY: number;
+  endX: number;
+  endY: number;
 }
 
 // eslint-disable-next-line complexity
