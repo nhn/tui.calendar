@@ -1,7 +1,7 @@
 import { h } from 'preact';
 
 import { Layout } from '@src/components/layout';
-import Panel from '@src/components/panel';
+import { Panel } from '@src/components/panel';
 import { Direction, ResizeMode } from '@src/constants/layout';
 
 import { ProviderWrapper } from '@stories/util/providerWrapper';

@@ -6,7 +6,7 @@ import range from 'tui-code-snippet/array/range';
 import GridHeader from '@src/components/dayGridCommon/gridHeader';
 import { AlldayGridRow } from '@src/components/dayGridWeek/alldayGridRow';
 import { OtherGridRow } from '@src/components/dayGridWeek/otherGridRow';
-import Panel from '@src/components/panel';
+import { Panel } from '@src/components/panel';
 import { ColumnInfo } from '@src/components/timeGrid/columnWithMouse';
 import { TimeGrid } from '@src/components/timeGrid/timeGrid';
 import { WEEK_DAYNAME_BORDER, WEEK_DAYNAME_HEIGHT } from '@src/constants/style';

@@ -1,9 +1,8 @@
 import { Fragment, FunctionComponent, h } from 'preact';
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
-import { DragPositionInfo } from '@src/components/draggable';
 import { PanelResizer } from '@src/components/panelResizer';
-import { Direction } from '@src/constants/layout';
+import { DEFAULT_RESIZER_LENGTH, Direction } from '@src/constants/layout';
 import { PANEL_HEIGHT } from '@src/constants/style';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { getElementRect, getPanelStylesFromInfo } from '@src/controller/panel';
@@ -14,6 +13,14 @@ import { noop } from '@src/utils/noop';
 import { isNumber } from '@src/utils/type';
 
 import { PanelInfo, PanelRect, RectSize } from '@t/layout';
+import { AlldayEventCategory } from '@t/panel';
+
+export interface DragPositionInfo {
+  startX: number;
+  startY: number;
+  endX: number;
+  endY: number;
+}
 
 export interface Props extends PanelInfo {
   onResizeStart?: (panelName: string) => void;
@@ -24,15 +31,15 @@ export interface Props extends PanelInfo {
 
 // type Child = VNode | string | number;
 
-const Panel: FunctionComponent<Props> = (props) => {
+export const Panel: FunctionComponent<Props> = (props) => {
   const {
     direction = Direction.COLUMN,
     onResizeStart = noop,
     onResizeEnd = noop,
     onPanelRectUpdated,
     name,
-    resizerWidth,
-    resizerHeight,
+    resizerWidth = DEFAULT_RESIZER_LENGTH,
+    resizerHeight = DEFAULT_RESIZER_LENGTH,
     resizable,
     children,
     isLast,
@@ -46,41 +53,21 @@ const Panel: FunctionComponent<Props> = (props) => {
   const { dayGridRows } = useStore(weekViewLayoutSelector);
   const { updateDayGridRowHeight } = useDispatch('weekViewLayout');
 
-  const panelResizeEnd = (resizeInfo: DragPositionInfo) => {
-    onResizeEnd(name, resizeInfo);
+  const panelResizerWidth = Math.max(resizerWidth, resizerRect.width);
+  const panelResizerHeight = Math.max(resizerHeight, resizerRect.height);
 
-    const panelHeight = Math.max(
-      props.minHeight ?? PANEL_HEIGHT,
-      getElementRect(panelRef.current).height + resizeInfo.endY - resizeInfo.startY
-    );
-    updateDayGridRowHeight({
-      rowName: name as WeekGridRows,
-      height: panelHeight,
-    });
-  };
-  const getPanelResizer = () => {
-    let width;
-    let height;
-
-    if (isNumber(resizerWidth)) {
-      width = Math.max(resizerWidth, resizerRect.width);
-    }
-
-    if (isNumber(resizerHeight)) {
-      height = Math.max(resizerHeight, resizerRect.height);
-    }
-
-    return (
-      <PanelResizer
-        ref={resizerRef}
-        direction={direction}
-        width={width}
-        height={height}
-        onResizeStart={() => onResizeStart(name)}
-        onResizeEnd={panelResizeEnd}
-      />
-    );
-  };
+  // const panelResizeEnd = (resizeInfo: DragPositionInfo) => {
+  //   onResizeEnd(name, resizeInfo);
+  //
+  //   const panelHeight = Math.max(
+  //     props.minHeight ?? PANEL_HEIGHT,
+  //     getElementRect(panelRef.current).height + resizeInfo.endY - resizeInfo.startY
+  //   );
+  //   updateDayGridRowHeight({
+  //     rowName: name as WeekGridRows,
+  //     height: panelHeight,
+  //   });
+  // };
 
   const updateElementRect = useCallback(() => {
     if (!onPanelRectUpdated) {
@@ -125,12 +112,18 @@ const Panel: FunctionComponent<Props> = (props) => {
       <div ref={panelRef} className={`${cls('panel')} ${cls(name)}`} style={styles}>
         {children}
       </div>
-      {resizable ? getPanelResizer() : null}
+      {resizable && (
+        <PanelResizer
+          ref={resizerRef}
+          name={name as AlldayEventCategory}
+          direction={direction}
+          width={panelResizerWidth}
+          height={panelResizerHeight}
+        />
+      )}
     </Fragment>
   );
 };
-
-export default Panel;
 
 // function isPanel(child: Child): child is VNode<PanelInfo> {
 //   if (isString(child) || isNumber(child)) {

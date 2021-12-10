@@ -3,7 +3,7 @@ import { useLayoutEffect, useRef, useState } from 'preact/hooks';
 
 import GridHeader from '@src/components/dayGridCommon/gridHeader';
 import DayGridMonth from '@src/components/dayGridMonth/dayGridMonth';
-import Panel from '@src/components/panel';
+import { Panel } from '@src/components/panel';
 import { MONTH_DAY_NAME_HEIGHT } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
 import { useTheme } from '@src/contexts/theme';

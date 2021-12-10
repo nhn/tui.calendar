@@ -30,3 +30,5 @@ export const panelInfoKeys: Array<keyof PanelInfo> = [
   'resizerHeight',
   'resizerWidth',
 ];
+
+export const DEFAULT_RESIZER_LENGTH = 3;
