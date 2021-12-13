@@ -16,6 +16,7 @@ import { EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
 import { createMousePositionDataGrabberWeek } from '@src/helpers/view';
 import { useDOMNode } from '@src/hooks/common/domNode';
 import { useDrag } from '@src/hooks/common/drag';
+import { useAlldayGridRowEventMove } from '@src/hooks/dayGridWeek/alldayGridRowEventMove';
 import { useAlldayGridRowEventResize } from '@src/hooks/dayGridWeek/alldayGridRowEventResize';
 import { useAlldayGridRowSelection } from '@src/hooks/dayGridWeek/alldayGridRowSelection';
 import { useGridRowHeightController } from '@src/hooks/dayGridWeek/gridRowHeightController';
@@ -77,10 +78,16 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
     [cells, gridInfo, panelContainer]
   );
 
-  const { dragTargetEvent, resizingWidth } = useAlldayGridRowEventResize({
+  const { resizingEvent, resizingWidth } = useAlldayGridRowEventResize({
     events,
     cells,
     gridColWidthMap,
+    mousePositionDataGrabber,
+  });
+  const { movingEvent, movingLeft } = useAlldayGridRowEventMove({
+    events,
+    cells,
+    gridInfo,
     mousePositionDataGrabber,
   });
 
@@ -112,7 +119,7 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
           start,
           end,
           isAllday: true,
-          popupRect: {
+          popupPosition: {
             left: (pageX + x - EVENT_FORM_POPUP_WIDTH) / 2,
             top: (pageY + y) / 2,
           },
@@ -130,7 +137,9 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
       <HorizontalEvent
         key={`${category}-DayEvent-${uiModel.cid()}`}
         uiModel={uiModel}
-        isResizing={uiModel.cid() === dragTargetEvent?.cid()}
+        isDraggingTarget={
+          uiModel.cid() === resizingEvent?.cid() || uiModel.cid() === movingEvent?.cid()
+        }
         eventHeight={EVENT_HEIGHT}
         headerHeight={0}
       />
@@ -160,12 +169,20 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
           narrowWeekend={narrowWeekend}
         />
         <div className={cls(`panel-${category}-events`)}>{horizontalEvents}</div>
-        {dragTargetEvent && (
+        {resizingEvent && (
           <HorizontalEvent
-            uiModel={dragTargetEvent}
+            uiModel={resizingEvent}
             eventHeight={EVENT_HEIGHT}
             headerHeight={0}
             resizingWidth={resizingWidth}
+          />
+        )}
+        {movingEvent && (
+          <HorizontalEvent
+            uiModel={movingEvent}
+            eventHeight={EVENT_HEIGHT}
+            headerHeight={0}
+            movingLeft={movingLeft}
           />
         )}
       </div>

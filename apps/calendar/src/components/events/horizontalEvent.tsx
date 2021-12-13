@@ -7,24 +7,17 @@ import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/drag';
 import EventUIModel from '@src/model/eventUIModel';
 
-import { StyleProp } from '@t/components/common';
-
 interface Props {
   uiModel: EventUIModel;
   eventHeight: number;
   headerHeight: number;
-  isResizing?: boolean;
+  isDraggingTarget?: boolean;
   resizingWidth?: string | null;
   flat?: boolean;
+  movingLeft?: number | null;
 }
 
-interface StyleProps {
-  uiModel: EventUIModel;
-  eventHeight: number;
-  headerHeight: number;
-  flat: boolean;
-  isResizing: boolean;
-}
+type StyleProps = Required<Props>;
 
 function getMargin(flat: boolean) {
   return {
@@ -54,7 +47,7 @@ function getEventItemStyle({
   exceedLeft,
   exceedRight,
   eventHeight,
-  isResizing,
+  isDraggingTarget,
 }: EventItemStyleParam) {
   const defaultItemStyle = {
     color: '#333',
@@ -64,7 +57,7 @@ function getEventItemStyle({
     overflow: 'hidden',
     height: eventHeight,
     lineHeight: toPx(eventHeight),
-    opacity: isResizing ? 0.5 : 1,
+    opacity: isDraggingTarget ? 0.5 : 1,
   };
   const margin = getMargin(flat);
 
@@ -80,7 +73,15 @@ function getEventItemStyle({
       };
 }
 
-function getStyles({ uiModel, eventHeight, headerHeight, flat, isResizing }: StyleProps) {
+function getStyles({
+  uiModel,
+  eventHeight,
+  headerHeight,
+  flat,
+  isDraggingTarget,
+  movingLeft,
+  resizingWidth,
+}: StyleProps) {
   const {
     width,
     left,
@@ -95,8 +96,8 @@ function getStyles({ uiModel, eventHeight, headerHeight, flat, isResizing }: Sty
   const containerStyle = flat
     ? {}
     : {
-        width: toPercent(width),
-        left: toPercent(left),
+        width: resizingWidth || toPercent(width),
+        left: toPercent(movingLeft ?? left),
         top: toPx((top - 1) * (eventHeight + margin.vertical) + headerHeight),
         position: 'absolute',
       };
@@ -108,7 +109,7 @@ function getStyles({ uiModel, eventHeight, headerHeight, flat, isResizing }: Sty
     bgColor,
     borderColor,
     eventHeight,
-    isResizing,
+    isDraggingTarget,
   });
 
   const resizeIconStyle = {
@@ -123,52 +124,52 @@ function getStyles({ uiModel, eventHeight, headerHeight, flat, isResizing }: Sty
   return { dayEventBlockClassName, containerStyle, eventItemStyle, resizeIconStyle };
 }
 
-const EventItem: FunctionComponent<{
-  containerStyle: StyleProp;
-  eventItemStyle: StyleProp;
-  className: string;
-}> = ({ containerStyle, eventItemStyle, className, children }) => (
-  <div className={className} style={containerStyle}>
-    <div className={cls('weekday-event')} style={eventItemStyle}>
-      {children}
-    </div>
-  </div>
-);
-
 export const HorizontalEvent: FunctionComponent<Props> = ({
   flat = false,
   uiModel,
   eventHeight,
   headerHeight,
-  isResizing = false,
+  isDraggingTarget = false,
   resizingWidth = null,
+  movingLeft = null,
 }) => {
   const { dayEventBlockClassName, containerStyle, eventItemStyle, resizeIconStyle } = getStyles({
     uiModel,
     eventHeight,
     headerHeight,
     flat,
-    isResizing,
+    isDraggingTarget,
+    resizingWidth,
+    movingLeft,
   });
 
-  const { onMouseDown } = useDrag(DRAGGING_TYPE_CREATORS.hEventResizeWithId(`${uiModel.cid()}`));
-  const onResizeStart = (e: MouseEvent) => {
+  const { onMouseDown: onResizeStart } = useDrag(
+    DRAGGING_TYPE_CREATORS.resizeEvent(`${uiModel.cid()}`)
+  );
+  const { onMouseDown: onMoveStart } = useDrag(
+    DRAGGING_TYPE_CREATORS.moveEvent(`${uiModel.cid()}`)
+  );
+
+  const handleResizeStart = (e: MouseEvent) => {
     e.stopPropagation();
-    onMouseDown(e);
+    onResizeStart(e);
+  };
+
+  const handleMoveStart = (e: MouseEvent) => {
+    e.stopPropagation();
+    onMoveStart(e);
   };
 
   return (
-    <EventItem
-      containerStyle={resizingWidth ? { ...containerStyle, width: resizingWidth } : containerStyle}
-      eventItemStyle={eventItemStyle}
-      className={dayEventBlockClassName}
-    >
-      <span className={cls('weekday-event-title')}>
-        <Template template="time" model={uiModel.model} />
-      </span>
-      {flat || isResizing ? null : (
-        <ResizeIcon style={resizeIconStyle} onMouseDown={onResizeStart} />
-      )}
-    </EventItem>
+    <div className={dayEventBlockClassName} style={containerStyle}>
+      <div className={cls('weekday-event')} style={eventItemStyle} onMouseDown={handleMoveStart}>
+        <span className={cls('weekday-event-title')}>
+          <Template template="time" model={uiModel.model} />
+        </span>
+        {flat || isDraggingTarget ? null : (
+          <ResizeIcon style={resizeIconStyle} onMouseDown={handleResizeStart} />
+        )}
+      </div>
+    </div>
   );
 };

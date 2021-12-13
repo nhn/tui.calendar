@@ -36,13 +36,13 @@ const FloatingLayer: FunctionComponent = () => {
     return null;
   }
 
-  const { popupRect } = param;
+  const { popupPosition } = param;
 
   const style = {
     display: 'block',
     position: 'absolute',
     zIndex: 1,
-    ...popupRect,
+    ...popupPosition,
   };
 
   return (

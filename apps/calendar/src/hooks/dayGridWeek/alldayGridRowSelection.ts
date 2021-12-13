@@ -64,7 +64,6 @@ export function useAlldayGridRowSelection(
     draggingItemType === DRAGGING_TYPE_CONSTANTS.alldayGridRowSelection &&
     draggingState > DraggingState.INIT;
   const hasCurrentCoords = !isNil(x) && !isNil(y);
-  const isDraggingEnd = draggingState === DraggingState.END_DRAG;
 
   const gridInfoList = useMemo(() => getGridInfoList(cells), [cells]);
 
@@ -127,11 +126,11 @@ export function useAlldayGridRowSelection(
   }, [currentSelectionData]);
 
   useEffect(() => {
-    if (isDraggingEnd && !isNil(prevSelectionDataRef.current)) {
+    if (draggingState === DraggingState.IDLE && !isNil(prevSelectionDataRef.current)) {
       setGridSelection(prevSelectionDataRef.current);
       prevSelectionDataRef.current = null;
     }
-  }, [isDraggingEnd]);
+  }, [draggingState]);
 
   return gridSelection;
 }

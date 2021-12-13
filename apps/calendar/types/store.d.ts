@@ -23,7 +23,7 @@ interface OptionData {
 }
 
 interface BasePopupParam {
-  popupRect: PopupRect;
+  popupPosition: PopupPosition;
   close?: () => void;
 }
 
@@ -50,7 +50,7 @@ interface EventDetailPopupParam extends BasePopupParam {
   event: EventModel;
 }
 
-type PopupRect = {
+type PopupPosition = {
   top?: number | string;
   bottom?: number | string;
   left?: number | string;
