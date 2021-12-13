@@ -35,8 +35,8 @@ export const Panel: FunctionComponent<Props> = (props) => {
   const panelType = isLast ? 'rest' : (name as WeekGridRows);
   const { updateDayGridRowHeight } = useDispatch('weekViewLayout');
   const { height } = useStore(panelSelector(panelType));
-  const panelHeight = props.height ?? height ?? DEFAULT_PANEL_HEIGHT;
-  const panelWidth = props.width ?? height ?? DEFAULT_PANEL_HEIGHT;
+  const panelHeight = height ?? props.height ?? DEFAULT_PANEL_HEIGHT;
+  const panelWidth = height ?? props.width ?? DEFAULT_PANEL_HEIGHT;
 
   useLayoutEffect(() => {
     updateDayGridRowHeight({ rowName: panelType, height: props.height ?? DEFAULT_PANEL_HEIGHT });
