@@ -1,3 +1,5 @@
+import range from 'tui-code-snippet/array/range';
+
 import { findByDateRange } from '@src/controller/month';
 import { findByDateRange as findByDateRangeForWeek } from '@src/controller/week';
 import EventUIModel from '@src/model/eventUIModel';
@@ -6,7 +8,9 @@ import {
   convertStartDayToLastDay,
   isWeekend,
   toEndOfDay,
+  toEndOfMonth,
   toStartOfDay,
+  toStartOfMonth,
   withinRangeDate,
 } from '@src/time/datetime';
 
@@ -17,7 +21,7 @@ import {
   Matrix3d,
   TimeGridEventMatrix,
 } from '@t/events';
-import { WeekOption } from '@t/option';
+import { MonthOption, WeekOption } from '@t/option';
 import { Cells, Panel } from '@t/panel';
 
 export const EVENT_HEIGHT = 22;
@@ -306,3 +310,62 @@ export const getDayGridEvents = (
     }
   );
 };
+
+// eslint-disable-next-line complexity
+export function getDateMatrixByMonth(renderMonthDate: Date | TZDate, options: MonthOption) {
+  const targetMonthDate = new TZDate(renderMonthDate);
+
+  const startDayOfWeek = options.startDayOfWeek ?? 0;
+  const visibleWeeksCount = Math.min(options.visibleWeeksCount ?? 0, 6);
+  const workweek = options.workweek ?? false;
+  const isAlways6Week = visibleWeeksCount > 0 ? false : options.isAlways6Week ?? true;
+
+  const calendar: Array<TZDate[]> = [];
+
+  let start;
+  let end;
+  let totalDate;
+  let week;
+
+  if (visibleWeeksCount) {
+    start = new TZDate(targetMonthDate);
+    end = new TZDate(targetMonthDate);
+    end.addDate(7 * (visibleWeeksCount - 1));
+  } else {
+    start = toStartOfMonth(targetMonthDate);
+    end = toEndOfMonth(targetMonthDate);
+  }
+
+  // create day number array by startDayOfWeek number
+  // 4 -> [4, 5, 6, 0, 1, 2, 3]
+  // 2 -> [2, 3, 4, 5, 6, 0, 1]
+  const weekArr = range(startDayOfWeek, 7).concat(range(7)).slice(0, 7);
+  const startIndex = weekArr.indexOf(start.getDay());
+  const endIndex = weekArr.indexOf(end.getDay());
+  // free dates after last date of this month
+  const afterDates = 7 - (endIndex + 1);
+
+  if (visibleWeeksCount) {
+    totalDate = 7 * visibleWeeksCount;
+  } else {
+    totalDate = isAlways6Week ? 7 * 6 : startIndex + end.getDate() + afterDates;
+  }
+  const cursor = toStartOfDay(start).addDate(-startIndex);
+  // iteratee all dates to render
+  range(totalDate).forEach((day: number) => {
+    if (!(day % 7)) {
+      // group each date by week
+      week = calendar[day / 7] = [];
+    }
+
+    const date = toStartOfDay(cursor);
+    if (!workweek || !isWeekend(date.getDay())) {
+      week.push(date);
+    }
+
+    // add date
+    cursor.setDate(cursor.getDate() + 1);
+  });
+
+  return calendar;
+}

@@ -9,6 +9,7 @@ import { useStore } from '@src/contexts/calendarStore';
 import { useTheme } from '@src/contexts/theme';
 import { cls } from '@src/helpers/css';
 import { capitalizeDayName } from '@src/helpers/dayName';
+import { getDateMatrixByMonth } from '@src/helpers/grid';
 import { optionSelector } from '@src/selectors';
 import { getGridInfo, getMonthCalendar, isWeekend } from '@src/time/datetime';
 import { getSize } from '@src/utils/dom';
@@ -62,7 +63,7 @@ export const Month: FunctionComponent = () => {
   const dayNames = getDayNames(option);
   const renderMonthDate = new Date(); // @TODO: 현재 렌더링된 MonthDate기준으로 계산(prev, next 사용 시 날짜 계산 필요)
   const monthOptions = option.month as Required<MonthOption>;
-  const calendar = getMonthCalendar(renderMonthDate, monthOptions);
+  const dateMatrix = getDateMatrixByMonth(renderMonthDate, monthOptions);
   const { narrowWeekend, startDayOfWeek, workweek } = monthOptions;
   const { gridInfo } = getGridInfo(dayNames.length, narrowWeekend, startDayOfWeek, workweek);
 
@@ -80,7 +81,7 @@ export const Month: FunctionComponent = () => {
         />
       </Panel>
       <Panel name="month-daygrid" height={gridPanelHeight}>
-        <DayGridMonth options={monthOptions} calendar={calendar} appContainer={containerRef} />
+        <DayGridMonth options={monthOptions} dateMatrix={dateMatrix} appContainer={containerRef} />
       </Panel>
     </div>
   );

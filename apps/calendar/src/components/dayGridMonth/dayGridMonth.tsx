@@ -24,7 +24,7 @@ const TOTAL_PERCENT_HEIGHT = 100;
 
 interface Props {
   options: CalendarMonthOption;
-  calendar: TZDate[][];
+  dateMatrix: TZDate[][];
   appContainer: RefObject<HTMLDivElement>;
   events?: EventModel[];
 }
@@ -42,7 +42,7 @@ function useGridHeight() {
   return { ref, height };
 }
 
-const DayGridMonth: FunctionComponent<Props> = ({ options, calendar = [], appContainer }) => {
+const DayGridMonth: FunctionComponent<Props> = ({ options, dateMatrix = [], appContainer }) => {
   const { visibleWeeksCount, workweek, startDayOfWeek, narrowWeekend } = options;
 
   const { ref, height } = useGridHeight();
@@ -58,7 +58,7 @@ const DayGridMonth: FunctionComponent<Props> = ({ options, calendar = [], appCon
 
   return (
     <Fragment>
-      {calendar.map((week, rowIndex) => {
+      {dateMatrix.map((week, rowIndex) => {
         const { uiModels, gridDateEventModelMap } = getRenderedEventUIModels(
           week,
           calendarData,

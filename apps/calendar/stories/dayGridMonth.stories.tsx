@@ -70,7 +70,7 @@ export const daygrid = () => {
   const sunday = saturday + 1;
   const WEEKDAYS = 7;
 
-  const calendar = range(3).map((index) => [
+  const dateMatrix = range(3).map((index) => [
     new TZDate(date.setDate(saturday + WEEKDAYS * index)),
     new TZDate(date.setDate(sunday + WEEKDAYS * index)),
   ]);
@@ -95,7 +95,7 @@ export const daygrid = () => {
     <ProviderWrapper>
       <DayGridMonth
         options={options}
-        calendar={calendar}
+        dateMatrix={dateMatrix}
         appContainer={{ current: document.createElement('div') }}
       />
     </ProviderWrapper>
@@ -103,7 +103,7 @@ export const daygrid = () => {
 };
 
 export const randomEvents = () => {
-  const calendar = getWeekDates();
+  const weekDates = getWeekDates();
 
   const options: CalendarMonthOption = {
     visibleWeeksCount: 1,
@@ -121,7 +121,7 @@ export const randomEvents = () => {
     eventFilter: () => true,
   };
 
-  const data = createRandomEvents('month', calendar[0], calendar[6], 10);
+  const data = createRandomEvents('month', weekDates[0], weekDates[6], 10);
   const events = data.map((event: EventModelData) => EventModel.create(event));
 
   return (
@@ -129,7 +129,7 @@ export const randomEvents = () => {
       <Panel name="weekday" height={400}>
         <DayGridMonth
           options={options}
-          calendar={[calendar]}
+          dateMatrix={[weekDates]}
           events={events}
           appContainer={{ current: document.createElement('div') }}
         />
