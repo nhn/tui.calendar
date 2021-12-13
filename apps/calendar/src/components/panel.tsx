@@ -32,15 +32,18 @@ export const Panel: FunctionComponent<Props> = (props) => {
     isLast,
   } = props;
 
-  const panelType = isLast ? 'rest' : (name as WeekGridRows);
-  const { updateDayGridRowHeight } = useDispatch('weekViewLayout');
-  const { height } = useStore(panelSelector(panelType));
+  const { setLastPanelType, updateDayGridRowHeight } = useDispatch('weekViewLayout');
+  const { height } = useStore(panelSelector(name));
   const panelHeight = height ?? props.height ?? DEFAULT_PANEL_HEIGHT;
   const panelWidth = height ?? props.width ?? DEFAULT_PANEL_HEIGHT;
 
   useLayoutEffect(() => {
-    updateDayGridRowHeight({ rowName: panelType, height: props.height ?? DEFAULT_PANEL_HEIGHT });
-  }, [panelType, props.height, updateDayGridRowHeight]);
+    setLastPanelType(isLast ? name : null);
+  });
+
+  useLayoutEffect(() => {
+    updateDayGridRowHeight({ rowName: name, height: props.height ?? DEFAULT_PANEL_HEIGHT });
+  }, [name, props.height, updateDayGridRowHeight]);
 
   const styleWithDirection =
     direction === Direction.COLUMN ? { height: panelHeight } : { width: panelWidth };

@@ -9,6 +9,7 @@ import { OtherGridRow } from '@src/components/dayGridWeek/otherGridRow';
 import { Panel } from '@src/components/panel';
 import { ColumnInfo } from '@src/components/timeGrid/columnWithMouse';
 import { TimeGrid } from '@src/components/timeGrid/timeGrid';
+import { DEFAULT_WEEK_PANEL_TYPES } from '@src/constants/layout';
 import { WEEK_DAYNAME_BORDER, WEEK_DAYNAME_HEIGHT } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
@@ -96,7 +97,7 @@ export const Week: FunctionComponent = () => {
     (cell) =>
       ({ start: toStartOfDay(cell), end: toEndOfDay(cell), unit: 'minute', slot: 30 } as ColumnInfo)
   );
-  const gridRows = Object.entries(gridRowLayout).map(([key, value]) => {
+  const gridRows = DEFAULT_WEEK_PANEL_TYPES.map((key) => {
     const rowType = key as AlldayEventCategory;
 
     return (
@@ -108,7 +109,7 @@ export const Week: FunctionComponent = () => {
             gridInfo={gridInfo}
             gridColWidthMap={gridColWidthMap}
             cells={cells}
-            height={value.height}
+            height={gridRowLayout[rowType].height}
             options={weekOptions}
             useCreationPopup={useCreationPopup}
           />
@@ -117,7 +118,7 @@ export const Week: FunctionComponent = () => {
             category={rowType}
             events={dayGridEvents[rowType]}
             cells={cells}
-            height={value.height}
+            height={gridRowLayout[rowType].height}
             options={weekOptions}
             gridColWidthMap={gridColWidthMap}
           />
