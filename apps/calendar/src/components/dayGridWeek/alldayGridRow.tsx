@@ -112,7 +112,7 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
           start,
           end,
           isAllday: true,
-          popupRect: {
+          popupPosition: {
             left: (pageX + x - EVENT_FORM_POPUP_WIDTH) / 2,
             top: (pageY + y) / 2,
           },
