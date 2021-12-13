@@ -1,5 +1,5 @@
 import { Fragment, FunctionComponent, h } from 'preact';
-import { useMemo } from 'preact/hooks';
+import { useMemo, useRef } from 'preact/hooks';
 
 import range from 'tui-code-snippet/array/range';
 
@@ -7,7 +7,9 @@ import { GridSelection } from '@src/components/dayGridCommon/gridSelection';
 import { GridCells } from '@src/components/dayGridWeek/gridCells';
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import Template from '@src/components/template';
+import { EVENT_FORM_POPUP_WIDTH } from '@src/constants/popup';
 import { PANEL_HEIGHT, WEEK_EVENT_MARGIN_TOP } from '@src/constants/style';
+import { useDispatch } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
 import { DRAGGING_TYPE_CONSTANTS } from '@src/helpers/drag';
 import { EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
@@ -19,6 +21,7 @@ import { useAlldayGridRowEventResize } from '@src/hooks/dayGridWeek/alldayGridRo
 import { useAlldayGridRowSelection } from '@src/hooks/dayGridWeek/alldayGridRowSelection';
 import { useGridRowHeightController } from '@src/hooks/dayGridWeek/gridRowHeightController';
 import EventUIModel from '@src/model/eventUIModel';
+import { PopupType } from '@src/slices/popup';
 import TZDate from '@src/time/date';
 import { addDate } from '@src/time/datetime';
 
@@ -35,6 +38,7 @@ interface Props {
   timezonesCount?: number;
   height?: number;
   options?: WeekOption;
+  useCreationPopup: boolean;
   shouldRenderDefaultPopup?: boolean;
   gridInfo: GridInfo[];
   gridColWidthMap: string[][];
@@ -52,11 +56,13 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
   category,
   height = PANEL_HEIGHT,
   options = {},
+  useCreationPopup,
   gridInfo,
   gridColWidthMap,
   timesWidth = 120,
   timezonesCount = 1,
 }) => {
+  const dragStartPos = useRef<{ x: number; y: number } | null>(null);
   const [panelContainer, setPanelContainerRef] = useDOMNode<HTMLDivElement>();
   const maxTop = Math.max(0, ...events.map(({ top }) => top));
   const { narrowWeekend = false } = options;
@@ -87,7 +93,40 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
 
   const gridSelection = useAlldayGridRowSelection(mousePositionDataGrabber, cells);
 
-  const { onMouseDown } = useDrag(DRAGGING_TYPE_CONSTANTS.alldayGridRowSelection);
+  const { show } = useDispatch('popup');
+
+  const { onMouseDown } = useDrag(DRAGGING_TYPE_CONSTANTS.alldayGridRowSelection, {
+    onDragStart: (e) => {
+      dragStartPos.current = {
+        x: e.pageX,
+        y: e.pageY,
+      };
+    },
+    onDragEnd: (e) => {
+      if (!gridSelection || !useCreationPopup || !dragStartPos.current) {
+        return;
+      }
+
+      const { start, end } = gridSelection;
+      const { x, y } = dragStartPos.current;
+      const { pageX, pageY } = e;
+
+      dragStartPos.current = null;
+      e.stopPropagation();
+      show({
+        type: PopupType.form,
+        param: {
+          start,
+          end,
+          isAllday: true,
+          popupPosition: {
+            left: (pageX + x - EVENT_FORM_POPUP_WIDTH) / 2,
+            top: (pageY + y) / 2,
+          },
+        },
+      });
+    },
+  });
 
   const { clickedIndex, isClickedCount, onClickExceedCount, onClickCollapseButton } =
     useGridRowHeightController(maxTop, category);
