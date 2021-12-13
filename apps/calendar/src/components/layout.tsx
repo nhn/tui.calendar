@@ -25,7 +25,6 @@ export const Layout: FunctionComponent<Props> = ({
 }) => {
   const layoutRef = useRef<HTMLDivElement>(null);
   const { updateLayoutHeight } = useDispatch('weekViewLayout');
-  // const filteredPanels = useMemo(() => filterPanels(toChildArray(children)), [children]);
 
   const className = useMemo(
     () =>

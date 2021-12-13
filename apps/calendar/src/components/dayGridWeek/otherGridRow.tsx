@@ -5,7 +5,7 @@ import range from 'tui-code-snippet/array/range';
 import { GridCells } from '@src/components/dayGridWeek/gridCells';
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import Template from '@src/components/template';
-import { PANEL_HEIGHT, WEEK_EVENT_MARGIN_TOP } from '@src/constants/style';
+import { DEFAULT_PANEL_HEIGHT, WEEK_EVENT_MARGIN_TOP } from '@src/constants/style';
 import { cls } from '@src/helpers/css';
 import { EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
 import { useGridRowHeightController } from '@src/hooks/dayGridWeek/gridRowHeightController';
@@ -39,7 +39,7 @@ export const OtherGridRow: FunctionComponent<Props> = ({
   events,
   cells = defaultPanelInfoList,
   category,
-  height = PANEL_HEIGHT,
+  height = DEFAULT_PANEL_HEIGHT,
   options = {},
   timesWidth = 120,
   timezonesCount = 1,

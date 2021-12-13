@@ -8,7 +8,7 @@ import { GridCells } from '@src/components/dayGridWeek/gridCells';
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import Template from '@src/components/template';
 import { EVENT_FORM_POPUP_WIDTH } from '@src/constants/popup';
-import { PANEL_HEIGHT, WEEK_EVENT_MARGIN_TOP } from '@src/constants/style';
+import { DEFAULT_PANEL_HEIGHT, WEEK_EVENT_MARGIN_TOP } from '@src/constants/style';
 import { useDispatch } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
 import { DRAGGING_TYPE_CONSTANTS } from '@src/helpers/drag';
@@ -53,7 +53,7 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
   events,
   cells = defaultPanelInfoList,
   category,
-  height = PANEL_HEIGHT,
+  height = DEFAULT_PANEL_HEIGHT,
   options = {},
   useCreationPopup,
   gridInfo,

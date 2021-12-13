@@ -10,7 +10,7 @@ export default { title: 'Layout' };
 
 export const vertical = () => (
   <ProviderWrapper>
-    <Layout height={500}>
+    <Layout>
       <Panel name="dayName" height={50}>
         <div style="border-bottom: 1px solid #bbb; height: 100%;">DayName Panel</div>
       </Panel>
