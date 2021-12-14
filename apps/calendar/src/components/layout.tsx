@@ -15,9 +15,9 @@ interface Props {
   classNames?: string[];
 }
 
+// @TODO: consider `direction` and `resizeMode`
 export const Layout: FunctionComponent<Props> = ({
   direction = Direction.COLUMN,
-  resizeMode = ResizeMode.RELATIVE,
   children,
   width,
   height,
@@ -41,10 +41,10 @@ export const Layout: FunctionComponent<Props> = ({
   }, [updateLayoutHeight]);
 
   const renderChildren = (componentChildren: ComponentChildren) => {
-    const childrenArray = toChildArray(componentChildren);
-    const lastIndex = childrenArray.length - 1;
+    const childArray = toChildArray(componentChildren);
+    const lastIndex = childArray.length - 1;
 
-    return childrenArray.map((child, index) => {
+    return childArray.map((child, index) => {
       if (isString(child) || isNumber(child) || isNil(child)) {
         return child;
       }
