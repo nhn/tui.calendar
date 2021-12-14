@@ -6,7 +6,7 @@ import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import TZDate from '@src/time/date';
 import { isSame, toEndOfDay, toStartOfDay } from '@src/time/datetime';
-import { isNil } from '@src/utils/type';
+import { isPresent } from '@src/utils/type';
 
 import { CellDateRange } from '@t/components/daygrid/gridSelectionData';
 import { GridSelectionData } from '@t/components/daygrid/gridWithMouse';
@@ -63,7 +63,7 @@ export function useAlldayGridRowSelection(
   const isSelectingGrid =
     draggingItemType === DRAGGING_TYPE_CONSTANTS.alldayGridRowSelection &&
     draggingState > DraggingState.INIT;
-  const hasCurrentCoords = !isNil(x) && !isNil(y);
+  const hasCurrentCoords = isPresent(x) && isPresent(y);
 
   const gridInfoList = useMemo(() => getGridInfoList(cells), [cells]);
 
@@ -111,7 +111,7 @@ export function useAlldayGridRowSelection(
   }, [isSelectingGrid, hasCurrentCoords, mousePositionDataGrabber, x, y, gridInfoList]);
 
   useEffect(() => {
-    if (isSelectingGrid && !isNil(initX) && !isNil(initY)) {
+    if (isSelectingGrid && isPresent(initX) && isPresent(initY)) {
       const data = mousePositionDataGrabber({ clientX: initX, clientY: initY } as MouseEvent);
       if (data) {
         initSelectionDataRef.current = getGridSelectionData(data, gridInfoList);
@@ -120,13 +120,13 @@ export function useAlldayGridRowSelection(
   }, [gridInfoList, initX, initY, isSelectingGrid, mousePositionDataGrabber]);
 
   useEffect(() => {
-    if (!isNil(currentSelectionData)) {
+    if (isPresent(currentSelectionData)) {
       setGridSelection(currentSelectionData);
     }
   }, [currentSelectionData]);
 
   useEffect(() => {
-    if (draggingState === DraggingState.IDLE && !isNil(prevSelectionDataRef.current)) {
+    if (draggingState === DraggingState.IDLE && isPresent(prevSelectionDataRef.current)) {
       setGridSelection(prevSelectionDataRef.current);
       prevSelectionDataRef.current = null;
     }
