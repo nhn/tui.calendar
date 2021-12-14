@@ -1,5 +1,5 @@
 import { Fragment, FunctionComponent, h } from 'preact';
-import { useLayoutEffect } from 'preact/hooks';
+import { useCallback, useLayoutEffect } from 'preact/hooks';
 
 import { PanelResizer } from '@src/components/panelResizer';
 import { DEFAULT_RESIZER_LENGTH, Direction } from '@src/constants/layout';
@@ -7,18 +7,12 @@ import { DEFAULT_PANEL_HEIGHT } from '@src/constants/style';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { getPanelStylesFromInfo } from '@src/controller/panel';
 import { cls } from '@src/helpers/css';
-import { WeekGridRows } from '@src/slices/weekViewLayout';
 
 import { PanelInfo } from '@t/layout';
 import { AlldayEventCategory } from '@t/panel';
-import { CalendarStore } from '@t/store';
 
 export interface Props extends PanelInfo {
   isLast?: boolean;
-}
-
-function panelSelector(name: WeekGridRows) {
-  return (state: CalendarStore) => state.weekViewLayout.dayGridRows[name] ?? {};
 }
 
 export const Panel: FunctionComponent<Props> = (props) => {
@@ -33,7 +27,9 @@ export const Panel: FunctionComponent<Props> = (props) => {
   } = props;
 
   const { setLastPanelType, updateDayGridRowHeight } = useDispatch('weekViewLayout');
-  const { height } = useStore(panelSelector(name));
+  const { height } = useStore(
+    useCallback((state) => state.weekViewLayout.dayGridRows[name] ?? {}, [name])
+  );
   const panelHeight = height ?? props.height ?? DEFAULT_PANEL_HEIGHT;
   const panelWidth = height ?? props.width ?? DEFAULT_PANEL_HEIGHT;
 
