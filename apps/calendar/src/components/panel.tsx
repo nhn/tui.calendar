@@ -19,6 +19,8 @@ export const Panel: FunctionComponent<Props> = (props) => {
   const {
     direction = Direction.COLUMN,
     name,
+    width: initialWidth = DEFAULT_PANEL_HEIGHT,
+    height: initialHeight = DEFAULT_PANEL_HEIGHT,
     resizerWidth = DEFAULT_RESIZER_LENGTH,
     resizerHeight = DEFAULT_RESIZER_LENGTH,
     resizable,
@@ -27,22 +29,21 @@ export const Panel: FunctionComponent<Props> = (props) => {
   } = props;
 
   const { setLastPanelType, updateDayGridRowHeight } = useDispatch('weekViewLayout');
-  const { height } = useStore(
+  const { height: dayGridRowHeight } = useStore(
     useCallback((state) => state.weekViewLayout.dayGridRows[name] ?? {}, [name])
   );
-  const panelHeight = height ?? props.height ?? DEFAULT_PANEL_HEIGHT;
-  const panelWidth = height ?? props.width ?? DEFAULT_PANEL_HEIGHT;
+  const height = dayGridRowHeight ?? initialHeight;
+  const width = dayGridRowHeight ?? initialWidth;
 
   useLayoutEffect(() => {
     setLastPanelType(isLast ? name : null);
   });
 
   useLayoutEffect(() => {
-    updateDayGridRowHeight({ rowName: name, height: props.height ?? DEFAULT_PANEL_HEIGHT });
-  }, [name, props.height, updateDayGridRowHeight]);
+    updateDayGridRowHeight({ rowName: name, height: initialHeight });
+  }, [initialHeight, name, updateDayGridRowHeight]);
 
-  const styleWithDirection =
-    direction === Direction.COLUMN ? { height: panelHeight } : { width: panelWidth };
+  const styleWithDirection = direction === Direction.COLUMN ? { height } : { width };
   const styles = getPanelStylesFromInfo({ ...props, ...styleWithDirection });
 
   return (
