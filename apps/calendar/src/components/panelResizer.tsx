@@ -4,6 +4,8 @@ import { useRef, useState } from 'preact/hooks';
 import { Direction } from '@src/constants/layout';
 import { useDispatch } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
+import { DRAGGING_TYPE_CONSTANTS } from '@src/helpers/drag';
+import { useDrag } from '@src/hooks/common/drag';
 
 import { StyleProp } from '@t/components/common';
 import { AlldayEventCategory } from '@t/panel';
@@ -47,42 +49,37 @@ export const PanelResizer: FunctionComponent<Props> = ({ name, direction, width,
     border: 'none',
     backgroundColor: '#999',
   };
+
   const [guideStyle, setGuideStyle] = useState<StyleProp>(defaultGuideStyle);
   const startPos = useRef<{ left: number; top: number } | null>(null);
   const { updateDayGridRowHeightByDiff } = useDispatch('weekViewLayout');
 
-  const onDragStart = (e: MouseEvent) => {
-    startPos.current = { left: e.pageX, top: e.pageY };
+  const { onMouseDown } = useDrag(DRAGGING_TYPE_CONSTANTS.panelResizer, {
+    onDragStart: (e) => {
+      startPos.current = { left: e.pageX, top: e.pageY };
+    },
+    onDrag: (e) => {
+      if (startPos.current) {
+        const top = e.pageY - startPos.current.top;
 
-    document.addEventListener('mousemove', onDragging);
-    document.addEventListener('mouseup', onDragEnd);
-  };
+        setGuideStyle((prev) => ({ ...prev, top, display: null }));
+      }
+    },
+    onDragEnd: (e) => {
+      if (startPos.current) {
+        const diff = e.pageY - startPos.current.top;
 
-  const onDragging = (e: MouseEvent) => {
-    if (startPos.current) {
-      const top = e.pageY - startPos.current.top;
+        startPos.current = null;
 
-      setGuideStyle((prev) => ({ ...prev, top, display: null }));
-    }
-  };
-
-  const onDragEnd = (e: MouseEvent) => {
-    document.removeEventListener('mousemove', onDragging);
-    document.removeEventListener('mouseup', onDragEnd);
-
-    if (startPos.current) {
-      const diff = e.pageY - startPos.current.top;
-
-      startPos.current = null;
-
-      setGuideStyle(defaultGuideStyle);
-      updateDayGridRowHeightByDiff({ rowName: name, diff });
-    }
-  };
+        setGuideStyle(defaultGuideStyle);
+        updateDayGridRowHeightByDiff({ rowName: name, diff });
+      }
+    },
+  });
 
   return (
     <div style={{ position: 'relative' }}>
-      <div className={cls('panel-resizer')} style={style} onMouseDown={onDragStart} />
+      <div className={cls('panel-resizer')} style={style} onMouseDown={onMouseDown} />
       <div className={cls('panel-resizer-guide')} style={guideStyle} />
     </div>
   );
