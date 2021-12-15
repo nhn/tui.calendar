@@ -1,38 +1,23 @@
 import { cloneElement, ComponentChildren, FunctionComponent, h, toChildArray } from 'preact';
 import { useLayoutEffect, useMemo, useRef } from 'preact/hooks';
 
-import { Direction, ResizeMode } from '@src/constants/layout';
 import { useDispatch } from '@src/contexts/calendarStore';
 import { getLayoutStylesFromInfo } from '@src/controller/layout';
 import { cls } from '@src/helpers/css';
 import { isNil, isNumber, isString } from '@src/utils/type';
 
 interface Props {
-  direction?: Direction;
   height?: number;
   width?: number;
-  resizeMode?: ResizeMode;
-  classNames?: string[];
+  className?: string;
 }
 
 // @TODO: consider `direction` and `resizeMode`
-export const Layout: FunctionComponent<Props> = ({
-  direction = Direction.COLUMN,
-  children,
-  width,
-  height,
-  classNames = [],
-}) => {
+export const Layout: FunctionComponent<Props> = ({ children, width, height, className = '' }) => {
   const layoutRef = useRef<HTMLDivElement>(null);
   const { updateLayoutHeight } = useDispatch('weekViewLayout');
 
-  const className = useMemo(
-    () =>
-      cls(...classNames, 'layout', {
-        horizontal: direction === Direction.ROW,
-      }),
-    [classNames, direction]
-  );
+  const layoutClassName = useMemo(() => `${cls('layout')} ${className}`, [className]);
 
   useLayoutEffect(() => {
     if (layoutRef.current) {
@@ -54,7 +39,7 @@ export const Layout: FunctionComponent<Props> = ({
   };
 
   return (
-    <div ref={layoutRef} className={className} style={getLayoutStylesFromInfo(width, height)}>
+    <div ref={layoutRef} className={layoutClassName} style={getLayoutStylesFromInfo(width, height)}>
       {renderChildren(children)}
     </div>
   );
