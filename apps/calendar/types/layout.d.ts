@@ -3,13 +3,6 @@ export interface RectSize {
   height: number;
 }
 
-export interface PanelRect extends RectSize {
-  x: number;
-  y: number;
-  resizerWidth: number;
-  resizerHeight: number;
-}
-
 export interface PanelInfo {
   name: string;
   overflowY?: boolean;
