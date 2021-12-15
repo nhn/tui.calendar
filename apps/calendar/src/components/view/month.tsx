@@ -69,7 +69,7 @@ export const Month: FunctionComponent = () => {
   return (
     // @TODO: change to layout component
     <div className={cls('month')} ref={containerRef}>
-      <Panel name="month-daynames" height={MONTH_DAY_NAME_HEIGHT}>
+      <Panel name="month-daynames" initialHeight={MONTH_DAY_NAME_HEIGHT}>
         <GridHeader
           templateType="monthDayname"
           dayNames={dayNames}
@@ -79,7 +79,7 @@ export const Month: FunctionComponent = () => {
           type="month"
         />
       </Panel>
-      <Panel name="month-daygrid" height={gridPanelHeight}>
+      <Panel name="month-daygrid" initialHeight={gridPanelHeight}>
         <DayGridMonth options={monthOptions} calendar={calendar} appContainer={containerRef} />
       </Panel>
     </div>

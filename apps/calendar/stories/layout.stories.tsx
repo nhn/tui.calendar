@@ -10,10 +10,10 @@ export default { title: 'Layout' };
 export const vertical = () => (
   <ProviderWrapper>
     <Layout>
-      <Panel name="dayName" height={50}>
+      <Panel name="dayName" initialHeight={50}>
         <div style="border-bottom: 1px solid #bbb; height: 100%;">DayName Panel</div>
       </Panel>
-      <Panel name="milestone" resizable height={50}>
+      <Panel name="milestone" resizable initialHeight={50}>
         <div>Milestone Panel</div>
       </Panel>
       <Panel name="task" resizable>
@@ -32,7 +32,7 @@ export const vertical = () => (
 export const verticalWithOverflow = () => (
   <ProviderWrapper>
     <Layout>
-      <Panel name="dayName" height={50} overflowY>
+      <Panel name="dayName" initialHeight={50} overflowY>
         <div style="border-bottom: 1px solid #bbb; height: 300px;">Overflow-Y Panel</div>
       </Panel>
     </Layout>
@@ -42,7 +42,7 @@ export const verticalWithOverflow = () => (
 export const horizontalWithOverflow = () => (
   <ProviderWrapper>
     <Layout>
-      <Panel name="dayName" width={200} height={200} overflowX>
+      <Panel name="dayName" initialWidth={200} initialHeight={200} overflowX>
         <div style="border-right: 1px solid #bbb; width: 300px;">Overflow-X Panel</div>
       </Panel>
     </Layout>

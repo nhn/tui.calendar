@@ -67,6 +67,14 @@ export function createWeekViewLayoutDispatchers(
       set(
         produce((state) => {
           state.lastPanelType = type;
+
+          if (type) {
+            state.weekViewLayout.dayGridRows[type].height = getRestPanelHeight(
+              state.weekViewLayout.dayGridRows,
+              state.lastPanelType,
+              state.layout
+            );
+          }
         })
       );
     },

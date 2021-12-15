@@ -130,7 +130,7 @@ export const Week: FunctionComponent = () => {
   return (
     // @TODO: refactor Layout component
     <div className={cls('week-view')}>
-      <Panel name="week-view-daynames" height={WEEK_DAYNAME_HEIGHT + WEEK_DAYNAME_BORDER}>
+      <Panel name="week-view-daynames" initialHeight={WEEK_DAYNAME_HEIGHT + WEEK_DAYNAME_BORDER}>
         <GridHeader
           dayNames={dayNames}
           marginLeft={120}

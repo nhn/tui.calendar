@@ -8,54 +8,85 @@ import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
 
 import { StyleProp } from '@t/components/common';
-import { PanelInfo } from '@t/layout';
 import { AlldayEventCategory } from '@t/panel';
 
-const styleKeys: (keyof PanelInfo)[] = ['minHeight', 'maxHeight', 'minWidth', 'maxWidth'];
+interface Props {
+  name: string;
+  overflowY?: boolean;
+  overflowX?: boolean;
+  show?: boolean;
+
+  autoSize?: number;
+  initialHeight?: number;
+  initialWidth?: number;
+  minHeight?: number;
+  minWidth?: number;
+  maxHeight?: number;
+  maxWidth?: number;
+
+  expandable?: boolean;
+  maxExpandableHeight?: number;
+  maxExpandableWidth?: number;
+
+  resizable?: boolean;
+  resizerHeight?: number;
+  resizerWidth?: number;
+}
 
 function getPanelSide(side: number, maxExpandableSide?: number) {
   return maxExpandableSide ? Math.min(maxExpandableSide, side) : side;
 }
 
-function getPanelStylesFromInfo(panel: PanelInfo) {
-  const styles: StyleProp = {};
-  const { height, width, overflowX, overflowY, maxExpandableWidth, maxExpandableHeight } = panel;
+function getPanelStyle({
+  initialHeight,
+  initialWidth,
+  overflowX,
+  overflowY,
+  maxExpandableWidth,
+  maxExpandableHeight,
+  minHeight,
+  maxHeight,
+  minWidth,
+  maxWidth,
+}: Partial<Props>) {
+  const style: StyleProp = {};
 
-  if (width) {
-    styles.width = getPanelSide(width, maxExpandableWidth);
-    styles.height = '100%';
+  if (initialWidth) {
+    style.width = getPanelSide(initialWidth, maxExpandableWidth);
+    style.height = '100%';
   }
-  if (height) {
-    styles.width = '100%';
-    styles.height = getPanelSide(height, maxExpandableHeight);
+  if (initialHeight) {
+    style.width = '100%';
+    style.height = getPanelSide(initialHeight, maxExpandableHeight);
   }
 
   if (overflowX) {
-    styles.overflowX = 'auto';
+    style.overflowX = 'auto';
   }
   if (overflowY) {
-    styles.overflowY = 'auto';
+    style.overflowY = 'auto';
   }
 
-  styleKeys.forEach((key) => {
-    if (panel[key]) {
-      styles[key] = panel[key] as keyof PanelInfo;
-    }
-  });
-
-  return styles;
+  return { ...style, minHeight, maxHeight, minWidth, maxWidth };
 }
 
-export const Panel: FunctionComponent<PanelInfo> = (props) => {
-  const {
-    name,
-    height: initialHeight = DEFAULT_PANEL_HEIGHT,
-    resizerWidth = DEFAULT_RESIZER_LENGTH,
-    resizerHeight = DEFAULT_RESIZER_LENGTH,
-    resizable,
-    children,
-  } = props;
-
+export const Panel: FunctionComponent<Props> = ({
+  name,
+  initialWidth = DEFAULT_PANEL_HEIGHT,
+  initialHeight = DEFAULT_PANEL_HEIGHT,
+  overflowX,
+  overflowY,
+  maxExpandableWidth,
+  maxExpandableHeight,
+  minHeight,
+  maxHeight,
+  minWidth,
+  maxWidth,
+  resizerWidth = DEFAULT_RESIZER_LENGTH,
+  resizerHeight = DEFAULT_RESIZER_LENGTH,
+  resizable,
+  children,
+}) => {
   const { updateDayGridRowHeight } = useDispatch('weekViewLayout');
   const { height: dayGridRowHeight } = useStore(
     useCallback((state) => state.weekViewLayout.dayGridRows[name] ?? {}, [name])
@@ -66,7 +97,18 @@ export const Panel: FunctionComponent<PanelInfo> = (props) => {
     updateDayGridRowHeight({ rowName: name, height: initialHeight });
   }, [initialHeight, name, updateDayGridRowHeight]);
 
-  const styles = getPanelStylesFromInfo({ ...props, height });
+  const styles = getPanelStyle({
+    initialWidth,
+    initialHeight: height,
+    overflowX,
+    overflowY,
+    maxExpandableWidth,
+    maxExpandableHeight,
+    minHeight,
+    maxHeight,
+    minWidth,
+    maxWidth,
+  });
 
   return (
     <Fragment>

@@ -21,7 +21,6 @@ import { Day } from '@src/time/datetime';
 import { getPosition, getRelativePosition, getSize } from '@src/utils/dom';
 import { ratio } from '@src/utils/math';
 
-import { RectSize } from '@t/layout';
 import { PopupPosition } from '@t/store';
 
 interface Props {
@@ -37,6 +36,11 @@ interface Props {
   parentContainer?: HTMLDivElement | null;
   appContainer?: HTMLDivElement | null;
   events?: EventUIModel[];
+  height: number;
+}
+
+interface RectSize {
+  width: number;
   height: number;
 }
 

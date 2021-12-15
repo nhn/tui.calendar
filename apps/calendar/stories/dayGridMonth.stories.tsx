@@ -126,7 +126,7 @@ export const randomEvents = () => {
 
   return (
     <ProviderWrapper events={events}>
-      <Panel name="weekday" height={400}>
+      <Panel name="weekday" initialHeight={400}>
         <DayGridMonth
           options={options}
           calendar={[calendar]}
