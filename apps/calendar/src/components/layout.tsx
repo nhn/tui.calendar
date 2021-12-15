@@ -2,14 +2,28 @@ import { cloneElement, ComponentChildren, FunctionComponent, h, toChildArray } f
 import { useLayoutEffect, useMemo, useRef } from 'preact/hooks';
 
 import { useDispatch } from '@src/contexts/calendarStore';
-import { getLayoutStylesFromInfo } from '@src/controller/layout';
-import { cls } from '@src/helpers/css';
+import { cls, toPercent } from '@src/helpers/css';
 import { isNil, isNumber, isString } from '@src/utils/type';
+
+import { StyleProp } from '@t/components/common';
 
 interface Props {
   height?: number;
   width?: number;
   className?: string;
+}
+
+function getLayoutStylesFromInfo(width?: number, height?: number) {
+  const styles: StyleProp = { height: toPercent(100) };
+
+  if (width) {
+    styles.width = width;
+  }
+  if (height) {
+    styles.height = height;
+  }
+
+  return styles;
 }
 
 // @TODO: consider `direction` and `resizeMode`

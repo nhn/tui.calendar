@@ -2,7 +2,7 @@ import { Fragment, FunctionComponent, h } from 'preact';
 import { useCallback, useLayoutEffect } from 'preact/hooks';
 
 import { PanelResizer } from '@src/components/panelResizer';
-import { DEFAULT_RESIZER_LENGTH, Direction } from '@src/constants/layout';
+import { DEFAULT_RESIZER_LENGTH } from '@src/constants/layout';
 import { DEFAULT_PANEL_HEIGHT } from '@src/constants/style';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { getPanelStylesFromInfo } from '@src/controller/panel';
@@ -17,9 +17,7 @@ export interface Props extends PanelInfo {
 
 export const Panel: FunctionComponent<Props> = (props) => {
   const {
-    direction = Direction.COLUMN,
     name,
-    width: initialWidth = DEFAULT_PANEL_HEIGHT,
     height: initialHeight = DEFAULT_PANEL_HEIGHT,
     resizerWidth = DEFAULT_RESIZER_LENGTH,
     resizerHeight = DEFAULT_RESIZER_LENGTH,
@@ -33,7 +31,6 @@ export const Panel: FunctionComponent<Props> = (props) => {
     useCallback((state) => state.weekViewLayout.dayGridRows[name] ?? {}, [name])
   );
   const height = dayGridRowHeight ?? initialHeight;
-  const width = dayGridRowHeight ?? initialWidth;
 
   useLayoutEffect(() => {
     setLastPanelType(isLast ? name : null);
@@ -43,8 +40,7 @@ export const Panel: FunctionComponent<Props> = (props) => {
     updateDayGridRowHeight({ rowName: name, height: initialHeight });
   }, [initialHeight, name, updateDayGridRowHeight]);
 
-  const styleWithDirection = direction === Direction.COLUMN ? { height } : { width };
-  const styles = getPanelStylesFromInfo({ ...props, ...styleWithDirection });
+  const styles = getPanelStylesFromInfo({ ...props, height });
 
   return (
     <Fragment>
@@ -54,7 +50,6 @@ export const Panel: FunctionComponent<Props> = (props) => {
       {resizable && (
         <PanelResizer
           name={name as AlldayEventCategory}
-          direction={direction}
           width={resizerWidth}
           height={resizerHeight}
         />

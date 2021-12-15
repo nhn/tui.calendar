@@ -1,7 +1,6 @@
 import { FunctionComponent, h } from 'preact';
 import { useRef, useState } from 'preact/hooks';
 
-import { Direction } from '@src/constants/layout';
 import { useDispatch } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
 import { DRAGGING_TYPE_CONSTANTS } from '@src/helpers/drag';
@@ -18,31 +17,16 @@ const DEFAULT_STYLE: StyleProp = {
 
 interface Props {
   name: AlldayEventCategory;
-  direction: Direction;
   width: number;
   height: number;
 }
 
-function getDefaultStyle(direction: Direction, width: number, height: number) {
-  const style = { ...DEFAULT_STYLE };
-
-  if (direction === Direction.ROW) {
-    style.borderLeft = DEFAULT_BORDER;
-    style.borderRight = DEFAULT_BORDER;
-    style.height = '100%';
-    style.width = width;
-    style.cursor = 'col-resize';
-  } else {
-    style.height = height;
-    style.width = '100%';
-    style.cursor = 'row-resize';
-  }
-
-  return style;
+function getDefaultStyle(width: number, height: number) {
+  return { ...DEFAULT_STYLE, height, width: '100%', cursor: 'row-resize' };
 }
 
-export const PanelResizer: FunctionComponent<Props> = ({ name, direction, width, height }) => {
-  const style = getDefaultStyle(direction, width, height);
+export const PanelResizer: FunctionComponent<Props> = ({ name, width, height }) => {
+  const style = getDefaultStyle(width, height);
   const defaultGuideStyle = {
     ...style,
     display: 'none',
