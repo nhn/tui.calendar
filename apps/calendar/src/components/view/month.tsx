@@ -9,16 +9,16 @@ import { useStore } from '@src/contexts/calendarStore';
 import { useTheme } from '@src/contexts/theme';
 import { cls } from '@src/helpers/css';
 import { capitalizeDayName } from '@src/helpers/dayName';
-import { optionSelector } from '@src/selectors';
+import { optionsSelector } from '@src/selectors';
 import { getGridInfo, getMonthCalendar, isWeekend } from '@src/time/datetime';
 import { getSize } from '@src/utils/dom';
 
-import { MonthOption } from '@t/option';
+import { MonthOptions } from '@t/options';
 import { CalendarStore } from '@t/store';
 import { TemplateMonthDayName } from '@t/template';
 
-function getDayNames(option: CalendarStore['option']) {
-  const { daynames, workweek } = option.month as Required<MonthOption>;
+function getDayNames(options: CalendarStore['options']) {
+  const { daynames, workweek } = options.month as Required<MonthOptions>;
   const dayNames: TemplateMonthDayName[] = [];
 
   daynames.forEach((name, index) => {
@@ -50,18 +50,18 @@ function useContainerHeight(container: RefObject<HTMLDivElement>, dayNameHeight:
 export const Month: FunctionComponent = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const option = useStore(optionSelector);
+  const options = useStore(optionsSelector);
   const theme = useTheme();
 
   const gridPanelHeight = useContainerHeight(containerRef, MONTH_DAY_NAME_HEIGHT);
 
-  if (!theme || !option) {
+  if (!theme || !options) {
     return null;
   }
 
-  const dayNames = getDayNames(option);
+  const dayNames = getDayNames(options);
   const renderMonthDate = new Date(); // @TODO: 현재 렌더링된 MonthDate기준으로 계산(prev, next 사용 시 날짜 계산 필요)
-  const monthOptions = option.month as Required<MonthOption>;
+  const monthOptions = options.month as Required<MonthOptions>;
   const calendar = getMonthCalendar(renderMonthDate, monthOptions);
   const { narrowWeekend, startDayOfWeek, workweek } = monthOptions;
   const { gridInfo } = getGridInfo(dayNames.length, narrowWeekend, startDayOfWeek, workweek);

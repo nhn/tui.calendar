@@ -4,7 +4,7 @@ import DayName from '@src/components/dayGridCommon/dayName';
 import { cls, toPercent } from '@src/helpers/css';
 
 import { CalendarViewType } from '@t/components/common';
-import { CalendarMonthOption, CalendarWeekOption } from '@t/store';
+import { CalendarMonthOptions, CalendarWeekOptions } from '@t/store';
 import { Template, TemplateMonthDayName, TemplateWeekDay } from '@t/template';
 
 type TemplateDayNames = (TemplateWeekDay | TemplateMonthDayName)[];
@@ -12,7 +12,7 @@ type TemplateDayNames = (TemplateWeekDay | TemplateMonthDayName)[];
 interface Props {
   dayNames: TemplateDayNames;
   theme?: DayNameTheme;
-  options?: CalendarMonthOption | CalendarWeekOption;
+  options?: CalendarMonthOptions | CalendarWeekOptions;
   marginLeft?: number;
   templateType: keyof Template;
   gridInfo: GridInfo[];

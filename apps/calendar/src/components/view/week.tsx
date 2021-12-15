@@ -17,7 +17,7 @@ import { getDayNames } from '@src/helpers/dayName';
 import { getDayGridEvents } from '@src/helpers/grid';
 import {
   calendarSelector,
-  optionSelector,
+  optionsSelector,
   templateSelector,
   weekViewLayoutSelector,
 } from '@src/selectors';
@@ -31,10 +31,10 @@ import {
   WEEK_DAYS,
 } from '@src/time/datetime';
 
-import { WeekOption } from '@t/option';
+import { WeekOptions } from '@t/options';
 import { AlldayEventCategory, Cells } from '@t/panel';
 
-function getCells(renderDate: TZDate, { startDayOfWeek = 0, workweek }: WeekOption): Cells {
+function getCells(renderDate: TZDate, { startDayOfWeek = 0, workweek }: WeekOptions): Cells {
   const renderDay = renderDate.getDay();
   const now = toStartOfDay(renderDate);
   const nowDay = now.getDay();
@@ -53,30 +53,30 @@ function getCells(renderDate: TZDate, { startDayOfWeek = 0, workweek }: WeekOpti
 
 function useWeekViewState() {
   const template = useStore(templateSelector);
-  const option = useStore(optionSelector);
+  const options = useStore(optionsSelector);
   const calendar = useStore(calendarSelector);
   const { dayGridRows: gridRowLayout } = useStore(weekViewLayoutSelector);
 
   return useMemo(
     () => ({
       template,
-      option,
+      options,
       calendar,
       gridRowLayout,
     }),
-    [calendar, gridRowLayout, option, template]
+    [calendar, gridRowLayout, options, template]
   );
 }
 
 export const Week: FunctionComponent = () => {
-  const { template, option, calendar, gridRowLayout } = useWeekViewState();
+  const { template, options, calendar, gridRowLayout } = useWeekViewState();
 
-  if (!template || !option || !calendar || !gridRowLayout) {
+  if (!template || !options || !calendar || !gridRowLayout) {
     return null;
   }
 
-  const { useCreationPopup = false } = option;
-  const weekOptions = option.week as Required<WeekOption>;
+  const { useCreationPopup = false } = options;
+  const weekOptions = options.week as Required<WeekOptions>;
   const { narrowWeekend, startDayOfWeek, workweek, hourStart, hourEnd } = weekOptions;
   // @TODO: calculate based on today(need to calculate date when prev & next used)
   const renderWeekDate = new TZDate();

@@ -32,7 +32,7 @@ import {
   Matrix,
   Matrix3d,
 } from '@t/events';
-import { WeekOption } from '@t/option';
+import { WeekOptions } from '@t/options';
 import { Panel } from '@t/panel';
 
 /**********
@@ -349,7 +349,7 @@ export function findByDateRange(
     end: TZDate;
     panels: Panel[];
     andFilters: Filter<EventModel | EventUIModel>[];
-    options: WeekOption;
+    options: WeekOptions;
   }
 ) {
   const { start, end, panels, andFilters = [], options } = condition;

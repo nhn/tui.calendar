@@ -5,7 +5,7 @@ import TZDate from '@src/time/date';
 import { fill } from '@src/utils/array';
 
 import { TimeUnit } from '@t/events';
-import { MonthOption } from '@t/option';
+import { MonthOptions } from '@t/options';
 
 export enum Day {
   SUN,
@@ -783,7 +783,7 @@ export function getDateDifference(d1: TZDate, d2: TZDate) {
   return Math.round((_d1 - _d2) / MS_PER_DAY);
 }
 
-export function getMonthCalendar(renderMonthDate: Date | TZDate, options: MonthOption) {
+export function getMonthCalendar(renderMonthDate: Date | TZDate, options: MonthOptions) {
   const date = new TZDate(renderMonthDate);
   const {
     startDayOfWeek = 0,

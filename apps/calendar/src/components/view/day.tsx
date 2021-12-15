@@ -15,20 +15,20 @@ import { getDayNames } from '@src/helpers/dayName';
 import { getDayGridEvents } from '@src/helpers/grid';
 import {
   calendarSelector,
-  optionSelector,
+  optionsSelector,
   templateSelector,
   weekViewLayoutSelector,
 } from '@src/selectors';
 import TZDate from '@src/time/date';
 import { getGridInfo, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 
-import { WeekOption } from '@t/option';
+import { WeekOptions } from '@t/options';
 import { AlldayEventCategory } from '@t/panel';
 
 function useDayViewState() {
   const template = useStore(templateSelector);
   const calendar = useStore(calendarSelector);
-  const option = useStore(optionSelector);
+  const option = useStore(optionsSelector);
   const weekViewLayout = useStore(weekViewLayoutSelector);
 
   return useMemo(
@@ -50,7 +50,7 @@ export const Day: FunctionComponent = () => {
   }
 
   const { useCreationPopup = false } = option;
-  const weekOptions = option.week as Required<WeekOption>;
+  const weekOptions = option.week as Required<WeekOptions>;
   const { narrowWeekend, startDayOfWeek, workweek, hourStart, hourEnd } = weekOptions;
   // @TODO: calculate based on today(need to calculate date when prev & next used)
   const cells = [new TZDate()];

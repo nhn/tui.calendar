@@ -25,7 +25,7 @@ import { PopupType } from '@src/slices/popup';
 import TZDate from '@src/time/date';
 import { addDate } from '@src/time/datetime';
 
-import { WeekOption } from '@t/option';
+import { WeekOptions } from '@t/options';
 import { AlldayEventCategory, Cells } from '@t/panel';
 
 type GridRowTitleTemplate = `${Props['category']}Title`;
@@ -37,7 +37,7 @@ interface Props {
   timesWidth?: number;
   timezonesCount?: number;
   height?: number;
-  options?: WeekOption;
+  options?: WeekOptions;
   useCreationPopup: boolean;
   shouldRenderDefaultPopup?: boolean;
   gridInfo: GridInfo[];

@@ -14,7 +14,7 @@ import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { createRandomEvents } from '@stories/util/randomEvents';
 
 import { EventModelData } from '@t/events';
-import { CalendarMonthOption } from '@t/store';
+import { CalendarMonthOptions } from '@t/store';
 
 export default { title: 'DayGridMonth' };
 
@@ -75,7 +75,7 @@ export const daygrid = () => {
     new TZDate(date.setDate(sunday + WEEKDAYS * index)),
   ]);
 
-  const options: CalendarMonthOption = {
+  const options: CalendarMonthOptions = {
     visibleWeeksCount: 3,
     workweek: false,
     narrowWeekend: true,
@@ -105,7 +105,7 @@ export const daygrid = () => {
 export const randomEvents = () => {
   const calendar = getWeekDates();
 
-  const options: CalendarMonthOption = {
+  const options: CalendarMonthOptions = {
     visibleWeeksCount: 1,
     workweek: false,
     narrowWeekend: false,

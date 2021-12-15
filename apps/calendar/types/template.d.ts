@@ -4,7 +4,7 @@ import type EventModel from '@src/model/eventModel';
 import type TZDate from '@src/time/date';
 
 import { EventCategory, TimeUnit } from '@t/events';
-import { TimezoneConfig } from '@t/option';
+import { TimezoneConfig } from '@t/options';
 
 export interface TemplateTimeGridHourLabel {
   hidden: boolean;

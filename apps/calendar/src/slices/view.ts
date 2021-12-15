@@ -1,6 +1,6 @@
 import produce from 'immer';
 
-import { ViewType } from '@t/option';
+import { ViewType } from '@t/options';
 import { CalendarStore, SetState } from '@t/store';
 
 export type ViewSlice = {

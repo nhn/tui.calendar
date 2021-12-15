@@ -8,7 +8,7 @@ import { getMonthCalendar } from '@src/time/datetime';
 import { calendars } from '@stories/util/mockCalendars';
 
 import { EventCategory, EventModelData } from '@t/events';
-import { CalendarInfo, ViewType } from '@t/option';
+import { CalendarInfo, ViewType } from '@t/options';
 
 const chance = new Chance();
 const EVENT_CATEGORY: EventCategory[] = ['milestone', 'task'];

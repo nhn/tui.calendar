@@ -13,7 +13,7 @@ import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { addDate } from '@src/time/datetime';
 
-import { WeekOption } from '@t/option';
+import { WeekOptions } from '@t/options';
 import { AlldayEventCategory, Cells } from '@t/panel';
 
 type GridRowTitleTemplate = `${AlldayEventCategory}Title`;
@@ -25,7 +25,7 @@ interface Props {
   timesWidth?: number;
   timezonesCount?: number;
   height?: number;
-  options?: WeekOption;
+  options?: WeekOptions;
   gridColWidthMap: string[][];
 }
 

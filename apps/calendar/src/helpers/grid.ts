@@ -17,7 +17,7 @@ import {
   Matrix3d,
   TimeGridEventMatrix,
 } from '@t/events';
-import { WeekOption } from '@t/option';
+import { WeekOptions } from '@t/options';
 import { Cells, Panel } from '@t/panel';
 
 export const EVENT_HEIGHT = 22;
@@ -252,7 +252,7 @@ const getTimeGridEventModels = (
 export const getDayGridEvents = (
   cells: Cells,
   calendarData: CalendarData,
-  { narrowWeekend, hourStart, hourEnd }: WeekOption
+  { narrowWeekend, hourStart, hourEnd }: WeekOptions
 ): EventModelMap => {
   const panels: Panel[] = [
     {

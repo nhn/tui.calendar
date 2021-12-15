@@ -283,7 +283,7 @@ export default class Calendar {
 
   public scrollToNow(): void;
 
-  public setCalendarColor(calendarId: string, option: ICalendarColor, silent?: boolean): void;
+  public setCalendarColor(calendarId: string, options: ICalendarColor, silent?: boolean): void;
 
   public setCalendars(calendars: ICalendarInfo[]): void;
 

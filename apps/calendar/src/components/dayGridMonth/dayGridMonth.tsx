@@ -18,12 +18,12 @@ import { calendarSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
 import { getSize } from '@src/utils/dom';
 
-import { CalendarMonthOption } from '@t/store';
+import { CalendarMonthOptions } from '@t/store';
 
 const TOTAL_PERCENT_HEIGHT = 100;
 
 interface Props {
-  options: CalendarMonthOption;
+  options: CalendarMonthOptions;
   calendar: TZDate[][];
   appContainer: RefObject<HTMLDivElement>;
   events?: EventModel[];

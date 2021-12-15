@@ -24,7 +24,7 @@ import {
 
 import { TimeGridSelectionInfo } from '@t/components/timeGrid/gridSelection';
 import { TimeUnit } from '@t/events';
-import { TimezoneConfig } from '@t/option';
+import { TimezoneConfig } from '@t/options';
 
 const REFRESH_INTERVAL = 1000 * SIXTY_SECONDS;
 
