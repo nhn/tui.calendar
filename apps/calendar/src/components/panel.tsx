@@ -11,10 +11,6 @@ import { StyleProp } from '@t/components/common';
 import { PanelInfo } from '@t/layout';
 import { AlldayEventCategory } from '@t/panel';
 
-export interface Props extends PanelInfo {
-  isLast?: boolean;
-}
-
 const styleKeys: (keyof PanelInfo)[] = ['minHeight', 'maxHeight', 'minWidth', 'maxWidth'];
 
 function getPanelSide(side: number, maxExpandableSide?: number) {
@@ -50,7 +46,7 @@ function getPanelStylesFromInfo(panel: PanelInfo) {
   return styles;
 }
 
-export const Panel: FunctionComponent<Props> = (props) => {
+export const Panel: FunctionComponent<PanelInfo> = (props) => {
   const {
     name,
     height: initialHeight = DEFAULT_PANEL_HEIGHT,
@@ -58,18 +54,13 @@ export const Panel: FunctionComponent<Props> = (props) => {
     resizerHeight = DEFAULT_RESIZER_LENGTH,
     resizable,
     children,
-    isLast,
   } = props;
 
-  const { setLastPanelType, updateDayGridRowHeight } = useDispatch('weekViewLayout');
+  const { updateDayGridRowHeight } = useDispatch('weekViewLayout');
   const { height: dayGridRowHeight } = useStore(
     useCallback((state) => state.weekViewLayout.dayGridRows[name] ?? {}, [name])
   );
   const height = dayGridRowHeight ?? initialHeight;
-
-  useLayoutEffect(() => {
-    setLastPanelType(isLast ? name : null);
-  });
 
   useLayoutEffect(() => {
     updateDayGridRowHeight({ rowName: name, height: initialHeight });

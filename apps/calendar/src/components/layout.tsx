@@ -1,6 +1,7 @@
-import { cloneElement, ComponentChildren, FunctionComponent, h, toChildArray } from 'preact';
+import { ComponentProps, FunctionComponent, h, toChildArray } from 'preact';
 import { useLayoutEffect, useMemo, useRef } from 'preact/hooks';
 
+import { Panel } from '@src/components/panel';
 import { useDispatch } from '@src/contexts/calendarStore';
 import { cls, toPercent } from '@src/helpers/css';
 import { isNil, isNumber, isString } from '@src/utils/type';
@@ -29,7 +30,7 @@ function getLayoutStylesFromInfo(width?: number, height?: number) {
 // @TODO: consider `direction` and `resizeMode`
 export const Layout: FunctionComponent<Props> = ({ children, width, height, className = '' }) => {
   const layoutRef = useRef<HTMLDivElement>(null);
-  const { updateLayoutHeight } = useDispatch('weekViewLayout');
+  const { setLastPanelType, updateLayoutHeight } = useDispatch('weekViewLayout');
 
   const layoutClassName = useMemo(() => `${cls('layout')} ${className}`, [className]);
 
@@ -39,22 +40,18 @@ export const Layout: FunctionComponent<Props> = ({ children, width, height, clas
     }
   }, [updateLayoutHeight]);
 
-  const renderChildren = (componentChildren: ComponentChildren) => {
-    const childArray = toChildArray(componentChildren);
-    const lastIndex = childArray.length - 1;
+  useLayoutEffect(() => {
+    const childArray = toChildArray(children);
+    const lastChild = childArray[childArray.length - 1];
 
-    return childArray.map((child, index) => {
-      if (isString(child) || isNumber(child) || isNil(child)) {
-        return child;
-      }
-
-      return cloneElement(child, { isLast: index === lastIndex });
-    });
-  };
+    if (!isString(lastChild) && !isNumber(lastChild) && !isNil(lastChild)) {
+      setLastPanelType((lastChild.props as unknown as ComponentProps<typeof Panel>).name);
+    }
+  }, [children, setLastPanelType]);
 
   return (
     <div ref={layoutRef} className={layoutClassName} style={getLayoutStylesFromInfo(width, height)}>
-      {renderChildren(children)}
+      {children}
     </div>
   );
 };
