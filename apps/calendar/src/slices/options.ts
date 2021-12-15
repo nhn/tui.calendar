@@ -3,10 +3,17 @@ import range from 'tui-code-snippet/array/range';
 
 import { getDayName } from '@src/helpers/dayName';
 import { Day } from '@src/time/datetime';
+import { mergeObject } from '@src/utils/object';
 
 import { EventModelData } from '@t/events';
 import { Option } from '@t/option';
-import { CalendarMonthOption, CalendarStore, CalendarWeekOption, SetState } from '@t/store';
+import {
+  CalendarMonthOption,
+  CalendarState,
+  CalendarStore,
+  CalendarWeekOption,
+  SetState,
+} from '@t/store';
 
 function initializeDayNames(startDayOfWeek = 0) {
   return [...range(startDayOfWeek, 7), ...range(startDayOfWeek)].map((day) => getDayName(day));
@@ -93,8 +100,8 @@ export function createOptionDispatchers(set: SetState<CalendarStore>): OptionDis
   return {
     setOptions: (newOption: Partial<OptionSlice['option']> = {}) =>
       set(
-        produce((state) => {
-          state.option = { ...state.option, ...newOption };
+        produce((state: CalendarState) => {
+          mergeObject(state.option, newOption);
         })
       ),
   };
