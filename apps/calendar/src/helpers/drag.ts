@@ -2,6 +2,7 @@ import { DraggingTypes } from '@t/drag';
 
 export const DRAGGING_TYPE_CONSTANTS: { [K in DraggingTypes]: DraggingTypes } = {
   alldayGridRowSelection: 'alldayGridRowSelection',
+  monthViewGridSelection: 'monthViewGridSelection',
   timeGridColumnSelection: 'timeGridColumnSelection',
 };
 

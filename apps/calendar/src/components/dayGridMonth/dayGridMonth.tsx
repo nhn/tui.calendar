@@ -1,5 +1,5 @@
-import { Fragment, FunctionComponent, h, RefObject } from 'preact';
-import { useEffect, useRef, useState } from 'preact/hooks';
+import { FunctionComponent, h, RefObject } from 'preact';
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 
 import { GridSelection } from '@src/components/dayGridCommon/gridSelection';
 import GridRow from '@src/components/dayGridMonth/gridRow';
@@ -12,7 +12,11 @@ import {
 } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
 import { cls, toPercent } from '@src/helpers/css';
+import { DRAGGING_TYPE_CONSTANTS } from '@src/helpers/drag';
 import { getRenderedEventUIModels } from '@src/helpers/grid';
+import { createMousePositionDataGrabberMonth } from '@src/helpers/view';
+import { useDOMNode } from '@src/hooks/common/domNode';
+import { useDrag } from '@src/hooks/common/drag';
 import EventModel from '@src/model/eventModel';
 import { calendarSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
@@ -25,6 +29,7 @@ const TOTAL_PERCENT_HEIGHT = 100;
 interface Props {
   options: CalendarMonthOption;
   dateMatrix: TZDate[][];
+  gridInfo: GridInfo[];
   appContainer: RefObject<HTMLDivElement>;
   events?: EventModel[];
 }
@@ -42,22 +47,31 @@ function useGridHeight() {
   return { ref, height };
 }
 
-const DayGridMonth: FunctionComponent<Props> = ({ options, dateMatrix = [], appContainer }) => {
-  const { visibleWeeksCount, workweek, startDayOfWeek, narrowWeekend } = options;
-
+const DayGridMonth: FunctionComponent<Props> = ({
+  options,
+  dateMatrix = [],
+  gridInfo = [],
+  appContainer,
+}) => {
+  const [gridContainer, setGridContainerRef] = useDOMNode<HTMLDivElement>();
+  const calendarData = useStore(calendarSelector);
   const { ref, height } = useGridHeight();
 
+  const { visibleWeeksCount, workweek, startDayOfWeek, narrowWeekend } = options;
   const rowHeight =
     TOTAL_PERCENT_HEIGHT / Math.max(visibleWeeksCount === 0 ? 6 : visibleWeeksCount, 1);
 
-  const calendarData = useStore(calendarSelector);
-
-  if (!calendarData) {
-    return null;
-  }
+  const { onMouseDown } = useDrag(DRAGGING_TYPE_CONSTANTS.monthViewGridSelection);
+  const mousePositionDataGrabber = useMemo(
+    () =>
+      gridContainer
+        ? createMousePositionDataGrabberMonth(dateMatrix, gridInfo, gridContainer)
+        : () => null,
+    [dateMatrix, gridContainer, gridInfo]
+  );
 
   return (
-    <Fragment>
+    <div ref={setGridContainerRef} onMouseDown={onMouseDown} style={{ height: toPercent(100) }}>
       {dateMatrix.map((week, rowIndex) => {
         const { uiModels, gridDateEventModelMap } = getRenderedEventUIModels(
           week,
@@ -99,7 +113,7 @@ const DayGridMonth: FunctionComponent<Props> = ({ options, dateMatrix = [], appC
           </div>
         );
       })}
-    </Fragment>
+    </div>
   );
 };
 

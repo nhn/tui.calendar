@@ -2,9 +2,10 @@ import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 
 import { useStore } from '@src/contexts/calendarStore';
 import { DRAGGING_TYPE_CONSTANTS } from '@src/helpers/drag';
+import type { MousePositionDataGrabber } from '@src/helpers/view';
 import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
-import TZDate from '@src/time/date';
+import type TZDate from '@src/time/date';
 import { isSame, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { isPresent } from '@src/utils/type';
 
@@ -46,10 +47,6 @@ function getGridSelectionData(
   const { start, end } = gridInfoList[rowIndex][columnIndex];
 
   return { start, end, rowIndex, columnIndex, x, y };
-}
-
-interface MousePositionDataGrabber {
-  (mouseEvent: MouseEvent): any;
 }
 
 export function useAlldayGridRowSelection(

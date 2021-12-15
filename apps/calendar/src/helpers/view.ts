@@ -3,6 +3,8 @@ import { getRelativeMousePosition, getX } from '@src/utils/mouse';
 
 import { Cells } from '@t/panel';
 
+export type MousePositionDataGrabber = (mouseEvent: MouseEvent) => MousePositionData | null;
+
 export function createMousePositionDataGrabberMonth(
   calendar: Cells[],
   grids: GridInfo[],
