@@ -4,6 +4,7 @@ import { useLayoutEffect, useMemo, useRef } from 'preact/hooks';
 import { Panel } from '@src/components/panel';
 import { useDispatch } from '@src/contexts/calendarStore';
 import { cls, toPercent } from '@src/helpers/css';
+import { noop } from '@src/utils/noop';
 import { isNil, isNumber, isString } from '@src/utils/type';
 
 import { StyleProp } from '@t/components/common';
@@ -35,9 +36,18 @@ export const Layout: FunctionComponent<Props> = ({ children, width, height, clas
   const layoutClassName = useMemo(() => `${cls('layout')} ${className}`, [className]);
 
   useLayoutEffect(() => {
-    if (layoutRef.current) {
-      updateLayoutHeight(layoutRef.current.offsetHeight);
+    const layoutElement = layoutRef.current;
+
+    if (layoutElement) {
+      const onResizeWindow = () => updateLayoutHeight(layoutElement.offsetHeight);
+
+      onResizeWindow();
+      window.addEventListener('resize', onResizeWindow);
+
+      return () => window.removeEventListener('resize', onResizeWindow);
     }
+
+    return noop;
   }, [updateLayoutHeight]);
 
   useLayoutEffect(() => {
