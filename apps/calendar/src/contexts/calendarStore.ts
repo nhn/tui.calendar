@@ -2,14 +2,11 @@ import { useCallback } from 'preact/hooks';
 
 import { createCalendarDispatchers, createCalendarSlice } from '@src/slices/calendar';
 import { createDndDispatchers, createDndSlice } from '@src/slices/dnd';
+import { createWeekViewLayoutDispatchers, createWeekViewLayoutSlice } from '@src/slices/layout';
 import { createOptionsDispatchers, createOptionsSlice } from '@src/slices/options';
 import { createPopupDispatchers, createPopupSlice } from '@src/slices/popup';
 import { createTemplateSlice } from '@src/slices/template';
 import { createViewDispatchers, createViewSlice } from '@src/slices/view';
-import {
-  createWeekViewLayoutDispatchers,
-  createWeekViewLayoutSlice,
-} from '@src/slices/weekViewLayout';
 import { createStoreContext } from '@src/store';
 import { devtools } from '@src/store/devtool';
 import { createStore } from '@src/store/internal';

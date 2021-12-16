@@ -15,6 +15,7 @@ import { useStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
 import { getDayNames } from '@src/helpers/dayName';
 import { getDayGridEvents } from '@src/helpers/grid';
+import { getDisplayPanel } from '@src/helpers/view';
 import {
   calendarSelector,
   optionsSelector,
@@ -75,7 +76,7 @@ export const Week: FunctionComponent = () => {
     return null;
   }
 
-  const { useCreationPopup = false } = options;
+  const { useCreationPopup, eventView, taskView } = options;
   const weekOptions = options.week as Required<WeekOptions>;
   const { narrowWeekend, startDayOfWeek, workweek, hourStart, hourEnd } = weekOptions;
   // @TODO: calculate based on today(need to calculate date when prev & next used)
@@ -97,35 +98,38 @@ export const Week: FunctionComponent = () => {
     (cell) =>
       ({ start: toStartOfDay(cell), end: toEndOfDay(cell), unit: 'minute', slot: 30 } as ColumnInfo)
   );
-  const gridRows = DEFAULT_WEEK_PANEL_TYPES.map((key) => {
-    const rowType = key as AlldayEventCategory;
+  const displayPanel = getDisplayPanel(taskView, eventView);
+  const gridRows = displayPanel
+    .filter((panel) => DEFAULT_WEEK_PANEL_TYPES.includes(panel))
+    .map((key) => {
+      const rowType = key as AlldayEventCategory;
 
-    return (
-      <Panel name={rowType} key={rowType} resizable>
-        {rowType === 'allday' ? (
-          <AlldayGridRow
-            category={rowType}
-            events={dayGridEvents[rowType]}
-            gridInfo={gridInfo}
-            gridColWidthMap={gridColWidthMap}
-            cells={cells}
-            height={gridRowLayout[rowType].height}
-            options={weekOptions}
-            useCreationPopup={useCreationPopup}
-          />
-        ) : (
-          <OtherGridRow
-            category={rowType}
-            events={dayGridEvents[rowType]}
-            cells={cells}
-            height={gridRowLayout[rowType].height}
-            options={weekOptions}
-            gridColWidthMap={gridColWidthMap}
-          />
-        )}
-      </Panel>
-    );
-  });
+      return (
+        <Panel name={rowType} key={rowType} resizable>
+          {rowType === 'allday' ? (
+            <AlldayGridRow
+              category={rowType}
+              events={dayGridEvents[rowType]}
+              gridInfo={gridInfo}
+              gridColWidthMap={gridColWidthMap}
+              cells={cells}
+              height={gridRowLayout[rowType].height}
+              options={weekOptions}
+              useCreationPopup={useCreationPopup}
+            />
+          ) : (
+            <OtherGridRow
+              category={rowType}
+              events={dayGridEvents[rowType]}
+              cells={cells}
+              height={gridRowLayout[rowType].height}
+              options={weekOptions}
+              gridColWidthMap={gridColWidthMap}
+            />
+          )}
+        </Panel>
+      );
+    });
 
   return (
     // @TODO: refactor Layout component

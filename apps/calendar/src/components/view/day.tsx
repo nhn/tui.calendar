@@ -8,11 +8,13 @@ import { Layout } from '@src/components/layout';
 import { Panel } from '@src/components/panel';
 import { ColumnInfo } from '@src/components/timeGrid/columnWithMouse';
 import { TimeGrid } from '@src/components/timeGrid/timeGrid';
+import { DEFAULT_WEEK_PANEL_TYPES } from '@src/constants/layout';
 import { WEEK_DAYNAME_BORDER, WEEK_DAYNAME_HEIGHT } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
 import { getDayNames } from '@src/helpers/dayName';
 import { getDayGridEvents } from '@src/helpers/grid';
+import { getDisplayPanel } from '@src/helpers/view';
 import {
   calendarSelector,
   optionsSelector,
@@ -29,23 +31,23 @@ function useDayViewState() {
   const template = useStore(templateSelector);
   const calendar = useStore(calendarSelector);
   const options = useStore(optionsSelector);
-  const weekViewLayout = useStore(weekViewLayoutSelector);
+  const { dayGridRows: gridRowLayout } = useStore(weekViewLayoutSelector);
 
   return useMemo(
     () => ({
       template,
       calendarData: calendar,
       options,
-      weekViewLayout,
+      gridRowLayout,
     }),
-    [calendar, options, template, weekViewLayout]
+    [calendar, options, template, gridRowLayout]
   );
 }
 
 export const Day: FunctionComponent = () => {
-  const { template, calendarData, options, weekViewLayout } = useDayViewState();
+  const { template, calendarData, options, gridRowLayout } = useDayViewState();
 
-  if (!template || !options || !calendarData || !weekViewLayout) {
+  if (!template || !options || !calendarData || !gridRowLayout) {
     return null;
   }
 
@@ -70,35 +72,38 @@ export const Day: FunctionComponent = () => {
     (cell) =>
       ({ start: toStartOfDay(cell), end: toEndOfDay(cell), unit: 'minute', slot: 30 } as ColumnInfo)
   );
-  const gridRows = Object.entries(weekViewLayout.dayGridRows).map(([key, value]) => {
-    const rowType = key as AlldayEventCategory;
+  const displayPanel = getDisplayPanel(taskView, eventView);
+  const gridRows = displayPanel
+    .filter((panel) => DEFAULT_WEEK_PANEL_TYPES.includes(panel))
+    .map((key) => {
+      const rowType = key as AlldayEventCategory;
 
-    return (
-      <Panel key={rowType} name={rowType} resizable>
-        {rowType === 'allday' ? (
-          <AlldayGridRow
-            category={rowType}
-            events={dayGridEvents[rowType]}
-            gridInfo={gridInfo}
-            gridColWidthMap={gridColWidthMap}
-            cells={cells}
-            height={value.height}
-            options={weekOptions}
-            useCreationPopup={useCreationPopup}
-          />
-        ) : (
-          <OtherGridRow
-            category={rowType}
-            events={dayGridEvents[rowType]}
-            cells={cells}
-            height={value.height}
-            options={options.week}
-            gridColWidthMap={gridColWidthMap}
-          />
-        )}
-      </Panel>
-    );
-  });
+      return (
+        <Panel key={rowType} name={rowType} resizable>
+          {rowType === 'allday' ? (
+            <AlldayGridRow
+              category={rowType}
+              events={dayGridEvents[rowType]}
+              gridInfo={gridInfo}
+              gridColWidthMap={gridColWidthMap}
+              cells={cells}
+              height={gridRowLayout[rowType].height}
+              options={weekOptions}
+              useCreationPopup={useCreationPopup}
+            />
+          ) : (
+            <OtherGridRow
+              category={rowType}
+              events={dayGridEvents[rowType]}
+              cells={cells}
+              height={gridRowLayout[rowType].height}
+              options={options.week}
+              gridColWidthMap={gridColWidthMap}
+            />
+          )}
+        </Panel>
+      );
+    });
 
   return (
     <Layout className={cls('day-view')}>

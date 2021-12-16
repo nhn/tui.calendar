@@ -1,6 +1,8 @@
 import { limit, ratio } from '@src/utils/math';
 import { getRelativeMousePosition, getX } from '@src/utils/mouse';
+import { isBoolean } from '@src/utils/type';
 
+import { Options } from '@t/options';
 import { Cells } from '@t/panel';
 
 export function createMousePositionDataGrabberMonth(
@@ -88,4 +90,27 @@ export function createMousePositionDataGrabberWeek(
       triggerEvent: mouseEvent.type,
     };
   };
+}
+
+export function getDisplayPanel(
+  taskView: Required<Options>['taskView'],
+  eventView: Required<Options>['eventView']
+) {
+  const displayPanel: string[] = [];
+  const defaultTaskPanel = taskView ? ['milestone', 'task'] : [];
+  const defaultEventPanel = eventView ? ['allday', 'time'] : [];
+
+  if (isBoolean(taskView)) {
+    displayPanel.push(...defaultTaskPanel);
+  } else {
+    displayPanel.push(...taskView);
+  }
+
+  if (isBoolean(eventView)) {
+    displayPanel.push(...defaultEventPanel);
+  } else {
+    displayPanel.push(...eventView);
+  }
+
+  return displayPanel;
 }

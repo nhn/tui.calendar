@@ -3,7 +3,7 @@ import { useState } from 'preact/hooks';
 import { DEFAULT_PANEL_HEIGHT } from '@src/constants/style';
 import { useDispatch } from '@src/contexts/calendarStore';
 import { EVENT_HEIGHT } from '@src/helpers/grid';
-import { WeekGridRows } from '@src/slices/weekViewLayout';
+import { WeekGridRows } from '@src/slices/layout';
 
 import { AlldayEventCategory } from '@t/panel';
 
