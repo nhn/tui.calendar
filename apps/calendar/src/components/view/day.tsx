@@ -28,29 +28,29 @@ import { AlldayEventCategory } from '@t/panel';
 function useDayViewState() {
   const template = useStore(templateSelector);
   const calendar = useStore(calendarSelector);
-  const option = useStore(optionsSelector);
+  const options = useStore(optionsSelector);
   const weekViewLayout = useStore(weekViewLayoutSelector);
 
   return useMemo(
     () => ({
       template,
       calendarData: calendar,
-      option,
+      options,
       weekViewLayout,
     }),
-    [calendar, option, template, weekViewLayout]
+    [calendar, options, template, weekViewLayout]
   );
 }
 
 export const Day: FunctionComponent = () => {
-  const { template, calendarData, option, weekViewLayout } = useDayViewState();
+  const { template, calendarData, options, weekViewLayout } = useDayViewState();
 
-  if (!template || !option || !calendarData || !weekViewLayout) {
+  if (!template || !options || !calendarData || !weekViewLayout) {
     return null;
   }
 
-  const { useCreationPopup = false } = option;
-  const weekOptions = option.week as Required<WeekOptions>;
+  const { useCreationPopup, eventView, taskView } = options;
+  const weekOptions = options.week as Required<WeekOptions>;
   const { narrowWeekend, startDayOfWeek, workweek, hourStart, hourEnd } = weekOptions;
   // @TODO: calculate based on today(need to calculate date when prev & next used)
   const cells = [new TZDate()];
@@ -92,7 +92,7 @@ export const Day: FunctionComponent = () => {
             events={dayGridEvents[rowType]}
             cells={cells}
             height={value.height}
-            options={option.week}
+            options={options.week}
             gridColWidthMap={gridColWidthMap}
           />
         )}

@@ -19,7 +19,7 @@ interface Props {
   type?: CalendarViewType;
 }
 
-const defaultDayNameOption = {
+const defaultDayNameOptions = {
   narrowWeekend: false,
   startDayOfWeek: 0,
   workweek: false,
@@ -34,7 +34,7 @@ const defaultMarginLeft = 0;
 const GridHeader: FunctionComponent<Props> = ({
   dayNames = [],
   theme = defaultDayNameTheme,
-  options = defaultDayNameOption,
+  options = defaultDayNameOptions,
   marginLeft = defaultMarginLeft,
   templateType,
   gridInfo,

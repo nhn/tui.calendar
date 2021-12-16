@@ -67,7 +67,7 @@ export type OptionsSlice = {
 };
 
 export type OptionsDispatchers = {
-  setOptions: (newOption: Partial<OptionsSlice['options']>) => void;
+  setOptions: (newOptions: Partial<OptionsSlice['options']>) => void;
 };
 
 // eslint-disable-next-line complexity
@@ -94,7 +94,7 @@ export function createOptionsDispatchers(set: SetState<CalendarStore>): OptionsD
     setOptions: (newOptions: Partial<OptionsSlice['options']> = {}) =>
       set(
         produce((state) => {
-          state.options = { ...state.option, ...newOptions };
+          state.options = { ...state.options, ...newOptions };
         })
       ),
   };

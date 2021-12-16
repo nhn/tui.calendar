@@ -2,11 +2,11 @@ import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import { CalendarDispatchers, CalendarSlice } from '@src/slices/calendar';
 import { DndDispatchers, DndSlice } from '@src/slices/dnd';
+import { WeekViewLayoutDispatchers, WeekViewLayoutSlice } from '@src/slices/layout';
 import { OptionsDispatchers, OptionsSlice } from '@src/slices/options';
 import { PopupDispatchers, PopupSlice } from '@src/slices/popup';
 import { TemplateSlice } from '@src/slices/template';
 import { ViewDispatchers, ViewSlice } from '@src/slices/view';
-import { WeekViewLayoutDispatchers, WeekViewLayoutSlice } from '@src/slices/weekViewLayout';
 import TZDate from '@src/time/date';
 
 import type { EventState } from '@t/events';

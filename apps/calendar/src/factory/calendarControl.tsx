@@ -73,7 +73,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
     }
 
     this._container = isString(container) ? document.querySelector(container) : container;
-    this._options = this.initOption(options);
+    this._options = this.initOptions(options);
     this._internalEvent = new EventHandler<InternalEventName>();
     this._externalEvent = this;
     this._context = {
@@ -111,7 +111,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
     return group ? this.store.getState().dispatch[group] : this.store.getState().dispatch;
   }
 
-  private initOption(options: Options = {}): Options {
+  private initOptions(options: Options = {}): Options {
     const {
       defaultView = this._viewName,
       taskView = true,
@@ -406,9 +406,9 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
   }
 
   /**
-   * Change calendar's event color with option
+   * Change calendar's event color with options
    * @param {string} calendarId - The calendar ID
-   * @param {CalendarColor} option - The {@link CalendarColor} object
+   * @param {CalendarColor} options - The {@link CalendarColor} object
    * @param {boolean} [silent=false] - No auto render after creation when set true
    * @todo implement this
    * @example
@@ -428,8 +428,8 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    *     borderColor: '#a1b56c'
    * });
    */
-  setCalendarColor(calendarId: string, option: CalendarColor, silent = false) {
-    // console.log('setCalendarColor', calendarId, option, silent);
+  setCalendarColor(calendarId: string, options: CalendarColor, silent = false) {
+    // console.log('setCalendarColor', calendarId, options, silent);
 
     if (!silent) {
       this.render();
@@ -551,7 +551,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
 
   /**
    * Set options of calendar
-   * @param {Option} options - set {@link Option}
+   * @param {Options} options - set {@link Options}
    * @param {boolean} [silent=false] - no auto render after creation when set true
    * @todo implement this
    */
@@ -560,8 +560,8 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
   }
 
   /**
-   * Get current {@link Option}.
-   * @returns {Option} options
+   * Get current {@link Options}.
+   * @returns {Options} options
    */
   getOptions() {
     return this._options;
