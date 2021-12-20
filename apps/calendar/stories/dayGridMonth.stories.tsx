@@ -8,6 +8,7 @@ import GridRow from '@src/components/dayGridMonth/gridRow';
 import Panel from '@src/components/panel';
 import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
+import { getGridInfo } from '@src/time/datetime';
 
 import { getWeekDates, getWeekendDates } from '@stories/util/mockCalendarDates';
 import { ProviderWrapper } from '@stories/util/providerWrapper';
@@ -91,11 +92,19 @@ export const daygrid = () => {
     eventFilter: () => true,
   };
 
+  const { gridInfo } = getGridInfo(
+    options.daynames.length,
+    options.narrowWeekend,
+    options.startDayOfWeek,
+    options.workweek
+  );
+
   return (
     <ProviderWrapper>
       <DayGridMonth
         options={options}
         dateMatrix={dateMatrix}
+        gridInfo={gridInfo}
         appContainer={{ current: document.createElement('div') }}
       />
     </ProviderWrapper>
@@ -124,6 +133,13 @@ export const randomEvents = () => {
   const data = createRandomEvents('month', weekDates[0], weekDates[6], 10);
   const events = data.map((event: EventModelData) => EventModel.create(event));
 
+  const { gridInfo } = getGridInfo(
+    options.daynames.length,
+    options.narrowWeekend,
+    options.startDayOfWeek,
+    options.workweek
+  );
+
   return (
     <ProviderWrapper events={events}>
       <Panel name="weekday" height={400}>
@@ -131,6 +147,7 @@ export const randomEvents = () => {
           options={options}
           dateMatrix={[weekDates]}
           events={events}
+          gridInfo={gridInfo}
           appContainer={{ current: document.createElement('div') }}
         />
       </Panel>
