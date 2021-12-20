@@ -3,5 +3,11 @@
     "apps/*",
     "libs/*"
   ],
+  "npmClient": "npm",
+  "command": {
+    "bootstrap": {
+      "npmClientArgs": ["--no-package-lock"]
+    }
+  },
   "version": "2.0.0-dev"
 }
