@@ -14,9 +14,9 @@ import { EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
 import { createMousePositionDataGrabberWeek } from '@src/helpers/view';
 import { useDOMNode } from '@src/hooks/common/domNode';
 import { useDrag } from '@src/hooks/common/drag';
+import { useDayGridSelection } from '@src/hooks/dayGridCommon/dayGridSelection';
 import { useAlldayGridRowEventMove } from '@src/hooks/dayGridWeek/alldayGridRowEventMove';
 import { useAlldayGridRowEventResize } from '@src/hooks/dayGridWeek/alldayGridRowEventResize';
-import { useAlldayGridRowSelection } from '@src/hooks/dayGridWeek/alldayGridRowSelection';
 import { useGridRowHeightController } from '@src/hooks/dayGridWeek/gridRowHeightController';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
@@ -85,9 +85,9 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
     mousePositionDataGrabber,
   });
 
-  const gridSelection = useAlldayGridRowSelection(mousePositionDataGrabber, cells);
+  const gridSelection = useDayGridSelection(mousePositionDataGrabber, cells);
 
-  const { onMouseDown } = useDrag(DRAGGING_TYPE_CONSTANTS.alldayGridRowSelection);
+  const { onMouseDown } = useDrag(DRAGGING_TYPE_CONSTANTS.dayGridSelection);
 
   const { clickedIndex, isClickedCount, onClickExceedCount, onClickCollapseButton } =
     useGridRowHeightController(maxTop, category);

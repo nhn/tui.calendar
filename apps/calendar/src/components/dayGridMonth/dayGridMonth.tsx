@@ -17,6 +17,7 @@ import { getRenderedEventUIModels } from '@src/helpers/grid';
 import { createMousePositionDataGrabberMonth } from '@src/helpers/view';
 import { useDOMNode } from '@src/hooks/common/domNode';
 import { useDrag } from '@src/hooks/common/drag';
+import { useDayGridSelection } from '@src/hooks/dayGridCommon/dayGridSelection';
 import EventModel from '@src/model/eventModel';
 import { calendarSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
@@ -61,7 +62,7 @@ const DayGridMonth: FunctionComponent<Props> = ({
   const rowHeight =
     TOTAL_PERCENT_HEIGHT / Math.max(visibleWeeksCount === 0 ? 6 : visibleWeeksCount, 1);
 
-  const { onMouseDown } = useDrag(DRAGGING_TYPE_CONSTANTS.monthViewGridSelection);
+  const { onMouseDown } = useDrag(DRAGGING_TYPE_CONSTANTS.dayGridSelection);
   const mousePositionDataGrabber = useMemo(
     () =>
       gridContainer
@@ -69,6 +70,8 @@ const DayGridMonth: FunctionComponent<Props> = ({
         : () => null,
     [dateMatrix, gridContainer, gridInfo]
   );
+
+  const gridSelection = useDayGridSelection(mousePositionDataGrabber, dateMatrix);
 
   return (
     <div ref={setGridContainerRef} onMouseDown={onMouseDown} style={{ height: toPercent(100) }}>

@@ -6,11 +6,11 @@ import { Cells } from '@t/panel';
 export type MousePositionDataGrabber = (mouseEvent: MouseEvent) => MousePositionData | null;
 
 export function createMousePositionDataGrabberMonth(
-  calendar: Cells[],
+  dateMatrix: Cells[],
   grids: GridInfo[],
   container: HTMLElement
 ): (mouseEvent: MouseEvent) => MousePositionData | null {
-  const weekCount = calendar.length;
+  const weekCount = dateMatrix.length;
 
   return function getGridPositionData(mouseEvent: MouseEvent) {
     const {
@@ -28,9 +28,9 @@ export function createMousePositionDataGrabberMonth(
     let gridX = getX(grids, ratio(width, 100, left));
     let gridY = Math.floor(ratio(height, weekCount, top));
 
-    gridY = limit(gridY, [0], [calendar.length - 1]);
+    gridY = limit(gridY, [0], [dateMatrix.length - 1]);
 
-    const dateRange = calendar[gridY];
+    const dateRange = dateMatrix[gridY];
 
     if (!dateRange) {
       return null;

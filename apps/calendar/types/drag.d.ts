@@ -4,7 +4,6 @@ export type EventDragging<EventId extends string = any> =
   `event/${EventDraggingBehavior}/${EventId}`;
 
 export type DraggingTypes<EventId extends string = any> =
-  | 'alldayGridRowSelection'
-  | 'monthViewGridSelection'
+  | 'dayGridSelection'
   | 'timeGridColumnSelection'
   | EventDragging<EventId>;
