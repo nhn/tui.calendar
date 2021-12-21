@@ -10,3 +10,22 @@ export async function dragAndDrop(
   await page.mouse.move(targetCoords.x, targetCoords.y, { steps: 15 });
   await page.mouse.up();
 }
+
+export async function selectGridCells(
+  page: Page,
+  startCellIdx: number,
+  endCellIdx: number,
+  className: string
+) {
+  const startCellLocator = page.locator(className).nth(startCellIdx);
+  const endCellLocator = page.locator(className).nth(endCellIdx);
+
+  const endCellBoundingBox = await endCellLocator.boundingBox();
+
+  if (endCellBoundingBox) {
+    await dragAndDrop(page, startCellLocator, {
+      x: endCellBoundingBox.x + 10,
+      y: endCellBoundingBox.y + 10,
+    });
+  }
+}

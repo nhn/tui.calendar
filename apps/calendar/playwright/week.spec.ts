@@ -1,6 +1,8 @@
-import { expect, test } from '@playwright/test';
+/* eslint-disable jest/expect-expect */
+import { expect, Page, test } from '@playwright/test';
 
-import { dragAndDrop } from './utils';
+import { assertGridSelectionMatching } from './assertions';
+import { dragAndDrop, selectGridCells } from './utils';
 
 const WEEK_VIEW_PAGE_URL =
   'http://localhost:6006/iframe.html?id=weekview--fixed-events&args=&viewMode=story';
@@ -71,5 +73,27 @@ test.describe('event moving', () => {
     } else {
       test.fail();
     }
+  });
+
+  test.describe('Selection', () => {
+    async function selectWeekGridCells(page: Page, startCellIdx: number, endCellIdx: number) {
+      await selectGridCells(page, startCellIdx, endCellIdx, '.toastui-calendar-panel-grid');
+    }
+
+    async function assertWeekGridSelectionMatching(page: Page, startIdx: number, endIdx: number) {
+      await assertGridSelectionMatching(page, startIdx, endIdx, '.toastui-calendar-panel-grid');
+    }
+
+    test('select 2 cells from left to right', async ({ page }) => {
+      await selectWeekGridCells(page, 14, 15);
+
+      await assertWeekGridSelectionMatching(page, 14, 15);
+    });
+
+    test('select 2 cells from right to left(reverse)', async ({ page }) => {
+      await selectWeekGridCells(page, 15, 14);
+
+      await assertWeekGridSelectionMatching(page, 14, 15);
+    });
   });
 });
