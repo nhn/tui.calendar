@@ -1,82 +1,15 @@
-import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 
 import { useStore } from '@src/contexts/calendarStore';
 import { DRAGGING_TYPE_CONSTANTS } from '@src/helpers/drag';
 import { MousePositionDataGrabber } from '@src/helpers/view';
 import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
-import TZDate from '@src/time/date';
-import { isSame, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { isPresent } from '@src/utils/type';
 
-import { CellDateRange } from '@t/components/daygrid/gridSelectionData';
-import { GridSelectionData } from '@t/components/daygrid/gridWithMouse';
-import { Cells } from '@t/panel';
-
-function isDateMatrix(value: TZDate[][] | Cells): value is TZDate[][] {
-  return Array.isArray(value[0]);
-}
-
-function getGridInfoList(dateMatrixOrRow: TZDate[][] | Cells): CellDateRange[][] {
-  if (isDateMatrix(dateMatrixOrRow)) {
-    const dateMatrix = dateMatrixOrRow;
-
-    return dateMatrix.map((row) => {
-      return row.map((cell) => {
-        const start = toStartOfDay(cell);
-        const end = toEndOfDay(cell);
-
-        return { start, end };
-      });
-    });
-  }
-
-  const dateRow = dateMatrixOrRow;
-
-  return [
-    dateRow.map<CellDateRange>((cell) => {
-      const start = toStartOfDay(cell);
-      const end = toEndOfDay(cell);
-
-      return { start, end };
-    }),
-  ];
-}
-
-function getGridSelectionData(
-  mouseData: MousePositionData,
-  gridInfoList: CellDateRange[][]
-): GridSelectionData {
-  const { gridX: columnIndex, gridY: rowIndex, x, y } = mouseData;
-  const { start, end } = gridInfoList[rowIndex][columnIndex];
-
-  return { start, end, rowIndex, columnIndex, x, y };
-}
-
-function getSelectionTime(
-  selectionStartData: GridSelectionData | null,
-  { start, end }: { start: TZDate; end: TZDate }
-) {
-  let selectionStartTime = start;
-  let selectionEndTime = end;
-
-  if (selectionStartData) {
-    selectionStartTime = selectionStartData?.start ?? start;
-    selectionEndTime = selectionStartData?.end ?? end;
-  }
-
-  return { selectionStartTime, selectionEndTime };
-}
-
 export function useDayGridSelection(
-  mousePositionDataGrabber: MousePositionDataGrabber,
-  dateMatrixOrRow: TZDate[][] | Cells
-): {
-  initRowIdx: number;
-  initColIdx: number;
-  currentRowIdx: number;
-  currentColIdx: number;
-} | null {
+  mousePositionDataGrabber: MousePositionDataGrabber
+): GridSelectionData | null {
   const [currentCoords, setCurrentCoords] = useState<{
     currentRowIdx: number;
     currentColIdx: number;

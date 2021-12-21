@@ -22,8 +22,9 @@ import { useDayGridSelection } from '@src/hooks/dayGridCommon/dayGridSelection';
 import EventModel from '@src/model/eventModel';
 import { calendarSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
-import { isBetweenWithDate, toEndOfDay } from '@src/time/datetime';
 import { getSize } from '@src/utils/dom';
+import { isBetween } from '@src/utils/math';
+import { isPresent } from '@src/utils/type';
 
 import { CalendarMonthOption } from '@t/store';
 
@@ -50,6 +51,46 @@ function useGridHeight() {
   return { ref, height };
 }
 
+function sortGridSelection(gridSelection: GridSelectionData) {
+  const { initRowIdx, initColIdx, currentRowIdx, currentColIdx } = gridSelection;
+  const isReversed = initRowIdx > currentRowIdx && initColIdx >= currentColIdx;
+
+  const [startRowIdx, startColIdx, endRowIdx, endColIdx] = isReversed
+    ? [currentRowIdx, currentColIdx, initRowIdx, initColIdx]
+    : [initRowIdx, initColIdx, currentRowIdx, currentColIdx];
+
+  return { startRowIdx, startColIdx, endRowIdx, endColIdx };
+}
+
+function calcGridSelectionData(
+  gridSelection: GridSelectionData | null,
+  rowIndex: number,
+  weekLength: number
+) {
+  let tempGridSelection = null;
+
+  if (isPresent(gridSelection)) {
+    const { startRowIdx, startColIdx, endRowIdx, endColIdx } = sortGridSelection(gridSelection);
+
+    if (isBetween(rowIndex, startRowIdx, endRowIdx)) {
+      let startCellIdx = startColIdx;
+      let endCellIdx = endColIdx;
+
+      if (startRowIdx < rowIndex) {
+        startCellIdx = 0;
+      }
+
+      if (endRowIdx > rowIndex) {
+        endCellIdx = weekLength - 1;
+      }
+
+      tempGridSelection = { startCellIdx, endCellIdx };
+    }
+  }
+
+  return tempGridSelection;
+}
+
 const DayGridMonth: FunctionComponent<Props> = ({
   options,
   dateMatrix = [],
@@ -73,7 +114,7 @@ const DayGridMonth: FunctionComponent<Props> = ({
     [dateMatrix, gridContainer, gridInfo]
   );
 
-  const gridSelection = useDayGridSelection(mousePositionDataGrabber, dateMatrix);
+  const gridSelection = useDayGridSelection(mousePositionDataGrabber);
 
   return (
     <div ref={setGridContainerRef} onMouseDown={onMouseDown} style={{ height: toPercent(100) }}>
@@ -84,43 +125,7 @@ const DayGridMonth: FunctionComponent<Props> = ({
           narrowWeekend
         );
 
-        // @TODO
-        // - GridSelection이 인덱스만 받게 한다.
-        // - 루프 안에서 인덱스의 차만 구하여 GridSelection 컴포넌트에 넘겨준다.
-        //   - 1주일 치의 날짜 배열에서 시작지점의 인덱스와 끝지점의 인덱스를 받는다.
-        //   - 컴포넌트 안에서 start, end 날짜 기준으로 스타일 계산하는 함수도 고친다.
-        // - useDayGridSelection은 드래그 시작 시 위치도 리턴해야한다.
-        //   - GridSelectionData 타입을 변경한다.
-        // ----------
-        // 처음에는 gridSelection.start, gridSelection.end 만 이용하여 동작하도록 구현해본다.
-
-        const tempGridSelection = null;
-        // if (
-        //   gridSelection &&
-        //   gridSelection.end >= week[0] &&
-        //   gridSelection.start <= week[week.length - 1]
-        // ) {
-        //   let selectionStartDateInRow =
-        //     gridSelection?.start > week[0] ? gridSelection?.start : week[0];
-        //   let selectionEndDateInRow =
-        //     gridSelection?.end < week[week.length - 1]
-        //       ? gridSelection?.end
-        //       : toEndOfDay(week[week.length - 1]);
-
-        //   if (isBetweenWithDate(gridSelection.start, week[0], week[week.length - 1])) {
-        //     selectionStartDateInRow = gridSelection.start;
-        //   }
-
-        //   if (isBetweenWithDate(gridSelection.end, week[0], week[week.length - 1])) {
-        //     selectionEndDateInRow = gridSelection.end;
-        //   }
-
-        //   tempGridSelection = {
-        //     ...gridSelection,
-        //     start: selectionStartDateInRow,
-        //     end: selectionEndDateInRow,
-        //   };
-        // }
+        const tempGridSelection = calcGridSelectionData(gridSelection, rowIndex, week.length);
 
         return (
           <div

@@ -85,7 +85,7 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
     mousePositionDataGrabber,
   });
 
-  const gridSelection = useDayGridSelection(mousePositionDataGrabber, cells);
+  const gridSelection = useDayGridSelection(mousePositionDataGrabber);
 
   const { onMouseDown } = useDrag(DRAGGING_TYPE_CONSTANTS.dayGridSelection);
 
