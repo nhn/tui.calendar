@@ -7,3 +7,7 @@ export const VIEW_TYPE: {
   WEEK: 'week',
   DAY: 'day',
 };
+
+export const DEFAULT_TASK_PANEL = ['milestone', 'task'];
+
+export const DEFAULT_EVENT_PANEL = ['allday', 'time'];

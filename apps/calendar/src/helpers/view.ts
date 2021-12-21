@@ -1,6 +1,6 @@
+import { DEFAULT_EVENT_PANEL, DEFAULT_TASK_PANEL } from '@src/constants/view';
 import { limit, ratio } from '@src/utils/math';
 import { getRelativeMousePosition, getX } from '@src/utils/mouse';
-import { isBoolean } from '@src/utils/type';
 
 import { Options } from '@t/options';
 import { Cells } from '@t/panel';
@@ -97,18 +97,16 @@ export function getDisplayPanel(
   eventView: Required<Options>['eventView']
 ) {
   const displayPanel: string[] = [];
-  const defaultTaskPanel = taskView ? ['milestone', 'task'] : [];
-  const defaultEventPanel = eventView ? ['allday', 'time'] : [];
 
-  if (isBoolean(taskView)) {
-    displayPanel.push(...defaultTaskPanel);
-  } else {
+  if (taskView === true) {
+    displayPanel.push(...DEFAULT_TASK_PANEL);
+  } else if (Array.isArray(taskView)) {
     displayPanel.push(...taskView);
   }
 
-  if (isBoolean(eventView)) {
-    displayPanel.push(...defaultEventPanel);
-  } else {
+  if (eventView === true) {
+    displayPanel.push(...DEFAULT_EVENT_PANEL);
+  } else if (Array.isArray(eventView)) {
     displayPanel.push(...eventView);
   }
 
