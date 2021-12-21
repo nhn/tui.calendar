@@ -112,27 +112,20 @@ export function getGridDateIndex(date: TZDate, cells: TZDate[]) {
 }
 
 export const getLeftAndWidth = (
-  start: TZDate,
-  end: TZDate,
+  startIdx: number,
+  endIdx: number,
   cells: Cells,
   narrowWeekend: boolean
 ) => {
-  const gridStartIndex = getGridDateIndex(start, cells);
-  const gridEndIndex = getGridDateIndex(convertStartDayToLastDay(end), cells);
-
-  if (gridStartIndex < 0 && gridEndIndex < 0) {
-    return { left: 0, width: withinRangeDate(start, end, cells) ? 100 : 0 };
-  }
+  // if (startIdx < 0 && endIdx < 0) {
+  //   return { left: 0, width: withinRangeDate(start, end, cells) ? 100 : 0 };
+  // }
 
   const { widthList } = getGridWidthAndLeftPercentValues(cells, narrowWeekend, TOTAL_WIDTH);
 
   return {
-    left: !gridStartIndex ? 0 : getWidth(widthList, 0, gridStartIndex - 1),
-    width: getWidth(
-      widthList,
-      gridStartIndex ?? 0,
-      gridEndIndex < 0 ? cells.length - 1 : gridEndIndex
-    ),
+    left: !startIdx ? 0 : getWidth(widthList, 0, startIdx - 1),
+    width: getWidth(widthList, startIdx ?? 0, endIdx < 0 ? cells.length - 1 : endIdx),
   };
 };
 

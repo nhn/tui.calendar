@@ -3,11 +3,10 @@ import { FunctionComponent, h } from 'preact';
 import { cls, toPercent } from '@src/helpers/css';
 import { getLeftAndWidth } from '@src/helpers/grid';
 
-import { GridSelectionData } from '@t/components/daygrid/gridWithMouse';
 import { Cells } from '@t/panel';
 
 interface Props {
-  gridSelectionData: GridSelectionData | null;
+  gridSelectionData: { startCellIdx: number; endCellIdx: number } | null;
   cells: Cells;
   narrowWeekend: boolean;
 }
@@ -20,9 +19,16 @@ export const GridSelection: FunctionComponent<Props> = ({
   if (!gridSelectionData) {
     return null;
   }
+  const { startCellIdx, endCellIdx } = gridSelectionData;
+  const isReversed = startCellIdx > endCellIdx;
 
-  const { start, end } = gridSelectionData;
-  const { left, width } = getLeftAndWidth(start, end, cells, narrowWeekend);
+  const { left, width } = getLeftAndWidth(
+    isReversed ? endCellIdx : startCellIdx,
+    isReversed ? startCellIdx : endCellIdx,
+    cells,
+    narrowWeekend
+  );
+
   const style = {
     left: toPercent(left),
     width: toPercent(width),

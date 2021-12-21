@@ -94,33 +94,33 @@ const DayGridMonth: FunctionComponent<Props> = ({
         // ----------
         // 처음에는 gridSelection.start, gridSelection.end 만 이용하여 동작하도록 구현해본다.
 
-        let tempGridSelection = null;
-        if (
-          gridSelection &&
-          gridSelection.end >= week[0] &&
-          gridSelection.start <= week[week.length - 1]
-        ) {
-          let selectionStartDateInRow =
-            gridSelection?.start > week[0] ? gridSelection?.start : week[0];
-          let selectionEndDateInRow =
-            gridSelection?.end < week[week.length - 1]
-              ? gridSelection?.end
-              : toEndOfDay(week[week.length - 1]);
+        const tempGridSelection = null;
+        // if (
+        //   gridSelection &&
+        //   gridSelection.end >= week[0] &&
+        //   gridSelection.start <= week[week.length - 1]
+        // ) {
+        //   let selectionStartDateInRow =
+        //     gridSelection?.start > week[0] ? gridSelection?.start : week[0];
+        //   let selectionEndDateInRow =
+        //     gridSelection?.end < week[week.length - 1]
+        //       ? gridSelection?.end
+        //       : toEndOfDay(week[week.length - 1]);
 
-          if (isBetweenWithDate(gridSelection.start, week[0], week[week.length - 1])) {
-            selectionStartDateInRow = gridSelection.start;
-          }
+        //   if (isBetweenWithDate(gridSelection.start, week[0], week[week.length - 1])) {
+        //     selectionStartDateInRow = gridSelection.start;
+        //   }
 
-          if (isBetweenWithDate(gridSelection.end, week[0], week[week.length - 1])) {
-            selectionEndDateInRow = gridSelection.end;
-          }
+        //   if (isBetweenWithDate(gridSelection.end, week[0], week[week.length - 1])) {
+        //     selectionEndDateInRow = gridSelection.end;
+        //   }
 
-          tempGridSelection = {
-            ...gridSelection,
-            start: selectionStartDateInRow,
-            end: selectionEndDateInRow,
-          };
-        }
+        //   tempGridSelection = {
+        //     ...gridSelection,
+        //     start: selectionStartDateInRow,
+        //     end: selectionEndDateInRow,
+        //   };
+        // }
 
         return (
           <div

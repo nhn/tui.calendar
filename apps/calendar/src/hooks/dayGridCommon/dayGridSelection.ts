@@ -71,82 +71,61 @@ function getSelectionTime(
 export function useDayGridSelection(
   mousePositionDataGrabber: MousePositionDataGrabber,
   dateMatrixOrRow: TZDate[][] | Cells
-) {
-  const [gridSelection, setGridSelection] = useState<GridSelectionData | null>(null);
-  const initSelectionDataRef = useRef<GridSelectionData | null>(null);
-  const prevSelectionDataRef = useRef<GridSelectionData | null>(null);
+): {
+  initRowIdx: number;
+  initColIdx: number;
+  currentRowIdx: number;
+  currentColIdx: number;
+} | null {
+  const [currentCoords, setCurrentCoords] = useState<{
+    currentRowIdx: number;
+    currentColIdx: number;
+  } | null>(null);
+  const initCoordsRef = useRef<{ initRowIdx: number; initColIdx: number } | null>(null);
+  const prevCoordsRef = useRef<{
+    currentRowIdx: number;
+    currentColIdx: number;
+  } | null>(null);
   const { draggingItemType, draggingState, x, y, initX, initY } = useStore(dndSelector);
   const isSelectingGrid =
     draggingItemType === DRAGGING_TYPE_CONSTANTS.dayGridSelection &&
     draggingState > DraggingState.INIT;
   const hasCurrentCoords = isPresent(x) && isPresent(y);
 
-  const gridInfoList = useMemo(() => getGridInfoList(dateMatrixOrRow), [dateMatrixOrRow]);
-
-  const currentSelectionData = useMemo(() => {
-    if (!isSelectingGrid || !hasCurrentCoords) {
-      return null;
-    }
-
-    const data = mousePositionDataGrabber({ clientX: x, clientY: y } as MouseEvent);
-    if (!data) {
-      return null;
-    }
-
-    const gridSelectionData = getGridSelectionData(data, gridInfoList);
-    const { selectionStartTime, selectionEndTime } = getSelectionTime(
-      initSelectionDataRef.current,
-      {
-        start: gridSelectionData.start,
-        end: gridSelectionData.end,
-      }
-    );
-
-    const nextSelectionData =
-      gridSelectionData.start < selectionStartTime
-        ? {
-            ...gridSelectionData,
-            end: selectionEndTime,
-          }
-        : {
-            ...gridSelectionData,
-            start: selectionStartTime,
-          };
-
-    if (
-      prevSelectionDataRef.current &&
-      isSame(nextSelectionData.start, prevSelectionDataRef.current.start) &&
-      isSame(nextSelectionData.end, prevSelectionDataRef.current.end)
-    ) {
-      return null;
-    }
-
-    prevSelectionDataRef.current = nextSelectionData;
-
-    return nextSelectionData;
-  }, [isSelectingGrid, hasCurrentCoords, mousePositionDataGrabber, x, y, gridInfoList]);
-
   useEffect(() => {
-    if (isSelectingGrid && isPresent(initX) && isPresent(initY)) {
+    if (isSelectingGrid && isPresent(initX) && isPresent(initY) && !prevCoordsRef.current) {
       const data = mousePositionDataGrabber({ clientX: initX, clientY: initY } as MouseEvent);
       if (data) {
-        initSelectionDataRef.current = getGridSelectionData(data, gridInfoList);
+        initCoordsRef.current = {
+          initRowIdx: data.gridY,
+          initColIdx: data.gridX,
+        };
       }
     }
-  }, [gridInfoList, initX, initY, isSelectingGrid, mousePositionDataGrabber]);
+  }, [initX, initY, isSelectingGrid, mousePositionDataGrabber]);
 
   useEffect(() => {
-    if (isPresent(currentSelectionData)) {
-      setGridSelection(currentSelectionData);
+    if (isSelectingGrid && hasCurrentCoords) {
+      const data = mousePositionDataGrabber({ clientX: x, clientY: y } as MouseEvent);
+      if (data) {
+        setCurrentCoords({ currentColIdx: data.gridX, currentRowIdx: data.gridY });
+        prevCoordsRef.current = { currentColIdx: data.gridX, currentRowIdx: data.gridY };
+      }
     }
-  }, [currentSelectionData]);
+  }, [hasCurrentCoords, isSelectingGrid, mousePositionDataGrabber, x, y]);
 
   useEffect(() => {
-    if (draggingState === DraggingState.IDLE && isPresent(prevSelectionDataRef.current)) {
-      setGridSelection(prevSelectionDataRef.current);
-      prevSelectionDataRef.current = null;
+    if (draggingState === DraggingState.IDLE && isPresent(prevCoordsRef.current)) {
+      setCurrentCoords(prevCoordsRef.current);
+      prevCoordsRef.current = null;
     }
   }, [draggingState]);
 
-  return gridSelection;
+  return isPresent(initCoordsRef.current) && isPresent(currentCoords)
+    ? {
+        ...currentCoords,
+        initRowIdx: initCoordsRef.current.initRowIdx,
+        initColIdx: initCoordsRef.current.initColIdx,
+      }
+    : null;
 }

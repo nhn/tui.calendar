@@ -125,7 +125,11 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
           />
         </div>
         <GridSelection
-          gridSelectionData={gridSelection}
+          gridSelectionData={
+            gridSelection
+              ? { startCellIdx: gridSelection.initColIdx, endCellIdx: gridSelection.currentColIdx }
+              : null
+          }
           cells={cells}
           narrowWeekend={narrowWeekend}
         />
