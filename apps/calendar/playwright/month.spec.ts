@@ -1,4 +1,5 @@
-import { expect, test } from '@playwright/test';
+/* eslint-disable jest/expect-expect */
+import { expect, Page, test } from '@playwright/test';
 
 import { assertGridSelectionMatching } from './assertions';
 import { dragAndDrop } from './utils';
@@ -17,9 +18,9 @@ test('basic test', async ({ page }) => {
 });
 
 test.describe('Selection', () => {
-  test('select 2 cells from left to right', async ({ page }) => {
-    const startCellLocator = page.locator('.toastui-calendar-daygrid-cell').nth(31);
-    const endCellLocator = page.locator('.toastui-calendar-daygrid-cell').nth(32);
+  async function selectGridCells(page: Page, startCellIdx: number, endCellIdx: number) {
+    const startCellLocator = page.locator('.toastui-calendar-daygrid-cell').nth(startCellIdx);
+    const endCellLocator = page.locator('.toastui-calendar-daygrid-cell').nth(endCellIdx);
 
     const endCellBoundingBox = await endCellLocator.boundingBox();
 
@@ -29,11 +30,29 @@ test.describe('Selection', () => {
         y: endCellBoundingBox.y + 10,
       });
     }
+  }
+
+  test('select 2 cells from left to right', async ({ page }) => {
+    await selectGridCells(page, 31, 32);
 
     await assertGridSelectionMatching(page, 31, 32);
   });
 
-  // @TODO
-  // 한줄 정방향/역향향 + 한줄 꽉 찼는가?
-  // 여러줄 정방향/역방향
+  test('select 2 rows from top to bottom', async ({ page }) => {
+    await selectGridCells(page, 25, 32);
+
+    await assertGridSelectionMatching(page, 25, 32);
+  });
+
+  test('select 2 rows from bottom to top(reverse)', async ({ page }) => {
+    await selectGridCells(page, 32, 25);
+
+    await assertGridSelectionMatching(page, 25, 32);
+  });
+
+  test('select entire row', async ({ page }) => {
+    await selectGridCells(page, 28, 34);
+
+    await assertGridSelectionMatching(page, 28, 34);
+  });
 });
