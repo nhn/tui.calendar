@@ -5,7 +5,7 @@ import range from 'tui-code-snippet/array/range';
 import DayGridMonth from '@src/components/dayGridMonth/dayGridMonth';
 import { GridCell } from '@src/components/dayGridMonth/gridCell';
 import GridRow from '@src/components/dayGridMonth/gridRow';
-import Panel from '@src/components/panel';
+import { Panel } from '@src/components/panel';
 import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 
@@ -14,7 +14,7 @@ import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { createRandomEvents } from '@stories/util/randomEvents';
 
 import { EventModelData } from '@t/events';
-import { CalendarMonthOption } from '@t/store';
+import { CalendarMonthOptions } from '@t/store';
 
 export default { title: 'DayGridMonth' };
 
@@ -75,7 +75,7 @@ export const daygrid = () => {
     new TZDate(date.setDate(sunday + WEEKDAYS * index)),
   ]);
 
-  const options: CalendarMonthOption = {
+  const options: CalendarMonthOptions = {
     visibleWeeksCount: 3,
     workweek: false,
     narrowWeekend: true,
@@ -105,7 +105,7 @@ export const daygrid = () => {
 export const randomEvents = () => {
   const calendar = getWeekDates();
 
-  const options: CalendarMonthOption = {
+  const options: CalendarMonthOptions = {
     visibleWeeksCount: 1,
     workweek: false,
     narrowWeekend: false,
@@ -126,7 +126,7 @@ export const randomEvents = () => {
 
   return (
     <ProviderWrapper events={events}>
-      <Panel name="weekday" height={400}>
+      <Panel name="weekday" initialHeight={400}>
         <DayGridMonth
           options={options}
           calendar={[calendar]}

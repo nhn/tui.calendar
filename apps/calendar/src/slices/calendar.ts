@@ -9,7 +9,7 @@ import {
 import EventModel from '@src/model/eventModel';
 
 import { CalendarData, EventModelData } from '@t/events';
-import { CalendarInfo } from '@t/option';
+import { CalendarInfo } from '@t/options';
 import { CalendarStore, SetState } from '@t/store';
 
 export type CalendarSlice = { calendar: CalendarData };

@@ -4,7 +4,7 @@ import Template from '@src/components/template';
 import { addTimeGridPrefix } from '@src/components/timeGrid';
 import { cls } from '@src/helpers/css';
 
-import { TimezoneConfig } from '@t/option';
+import { TimezoneConfig } from '@t/options';
 
 interface Props {
   timezone: TimezoneConfig;

@@ -6,7 +6,7 @@ import { makeDateRange, MS_PER_DAY, toEndOfDay, toFormat, toStartOfDay } from '@
 import Collection from '@src/utils/collection';
 
 import { CalendarData, EventModelData, IDS_OF_DAY } from '@t/events';
-import { CalendarInfo } from '@t/option';
+import { CalendarInfo } from '@t/options';
 
 /**
  * Make a event collection

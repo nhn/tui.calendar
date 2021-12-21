@@ -15,6 +15,10 @@ declare module 'tui-code-snippet/type/isNumber' {
   export default function isNumber(value: unknown): value is number;
 }
 
+declare module 'tui-code-snippet/type/isBoolean' {
+  export default function isBoolean(value: unknown): value is boolean;
+}
+
 declare module 'tui-code-snippet/collection/pluck' {
   export default function pluck<T, K extends keyof T>(arr: T[], property: K): T[K][];
 }

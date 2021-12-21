@@ -1,6 +1,8 @@
+import { DEFAULT_EVENT_PANEL, DEFAULT_TASK_PANEL } from '@src/constants/view';
 import { limit, ratio } from '@src/utils/math';
 import { getRelativeMousePosition, getX } from '@src/utils/mouse';
 
+import { Options } from '@t/options';
 import { Cells } from '@t/panel';
 
 export function createMousePositionDataGrabberMonth(
@@ -88,4 +90,25 @@ export function createMousePositionDataGrabberWeek(
       triggerEvent: mouseEvent.type,
     };
   };
+}
+
+export function getDisplayPanel(
+  taskView: Required<Options>['taskView'],
+  eventView: Required<Options>['eventView']
+) {
+  const displayPanel: string[] = [];
+
+  if (taskView === true) {
+    displayPanel.push(...DEFAULT_TASK_PANEL);
+  } else if (Array.isArray(taskView)) {
+    displayPanel.push(...taskView);
+  }
+
+  if (eventView === true) {
+    displayPanel.push(...DEFAULT_EVENT_PANEL);
+  } else if (Array.isArray(eventView)) {
+    displayPanel.push(...eventView);
+  }
+
+  return displayPanel;
 }

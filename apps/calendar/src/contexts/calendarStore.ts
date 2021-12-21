@@ -2,35 +2,32 @@ import { useCallback } from 'preact/hooks';
 
 import { createCalendarDispatchers, createCalendarSlice } from '@src/slices/calendar';
 import { createDndDispatchers, createDndSlice } from '@src/slices/dnd';
-import { createOptionDispatchers, createOptionSlice } from '@src/slices/options';
+import { createWeekViewLayoutDispatchers, createWeekViewLayoutSlice } from '@src/slices/layout';
+import { createOptionsDispatchers, createOptionsSlice } from '@src/slices/options';
 import { createPopupDispatchers, createPopupSlice } from '@src/slices/popup';
 import { createTemplateSlice } from '@src/slices/template';
 import { createViewDispatchers, createViewSlice } from '@src/slices/view';
-import {
-  createWeekViewLayoutDispatchers,
-  createWeekViewLayoutSlice,
-} from '@src/slices/weekViewLayout';
 import { createStoreContext } from '@src/store';
 import { devtools } from '@src/store/devtool';
 import { createStore } from '@src/store/internal';
 import { pick } from '@src/utils/object';
 
-import { Option } from '@t/option';
+import { Options } from '@t/options';
 import { CalendarStore, Dispatchers, SetState, StoreCreator } from '@t/store';
 
 // eslint-disable-next-line no-process-env
 const isDevelopmentMode = process.env.NODE_ENV === 'development';
-const storeCreator = (option: Option) => (set: SetState<CalendarStore>) => {
+const storeCreator = (options: Options) => (set: SetState<CalendarStore>) => {
   return {
-    ...createOptionSlice(option),
-    ...createTemplateSlice(option.template),
+    ...createOptionsSlice(options),
+    ...createTemplateSlice(options.template),
     ...createPopupSlice(),
     ...createWeekViewLayoutSlice(),
-    ...createCalendarSlice(option.calendars),
-    ...createViewSlice(option.defaultView),
+    ...createCalendarSlice(options.calendars),
+    ...createViewSlice(options.defaultView),
     ...createDndSlice(),
     dispatch: {
-      option: createOptionDispatchers(set),
+      options: createOptionsDispatchers(set),
       popup: createPopupDispatchers(set),
       weekViewLayout: createWeekViewLayoutDispatchers(set),
       calendar: createCalendarDispatchers(set),
@@ -40,14 +37,14 @@ const storeCreator = (option: Option) => (set: SetState<CalendarStore>) => {
   };
 };
 
-export const initCalendarStore = (option: Option = {}) =>
+export const initCalendarStore = (options: Options = {}) =>
   createStore<CalendarStore>(
     isDevelopmentMode
-      ? (devtools(storeCreator(option), {
+      ? (devtools(storeCreator(options), {
           name: 'tui-calendar-store',
           serialize: { options: true },
         }) as StoreCreator<CalendarStore>)
-      : storeCreator(option)
+      : storeCreator(options)
   );
 
 const { StoreProvider, useStore, useInternalStore } = createStoreContext<CalendarStore>();

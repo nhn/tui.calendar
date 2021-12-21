@@ -6,7 +6,7 @@ import DatePicker from 'tui-date-picker';
 import { PopupSection } from '@src/components/popup/popupSection';
 import { useStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
-import { optionSelector } from '@src/selectors';
+import { optionsSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
 
 interface Props {
@@ -29,7 +29,7 @@ export const DateSelector: FunctionComponent<Props> = ({
   end,
   isAllday: initialIsAllday,
 }) => {
-  const { usageStatistics } = useStore(optionSelector);
+  const { usageStatistics } = useStore(optionsSelector);
   const [isAllday, setAllday] = useState(initialIsAllday);
   const toggleAllday = () => setAllday((prev) => !prev);
   const startPickerContainerRef = useRef<HTMLDivElement>(null);

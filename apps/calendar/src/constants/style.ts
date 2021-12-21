@@ -32,4 +32,4 @@ export const WEEK_EVENT_MARGIN_TOP = 2;
 export const WEEK_EVENT_MARGIN_LEFT = 8;
 export const WEEK_EVENT_MARGIN_RIGHT = 8;
 
-export const PANEL_HEIGHT = 72;
+export const DEFAULT_PANEL_HEIGHT = 72;

@@ -8,6 +8,7 @@ export function isFunction(value: unknown): value is Function {
   return typeof value === 'function';
 }
 
+export { default as isBoolean } from 'tui-code-snippet/type/isBoolean';
 export { default as isNumber } from 'tui-code-snippet/type/isNumber';
 export { default as isObject } from 'tui-code-snippet/type/isObject';
 export { default as isString } from 'tui-code-snippet/type/isString';

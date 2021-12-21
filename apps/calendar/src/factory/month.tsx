@@ -3,10 +3,10 @@ import { h } from 'preact';
 import { Month as MonthComponent } from '@src/components/view/month';
 import CalendarControl from '@src/factory/calendarControl';
 
-import { Option } from '@t/option';
+import { Options } from '@t/options';
 
 export default class Month extends CalendarControl {
-  constructor(container: Element, options: Option = {}) {
+  constructor(container: Element, options: Options = {}) {
     super(container, options);
 
     this._internalEvent.on('render', this.onRender, this);

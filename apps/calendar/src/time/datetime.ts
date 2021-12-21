@@ -5,7 +5,7 @@ import TZDate from '@src/time/date';
 import { fill } from '@src/utils/array';
 
 import { TimeUnit } from '@t/events';
-import { MonthOption } from '@t/option';
+import { MonthOptions } from '@t/options';
 
 export enum Day {
   SUN,
@@ -514,7 +514,7 @@ export function toEndOfDay(date?: number | TZDate): TZDate {
   return d;
 }
 
-export function isWeekend(day: number): boolean {
+export function isWeekend(day: Day): boolean {
   return day === Day.SUN || day === Day.SAT;
 }
 
@@ -677,13 +677,7 @@ export function getGridInfo(
   const uniformWidth = 100 / days;
   const wideWidth = days > limitDaysToApplyNarrowWeekend ? 100 / (days - 1) : uniformWidth;
   let accumulatedWidth = 0;
-  let dates = range(startDayOfWeek, 7).concat(range(days)).slice(0, 7);
-
-  if (workweek) {
-    dates = dates.filter((day: number) => {
-      return !isWeekend(day);
-    });
-  }
+  const dates = range(startDayOfWeek, 7).concat(range(days)).slice(0, 7);
 
   narrowWeekend = workweek ? false : narrowWeekend;
 
@@ -783,7 +777,7 @@ export function getDateDifference(d1: TZDate, d2: TZDate) {
   return Math.round((_d1 - _d2) / MS_PER_DAY);
 }
 
-export function getMonthCalendar(renderMonthDate: Date | TZDate, options: MonthOption) {
+export function getMonthCalendar(renderMonthDate: Date | TZDate, options: MonthOptions) {
   const date = new TZDate(renderMonthDate);
   const {
     startDayOfWeek = 0,
