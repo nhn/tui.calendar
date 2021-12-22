@@ -3,6 +3,7 @@ import { DraggingTypes } from '@t/drag';
 export const DRAGGING_TYPE_CONSTANTS: { [K in DraggingTypes]: DraggingTypes } = {
   dayGridSelection: 'dayGridSelection',
   timeGridColumnSelection: 'timeGridColumnSelection',
+  panelResizer: 'panelResizer',
 };
 
 export const DRAGGING_TYPE_CREATORS = {

@@ -22,7 +22,7 @@ import {
 import { noop } from '@src/utils/noop';
 import { isNumber } from '@src/utils/type';
 
-import { TimezoneConfig } from '@t/option';
+import { TimezoneConfig } from '@t/options';
 
 interface Props {
   currentTime: TZDate;

@@ -7,7 +7,7 @@ import { Week } from '@src/components/view/week';
 import { useStore } from '@src/contexts/calendarStore';
 import { viewSelector } from '@src/selectors';
 
-import { ViewType } from '@t/option';
+import { ViewType } from '@t/options';
 
 const views: {
   [k in ViewType]: FunctionComponent;

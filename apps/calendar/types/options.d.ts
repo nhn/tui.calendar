@@ -7,7 +7,7 @@ import { ThemeKeyValue } from '@src/theme/themeProps';
 import { EventModelData } from '@t/events';
 import { TemplateConfig } from '@t/template';
 
-export interface WeekOption {
+export interface WeekOptions {
   startDayOfWeek?: number;
   daynames?: string[];
   narrowWeekend?: boolean;
@@ -19,7 +19,7 @@ export interface WeekOption {
   hourEnd?: number;
 }
 
-export interface MonthOption {
+export interface MonthOptions {
   daynames?: string[];
   startDayOfWeek?: number;
   narrowWeekend?: boolean;
@@ -69,14 +69,15 @@ export interface CalendarInfo extends CalendarColor {
 
 export type ViewType = 'month' | 'week' | 'day';
 
-export interface Option {
+// @TODO: Options 정의 필요
+export interface Options {
   defaultView?: ViewType;
   taskView?: boolean | string[];
   eventView?: boolean | string[];
   theme?: ThemeKeyValue;
   template?: TemplateConfig;
-  week?: WeekOption;
-  month?: MonthOption;
+  week?: WeekOptions;
+  month?: MonthOptions;
   calendars?: CalendarInfo[];
   useCreationPopup?: boolean;
   useDetailPopup?: boolean;
@@ -86,8 +87,6 @@ export interface Option {
   usageStatistics?: boolean;
   timezone?: CustomTimezone;
 }
-
-type Options = Option; // @TODO: Option 정의 필요
 
 interface ViewInfoUserInput {
   component: ComponentType<any>;

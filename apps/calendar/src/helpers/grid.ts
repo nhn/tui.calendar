@@ -5,13 +5,11 @@ import { findByDateRange as findByDateRangeForWeek } from '@src/controller/week'
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import {
-  convertStartDayToLastDay,
   isWeekend,
   toEndOfDay,
   toEndOfMonth,
   toStartOfDay,
   toStartOfMonth,
-  withinRangeDate,
 } from '@src/time/datetime';
 
 import {
@@ -21,7 +19,7 @@ import {
   Matrix3d,
   TimeGridEventMatrix,
 } from '@t/events';
-import { MonthOption, WeekOption } from '@t/option';
+import { MonthOptions, WeekOptions } from '@t/options';
 import { Cells, Panel } from '@t/panel';
 
 export const EVENT_HEIGHT = 22;
@@ -245,7 +243,7 @@ const getTimeGridEventModels = (
 export const getDayGridEvents = (
   cells: Cells,
   calendarData: CalendarData,
-  { narrowWeekend, hourStart, hourEnd }: WeekOption
+  { narrowWeekend, hourStart, hourEnd }: WeekOptions
 ): EventModelMap => {
   const panels: Panel[] = [
     {
@@ -301,7 +299,7 @@ export const getDayGridEvents = (
 };
 
 // eslint-disable-next-line complexity
-export function getDateMatrixByMonth(renderMonthDate: Date | TZDate, options: MonthOption) {
+export function getDateMatrixByMonth(renderMonthDate: Date | TZDate, options: MonthOptions) {
   const targetMonthDate = new TZDate(renderMonthDate);
 
   const startDayOfWeek = options.startDayOfWeek ?? 0;

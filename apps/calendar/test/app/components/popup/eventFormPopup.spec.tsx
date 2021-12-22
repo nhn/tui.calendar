@@ -29,7 +29,7 @@ describe('event form popup', () => {
     store = initCalendarStore({ calendars: [{ id: '1', name: '1' }] });
     const { container } = render(
       <StoreProvider store={store}>
-        <EventFormPopup start={start} end={end} isAllday={false} popupRect={{}} />
+        <EventFormPopup start={start} end={end} isAllday={false} popupPosition={{}} />
       </StoreProvider>
     );
 
@@ -41,7 +41,7 @@ describe('event form popup', () => {
   it('should display CalendarSelector when `calendars` is not exists', () => {
     const { container } = render(
       <StoreProvider store={store}>
-        <EventFormPopup start={start} end={end} isAllday={false} popupRect={{}} />
+        <EventFormPopup start={start} end={end} isAllday={false} popupPosition={{}} />
       </StoreProvider>
     );
 
@@ -53,7 +53,7 @@ describe('event form popup', () => {
   it('should be changed private icon when private button is clicked', () => {
     const { container } = render(
       <StoreProvider store={store}>
-        <EventFormPopup start={start} end={end} isAllday={false} popupRect={{}} />
+        <EventFormPopup start={start} end={end} isAllday={false} popupPosition={{}} />
       </StoreProvider>
     );
 
@@ -73,7 +73,7 @@ describe('event form popup', () => {
   it('should render range-picker but range-picker is hidden', () => {
     const { container } = render(
       <StoreProvider store={store}>
-        <EventFormPopup start={start} end={end} isAllday={false} popupRect={{}} />
+        <EventFormPopup start={start} end={end} isAllday={false} popupPosition={{}} />
       </StoreProvider>
     );
 
@@ -86,7 +86,7 @@ describe('event form popup', () => {
     it(`should render range picker when ${placeholder} input is clicked`, () => {
       const { container } = render(
         <StoreProvider store={store}>
-          <EventFormPopup start={start} end={end} isAllday={false} popupRect={{}} />
+          <EventFormPopup start={start} end={end} isAllday={false} popupPosition={{}} />
         </StoreProvider>
       );
 
@@ -100,7 +100,7 @@ describe('event form popup', () => {
   it('should not render time-picker in range-picker when allday button is clicked', () => {
     const { container } = render(
       <StoreProvider store={store}>
-        <EventFormPopup start={start} end={end} isAllday={false} popupRect={{}} />
+        <EventFormPopup start={start} end={end} isAllday={false} popupPosition={{}} />
       </StoreProvider>
     );
 

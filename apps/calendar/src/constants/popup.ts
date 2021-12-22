@@ -1,0 +1,1 @@
+export const EVENT_FORM_POPUP_WIDTH = 474;

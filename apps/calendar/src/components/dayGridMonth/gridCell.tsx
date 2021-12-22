@@ -21,8 +21,7 @@ import { Day } from '@src/time/datetime';
 import { getPosition, getRelativePosition, getSize } from '@src/utils/dom';
 import { ratio } from '@src/utils/math';
 
-import { RectSize } from '@t/layout';
-import { PopupRect } from '@t/store';
+import { PopupPosition } from '@t/store';
 
 interface Props {
   date: TZDate;
@@ -37,6 +36,11 @@ interface Props {
   parentContainer?: HTMLDivElement | null;
   appContainer?: HTMLDivElement | null;
   events?: EventUIModel[];
+  height: number;
+}
+
+interface RectSize {
+  width: number;
   height: number;
 }
 
@@ -117,7 +121,12 @@ function getDateColor(dayIndex: Day, commonTheme: CommonTheme) {
   return today.color;
 }
 
-function getSeeMorePopupRect({ appContainer, grid, cell, popupSize }: SeeMoreRectParam): PopupRect {
+function getSeeMorePopupRect({
+  appContainer,
+  grid,
+  cell,
+  popupSize,
+}: SeeMoreRectParam): PopupPosition {
   const appContainerSize = getSize(appContainer);
 
   const pos = getRelativePosition(
@@ -139,13 +148,13 @@ function getSeeMorePopupRect({ appContainer, grid, cell, popupSize }: SeeMoreRec
   return { ...popupSize, ...popupPosition };
 }
 
-function usePopupRect(
+function usePopupPosition(
   eventLength: number,
   parentContainer?: HTMLDivElement | null,
   appContainer?: HTMLDivElement | null
 ) {
   const container = useRef<HTMLDivElement>(null);
-  const [popupRect, setPopupRect] = useState<PopupRect | null>(null);
+  const [popupPosition, setPopupPosition] = useState<PopupPosition | null>(null);
 
   useEffect(() => {
     if (appContainer && parentContainer && container.current) {
@@ -167,11 +176,11 @@ function usePopupRect(
         popupSize,
       });
 
-      setPopupRect(rect);
+      setPopupPosition(rect);
     }
   }, [appContainer, eventLength, parentContainer]);
 
-  return { popupRect, container };
+  return { popupPosition, container };
 }
 
 export const GridCell: FunctionComponent<Props> = ({
@@ -188,20 +197,24 @@ export const GridCell: FunctionComponent<Props> = ({
 
   const { common: commonTheme } = theme;
 
-  const { popupRect, container } = usePopupRect(events.length, parentContainer, appContainer);
+  const { popupPosition, container } = usePopupPosition(
+    events.length,
+    parentContainer,
+    appContainer
+  );
 
   const onOpenSeeMorePopup = useCallback(() => {
-    if (popupRect) {
+    if (popupPosition) {
       show({
         type: PopupType.seeMore,
         param: {
           date,
-          popupRect,
+          popupPosition,
           events,
         },
       });
     }
-  }, [date, events, popupRect, show]);
+  }, [date, events, popupPosition, show]);
 
   const exceedCount = getExceedCount(events, height, MONTH_EVENT_HEIGHT);
 

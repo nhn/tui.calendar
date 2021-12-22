@@ -25,12 +25,12 @@ import { getSize } from '@src/utils/dom';
 import { isBetween } from '@src/utils/math';
 import { isPresent } from '@src/utils/type';
 
-import { CalendarMonthOption } from '@t/store';
+import { CalendarMonthOptions } from '@t/store';
 
 const TOTAL_PERCENT_HEIGHT = 100;
 
 interface Props {
-  options: CalendarMonthOption;
+  options: CalendarMonthOptions;
   dateMatrix: TZDate[][];
   gridInfo: GridInfo[];
   appContainer: RefObject<HTMLDivElement>;

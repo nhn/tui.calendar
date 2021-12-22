@@ -16,12 +16,12 @@ import { toStartOfDay } from '@src/time/datetime';
 import { isNumber, isString } from '@src/utils/type';
 
 import { CalendarData, DateType, EventModelData } from '@t/events';
-import { CalendarColor, CalendarInfo, CustomTimezone, Option, ViewType } from '@t/option';
+import { CalendarColor, CalendarInfo, CustomTimezone, Options, ViewType } from '@t/options';
 import { CalendarStore, Dispatchers, InternalStoreAPI } from '@t/store';
 import { Template } from '@t/template';
 
 interface AppContext {
-  options: Option;
+  options: Options;
   calendarData: CalendarData;
   templates: Template;
   internalEvent: EventHandler<InternalEventName>;
@@ -31,7 +31,7 @@ interface AppContext {
 export default abstract class CalendarControl extends EventHandler<ExternalEventName> {
   protected _container: Element | null;
 
-  protected _options: Option;
+  protected _options: Options;
 
   protected _context: AppContext;
 
@@ -64,16 +64,16 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
 
   private _mainApp?: AnyComponent<any, any>;
 
-  constructor(container: string | Element, option: Option = {}) {
+  constructor(container: string | Element, options: Options = {}) {
     super();
 
-    const { timezone } = option;
+    const { timezone } = options;
     if (timezone) {
       this.setTimezone(timezone);
     }
 
     this._container = isString(container) ? document.querySelector(container) : container;
-    this._options = this.initOption(option);
+    this._options = this.initOptions(options);
     this._internalEvent = new EventHandler<InternalEventName>();
     this._externalEvent = this;
     this._context = {
@@ -85,7 +85,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
         events: createEventCollection(),
         idsOfDay: {},
       },
-      templates: registerTemplateConfig(option.template),
+      templates: registerTemplateConfig(options.template),
       internalEvent: this._internalEvent,
       externalEvent: this._externalEvent,
     };
@@ -96,7 +96,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
       end: toStartOfDay(),
     };
 
-    this.theme = new Theme(option.theme);
+    this.theme = new Theme(options.theme);
 
     this.store = initCalendarStore(this._options);
   }
@@ -111,7 +111,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
     return group ? this.store.getState().dispatch[group] : this.store.getState().dispatch;
   }
 
-  private initOption(option: Option = {}): Option {
+  private initOptions(options: Options = {}): Options {
     const {
       defaultView = this._viewName,
       taskView = true,
@@ -125,7 +125,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
       disableDblClick = false,
       disableClick = false,
       isReadOnly = false,
-    } = option;
+    } = options;
 
     return {
       defaultView,
@@ -406,9 +406,9 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
   }
 
   /**
-   * Change calendar's event color with option
+   * Change calendar's event color with options
    * @param {string} calendarId - The calendar ID
-   * @param {CalendarColor} option - The {@link CalendarColor} object
+   * @param {CalendarColor} options - The {@link CalendarColor} object
    * @param {boolean} [silent=false] - No auto render after creation when set true
    * @todo implement this
    * @example
@@ -428,8 +428,8 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    *     borderColor: '#a1b56c'
    * });
    */
-  setCalendarColor(calendarId: string, option: CalendarColor, silent = false) {
-    // console.log('setCalendarColor', calendarId, option, silent);
+  setCalendarColor(calendarId: string, options: CalendarColor, silent = false) {
+    // console.log('setCalendarColor', calendarId, options, silent);
 
     if (!silent) {
       this.render();
@@ -551,17 +551,17 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
 
   /**
    * Set options of calendar
-   * @param {Option} options - set {@link Option}
+   * @param {Options} options - set {@link Options}
    * @param {boolean} [silent=false] - no auto render after creation when set true
    * @todo implement this
    */
-  setOptions(options: Option, silent = false) {
+  setOptions(options: Options, silent = false) {
     // console.log('setOptions', options, silent);
   }
 
   /**
-   * Get current {@link Option}.
-   * @returns {Option} options
+   * Get current {@link Options}.
+   * @returns {Options} options
    */
   getOptions() {
     return this._options;

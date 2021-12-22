@@ -169,3 +169,26 @@
   font-size: 0;
   top: -1px;
 }
+
+.popup-arrow-border,
+.popup-arrow-fill {
+  position: absolute;
+}
+
+.popup-arrow-top .popup-arrow-border {
+  border-top: none;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid #d5d5d5;
+  border-left: 8px solid transparent;
+  left: calc(50% - 8px);
+  top: -7px;
+}
+
+.popup-arrow-top .popup-arrow-fill {
+  border-top: none;
+  border-right: 7px solid transparent;
+  border-bottom: 7px solid #fff;
+  border-left: 7px solid transparent;
+  left: -7px;
+  top: 1px;
+}

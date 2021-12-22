@@ -2,28 +2,28 @@ import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import { CalendarDispatchers, CalendarSlice } from '@src/slices/calendar';
 import { DndDispatchers, DndSlice } from '@src/slices/dnd';
-import { OptionDispatchers, OptionSlice } from '@src/slices/options';
+import { WeekViewLayoutDispatchers, WeekViewLayoutSlice } from '@src/slices/layout';
+import { OptionsDispatchers, OptionsSlice } from '@src/slices/options';
 import { PopupDispatchers, PopupSlice } from '@src/slices/popup';
 import { TemplateSlice } from '@src/slices/template';
 import { ViewDispatchers, ViewSlice } from '@src/slices/view';
-import { WeekViewLayoutDispatchers, WeekViewLayoutSlice } from '@src/slices/weekViewLayout';
 import TZDate from '@src/time/date';
 
 import type { EventState } from '@t/events';
-import type { MonthOption, WeekOption } from '@t/option';
+import type { MonthOptions, WeekOptions } from '@t/options';
 
-type CalendarMonthOption = Required<MonthOption>;
-type CalendarWeekOption = Required<WeekOption>;
+type CalendarMonthOptions = Required<MonthOptions>;
+type CalendarWeekOptions = Required<WeekOptions>;
 
-interface OptionData {
+interface OptionsData {
   useCreationPopup: boolean;
   useDetailPopup: boolean;
-  month: CalendarMonthOption;
-  week: CalendarWeekOption;
+  month: CalendarMonthOptions;
+  week: CalendarWeekOptions;
 }
 
 interface BasePopupParam {
-  popupRect: PopupRect;
+  popupPosition: PopupPosition;
   close?: () => void;
 }
 
@@ -50,7 +50,7 @@ interface EventDetailPopupParam extends BasePopupParam {
   event: EventModel;
 }
 
-type PopupRect = {
+type PopupPosition = {
   top?: number | string;
   bottom?: number | string;
   left?: number | string;
@@ -96,7 +96,7 @@ export type StoreCreator<State extends StateWithActions> = (
   api: InternalStoreAPI<State>
 ) => State;
 
-export type CalendarState = OptionSlice &
+export type CalendarState = OptionsSlice &
   TemplateSlice &
   PopupSlice &
   WeekViewLayoutSlice &
@@ -105,7 +105,7 @@ export type CalendarState = OptionSlice &
   DndSlice;
 
 export type Dispatchers = {
-  option: OptionDispatchers;
+  options: OptionsDispatchers;
   popup: PopupDispatchers;
   weekViewLayout: WeekViewLayoutDispatchers;
   calendar: CalendarDispatchers;
