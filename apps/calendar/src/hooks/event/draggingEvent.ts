@@ -23,16 +23,14 @@ export function useDraggingEvent(events: EventUIModel[], behavior: EventDragging
   const currentDraggingEvent = useStore(
     useCallback(
       (state) => {
-        const { draggingItemType } = state.dnd;
+        const { draggingItemType, draggingEventUIModel } = state.dnd;
         const targetEventId = getTargetEventId(draggingItemType, behavior);
 
-        if (isNil(targetEventId)) {
-          return null;
-        }
-
-        return events.find((event) => event.cid() === Number(targetEventId)) ?? null;
+        return Number(targetEventId) === draggingEventUIModel?.model.cid()
+          ? draggingEventUIModel
+          : null;
       },
-      [behavior, events]
+      [behavior]
     )
   );
 

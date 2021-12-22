@@ -2,6 +2,7 @@ import { FunctionComponent, h } from 'preact';
 
 import ResizeIcon from '@src/components/events/resizeIcon';
 import Template from '@src/components/template';
+import { useDispatch } from '@src/contexts/calendarStore';
 import { cls, toPercent, toPx } from '@src/helpers/css';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/drag';
@@ -143,11 +144,23 @@ export const HorizontalEvent: FunctionComponent<Props> = ({
     movingLeft,
   });
 
+  const { setDraggingEventUIModel } = useDispatch('dnd');
+
   const { onMouseDown: onResizeStart } = useDrag(
-    DRAGGING_TYPE_CREATORS.resizeEvent(`${uiModel.cid()}`)
+    DRAGGING_TYPE_CREATORS.resizeEvent(`${uiModel.cid()}`),
+    {
+      onDragStart: () => {
+        setDraggingEventUIModel(uiModel);
+      },
+    }
   );
   const { onMouseDown: onMoveStart } = useDrag(
-    DRAGGING_TYPE_CREATORS.moveEvent(`${uiModel.cid()}`)
+    DRAGGING_TYPE_CREATORS.moveEvent(`${uiModel.cid()}`),
+    {
+      onDragStart: () => {
+        setDraggingEventUIModel(uiModel);
+      },
+    }
   );
 
   const handleResizeStart = (e: MouseEvent) => {
