@@ -10,19 +10,13 @@ import { isPresent } from '@src/utils/type';
 export function useDayGridSelection(
   mousePositionDataGrabber: MousePositionDataGrabber
 ): GridSelectionData | null {
-  const [currentCoords, setCurrentCoords] = useState<{
-    currentRowIdx: number;
-    currentColIdx: number;
-  } | null>(null);
-  const initCoordsRef = useRef<{ initRowIdx: number; initColIdx: number } | null>(null);
-  const prevCoordsRef = useRef<{
-    currentRowIdx: number;
-    currentColIdx: number;
-  } | null>(null);
+  const [currentCoords, setCurrentCoords] = useState<CurrentGridSelectionData | null>(null);
+  const initCoordsRef = useRef<InitGridSelectionData | null>(null);
+  const prevCoordsRef = useRef<CurrentGridSelectionData | null>(null);
   const { draggingItemType, draggingState, x, y, initX, initY } = useStore(dndSelector);
   const isSelectingGrid =
     draggingItemType === DRAGGING_TYPE_CONSTANTS.dayGridSelection &&
-    draggingState > DraggingState.INIT;
+    draggingState >= DraggingState.INIT;
   const hasCurrentCoords = isPresent(x) && isPresent(y);
 
   useEffect(() => {
@@ -30,9 +24,10 @@ export function useDayGridSelection(
       const data = mousePositionDataGrabber({ clientX: initX, clientY: initY } as MouseEvent);
       if (data) {
         initCoordsRef.current = {
-          initRowIdx: data.gridY,
-          initColIdx: data.gridX,
+          initRowIndex: data.gridY,
+          initColIndex: data.gridX,
         };
+        setCurrentCoords({ currentColIndex: data.gridX, currentRowIndex: data.gridY });
       }
     }
   }, [initX, initY, isSelectingGrid, mousePositionDataGrabber]);
@@ -41,8 +36,8 @@ export function useDayGridSelection(
     if (isSelectingGrid && hasCurrentCoords) {
       const data = mousePositionDataGrabber({ clientX: x, clientY: y } as MouseEvent);
       if (data) {
-        setCurrentCoords({ currentColIdx: data.gridX, currentRowIdx: data.gridY });
-        prevCoordsRef.current = { currentColIdx: data.gridX, currentRowIdx: data.gridY };
+        setCurrentCoords({ currentColIndex: data.gridX, currentRowIndex: data.gridY });
+        prevCoordsRef.current = { currentColIndex: data.gridX, currentRowIndex: data.gridY };
       }
     }
   }, [hasCurrentCoords, isSelectingGrid, mousePositionDataGrabber, x, y]);
@@ -57,8 +52,8 @@ export function useDayGridSelection(
   return isPresent(initCoordsRef.current) && isPresent(currentCoords)
     ? {
         ...currentCoords,
-        initRowIdx: initCoordsRef.current.initRowIdx,
-        initColIdx: initCoordsRef.current.initColIdx,
+        initRowIndex: initCoordsRef.current.initRowIndex,
+        initColIndex: initCoordsRef.current.initColIndex,
       }
     : null;
 }
