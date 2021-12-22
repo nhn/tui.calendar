@@ -1,4 +1,3 @@
-/* eslint-disable complexity */
 import { FunctionComponent, h, RefObject } from 'preact';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 
@@ -52,14 +51,24 @@ function useGridHeight() {
 }
 
 function sortGridSelection(gridSelection: GridSelectionData) {
-  const { initRowIdx, initColIdx, currentRowIdx, currentColIdx } = gridSelection;
-  const isReversed = initRowIdx > currentRowIdx && initColIdx >= currentColIdx;
+  const { initRowIndex, initColIndex, currentRowIndex, currentColIndex } = gridSelection;
+  const isReversed =
+    initRowIndex > currentRowIndex ||
+    (initRowIndex === currentRowIndex && initColIndex > currentColIndex);
 
-  const [startRowIdx, startColIdx, endRowIdx, endColIdx] = isReversed
-    ? [currentRowIdx, currentColIdx, initRowIdx, initColIdx]
-    : [initRowIdx, initColIdx, currentRowIdx, currentColIdx];
-
-  return { startRowIdx, startColIdx, endRowIdx, endColIdx };
+  return isReversed
+    ? {
+        startRowIndex: currentRowIndex,
+        startColIndex: currentColIndex,
+        endRowIndex: initRowIndex,
+        endColIndex: initColIndex,
+      }
+    : {
+        startRowIndex: initRowIndex,
+        startColIndex: initColIndex,
+        endRowIndex: currentRowIndex,
+        endColIndex: currentColIndex,
+      };
 }
 
 function calcGridSelectionData(
@@ -67,28 +76,35 @@ function calcGridSelectionData(
   rowIndex: number,
   weekLength: number
 ) {
-  let tempGridSelection = null;
+  let resultGridSelection = null;
 
   if (isPresent(gridSelection)) {
-    const { startRowIdx, startColIdx, endRowIdx, endColIdx } = sortGridSelection(gridSelection);
+    const { startRowIndex, startColIndex, endRowIndex, endColIndex } =
+      sortGridSelection(gridSelection);
 
-    if (isBetween(rowIndex, startRowIdx, endRowIdx)) {
-      let startCellIdx = startColIdx;
-      let endCellIdx = endColIdx;
+    if (
+      isBetween(
+        rowIndex,
+        Math.min(startRowIndex, endRowIndex),
+        Math.max(startRowIndex, endRowIndex)
+      )
+    ) {
+      let startCellIndex = startColIndex;
+      let endCellIndex = endColIndex;
 
-      if (startRowIdx < rowIndex) {
-        startCellIdx = 0;
+      if (startRowIndex < rowIndex) {
+        startCellIndex = 0;
       }
 
-      if (endRowIdx > rowIndex) {
-        endCellIdx = weekLength - 1;
+      if (endRowIndex > rowIndex) {
+        endCellIndex = weekLength - 1;
       }
 
-      tempGridSelection = { startCellIdx, endCellIdx };
+      resultGridSelection = { startCellIndex, endCellIndex };
     }
   }
 
-  return tempGridSelection;
+  return resultGridSelection;
 }
 
 const DayGridMonth: FunctionComponent<Props> = ({
@@ -125,7 +141,7 @@ const DayGridMonth: FunctionComponent<Props> = ({
           narrowWeekend
         );
 
-        const tempGridSelection = calcGridSelectionData(gridSelection, rowIndex, week.length);
+        const gridSelectionDataByRow = calcGridSelectionData(gridSelection, rowIndex, week.length);
 
         return (
           <div
@@ -157,7 +173,7 @@ const DayGridMonth: FunctionComponent<Props> = ({
                 eventTopMargin={MONTH_EVENT_MARGIN_TOP}
               />
               <GridSelection
-                gridSelectionData={tempGridSelection}
+                gridSelectionData={gridSelectionDataByRow}
                 cells={week}
                 narrowWeekend={narrowWeekend}
               />
