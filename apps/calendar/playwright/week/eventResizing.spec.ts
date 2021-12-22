@@ -1,22 +1,10 @@
-/* eslint-disable jest/expect-expect */
-import { expect, Page, test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
-import { assertGridSelectionMatching } from './assertions';
-import { dragAndDrop, selectGridCells } from './utils';
-
-const WEEK_VIEW_PAGE_URL =
-  'http://localhost:6006/iframe.html?id=weekview--fixed-events&args=&viewMode=story';
+import { WEEK_VIEW_PAGE_URL } from '../configs';
+import { dragAndDrop } from '../utils';
 
 test.beforeEach(async ({ page }) => {
   await page.goto(WEEK_VIEW_PAGE_URL);
-});
-
-test.describe('basic test', () => {
-  test('event count', async ({ page }) => {
-    const events = await page.$$('.toastui-calendar-weekday-event-block');
-
-    expect(events).toHaveLength(3);
-  });
 });
 
 test.describe('event resizing', () => {
@@ -43,21 +31,6 @@ test.describe('event resizing', () => {
     } else {
       test.fail();
     }
-  });
-
-  test('event form popup with grid selection', async ({ page }) => {
-    const startCellLocator = page.locator(
-      '.toastui-calendar-allday .toastui-calendar-panel-grid >> nth=0'
-    );
-
-    await startCellLocator.hover();
-    await page.mouse.down();
-    await page.mouse.move(1000, 0, { steps: 15 });
-    await page.mouse.up();
-
-    const floatingLayer = page.locator('.toastui-calendar-floating-layer');
-
-    expect(floatingLayer).not.toBeNull();
   });
 });
 
@@ -88,31 +61,5 @@ test.describe('event moving', () => {
     } else {
       test.fail();
     }
-  });
-
-  test.describe('Selection', () => {
-    async function selectWeekGridCells(page: Page, startCellIndex: number, endCellIndex: number) {
-      await selectGridCells(page, startCellIndex, endCellIndex, '.toastui-calendar-panel-grid');
-    }
-
-    async function assertWeekGridSelectionMatching(
-      page: Page,
-      startIndex: number,
-      endIndex: number
-    ) {
-      await assertGridSelectionMatching(page, startIndex, endIndex, '.toastui-calendar-panel-grid');
-    }
-
-    test('select 2 cells from left to right', async ({ page }) => {
-      await selectWeekGridCells(page, 14, 15);
-
-      await assertWeekGridSelectionMatching(page, 14, 15);
-    });
-
-    test('select 2 cells from right to left(reverse)', async ({ page }) => {
-      await selectWeekGridCells(page, 15, 14);
-
-      await assertWeekGridSelectionMatching(page, 14, 15);
-    });
   });
 });

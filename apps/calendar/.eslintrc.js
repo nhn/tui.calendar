@@ -80,9 +80,10 @@ module.exports = {
       },
     },
     {
-      files: ['playwright/*.ts'],
+      files: ['playwright/**/*.ts'],
       rules: {
         'dot-notation': ['error', { allowKeywords: true }],
+        'jest/expect-expect': 'off',
         'jest/no-done-callback': 'off',
       },
     },

@@ -1,20 +1,11 @@
-/* eslint-disable jest/expect-expect */
-import { expect, Page, test } from '@playwright/test';
+import { Page, test } from '@playwright/test';
 
-import { assertGridSelectionMatching } from './assertions';
-import { selectGridCells } from './utils';
-
-const MONTH_VIEW_PAGE_URL =
-  'http://localhost:6006/iframe.html?id=monthview--fixed-events&args=&viewMode=story';
+import { assertGridSelectionMatching } from '../assertions';
+import { MONTH_VIEW_PAGE_URL } from '../configs';
+import { selectGridCells } from '../utils';
 
 test.beforeEach(async ({ page }) => {
   await page.goto(MONTH_VIEW_PAGE_URL);
-});
-
-test('basic test', async ({ page }) => {
-  const events = await page.$$('.toastui-calendar-weekday-event');
-
-  expect(events).toHaveLength(4);
 });
 
 test.describe('Selection', () => {
