@@ -18,13 +18,37 @@ test('basic test', async ({ page }) => {
 });
 
 test.describe('Selection', () => {
-  async function selectMonthGridCells(page: Page, startCellIdx: number, endCellIdx: number) {
-    await selectGridCells(page, startCellIdx, endCellIdx, '.toastui-calendar-daygrid-cell');
+  /**
+   * Suppose we have following cells in the month view.
+   * Each number represetns the index of the cell.
+   *
+   * [
+   *   [ 0,  1,  2,  3,  4,  5,  6],
+   *   [ 7,  8,  9, 10, 11, 12, 13],
+   *   [14, 15, 16, 17, 18, 19 ,20],
+   *   [21, 22, 23, 24, 25, 26, 27],
+   *   [28, 29, 30, 31, 32, 33, 34],
+   * ]
+   */
+
+  function selectMonthGridCells(page: Page, startCellIndex: number, endCellIndex: number) {
+    return selectGridCells(page, startCellIndex, endCellIndex, '.toastui-calendar-daygrid-cell');
   }
 
-  async function assertMonthGridSelectionMatching(page: Page, startIdx: number, endIdx: number) {
-    await assertGridSelectionMatching(page, startIdx, endIdx, '.toastui-calendar-daygrid-cell');
+  function assertMonthGridSelectionMatching(page: Page, startIndex: number, endIndex: number) {
+    return assertGridSelectionMatching(
+      page,
+      startIndex,
+      endIndex,
+      '.toastui-calendar-daygrid-cell'
+    );
   }
+
+  test('select a cell', async ({ page }) => {
+    await selectMonthGridCells(page, 31, 31);
+
+    await assertMonthGridSelectionMatching(page, 31, 31);
+  });
 
   test('select 2 cells from left to right', async ({ page }) => {
     await selectMonthGridCells(page, 31, 32);

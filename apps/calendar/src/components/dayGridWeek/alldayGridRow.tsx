@@ -127,7 +127,10 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
         <GridSelection
           gridSelectionData={
             gridSelection
-              ? { startCellIdx: gridSelection.initColIdx, endCellIdx: gridSelection.currentColIdx }
+              ? {
+                  startCellIndex: gridSelection.initColIndex,
+                  endCellIndex: gridSelection.currentColIndex,
+                }
               : null
           }
           cells={cells}

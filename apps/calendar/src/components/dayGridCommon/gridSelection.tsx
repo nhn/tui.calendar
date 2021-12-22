@@ -6,7 +6,7 @@ import { getLeftAndWidth } from '@src/helpers/grid';
 import { Cells } from '@t/panel';
 
 interface Props {
-  gridSelectionData: { startCellIdx: number; endCellIdx: number } | null;
+  gridSelectionData: { startCellIndex: number; endCellIndex: number } | null;
   cells: Cells;
   narrowWeekend: boolean;
 }
@@ -19,12 +19,11 @@ export const GridSelection: FunctionComponent<Props> = ({
   if (!gridSelectionData) {
     return null;
   }
-  const { startCellIdx, endCellIdx } = gridSelectionData;
-  const isReversed = startCellIdx > endCellIdx;
+  const { startCellIndex, endCellIndex } = gridSelectionData;
 
   const { left, width } = getLeftAndWidth(
-    isReversed ? endCellIdx : startCellIdx,
-    isReversed ? startCellIdx : endCellIdx,
+    Math.min(startCellIndex, endCellIndex),
+    Math.max(startCellIndex, endCellIndex),
     cells,
     narrowWeekend
   );

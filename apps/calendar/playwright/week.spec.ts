@@ -76,12 +76,16 @@ test.describe('event moving', () => {
   });
 
   test.describe('Selection', () => {
-    async function selectWeekGridCells(page: Page, startCellIdx: number, endCellIdx: number) {
-      await selectGridCells(page, startCellIdx, endCellIdx, '.toastui-calendar-panel-grid');
+    async function selectWeekGridCells(page: Page, startCellIndex: number, endCellIndex: number) {
+      await selectGridCells(page, startCellIndex, endCellIndex, '.toastui-calendar-panel-grid');
     }
 
-    async function assertWeekGridSelectionMatching(page: Page, startIdx: number, endIdx: number) {
-      await assertGridSelectionMatching(page, startIdx, endIdx, '.toastui-calendar-panel-grid');
+    async function assertWeekGridSelectionMatching(
+      page: Page,
+      startIndex: number,
+      endIndex: number
+    ) {
+      await assertGridSelectionMatching(page, startIndex, endIndex, '.toastui-calendar-panel-grid');
     }
 
     test('select 2 cells from left to right', async ({ page }) => {
