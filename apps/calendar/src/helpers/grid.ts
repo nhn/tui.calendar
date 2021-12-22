@@ -307,14 +307,14 @@ export function getDateMatrixByMonth(renderMonthDate: Date | TZDate, options: Mo
   const workweek = options.workweek ?? false;
   const isAlways6Week = visibleWeeksCount > 0 ? false : options.isAlways6Week ?? true;
 
-  const calendar: Array<TZDate[]> = [];
+  const dateMatrix: TZDate[][] = [];
 
   let start;
   let end;
   let totalDate;
   let week;
 
-  if (visibleWeeksCount) {
+  if (visibleWeeksCount > 0) {
     start = new TZDate(targetMonthDate);
     end = new TZDate(targetMonthDate);
     end.addDate(7 * (visibleWeeksCount - 1));
@@ -342,7 +342,7 @@ export function getDateMatrixByMonth(renderMonthDate: Date | TZDate, options: Mo
   range(totalDate).forEach((day: number) => {
     if (!(day % 7)) {
       // group each date by week
-      week = calendar[day / 7] = [];
+      week = dateMatrix[day / 7] = [];
     }
 
     const date = toStartOfDay(cursor);
@@ -354,5 +354,5 @@ export function getDateMatrixByMonth(renderMonthDate: Date | TZDate, options: Mo
     cursor.setDate(cursor.getDate() + 1);
   });
 
-  return calendar;
+  return dateMatrix;
 }
