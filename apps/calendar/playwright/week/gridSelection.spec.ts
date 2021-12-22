@@ -13,8 +13,8 @@ function selectWeekGridCells(page: Page, startCellIndex: number, endCellIndex: n
 }
 
 test.describe('Grid Selection', () => {
-  async function assertWeekGridSelectionMatching(page: Page, startIndex: number, endIndex: number) {
-    await assertGridSelectionMatching(page, startIndex, endIndex, '.toastui-calendar-panel-grid');
+  function assertWeekGridSelectionMatching(page: Page, startIndex: number, endIndex: number) {
+    return assertGridSelectionMatching(page, startIndex, endIndex, '.toastui-calendar-panel-grid');
   }
 
   test('select 2 cells from left to right', async ({ page }) => {
