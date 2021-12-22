@@ -133,7 +133,11 @@ const DayGridMonth: FunctionComponent<Props> = ({
   const gridSelection = useDayGridSelection(mousePositionDataGrabber);
 
   return (
-    <div ref={setGridContainerRef} onMouseDown={onMouseDown} style={{ height: toPercent(100) }}>
+    <div
+      ref={setGridContainerRef}
+      onMouseDown={onMouseDown}
+      className={cls('month-daygrid__container')}
+    >
       {dateMatrix.map((week, rowIndex) => {
         const { uiModels, gridDateEventModelMap } = getRenderedEventUIModels(
           week,
