@@ -21,7 +21,6 @@ import { useDOMNode } from '@src/hooks/common/domNode';
 import { useDrag } from '@src/hooks/common/drag';
 import { useDayGridSelection } from '@src/hooks/dayGridCommon/dayGridSelection';
 import { useDayGridMonthEventMove } from '@src/hooks/dayGridMonth/dayGridMonthEventMove';
-import { useDraggingEvent } from '@src/hooks/event/draggingEvent';
 import EventModel from '@src/model/eventModel';
 import { calendarSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
@@ -84,27 +83,12 @@ export const DayGridMonth: FunctionComponent<Props> = ({
     narrowWeekend
   );
 
-  // const { draggingEvent: movingEvent, clearDraggingEvent } = useDraggingEvent(
-  //   monthUIModels,
-  //   'move'
-  // );
-
   const { movingEvent, currentGridPos } = useDayGridMonthEventMove({
     events: monthUIModels,
     cells: dateMatrix,
     gridInfo,
     mousePositionDataGrabber,
   });
-
-  // console.log(movingEvent);
-
-  // const { movingEvent } = useDayGridMonthEventMove({
-  //   monthUIModels,
-  //   cells,
-  //   dateMatrix,
-  //   gridInfo,
-  //   mousePositionDataGrabber,
-  // });
 
   return (
     <div ref={setGridContainerRef} onMouseDown={onMouseDown} style={{ height: toPercent(100) }}>
@@ -174,8 +158,6 @@ export const DayGridMonth: FunctionComponent<Props> = ({
               />
               <MonthEvents
                 name="month"
-                cells={week}
-                week={rowIndex}
                 events={uiModels}
                 height={height}
                 narrowWeekend={narrowWeekend}
@@ -183,8 +165,6 @@ export const DayGridMonth: FunctionComponent<Props> = ({
                 className={cls('weekday-events')}
                 headerHeight={MONTH_CELL_PADDING_TOP + MONTH_CELL_BAR_HEIGHT}
                 eventTopMargin={MONTH_EVENT_MARGIN_TOP}
-                gridInfo={gridInfo}
-                mousePositionDataGrabber={mousePositionDataGrabber}
               />
               <GridSelection
                 gridSelectionData={tempGridSelection}

@@ -106,8 +106,6 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
       />
     ));
 
-  console.log(resizingEvent);
-
   return (
     <Fragment>
       <div className={cls('panel-title')} style={{ width: columnWidth }}>

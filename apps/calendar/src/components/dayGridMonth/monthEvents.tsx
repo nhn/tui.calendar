@@ -1,17 +1,13 @@
-import { Fragment, FunctionComponent, h } from 'preact';
+import { FunctionComponent, h } from 'preact';
 
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import { useStore } from '@src/contexts/calendarStore';
 import { EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
-import { useDayGridMonthEventMove } from '@src/hooks/dayGridMonth/dayGridMonthEventMove';
 import EventUIModel from '@src/model/eventUIModel';
 import { dndSelector } from '@src/selectors';
-import TZDate from '@src/time/date';
 
 interface Props {
   name: string;
-  cells: TZDate[];
-  week: number;
   height: number;
   eventHeight?: number;
   events: EventUIModel[];
@@ -19,8 +15,6 @@ interface Props {
   className: string;
   headerHeight: number;
   eventTopMargin: number;
-  gridInfo: GridInfo[];
-  mousePositionDataGrabber: (e: MouseEvent) => MousePositionData | null;
 }
 
 export const MonthEvents: FunctionComponent<Props> = ({
@@ -31,21 +25,7 @@ export const MonthEvents: FunctionComponent<Props> = ({
   className,
   headerHeight,
   eventTopMargin,
-  cells,
-  week,
-  gridInfo,
-  mousePositionDataGrabber,
 }) => {
-  // const { movingEvent, movingLeft } = useDayGridMonthEventMove({
-  //   events,
-  //   cells,
-  //   week,
-  //   gridInfo,
-  //   mousePositionDataGrabber,
-  // });
-
-  // console.log(movingEvent, movingLeft);
-  // console.log(cells[0].getDate(), cells[6].getDate());
   const { draggingEventUIModel } = useStore(dndSelector);
 
   const dayEvents = events
@@ -60,17 +40,5 @@ export const MonthEvents: FunctionComponent<Props> = ({
       />
     ));
 
-  return (
-    <Fragment>
-      <div className={className}>{dayEvents}</div>
-      {/* {movingEvent && (*/}
-      {/*  <HorizontalEvent*/}
-      {/*    uiModel={movingEvent}*/}
-      {/*    eventHeight={EVENT_HEIGHT}*/}
-      {/*    headerHeight={headerHeight}*/}
-      {/*    movingLeft={movingLeft}*/}
-      {/*  />*/}
-      {/* )}*/}
-    </Fragment>
-  );
+  return <div className={className}>{dayEvents}</div>;
 };
