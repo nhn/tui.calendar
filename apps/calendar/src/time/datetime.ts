@@ -752,6 +752,13 @@ export function addDate(d: TZDate, step: number) {
   return date;
 }
 
+export function subtractDate(d: TZDate, steps: number) {
+  const date = clone(d);
+  date.setDate(d.getDate() - steps);
+
+  return date;
+}
+
 export function addMonth(d: TZDate, step: number) {
   const date = clone(d);
   date.setMonth(d.getMonth() + step);

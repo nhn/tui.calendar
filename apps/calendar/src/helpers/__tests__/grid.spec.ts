@@ -1,6 +1,6 @@
 import range from 'tui-code-snippet/array/range';
 
-import { getDateMatrixByMonth } from '@src/helpers/grid';
+import { createDateMatrixOfMonth } from '@src/helpers/grid';
 import TZDate from '@src/time/date';
 import { addDate } from '@src/time/datetime';
 
@@ -20,7 +20,7 @@ function createResultMatrix({
   );
 }
 
-describe('getDateMatrixByMonth', () => {
+describe('createDateMatrixOfMonth', () => {
   it('should create matrix of dates of given month with empty option', () => {
     const targetMonth = new TZDate('2021-12-01T00:00:00');
     const expectedStartDateOfMonth = new TZDate('2021-11-28T00:00:00');
@@ -32,7 +32,7 @@ describe('getDateMatrixByMonth', () => {
       rangeEnd: 6,
     });
 
-    const result = getDateMatrixByMonth(targetMonth, {});
+    const result = createDateMatrixOfMonth(targetMonth, {});
 
     expect(result).toEqual(expected);
   });
@@ -48,8 +48,26 @@ describe('getDateMatrixByMonth', () => {
       rangeEnd: 6,
     });
 
-    const result = getDateMatrixByMonth(targetMonth, {
+    const result = createDateMatrixOfMonth(targetMonth, {
       visibleWeeksCount: 4,
+    });
+
+    expect(result).toEqual(expected);
+  });
+
+  it('should create matrix of dates less than 6 weeks, even though target date is not the first day of the month', () => {
+    const targetDate = new TZDate('2021-12-15T00:00:00');
+    const expectedStartDateOfMonth = new TZDate('2021-12-12T00:00:00');
+
+    const expected = createResultMatrix({
+      startFrom: expectedStartDateOfMonth,
+      rows: 2,
+      rangeStart: 0,
+      rangeEnd: 6,
+    });
+
+    const result = createDateMatrixOfMonth(targetDate, {
+      visibleWeeksCount: 2,
     });
 
     expect(result).toEqual(expected);
@@ -66,7 +84,7 @@ describe('getDateMatrixByMonth', () => {
       rangeEnd: 5,
     });
 
-    const result = getDateMatrixByMonth(targetMonth, {
+    const result = createDateMatrixOfMonth(targetMonth, {
       workweek: true,
     });
 
@@ -84,7 +102,7 @@ describe('getDateMatrixByMonth', () => {
       rangeEnd: 6,
     });
 
-    const result = getDateMatrixByMonth(targetMonth, {
+    const result = createDateMatrixOfMonth(targetMonth, {
       visibleWeeksCount: 4,
       isAlways6Week: true,
     });
@@ -103,7 +121,7 @@ describe('getDateMatrixByMonth', () => {
       rangeEnd: 6,
     });
 
-    const result = getDateMatrixByMonth(targetMonth, {
+    const result = createDateMatrixOfMonth(targetMonth, {
       isAlways6Week: false,
     });
 
@@ -121,7 +139,7 @@ describe('getDateMatrixByMonth', () => {
       rangeEnd: 6,
     });
 
-    const result = getDateMatrixByMonth(targetMonth, {
+    const result = createDateMatrixOfMonth(targetMonth, {
       isAlways6Week: true,
     });
 
@@ -140,7 +158,7 @@ describe('getDateMatrixByMonth', () => {
 
     const startingMonday = new TZDate('2021-11-29T00:00:00');
     const expectedStartFromMonday = createExpected(startingMonday);
-    const resultStartFromMonday = getDateMatrixByMonth(targetMonth, {
+    const resultStartFromMonday = createDateMatrixOfMonth(targetMonth, {
       startDayOfWeek: 1,
     });
 
@@ -148,7 +166,7 @@ describe('getDateMatrixByMonth', () => {
 
     const startingWednesday = new TZDate('2021-12-01T00:00:00');
     const expectStartFromWednesday = createExpected(startingWednesday);
-    const resultStartFromWednesday = getDateMatrixByMonth(targetMonth, {
+    const resultStartFromWednesday = createDateMatrixOfMonth(targetMonth, {
       startDayOfWeek: 3,
     });
 
@@ -156,7 +174,7 @@ describe('getDateMatrixByMonth', () => {
 
     const startingFriday = new TZDate('2021-11-26T00:00:00');
     const expectStartFromFriday = createExpected(startingFriday);
-    const resultStartFromFriday = getDateMatrixByMonth(targetMonth, {
+    const resultStartFromFriday = createDateMatrixOfMonth(targetMonth, {
       startDayOfWeek: 5,
     });
 

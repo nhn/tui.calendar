@@ -9,7 +9,7 @@ import { useStore } from '@src/contexts/calendarStore';
 import { useTheme } from '@src/contexts/theme';
 import { cls } from '@src/helpers/css';
 import { capitalizeDayName } from '@src/helpers/dayName';
-import { getDateMatrixByMonth } from '@src/helpers/grid';
+import { createDateMatrixOfMonth } from '@src/helpers/grid';
 import { optionsSelector } from '@src/selectors';
 import { getGridInfo, getMonthCalendar, isWeekend } from '@src/time/datetime';
 import { getSize } from '@src/utils/dom';
@@ -62,7 +62,7 @@ export const Month: FunctionComponent = () => {
 
   const dateMatrix = useMemo(
     // @TODO: 현재 렌더링된 MonthDate기준으로 계산(prev, next 사용 시 날짜 계산 필요)
-    () => getDateMatrixByMonth(new Date(), monthOptions),
+    () => createDateMatrixOfMonth(new Date(), monthOptions),
     [monthOptions]
   );
   const { gridInfo } = useMemo(

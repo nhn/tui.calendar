@@ -5,11 +5,15 @@ import { findByDateRange as findByDateRangeForWeek } from '@src/controller/week'
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import {
+  addDate,
+  getDateDifference,
   isWeekend,
+  subtractDate,
   toEndOfDay,
   toEndOfMonth,
   toStartOfDay,
   toStartOfMonth,
+  WEEK_DAYS,
 } from '@src/time/datetime';
 
 import {
@@ -298,61 +302,46 @@ export const getDayGridEvents = (
   );
 };
 
-// eslint-disable-next-line complexity
-export function getDateMatrixByMonth(renderMonthDate: Date | TZDate, options: MonthOptions) {
-  const targetMonthDate = new TZDate(renderMonthDate);
+const DEFAULT_VISIBLE_WEEKS = 6;
+export function createDateMatrixOfMonth(
+  renderTargetDate: Date | TZDate,
+  {
+    workweek = false,
+    visibleWeeksCount = 0,
+    startDayOfWeek = 0,
+    isAlways6Week = true,
+  }: MonthOptions
+) {
+  const targetDate = new TZDate(renderTargetDate);
+  const shouldApplyVisibleWeeksCount = visibleWeeksCount > 0;
+  const baseDate = shouldApplyVisibleWeeksCount ? targetDate : toStartOfMonth(targetDate);
+  const firstDateOfMatrix = subtractDate(
+    baseDate,
+    baseDate.getDay() - startDayOfWeek + (baseDate.getDay() < startDayOfWeek ? WEEK_DAYS : 0)
+  );
+  const dayOfFirstDateOfMatrix = firstDateOfMatrix.getDay();
 
-  const startDayOfWeek = options.startDayOfWeek ?? 0;
-  const visibleWeeksCount = Math.min(options.visibleWeeksCount ?? 0, 6);
-  const workweek = options.workweek ?? false;
-  const isAlways6Week = visibleWeeksCount > 0 ? false : options.isAlways6Week ?? true;
+  const totalDatsCountOfMonth = toEndOfMonth(targetDate).getDate();
+  const initialDifference = getDateDifference(firstDateOfMatrix, baseDate);
+  const totalDatesOfMatrix = totalDatsCountOfMonth + initialDifference;
 
-  const dateMatrix: TZDate[][] = [];
-
-  let start;
-  let end;
-  let totalDate;
-  let week;
-
-  if (visibleWeeksCount > 0) {
-    start = new TZDate(targetMonthDate);
-    end = new TZDate(targetMonthDate);
-    end.addDate(7 * (visibleWeeksCount - 1));
-  } else {
-    start = toStartOfMonth(targetMonthDate);
-    end = toEndOfMonth(targetMonthDate);
+  let totalWeeksOfMatrix = DEFAULT_VISIBLE_WEEKS;
+  if (shouldApplyVisibleWeeksCount) {
+    totalWeeksOfMatrix = visibleWeeksCount;
+  } else if (isAlways6Week === false) {
+    totalWeeksOfMatrix = Math.ceil(totalDatesOfMatrix / WEEK_DAYS);
   }
 
-  // create day number array by startDayOfWeek number
-  // 4 -> [4, 5, 6, 0, 1, 2, 3]
-  // 2 -> [2, 3, 4, 5, 6, 0, 1]
-  const weekArr = range(startDayOfWeek, 7).concat(range(7)).slice(0, 7);
-  const startIndex = weekArr.indexOf(start.getDay());
-  const endIndex = weekArr.indexOf(end.getDay());
-  // free dates after last date of this month
-  const afterDates = 7 - (endIndex + 1);
+  return range(0, totalWeeksOfMatrix).map((weekIndex) =>
+    range(0, WEEK_DAYS).reduce((weekRow, dayOfWeek) => {
+      const steps = weekIndex * WEEK_DAYS + dayOfWeek;
+      const currentDay = (steps + dayOfFirstDateOfMatrix) % WEEK_DAYS;
+      if (!workweek || (workweek && !isWeekend(currentDay))) {
+        const date = addDate(firstDateOfMatrix, steps);
+        weekRow.push(date);
+      }
 
-  if (visibleWeeksCount) {
-    totalDate = 7 * visibleWeeksCount;
-  } else {
-    totalDate = isAlways6Week ? 7 * 6 : startIndex + end.getDate() + afterDates;
-  }
-  const cursor = toStartOfDay(start).addDate(-startIndex);
-  // iteratee all dates to render
-  range(totalDate).forEach((day: number) => {
-    if (!(day % 7)) {
-      // group each date by week
-      week = dateMatrix[day / 7] = [];
-    }
-
-    const date = toStartOfDay(cursor);
-    if (!workweek || !isWeekend(date.getDay())) {
-      week.push(date);
-    }
-
-    // add date
-    cursor.setDate(cursor.getDate() + 1);
-  });
-
-  return dateMatrix;
+      return weekRow;
+    }, [] as TZDate[])
+  );
 }
