@@ -4,7 +4,8 @@ import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 
 import { GridSelection } from '@src/components/dayGridCommon/gridSelection';
 import GridRow from '@src/components/dayGridMonth/gridRow';
-import MonthEvents from '@src/components/dayGridMonth/monthEvents';
+import { MonthEvents } from '@src/components/dayGridMonth/monthEvents';
+import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import {
   MONTH_CELL_BAR_HEIGHT,
   MONTH_CELL_PADDING_TOP,
@@ -14,11 +15,13 @@ import {
 import { useStore } from '@src/contexts/calendarStore';
 import { cls, toPercent } from '@src/helpers/css';
 import { DRAGGING_TYPE_CONSTANTS } from '@src/helpers/drag';
-import { getRenderedEventUIModels } from '@src/helpers/grid';
+import { EVENT_HEIGHT, getRenderedEventUIModels } from '@src/helpers/grid';
 import { createMousePositionDataGrabberMonth } from '@src/helpers/view';
 import { useDOMNode } from '@src/hooks/common/domNode';
 import { useDrag } from '@src/hooks/common/drag';
 import { useDayGridSelection } from '@src/hooks/dayGridCommon/dayGridSelection';
+import { useDayGridMonthEventMove } from '@src/hooks/dayGridMonth/dayGridMonthEventMove';
+import { useDraggingEvent } from '@src/hooks/event/draggingEvent';
 import EventModel from '@src/model/eventModel';
 import { calendarSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
@@ -50,7 +53,7 @@ function useGridHeight() {
   return { ref, height };
 }
 
-const DayGridMonth: FunctionComponent<Props> = ({
+export const DayGridMonth: FunctionComponent<Props> = ({
   options,
   dateMatrix = [],
   gridInfo = [],
@@ -74,6 +77,34 @@ const DayGridMonth: FunctionComponent<Props> = ({
   );
 
   const gridSelection = useDayGridSelection(mousePositionDataGrabber, dateMatrix);
+  const flattenCells = dateMatrix.flat();
+  const { uiModels: monthUIModels } = getRenderedEventUIModels(
+    flattenCells,
+    calendarData,
+    narrowWeekend
+  );
+
+  // const { draggingEvent: movingEvent, clearDraggingEvent } = useDraggingEvent(
+  //   monthUIModels,
+  //   'move'
+  // );
+
+  const { movingEvent, currentGridPos } = useDayGridMonthEventMove({
+    events: monthUIModels,
+    cells: dateMatrix,
+    gridInfo,
+    mousePositionDataGrabber,
+  });
+
+  // console.log(movingEvent);
+
+  // const { movingEvent } = useDayGridMonthEventMove({
+  //   monthUIModels,
+  //   cells,
+  //   dateMatrix,
+  //   gridInfo,
+  //   mousePositionDataGrabber,
+  // });
 
   return (
     <div ref={setGridContainerRef} onMouseDown={onMouseDown} style={{ height: toPercent(100) }}>
@@ -83,6 +114,7 @@ const DayGridMonth: FunctionComponent<Props> = ({
           calendarData,
           narrowWeekend
         );
+        const isMouseInWeek = rowIndex === currentGridPos?.y;
 
         // @TODO
         // - GridSelection이 인덱스만 받게 한다.
@@ -143,6 +175,7 @@ const DayGridMonth: FunctionComponent<Props> = ({
               <MonthEvents
                 name="month"
                 cells={week}
+                week={rowIndex}
                 events={uiModels}
                 height={height}
                 narrowWeekend={narrowWeekend}
@@ -150,6 +183,8 @@ const DayGridMonth: FunctionComponent<Props> = ({
                 className={cls('weekday-events')}
                 headerHeight={MONTH_CELL_PADDING_TOP + MONTH_CELL_BAR_HEIGHT}
                 eventTopMargin={MONTH_EVENT_MARGIN_TOP}
+                gridInfo={gridInfo}
+                mousePositionDataGrabber={mousePositionDataGrabber}
               />
               <GridSelection
                 gridSelectionData={tempGridSelection}
@@ -157,11 +192,16 @@ const DayGridMonth: FunctionComponent<Props> = ({
                 narrowWeekend={narrowWeekend}
               />
             </div>
+            {isMouseInWeek && movingEvent && (
+              <HorizontalEvent
+                uiModel={movingEvent}
+                eventHeight={EVENT_HEIGHT}
+                headerHeight={MONTH_CELL_PADDING_TOP + MONTH_CELL_BAR_HEIGHT}
+              />
+            )}
           </div>
         );
       })}
     </div>
   );
 };
-
-export default DayGridMonth;

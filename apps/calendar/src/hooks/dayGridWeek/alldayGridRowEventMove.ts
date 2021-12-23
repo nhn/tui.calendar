@@ -53,6 +53,8 @@ export function useAlldayGridRowEventMove({
       !isNil(currentMovingLeft) &&
       !isNil(targetEventStartGridX);
 
+    console.log(currentGridX, currentMovingLeft, targetEventStartGridX);
+
     if (shouldUpdate) {
       const dateOffset = currentGridX - targetEventStartGridX;
       let newStartDate = new TZDate(movingEvent.getStarts());

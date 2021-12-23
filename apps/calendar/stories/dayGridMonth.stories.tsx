@@ -2,7 +2,7 @@ import { h } from 'preact';
 
 import range from 'tui-code-snippet/array/range';
 
-import DayGridMonth from '@src/components/dayGridMonth/dayGridMonth';
+import { DayGridMonth } from '@src/components/dayGridMonth/dayGridMonth';
 import { GridCell } from '@src/components/dayGridMonth/gridCell';
 import GridRow from '@src/components/dayGridMonth/gridRow';
 import Panel from '@src/components/panel';
