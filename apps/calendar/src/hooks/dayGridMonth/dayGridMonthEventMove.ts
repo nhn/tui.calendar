@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'preact/hooks';
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useDraggingEvent } from '@src/hooks/event/draggingEvent';
@@ -29,6 +29,17 @@ export function useDayGridMonthEventMove({
   const { updateEvent } = useDispatch('calendar');
 
   const [currentGridPos, setCurrentGridPos] = useState<{ x: number; y: number } | null>(null);
+  const shadowEvent = useMemo(() => {
+    let shadowEventUIModel = null;
+    if (movingEvent) {
+      shadowEventUIModel = EventUIModel.create(movingEvent?.model);
+      shadowEventUIModel.top = 1;
+      shadowEventUIModel.left = gridInfo[currentGridPos?.x ?? 0].left;
+      shadowEventUIModel.width = gridInfo[currentGridPos?.x ?? 0].width;
+    }
+
+    return shadowEventUIModel;
+  }, [currentGridPos?.x, gridInfo, movingEvent]);
 
   const dragStartEventRef = useRef<EventUIModel | null>(null);
   useEffect(() => {
@@ -76,16 +87,8 @@ export function useDayGridMonthEventMove({
     }
   }, [cells, clearDraggingEvent, currentGridPos, draggingState, movingEvent, updateEvent]);
 
-  let shadowEventUIModel = null;
-  if (movingEvent) {
-    shadowEventUIModel = EventUIModel.create(movingEvent?.model);
-    shadowEventUIModel.top = 1;
-    shadowEventUIModel.left = gridInfo[currentGridPos?.x ?? 0].left;
-    shadowEventUIModel.width = gridInfo[currentGridPos?.x ?? 0].width;
-  }
-
   return {
-    movingEvent: shadowEventUIModel,
+    movingEvent: shadowEvent,
     currentGridPos,
   };
 }
