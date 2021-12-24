@@ -2,7 +2,7 @@ import range from 'tui-code-snippet/array/range';
 
 import { createDateMatrixOfMonth } from '@src/helpers/grid';
 import TZDate from '@src/time/date';
-import { addDate } from '@src/time/datetime';
+import { addDate, WEEK_DAYS } from '@src/time/datetime';
 
 function createResultMatrix({
   startFrom,
@@ -16,7 +16,7 @@ function createResultMatrix({
   rangeEnd: number;
 }) {
   return range(rows).map((rowCount) =>
-    range(rangeStart, rangeEnd + 1).map((num) => addDate(startFrom, num + rowCount * 7))
+    range(rangeStart, rangeEnd + 1).map((num) => addDate(startFrom, num + rowCount * WEEK_DAYS))
   );
 }
 

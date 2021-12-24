@@ -1,5 +1,6 @@
 import range from 'tui-code-snippet/array/range';
 
+import { DEFAULT_VISIBLE_WEEKS } from '@src/constants/grid';
 import { findByDateRange } from '@src/controller/month';
 import { findByDateRange as findByDateRangeForWeek } from '@src/controller/week';
 import EventUIModel from '@src/model/eventUIModel';
@@ -302,7 +303,6 @@ export const getDayGridEvents = (
   );
 };
 
-const DEFAULT_VISIBLE_WEEKS = 6;
 export function createDateMatrixOfMonth(
   renderTargetDate: Date | TZDate,
   {
