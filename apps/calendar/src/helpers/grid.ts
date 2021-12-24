@@ -1,17 +1,20 @@
 import range from 'tui-code-snippet/array/range';
 
+import { DEFAULT_VISIBLE_WEEKS } from '@src/constants/grid';
 import { findByDateRange } from '@src/controller/month';
 import { findByDateRange as findByDateRangeForWeek } from '@src/controller/week';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import {
-  convertStartDayToLastDay,
+  addDate,
+  getDateDifference,
   isWeekend,
+  subtractDate,
   toEndOfDay,
   toEndOfMonth,
   toStartOfDay,
   toStartOfMonth,
-  withinRangeDate,
+  WEEK_DAYS,
 } from '@src/time/datetime';
 
 import {
@@ -21,7 +24,7 @@ import {
   Matrix3d,
   TimeGridEventMatrix,
 } from '@t/events';
-import { MonthOption, WeekOption } from '@t/option';
+import { MonthOptions, WeekOptions } from '@t/options';
 import { Cells, Panel } from '@t/panel';
 
 export const EVENT_HEIGHT = 22;
@@ -112,27 +115,16 @@ export function getGridDateIndex(date: TZDate, cells: TZDate[]) {
 }
 
 export const getLeftAndWidth = (
-  start: TZDate,
-  end: TZDate,
+  startIndex: number,
+  endIndex: number,
   cells: Cells,
   narrowWeekend: boolean
 ) => {
-  const gridStartIndex = getGridDateIndex(start, cells);
-  const gridEndIndex = getGridDateIndex(convertStartDayToLastDay(end), cells);
-
-  if (gridStartIndex < 0 && gridEndIndex < 0) {
-    return { left: 0, width: withinRangeDate(start, end, cells) ? 100 : 0 };
-  }
-
   const { widthList } = getGridWidthAndLeftPercentValues(cells, narrowWeekend, TOTAL_WIDTH);
 
   return {
-    left: !gridStartIndex ? 0 : getWidth(widthList, 0, gridStartIndex - 1),
-    width: getWidth(
-      widthList,
-      gridStartIndex ?? 0,
-      gridEndIndex < 0 ? cells.length - 1 : gridEndIndex
-    ),
+    left: !startIndex ? 0 : getWidth(widthList, 0, startIndex - 1),
+    width: getWidth(widthList, startIndex ?? 0, endIndex < 0 ? cells.length - 1 : endIndex),
   };
 };
 
@@ -256,7 +248,7 @@ const getTimeGridEventModels = (
 export const getDayGridEvents = (
   cells: Cells,
   calendarData: CalendarData,
-  { narrowWeekend, hourStart, hourEnd }: WeekOption
+  { narrowWeekend, hourStart, hourEnd }: WeekOptions
 ): EventModelMap => {
   const panels: Panel[] = [
     {
@@ -311,61 +303,45 @@ export const getDayGridEvents = (
   );
 };
 
-// eslint-disable-next-line complexity
-export function getDateMatrixByMonth(renderMonthDate: Date | TZDate, options: MonthOption) {
-  const targetMonthDate = new TZDate(renderMonthDate);
+export function createDateMatrixOfMonth(
+  renderTargetDate: Date | TZDate,
+  {
+    workweek = false,
+    visibleWeeksCount = 0,
+    startDayOfWeek = 0,
+    isAlways6Week = true,
+  }: MonthOptions
+) {
+  const targetDate = new TZDate(renderTargetDate);
+  const shouldApplyVisibleWeeksCount = visibleWeeksCount > 0;
+  const baseDate = shouldApplyVisibleWeeksCount ? targetDate : toStartOfMonth(targetDate);
+  const firstDateOfMatrix = subtractDate(
+    baseDate,
+    baseDate.getDay() - startDayOfWeek + (baseDate.getDay() < startDayOfWeek ? WEEK_DAYS : 0)
+  );
+  const dayOfFirstDateOfMatrix = firstDateOfMatrix.getDay();
 
-  const startDayOfWeek = options.startDayOfWeek ?? 0;
-  const visibleWeeksCount = Math.min(options.visibleWeeksCount ?? 0, 6);
-  const workweek = options.workweek ?? false;
-  const isAlways6Week = visibleWeeksCount > 0 ? false : options.isAlways6Week ?? true;
+  const totalDatsCountOfMonth = toEndOfMonth(targetDate).getDate();
+  const initialDifference = getDateDifference(firstDateOfMatrix, baseDate);
+  const totalDatesOfMatrix = totalDatsCountOfMonth + initialDifference;
 
-  const calendar: Array<TZDate[]> = [];
-
-  let start;
-  let end;
-  let totalDate;
-  let week;
-
-  if (visibleWeeksCount) {
-    start = new TZDate(targetMonthDate);
-    end = new TZDate(targetMonthDate);
-    end.addDate(7 * (visibleWeeksCount - 1));
-  } else {
-    start = toStartOfMonth(targetMonthDate);
-    end = toEndOfMonth(targetMonthDate);
+  let totalWeeksOfMatrix = DEFAULT_VISIBLE_WEEKS;
+  if (shouldApplyVisibleWeeksCount) {
+    totalWeeksOfMatrix = visibleWeeksCount;
+  } else if (isAlways6Week === false) {
+    totalWeeksOfMatrix = Math.ceil(totalDatesOfMatrix / WEEK_DAYS);
   }
 
-  // create day number array by startDayOfWeek number
-  // 4 -> [4, 5, 6, 0, 1, 2, 3]
-  // 2 -> [2, 3, 4, 5, 6, 0, 1]
-  const weekArr = range(startDayOfWeek, 7).concat(range(7)).slice(0, 7);
-  const startIndex = weekArr.indexOf(start.getDay());
-  const endIndex = weekArr.indexOf(end.getDay());
-  // free dates after last date of this month
-  const afterDates = 7 - (endIndex + 1);
+  return range(0, totalWeeksOfMatrix).map((weekIndex) =>
+    range(0, WEEK_DAYS).reduce((weekRow, dayOfWeek) => {
+      const steps = weekIndex * WEEK_DAYS + dayOfWeek;
+      const currentDay = (steps + dayOfFirstDateOfMatrix) % WEEK_DAYS;
+      if (!workweek || (workweek && !isWeekend(currentDay))) {
+        const date = addDate(firstDateOfMatrix, steps);
+        weekRow.push(date);
+      }
 
-  if (visibleWeeksCount) {
-    totalDate = 7 * visibleWeeksCount;
-  } else {
-    totalDate = isAlways6Week ? 7 * 6 : startIndex + end.getDate() + afterDates;
-  }
-  const cursor = toStartOfDay(start).addDate(-startIndex);
-  // iteratee all dates to render
-  range(totalDate).forEach((day: number) => {
-    if (!(day % 7)) {
-      // group each date by week
-      week = calendar[day / 7] = [];
-    }
-
-    const date = toStartOfDay(cursor);
-    if (!workweek || !isWeekend(date.getDay())) {
-      week.push(date);
-    }
-
-    // add date
-    cursor.setDate(cursor.getDate() + 1);
-  });
-
-  return calendar;
+      return weekRow;
+    }, [] as TZDate[])
+  );
 }

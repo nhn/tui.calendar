@@ -1,20 +1,10 @@
 import { expect, test } from '@playwright/test';
 
-import { dragAndDrop } from './utils';
-
-const WEEK_VIEW_PAGE_URL =
-  'http://localhost:6006/iframe.html?id=weekview--fixed-events&args=&viewMode=story';
+import { WEEK_VIEW_PAGE_URL } from '../configs';
+import { dragAndDrop } from '../utils';
 
 test.beforeEach(async ({ page }) => {
   await page.goto(WEEK_VIEW_PAGE_URL);
-});
-
-test.describe('basic test', () => {
-  test('event count', async ({ page }) => {
-    const events = await page.$$('.toastui-calendar-weekday-event-block');
-
-    expect(events).toHaveLength(3);
-  });
 });
 
 test.describe('event resizing', () => {

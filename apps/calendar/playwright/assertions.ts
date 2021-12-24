@@ -1,8 +1,13 @@
 import { expect, Page, test } from '@playwright/test';
 
-export async function assertGridSelectionMatching(page: Page, startIdx: number, endIdx: number) {
-  const startCellLocator = page.locator('.toastui-calendar-daygrid-cell').nth(startIdx);
-  const endCellLocator = page.locator('.toastui-calendar-daygrid-cell').nth(endIdx);
+export async function assertGridSelectionMatching(
+  page: Page,
+  startIdx: number,
+  endIdx: number,
+  className: string
+) {
+  const startCellLocator = page.locator(className).nth(startIdx);
+  const endCellLocator = page.locator(className).nth(endIdx);
 
   const selectionLocator = page.locator('.toastui-calendar-daygrid-grid-selection');
   const selectionStartLocator = selectionLocator.first();

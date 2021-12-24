@@ -6,7 +6,7 @@ import { cls } from '@src/helpers/css';
 import EventModel from '@src/model/eventModel';
 import Theme from '@src/theme';
 
-import { Options } from '@t/option';
+import { Options } from '@t/options';
 
 const style = {
   position: 'absolute',
@@ -30,7 +30,7 @@ export function ProviderWrapper({
   const store = initCalendarStore(optionsUserInput);
   const { dispatch } = store.getState();
 
-  dispatch.option.setOptions(optionsUserInput);
+  dispatch.options.setOptions(optionsUserInput);
   dispatch.calendar.clearEvents();
 
   if (events.length) {

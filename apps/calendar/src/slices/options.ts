@@ -6,12 +6,12 @@ import { Day } from '@src/time/datetime';
 import { mergeObject } from '@src/utils/object';
 
 import { EventModelData } from '@t/events';
-import { Option } from '@t/option';
+import { Options } from '@t/options';
 import {
-  CalendarMonthOption,
+  CalendarMonthOptions,
   CalendarState,
   CalendarStore,
-  CalendarWeekOption,
+  CalendarWeekOptions,
   SetState,
 } from '@t/store';
 
@@ -19,7 +19,7 @@ function initializeDayNames(startDayOfWeek = 0) {
   return [...range(startDayOfWeek, 7), ...range(startDayOfWeek)].map((day) => getDayName(day));
 }
 
-function initializeWeekOption(weekOption: Option['week'] = {}): CalendarWeekOption {
+function initializeWeekOptions(weekOptions: Options['week'] = {}): CalendarWeekOptions {
   return {
     startDayOfWeek: Day.SUN,
     daynames: [],
@@ -36,11 +36,11 @@ function initializeWeekOption(weekOption: Option['week'] = {}): CalendarWeekOpti
     ],
     hourStart: 0,
     hourEnd: 24,
-    ...weekOption,
+    ...weekOptions,
   };
 }
 
-function initializeMonthOption(monthOption: Option['month']): CalendarMonthOption {
+function initializeMonthOptions(monthOptions: Options['month']): CalendarMonthOptions {
   const month = {
     daynames: [],
     visibleWeeksCount: 0,
@@ -56,7 +56,7 @@ function initializeMonthOption(monthOption: Option['month']): CalendarMonthOptio
     visibleEventCount: 6,
     eventFilter: (event: Required<EventModelData>) =>
       event.isVisible && ['allday', 'time'].includes(event.category),
-    ...monthOption,
+    ...monthOptions,
   };
 
   if (!month.daynames.length) {
@@ -69,39 +69,39 @@ function initializeMonthOption(monthOption: Option['month']): CalendarMonthOptio
 // @TODO: some of options has default values. so it should be `Required` type.
 // But it needs a complex type such as `DeepRequired`.
 // maybe leveraging library like `ts-essential` might be helpful.
-export type OptionSlice = {
-  option: Omit<Required<Option>, 'template' | 'calendars' | 'theme' | 'timezone'>;
+export type OptionsSlice = {
+  options: Omit<Required<Options>, 'template' | 'calendars' | 'theme' | 'timezone'>;
 };
 
-export type OptionDispatchers = {
-  setOptions: (newOption: Partial<OptionSlice['option']>) => void;
+export type OptionsDispatchers = {
+  setOptions: (newOptions: Partial<OptionsSlice['options']>) => void;
 };
 
 // eslint-disable-next-line complexity
-export function createOptionSlice(option: Option = {}): OptionSlice {
+export function createOptionsSlice(options: Options = {}): OptionsSlice {
   return {
-    option: {
-      defaultView: option?.defaultView ?? 'week',
-      taskView: option?.taskView ?? true,
-      eventView: option?.eventView ?? true,
-      useCreationPopup: option?.useCreationPopup ?? false,
-      useDetailPopup: option?.useDetailPopup ?? false,
-      disableDblClick: option?.disableDblClick ?? false,
-      disableClick: option?.disableClick ?? false,
-      isReadOnly: option?.isReadOnly ?? false,
-      week: initializeWeekOption(option.week),
-      month: initializeMonthOption(option.month),
-      usageStatistics: option?.usageStatistics ?? true,
+    options: {
+      defaultView: options.defaultView ?? 'week',
+      taskView: options.taskView ?? true,
+      eventView: options.eventView ?? true,
+      useCreationPopup: options.useCreationPopup ?? false,
+      useDetailPopup: options.useDetailPopup ?? false,
+      disableDblClick: options.disableDblClick ?? false,
+      disableClick: options.disableClick ?? false,
+      isReadOnly: options.isReadOnly ?? false,
+      week: initializeWeekOptions(options.week),
+      month: initializeMonthOptions(options.month),
+      usageStatistics: options.usageStatistics ?? true,
     },
   };
 }
 
-export function createOptionDispatchers(set: SetState<CalendarStore>): OptionDispatchers {
+export function createOptionsDispatchers(set: SetState<CalendarStore>): OptionsDispatchers {
   return {
-    setOptions: (newOption: Partial<OptionSlice['option']> = {}) =>
+    setOptions: (newOptions: Partial<OptionsSlice['options']> = {}) =>
       set(
         produce((state: CalendarState) => {
-          mergeObject(state.option, newOption);
+          mergeObject(state.options, newOptions);
         })
       ),
   };

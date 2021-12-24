@@ -3,23 +3,23 @@ import { useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
 
 import GridHeader from '@src/components/dayGridCommon/gridHeader';
 import { DayGridMonth } from '@src/components/dayGridMonth/dayGridMonth';
-import Panel from '@src/components/panel';
+import { Panel } from '@src/components/panel';
 import { MONTH_DAY_NAME_HEIGHT } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
 import { useTheme } from '@src/contexts/theme';
 import { cls } from '@src/helpers/css';
 import { capitalizeDayName } from '@src/helpers/dayName';
-import { getDateMatrixByMonth } from '@src/helpers/grid';
-import { optionSelector } from '@src/selectors';
+import { createDateMatrixOfMonth } from '@src/helpers/grid';
+import { optionsSelector } from '@src/selectors';
 import { getGridInfo, isWeekend } from '@src/time/datetime';
 import { getSize } from '@src/utils/dom';
 
-import { MonthOption } from '@t/option';
+import { MonthOptions } from '@t/options';
 import { CalendarStore } from '@t/store';
 import { TemplateMonthDayName } from '@t/template';
 
-function getDayNames(option: CalendarStore['option']) {
-  const { daynames, workweek } = option.month as Required<MonthOption>;
+function getDayNames(options: CalendarStore['options']) {
+  const { daynames, workweek } = options.month as Required<MonthOptions>;
   const dayNames: TemplateMonthDayName[] = [];
 
   daynames.forEach((name, index) => {
@@ -51,18 +51,18 @@ function useContainerHeight(container: RefObject<HTMLDivElement>, dayNameHeight:
 export const Month: FunctionComponent = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const option = useStore(optionSelector);
+  const options = useStore(optionsSelector);
   const theme = useTheme();
 
   const gridPanelHeight = useContainerHeight(containerRef, MONTH_DAY_NAME_HEIGHT);
 
-  const dayNames = getDayNames(option);
-  const monthOptions = option.month as Required<MonthOption>;
+  const dayNames = getDayNames(options);
+  const monthOptions = options.month as Required<MonthOptions>;
   const { narrowWeekend, startDayOfWeek, workweek } = monthOptions;
 
   const dateMatrix = useMemo(
     // @TODO: 현재 렌더링된 MonthDate기준으로 계산(prev, next 사용 시 날짜 계산 필요)
-    () => getDateMatrixByMonth(new Date(), monthOptions),
+    () => createDateMatrixOfMonth(new Date(), monthOptions),
     [monthOptions]
   );
   const { gridInfo } = useMemo(
@@ -73,7 +73,7 @@ export const Month: FunctionComponent = () => {
   return (
     // @TODO: change to layout component
     <div className={cls('month')} ref={containerRef}>
-      <Panel name="month-daynames" height={MONTH_DAY_NAME_HEIGHT}>
+      <Panel name="month-daynames" initialHeight={MONTH_DAY_NAME_HEIGHT}>
         <GridHeader
           templateType="monthDayname"
           dayNames={dayNames}
@@ -83,7 +83,7 @@ export const Month: FunctionComponent = () => {
           type="month"
         />
       </Panel>
-      <Panel name="month-daygrid" height={gridPanelHeight}>
+      <Panel name="month-daygrid" initialHeight={gridPanelHeight}>
         <DayGridMonth
           options={monthOptions}
           dateMatrix={dateMatrix}

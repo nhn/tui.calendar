@@ -8,7 +8,7 @@ import TZDate from '@src/time/date';
 import { calendars } from '@stories/util/mockCalendars';
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 
-import { CalendarInfo } from '@t/option';
+import { CalendarInfo } from '@t/options';
 import { EventFormPopupParam } from '@t/store';
 
 export default {

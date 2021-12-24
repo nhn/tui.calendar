@@ -11,7 +11,7 @@ import array from '@src/utils/array';
 const MIN_HEIGHT_PERCENT = 1;
 const MIN_MODEL_HEIGHT_PERCENT = 20;
 
-interface RenderInfoOption {
+interface RenderInfoOptions {
   baseWidth: number;
   columnIndex: number;
   renderStart: TZDate;
@@ -40,25 +40,25 @@ export function isBetween(startColumnTime: TZDate, endColumnTime: TZDate) {
   };
 }
 
-function hasGoingDuration(uiModel: EventUIModel, option: RenderInfoOption) {
-  const { goingStart, startColumnTime } = option;
+function hasGoingDuration(uiModel: EventUIModel, options: RenderInfoOptions) {
+  const { goingStart, startColumnTime } = options;
   const { goingDuration = 0 } = uiModel.valueOf();
 
   return goingDuration && startColumnTime <= goingStart;
 }
 
-function hasComingDuration(uiModel: EventUIModel, option: RenderInfoOption) {
-  const { comingEnd, endColumnTime } = option;
+function hasComingDuration(uiModel: EventUIModel, options: RenderInfoOptions) {
+  const { comingEnd, endColumnTime } = options;
   const { comingDuration = 0 } = uiModel.valueOf();
 
   return comingDuration && endColumnTime >= comingEnd;
 }
 
-function setInnerHeights(uiModel: EventUIModel, option: RenderInfoOption) {
-  const { renderStart, renderEnd, modelStart, modelEnd } = option;
+function setInnerHeights(uiModel: EventUIModel, options: RenderInfoOptions) {
+  const { renderStart, renderEnd, modelStart, modelEnd } = options;
   let modelDurationHeight = 100;
 
-  if (hasGoingDuration(uiModel, option)) {
+  if (hasGoingDuration(uiModel, options)) {
     const { height: goingDurationHeight } = getTopHeightByTime(
       renderStart,
       modelStart,
@@ -69,7 +69,7 @@ function setInnerHeights(uiModel: EventUIModel, option: RenderInfoOption) {
     modelDurationHeight -= goingDurationHeight;
   }
 
-  if (hasComingDuration(uiModel, option)) {
+  if (hasComingDuration(uiModel, options)) {
     const { height: comingDurationHeight } = getTopHeightByTime(
       modelEnd,
       renderEnd,
@@ -87,8 +87,8 @@ function setInnerHeights(uiModel: EventUIModel, option: RenderInfoOption) {
   uiModel.modelDurationHeight = modelDurationHeight;
 }
 
-function setCroppedEdges(uiModel: EventUIModel, option: RenderInfoOption) {
-  const { goingStart, comingEnd, startColumnTime, endColumnTime } = option;
+function setCroppedEdges(uiModel: EventUIModel, options: RenderInfoOptions) {
+  const { goingStart, comingEnd, startColumnTime, endColumnTime } = options;
 
   if (goingStart < startColumnTime) {
     uiModel.croppedStart = true;
@@ -98,8 +98,9 @@ function setCroppedEdges(uiModel: EventUIModel, option: RenderInfoOption) {
   }
 }
 
-function setDimension(uiModel: EventUIModel, option: RenderInfoOption) {
-  const { renderStart, renderEnd, startColumnTime, endColumnTime, baseWidth, columnIndex } = option;
+function setDimension(uiModel: EventUIModel, options: RenderInfoOptions) {
+  const { renderStart, renderEnd, startColumnTime, endColumnTime, baseWidth, columnIndex } =
+    options;
   const { top, height } = getTopHeightByTime(
     renderStart,
     renderEnd,
@@ -127,7 +128,7 @@ function setRenderInfo(
   const comingEnd = addMinutes(modelEnd, comingDuration);
   const renderStart = max(goingStart, startColumnTime);
   const renderEnd = min(comingEnd, endColumnTime);
-  const renderInfoOption = {
+  const renderInfoOptions = {
     baseWidth,
     columnIndex,
     modelStart,
@@ -140,9 +141,9 @@ function setRenderInfo(
     endColumnTime,
   };
 
-  setDimension(uiModel, renderInfoOption);
-  setInnerHeights(uiModel, renderInfoOption);
-  setCroppedEdges(uiModel, renderInfoOption);
+  setDimension(uiModel, renderInfoOptions);
+  setInnerHeights(uiModel, renderInfoOptions);
+  setCroppedEdges(uiModel, renderInfoOptions);
 }
 
 /**

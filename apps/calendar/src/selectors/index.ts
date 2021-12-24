@@ -11,5 +11,5 @@ export const calendarSelector = topLevelStateSelector('calendar');
 export const weekViewLayoutSelector = topLevelStateSelector('weekViewLayout');
 export const templateSelector = topLevelStateSelector('template');
 export const viewSelector = topLevelStateSelector('view');
-export const optionSelector = topLevelStateSelector('option');
+export const optionsSelector = topLevelStateSelector('options');
 export const dndSelector = topLevelStateSelector('dnd');

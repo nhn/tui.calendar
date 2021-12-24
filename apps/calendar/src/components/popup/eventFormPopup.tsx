@@ -17,6 +17,9 @@ import { EventFormPopupParam } from '@t/store';
 const classNames = {
   popupContainer: cls('popup-container'),
   formContainer: cls('form-container'),
+  popupArrowTop: cls('popup-arrow-top'),
+  popupArrowBorder: cls('popup-arrow-border'),
+  popupArrowFill: cls('popup-arrow-fill'),
 };
 
 export const EventFormPopup: FunctionComponent<EventFormPopupParam> = ({
@@ -40,6 +43,11 @@ export const EventFormPopup: FunctionComponent<EventFormPopupParam> = ({
         <PopupSection>
           <ConfirmPopupButton />
         </PopupSection>
+      </div>
+      <div className={classNames.popupArrowTop}>
+        <div className={classNames.popupArrowBorder}>
+          <div className={classNames.popupArrowFill} />
+        </div>
       </div>
     </div>
   );

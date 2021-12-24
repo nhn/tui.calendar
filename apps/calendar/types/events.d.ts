@@ -3,7 +3,7 @@ import type EventUIModel from '@src/model/eventUIModel';
 import type TZDate from '@src/time/date';
 import type Collection from '@src/utils/collection';
 
-import { CalendarInfo } from '@t/option';
+import { CalendarInfo } from '@t/options';
 
 export type Matrix<T> = T[][];
 export type Matrix3d<T> = Matrix<T>[];

@@ -10,6 +10,10 @@
   position: relative;
 }
 
+.month-daygrid .month-daygrid__container {
+  height: 100%;
+}
+
 .weekday-grid {
   position: absolute;
   min-height: inherit;

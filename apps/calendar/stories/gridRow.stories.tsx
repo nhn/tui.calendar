@@ -5,7 +5,7 @@ import range from 'tui-code-snippet/array/range';
 
 import { OtherGridRow } from '@src/components/dayGridWeek/otherGridRow';
 import { Layout } from '@src/components/layout';
-import Panel from '@src/components/panel';
+import { Panel } from '@src/components/panel';
 import { createEventCollection } from '@src/controller/base';
 import { getDayGridEvents } from '@src/helpers/grid';
 import TZDate from '@src/time/date';

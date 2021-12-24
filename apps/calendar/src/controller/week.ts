@@ -32,7 +32,7 @@ import {
   Matrix,
   Matrix3d,
 } from '@t/events';
-import { WeekOption } from '@t/option';
+import { WeekOptions } from '@t/options';
 import { Panel } from '@t/panel';
 
 /**********
@@ -183,7 +183,7 @@ export function _makeHourRangeFilter(hStart: number, hEnd: number) {
 
 /**
  * make ui model function depending on start and end hour
- * if time view option has start or end hour condition
+ * if time view options has start or end hour condition
  * it add filter
  * @param {number} hourStart - start hour to be shown
  * @param {number} hourEnd - end hour to be shown
@@ -243,7 +243,7 @@ export function splitEventByDateRange(
 /**
  * create ui model for time view part
  * @param {IDS_OF_DAY} idsOfDay - model controller
- * @param {object} condition - find option
+ * @param {object} condition - find options
  *  @param {TZDate} condition.start - start date.
  *  @param {TZDate} condition.end - end date.
  *  @param {Collection} condition.uiModelTimeColl - collection of ui models.
@@ -333,7 +333,7 @@ export function getUIModelForAlldayView(
 /**
  * Populate events in date range.
  * @param {CalendarData} calendarData - data store
- * @param {object} condition - find option
+ * @param {object} condition - find options
  *  @param {IDS_OF_DAY} condition.idsOfDay - model controller
  *  @param {TZDate} condition.start start date.
  *  @param {TZDate} condition.end end date.
@@ -349,7 +349,7 @@ export function findByDateRange(
     end: TZDate;
     panels: Panel[];
     andFilters: Filter<EventModel | EventUIModel>[];
-    options: WeekOption;
+    options: WeekOptions;
   }
 ) {
   const { start, end, panels, andFilters = [], options } = condition;
