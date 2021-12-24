@@ -18,7 +18,8 @@
     "lint": "eslint ./src ./test",
     "build": "webpack --mode=production && webpack --mode=production --env minify && node tsBannerGenerator.js",
     "doc": "tuidoc",
-    "analyze": "NODE_ENV=production webpack --mode=production --minify --profile --json > stats.json && webpack-bundle-analyzer stats.json ./dist"
+    "analyze": "NODE_ENV=production webpack --mode=production --minify --profile --json > stats.json && webpack-bundle-analyzer stats.json ./dist",
+    "prepare": "npm run build"
   },
   "keywords": [
     "nhn",

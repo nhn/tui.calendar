@@ -4,6 +4,10 @@ export function isNil(value: unknown): value is null | undefined {
   return isUndefined(value) || value === null;
 }
 
+export function isPresent<T>(value: T | null | undefined): value is T {
+  return !isNil(value);
+}
+
 export function isFunction(value: unknown): value is Function {
   return typeof value === 'function';
 }

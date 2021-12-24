@@ -16,9 +16,9 @@ import { EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
 import { createMousePositionDataGrabberWeek } from '@src/helpers/view';
 import { useDOMNode } from '@src/hooks/common/domNode';
 import { useDrag } from '@src/hooks/common/drag';
+import { useDayGridSelection } from '@src/hooks/dayGridCommon/dayGridSelection';
 import { useAlldayGridRowEventMove } from '@src/hooks/dayGridWeek/alldayGridRowEventMove';
 import { useAlldayGridRowEventResize } from '@src/hooks/dayGridWeek/alldayGridRowEventResize';
-import { useAlldayGridRowSelection } from '@src/hooks/dayGridWeek/alldayGridRowSelection';
 import { useGridRowHeightController } from '@src/hooks/dayGridWeek/gridRowHeightController';
 import EventUIModel from '@src/model/eventUIModel';
 import { PopupType } from '@src/slices/popup';
@@ -62,8 +62,11 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
   timesWidth = 120,
   timezonesCount = 1,
 }) => {
-  const dragStartPos = useRef<{ x: number; y: number } | null>(null);
   const [panelContainer, setPanelContainerRef] = useDOMNode<HTMLDivElement>();
+  const { show } = useDispatch('popup');
+
+  const dragStartPos = useRef<{ x: number; y: number } | null>(null);
+
   const maxTop = Math.max(0, ...events.map(({ top }) => top));
   const { narrowWeekend = false } = options;
   const rowTitleTemplate: GridRowTitleTemplate = `${category}Title`;
@@ -91,11 +94,15 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
     mousePositionDataGrabber,
   });
 
-  const gridSelection = useAlldayGridRowSelection(mousePositionDataGrabber, cells);
+  const gridSelection = useDayGridSelection(mousePositionDataGrabber);
+  const gridSelectionData = gridSelection
+    ? {
+        startCellIndex: gridSelection.initColIndex,
+        endCellIndex: gridSelection.currentColIndex,
+      }
+    : null;
 
-  const { show } = useDispatch('popup');
-
-  const { onMouseDown } = useDrag(DRAGGING_TYPE_CONSTANTS.alldayGridRowSelection, {
+  const { onMouseDown } = useDrag(DRAGGING_TYPE_CONSTANTS.dayGridSelection, {
     onDragStart: (e) => {
       dragStartPos.current = {
         x: e.pageX,
@@ -107,12 +114,16 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
         return;
       }
 
-      const { start, end } = gridSelection;
+      const { initColIndex, currentColIndex } = gridSelection;
       const { x, y } = dragStartPos.current;
       const { pageX, pageY } = e;
 
       dragStartPos.current = null;
       e.stopPropagation();
+
+      const start = cells[Math.min(initColIndex, currentColIndex)];
+      const end = cells[Math.max(initColIndex, currentColIndex)];
+
       show({
         type: PopupType.form,
         param: {
@@ -164,7 +175,7 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
           />
         </div>
         <GridSelection
-          gridSelectionData={gridSelection}
+          gridSelectionData={gridSelectionData}
           cells={cells}
           narrowWeekend={narrowWeekend}
         />
