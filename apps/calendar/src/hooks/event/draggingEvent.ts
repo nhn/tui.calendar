@@ -18,7 +18,7 @@ const getTargetEventId = (itemType: string | null, behavior: EventDraggingBehavi
   return isEventDraggingType(itemType) ? itemType.split('/')[2] : null;
 };
 
-export function useDraggingEvent(events: EventUIModel[], behavior: EventDraggingBehavior) {
+export function useDraggingEvent(behavior: EventDraggingBehavior) {
   const [draggingEvent, setDraggingEvent] = useState<EventUIModel | null>(null);
   const currentDraggingEvent = useStore(
     useCallback(

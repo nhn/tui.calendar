@@ -82,13 +82,11 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
   );
 
   const { resizingEvent, resizingWidth } = useAlldayGridRowEventResize({
-    events,
     cells,
     gridColWidthMap,
     mousePositionDataGrabber,
   });
   const { movingEvent, movingLeft } = useAlldayGridRowEventMove({
-    events,
     cells,
     gridInfo,
     mousePositionDataGrabber,

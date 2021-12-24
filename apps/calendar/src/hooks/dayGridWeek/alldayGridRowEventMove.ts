@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from 'preact/hooks';
 
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useDraggingEvent } from '@src/hooks/event/draggingEvent';
-import EventUIModel from '@src/model/eventUIModel';
 import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import TZDate from '@src/time/date';
@@ -12,20 +11,14 @@ import { isNil } from '@src/utils/type';
 import { Cells } from '@t/panel';
 
 interface Params {
-  events: EventUIModel[];
   cells: Cells;
   gridInfo: GridInfo[];
   mousePositionDataGrabber: (e: MouseEvent) => MousePositionData | null;
 }
 
-export function useAlldayGridRowEventMove({
-  events,
-  cells,
-  gridInfo,
-  mousePositionDataGrabber,
-}: Params) {
+export function useAlldayGridRowEventMove({ cells, gridInfo, mousePositionDataGrabber }: Params) {
   const { x, y, draggingState } = useStore(dndSelector);
-  const { draggingEvent: movingEvent, clearDraggingEvent } = useDraggingEvent(events, 'move');
+  const { draggingEvent: movingEvent, clearDraggingEvent } = useDraggingEvent('move');
   const { updateEvent } = useDispatch('calendar');
 
   const [currentGridX, setCurrentGridX] = useState<number | null>(null);

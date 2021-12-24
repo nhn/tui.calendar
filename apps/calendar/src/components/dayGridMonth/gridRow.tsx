@@ -1,4 +1,5 @@
 import { FunctionComponent, h, RefObject } from 'preact';
+import { memo } from 'preact/compat';
 import { useRef } from 'preact/hooks';
 
 import { GridCell } from '@src/components/dayGridMonth/gridCell';
@@ -69,4 +70,5 @@ const GridRow: FunctionComponent<Props> = ({
     </div>
   );
 };
-export default GridRow;
+
+export default memo(GridRow);

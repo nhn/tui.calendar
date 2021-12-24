@@ -12,28 +12,22 @@ import { isPresent } from '@src/utils/type';
 import { Cells } from '@t/panel';
 
 interface Params {
-  events: EventUIModel[];
   cells: Cells[];
   gridInfo: GridInfo[];
   mousePositionDataGrabber: (e: MouseEvent) => MousePositionData | null;
 }
 
-export function useDayGridMonthEventMove({
-  events,
-  cells,
-  gridInfo,
-  mousePositionDataGrabber,
-}: Params) {
+export function useDayGridMonthEventMove({ cells, gridInfo, mousePositionDataGrabber }: Params) {
   const { x, y, draggingState } = useStore(dndSelector);
-  const { draggingEvent: movingEvent, clearDraggingEvent } = useDraggingEvent(events, 'move');
+  const { draggingEvent: movingEvent, clearDraggingEvent } = useDraggingEvent('move');
   const { updateEvent } = useDispatch('calendar');
 
   const [currentGridPos, setCurrentGridPos] = useState<{ x: number; y: number } | null>(null);
   const shadowEvent = useMemo(() => {
     let shadowEventUIModel = null;
     if (movingEvent) {
-      shadowEventUIModel = EventUIModel.create(movingEvent?.model);
-      shadowEventUIModel.top = 1;
+      shadowEventUIModel = EventUIModel.create(movingEvent.model);
+      shadowEventUIModel.top = movingEvent.top;
       shadowEventUIModel.left = gridInfo[currentGridPos?.x ?? 0].left;
       shadowEventUIModel.width = gridInfo[currentGridPos?.x ?? 0].width;
     }

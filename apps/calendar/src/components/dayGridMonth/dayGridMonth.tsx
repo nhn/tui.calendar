@@ -133,19 +133,17 @@ export const DayGridMonth: FunctionComponent<Props> = ({
   );
 
   const gridSelection = useDayGridSelection(mousePositionDataGrabber);
-  const flattenCells = dateMatrix.flat();
-  const { uiModels: monthUIModels } = getRenderedEventUIModels(
-    flattenCells,
-    calendarData,
-    narrowWeekend
-  );
 
   const { movingEvent, currentGridPos } = useDayGridMonthEventMove({
-    events: monthUIModels,
     cells: dateMatrix,
     gridInfo,
     mousePositionDataGrabber,
   });
+
+  const renderedEventUiModels = useMemo(
+    () => dateMatrix.map((week) => getRenderedEventUIModels(week, calendarData, narrowWeekend)),
+    [calendarData, dateMatrix, narrowWeekend]
+  );
 
   if (!calendarData) {
     return null;
@@ -158,11 +156,7 @@ export const DayGridMonth: FunctionComponent<Props> = ({
       className={cls('month-daygrid__container')}
     >
       {dateMatrix.map((week, rowIndex) => {
-        const { uiModels, gridDateEventModelMap } = getRenderedEventUIModels(
-          week,
-          calendarData,
-          narrowWeekend
-        );
+        const { uiModels, gridDateEventModelMap } = renderedEventUiModels[rowIndex];
         const isMouseInWeek = rowIndex === currentGridPos?.y;
         const gridSelectionDataByRow = calcGridSelectionData(gridSelection, rowIndex, week.length);
 
