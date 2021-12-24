@@ -62,8 +62,11 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
   timesWidth = 120,
   timezonesCount = 1,
 }) => {
-  const dragStartPos = useRef<{ x: number; y: number } | null>(null);
   const [panelContainer, setPanelContainerRef] = useDOMNode<HTMLDivElement>();
+  const { show } = useDispatch('popup');
+
+  const dragStartPos = useRef<{ x: number; y: number } | null>(null);
+
   const maxTop = Math.max(0, ...events.map(({ top }) => top));
   const { narrowWeekend = false } = options;
   const rowTitleTemplate: GridRowTitleTemplate = `${category}Title`;
@@ -92,8 +95,12 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
   });
 
   const gridSelection = useDayGridSelection(mousePositionDataGrabber);
-
-  const { show } = useDispatch('popup');
+  const gridSelectionData = gridSelection
+    ? {
+        startCellIndex: gridSelection.initColIndex,
+        endCellIndex: gridSelection.currentColIndex,
+      }
+    : null;
 
   const { onMouseDown } = useDrag(DRAGGING_TYPE_CONSTANTS.dayGridSelection, {
     onDragStart: (e) => {
@@ -168,14 +175,7 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
           />
         </div>
         <GridSelection
-          gridSelectionData={
-            gridSelection
-              ? {
-                  startCellIndex: gridSelection.initColIndex,
-                  endCellIndex: gridSelection.currentColIndex,
-                }
-              : null
-          }
+          gridSelectionData={gridSelectionData}
           cells={cells}
           narrowWeekend={narrowWeekend}
         />

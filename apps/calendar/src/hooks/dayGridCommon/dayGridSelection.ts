@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'preact/hooks';
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 
 import { useStore } from '@src/contexts/calendarStore';
 import { DRAGGING_TYPE_CONSTANTS } from '@src/helpers/drag';
@@ -51,11 +51,15 @@ export function useDayGridSelection(
     }
   }, [draggingState]);
 
-  return isPresent(initSelectionDataRef.current) && isPresent(currentSelectionData)
-    ? {
-        ...currentSelectionData,
-        initRowIndex: initSelectionDataRef.current.initRowIndex,
-        initColIndex: initSelectionDataRef.current.initColIndex,
-      }
-    : null;
+  return useMemo(
+    () =>
+      isPresent(initSelectionDataRef.current) && isPresent(currentSelectionData)
+        ? {
+            ...currentSelectionData,
+            initRowIndex: initSelectionDataRef.current.initRowIndex,
+            initColIndex: initSelectionDataRef.current.initColIndex,
+          }
+        : null,
+    [currentSelectionData]
+  );
 }

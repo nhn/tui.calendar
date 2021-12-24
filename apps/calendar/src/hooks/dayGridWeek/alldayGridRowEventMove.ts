@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect, useMemo, useState } from 'preact/hooks';
 
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useDraggingEvent } from '@src/hooks/event/draggingEvent';
@@ -79,8 +79,11 @@ export function useAlldayGridRowEventMove({
     draggingState,
   ]);
 
-  return {
-    movingEvent,
-    movingLeft: currentMovingLeft,
-  };
+  return useMemo(
+    () => ({
+      movingEvent,
+      movingLeft: currentMovingLeft,
+    }),
+    [currentMovingLeft, movingEvent]
+  );
 }
