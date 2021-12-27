@@ -23,13 +23,9 @@ jobs:
       - name: npm install(jest)
         run: |
           npm install
-      - name: build libs/date
+      - name: bootstrap packages
         run: |
-          npm run setup:date
-      - name: npm install(toast.ui-calendar)
-        working-directory: ${{ env.WORKING_DIRECTORY }}
-        run: |
-          npm install
+          npx lerna bootstrap --no-ci
       - name: test
         run: |
           npm run test
