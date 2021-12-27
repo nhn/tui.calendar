@@ -1,5 +1,7 @@
 import type { Locator, Page } from '@playwright/test';
 
+import { BoundingBox } from './types';
+
 export async function dragAndDrop(
   page: Page,
   startLocator: Locator,
@@ -23,12 +25,14 @@ export async function selectGridCells(
   const startCellLocator = page.locator(className).nth(startCellIdx);
   const endCellLocator = page.locator(className).nth(endCellIdx);
 
-  const endCellBoundingBox = await endCellLocator.boundingBox();
+  const endCellBoundingBox = await getBoundingBox(endCellLocator);
 
-  if (endCellBoundingBox) {
-    await dragAndDrop(page, startCellLocator, {
-      x: endCellBoundingBox.x + 10,
-      y: endCellBoundingBox.y + 10,
-    });
-  }
+  await dragAndDrop(page, startCellLocator, {
+    x: endCellBoundingBox.x + 10,
+    y: endCellBoundingBox.y + 10,
+  });
+}
+
+export async function getBoundingBox(locator: Locator): Promise<BoundingBox> {
+  return (await locator.boundingBox()) ?? { x: NaN, y: NaN, width: NaN, height: NaN };
 }
