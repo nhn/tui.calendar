@@ -1,7 +1,6 @@
 import { expect, Page } from '@playwright/test';
 
-import { BoundingBox } from './types';
-import { dragAndDrop, getBoundingBox } from './utils';
+import { getBoundingBox } from './utils';
 
 export async function assertGridSelectionMatching(
   page: Page,
@@ -47,41 +46,4 @@ export async function assertGridSelectionMatching(
     startCellBoundingBox.width,
     -1
   );
-}
-
-export async function assertMonthEventMovingMatching(
-  page: Page,
-  targetCoordsDiff: { x: number; y: number }
-) {
-  function checkBoundingBoxAfterMoving(
-    boundingBoxBeforeMoving: BoundingBox,
-    boundingBoxAfterMoving: BoundingBox
-  ) {
-    if (targetCoordsDiff.x > 0) {
-      expect(boundingBoxAfterMoving.x).toBeGreaterThan(boundingBoxBeforeMoving.x);
-    } else if (targetCoordsDiff.x < 0) {
-      expect(boundingBoxAfterMoving.x).toBeLessThan(boundingBoxBeforeMoving.x);
-    }
-
-    if (targetCoordsDiff.y > 0) {
-      expect(boundingBoxAfterMoving.y).toBeGreaterThan(boundingBoxBeforeMoving.y);
-    } else if (targetCoordsDiff.y < 0) {
-      expect(boundingBoxAfterMoving.y).toBeLessThan(boundingBoxBeforeMoving.y);
-    }
-  }
-
-  const targetEventLocator = page.locator(
-    '.toastui-calendar-weekday-event-block:has-text("event2")'
-  );
-  const boundingBoxBeforeMoving = await getBoundingBox(targetEventLocator);
-
-  await dragAndDrop(page, targetEventLocator, {
-    x: boundingBoxBeforeMoving.x + targetCoordsDiff.x,
-    y: boundingBoxBeforeMoving.y + targetCoordsDiff.y,
-  });
-
-  const boundingBoxAfterMoving = await getBoundingBox(targetEventLocator);
-
-  checkBoundingBoxAfterMoving(boundingBoxBeforeMoving, boundingBoxAfterMoving);
-  expect(boundingBoxAfterMoving.width).toBeCloseTo(boundingBoxBeforeMoving.width, 3);
 }

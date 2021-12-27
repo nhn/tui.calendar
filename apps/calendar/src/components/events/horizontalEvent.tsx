@@ -125,6 +125,13 @@ function getStyles({
   return { dayEventBlockClassName, containerStyle, eventItemStyle, resizeIconStyle };
 }
 
+function getTestId({ model }: EventUIModel) {
+  const calendarId = model.calendarId ? `${model.calendarId}-` : '';
+  const id = model.id ? `${model.id}-` : '';
+
+  return `${calendarId}${id}${model.title}`;
+}
+
 export const HorizontalEvent: FunctionComponent<Props> = ({
   flat = false,
   uiModel,
@@ -174,7 +181,11 @@ export const HorizontalEvent: FunctionComponent<Props> = ({
   };
 
   return (
-    <div className={dayEventBlockClassName} style={containerStyle}>
+    <div
+      className={dayEventBlockClassName}
+      style={containerStyle}
+      data-test-id={getTestId(uiModel)}
+    >
       <div className={cls('weekday-event')} style={eventItemStyle} onMouseDown={handleMoveStart}>
         <span className={cls('weekday-event-title')}>
           <Template template="time" model={uiModel.model} />

@@ -8,16 +8,21 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe('event resizing', () => {
+  /**
+   * Suppose we have the following cells in the week view.
+   * Each number represents the index of the cell.
+   *
+   * [ 0,  1,  2,  3,  4,  5,  6]
+   */
+
   test('resizing allday grid row event', async ({ page }) => {
     const targetEventLocator = page.locator('.toastui-calendar-weekday-event >> nth=0');
     const boundingBoxBeforeResizing = await getBoundingBox(targetEventLocator);
 
     const resizerLocator = page.locator('.toastui-calendar-handle-y >> nth=0');
-    const resizerBoundingBox = await getBoundingBox(resizerLocator);
+    const endOfWeekCellLocator = page.locator('.toastui-calendar-panel-grid >> nth=6');
 
-    const targetX = resizerBoundingBox.x + resizerBoundingBox.width / 2;
-    const targetY = resizerBoundingBox.y + resizerBoundingBox.height / 2;
-    await dragAndDrop(page, resizerLocator, { x: targetX + 500, y: targetY });
+    await dragAndDrop(page, resizerLocator, endOfWeekCellLocator);
 
     const boundingBoxAfterResizing = await getBoundingBox(targetEventLocator);
 
@@ -27,18 +32,12 @@ test.describe('event resizing', () => {
 
 test.describe('event moving', () => {
   test('moving allday grid row event', async ({ page }) => {
-    const cellLocator = page.locator('.toastui-calendar-panel-grid >> nth=0');
-    const cellBoundingBox = await getBoundingBox(cellLocator);
-
-    const targetEventLocator = page.locator(
-      '.toastui-calendar-weekday-event-block:has-text("event1")'
-    );
+    const targetEventLocator = page.locator('data-test-id=cal1-1-event1');
     const boundingBoxBeforeMoving = await getBoundingBox(targetEventLocator);
 
-    await dragAndDrop(page, targetEventLocator, {
-      x: boundingBoxBeforeMoving.x + cellBoundingBox.width + 5,
-      y: boundingBoxBeforeMoving.y,
-    });
+    const secondOfWeekCellLocator = page.locator('.toastui-calendar-panel-grid >> nth=1');
+
+    await dragAndDrop(page, targetEventLocator, secondOfWeekCellLocator);
 
     const boundingBoxAfterMoving = await getBoundingBox(targetEventLocator);
 
