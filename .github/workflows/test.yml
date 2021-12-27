@@ -15,14 +15,31 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '16'
+          registry-url: https://registry.npmjs.org/
       - run: npm install -g npm
       - name: Setup timezone
         uses: szenius/set-timezone@v1.0
         with:
           timezoneMacos: 'Asia/Seoul'
-      - name: npm install(jest)
+      - name: Compute root dependencies cache key
+        id: root_lockfile_hash
+        run: echo "::set-output name=hash::${{ hashFiles('package-lock.json') }}"
+        shell: bash
+      - name: Check root dependencies cache
+        uses: actions/cache@v2
+        id: root_cache_dependencies
+        with:
+          path: ./node_modules
+          key: ${{ steps.root_lockfile_hash.outputs.hash }}
+      - name: Install root dependencies
         run: |
-          npm install
+          if echo ${{ steps.root_cache_dependencies.outputs.cache-hit }} | grep -c "true"
+          then
+            echo "Cache hit - skipping root dependency installation"
+          else
+            npm install
+          fi
+        shell: bash
       - name: bootstrap packages
         run: |
           npx lerna bootstrap --no-ci
