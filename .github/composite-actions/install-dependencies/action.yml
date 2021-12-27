@@ -12,6 +12,9 @@ runs:
       with:
         node-version: '16'
         registry-url: https://registry.npmjs.org/
+    - name: Update npm to latest version
+      run: npm install -g npm
+      shell: bash
     - name: Setup timezone
       uses: szenius/set-timezone@v1.0
       with:
@@ -35,9 +38,6 @@ runs:
           npm install
         fi
       shell: bash
-    - name: bootstrap packages
+    - name: Build @toast-ui/date
+      run: npm run build:date
       shell: bash
-      run: |
-        npx lerna bootstrap --no-ci
-    - shell: bash
-      run: npm install -g npm

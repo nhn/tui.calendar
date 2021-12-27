@@ -22,6 +22,9 @@ jobs:
     steps:
       - name: Checkout next branch
         uses: actions/checkout@v2
+      - name: Install dependencies
+        id: cache-keys
+        uses: ./.github/composite-actions/install-dependencies
       - name: run unit test
         run: |
           npm run test
@@ -33,6 +36,9 @@ jobs:
     steps:
       - name: Checkout next branch
         uses: actions/checkout@v2
+      - name: Install dependencies
+        id: cache-keys
+        uses: ./.github/composite-actions/install-dependencies
       - name: Install playwright dependencies
         run: |
           npx playwright install
