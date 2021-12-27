@@ -9,6 +9,9 @@ export async function dragAndDrop(
   await page.mouse.down();
   await page.mouse.move(targetCoords.x, targetCoords.y, { steps: 15 });
   await page.mouse.up();
+
+  // NOTE: Handling re-render timing issue
+  await page.locator('body').hover();
 }
 
 export async function selectGridCells(

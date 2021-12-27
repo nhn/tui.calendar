@@ -20,8 +20,6 @@ test.describe('event resizing', () => {
       const targetY = resizerBoundingBox.y + resizerBoundingBox.height / 2;
 
       await dragAndDrop(page, resizerLocator, { x: targetX + 500, y: targetY });
-      // NOTE: Handling re-render timing issue
-      await targetEventLocator.hover();
     }
 
     const boundingBoxAfterResizing = await targetEventLocator.boundingBox();
@@ -39,7 +37,9 @@ test.describe('event moving', () => {
     const cellLocator = page.locator('.toastui-calendar-panel-grid >> nth=0');
     const cellBoundingBox = await cellLocator.boundingBox();
 
-    const targetEventLocator = page.locator('.toastui-calendar-handle-y >> nth=0');
+    const targetEventLocator = page.locator(
+      '.toastui-calendar-weekday-event-block:has-text("event1")'
+    );
     const boundingBoxBeforeMoving = await targetEventLocator.boundingBox();
 
     if (cellBoundingBox && boundingBoxBeforeMoving) {
@@ -47,17 +47,13 @@ test.describe('event moving', () => {
         x: boundingBoxBeforeMoving.x + cellBoundingBox.width + 5,
         y: boundingBoxBeforeMoving.y,
       });
-      // NOTE: Handling re-render timing issue
-      await targetEventLocator.hover();
     }
 
     const boundingBoxAfterMoving = await targetEventLocator.boundingBox();
 
     if (boundingBoxBeforeMoving && boundingBoxAfterMoving) {
       expect(boundingBoxAfterMoving.x).toBeGreaterThan(boundingBoxBeforeMoving.x);
-      expect(Math.floor(boundingBoxAfterMoving.width)).toEqual(
-        Math.floor(boundingBoxBeforeMoving.width)
-      );
+      expect(boundingBoxAfterMoving.width).toBeCloseTo(boundingBoxBeforeMoving.width, 3);
     } else {
       test.fail();
     }

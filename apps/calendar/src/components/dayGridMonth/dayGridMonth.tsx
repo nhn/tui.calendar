@@ -2,7 +2,7 @@ import { FunctionComponent, h, RefObject } from 'preact';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 
 import { GridSelection } from '@src/components/dayGridCommon/gridSelection';
-import GridRow from '@src/components/dayGridMonth/gridRow';
+import { GridRow } from '@src/components/dayGridMonth/gridRow';
 import { MonthEvents } from '@src/components/dayGridMonth/monthEvents';
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import {
