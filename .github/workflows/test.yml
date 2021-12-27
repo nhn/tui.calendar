@@ -5,7 +5,7 @@ on:
 jobs:
   test:
     name: Test
-    runs-on: ubuntu-latest
+    runs-on: macos-11
     env:
       WORKING_DIRECTORY: ./apps/calendar
     steps:
@@ -29,7 +29,6 @@ jobs:
       - name: install playwright dependencies
         run: |
           npx playwright install
-          sudo npx playwright install-deps
       - name: run unit test
         run: |
           npm run test
