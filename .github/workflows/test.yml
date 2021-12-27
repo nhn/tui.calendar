@@ -26,6 +26,13 @@ jobs:
       - name: bootstrap packages
         run: |
           npx lerna bootstrap --no-ci
-      - name: test
+      - name: install playwright dependencies
+        run: |
+          npx playwright install
+          sudo npx playwright install-deps
+      - name: run unit test
         run: |
           npm run test
+      - name: run E2E test
+        run: |
+          npm run test:playwright:ci
