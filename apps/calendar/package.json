@@ -68,7 +68,6 @@
     "ts2js": "tsc --outDir tmpdoc --sourceMap false --target ES2015 --noEmit false",
     "doc:dev": "npm run build:prod && npm run ts2js && tuidoc --serv",
     "doc": "npm run ts2js && tuidoc",
-    "precommit": "lint-staged",
-    "prepublish": "npm run storybook:build"
+    "precommit": "lint-staged"
   }
 }
