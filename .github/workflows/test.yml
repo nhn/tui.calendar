@@ -17,9 +17,9 @@ jobs:
           node-version: '16'
       - run: npm install -g npm
       - name: Setup timezone
-        uses: zcong1993/setup-timezone@master
+        uses: szenius/set-timezone@v1.0
         with:
-          timezone: Asia/Seoul
+          timezoneMacos: 'Asia/Seoul'
       - name: npm install(jest)
         run: |
           npm install
