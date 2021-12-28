@@ -64,7 +64,7 @@
     "build:esm": "tsc -p tsconfig.esm.json && prettier dist/esm/**/*.js --write",
     "analyze": "webpack --minify --profile --json > stats.json && webpack-bundle-analyzer stats.json ./dist",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook",
+    "storybook:build": "build-storybook",
     "ts2js": "tsc --outDir tmpdoc --sourceMap false --target ES2015 --noEmit false",
     "doc:dev": "npm run build:prod && npm run ts2js && tuidoc --serv",
     "doc": "npm run ts2js && tuidoc",

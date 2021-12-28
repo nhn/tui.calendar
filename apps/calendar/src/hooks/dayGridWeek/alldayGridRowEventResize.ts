@@ -19,14 +19,12 @@ function getEventColIndex(uiModel: EventUIModel, cells: Cells) {
 }
 
 interface Params {
-  events: EventUIModel[];
   cells: TZDate[];
   gridColWidthMap: string[][];
   mousePositionDataGrabber: (e: MouseEvent) => MousePositionData | null;
 }
 
 export function useAlldayGridRowEventResize({
-  events,
   cells,
   gridColWidthMap,
   mousePositionDataGrabber,
@@ -34,7 +32,7 @@ export function useAlldayGridRowEventResize({
   const { x, y, draggingState } = useStore(dndSelector);
   const { updateEvent } = useDispatch('calendar');
 
-  const { draggingEvent: resizingEvent, clearDraggingEvent } = useDraggingEvent(events, 'resize');
+  const { draggingEvent: resizingEvent, clearDraggingEvent } = useDraggingEvent('resize');
 
   const [currentGridX, setCurrentGridX] = useState<number | null>(null);
 

@@ -81,17 +81,17 @@ export type OptionsDispatchers = {
 export function createOptionsSlice(options: Options = {}): OptionsSlice {
   return {
     options: {
-      defaultView: options?.defaultView ?? 'week',
-      taskView: options?.taskView ?? true,
-      eventView: options?.eventView ?? true,
-      useCreationPopup: options?.useCreationPopup ?? false,
-      useDetailPopup: options?.useDetailPopup ?? false,
-      disableDblClick: options?.disableDblClick ?? false,
-      disableClick: options?.disableClick ?? false,
-      isReadOnly: options?.isReadOnly ?? false,
+      defaultView: options.defaultView ?? 'week',
+      taskView: options.taskView ?? true,
+      eventView: options.eventView ?? true,
+      useCreationPopup: options.useCreationPopup ?? false,
+      useDetailPopup: options.useDetailPopup ?? false,
+      disableDblClick: options.disableDblClick ?? false,
+      disableClick: options.disableClick ?? false,
+      isReadOnly: options.isReadOnly ?? false,
       week: initializeWeekOptions(options.week),
       month: initializeMonthOptions(options.month),
-      usageStatistics: options?.usageStatistics ?? true,
+      usageStatistics: options.usageStatistics ?? true,
     },
   };
 }

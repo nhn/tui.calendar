@@ -2,6 +2,7 @@ import { FunctionComponent, h } from 'preact';
 
 import ResizeIcon from '@src/components/events/resizeIcon';
 import Template from '@src/components/template';
+import { useDispatch } from '@src/contexts/calendarStore';
 import { cls, toPercent, toPx } from '@src/helpers/css';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/drag';
@@ -124,6 +125,13 @@ function getStyles({
   return { dayEventBlockClassName, containerStyle, eventItemStyle, resizeIconStyle };
 }
 
+function getTestId({ model }: EventUIModel) {
+  const calendarId = model.calendarId ? `${model.calendarId}-` : '';
+  const id = model.id ? `${model.id}-` : '';
+
+  return `${calendarId}${id}${model.title}`;
+}
+
 export const HorizontalEvent: FunctionComponent<Props> = ({
   flat = false,
   uiModel,
@@ -143,11 +151,23 @@ export const HorizontalEvent: FunctionComponent<Props> = ({
     movingLeft,
   });
 
+  const { setDraggingEventUIModel } = useDispatch('dnd');
+
   const { onMouseDown: onResizeStart } = useDrag(
-    DRAGGING_TYPE_CREATORS.resizeEvent(`${uiModel.cid()}`)
+    DRAGGING_TYPE_CREATORS.resizeEvent(`${uiModel.cid()}`),
+    {
+      onDragStart: () => {
+        setDraggingEventUIModel(uiModel);
+      },
+    }
   );
   const { onMouseDown: onMoveStart } = useDrag(
-    DRAGGING_TYPE_CREATORS.moveEvent(`${uiModel.cid()}`)
+    DRAGGING_TYPE_CREATORS.moveEvent(`${uiModel.cid()}`),
+    {
+      onDragStart: () => {
+        setDraggingEventUIModel(uiModel);
+      },
+    }
   );
 
   const handleResizeStart = (e: MouseEvent) => {
@@ -161,7 +181,11 @@ export const HorizontalEvent: FunctionComponent<Props> = ({
   };
 
   return (
-    <div className={dayEventBlockClassName} style={containerStyle}>
+    <div
+      className={dayEventBlockClassName}
+      style={containerStyle}
+      data-test-id={getTestId(uiModel)}
+    >
       <div className={cls('weekday-event')} style={eventItemStyle} onMouseDown={handleMoveStart}>
         <span className={cls('weekday-event-title')}>
           <Template template="time" model={uiModel.model} />

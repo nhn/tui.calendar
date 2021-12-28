@@ -10,8 +10,8 @@ test.beforeEach(async ({ page }) => {
 
 test.describe('Selection', () => {
   /**
-   * Suppose we have following cells in the month view.
-   * Each number represetns the index of the cell.
+   * Suppose we have the following cells in the month view.
+   * Each number represents the index of the cell.
    *
    * [
    *   [ 0,  1,  2,  3,  4,  5,  6],

@@ -82,20 +82,18 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
   );
 
   const { resizingEvent, resizingWidth } = useAlldayGridRowEventResize({
-    events,
     cells,
     gridColWidthMap,
     mousePositionDataGrabber,
   });
   const { movingEvent, movingLeft } = useAlldayGridRowEventMove({
-    events,
     cells,
     gridInfo,
     mousePositionDataGrabber,
   });
 
   const gridSelection = useDayGridSelection(mousePositionDataGrabber);
-  const gridSelectionData = gridSelection
+  const gridSelectionData: GridSelectionDataByRow | null = gridSelection
     ? {
         startCellIndex: gridSelection.initColIndex,
         endCellIndex: gridSelection.currentColIndex,

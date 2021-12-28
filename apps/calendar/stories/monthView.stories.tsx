@@ -38,16 +38,19 @@ function createMonthEvents() {
       title: 'event1',
       start: firstSunday,
       end: secondTuesday,
+      id: '0',
     },
     {
       title: 'event2',
       start: secondTuesday,
       end: secondThursday,
+      id: '1',
     },
     {
       title: 'event3',
       start: thirdThursday,
       end: thirdSaturday,
+      id: '2',
     },
   ];
 

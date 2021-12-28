@@ -2,7 +2,7 @@ import { FunctionComponent, h, RefObject } from 'preact';
 import { useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
 
 import GridHeader from '@src/components/dayGridCommon/gridHeader';
-import DayGridMonth from '@src/components/dayGridMonth/dayGridMonth';
+import { DayGridMonth } from '@src/components/dayGridMonth/dayGridMonth';
 import { Panel } from '@src/components/panel';
 import { MONTH_DAY_NAME_HEIGHT } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
@@ -11,7 +11,7 @@ import { cls } from '@src/helpers/css';
 import { capitalizeDayName } from '@src/helpers/dayName';
 import { createDateMatrixOfMonth } from '@src/helpers/grid';
 import { optionsSelector } from '@src/selectors';
-import { getGridInfo, getMonthCalendar, isWeekend } from '@src/time/datetime';
+import { getGridInfo, isWeekend } from '@src/time/datetime';
 import { getSize } from '@src/utils/dom';
 
 import { MonthOptions } from '@t/options';

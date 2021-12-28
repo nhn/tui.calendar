@@ -177,7 +177,7 @@ export function getRenderedEventUIModels(
   const { idsOfDay } = calendarData;
   const eventUIModels = findByDateRange(calendarData, {
     start: cells[0],
-    end: cells[cells.length - 1],
+    end: toEndOfDay(cells[cells.length - 1]),
   });
   const idEventModelMap: Record<number, EventUIModel> = [];
 

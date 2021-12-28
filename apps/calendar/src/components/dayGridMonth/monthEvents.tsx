@@ -1,13 +1,13 @@
 import { FunctionComponent, h } from 'preact';
+import { useCallback } from 'preact/hooks';
 
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
+import { useStore } from '@src/contexts/calendarStore';
 import { EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
 import EventUIModel from '@src/model/eventUIModel';
-import TZDate from '@src/time/date';
 
 interface Props {
   name: string;
-  cells: TZDate[];
   height: number;
   eventHeight?: number;
   events: EventUIModel[];
@@ -17,7 +17,7 @@ interface Props {
   eventTopMargin: number;
 }
 
-const MonthEvents: FunctionComponent<Props> = ({
+export const MonthEvents: FunctionComponent<Props> = ({
   height,
   eventHeight = EVENT_HEIGHT,
   events,
@@ -26,20 +26,19 @@ const MonthEvents: FunctionComponent<Props> = ({
   headerHeight,
   eventTopMargin,
 }) => {
-  const filteredUIModels = events.filter(
-    isWithinHeight(height - headerHeight, eventHeight + eventTopMargin)
-  );
+  const draggingEventUIModel = useStore(useCallback((state) => state.dnd.draggingEventUIModel, []));
 
-  const dayEvents = filteredUIModels.map((uiModel) => (
-    <HorizontalEvent
-      uiModel={uiModel}
-      key={`${name}-DayEvent-${uiModel.cid()}`}
-      eventHeight={eventHeight}
-      headerHeight={headerHeight}
-    />
-  ));
+  const dayEvents = events
+    .filter(isWithinHeight(height - headerHeight, eventHeight + eventTopMargin))
+    .map((uiModel) => (
+      <HorizontalEvent
+        key={`${name}-DayEvent-${uiModel.cid()}`}
+        uiModel={uiModel}
+        isDraggingTarget={uiModel.cid() === draggingEventUIModel?.cid()}
+        eventHeight={eventHeight}
+        headerHeight={headerHeight}
+      />
+    ));
 
   return <div className={className}>{dayEvents}</div>;
 };
-
-export default MonthEvents;

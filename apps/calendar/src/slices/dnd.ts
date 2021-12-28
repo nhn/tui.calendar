@@ -1,6 +1,9 @@
 import produce from 'immer';
 
-import { CalendarStore, SetState } from '@t/store';
+import EventUIModel from '@src/model/eventUIModel';
+import { isNil } from '@src/utils/type';
+
+import { CalendarState, CalendarStore, SetState } from '@t/store';
 
 export enum DraggingState {
   IDLE,
@@ -16,6 +19,7 @@ export interface DndSlice {
     initY: number | null;
     x: number | null;
     y: number | null;
+    draggingEventUIModel: EventUIModel | null;
   };
 }
 
@@ -23,6 +27,7 @@ export interface DndDispatchers {
   initDrag: (initState: Pick<DndSlice['dnd'], 'initX' | 'initY' | 'draggingItemType'>) => void;
   setDraggingState: (newState: Partial<Omit<DndSlice['dnd'], 'draggingState'>>) => void;
   reset: () => void;
+  setDraggingEventUIModel: (eventUIModel: EventUIModel | null) => void;
 }
 
 export function createDndSlice(): DndSlice {
@@ -34,6 +39,7 @@ export function createDndSlice(): DndSlice {
       initY: null,
       x: null,
       y: null,
+      draggingEventUIModel: null,
     },
   };
 }
@@ -66,6 +72,21 @@ export function createDndDispatchers(set: SetState<CalendarStore>): DndDispatche
       set(
         produce((state) => {
           state.dnd = createDndSlice().dnd;
+        })
+      );
+    },
+    setDraggingEventUIModel: (eventUIModel) => {
+      set(
+        produce((state: CalendarState) => {
+          if (isNil(eventUIModel)) {
+            state.dnd.draggingEventUIModel = eventUIModel;
+          } else {
+            const eventUIModelProps = eventUIModel.getUIProps();
+            const clonedEventUIModel = EventUIModel.create(eventUIModel.model);
+            clonedEventUIModel.setUIProps(eventUIModelProps);
+
+            state.dnd.draggingEventUIModel = clonedEventUIModel;
+          }
         })
       );
     },

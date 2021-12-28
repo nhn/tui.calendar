@@ -43,7 +43,8 @@ Desktop.ini
 .metadata
 
 # build
-build
+build/
+storybook-static/
 
 # etc
 *.swp

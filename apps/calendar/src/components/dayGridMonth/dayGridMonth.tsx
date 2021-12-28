@@ -2,8 +2,9 @@ import { FunctionComponent, h, RefObject } from 'preact';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 
 import { GridSelection } from '@src/components/dayGridCommon/gridSelection';
-import GridRow from '@src/components/dayGridMonth/gridRow';
-import MonthEvents from '@src/components/dayGridMonth/monthEvents';
+import { GridRow } from '@src/components/dayGridMonth/gridRow';
+import { MonthEvents } from '@src/components/dayGridMonth/monthEvents';
+import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import {
   MONTH_CELL_BAR_HEIGHT,
   MONTH_CELL_PADDING_TOP,
@@ -13,11 +14,12 @@ import {
 import { useStore } from '@src/contexts/calendarStore';
 import { cls, toPercent } from '@src/helpers/css';
 import { DRAGGING_TYPE_CONSTANTS } from '@src/helpers/drag';
-import { getRenderedEventUIModels } from '@src/helpers/grid';
+import { EVENT_HEIGHT, getRenderedEventUIModels } from '@src/helpers/grid';
 import { createMousePositionDataGrabberMonth } from '@src/helpers/view';
 import { useDOMNode } from '@src/hooks/common/domNode';
 import { useDrag } from '@src/hooks/common/drag';
 import { useDayGridSelection } from '@src/hooks/dayGridCommon/dayGridSelection';
+import { useDayGridMonthEventMove } from '@src/hooks/dayGridMonth/dayGridMonthEventMove';
 import EventModel from '@src/model/eventModel';
 import { calendarSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
@@ -75,8 +77,8 @@ function calcGridSelectionData(
   gridSelection: GridSelectionData | null,
   rowIndex: number,
   weekLength: number
-) {
-  let resultGridSelection = null;
+): GridSelectionDataByRow | null {
+  let resultGridSelection: GridSelectionDataByRow | null = null;
 
   if (isPresent(gridSelection)) {
     const { startRowIndex, startColIndex, endRowIndex, endColIndex } =
@@ -107,7 +109,7 @@ function calcGridSelectionData(
   return resultGridSelection;
 }
 
-const DayGridMonth: FunctionComponent<Props> = ({
+export const DayGridMonth: FunctionComponent<Props> = ({
   options,
   dateMatrix = [],
   gridInfo = [],
@@ -132,6 +134,17 @@ const DayGridMonth: FunctionComponent<Props> = ({
 
   const gridSelection = useDayGridSelection(mousePositionDataGrabber);
 
+  const { movingEvent, currentGridPos } = useDayGridMonthEventMove({
+    cells: dateMatrix,
+    gridInfo,
+    mousePositionDataGrabber,
+  });
+
+  const renderedEventUiModels = useMemo(
+    () => dateMatrix.map((week) => getRenderedEventUIModels(week, calendarData, narrowWeekend)),
+    [calendarData, dateMatrix, narrowWeekend]
+  );
+
   return (
     <div
       ref={setGridContainerRef}
@@ -139,12 +152,8 @@ const DayGridMonth: FunctionComponent<Props> = ({
       className={cls('month-daygrid__container')}
     >
       {dateMatrix.map((week, rowIndex) => {
-        const { uiModels, gridDateEventModelMap } = getRenderedEventUIModels(
-          week,
-          calendarData,
-          narrowWeekend
-        );
-
+        const { uiModels, gridDateEventModelMap } = renderedEventUiModels[rowIndex];
+        const isMouseInWeek = rowIndex === currentGridPos?.y;
         const gridSelectionDataByRow = calcGridSelectionData(gridSelection, rowIndex, week.length);
 
         return (
@@ -167,7 +176,6 @@ const DayGridMonth: FunctionComponent<Props> = ({
               />
               <MonthEvents
                 name="month"
-                cells={week}
                 events={uiModels}
                 height={height}
                 narrowWeekend={narrowWeekend}
@@ -182,11 +190,16 @@ const DayGridMonth: FunctionComponent<Props> = ({
                 narrowWeekend={narrowWeekend}
               />
             </div>
+            {isMouseInWeek && movingEvent && (
+              <HorizontalEvent
+                uiModel={movingEvent}
+                eventHeight={EVENT_HEIGHT}
+                headerHeight={MONTH_CELL_PADDING_TOP + MONTH_CELL_BAR_HEIGHT}
+              />
+            )}
           </div>
         );
       })}
     </div>
   );
 };
-
-export default DayGridMonth;

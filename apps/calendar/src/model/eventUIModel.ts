@@ -1,13 +1,48 @@
 import { collidesWith } from '@src/helpers/events';
 import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
+import { pick } from '@src/utils/object';
+
+interface EventUIProps {
+  top: number;
+  left: number;
+  width: number;
+  height: number;
+  hasCollide: boolean;
+  extraSpace: number;
+  hidden: boolean;
+  exceedLeft: boolean;
+  exceedRight: boolean;
+  croppedStart: boolean;
+  croppedEnd: boolean;
+  goingDurationHeight: number;
+  modelDurationHeight: number;
+  comingDurationHeight: number;
+}
+
+const eventUIPropsKey: (keyof EventUIProps)[] = [
+  'top',
+  'left',
+  'width',
+  'height',
+  'hasCollide',
+  'extraSpace',
+  'hidden',
+  'exceedLeft',
+  'exceedRight',
+  'croppedStart',
+  'croppedEnd',
+  'goingDurationHeight',
+  'modelDurationHeight',
+  'comingDurationHeight',
+];
 
 /**
  * Set of UI-related properties for calendar event.
  * @class
  * @param {EventModel} event EventModel instance.
  */
-export default class EventUIModel {
+export default class EventUIModel implements EventUIProps {
   model: EventModel;
 
   top = 0;
@@ -104,6 +139,14 @@ export default class EventUIModel {
    */
   static create(event: EventModel): EventUIModel {
     return new EventUIModel(event);
+  }
+
+  getUIProps(): EventUIProps {
+    return pick(this, ...eventUIPropsKey);
+  }
+
+  setUIProps(props: EventUIProps) {
+    Object.assign(this, props);
   }
 
   /**
