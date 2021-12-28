@@ -26,10 +26,7 @@ export function useDayGridMonthEventMove({ cells, gridInfo, mousePositionDataGra
   const shadowEvent = useMemo(() => {
     let shadowEventUIModel = null;
     if (movingEvent) {
-      const newUIProps = movingEvent.getUIProps();
-
-      shadowEventUIModel = new EventUIModel(movingEvent.model);
-      shadowEventUIModel.setUIProps(newUIProps);
+      shadowEventUIModel = movingEvent;
       shadowEventUIModel.left = gridInfo[currentGridPos?.x ?? 0].left;
       shadowEventUIModel.width = gridInfo[currentGridPos?.x ?? 0].width;
     }
