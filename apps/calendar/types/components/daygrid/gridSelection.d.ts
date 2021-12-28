@@ -9,3 +9,5 @@ type CurrentGridSelectionData = {
 };
 
 type GridSelectionData = InitGridSelectionData & CurrentGridSelectionData;
+
+type GridSelectionDataByRow = { startCellIndex: number; endCellIndex: number };

@@ -6,7 +6,7 @@ import { getLeftAndWidth } from '@src/helpers/grid';
 import { Cells } from '@t/panel';
 
 interface Props {
-  gridSelectionData: { startCellIndex: number; endCellIndex: number } | null;
+  gridSelectionData: GridSelectionDataByRow | null;
   cells: Cells;
   narrowWeekend: boolean;
 }

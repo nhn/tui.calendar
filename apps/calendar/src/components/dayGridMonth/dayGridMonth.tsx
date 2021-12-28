@@ -77,8 +77,8 @@ function calcGridSelectionData(
   gridSelection: GridSelectionData | null,
   rowIndex: number,
   weekLength: number
-) {
-  let resultGridSelection = null;
+): GridSelectionDataByRow | null {
+  let resultGridSelection: GridSelectionDataByRow | null = null;
 
   if (isPresent(gridSelection)) {
     const { startRowIndex, startColIndex, endRowIndex, endColIndex } =

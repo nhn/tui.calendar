@@ -93,7 +93,7 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
   });
 
   const gridSelection = useDayGridSelection(mousePositionDataGrabber);
-  const gridSelectionData = gridSelection
+  const gridSelectionData: GridSelectionDataByRow | null = gridSelection
     ? {
         startCellIndex: gridSelection.initColIndex,
         endCellIndex: gridSelection.currentColIndex,
