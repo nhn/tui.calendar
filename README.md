@@ -158,7 +158,7 @@ tui-calendar/
 
 * [toast-ui.vue-calendar](https://github.com/nhn/toast-ui.vue-calendar) **Vue** wrapper component is implemented by [NHN](https://github.com/nhn).
 * [toast-ui.react-calendar](https://github.com/nhn/toast-ui.react-calendar) **React** wrapper component is powered by [NHN](https://github.com/nhn).
-* [ngx-mat-tui-calendar](https://github.com/ron2015schmitt/ngx-mat-tui-calendar) **Angular 12** wrapper component [@ron2015schmitt](https://github.com/ron2015schmitt)
+* [ngx-mat-tui-calendar](https://github.com/ron2015schmitt/ngx-mat-tui-calendar) **Angular 12**, **Material Design** wrapper component by [@ron2015schmitt](https://github.com/ron2015schmitt)
 * [ngx-tui-dev](https://github.com/brnrds/ngx-tui-dev): **TypeScript** and **Angular 5** wrapper component is being implemented(ref [#82](https://github.com/nhn/tui.calendar/issues/82)) by [@amanvishnani](https://github.com/amanvishnani) and [@brnrds](https://github.com/brnrds). Thanks for their effort.
 * [vue-tui-calendar](https://github.com/lkmadushan/vue-tuicalendar): **Vue** wrapper component is being implemented(ref [#81](https://github.com/nhn/tui.calendar/issues/81)) by [@lkmadushan](https://github.com/lkmadushan). Thanks for their effort.
 * [tui-calendar-react](https://github.com/IniZio/react-tui-calendar): **React** wrapper component is provided(ref #[134](https://github.com/nhn/tui.calendar/issues/134)) by [@IniZio](https://github.com/IniZio). Thanks for his effort.
