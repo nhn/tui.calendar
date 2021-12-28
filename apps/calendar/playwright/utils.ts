@@ -27,5 +27,11 @@ export async function selectGridCells(
 }
 
 export async function getBoundingBox(locator: Locator): Promise<BoundingBox> {
-  return (await locator.boundingBox()) ?? { x: NaN, y: NaN, width: NaN, height: NaN };
+  const boundingBox = await locator.boundingBox();
+
+  if (!boundingBox) {
+    throw new Error(`BoundingBox of ${locator} is not found`);
+  }
+
+  return boundingBox;
 }
