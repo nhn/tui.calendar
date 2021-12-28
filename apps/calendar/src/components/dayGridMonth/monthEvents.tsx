@@ -1,10 +1,10 @@
 import { FunctionComponent, h } from 'preact';
+import { useCallback } from 'preact/hooks';
 
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import { useStore } from '@src/contexts/calendarStore';
 import { EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
 import EventUIModel from '@src/model/eventUIModel';
-import { dndSelector } from '@src/selectors';
 
 interface Props {
   name: string;
@@ -26,7 +26,7 @@ export const MonthEvents: FunctionComponent<Props> = ({
   headerHeight,
   eventTopMargin,
 }) => {
-  const { draggingEventUIModel } = useStore(dndSelector);
+  const draggingEventUIModel = useStore(useCallback((state) => state.dnd.draggingEventUIModel, []));
 
   const dayEvents = events
     .filter(isWithinHeight(height - headerHeight, eventHeight + eventTopMargin))
