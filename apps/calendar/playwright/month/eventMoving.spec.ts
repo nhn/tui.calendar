@@ -71,7 +71,7 @@ test.describe('event moving', () => {
     const boundingBoxAfterMoving = await getBoundingBox(eventLocator);
 
     expect(boundingBoxAfterMoving.y).toBeGreaterThan(boundingBoxBeforeMoving.y);
-    expect(boundingBoxAfterMoving.width).toBeCloseTo(boundingBoxBeforeMoving.width, 3);
+    expect(boundingBoxAfterMoving.width).toBe(boundingBoxBeforeMoving.width);
     expect(boundingBoxAfterMoving.y).toBeGreaterThan(targetCellBoundingBox.y);
     expect(boundingBoxAfterMoving.y).toBeLessThan(
       targetCellBoundingBox.y + targetCellBoundingBox.height
@@ -87,7 +87,7 @@ test.describe('event moving', () => {
     const boundingBoxAfterMoving = await getBoundingBox(eventLocator);
 
     expect(boundingBoxAfterMoving.y).toBeLessThan(boundingBoxBeforeMoving.y);
-    expect(boundingBoxAfterMoving.width).toBeCloseTo(boundingBoxBeforeMoving.width, 3);
+    expect(boundingBoxAfterMoving.width).toBe(boundingBoxBeforeMoving.width);
     expect(boundingBoxAfterMoving.y).toBeGreaterThan(targetCellBoundingBox.y);
     expect(boundingBoxAfterMoving.y).toBeLessThan(
       targetCellBoundingBox.y + targetCellBoundingBox.height
