@@ -3,6 +3,8 @@ import { expect, Locator, test } from '@playwright/test';
 import { MONTH_VIEW_PAGE_URL } from '../configs';
 import { dragAndDrop, getBoundingBox } from '../utils';
 
+const CELL_SELECTOR = '.toastui-calendar-daygrid-cell';
+
 test.beforeEach(async ({ page }) => {
   await page.goto(MONTH_VIEW_PAGE_URL);
 });
@@ -29,7 +31,7 @@ test.describe('event moving', () => {
   });
 
   test('moving month grid event to right', async ({ page }) => {
-    const targetCellLocator = page.locator('.toastui-calendar-daygrid-cell >> nth=17');
+    const targetCellLocator = page.locator(`${CELL_SELECTOR} >> nth=17`);
     const targetCellBoundingBox = await getBoundingBox(targetCellLocator);
 
     const boundingBoxBeforeMoving = await getBoundingBox(eventLocator);
@@ -45,7 +47,7 @@ test.describe('event moving', () => {
   });
 
   test('moving month grid event to left', async ({ page }) => {
-    const targetCellLocator = page.locator('.toastui-calendar-daygrid-cell >> nth=15');
+    const targetCellLocator = page.locator(`${CELL_SELECTOR} >> nth=15`);
     const targetCellBoundingBox = await getBoundingBox(targetCellLocator);
 
     const boundingBoxBeforeMoving = await getBoundingBox(eventLocator);
@@ -61,7 +63,7 @@ test.describe('event moving', () => {
   });
 
   test('moving month grid event to bottom', async ({ page }) => {
-    const targetCellLocator = page.locator('.toastui-calendar-daygrid-cell >> nth=23');
+    const targetCellLocator = page.locator(`${CELL_SELECTOR} >> nth=23`);
     const targetCellBoundingBox = await getBoundingBox(targetCellLocator);
 
     const boundingBoxBeforeMoving = await getBoundingBox(eventLocator);
@@ -77,7 +79,7 @@ test.describe('event moving', () => {
   });
 
   test('moving month grid event to top', async ({ page }) => {
-    const targetCellLocator = page.locator('.toastui-calendar-daygrid-cell >> nth=9');
+    const targetCellLocator = page.locator(`${CELL_SELECTOR} >> nth=9`);
     const targetCellBoundingBox = await getBoundingBox(targetCellLocator);
 
     const boundingBoxBeforeMoving = await getBoundingBox(eventLocator);
@@ -93,9 +95,9 @@ test.describe('event moving', () => {
   });
 
   test('moving month grid event to end of week', async ({ page }) => {
-    const endOfWeekCellLocator = page.locator('.toastui-calendar-daygrid-cell >> nth=20');
+    const endOfWeekCellLocator = page.locator(`${CELL_SELECTOR} >> nth=20`);
     const endOfWeekCellBoundingBox = await getBoundingBox(endOfWeekCellLocator);
-    const secondOfWeekCellLocator = page.locator('.toastui-calendar-daygrid-cell >> nth=22');
+    const secondOfWeekCellLocator = page.locator(`${CELL_SELECTOR} >> nth=22`);
     const secondOfWeekCellBoundingBox = await getBoundingBox(secondOfWeekCellLocator);
 
     await dragAndDrop(page, eventLocator, endOfWeekCellLocator);
