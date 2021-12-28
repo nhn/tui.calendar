@@ -145,10 +145,6 @@ export const DayGridMonth: FunctionComponent<Props> = ({
     [calendarData, dateMatrix, narrowWeekend]
   );
 
-  if (!calendarData) {
-    return null;
-  }
-
   return (
     <div
       ref={setGridContainerRef}
