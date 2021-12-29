@@ -6,36 +6,23 @@ import { GridCell } from '@src/components/dayGridMonth/gridCell';
 import { useTheme } from '@src/contexts/theme';
 import { cls, toPercent } from '@src/helpers/css';
 import EventUIModel from '@src/model/eventUIModel';
-import { getGridInfo, toFormat, toStartOfDay } from '@src/time/datetime';
+import { toFormat, toStartOfDay } from '@src/time/datetime';
 
 import { Cells } from '@t/panel';
 
 interface Props {
   cssHeight?: CSSValue;
   gridDateEventModelMap?: Record<string, EventUIModel[]>;
-  narrowWeekend?: boolean;
-  startDayOfWeek?: number;
-  workweek?: boolean;
   week: Cells;
+  gridInfo: GridInfo[];
   appContainer: RefObject<HTMLDivElement>;
   height?: number;
 }
 
 export const GridRow: FunctionComponent<Props> = memo(
-  ({
-    cssHeight,
-    narrowWeekend = false,
-    startDayOfWeek = 0,
-    workweek = false,
-    week,
-    appContainer,
-    gridDateEventModelMap = {},
-    height = 0,
-  }) => {
+  ({ cssHeight, week, gridInfo, appContainer, gridDateEventModelMap = {}, height = 0 }) => {
     const container = useRef<HTMLDivElement>(null);
     const { common } = useTheme();
-
-    const { gridInfo } = getGridInfo(week.length, narrowWeekend, startDayOfWeek, workweek);
 
     return (
       <div

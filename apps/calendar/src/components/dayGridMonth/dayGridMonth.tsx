@@ -119,7 +119,7 @@ export const DayGridMonth: FunctionComponent<Props> = ({
   const calendarData = useStore(calendarSelector);
   const { ref, height } = useGridHeight();
 
-  const { visibleWeeksCount, workweek, startDayOfWeek, narrowWeekend } = options;
+  const { visibleWeeksCount, narrowWeekend } = options;
   const rowHeight =
     TOTAL_PERCENT_HEIGHT / Math.max(visibleWeeksCount === 0 ? 6 : visibleWeeksCount, 1);
 
@@ -167,10 +167,8 @@ export const DayGridMonth: FunctionComponent<Props> = ({
               <GridRow
                 cssHeight={toPercent(TOTAL_PERCENT_HEIGHT)}
                 gridDateEventModelMap={gridDateEventModelMap}
-                workweek={workweek}
-                startDayOfWeek={startDayOfWeek}
-                narrowWeekend={narrowWeekend}
                 week={week}
+                gridInfo={gridInfo}
                 appContainer={appContainer}
                 height={height}
               />
