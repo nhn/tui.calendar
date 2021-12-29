@@ -13,7 +13,7 @@ import { createRandomEventModelsForMonth, createRandomEvents } from '@stories/ut
 
 import { EventModelData } from '@t/events';
 
-export default { title: 'WeekView' };
+export default { title: 'Views/WeekView', component: Week };
 
 function createTimeGridEvents() {
   const today = new TZDate();

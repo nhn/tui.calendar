@@ -9,7 +9,7 @@ import { ProviderWrapper } from '@stories/util/providerWrapper';
 
 import { TemplateMonthDayName } from '@t/template';
 
-export default { title: 'GridHeader' };
+export default { title: 'Components/GridHeader', component: GridHeader };
 
 interface DayNamesStory {
   dayNames: TemplateMonthDayName[];

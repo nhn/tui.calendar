@@ -1,18 +1,11 @@
-import { FunctionComponent, h } from 'preact';
+import { FunctionComponent, h, JSX } from 'preact';
 
-interface Props {
-  name: string;
-  value: string;
-  className: string;
-  onClick: (value: string) => void;
-}
+type Props = JSX.HTMLAttributes<HTMLButtonElement>;
 
-const Button: FunctionComponent<Props> = ({ name, onClick, value, className }) => {
+export const Button: FunctionComponent<Props> = ({ children, ...rest }) => {
   return (
-    <button type="button" className={className} onClick={() => onClick(value)}>
-      {name}
+    <button {...rest} type="button">
+      {children}
     </button>
   );
 };
-
-export default Button;

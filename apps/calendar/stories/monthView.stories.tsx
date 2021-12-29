@@ -12,7 +12,7 @@ import { createRandomEventModelsForMonth } from '@stories/util/randomEvents';
 
 import { EventModelData } from '@t/events';
 
-export default { title: 'MonthView' };
+export default { title: 'Views/MonthView', component: Month };
 
 function createMonthEvents() {
   const DAYS_OF_WEEK = 7;

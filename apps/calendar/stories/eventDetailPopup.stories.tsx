@@ -12,7 +12,7 @@ import { EventDetailPopupParam } from '@t/store';
 
 export default {
   component: EventDetailPopup,
-  title: 'Popup/EventDetailPopup',
+  title: 'Popups/EventDetailPopup',
 };
 
 const Template: Story<EventDetailPopupParam> = (args) => (

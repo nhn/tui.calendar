@@ -5,7 +5,7 @@ import { Panel } from '@src/components/panel';
 
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 
-export default { title: 'Layout' };
+export default { title: 'Components/Layout', component: Layout };
 
 export const vertical = () => (
   <ProviderWrapper>

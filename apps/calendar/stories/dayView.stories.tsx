@@ -11,7 +11,7 @@ import { addDate } from '@src/time/datetime';
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { createRandomEventModelsForMonth, createRandomEvents } from '@stories/util/randomEvents';
 
-export default { title: 'DayView' };
+export default { title: 'Views/DayView', component: Day };
 
 function createTimeGridEvents() {
   const today = new TZDate();

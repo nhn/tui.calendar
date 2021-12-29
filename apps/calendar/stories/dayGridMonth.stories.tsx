@@ -12,7 +12,7 @@ import { ProviderWrapper } from '@stories/util/providerWrapper';
 
 import { CalendarMonthOptions } from '@t/store';
 
-export default { title: 'DayGridMonth' };
+export default { title: 'Components/DayGridMonth', component: DayGridMonth };
 
 export const Cell = () => {
   const date = new TZDate();
