@@ -1,8 +1,9 @@
-import { FunctionComponent, h, RefObject } from 'preact';
-import { useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { FunctionComponent, h } from 'preact';
+import { useLayoutEffect, useMemo, useState } from 'preact/hooks';
 
 import GridHeader from '@src/components/dayGridCommon/gridHeader';
 import { DayGridMonth } from '@src/components/dayGridMonth/dayGridMonth';
+import { Layout } from '@src/components/layout';
 import { Panel } from '@src/components/panel';
 import { MONTH_DAY_NAME_HEIGHT } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
@@ -10,6 +11,7 @@ import { useTheme } from '@src/contexts/theme';
 import { cls } from '@src/helpers/css';
 import { capitalizeDayName } from '@src/helpers/dayName';
 import { createDateMatrixOfMonth } from '@src/helpers/grid';
+import { useDOMNode } from '@src/hooks/common/domNode';
 import { optionsSelector } from '@src/selectors';
 import { getGridInfo, isWeekend } from '@src/time/datetime';
 import { getSize } from '@src/utils/dom';
@@ -34,12 +36,12 @@ function getDayNames(options: CalendarStore['options']) {
   return dayNames;
 }
 
-function useContainerHeight(container: RefObject<HTMLDivElement>, dayNameHeight: number) {
+function useContainerHeight(container: HTMLDivElement | null, dayNameHeight: number) {
   const [gridPanelHeight, setGridPanelHeight] = useState(0);
 
   useLayoutEffect(() => {
-    if (container.current) {
-      const { height } = getSize(container.current);
+    if (container) {
+      const { height } = getSize(container);
 
       setGridPanelHeight(height - dayNameHeight);
     }
@@ -49,12 +51,12 @@ function useContainerHeight(container: RefObject<HTMLDivElement>, dayNameHeight:
 }
 
 export const Month: FunctionComponent = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [container, containerRef] = useDOMNode<HTMLDivElement>();
 
   const options = useStore(optionsSelector);
   const theme = useTheme();
 
-  const gridPanelHeight = useContainerHeight(containerRef, MONTH_DAY_NAME_HEIGHT);
+  const gridPanelHeight = useContainerHeight(container, MONTH_DAY_NAME_HEIGHT);
 
   const dayNames = getDayNames(options);
   const monthOptions = options.month as Required<MonthOptions>;
@@ -71,8 +73,7 @@ export const Month: FunctionComponent = () => {
   );
 
   return (
-    // @TODO: change to layout component
-    <div className={cls('month')} ref={containerRef}>
+    <Layout className={cls('month')} ref={containerRef}>
       <Panel name="month-daynames" initialHeight={MONTH_DAY_NAME_HEIGHT}>
         <GridHeader
           templateType="monthDayname"
@@ -84,13 +85,8 @@ export const Month: FunctionComponent = () => {
         />
       </Panel>
       <Panel name="month-daygrid" initialHeight={gridPanelHeight}>
-        <DayGridMonth
-          options={monthOptions}
-          dateMatrix={dateMatrix}
-          gridInfo={gridInfo}
-          appContainer={containerRef}
-        />
+        <DayGridMonth options={monthOptions} dateMatrix={dateMatrix} gridInfo={gridInfo} />
       </Panel>
-    </div>
+    </Layout>
   );
 };

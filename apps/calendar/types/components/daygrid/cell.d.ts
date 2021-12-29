@@ -15,6 +15,6 @@ type SeeMoreOptions = {
 type SeeMoreRectParam = {
   cell: HTMLDivElement;
   grid: HTMLDivElement;
-  appContainer: HTMLDivElement;
+  layoutContainer: HTMLDivElement;
   popupSize: { width: number; height: number };
 };

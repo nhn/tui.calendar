@@ -3,6 +3,7 @@ import { h } from 'preact';
 import { DayGridMonth } from '@src/components/dayGridMonth/dayGridMonth';
 import { GridCell } from '@src/components/dayGridMonth/gridCell';
 import { GridRow } from '@src/components/dayGridMonth/gridRow';
+import { Layout } from '@src/components/layout';
 import { createDateMatrixOfMonth } from '@src/helpers/grid';
 import TZDate from '@src/time/date';
 import { getGridInfo } from '@src/time/datetime';
@@ -19,12 +20,14 @@ export const Cell = () => {
 
   return (
     <ProviderWrapper>
-      <GridCell
-        date={date}
-        dayIndex={date.getDay()}
-        style={{ width: 100, height: 100 }}
-        height={100}
-      />
+      <Layout>
+        <GridCell
+          date={date}
+          dayIndex={date.getDay()}
+          style={{ width: 100, height: 100 }}
+          height={100}
+        />
+      </Layout>
     </ProviderWrapper>
   );
 };
@@ -36,12 +39,9 @@ export const Week = () => {
 
   return (
     <ProviderWrapper>
-      <GridRow
-        gridInfo={gridInfo}
-        cssHeight={100}
-        week={weekDates}
-        appContainer={{ current: document.createElement('div') }}
-      />
+      <Layout>
+        <GridRow gridInfo={gridInfo} cssHeight={100} week={weekDates} />
+      </Layout>
     </ProviderWrapper>
   );
 };
@@ -74,12 +74,9 @@ export const Month = () => {
 
   return (
     <ProviderWrapper>
-      <DayGridMonth
-        options={options}
-        dateMatrix={dateMatrix}
-        gridInfo={gridInfo}
-        appContainer={{ current: document.createElement('div') }}
-      />
+      <Layout>
+        <DayGridMonth options={options} dateMatrix={dateMatrix} gridInfo={gridInfo} />
+      </Layout>
     </ProviderWrapper>
   );
 };

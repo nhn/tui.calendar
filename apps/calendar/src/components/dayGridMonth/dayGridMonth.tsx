@@ -35,7 +35,6 @@ interface Props {
   options: CalendarMonthOptions;
   dateMatrix: TZDate[][];
   gridInfo: GridInfo[];
-  appContainer: RefObject<HTMLDivElement>;
   events?: EventModel[];
 }
 
@@ -113,7 +112,6 @@ export const DayGridMonth: FunctionComponent<Props> = ({
   options,
   dateMatrix = [],
   gridInfo = [],
-  appContainer,
 }) => {
   const [gridContainer, setGridContainerRef] = useDOMNode<HTMLDivElement>();
   const calendarData = useStore(calendarSelector);
@@ -169,7 +167,6 @@ export const DayGridMonth: FunctionComponent<Props> = ({
                 gridDateEventModelMap={gridDateEventModelMap}
                 week={week}
                 gridInfo={gridInfo}
-                appContainer={appContainer}
                 height={height}
               />
               <MonthEvents

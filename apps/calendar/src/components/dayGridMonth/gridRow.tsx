@@ -15,12 +15,11 @@ interface Props {
   gridDateEventModelMap?: Record<string, EventUIModel[]>;
   week: Cells;
   gridInfo: GridInfo[];
-  appContainer: RefObject<HTMLDivElement>;
   height?: number;
 }
 
 export const GridRow: FunctionComponent<Props> = memo(
-  ({ cssHeight, week, gridInfo, appContainer, gridDateEventModelMap = {}, height = 0 }) => {
+  ({ cssHeight, week, gridInfo, gridDateEventModelMap = {}, height = 0 }) => {
     const container = useRef<HTMLDivElement>(null);
     const { common } = useTheme();
 
@@ -49,7 +48,6 @@ export const GridRow: FunctionComponent<Props> = memo(
                 left: toPercent(left),
               }}
               parentContainer={container.current}
-              appContainer={appContainer.current}
               events={gridDateEventModelMap[ymd]}
               height={height}
             />

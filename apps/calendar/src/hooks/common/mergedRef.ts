@@ -22,6 +22,7 @@ export function useMergedRef<T>(...refs: Ref<T>[]): RefObject<T> {
         });
       },
     }),
-    [refs]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    refs
   );
 }
