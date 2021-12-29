@@ -44,7 +44,7 @@ const CellHeader: FunctionComponent<Props> = ({
       {exceedCount ? (
         <MoreEventsButton
           number={exceedCount}
-          clickHandler={onClickExceedCount}
+          onClickButton={onClickExceedCount}
           className={cls('grid-cell-more-events')}
         />
       ) : null}

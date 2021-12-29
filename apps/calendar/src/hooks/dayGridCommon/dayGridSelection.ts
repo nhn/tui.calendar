@@ -10,12 +10,14 @@ import { isPresent } from '@src/utils/type';
 export function useDayGridSelection(
   mousePositionDataGrabber: MousePositionDataGrabber
 ): GridSelectionData | null {
+  const { draggingItemType, draggingState, x, y, initX, initY } = useStore(dndSelector);
+
   const [currentSelectionData, setCurrentSelectionData] = useState<CurrentGridSelectionData | null>(
     null
   );
   const initSelectionDataRef = useRef<InitGridSelectionData | null>(null);
   const prevSelectionDataRef = useRef<CurrentGridSelectionData | null>(null);
-  const { draggingItemType, draggingState, x, y, initX, initY } = useStore(dndSelector);
+
   const isSelectingGrid =
     draggingItemType === DRAGGING_TYPE_CONSTANTS.dayGridSelection &&
     draggingState >= DraggingState.INIT;
