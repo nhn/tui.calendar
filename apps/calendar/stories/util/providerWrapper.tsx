@@ -1,5 +1,6 @@
 import { h, RenderableProps } from 'preact';
 
+import { CalendarContainer } from '@src/calendarContainer';
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
 import { ThemeProvider } from '@src/contexts/theme';
 import { cls } from '@src/helpers/css';
@@ -38,10 +39,8 @@ export function ProviderWrapper({
   }
 
   return (
-    <ThemeProvider theme={theme}>
-      <div className={cls('layout')} style={style}>
-        <StoreProvider store={store}>{children}</StoreProvider>
-      </div>
-    </ThemeProvider>
+    <CalendarContainer theme={theme} store={store}>
+      {children}
+    </CalendarContainer>
   );
 }
