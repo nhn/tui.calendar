@@ -144,11 +144,7 @@ export const DayGridMonth: FunctionComponent<Props> = ({
   );
 
   return (
-    <div
-      ref={setGridContainerRef}
-      onMouseDown={onMouseDown}
-      className={cls('month-daygrid__container')}
-    >
+    <div ref={setGridContainerRef} onMouseDown={onMouseDown} className={cls('month-daygrid')}>
       {dateMatrix.map((week, rowIndex) => {
         const { uiModels, gridDateEventModelMap } = renderedEventUiModels[rowIndex];
         const isMouseInWeek = rowIndex === currentGridPos?.y;

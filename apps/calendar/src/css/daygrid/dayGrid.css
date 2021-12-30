@@ -1,17 +1,20 @@
-.month {
+.layout.month {
   height: 100%;
+}
+
+.month .daynames {
+  /* from constant MONTH_DAY_NAME_HEIGHT */
+  height: 31px;
+}
+
+.month .month-daygrid {
+  position: relative;
+  /* modify this if you want to change height of daynames */
+  height: calc(100% - 31px);
 }
 
 .month-week-item {
   position: relative;
-}
-
-.month-daygrid {
-  position: relative;
-}
-
-.month-daygrid__container {
-  height: 100%;
 }
 
 .weekday-grid {
