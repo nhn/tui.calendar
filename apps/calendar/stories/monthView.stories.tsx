@@ -3,6 +3,7 @@ import { h } from 'preact';
 import { Story } from '@storybook/preact';
 import range from 'tui-code-snippet/array/range';
 
+import FloatingLayer from '@src/components/floatingLayer';
 import { Month } from '@src/components/view/month';
 import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
@@ -69,6 +70,7 @@ function createMonthEvents() {
 const Template: Story = (args) => (
   <ProviderWrapper options={args.options} events={args.events}>
     <Month />
+    <FloatingLayer />
   </ProviderWrapper>
 );
 
@@ -111,5 +113,6 @@ randomEvents.args = {
 
 export const FixedEvents = Template.bind({});
 FixedEvents.args = {
+  options: { useCreationPopup: true },
   events: createMonthEvents(),
 };

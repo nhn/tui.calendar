@@ -37,6 +37,7 @@ export const Month: FunctionComponent = () => {
   const theme = useTheme();
 
   const dayNames = getDayNames(options);
+  const { useCreationPopup } = options;
   const monthOptions = options.month as Required<MonthOptions>;
   const { narrowWeekend, startDayOfWeek, workweek } = monthOptions;
 
@@ -60,7 +61,12 @@ export const Month: FunctionComponent = () => {
         gridInfo={gridInfo}
         type="month"
       />
-      <DayGridMonth options={monthOptions} dateMatrix={dateMatrix} gridInfo={gridInfo} />
+      <DayGridMonth
+        options={monthOptions}
+        dateMatrix={dateMatrix}
+        gridInfo={gridInfo}
+        useCreationPopup={useCreationPopup}
+      />
     </Layout>
   );
 };

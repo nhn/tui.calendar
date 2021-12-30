@@ -1,4 +1,4 @@
-import { FunctionComponent, h, RefObject } from 'preact';
+import { FunctionComponent, h } from 'preact';
 import { memo } from 'preact/compat';
 import { useRef } from 'preact/hooks';
 

@@ -75,7 +75,12 @@ export const Month = () => {
   return (
     <ProviderWrapper>
       <Layout>
-        <DayGridMonth options={options} dateMatrix={dateMatrix} gridInfo={gridInfo} />
+        <DayGridMonth
+          options={options}
+          dateMatrix={dateMatrix}
+          gridInfo={gridInfo}
+          useCreationPopup={false}
+        />
       </Layout>
     </ProviderWrapper>
   );
