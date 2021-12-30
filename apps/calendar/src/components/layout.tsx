@@ -57,7 +57,7 @@ export const Layout: FunctionComponent<Props> = ({
     }
 
     return noop;
-  }, [containerRef, updateLayoutHeight]);
+  }, [updateLayoutHeight]);
 
   useLayoutEffect(() => {
     if (autoAdjustPanels) {
