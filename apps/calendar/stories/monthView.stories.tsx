@@ -1,6 +1,7 @@
 import { h } from 'preact';
 
 import { Story } from '@storybook/preact';
+import range from 'tui-code-snippet/array/range';
 
 import { Month } from '@src/components/view/month';
 import EventModel from '@src/model/eventModel';
@@ -53,6 +54,14 @@ function createMonthEvents() {
       id: '2',
     },
   ];
+  range(10).forEach((i) => {
+    events.push({
+      title: `event2-${i}`,
+      start: secondTuesday,
+      end: secondThursday,
+      id: `${i}${i}`,
+    });
+  });
 
   return events.map((event) => EventModel.create(event));
 }
