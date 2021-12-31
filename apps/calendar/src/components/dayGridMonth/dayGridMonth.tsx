@@ -5,26 +5,22 @@ import { GridSelection } from '@src/components/dayGridCommon/gridSelection';
 import { GridRow } from '@src/components/dayGridMonth/gridRow';
 import { MonthEvents } from '@src/components/dayGridMonth/monthEvents';
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
-import { EVENT_FORM_POPUP_WIDTH } from '@src/constants/popup';
 import {
   MONTH_CELL_BAR_HEIGHT,
   MONTH_CELL_PADDING_TOP,
   MONTH_EVENT_HEIGHT,
   MONTH_EVENT_MARGIN_TOP,
 } from '@src/constants/style';
-import { useDispatch, useStore } from '@src/contexts/calendarStore';
+import { useStore } from '@src/contexts/calendarStore';
 import { cls, toPercent } from '@src/helpers/css';
-import { DRAGGING_TYPE_CONSTANTS } from '@src/helpers/drag';
 import { EVENT_HEIGHT, getRenderedEventUIModels } from '@src/helpers/grid';
 import { createMousePositionDataGrabberMonth } from '@src/helpers/view';
 import { useDOMNode } from '@src/hooks/common/domNode';
-import { useDrag } from '@src/hooks/common/drag';
 import { useDayGridSelection } from '@src/hooks/dayGridCommon/dayGridSelection';
+import { usePopupWithDayGridSelection } from '@src/hooks/dayGridCommon/popupWithDayGridSelection';
 import { useDayGridMonthEventMove } from '@src/hooks/dayGridMonth/dayGridMonthEventMove';
 import { calendarSelector } from '@src/selectors';
-import { PopupType } from '@src/slices/popup';
 import TZDate from '@src/time/date';
-import { compare } from '@src/time/datetime';
 import { getSize } from '@src/utils/dom';
 import { isBetween } from '@src/utils/math';
 import { isPresent } from '@src/utils/type';
@@ -116,10 +112,8 @@ export const DayGridMonth: FunctionComponent<Props> = ({
   gridInfo = [],
   useCreationPopup,
 }) => {
-  const dragStartPos = useRef<{ x: number; y: number } | null>(null);
   const [gridContainer, setGridContainerRef] = useDOMNode<HTMLDivElement>();
   const calendarData = useStore(calendarSelector);
-  const { show } = useDispatch('popup');
   const { ref, height } = useGridHeight();
 
   const { visibleWeeksCount, narrowWeekend } = options;
@@ -135,45 +129,7 @@ export const DayGridMonth: FunctionComponent<Props> = ({
   );
 
   const gridSelection = useDayGridSelection(mousePositionDataGrabber);
-  const { onMouseDown } = useDrag(DRAGGING_TYPE_CONSTANTS.dayGridSelection, {
-    onDragStart: (e) => {
-      dragStartPos.current = {
-        x: e.pageX,
-        y: e.pageY,
-      };
-    },
-    onDragEnd: (e) => {
-      if (!gridSelection || !useCreationPopup || !dragStartPos.current) {
-        return;
-      }
-
-      const { initColIndex, initRowIndex, currentColIndex, currentRowIndex } = gridSelection;
-      const { x, y } = dragStartPos.current;
-      const { pageX, pageY } = e;
-
-      dragStartPos.current = null;
-      e.stopPropagation();
-
-      const selectionStartDate = dateMatrix[initRowIndex][initColIndex];
-      const selectionEndDate = dateMatrix[currentRowIndex][currentColIndex];
-      const isInCreased = compare(selectionStartDate, selectionEndDate) === -1;
-      const start = isInCreased ? selectionStartDate : selectionEndDate;
-      const end = isInCreased ? selectionEndDate : selectionStartDate;
-
-      show({
-        type: PopupType.form,
-        param: {
-          start,
-          end,
-          isAllday: true,
-          popupPosition: {
-            left: (pageX + x - EVENT_FORM_POPUP_WIDTH) / 2,
-            top: (pageY + y) / 2,
-          },
-        },
-      });
-    },
-  });
+  const onMouseDown = usePopupWithDayGridSelection({ gridSelection, useCreationPopup, dateMatrix });
 
   const { movingEvent, currentGridPos } = useDayGridMonthEventMove({
     cells: dateMatrix,
