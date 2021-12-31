@@ -14,12 +14,10 @@ interface Params {
   dateMatrix: TZDate[][];
 }
 
-function sortDate(startDate: TZDate, endDate: TZDate) {
-  const isIncreased = compare(startDate, endDate) === -1;
-  const start = isIncreased ? startDate : endDate;
-  const end = isIncreased ? endDate : startDate;
+function sortDate(start: TZDate, end: TZDate) {
+  const isIncreased = compare(start, end) === -1;
 
-  return [start, end];
+  return isIncreased ? [start, end] : [end, start];
 }
 
 export function usePopupWithDayGridSelection({
