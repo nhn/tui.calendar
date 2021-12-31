@@ -33,7 +33,7 @@
 
 .dropdown-menu {
   position: absolute;
-  width: 100%;
+  width: calc(100% - 2px);
   top: 31px;
   z-index: 1;
   padding: 4px 0;
