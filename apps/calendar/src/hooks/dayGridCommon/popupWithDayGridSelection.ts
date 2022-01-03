@@ -6,7 +6,6 @@ import { DRAGGING_TYPE_CONSTANTS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/drag';
 import { PopupType } from '@src/slices/popup';
 import TZDate from '@src/time/date';
-import { compare } from '@src/time/datetime';
 
 interface Params {
   gridSelection: GridSelectionData | null;
@@ -15,7 +14,7 @@ interface Params {
 }
 
 function sortDate(start: TZDate, end: TZDate) {
-  const isIncreased = compare(start, end) === -1;
+  const isIncreased = start < end;
 
   return isIncreased ? [start, end] : [end, start];
 }
