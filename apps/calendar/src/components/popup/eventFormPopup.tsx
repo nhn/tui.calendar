@@ -32,7 +32,7 @@ export const EventFormPopup: FunctionComponent<EventFormPopupParam> = ({
   const { calendars } = useStore(calendarSelector);
 
   return (
-    <div className={classNames.popupContainer}>
+    <div role="dialog" className={classNames.popupContainer}>
       <div className={classNames.formContainer}>
         {calendars?.length ? <CalendarSelector calendars={calendars} /> : <PopupSection />}
         <TitleInputBox />
