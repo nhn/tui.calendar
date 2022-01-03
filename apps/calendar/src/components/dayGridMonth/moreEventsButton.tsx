@@ -12,15 +12,18 @@ interface Props {
 const MoreEventsButton: FunctionComponent<Props> = ({ number, onClickButton, className }) => {
   const { reset } = useDispatch('dnd');
 
-  const handleClick = (e: MouseEvent) => {
+  const handleMouseDown = (e: MouseEvent) => {
     e.stopPropagation();
+  };
+
+  const handleClick = () => {
     reset();
     onClickButton();
   };
 
   return (
     // NOTE: use `onMouseDown` event to prevent `useDrag` from firing
-    <button type="button" onMouseDown={handleClick} className={className}>
+    <button type="button" onMouseDown={handleMouseDown} onClick={handleClick} className={className}>
       <Template template="monthGridHeaderExceed" model={number} />
     </button>
   );
