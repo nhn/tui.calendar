@@ -33,7 +33,7 @@ test.describe('Grid Selection', () => {
 test('event form popup with grid selection', async ({ page }) => {
   await selectWeekGridCells(page, 14, 15);
 
-  const floatingLayer = page.locator('.toastui-calendar-floating-layer');
+  const floatingLayer = page.locator('css=[role=dialog]');
 
   expect(floatingLayer).not.toBeNull();
 });

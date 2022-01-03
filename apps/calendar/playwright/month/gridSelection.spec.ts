@@ -1,4 +1,4 @@
-import { Page, test } from '@playwright/test';
+import { expect, Page, test } from '@playwright/test';
 
 import { assertGridSelectionMatching } from '../assertions';
 import { MONTH_VIEW_PAGE_URL } from '../configs';
@@ -69,5 +69,13 @@ test.describe('Selection', () => {
     await selectMonthGridCells(page, 28, 34);
 
     await assertMonthGridSelectionMatching(page, 28, 34);
+  });
+
+  test('event form popup with grid selection', async ({ page }) => {
+    await selectMonthGridCells(page, 28, 34);
+
+    const floatingLayer = page.locator('css=[role=dialog]');
+
+    expect(floatingLayer).not.toBeNull();
   });
 });

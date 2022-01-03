@@ -1,4 +1,4 @@
-import { FunctionComponent, h, RefObject } from 'preact';
+import { FunctionComponent, h } from 'preact';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 
 import { GridSelection } from '@src/components/dayGridCommon/gridSelection';
@@ -13,14 +13,12 @@ import {
 } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
 import { cls, toPercent } from '@src/helpers/css';
-import { DRAGGING_TYPE_CONSTANTS } from '@src/helpers/drag';
 import { EVENT_HEIGHT, getRenderedEventUIModels } from '@src/helpers/grid';
 import { createMousePositionDataGrabberMonth } from '@src/helpers/view';
 import { useDOMNode } from '@src/hooks/common/domNode';
-import { useDrag } from '@src/hooks/common/drag';
 import { useDayGridSelection } from '@src/hooks/dayGridCommon/dayGridSelection';
+import { usePopupWithDayGridSelection } from '@src/hooks/dayGridCommon/popupWithDayGridSelection';
 import { useDayGridMonthEventMove } from '@src/hooks/dayGridMonth/dayGridMonthEventMove';
-import EventModel from '@src/model/eventModel';
 import { calendarSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
 import { getSize } from '@src/utils/dom';
@@ -35,7 +33,6 @@ interface Props {
   options: CalendarMonthOptions;
   dateMatrix: TZDate[][];
   gridInfo: GridInfo[];
-  events?: EventModel[];
 }
 
 function useGridHeight() {
@@ -121,7 +118,6 @@ export const DayGridMonth: FunctionComponent<Props> = ({
   const rowHeight =
     TOTAL_PERCENT_HEIGHT / Math.max(visibleWeeksCount === 0 ? 6 : visibleWeeksCount, 1);
 
-  const { onMouseDown } = useDrag(DRAGGING_TYPE_CONSTANTS.dayGridSelection);
   const mousePositionDataGrabber = useMemo(
     () =>
       gridContainer
@@ -131,6 +127,7 @@ export const DayGridMonth: FunctionComponent<Props> = ({
   );
 
   const gridSelection = useDayGridSelection(mousePositionDataGrabber);
+  const onMouseDown = usePopupWithDayGridSelection({ gridSelection, dateMatrix });
 
   const { movingEvent, currentGridPos } = useDayGridMonthEventMove({
     cells: dateMatrix,

@@ -49,10 +49,6 @@
   line-height: 30px;
 }
 
-.popup-section-title {
-  width: calc(100% - 36px);
-}
-
 .popup-section-title input {
   width: 365px;
 }
@@ -139,6 +135,10 @@
 
 .dropdown-section.state-section {
   width: 109px;
+}
+
+.dropdown-section.state-section .popup-button {
+  width: 100%;
 }
 
 .state-section .content {

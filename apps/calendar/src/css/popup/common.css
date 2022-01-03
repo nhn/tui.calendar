@@ -5,6 +5,10 @@
   clear: both;
 }
 
+.popup-container * {
+  box-sizing: border-box;
+}
+
 .popup-section {
   font-size: 0;
   min-height: 40px;
