@@ -1,10 +1,9 @@
-import { FunctionComponent, h, RefObject } from 'preact';
-import { useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { FunctionComponent, h } from 'preact';
+import { useMemo } from 'preact/hooks';
 
 import GridHeader from '@src/components/dayGridCommon/gridHeader';
 import { DayGridMonth } from '@src/components/dayGridMonth/dayGridMonth';
-import { Panel } from '@src/components/panel';
-import { MONTH_DAY_NAME_HEIGHT } from '@src/constants/style';
+import { Layout } from '@src/components/layout';
 import { useStore } from '@src/contexts/calendarStore';
 import { useTheme } from '@src/contexts/theme';
 import { cls } from '@src/helpers/css';
@@ -12,7 +11,6 @@ import { capitalizeDayName } from '@src/helpers/dayName';
 import { createDateMatrixOfMonth } from '@src/helpers/grid';
 import { optionsSelector } from '@src/selectors';
 import { getGridInfo, isWeekend } from '@src/time/datetime';
-import { getSize } from '@src/utils/dom';
 
 import { MonthOptions } from '@t/options';
 import { CalendarStore } from '@t/store';
@@ -34,27 +32,9 @@ function getDayNames(options: CalendarStore['options']) {
   return dayNames;
 }
 
-function useContainerHeight(container: RefObject<HTMLDivElement>, dayNameHeight: number) {
-  const [gridPanelHeight, setGridPanelHeight] = useState(0);
-
-  useLayoutEffect(() => {
-    if (container.current) {
-      const { height } = getSize(container.current);
-
-      setGridPanelHeight(height - dayNameHeight);
-    }
-  }, [container, dayNameHeight]);
-
-  return gridPanelHeight;
-}
-
 export const Month: FunctionComponent = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-
   const options = useStore(optionsSelector);
   const theme = useTheme();
-
-  const gridPanelHeight = useContainerHeight(containerRef, MONTH_DAY_NAME_HEIGHT);
 
   const dayNames = getDayNames(options);
   const monthOptions = options.month as Required<MonthOptions>;
@@ -71,26 +51,16 @@ export const Month: FunctionComponent = () => {
   );
 
   return (
-    // @TODO: change to layout component
-    <div className={cls('month')} ref={containerRef}>
-      <Panel name="month-daynames" initialHeight={MONTH_DAY_NAME_HEIGHT}>
-        <GridHeader
-          templateType="monthDayname"
-          dayNames={dayNames}
-          theme={theme.month.dayname}
-          options={monthOptions}
-          gridInfo={gridInfo}
-          type="month"
-        />
-      </Panel>
-      <Panel name="month-daygrid" initialHeight={gridPanelHeight}>
-        <DayGridMonth
-          options={monthOptions}
-          dateMatrix={dateMatrix}
-          gridInfo={gridInfo}
-          appContainer={containerRef}
-        />
-      </Panel>
-    </div>
+    <Layout className={cls('month')}>
+      <GridHeader
+        templateType="monthDayname"
+        dayNames={dayNames}
+        theme={theme.month.dayname}
+        options={monthOptions}
+        gridInfo={gridInfo}
+        type="month"
+      />
+      <DayGridMonth options={monthOptions} dateMatrix={dateMatrix} gridInfo={gridInfo} />
+    </Layout>
   );
 };

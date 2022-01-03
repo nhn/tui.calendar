@@ -6,6 +6,7 @@ import range from 'tui-code-snippet/array/range';
 import GridHeader from '@src/components/dayGridCommon/gridHeader';
 import { AlldayGridRow } from '@src/components/dayGridWeek/alldayGridRow';
 import { OtherGridRow } from '@src/components/dayGridWeek/otherGridRow';
+import { Layout } from '@src/components/layout';
 import { Panel } from '@src/components/panel';
 import { ColumnInfo } from '@src/components/timeGrid/columnWithMouse';
 import { TimeGrid } from '@src/components/timeGrid/timeGrid';
@@ -132,8 +133,7 @@ export const Week: FunctionComponent = () => {
     });
 
   return (
-    // @TODO: refactor Layout component
-    <div className={cls('week-view')}>
+    <Layout className={cls('week-view')} autoAdjustPanels={true}>
       <Panel name="week-view-daynames" initialHeight={WEEK_DAYNAME_HEIGHT + WEEK_DAYNAME_BORDER}>
         <GridHeader
           dayNames={dayNames}
@@ -148,6 +148,6 @@ export const Week: FunctionComponent = () => {
       <Panel name="time" autoSize={1}>
         <TimeGrid events={dayGridEvents.time} columnInfoList={columnInfoList} />
       </Panel>
-    </div>
+    </Layout>
   );
 };

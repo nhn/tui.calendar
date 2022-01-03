@@ -17,7 +17,7 @@ import {
 
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 
-export default { title: 'Times' };
+export default { title: 'Components/Times', component: Times };
 
 export const minutesInAnHour = () => {
   const now = new TZDate();

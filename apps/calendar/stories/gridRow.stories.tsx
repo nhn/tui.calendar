@@ -16,7 +16,11 @@ import { createRandomEventModelsForMonth } from '@stories/util/randomEvents';
 
 import { CalendarData } from '@t/events';
 
-export default { title: 'GridRow', component: OtherGridRow, args: { primary: true } };
+export default {
+  title: 'Components/WeekGridRow',
+  component: OtherGridRow,
+  args: { primary: true },
+};
 
 const events = createRandomEventModelsForMonth(40);
 

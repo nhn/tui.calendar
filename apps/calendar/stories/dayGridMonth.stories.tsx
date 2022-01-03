@@ -1,121 +1,54 @@
 import { h } from 'preact';
 
-import range from 'tui-code-snippet/array/range';
-
 import { DayGridMonth } from '@src/components/dayGridMonth/dayGridMonth';
 import { GridCell } from '@src/components/dayGridMonth/gridCell';
 import { GridRow } from '@src/components/dayGridMonth/gridRow';
-import { Panel } from '@src/components/panel';
-import EventModel from '@src/model/eventModel';
+import { Layout } from '@src/components/layout';
+import { createDateMatrixOfMonth } from '@src/helpers/grid';
 import TZDate from '@src/time/date';
 import { getGridInfo } from '@src/time/datetime';
 
-import { getWeekDates, getWeekendDates } from '@stories/util/mockCalendarDates';
+import { getWeekDates } from '@stories/util/mockCalendarDates';
 import { ProviderWrapper } from '@stories/util/providerWrapper';
-import { createRandomEvents } from '@stories/util/randomEvents';
 
-import { EventModelData } from '@t/events';
 import { CalendarMonthOptions } from '@t/store';
 
-export default { title: 'DayGridMonth' };
+export default { title: 'Components/DayGridMonth', component: DayGridMonth };
 
-export const cell = () => {
+export const Cell = () => {
   const date = new TZDate();
 
   return (
     <ProviderWrapper>
-      <GridCell
-        date={date}
-        dayIndex={date.getDay()}
-        style={{ width: 100, height: 100 }}
-        height={100}
-      />
+      <Layout>
+        <GridCell
+          date={date}
+          dayIndex={date.getDay()}
+          style={{ width: 100, height: 100 }}
+          height={100}
+        />
+      </Layout>
     </ProviderWrapper>
   );
 };
 
-export const week = () => {
-  const calendar = getWeekDates();
-
-  return (
-    <ProviderWrapper>
-      <GridRow
-        cssHeight={100}
-        week={calendar}
-        appContainer={{ current: document.createElement('div') }}
-      />
-    </ProviderWrapper>
-  );
-};
-
-export const weekend = () => {
-  const calendar = getWeekendDates();
-
-  return (
-    <ProviderWrapper>
-      <GridRow
-        height={200}
-        week={calendar}
-        appContainer={{ current: document.createElement('div') }}
-      />
-    </ProviderWrapper>
-  );
-};
-
-export const daygrid = () => {
-  const date = new Date();
-
-  const dayIndex = date.getDay();
-  const start = date.getDate() - dayIndex;
-  const saturday = start + 6;
-  const sunday = saturday + 1;
-  const WEEKDAYS = 7;
-
-  const dateMatrix = range(3).map((index) => [
-    new TZDate(date.setDate(saturday + WEEKDAYS * index)),
-    new TZDate(date.setDate(sunday + WEEKDAYS * index)),
-  ]);
-
-  const options: CalendarMonthOptions = {
-    visibleWeeksCount: 3,
-    workweek: false,
-    narrowWeekend: true,
-    startDayOfWeek: 0,
-    isAlways6Week: true,
-    daynames: [],
-    moreLayerSize: { width: null, height: null },
-    grid: {
-      header: { height: 31 },
-      footer: { height: 31 },
-    },
-    visibleEventCount: 6,
-    eventFilter: () => true,
-  };
-
-  const { gridInfo } = getGridInfo(
-    options.daynames.length,
-    options.narrowWeekend,
-    options.startDayOfWeek,
-    options.workweek
-  );
-
-  return (
-    <ProviderWrapper>
-      <DayGridMonth
-        options={options}
-        dateMatrix={dateMatrix}
-        gridInfo={gridInfo}
-        appContainer={{ current: document.createElement('div') }}
-      />
-    </ProviderWrapper>
-  );
-};
-
-export const randomEvents = () => {
+export const Week = () => {
   const weekDates = getWeekDates();
 
+  const { gridInfo } = getGridInfo(weekDates.length, false, 0, false);
+
+  return (
+    <ProviderWrapper>
+      <Layout>
+        <GridRow gridInfo={gridInfo} cssHeight={100} week={weekDates} />
+      </Layout>
+    </ProviderWrapper>
+  );
+};
+
+export const Month = () => {
   const options: CalendarMonthOptions = {
-    visibleWeeksCount: 1,
+    visibleWeeksCount: 3,
     workweek: false,
     narrowWeekend: false,
     startDayOfWeek: 0,
@@ -130,27 +63,20 @@ export const randomEvents = () => {
     eventFilter: () => true,
   };
 
-  const data = createRandomEvents('month', weekDates[0], weekDates[6], 10);
-  const events = data.map((event: EventModelData) => EventModel.create(event));
+  const dateMatrix = createDateMatrixOfMonth(new Date(), options);
 
   const { gridInfo } = getGridInfo(
-    options.daynames.length,
+    dateMatrix[0].length,
     options.narrowWeekend,
     options.startDayOfWeek,
     options.workweek
   );
 
   return (
-    <ProviderWrapper events={events}>
-      <Panel name="weekday" initialHeight={400}>
-        <DayGridMonth
-          options={options}
-          dateMatrix={[weekDates]}
-          events={events}
-          gridInfo={gridInfo}
-          appContainer={{ current: document.createElement('div') }}
-        />
-      </Panel>
+    <ProviderWrapper>
+      <Layout>
+        <DayGridMonth options={options} dateMatrix={dateMatrix} gridInfo={gridInfo} />
+      </Layout>
     </ProviderWrapper>
   );
 };

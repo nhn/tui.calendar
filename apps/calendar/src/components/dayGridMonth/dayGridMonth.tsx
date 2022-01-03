@@ -35,7 +35,6 @@ interface Props {
   options: CalendarMonthOptions;
   dateMatrix: TZDate[][];
   gridInfo: GridInfo[];
-  appContainer: RefObject<HTMLDivElement>;
   events?: EventModel[];
 }
 
@@ -113,13 +112,12 @@ export const DayGridMonth: FunctionComponent<Props> = ({
   options,
   dateMatrix = [],
   gridInfo = [],
-  appContainer,
 }) => {
   const [gridContainer, setGridContainerRef] = useDOMNode<HTMLDivElement>();
   const calendarData = useStore(calendarSelector);
   const { ref, height } = useGridHeight();
 
-  const { visibleWeeksCount, workweek, startDayOfWeek, narrowWeekend } = options;
+  const { visibleWeeksCount, narrowWeekend } = options;
   const rowHeight =
     TOTAL_PERCENT_HEIGHT / Math.max(visibleWeeksCount === 0 ? 6 : visibleWeeksCount, 1);
 
@@ -146,11 +144,7 @@ export const DayGridMonth: FunctionComponent<Props> = ({
   );
 
   return (
-    <div
-      ref={setGridContainerRef}
-      onMouseDown={onMouseDown}
-      className={cls('month-daygrid__container')}
-    >
+    <div ref={setGridContainerRef} onMouseDown={onMouseDown} className={cls('month-daygrid')}>
       {dateMatrix.map((week, rowIndex) => {
         const { uiModels, gridDateEventModelMap } = renderedEventUiModels[rowIndex];
         const isMouseInWeek = rowIndex === currentGridPos?.y;
@@ -167,11 +161,8 @@ export const DayGridMonth: FunctionComponent<Props> = ({
               <GridRow
                 cssHeight={toPercent(TOTAL_PERCENT_HEIGHT)}
                 gridDateEventModelMap={gridDateEventModelMap}
-                workweek={workweek}
-                startDayOfWeek={startDayOfWeek}
-                narrowWeekend={narrowWeekend}
                 week={week}
-                appContainer={appContainer}
+                gridInfo={gridInfo}
                 height={height}
               />
               <MonthEvents

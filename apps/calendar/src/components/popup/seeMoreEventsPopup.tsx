@@ -33,7 +33,11 @@ export const SeeMoreEventsPopup: FunctionComponent<SeeMorePopupParam> = ({ date,
   };
 
   return (
-    <div className={cls('see-more')} style={{ ...moreView, padding: MONTH_MORE_VIEW_PADDING }}>
+    <div
+      role="dialog"
+      className={cls('see-more')}
+      style={{ ...moreView, padding: MONTH_MORE_VIEW_PADDING }}
+    >
       <div className={cls('see-more-header')} style={style}>
         <Template template="monthMoreTitleDate" model={moreTitle} />
         <ClosePopupButton />

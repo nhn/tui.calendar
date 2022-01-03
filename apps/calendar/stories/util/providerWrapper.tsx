@@ -1,19 +1,18 @@
 import { h, RenderableProps } from 'preact';
 
-import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
-import { ThemeProvider } from '@src/contexts/theme';
-import { cls } from '@src/helpers/css';
+import { CalendarContainer } from '@src/calendarContainer';
+import { initCalendarStore } from '@src/contexts/calendarStore';
 import EventModel from '@src/model/eventModel';
 import Theme from '@src/theme';
 
 import { Options } from '@t/options';
 
-const style = {
+const rootContainerStyle = {
   position: 'absolute',
   left: 0,
   right: 0,
-  bottom: 5,
-  top: 5,
+  bottom: 0,
+  top: 0,
 };
 
 type Props = {
@@ -38,10 +37,8 @@ export function ProviderWrapper({
   }
 
   return (
-    <ThemeProvider theme={theme}>
-      <div className={cls('layout')} style={style}>
-        <StoreProvider store={store}>{children}</StoreProvider>
-      </div>
-    </ThemeProvider>
+    <CalendarContainer theme={theme} store={store}>
+      <div style={rootContainerStyle}>{children}</div>
+    </CalendarContainer>
   );
 }

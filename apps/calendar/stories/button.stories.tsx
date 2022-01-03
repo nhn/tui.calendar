@@ -1,8 +1,8 @@
-import { h, JSX } from 'preact';
+import { h } from 'preact';
 
-import Button from '@stories/Button';
+import { Button } from '@src/components/ui/button';
 
-export default { title: 'Button' };
+export default { title: 'Components/Button', component: Button };
 
-export const withText = (): JSX.Element => <Button>Text Button</Button>;
-export const withEmoji = (): JSX.Element => <Button>😀 😎 👍 💯</Button>;
+export const withText = () => <Button className="button">Text Button</Button>;
+export const withEmoji = () => <Button className="button">😀 😎 👍 💯</Button>;

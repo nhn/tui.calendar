@@ -13,7 +13,7 @@ import { EventFormPopupParam } from '@t/store';
 
 export default {
   component: EventFormPopup,
-  title: 'Popup/EventFormPopup',
+  title: 'Popups/EventFormPopup',
 };
 
 interface EventFormPopupStoryProps extends EventFormPopupParam {

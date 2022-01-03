@@ -7,7 +7,7 @@ import EventUIModel from '@src/model/eventUIModel';
 
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 
-export default { title: 'Various Event Blocks' };
+export default { title: 'Components/EventBlocks' };
 
 export const timeEvent = () => {
   const event = EventModel.create({

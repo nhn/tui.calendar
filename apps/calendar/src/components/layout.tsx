@@ -1,8 +1,9 @@
-import { ComponentProps, FunctionComponent, h, toChildArray } from 'preact';
+import { ComponentChildren, ComponentProps, FunctionComponent, h, toChildArray } from 'preact';
 import { useLayoutEffect, useMemo, useRef } from 'preact/hooks';
 
 import { Panel } from '@src/components/panel';
 import { useDispatch } from '@src/contexts/calendarStore';
+import { LayoutContainerRefProvider } from '@src/contexts/layoutContainerRef';
 import { cls, toPercent } from '@src/helpers/css';
 import { noop } from '@src/utils/noop';
 import { isNil, isNumber, isString } from '@src/utils/type';
@@ -13,6 +14,8 @@ interface Props {
   height?: number;
   width?: number;
   className?: string;
+  autoAdjustPanels?: boolean;
+  children: ComponentChildren;
 }
 
 function getLayoutStylesFromInfo(width?: number, height?: number) {
@@ -29,14 +32,20 @@ function getLayoutStylesFromInfo(width?: number, height?: number) {
 }
 
 // @TODO: consider `direction` and `resizeMode`
-export const Layout: FunctionComponent<Props> = ({ children, width, height, className = '' }) => {
-  const layoutRef = useRef<HTMLDivElement>(null);
+export const Layout: FunctionComponent<Props> = ({
+  children,
+  width,
+  height,
+  className = '',
+  autoAdjustPanels = false,
+}) => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const { setLastPanelType, updateLayoutHeight } = useDispatch('weekViewLayout');
 
   const layoutClassName = useMemo(() => `${cls('layout')} ${className}`, [className]);
 
   useLayoutEffect(() => {
-    const layoutElement = layoutRef.current;
+    const layoutElement = containerRef.current;
 
     if (layoutElement) {
       const onResizeWindow = () => updateLayoutHeight(layoutElement.offsetHeight);
@@ -51,17 +60,25 @@ export const Layout: FunctionComponent<Props> = ({ children, width, height, clas
   }, [updateLayoutHeight]);
 
   useLayoutEffect(() => {
-    const childArray = toChildArray(children);
-    const lastChild = childArray[childArray.length - 1];
+    if (autoAdjustPanels) {
+      const childArray = toChildArray(children);
+      const lastChild = childArray[childArray.length - 1];
 
-    if (!isString(lastChild) && !isNumber(lastChild) && !isNil(lastChild)) {
-      setLastPanelType((lastChild.props as unknown as ComponentProps<typeof Panel>).name);
+      if (!isString(lastChild) && !isNumber(lastChild) && !isNil(lastChild)) {
+        setLastPanelType((lastChild.props as unknown as ComponentProps<typeof Panel>).name);
+      }
     }
-  }, [children, setLastPanelType]);
+  }, [children, setLastPanelType, autoAdjustPanels]);
 
   return (
-    <div ref={layoutRef} className={layoutClassName} style={getLayoutStylesFromInfo(width, height)}>
-      {children}
-    </div>
+    <LayoutContainerRefProvider value={containerRef}>
+      <div
+        ref={containerRef}
+        className={layoutClassName}
+        style={getLayoutStylesFromInfo(width, height)}
+      >
+        {children}
+      </div>
+    </LayoutContainerRefProvider>
   );
 };

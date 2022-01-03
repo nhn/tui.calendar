@@ -11,9 +11,11 @@ import {
   MONTH_MORE_VIEW_PADDING,
 } from '@src/constants/style';
 import { useDispatch } from '@src/contexts/calendarStore';
+import { useLayoutContainerRef } from '@src/contexts/layoutContainerRef';
 import { useTheme } from '@src/contexts/theme';
 import { cls, toPercent } from '@src/helpers/css';
 import { getExceedCount } from '@src/helpers/grid';
+import { useDOMNode } from '@src/hooks/common/domNode';
 import EventUIModel from '@src/model/eventUIModel';
 import { PopupType } from '@src/slices/popup';
 import TZDate from '@src/time/date';
@@ -34,7 +36,6 @@ interface Props {
     top?: CSSValue;
   };
   parentContainer?: HTMLDivElement | null;
-  appContainer?: HTMLDivElement | null;
   events?: EventUIModel[];
   height: number;
 }
@@ -122,19 +123,19 @@ function getDateColor(dayIndex: Day, commonTheme: CommonTheme) {
 }
 
 function getSeeMorePopupRect({
-  appContainer,
+  layoutContainer,
   grid,
   cell,
   popupSize,
 }: SeeMoreRectParam): PopupPosition {
-  const appContainerSize = getSize(appContainer);
+  const appContainerSize = getSize(layoutContainer);
 
   const pos = getRelativePosition(
     {
       clientX: getPosition(cell).x,
       clientY: getPosition(grid).y,
     } as MouseEvent,
-    appContainer
+    layoutContainer
   );
 
   let left = pos[0] - MONTH_MORE_VIEW_PADDING;
@@ -151,36 +152,31 @@ function getSeeMorePopupRect({
 function usePopupPosition(
   eventLength: number,
   parentContainer?: HTMLDivElement | null,
-  appContainer?: HTMLDivElement | null
+  layoutContainer?: HTMLDivElement | null
 ) {
-  const container = useRef<HTMLDivElement>(null);
+  const [container, containerRefCallback] = useDOMNode<HTMLDivElement>();
   const [popupPosition, setPopupPosition] = useState<PopupPosition | null>(null);
 
   useEffect(() => {
-    if (appContainer && parentContainer && container.current) {
-      const popupSize = getSeeMorePopupSize(
-        parentContainer,
-        container.current.offsetWidth,
-        eventLength,
-        {
-          moreLayerSize: { width: null, height: null },
-          eventHeight: MONTH_EVENT_HEIGHT,
-          eventMarginTop: MONTH_EVENT_MARGIN_TOP,
-        }
-      );
+    if (layoutContainer && parentContainer && container) {
+      const popupSize = getSeeMorePopupSize(parentContainer, container.offsetWidth, eventLength, {
+        moreLayerSize: { width: null, height: null },
+        eventHeight: MONTH_EVENT_HEIGHT,
+        eventMarginTop: MONTH_EVENT_MARGIN_TOP,
+      });
 
       const rect = getSeeMorePopupRect({
-        cell: container.current,
+        cell: container,
         grid: parentContainer,
-        appContainer,
+        layoutContainer,
         popupSize,
       });
 
       setPopupPosition(rect);
     }
-  }, [appContainer, eventLength, parentContainer]);
+  }, [layoutContainer, container, eventLength, parentContainer]);
 
-  return { popupPosition, container };
+  return { popupPosition, containerRefCallback };
 }
 
 export const GridCell: FunctionComponent<Props> = ({
@@ -189,18 +185,18 @@ export const GridCell: FunctionComponent<Props> = ({
   events = [],
   style,
   parentContainer,
-  appContainer,
   height,
 }) => {
+  const layoutContainerRef = useLayoutContainerRef();
   const { show } = useDispatch('popup');
   const theme = useTheme();
 
   const { common: commonTheme } = theme;
 
-  const { popupPosition, container } = usePopupPosition(
+  const { popupPosition, containerRefCallback } = usePopupPosition(
     events.length,
     parentContainer,
-    appContainer
+    layoutContainerRef?.current
   );
 
   const onOpenSeeMorePopup = useCallback(() => {
@@ -225,7 +221,7 @@ export const GridCell: FunctionComponent<Props> = ({
         ...style,
         color: getDateColor(dayIndex, commonTheme),
       }}
-      ref={container}
+      ref={containerRefCallback}
     >
       <CellHeader exceedCount={exceedCount} date={date} onClickExceedCount={onOpenSeeMorePopup} />
     </div>

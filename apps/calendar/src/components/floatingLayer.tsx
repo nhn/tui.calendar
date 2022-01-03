@@ -7,6 +7,7 @@ import { useStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
 import { popupSelector } from '@src/selectors';
 import { PopupType } from '@src/slices/popup';
+import { isNil } from '@src/utils/type';
 
 import {
   EventDetailPopupParam,
@@ -32,7 +33,7 @@ const FloatingLayer: FunctionComponent = () => {
   const popupState = useStore(popupSelector);
   const { type, param } = popupState;
 
-  if (!type || !param) {
+  if (isNil(type) || isNil(param)) {
     return null;
   }
 

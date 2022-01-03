@@ -13,7 +13,7 @@ import { createRandomEvents } from '@stories/util/randomEvents';
 
 import { EventModelData } from '@t/events';
 
-export default { title: 'TimeGrid' };
+export default { title: 'Components/TimeGrid', component: TimeGrid };
 
 function toThisWeek(date: TZDate) {
   const today = toStartOfDay(new TZDate());

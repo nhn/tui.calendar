@@ -19,7 +19,7 @@ import { createEventModels } from '@stories/helper/event';
 import { TimeGridSelectionInfo } from '@t/components/timeGrid/gridSelection';
 import { EventModelData } from '@t/events';
 
-export default { title: 'Column' };
+export default { title: 'Components/Column', component: Column };
 
 interface WrapperProps {
   width: number;

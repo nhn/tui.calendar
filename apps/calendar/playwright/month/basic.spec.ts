@@ -7,7 +7,8 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('basic test', async ({ page }) => {
-  const events = await page.$$('.toastui-calendar-weekday-event');
+  const eventsLocator = page.locator('.toastui-calendar-weekday-event');
+  const eventsCount = await eventsLocator.count();
 
-  expect(events).toHaveLength(4);
+  expect(eventsCount).toBe(5);
 });

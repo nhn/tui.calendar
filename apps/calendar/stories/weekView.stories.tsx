@@ -2,7 +2,6 @@ import { h } from 'preact';
 
 import { Story } from '@storybook/preact';
 
-import FloatingLayer from '@src/components/floatingLayer';
 import { Week } from '@src/components/view/week';
 import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
@@ -13,7 +12,7 @@ import { createRandomEventModelsForMonth, createRandomEvents } from '@stories/ut
 
 import { EventModelData } from '@t/events';
 
-export default { title: 'WeekView' };
+export default { title: 'Views/WeekView', component: Week };
 
 function createTimeGridEvents() {
   const today = new TZDate();
@@ -65,7 +64,6 @@ function createWeekEvents() {
 const Template: Story = (args) => (
   <ProviderWrapper options={args.options} events={args.events}>
     <Week />
-    <FloatingLayer />
   </ProviderWrapper>
 );
 
