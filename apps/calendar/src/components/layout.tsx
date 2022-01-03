@@ -82,5 +82,3 @@ export const Layout: FunctionComponent<Props> = ({
     </LayoutContainerRefProvider>
   );
 };
-
-Layout.displayName = 'Layout';
