@@ -33,7 +33,6 @@ interface Props {
   options: CalendarMonthOptions;
   dateMatrix: TZDate[][];
   gridInfo: GridInfo[];
-  useCreationPopup: boolean;
 }
 
 function useGridHeight() {
@@ -110,7 +109,6 @@ export const DayGridMonth: FunctionComponent<Props> = ({
   options,
   dateMatrix = [],
   gridInfo = [],
-  useCreationPopup,
 }) => {
   const [gridContainer, setGridContainerRef] = useDOMNode<HTMLDivElement>();
   const calendarData = useStore(calendarSelector);
@@ -129,7 +127,7 @@ export const DayGridMonth: FunctionComponent<Props> = ({
   );
 
   const gridSelection = useDayGridSelection(mousePositionDataGrabber);
-  const onMouseDown = usePopupWithDayGridSelection({ gridSelection, useCreationPopup, dateMatrix });
+  const onMouseDown = usePopupWithDayGridSelection({ gridSelection, dateMatrix });
 
   const { movingEvent, currentGridPos } = useDayGridMonthEventMove({
     cells: dateMatrix,

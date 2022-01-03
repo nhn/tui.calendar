@@ -1,15 +1,16 @@
 import { useRef } from 'preact/hooks';
 
 import { EVENT_FORM_POPUP_WIDTH } from '@src/constants/popup';
-import { useDispatch } from '@src/contexts/calendarStore';
+import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { DRAGGING_TYPE_CONSTANTS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/drag';
 import { PopupType } from '@src/slices/popup';
 import TZDate from '@src/time/date';
 
+import { CalendarState } from '@t/store';
+
 interface Params {
   gridSelection: GridSelectionData | null;
-  useCreationPopup: boolean;
   dateMatrix: TZDate[][];
 }
 
@@ -19,13 +20,16 @@ function sortDate(start: TZDate, end: TZDate) {
   return isIncreased ? [start, end] : [end, start];
 }
 
-export function usePopupWithDayGridSelection({
-  gridSelection,
-  useCreationPopup,
-  dateMatrix,
-}: Params) {
-  const dragStartPos = useRef<{ x: number; y: number } | null>(null);
+function useCreationPopupOptionSelector(state: CalendarState) {
+  return state.options.useCreationPopup;
+}
+
+export function usePopupWithDayGridSelection({ gridSelection, dateMatrix }: Params) {
+  // @TODO: use better naming
+  const useCreationPopup = useStore(useCreationPopupOptionSelector);
   const { show } = useDispatch('popup');
+
+  const dragStartPos = useRef<{ x: number; y: number } | null>(null);
 
   const { onMouseDown } = useDrag(DRAGGING_TYPE_CONSTANTS.dayGridSelection, {
     onDragStart: (e) => {
