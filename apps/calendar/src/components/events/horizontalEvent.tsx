@@ -2,11 +2,14 @@ import { FunctionComponent, h } from 'preact';
 
 import ResizeIcon from '@src/components/events/resizeIcon';
 import Template from '@src/components/template';
-import { useDispatch } from '@src/contexts/calendarStore';
+import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { cls, toPercent, toPx } from '@src/helpers/css';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/drag';
 import EventUIModel from '@src/model/eventUIModel';
+import { dndSelector } from '@src/selectors';
+import { DraggingState } from '@src/slices/dnd';
+import { PopupType } from '@src/slices/popup';
 import { noop } from '@src/utils/noop';
 
 interface Props {
@@ -153,7 +156,10 @@ export const HorizontalEvent: FunctionComponent<Props> = ({
   });
   const { isReadOnly } = uiModel.model;
 
+  const { draggingState } = useStore(dndSelector);
   const { setDraggingEventUIModel } = useDispatch('dnd');
+  const { show } = useDispatch('popup');
+  const isDragging = draggingState > DraggingState.INIT;
 
   const { onMouseDown: onResizeStart } = useDrag(
     DRAGGING_TYPE_CREATORS.resizeEvent(`${uiModel.cid()}`),
@@ -168,6 +174,20 @@ export const HorizontalEvent: FunctionComponent<Props> = ({
     {
       onDragStart: () => {
         setDraggingEventUIModel(uiModel);
+      },
+      onDragEnd: () => {
+        if (!isDragging) {
+          show({
+            type: PopupType.detail,
+            param: {
+              event: uiModel.model,
+              popupPosition: {
+                left: 0,
+                top: 0,
+              },
+            },
+          });
+        }
       },
     }
   );
