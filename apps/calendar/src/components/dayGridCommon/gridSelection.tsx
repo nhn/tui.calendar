@@ -6,13 +6,13 @@ import TZDate from '@src/time/date';
 
 interface Props {
   gridSelectionData: GridSelectionDataByRow | null;
-  cells: TZDate[];
+  row: TZDate[];
   narrowWeekend: boolean;
 }
 
 export const GridSelection: FunctionComponent<Props> = ({
   gridSelectionData,
-  cells,
+  row,
   narrowWeekend,
 }) => {
   if (!gridSelectionData) {
@@ -23,7 +23,7 @@ export const GridSelection: FunctionComponent<Props> = ({
   const { left, width } = getLeftAndWidth(
     Math.min(startCellIndex, endCellIndex),
     Math.max(startCellIndex, endCellIndex),
-    cells,
+    row,
     narrowWeekend
   );
 

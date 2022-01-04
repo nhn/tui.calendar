@@ -24,7 +24,7 @@ export default {
 
 const events = createRandomEventModelsForMonth(40);
 
-const cells = range(0, 7).map((day) => {
+const row = range(0, 7).map((day) => {
   const now = toStartOfDay(new TZDate());
 
   return addDate(now, day - now.getDay());
@@ -34,10 +34,10 @@ const calendarData: CalendarData = {
   events: createEventCollection(...events),
   idsOfDay: {},
 };
-const dayGridEvents = getDayGridEvents(cells, calendarData, { narrowWeekend: false });
+const dayGridEvents = getDayGridEvents(row, calendarData, { narrowWeekend: false });
 
 const Template: Story = (args) => {
-  const { cellWidthMap } = getRowStyleInfo(cells.length, true, 0, true);
+  const { cellWidthMap } = getRowStyleInfo(row.length, true, 0, true);
 
   return (
     <ProviderWrapper options={args.options} events={events}>

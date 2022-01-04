@@ -175,7 +175,7 @@ export const DayGridMonth: FunctionComponent<Props> = ({
               />
               <GridSelection
                 gridSelectionData={gridSelectionDataByRow}
-                cells={week}
+                row={week}
                 narrowWeekend={narrowWeekend}
               />
             </div>

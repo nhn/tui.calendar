@@ -10,7 +10,7 @@ export type MousePositionDataGrabber = (mouseEvent: MouseEvent) => MousePosition
 
 export function createMousePositionDataGrabberMonth(
   dateMatrix: TZDate[][],
-  grids: CellStyleInfo[],
+  rowInfo: CellStyleInfo[],
   container: HTMLElement
 ): (mouseEvent: MouseEvent) => MousePositionData | null {
   const weekCount = dateMatrix.length;
@@ -28,7 +28,7 @@ export function createMousePositionDataGrabberMonth(
       clientLeft: container.clientLeft,
       clientTop: container.clientTop,
     });
-    let gridX = getX(grids, ratio(width, 100, left));
+    let gridX = getX(rowInfo, ratio(width, 100, left));
     let gridY = Math.floor(ratio(height, weekCount, top));
 
     gridY = limit(gridY, [0], [dateMatrix.length - 1]);
@@ -60,7 +60,7 @@ export function createMousePositionDataGrabberMonth(
 }
 
 export function createMousePositionDataGrabberWeek(
-  cells: TZDate[],
+  row: TZDate[],
   grids: CellStyleInfo[],
   container: HTMLElement
 ): (mouseEvent: MouseEvent) => MousePositionData | null {
@@ -75,9 +75,9 @@ export function createMousePositionDataGrabberWeek(
     let gridX = getX(grids, ratio(width, 100, left));
     const gridY = 0;
 
-    gridX = limit(gridX, [0], [cells.length - 1]);
+    gridX = limit(gridX, [0], [row.length - 1]);
 
-    const date = cells[gridX];
+    const date = row[gridX];
 
     if (!date) {
       return null;

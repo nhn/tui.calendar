@@ -9,21 +9,21 @@ import { DraggingState } from '@src/slices/dnd';
 import TZDate from '@src/time/date';
 import { isNil } from '@src/utils/type';
 
-function getEventColIndex(uiModel: EventUIModel, cells: TZDate[]) {
-  const start = getGridDateIndex(uiModel.getStarts(), cells);
-  const end = getGridDateIndex(uiModel.getEnds(), cells);
+function getEventColIndex(uiModel: EventUIModel, row: TZDate[]) {
+  const start = getGridDateIndex(uiModel.getStarts(), row);
+  const end = getGridDateIndex(uiModel.getEnds(), row);
 
   return { start, end };
 }
 
 interface Params {
-  cells: TZDate[];
+  row: TZDate[];
   gridColWidthMap: string[][];
   mousePositionDataGrabber: (e: MouseEvent) => MousePositionData | null;
 }
 
 export function useAlldayGridRowEventResize({
-  cells,
+  row,
   gridColWidthMap,
   mousePositionDataGrabber,
 }: Params) {
@@ -38,11 +38,11 @@ export function useAlldayGridRowEventResize({
 
   const targetEventGridIndices = useMemo(() => {
     if (resizingEvent) {
-      return getEventColIndex(resizingEvent, cells);
+      return getEventColIndex(resizingEvent, row);
     }
 
     return { start: -1, end: -1 };
-  }, [cells, resizingEvent]);
+  }, [row, resizingEvent]);
 
   const resizingWidth = useMemo(() => {
     if (targetEventGridIndices.start > -1 && !isNil(currentGridX)) {
@@ -69,7 +69,7 @@ export function useAlldayGridRowEventResize({
       targetEventGridIndices.end !== currentGridX;
 
     if (shouldUpdateEventEnd) {
-      const targetDate = cells[currentGridX];
+      const targetDate = row[currentGridX];
 
       updateEvent({
         event: resizingEvent.model,
@@ -79,7 +79,7 @@ export function useAlldayGridRowEventResize({
       clearDraggingEvent();
     }
   }, [
-    cells,
+    row,
     currentGridX,
     resizingEvent,
     updateEvent,

@@ -9,11 +9,11 @@ import TZDate from '@src/time/date';
 import { getDateDifference, MS_PER_DAY } from '@src/time/datetime';
 import { isPresent } from '@src/utils/type';
 
-import { CellInfo } from '@t/time/datetime';
+import { CellStyleInfo } from '@t/time/datetime';
 
 interface Params {
   dateMatrix: TZDate[][];
-  rowInfo: CellInfo[];
+  rowInfo: CellStyleInfo[];
   mousePositionDataGrabber: (e: MouseEvent) => MousePositionData | null;
 }
 

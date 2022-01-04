@@ -56,22 +56,21 @@ export function getExceedCount(
   return uiModel.filter(isExceededHeight(containerHeight, eventHeight)).length;
 }
 
-const getWeekendCount = (cells: TZDate[]) =>
-  cells.filter((cell) => isWeekend(cell.getDay())).length;
+const getWeekendCount = (row: TZDate[]) => row.filter((cell) => isWeekend(cell.getDay())).length;
 
 export function getGridWidthAndLeftPercentValues(
-  cells: TZDate[],
+  row: TZDate[],
   narrowWeekend: boolean,
   totalWidth: number
 ) {
-  const weekendCount = getWeekendCount(cells);
-  const gridCellCount = cells.length;
+  const weekendCount = getWeekendCount(row);
+  const gridCellCount = row.length;
   const isAllWeekend = weekendCount === gridCellCount;
   const widthPerDay =
     totalWidth /
     (narrowWeekend && !isAllWeekend ? gridCellCount * 2 - weekendCount : gridCellCount);
 
-  const widthList: number[] = cells.map((cell) => {
+  const widthList: number[] = row.map((cell) => {
     const day = cell.getDay();
 
     if (!narrowWeekend || isAllWeekend) {
@@ -111,36 +110,36 @@ export const isInGrid = (gridDate: TZDate) => {
   };
 };
 
-export function getGridDateIndex(date: TZDate, cells: TZDate[]) {
-  return cells.findIndex((item) => date >= toStartOfDay(item) && date <= toEndOfDay(item));
+export function getGridDateIndex(date: TZDate, row: TZDate[]) {
+  return row.findIndex((cell) => date >= toStartOfDay(cell) && date <= toEndOfDay(cell));
 }
 
 export const getLeftAndWidth = (
   startIndex: number,
   endIndex: number,
-  cells: TZDate[],
+  row: TZDate[],
   narrowWeekend: boolean
 ) => {
-  const { widthList } = getGridWidthAndLeftPercentValues(cells, narrowWeekend, TOTAL_WIDTH);
+  const { widthList } = getGridWidthAndLeftPercentValues(row, narrowWeekend, TOTAL_WIDTH);
 
   return {
     left: !startIndex ? 0 : getWidth(widthList, 0, startIndex - 1),
-    width: getWidth(widthList, startIndex ?? 0, endIndex < 0 ? cells.length - 1 : endIndex),
+    width: getWidth(widthList, startIndex ?? 0, endIndex < 0 ? row.length - 1 : endIndex),
   };
 };
 
 export const getEventLeftAndWidth = (
   start: TZDate,
   end: TZDate,
-  cells: TZDate[],
+  row: TZDate[],
   narrowWeekend: boolean
 ) => {
-  const { widthList } = getGridWidthAndLeftPercentValues(cells, narrowWeekend, TOTAL_WIDTH);
+  const { widthList } = getGridWidthAndLeftPercentValues(row, narrowWeekend, TOTAL_WIDTH);
 
   let gridStartIndex = 0;
-  let gridEndIndex = cells.length - 1;
+  let gridEndIndex = row.length - 1;
 
-  cells.forEach((cell, index) => {
+  row.forEach((cell, index) => {
     if (cell <= start) {
       gridStartIndex = index;
     }
@@ -157,12 +156,12 @@ export const getEventLeftAndWidth = (
 
 function getEventUIModelWithPosition(
   uiModel: EventUIModel,
-  cells: TZDate[],
+  row: TZDate[],
   narrowWeekend = false
 ): EventUIModel {
   const modelStart = uiModel.getStarts();
   const modelEnd = uiModel.getEnds();
-  const { width, left } = getEventLeftAndWidth(modelStart, modelEnd, cells, narrowWeekend);
+  const { width, left } = getEventLeftAndWidth(modelStart, modelEnd, row, narrowWeekend);
 
   uiModel.width = width;
   uiModel.left = left;
@@ -171,20 +170,20 @@ function getEventUIModelWithPosition(
 }
 
 export function getRenderedEventUIModels(
-  cells: TZDate[],
+  row: TZDate[],
   calendarData: CalendarData,
   narrowWeekend: boolean
 ) {
   const { idsOfDay } = calendarData;
   const eventUIModels = findByDateRange(calendarData, {
-    start: cells[0],
-    end: toEndOfDay(cells[cells.length - 1]),
+    start: row[0],
+    end: toEndOfDay(row[row.length - 1]),
   });
   const idEventModelMap: Record<number, EventUIModel> = [];
 
   forEachMatrix3d(eventUIModels, (uiModel) => {
     const cid = uiModel.model.cid();
-    idEventModelMap[cid] = getEventUIModelWithPosition(uiModel, cells, narrowWeekend);
+    idEventModelMap[cid] = getEventUIModelWithPosition(uiModel, row, narrowWeekend);
   });
 
   const gridDateEventModelMap = Object.keys(idsOfDay).reduce<Record<string, EventUIModel[]>>(
@@ -206,13 +205,13 @@ export function getRenderedEventUIModels(
 
 const getDayGridEventModels = (
   eventModels: DayGridEventMatrix,
-  cells: TZDate[],
+  row: TZDate[],
   narrowWeekend = false
 ): EventUIModel[] => {
   forEachMatrix3d(eventModels, (uiModel) => {
     const modelStart = uiModel.getStarts();
     const modelEnd = uiModel.getEnds();
-    const { width, left } = getEventLeftAndWidth(modelStart, modelEnd, cells, narrowWeekend);
+    const { width, left } = getEventLeftAndWidth(modelStart, modelEnd, row, narrowWeekend);
 
     uiModel.width = width;
     uiModel.left = left;
@@ -236,7 +235,7 @@ export function setTopForDayGridEvents(models: EventUIModel[]) {
 
 const getTimeGridEventModels = (
   eventModels: TimeGridEventMatrix,
-  cells: TZDate[],
+  row: TZDate[],
   narrowWeekend = false
 ): EventUIModel[] => {
   const result: EventUIModel[] = [];
@@ -247,7 +246,7 @@ const getTimeGridEventModels = (
 };
 
 export const getDayGridEvents = (
-  cells: TZDate[],
+  row: TZDate[],
   calendarData: CalendarData,
   { narrowWeekend, hourStart, hourEnd }: WeekOptions
 ): EventModelMap => {
@@ -274,8 +273,8 @@ export const getDayGridEvents = (
     },
   ];
   const eventModels = findByDateRangeForWeek(calendarData, {
-    start: toStartOfDay(cells[0]),
-    end: toEndOfDay(cells[cells.length - 1]),
+    start: toStartOfDay(row[0]),
+    end: toEndOfDay(row[row.length - 1]),
     panels,
     andFilters: [],
     options: {
@@ -291,8 +290,8 @@ export const getDayGridEvents = (
       return {
         ...acc,
         [cur]: Array.isArray(events)
-          ? getDayGridEventModels(events, cells, narrowWeekend)
-          : getTimeGridEventModels(events, cells, narrowWeekend),
+          ? getDayGridEventModels(events, row, narrowWeekend)
+          : getTimeGridEventModels(events, row, narrowWeekend),
       };
     },
     {

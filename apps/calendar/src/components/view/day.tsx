@@ -55,20 +55,20 @@ export const Day: FunctionComponent = () => {
   const weekOptions = options.week as Required<WeekOptions>;
   const { narrowWeekend, startDayOfWeek, workweek, hourStart, hourEnd } = weekOptions;
   // @TODO: calculate based on today(need to calculate date when prev & next used)
-  const cells = [new TZDate()];
-  const dayNames = getDayNames(cells);
+  const row = [new TZDate()];
+  const dayNames = getDayNames(row);
   const { rowStyleInfo, cellWidthMap } = getRowStyleInfo(
-    cells.length,
+    row.length,
     narrowWeekend,
     startDayOfWeek,
     workweek
   );
-  const dayGridEvents = getDayGridEvents(cells, calendarData, {
+  const dayGridEvents = getDayGridEvents(row, calendarData, {
     narrowWeekend,
     hourStart,
     hourEnd,
   });
-  const columnInfoList = cells.map(
+  const columnInfoList = row.map(
     (cell) =>
       ({ start: toStartOfDay(cell), end: toEndOfDay(cell), unit: 'minute', slot: 30 } as ColumnInfo)
   );
@@ -84,9 +84,9 @@ export const Day: FunctionComponent = () => {
             <AlldayGridRow
               category={rowType}
               events={dayGridEvents[rowType]}
-              gridInfo={rowStyleInfo}
+              rowStyleInfo={rowStyleInfo}
               gridColWidthMap={cellWidthMap}
-              cells={cells}
+              row={row}
               height={gridRowLayout[rowType].height}
               options={weekOptions}
             />
@@ -94,7 +94,7 @@ export const Day: FunctionComponent = () => {
             <OtherGridRow
               category={rowType}
               events={dayGridEvents[rowType]}
-              cells={cells}
+              row={row}
               height={gridRowLayout[rowType].height}
               options={options.week}
               gridColWidthMap={cellWidthMap}

@@ -14,7 +14,7 @@ import TZDate from '@src/time/date';
 
 interface Props {
   uiModels: EventUIModel[];
-  cells: TZDate[];
+  row: TZDate[];
   narrowWeekend: boolean;
   height: number;
   clickedIndex: number;
@@ -25,7 +25,7 @@ interface Props {
 
 export const GridCells: FunctionComponent<Props> = ({
   uiModels,
-  cells,
+  row,
   narrowWeekend,
   height,
   clickedIndex,
@@ -35,15 +35,11 @@ export const GridCells: FunctionComponent<Props> = ({
 }) => {
   // @TODO: get margin value dynamically
   const eventTopMargin = 2;
-  const { widthList, leftList } = getGridWidthAndLeftPercentValues(
-    cells,
-    narrowWeekend,
-    TOTAL_WIDTH
-  );
+  const { widthList, leftList } = getGridWidthAndLeftPercentValues(row, narrowWeekend, TOTAL_WIDTH);
 
   return (
     <Fragment>
-      {cells.map((cell, index) => {
+      {row.map((cell, index) => {
         const width = toPercent(widthList[index]);
         const left = toPercent(leftList[index]);
 

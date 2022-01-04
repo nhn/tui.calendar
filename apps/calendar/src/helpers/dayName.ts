@@ -10,9 +10,9 @@ export function capitalizeDayName(name: string) {
   return name.charAt(0).toUpperCase() + name.slice(1);
 }
 
-export function getDayNames(cells: TZDate[]) {
+export function getDayNames(row: TZDate[]) {
   // @TODO: apply template daynames
-  return cells.map<TemplateWeekDay>((day) => {
+  return row.map<TemplateWeekDay>((day) => {
     const dayIndex = day.getDay();
     const dayName = capitalizeDayName(getDayName(dayIndex));
 
