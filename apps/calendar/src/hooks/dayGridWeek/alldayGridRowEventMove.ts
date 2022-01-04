@@ -5,7 +5,6 @@ import { useDraggingEvent } from '@src/hooks/event/draggingEvent';
 import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import TZDate from '@src/time/date';
-import { isSame } from '@src/time/datetime';
 import { isNil } from '@src/utils/type';
 
 import { Cells } from '@t/panel';
@@ -35,7 +34,8 @@ export function useAlldayGridRowEventMove({ cells, gridInfo, mousePositionDataGr
 
   const targetEventStartGridX = isNil(movingEvent)
     ? null
-    : cells.findIndex((cell) => isSame(cell, movingEvent.getStarts()));
+    : gridInfo.findIndex(({ left }) => left === movingEvent.left);
+
   const currentMovingLeft = isNil(currentGridX) ? null : gridInfo[currentGridX].left;
 
   useEffect(() => {
