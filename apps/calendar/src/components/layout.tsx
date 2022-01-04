@@ -1,10 +1,11 @@
 import { ComponentChildren, ComponentProps, FunctionComponent, h, toChildArray } from 'preact';
-import { useLayoutEffect, useMemo, useRef } from 'preact/hooks';
+import { useLayoutEffect, useMemo } from 'preact/hooks';
 
 import { Panel } from '@src/components/panel';
 import { useDispatch } from '@src/contexts/calendarStore';
-import { LayoutContainerRefProvider } from '@src/contexts/layoutContainerRef';
+import { LayoutContainerProvider } from '@src/contexts/layoutContainerRef';
 import { cls, toPercent } from '@src/helpers/css';
+import { useDOMNode } from '@src/hooks/common/domNode';
 import { noop } from '@src/utils/noop';
 import { isNil, isNumber, isString } from '@src/utils/type';
 
@@ -39,16 +40,14 @@ export const Layout: FunctionComponent<Props> = ({
   className = '',
   autoAdjustPanels = false,
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [container, containerRefCallback] = useDOMNode<HTMLDivElement>();
   const { setLastPanelType, updateLayoutHeight } = useDispatch('weekViewLayout');
 
   const layoutClassName = useMemo(() => `${cls('layout')} ${className}`, [className]);
 
   useLayoutEffect(() => {
-    const layoutElement = containerRef.current;
-
-    if (layoutElement) {
-      const onResizeWindow = () => updateLayoutHeight(layoutElement.offsetHeight);
+    if (container) {
+      const onResizeWindow = () => updateLayoutHeight(container.offsetHeight);
 
       onResizeWindow();
       window.addEventListener('resize', onResizeWindow);
@@ -57,10 +56,10 @@ export const Layout: FunctionComponent<Props> = ({
     }
 
     return noop;
-  }, [updateLayoutHeight]);
+  }, [container, updateLayoutHeight]);
 
   useLayoutEffect(() => {
-    if (autoAdjustPanels) {
+    if (container && autoAdjustPanels) {
       const childArray = toChildArray(children);
       const lastChild = childArray[childArray.length - 1];
 
@@ -68,17 +67,17 @@ export const Layout: FunctionComponent<Props> = ({
         setLastPanelType((lastChild.props as unknown as ComponentProps<typeof Panel>).name);
       }
     }
-  }, [children, setLastPanelType, autoAdjustPanels]);
+  }, [children, setLastPanelType, autoAdjustPanels, container]);
 
   return (
-    <LayoutContainerRefProvider value={containerRef}>
+    <LayoutContainerProvider value={container}>
       <div
-        ref={containerRef}
+        ref={containerRefCallback}
         className={layoutClassName}
         style={getLayoutStylesFromInfo(width, height)}
       >
-        {children}
+        {container ? children : null}
       </div>
-    </LayoutContainerRefProvider>
+    </LayoutContainerProvider>
   );
 };
