@@ -1,11 +1,13 @@
 import { createMousePositionDataGrabberMonth } from '@src/helpers/view';
 import TZDate from '@src/time/date';
-import { getGridInfo } from '@src/time/datetime';
+import { getRowStyleInfo } from '@src/time/datetime';
+
+import { CellStyleInfo } from '@t/time/datetime';
 
 describe('monthView Helper', function () {
   let container: HTMLElement;
   let calendar: TZDate[][] = [];
-  let grids: GridInfo[] = [];
+  let grids: CellStyleInfo[] = [];
 
   beforeEach(function () {
     container = document.createElement('div');
@@ -33,7 +35,7 @@ describe('monthView Helper', function () {
       ],
     ];
 
-    grids = getGridInfo(7, false, 0, false).gridInfo;
+    grids = getRowStyleInfo(7, false, 0, false).rowStyleInfo;
   });
 
   it('should calc date by mouse event.', () => {

@@ -22,7 +22,7 @@ import {
   weekViewLayoutSelector,
 } from '@src/selectors';
 import TZDate from '@src/time/date';
-import { getGridInfo, toEndOfDay, toStartOfDay } from '@src/time/datetime';
+import { getRowStyleInfo, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 
 import { WeekOptions } from '@t/options';
 import { AlldayEventCategory } from '@t/panel';
@@ -57,7 +57,7 @@ export const Day: FunctionComponent = () => {
   // @TODO: calculate based on today(need to calculate date when prev & next used)
   const cells = [new TZDate()];
   const dayNames = getDayNames(cells);
-  const { gridInfo, gridColWidthMap } = getGridInfo(
+  const { rowStyleInfo, cellWidthMap } = getRowStyleInfo(
     cells.length,
     narrowWeekend,
     startDayOfWeek,
@@ -84,8 +84,8 @@ export const Day: FunctionComponent = () => {
             <AlldayGridRow
               category={rowType}
               events={dayGridEvents[rowType]}
-              gridInfo={gridInfo}
-              gridColWidthMap={gridColWidthMap}
+              gridInfo={rowStyleInfo}
+              gridColWidthMap={cellWidthMap}
               cells={cells}
               height={gridRowLayout[rowType].height}
               options={weekOptions}
@@ -97,7 +97,7 @@ export const Day: FunctionComponent = () => {
               cells={cells}
               height={gridRowLayout[rowType].height}
               options={options.week}
-              gridColWidthMap={gridColWidthMap}
+              gridColWidthMap={cellWidthMap}
             />
           )}
         </Panel>
@@ -111,7 +111,7 @@ export const Day: FunctionComponent = () => {
           dayNames={dayNames}
           marginLeft={120}
           templateType="weekDayname"
-          gridInfo={gridInfo}
+          rowStyleInfo={rowStyleInfo}
           type="week"
         />
       </Panel>

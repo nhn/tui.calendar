@@ -9,9 +9,7 @@ import { DraggingState } from '@src/slices/dnd';
 import TZDate from '@src/time/date';
 import { isNil } from '@src/utils/type';
 
-import { Cells } from '@t/panel';
-
-function getEventColIndex(uiModel: EventUIModel, cells: Cells) {
+function getEventColIndex(uiModel: EventUIModel, cells: TZDate[]) {
   const start = getGridDateIndex(uiModel.getStarts(), cells);
   const end = getGridDateIndex(uiModel.getEnds(), cells);
 

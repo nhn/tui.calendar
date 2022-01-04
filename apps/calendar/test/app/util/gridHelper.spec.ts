@@ -13,7 +13,6 @@ import TZDate from '@src/time/date';
 import { createDate } from '@test/helper';
 
 import { CalendarData } from '@t/events';
-import { Cells } from '@t/panel';
 
 const data = [
   { start: createDate(2021, 4, 30), end: createDate(2021, 5, 2) }, // Fri ~ Sun
@@ -44,7 +43,7 @@ describe('gridHelper', () => {
 
   it('getRenderedEventUIModels', () => {
     const narrowWeekend = false;
-    const cells: Cells = [
+    const cells: TZDate[] = [
       new TZDate(2021, 5, 2),
       new TZDate(2021, 5, 3),
       new TZDate(2021, 5, 4),
@@ -65,7 +64,7 @@ describe('gridHelper', () => {
   describe('getGridWidthAndLeftPercentValues', () => {
     const totalWidth = 100;
     let narrowWeekend: boolean;
-    let cells: Cells;
+    let cells: TZDate[];
 
     describe('narrowWeekend is true', () => {
       beforeAll(() => {

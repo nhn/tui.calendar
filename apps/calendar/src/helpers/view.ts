@@ -1,15 +1,16 @@
 import { DEFAULT_EVENT_PANEL, DEFAULT_TASK_PANEL } from '@src/constants/view';
+import TZDate from '@src/time/date';
 import { limit, ratio } from '@src/utils/math';
 import { getRelativeMousePosition, getX } from '@src/utils/mouse';
 
 import { Options } from '@t/options';
-import { Cells } from '@t/panel';
+import { CellStyleInfo } from '@t/time/datetime';
 
 export type MousePositionDataGrabber = (mouseEvent: MouseEvent) => MousePositionData | null;
 
 export function createMousePositionDataGrabberMonth(
-  dateMatrix: Cells[],
-  grids: GridInfo[],
+  dateMatrix: TZDate[][],
+  grids: CellStyleInfo[],
   container: HTMLElement
 ): (mouseEvent: MouseEvent) => MousePositionData | null {
   const weekCount = dateMatrix.length;
@@ -59,8 +60,8 @@ export function createMousePositionDataGrabberMonth(
 }
 
 export function createMousePositionDataGrabberWeek(
-  cells: Cells,
-  grids: GridInfo[],
+  cells: TZDate[],
+  grids: CellStyleInfo[],
   container: HTMLElement
 ): (mouseEvent: MouseEvent) => MousePositionData | null {
   return function getGridPositionData(mouseEvent: MouseEvent) {

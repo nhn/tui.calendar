@@ -1,4 +1,5 @@
-import { Cells } from '@t/panel';
+import TZDate from '@src/time/date';
+
 import { TemplateWeekDay } from '@t/template';
 
 export const getDayName = (dayIndex: number) => {
@@ -9,7 +10,7 @@ export function capitalizeDayName(name: string) {
   return name.charAt(0).toUpperCase() + name.slice(1);
 }
 
-export function getDayNames(cells: Cells) {
+export function getDayNames(cells: TZDate[]) {
   // @TODO: apply template daynames
   return cells.map<TemplateWeekDay>((day) => {
     const dayIndex = day.getDay();

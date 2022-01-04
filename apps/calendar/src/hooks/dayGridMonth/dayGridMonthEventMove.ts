@@ -9,15 +9,19 @@ import TZDate from '@src/time/date';
 import { getDateDifference, MS_PER_DAY } from '@src/time/datetime';
 import { isPresent } from '@src/utils/type';
 
-import { Cells } from '@t/panel';
+import { CellInfo } from '@t/time/datetime';
 
 interface Params {
-  cells: Cells[];
-  gridInfo: GridInfo[];
+  dateMatrix: TZDate[][];
+  rowInfo: CellInfo[];
   mousePositionDataGrabber: (e: MouseEvent) => MousePositionData | null;
 }
 
-export function useDayGridMonthEventMove({ cells, gridInfo, mousePositionDataGrabber }: Params) {
+export function useDayGridMonthEventMove({
+  dateMatrix,
+  rowInfo,
+  mousePositionDataGrabber,
+}: Params) {
   const { x, y, draggingState } = useStore(dndSelector);
   const { draggingEvent: movingEvent, clearDraggingEvent } = useDraggingEvent('move');
   const { updateEvent } = useDispatch('calendar');
@@ -27,12 +31,12 @@ export function useDayGridMonthEventMove({ cells, gridInfo, mousePositionDataGra
     let shadowEventUIModel = null;
     if (movingEvent) {
       shadowEventUIModel = movingEvent;
-      shadowEventUIModel.left = gridInfo[currentGridPos?.x ?? 0].left;
-      shadowEventUIModel.width = gridInfo[currentGridPos?.x ?? 0].width;
+      shadowEventUIModel.left = rowInfo[currentGridPos?.x ?? 0].left;
+      shadowEventUIModel.width = rowInfo[currentGridPos?.x ?? 0].width;
     }
 
     return shadowEventUIModel;
-  }, [currentGridPos?.x, gridInfo, movingEvent]);
+  }, [currentGridPos?.x, rowInfo, movingEvent]);
 
   const dragStartEventRef = useRef<EventUIModel | null>(null);
   useEffect(() => {
@@ -62,7 +66,7 @@ export function useDayGridMonthEventMove({ cells, gridInfo, mousePositionDataGra
     if (shouldUpdate) {
       const preStartDate = dragStartEventUIModel.model.getStarts();
       const eventDuration = dragStartEventUIModel.duration();
-      const currentDate = cells[currentGridPos.y][currentGridPos.x];
+      const currentDate = dateMatrix[currentGridPos.y][currentGridPos.x];
 
       const timeOffsetPerDay = getDateDifference(currentDate, preStartDate) * MS_PER_DAY;
 
@@ -78,7 +82,7 @@ export function useDayGridMonthEventMove({ cells, gridInfo, mousePositionDataGra
       });
       clearDraggingEvent();
     }
-  }, [cells, clearDraggingEvent, currentGridPos, draggingState, movingEvent, updateEvent]);
+  }, [dateMatrix, clearDraggingEvent, currentGridPos, draggingState, movingEvent, updateEvent]);
 
   return {
     movingEvent: shadowEvent,

@@ -7,15 +7,14 @@ import { DraggingState } from '@src/slices/dnd';
 import TZDate from '@src/time/date';
 import { isNil } from '@src/utils/type';
 
-import { Cells } from '@t/panel';
+import { CellStyleInfo } from '@t/time/datetime';
 
 interface Params {
-  cells: Cells;
-  gridInfo: GridInfo[];
+  gridInfo: CellStyleInfo[];
   mousePositionDataGrabber: (e: MouseEvent) => MousePositionData | null;
 }
 
-export function useAlldayGridRowEventMove({ cells, gridInfo, mousePositionDataGrabber }: Params) {
+export function useAlldayGridRowEventMove({ gridInfo, mousePositionDataGrabber }: Params) {
   const { x, y, draggingState } = useStore(dndSelector);
   const { draggingEvent: movingEvent, clearDraggingEvent } = useDraggingEvent('move');
   const { updateEvent } = useDispatch('calendar');

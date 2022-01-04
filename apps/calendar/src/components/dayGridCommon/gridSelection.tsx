@@ -2,12 +2,11 @@ import { FunctionComponent, h } from 'preact';
 
 import { cls, toPercent } from '@src/helpers/css';
 import { getLeftAndWidth } from '@src/helpers/grid';
-
-import { Cells } from '@t/panel';
+import TZDate from '@src/time/date';
 
 interface Props {
   gridSelectionData: GridSelectionDataByRow | null;
-  cells: Cells;
+  cells: TZDate[];
   narrowWeekend: boolean;
 }
 

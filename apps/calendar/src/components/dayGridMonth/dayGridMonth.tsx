@@ -26,13 +26,14 @@ import { isBetween } from '@src/utils/math';
 import { isPresent } from '@src/utils/type';
 
 import { CalendarMonthOptions } from '@t/store';
+import { CellInfo } from '@t/time/datetime';
 
 const TOTAL_PERCENT_HEIGHT = 100;
 
 interface Props {
   options: CalendarMonthOptions;
   dateMatrix: TZDate[][];
-  gridInfo: GridInfo[];
+  rowInfo: CellInfo[];
 }
 
 function useGridHeight() {
@@ -108,7 +109,7 @@ function calcGridSelectionData(
 export const DayGridMonth: FunctionComponent<Props> = ({
   options,
   dateMatrix = [],
-  gridInfo = [],
+  rowInfo = [],
 }) => {
   const [gridContainer, setGridContainerRef] = useDOMNode<HTMLDivElement>();
   const calendarData = useStore(calendarSelector);
@@ -121,17 +122,17 @@ export const DayGridMonth: FunctionComponent<Props> = ({
   const mousePositionDataGrabber = useMemo(
     () =>
       gridContainer
-        ? createMousePositionDataGrabberMonth(dateMatrix, gridInfo, gridContainer)
+        ? createMousePositionDataGrabberMonth(dateMatrix, rowInfo, gridContainer)
         : () => null,
-    [dateMatrix, gridContainer, gridInfo]
+    [dateMatrix, gridContainer, rowInfo]
   );
 
   const gridSelection = useDayGridSelection(mousePositionDataGrabber);
   const onMouseDown = usePopupWithDayGridSelection({ gridSelection, dateMatrix });
 
   const { movingEvent, currentGridPos } = useDayGridMonthEventMove({
-    cells: dateMatrix,
-    gridInfo,
+    dateMatrix,
+    rowInfo,
     mousePositionDataGrabber,
   });
 
@@ -159,7 +160,7 @@ export const DayGridMonth: FunctionComponent<Props> = ({
                 cssHeight={toPercent(TOTAL_PERCENT_HEIGHT)}
                 gridDateEventModelMap={gridDateEventModelMap}
                 week={week}
-                gridInfo={gridInfo}
+                rowInfo={rowInfo}
                 height={height}
               />
               <MonthEvents

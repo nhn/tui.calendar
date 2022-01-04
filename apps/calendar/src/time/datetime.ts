@@ -6,6 +6,7 @@ import { fill } from '@src/utils/array';
 
 import { TimeUnit } from '@t/events';
 import { MonthOptions } from '@t/options';
+import { CellStyleInfo, RawDate } from '@t/time/datetime';
 
 export enum Day {
   SUN,
@@ -667,12 +668,12 @@ export function arr2dCalendar(
  * @param {boolean} workweek - only show work week
  * @returns {Array} day, left, width
  */
-export function getGridInfo(
+export function getRowStyleInfo(
   days: number,
   narrowWeekend: boolean,
   startDayOfWeek: number,
   workweek: boolean
-): { gridInfo: GridInfo[]; gridColWidthMap: string[][] } {
+): { rowStyleInfo: CellStyleInfo[]; cellWidthMap: string[][] } {
   const limitDaysToApplyNarrowWeekend = 5;
   const uniformWidth = 100 / days;
   const wideWidth = days > limitDaysToApplyNarrowWeekend ? 100 / (days - 1) : uniformWidth;
@@ -681,14 +682,13 @@ export function getGridInfo(
 
   narrowWeekend = workweek ? false : narrowWeekend;
 
-  const gridInfo = dates.map((day: number) => {
+  const rowStyleInfo = dates.map((day: number) => {
     let width = narrowWeekend ? wideWidth : uniformWidth;
     if (days > limitDaysToApplyNarrowWeekend && narrowWeekend && isWeekend(day)) {
       width = wideWidth / 2;
     }
 
     const model = {
-      day,
       width,
       left: accumulatedWidth,
     };
@@ -698,22 +698,22 @@ export function getGridInfo(
     return model;
   });
 
-  const { length } = gridInfo;
-  const gridColWidthMap = fill(length, fill(length, 0));
+  const { length } = rowStyleInfo;
+  const cellWidthMap = fill(length, fill(length, 0));
 
-  gridInfo.forEach(({ width }, index) => {
+  rowStyleInfo.forEach(({ width }, index) => {
     for (let i = 0; i <= index; i += 1) {
       for (let j = index; j < length; j += 1) {
-        gridColWidthMap[i][j] += width;
+        cellWidthMap[i][j] += width;
       }
     }
   });
 
-  gridColWidthMap[0][length - 1] = 100;
+  cellWidthMap[0][length - 1] = 100;
 
   return {
-    gridInfo,
-    gridColWidthMap: gridColWidthMap.map((widthList) => widthList.map(toPercent)),
+    rowStyleInfo,
+    cellWidthMap: cellWidthMap.map((widthList) => widthList.map(toPercent)),
   };
 }
 

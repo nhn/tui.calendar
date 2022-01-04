@@ -22,20 +22,21 @@ import TZDate from '@src/time/date';
 import { addDate } from '@src/time/datetime';
 
 import { WeekOptions } from '@t/options';
-import { AlldayEventCategory, Cells } from '@t/panel';
+import { AlldayEventCategory } from '@t/panel';
+import { CellStyleInfo } from '@t/time/datetime';
 
 type GridRowTitleTemplate = `${Props['category']}Title`;
 
 interface Props {
   category: Exclude<AlldayEventCategory, 'milestone' | 'task'>;
   events: EventUIModel[];
-  cells?: Cells;
+  cells?: TZDate[];
   timesWidth?: number;
   timezonesCount?: number;
   height?: number;
   options?: WeekOptions;
   shouldRenderDefaultPopup?: boolean;
-  gridInfo: GridInfo[];
+  gridInfo: CellStyleInfo[];
   gridColWidthMap: string[][];
 }
 
@@ -78,7 +79,6 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
     mousePositionDataGrabber,
   });
   const { movingEvent, movingLeft } = useAlldayGridRowEventMove({
-    cells,
     gridInfo,
     mousePositionDataGrabber,
   });

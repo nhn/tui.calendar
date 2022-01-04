@@ -25,7 +25,7 @@ import {
   TimeGridEventMatrix,
 } from '@t/events';
 import { MonthOptions, WeekOptions } from '@t/options';
-import { Cells, Panel } from '@t/panel';
+import { Panel } from '@t/panel';
 
 export const EVENT_HEIGHT = 22;
 export const TOTAL_WIDTH = 100;
@@ -56,10 +56,11 @@ export function getExceedCount(
   return uiModel.filter(isExceededHeight(containerHeight, eventHeight)).length;
 }
 
-const getWeekendCount = (cells: Cells) => cells.filter((cell) => isWeekend(cell.getDay())).length;
+const getWeekendCount = (cells: TZDate[]) =>
+  cells.filter((cell) => isWeekend(cell.getDay())).length;
 
 export function getGridWidthAndLeftPercentValues(
-  cells: Cells,
+  cells: TZDate[],
   narrowWeekend: boolean,
   totalWidth: number
 ) {
@@ -117,7 +118,7 @@ export function getGridDateIndex(date: TZDate, cells: TZDate[]) {
 export const getLeftAndWidth = (
   startIndex: number,
   endIndex: number,
-  cells: Cells,
+  cells: TZDate[],
   narrowWeekend: boolean
 ) => {
   const { widthList } = getGridWidthAndLeftPercentValues(cells, narrowWeekend, TOTAL_WIDTH);
@@ -131,7 +132,7 @@ export const getLeftAndWidth = (
 export const getEventLeftAndWidth = (
   start: TZDate,
   end: TZDate,
-  cells: Cells,
+  cells: TZDate[],
   narrowWeekend: boolean
 ) => {
   const { widthList } = getGridWidthAndLeftPercentValues(cells, narrowWeekend, TOTAL_WIDTH);
@@ -156,7 +157,7 @@ export const getEventLeftAndWidth = (
 
 function getEventUIModelWithPosition(
   uiModel: EventUIModel,
-  cells: Cells,
+  cells: TZDate[],
   narrowWeekend = false
 ): EventUIModel {
   const modelStart = uiModel.getStarts();
@@ -205,7 +206,7 @@ export function getRenderedEventUIModels(
 
 const getDayGridEventModels = (
   eventModels: DayGridEventMatrix,
-  cells: Cells,
+  cells: TZDate[],
   narrowWeekend = false
 ): EventUIModel[] => {
   forEachMatrix3d(eventModels, (uiModel) => {
@@ -235,7 +236,7 @@ export function setTopForDayGridEvents(models: EventUIModel[]) {
 
 const getTimeGridEventModels = (
   eventModels: TimeGridEventMatrix,
-  cells: Cells,
+  cells: TZDate[],
   narrowWeekend = false
 ): EventUIModel[] => {
   const result: EventUIModel[] = [];
@@ -246,7 +247,7 @@ const getTimeGridEventModels = (
 };
 
 export const getDayGridEvents = (
-  cells: Cells,
+  cells: TZDate[],
   calendarData: CalendarData,
   { narrowWeekend, hourStart, hourEnd }: WeekOptions
 ): EventModelMap => {

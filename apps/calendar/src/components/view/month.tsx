@@ -10,11 +10,12 @@ import { cls } from '@src/helpers/css';
 import { capitalizeDayName } from '@src/helpers/dayName';
 import { createDateMatrixOfMonth } from '@src/helpers/grid';
 import { optionsSelector } from '@src/selectors';
-import { getGridInfo, isWeekend } from '@src/time/datetime';
+import { getRowStyleInfo, isWeekend } from '@src/time/datetime';
 
 import { MonthOptions } from '@t/options';
 import { CalendarStore } from '@t/store';
 import { TemplateMonthDayName } from '@t/template';
+import { CellInfo } from '@t/time/datetime';
 
 function getDayNames(options: CalendarStore['options']) {
   const { daynames, workweek } = options.month as Required<MonthOptions>;
@@ -45,10 +46,14 @@ export const Month: FunctionComponent = () => {
     () => createDateMatrixOfMonth(new Date(), monthOptions),
     [monthOptions]
   );
-  const { gridInfo } = useMemo(
-    () => getGridInfo(dayNames.length, narrowWeekend, startDayOfWeek, workweek),
+  const { rowStyleInfo } = useMemo(
+    () => getRowStyleInfo(dayNames.length, narrowWeekend, startDayOfWeek, workweek),
     [dayNames.length, narrowWeekend, startDayOfWeek, workweek]
   );
+  const rowInfo: CellInfo[] = rowStyleInfo.map((cellStyleInfo, index) => ({
+    ...cellStyleInfo,
+    date: dateMatrix[0][index],
+  }));
 
   return (
     <Layout className={cls('month')}>
@@ -57,10 +62,10 @@ export const Month: FunctionComponent = () => {
         dayNames={dayNames}
         theme={theme.month.dayname}
         options={monthOptions}
-        gridInfo={gridInfo}
+        rowStyleInfo={rowStyleInfo}
         type="month"
       />
-      <DayGridMonth options={monthOptions} dateMatrix={dateMatrix} gridInfo={gridInfo} />
+      <DayGridMonth options={monthOptions} dateMatrix={dateMatrix} rowInfo={rowInfo} />
     </Layout>
   );
 };

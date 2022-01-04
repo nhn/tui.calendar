@@ -9,7 +9,7 @@ import { Panel } from '@src/components/panel';
 import { createEventCollection } from '@src/controller/base';
 import { getDayGridEvents } from '@src/helpers/grid';
 import TZDate from '@src/time/date';
-import { addDate, getGridInfo, toStartOfDay } from '@src/time/datetime';
+import { addDate, getRowStyleInfo, toStartOfDay } from '@src/time/datetime';
 
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { createRandomEventModelsForMonth } from '@stories/util/randomEvents';
@@ -37,7 +37,7 @@ const calendarData: CalendarData = {
 const dayGridEvents = getDayGridEvents(cells, calendarData, { narrowWeekend: false });
 
 const Template: Story = (args) => {
-  const { gridColWidthMap } = getGridInfo(cells.length, true, 0, true);
+  const { cellWidthMap } = getRowStyleInfo(cells.length, true, 0, true);
 
   return (
     <ProviderWrapper options={args.options} events={events}>
@@ -47,7 +47,7 @@ const Template: Story = (args) => {
             events={dayGridEvents.milestone}
             category="milestone"
             options={{ narrowWeekend: false }}
-            gridColWidthMap={gridColWidthMap}
+            gridColWidthMap={cellWidthMap}
           />
         </Panel>
       </Layout>

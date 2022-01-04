@@ -1,3 +1,5 @@
+import { CellStyleInfo } from '@t/time/datetime';
+
 export type ContainerPosition = {
   left: number;
   top: number;
@@ -5,7 +7,7 @@ export type ContainerPosition = {
   clientTop: number;
 };
 
-export function getX(grids: GridInfo[], left: number) {
+export function getX(grids: CellStyleInfo[], left: number) {
   return grids.findIndex((item) => item.left <= left && left <= item.left + item.width) ?? -1;
 }
 

@@ -10,12 +10,11 @@ import {
   TOTAL_WIDTH,
 } from '@src/helpers/grid';
 import EventUIModel from '@src/model/eventUIModel';
-
-import { Cells } from '@t/panel';
+import TZDate from '@src/time/date';
 
 interface Props {
   uiModels: EventUIModel[];
-  cells: Cells;
+  cells: TZDate[];
   narrowWeekend: boolean;
   height: number;
   clickedIndex: number;

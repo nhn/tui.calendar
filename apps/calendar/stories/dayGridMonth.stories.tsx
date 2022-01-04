@@ -6,7 +6,7 @@ import { GridRow } from '@src/components/dayGridMonth/gridRow';
 import { Layout } from '@src/components/layout';
 import { createDateMatrixOfMonth } from '@src/helpers/grid';
 import TZDate from '@src/time/date';
-import { getGridInfo } from '@src/time/datetime';
+import { getRowStyleInfo } from '@src/time/datetime';
 
 import { getWeekDates } from '@stories/util/mockCalendarDates';
 import { ProviderWrapper } from '@stories/util/providerWrapper';
@@ -35,12 +35,12 @@ export const Cell = () => {
 export const Week = () => {
   const weekDates = getWeekDates();
 
-  const { gridInfo } = getGridInfo(weekDates.length, false, 0, false);
+  const { rowStyleInfo } = getRowStyleInfo(weekDates.length, false, 0, false);
 
   return (
     <ProviderWrapper>
       <Layout>
-        <GridRow gridInfo={gridInfo} cssHeight={100} week={weekDates} />
+        <GridRow rowInfo={rowStyleInfo} cssHeight={100} week={weekDates} />
       </Layout>
     </ProviderWrapper>
   );
@@ -65,17 +65,22 @@ export const Month = () => {
 
   const dateMatrix = createDateMatrixOfMonth(new Date(), options);
 
-  const { gridInfo } = getGridInfo(
+  const { rowStyleInfo } = getRowStyleInfo(
     dateMatrix[0].length,
     options.narrowWeekend,
     options.startDayOfWeek,
     options.workweek
   );
 
+  const rowInfo = rowStyleInfo.map((cellStyleInfo, index) => ({
+    ...cellStyleInfo,
+    date: dateMatrix[0][index],
+  }));
+
   return (
     <ProviderWrapper>
       <Layout>
-        <DayGridMonth options={options} dateMatrix={dateMatrix} gridInfo={gridInfo} />
+        <DayGridMonth options={options} dateMatrix={dateMatrix} rowInfo={rowInfo} />
       </Layout>
     </ProviderWrapper>
   );

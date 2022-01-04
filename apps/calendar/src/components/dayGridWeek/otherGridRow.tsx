@@ -14,14 +14,14 @@ import TZDate from '@src/time/date';
 import { addDate } from '@src/time/datetime';
 
 import { WeekOptions } from '@t/options';
-import { AlldayEventCategory, Cells } from '@t/panel';
+import { AlldayEventCategory } from '@t/panel';
 
 type GridRowTitleTemplate = `${AlldayEventCategory}Title`;
 
 interface Props {
   category: Exclude<AlldayEventCategory, 'allday'>;
   events: EventUIModel[];
-  cells?: Cells;
+  cells?: TZDate[];
   timesWidth?: number;
   timezonesCount?: number;
   height?: number;
