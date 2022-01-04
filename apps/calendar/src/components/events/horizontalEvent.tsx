@@ -7,6 +7,7 @@ import { cls, toPercent, toPx } from '@src/helpers/css';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/drag';
 import EventUIModel from '@src/model/eventUIModel';
+import { noop } from '@src/utils/noop';
 
 interface Props {
   uiModel: EventUIModel;
@@ -150,6 +151,7 @@ export const HorizontalEvent: FunctionComponent<Props> = ({
     resizingWidth,
     movingLeft,
   });
+  const { isReadOnly } = uiModel.model;
 
   const { setDraggingEventUIModel } = useDispatch('dnd');
 
@@ -175,10 +177,14 @@ export const HorizontalEvent: FunctionComponent<Props> = ({
     onResizeStart(e);
   };
 
-  const handleMoveStart = (e: MouseEvent) => {
-    e.stopPropagation();
-    onMoveStart(e);
-  };
+  const handleMoveStart = isReadOnly
+    ? noop
+    : (e: MouseEvent) => {
+        e.stopPropagation();
+        onMoveStart(e);
+      };
+
+  const shouldHideResizeHandler = flat || isDraggingTarget || isReadOnly;
 
   return (
     <div
@@ -190,7 +196,7 @@ export const HorizontalEvent: FunctionComponent<Props> = ({
         <span className={cls('weekday-event-title')}>
           <Template template="time" model={uiModel.model} />
         </span>
-        {flat || isDraggingTarget ? null : (
+        {shouldHideResizeHandler ? null : (
           <ResizeIcon style={resizeIconStyle} onMouseDown={handleResizeStart} />
         )}
       </div>
