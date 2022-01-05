@@ -31,9 +31,11 @@ export const EventDetailPopup: FunctionComponent = () => {
   useLayoutEffect(() => {
     if (popupContainerRef.current && eventRect) {
       const popupRect = popupContainerRef.current.getBoundingClientRect();
-      const top = eventRect.top + eventRect.height / 2 - popupRect.height / 2;
 
-      setStyle({ top });
+      const top = eventRect.top + eventRect.height / 2 - popupRect.height / 2;
+      const left = eventRect.left + eventRect.width;
+
+      setStyle({ top, left });
     }
   }, [eventRect]);
 
