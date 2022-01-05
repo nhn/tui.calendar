@@ -20,6 +20,16 @@ const classNames = {
   detailContainer: cls('detail-container'),
 };
 
+function adjustTopPosition(eventRect: Rect, layoutRect: Rect, popupRect: Rect) {
+  let top = eventRect.top + eventRect.height / 2 - popupRect.height / 2;
+
+  if (top + popupRect.height > layoutRect.top + layoutRect.height) {
+    top = layoutRect.top + layoutRect.height - popupRect.height;
+  }
+
+  return top < 0 ? 0 : top;
+}
+
 function adjustLeftPosition(eventRect: Rect, layoutRect: Rect, popupRect: Rect) {
   let left = eventRect.left + eventRect.width;
 
@@ -45,7 +55,7 @@ export const EventDetailPopup: FunctionComponent = () => {
       const layoutRect = layoutContainer.getBoundingClientRect();
       const popupRect = popupContainerRef.current.getBoundingClientRect();
 
-      const top = eventRect.top + eventRect.height / 2 - popupRect.height / 2;
+      const top = adjustTopPosition(eventRect, layoutRect, popupRect);
       const left = adjustLeftPosition(eventRect, layoutRect, popupRect);
 
       setStyle({ top, left });
