@@ -1,5 +1,5 @@
 import { FunctionComponent, h } from 'preact';
-import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
+import { useCallback, useEffect, useState } from 'preact/hooks';
 
 import CellHeader from '@src/components/dayGridMonth/cellHeader';
 import {
@@ -11,7 +11,7 @@ import {
   MONTH_MORE_VIEW_PADDING,
 } from '@src/constants/style';
 import { useDispatch } from '@src/contexts/calendarStore';
-import { useLayoutContainerRef } from '@src/contexts/layoutContainerRef';
+import { useLayoutContainer } from '@src/contexts/layoutContainerRef';
 import { useTheme } from '@src/contexts/theme';
 import { cls, toPercent } from '@src/helpers/css';
 import { getExceedCount } from '@src/helpers/grid';
@@ -187,7 +187,7 @@ export const GridCell: FunctionComponent<Props> = ({
   parentContainer,
   height,
 }) => {
-  const layoutContainerRef = useLayoutContainerRef();
+  const layoutContainer = useLayoutContainer();
   const { show } = useDispatch('popup');
   const theme = useTheme();
 
@@ -196,7 +196,7 @@ export const GridCell: FunctionComponent<Props> = ({
   const { popupPosition, containerRefCallback } = usePopupPosition(
     events.length,
     parentContainer,
-    layoutContainerRef?.current
+    layoutContainer
   );
 
   const onOpenSeeMorePopup = useCallback(() => {
