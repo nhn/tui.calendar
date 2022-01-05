@@ -7,37 +7,50 @@ import { EventDetailSectionDetail } from '@src/components/popup/eventDetailSecti
 import { EventDetailSectionHeader } from '@src/components/popup/eventDetailSectionHeader';
 import { useStore } from '@src/contexts/calendarStore';
 import { useFloatingLayerContainer } from '@src/contexts/floatingLayerRef';
+import { useLayoutContainer } from '@src/contexts/layoutContainerRef';
 import { cls } from '@src/helpers/css';
 import TZDate from '@src/time/date';
 import { isNil } from '@src/utils/type';
 
 import { StyleProp } from '@t/components/common';
-import { EventDetailPopupParam } from '@t/store';
+import { EventDetailPopupParam, Rect } from '@t/store';
 
 const classNames = {
   popupContainer: cls('popup-container'),
   detailContainer: cls('detail-container'),
 };
 
+function adjustLeftPosition(eventRect: Rect, layoutRect: Rect, popupRect: Rect) {
+  let left = eventRect.left + eventRect.width;
+
+  if (left + popupRect.width > layoutRect.left + layoutRect.width) {
+    left = eventRect.left - popupRect.width;
+  }
+
+  return left < layoutRect.left ? layoutRect.left : left;
+}
+
 export const EventDetailPopup: FunctionComponent = () => {
   const { event, eventRect } = useStore(
     (state) => (state.popup.param as EventDetailPopupParam) ?? {}
   );
+  const layoutContainer = useLayoutContainer();
   const floatingLayerContainer = useFloatingLayerContainer();
   const popupContainerRef = useRef<HTMLDivElement>(null);
 
   const [style, setStyle] = useState<StyleProp>({});
 
   useLayoutEffect(() => {
-    if (popupContainerRef.current && eventRect) {
+    if (popupContainerRef.current && eventRect && layoutContainer) {
+      const layoutRect = layoutContainer.getBoundingClientRect();
       const popupRect = popupContainerRef.current.getBoundingClientRect();
 
       const top = eventRect.top + eventRect.height / 2 - popupRect.height / 2;
-      const left = eventRect.left + eventRect.width;
+      const left = adjustLeftPosition(eventRect, layoutRect, popupRect);
 
       setStyle({ top, left });
     }
-  }, [eventRect]);
+  }, [eventRect, layoutContainer]);
 
   if (isNil(event) || isNil(eventRect) || isNil(floatingLayerContainer)) {
     return null;
