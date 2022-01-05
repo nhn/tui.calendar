@@ -309,6 +309,10 @@ Base.prototype.updateSchedule = function(schedule, options) {
         schedule.set('attendees', options.attendees);
     }
 
+    if (options.recurrenceRule) {
+        schedule.set('recurrenceRule', options.recurrenceRule);
+    }
+
     this._removeFromMatrix(schedule);
     this._addToMatrix(schedule);
 

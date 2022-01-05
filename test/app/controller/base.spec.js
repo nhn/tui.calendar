@@ -182,14 +182,18 @@ describe('controller/base', function() {
                 title: 'Go to work',
                 isAllDay: false,
                 start: '2015/05/02',
-                end: '2015/05/02'
+                end: '2015/05/02',
+                attendees: ['a', 'b'],
+                recurrenceRule: 'FREQ=DAILY;INTERVAL=1;COUNT=5',
             });
 
             expect(ctrl.schedules.single()).toEqual(jasmine.objectContaining({
                 title: 'Go to work',
                 isAllDay: false,
                 start: new TZDate('2015/05/02'),
-                end: new TZDate('2015/05/02')
+                end: new TZDate('2015/05/02'),
+                attendees: ['a', 'b'],
+                recurrenceRule: 'FREQ=DAILY;INTERVAL=1;COUNT=5',
             }));
 
             expect(ctrl.dateMatrix).toEqual({
