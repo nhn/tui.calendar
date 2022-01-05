@@ -4,13 +4,13 @@ import { limit, ratio } from '@src/utils/math';
 import { getRelativeMousePosition, getX } from '@src/utils/mouse';
 
 import { Options } from '@t/options';
-import { CellStyleInfo } from '@t/time/datetime';
+import { CellStyle } from '@t/time/datetime';
 
 export type MousePositionDataGrabber = (mouseEvent: MouseEvent) => MousePositionData | null;
 
 export function createMousePositionDataGrabberMonth(
   dateMatrix: TZDate[][],
-  rowStyleInfo: CellStyleInfo[],
+  rowStyleInfo: CellStyle[],
   container: HTMLElement
 ): (mouseEvent: MouseEvent) => MousePositionData | null {
   const weekCount = dateMatrix.length;
@@ -61,7 +61,7 @@ export function createMousePositionDataGrabberMonth(
 
 export function createMousePositionDataGrabberWeek(
   row: TZDate[],
-  rowStyleInfo: CellStyleInfo[],
+  rowStyleInfo: CellStyle[],
   container: HTMLElement
 ): (mouseEvent: MouseEvent) => MousePositionData | null {
   return function getGridPositionData(mouseEvent: MouseEvent) {

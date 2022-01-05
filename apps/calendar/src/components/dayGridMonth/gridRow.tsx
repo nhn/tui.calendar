@@ -9,13 +9,13 @@ import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { toFormat, toStartOfDay } from '@src/time/datetime';
 
-import { CellStyleInfo } from '@t/time/datetime';
+import { CellStyle } from '@t/time/datetime';
 
 interface Props {
   cssHeight?: CSSValue;
   gridDateEventModelMap?: Record<string, EventUIModel[]>;
   week: TZDate[];
-  rowInfo: CellStyleInfo[];
+  rowInfo: CellStyle[];
   height?: number;
 }
 

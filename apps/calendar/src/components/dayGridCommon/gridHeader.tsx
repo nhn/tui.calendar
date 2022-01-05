@@ -6,7 +6,7 @@ import { cls, toPercent } from '@src/helpers/css';
 import { CalendarViewType } from '@t/components/common';
 import { CalendarMonthOptions, CalendarWeekOptions } from '@t/store';
 import { Template, TemplateMonthDayName, TemplateWeekDay } from '@t/template';
-import { CellStyleInfo } from '@t/time/datetime';
+import { CellStyle } from '@t/time/datetime';
 
 type TemplateDayNames = (TemplateWeekDay | TemplateMonthDayName)[];
 
@@ -16,7 +16,7 @@ interface Props {
   options?: CalendarMonthOptions | CalendarWeekOptions;
   marginLeft?: number;
   templateType: keyof Template;
-  rowStyleInfo: CellStyleInfo[];
+  rowStyleInfo: CellStyle[];
   type?: CalendarViewType;
 }
 

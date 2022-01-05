@@ -7,10 +7,10 @@ import { DraggingState } from '@src/slices/dnd';
 import TZDate from '@src/time/date';
 import { isNil } from '@src/utils/type';
 
-import { CellStyleInfo } from '@t/time/datetime';
+import { CellStyle } from '@t/time/datetime';
 
 interface Params {
-  rowStyleInfo: CellStyleInfo[];
+  rowStyleInfo: CellStyle[];
   mousePositionDataGrabber: (e: MouseEvent) => MousePositionData | null;
 }
 

@@ -23,7 +23,7 @@ import { addDate } from '@src/time/datetime';
 
 import { WeekOptions } from '@t/options';
 import { AlldayEventCategory } from '@t/panel';
-import { CellStyleInfo } from '@t/time/datetime';
+import { CellStyle } from '@t/time/datetime';
 
 type GridRowTitleTemplate = `${Props['category']}Title`;
 
@@ -36,7 +36,7 @@ interface Props {
   height?: number;
   options?: WeekOptions;
   shouldRenderDefaultPopup?: boolean;
-  rowStyleInfo: CellStyleInfo[];
+  rowStyleInfo: CellStyle[];
   gridColWidthMap: string[][];
 }
 

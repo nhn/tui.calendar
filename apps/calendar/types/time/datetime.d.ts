@@ -10,11 +10,11 @@ type RawDate = {
   ms: number;
 };
 
-interface CellStyleInfo {
+interface CellStyle {
   width: number;
   left: number;
 }
 
-interface CellInfo extends CellStyleInfo {
+interface CellInfo extends CellStyle {
   date: TZDate;
 }

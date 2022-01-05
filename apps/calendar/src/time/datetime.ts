@@ -6,7 +6,7 @@ import { fill } from '@src/utils/array';
 
 import { TimeUnit } from '@t/events';
 import { MonthOptions } from '@t/options';
-import { CellStyleInfo, RawDate } from '@t/time/datetime';
+import { CellStyle, RawDate } from '@t/time/datetime';
 
 export enum Day {
   SUN,
@@ -673,7 +673,7 @@ export function getRowStyleInfo(
   narrowWeekend: boolean,
   startDayOfWeek: number,
   workweek: boolean
-): { rowStyleInfo: CellStyleInfo[]; cellWidthMap: string[][] } {
+): { rowStyleInfo: CellStyle[]; cellWidthMap: string[][] } {
   const limitDaysToApplyNarrowWeekend = 5;
   const uniformWidth = 100 / days;
   const wideWidth = days > limitDaysToApplyNarrowWeekend ? 100 / (days - 1) : uniformWidth;

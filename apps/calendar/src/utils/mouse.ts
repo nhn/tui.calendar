@@ -1,4 +1,4 @@
-import { CellStyleInfo } from '@t/time/datetime';
+import { CellStyle } from '@t/time/datetime';
 
 export type ContainerPosition = {
   left: number;
@@ -7,7 +7,7 @@ export type ContainerPosition = {
   clientTop: number;
 };
 
-export function getX(rowStyleInfo: CellStyleInfo[], left: number) {
+export function getX(rowStyleInfo: CellStyle[], left: number) {
   return (
     rowStyleInfo.findIndex(
       (cellStyleInfo) =>

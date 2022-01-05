@@ -2,12 +2,12 @@ import { createMousePositionDataGrabberMonth } from '@src/helpers/view';
 import TZDate from '@src/time/date';
 import { getRowStyleInfo } from '@src/time/datetime';
 
-import { CellStyleInfo } from '@t/time/datetime';
+import { CellStyle } from '@t/time/datetime';
 
 describe('monthView Helper', function () {
   let container: HTMLElement;
   let calendar: TZDate[][] = [];
-  let rowInfo: CellStyleInfo[] = [];
+  let rowInfo: CellStyle[] = [];
 
   beforeEach(function () {
     container = document.createElement('div');
