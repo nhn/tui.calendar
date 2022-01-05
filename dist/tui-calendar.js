@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.15.1 | Mon Nov 15 2021
+ * @version 1.15.2 | Wed Jan 05 2022
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -9101,6 +9101,10 @@ Base.prototype.updateSchedule = function(schedule, options) {
         schedule.set('attendees', options.attendees);
     }
 
+    if (options.recurrenceRule) {
+        schedule.set('recurrenceRule', options.recurrenceRule);
+    }
+
     this._removeFromMatrix(schedule);
     this._addToMatrix(schedule);
 
@@ -12060,6 +12064,10 @@ Calendar.prototype.setOptions = function(options, silent) {
     );
 
     this._setAdditionalInternalOptions(options);
+
+    if (util.isObject(options.timezone) && util.isArray(options.timezone.zones)) {
+        this._options.timezones = options.timezone.zones;
+    }
 
     if (!silent) {
         this.changeView(this._viewName, true);
