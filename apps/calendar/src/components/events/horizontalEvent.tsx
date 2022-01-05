@@ -7,10 +7,10 @@ import { cls, toPercent, toPx } from '@src/helpers/css';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/drag';
 import EventUIModel from '@src/model/eventUIModel';
-import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import { PopupType } from '@src/slices/popup';
-import { noop } from '@src/utils/noop';
+
+import { CalendarState } from '@t/store';
 
 interface Props {
   uiModel: EventUIModel;
@@ -136,6 +136,10 @@ function getTestId({ model }: EventUIModel) {
   return `${calendarId}${id}${model.title}`;
 }
 
+function draggingStateSelector(state: CalendarState) {
+  return state.dnd.draggingState;
+}
+
 export const HorizontalEvent: FunctionComponent<Props> = ({
   flat = false,
   uiModel,
@@ -156,7 +160,7 @@ export const HorizontalEvent: FunctionComponent<Props> = ({
   });
   const { isReadOnly } = uiModel.model;
 
-  const { draggingState } = useStore(dndSelector);
+  const draggingState = useStore(draggingStateSelector);
   const { setDraggingEventUIModel } = useDispatch('dnd');
   const { show } = useDispatch('popup');
   const isDragging = draggingState > DraggingState.INIT;
@@ -197,12 +201,10 @@ export const HorizontalEvent: FunctionComponent<Props> = ({
     onResizeStart(e);
   };
 
-  const handleMoveStart = isReadOnly
-    ? noop
-    : (e: MouseEvent) => {
-        e.stopPropagation();
-        onMoveStart(e);
-      };
+  const handleMoveStart = (e: MouseEvent) => {
+    e.stopPropagation();
+    onMoveStart(e);
+  };
 
   const shouldHideResizeHandler = flat || isDraggingTarget || isReadOnly;
 
