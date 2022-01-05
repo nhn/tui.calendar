@@ -1,8 +1,9 @@
 import { FunctionComponent, h } from 'preact';
 
 import { StoreProvider } from '@src/contexts/calendarStore';
+import { FloatingLayerContainerProvider } from '@src/contexts/floatingLayerRef';
 import { ThemeProvider } from '@src/contexts/theme';
-import { cls } from '@src/helpers/css';
+import { useDOMNode } from '@src/hooks/common/domNode';
 import Theme from '@src/theme';
 
 import { CalendarStore, InternalStoreAPI } from '@t/store';
@@ -12,11 +13,17 @@ interface Props {
   store: InternalStoreAPI<CalendarStore>;
 }
 
-export const CalendarContainer: FunctionComponent<Props> = ({ theme, store, children }) => (
-  <ThemeProvider theme={theme}>
-    <StoreProvider store={store}>
-      {children}
-      <div id={cls('portal')} />
-    </StoreProvider>
-  </ThemeProvider>
-);
+export const CalendarContainer: FunctionComponent<Props> = ({ theme, store, children }) => {
+  const [container, containerRefCallback] = useDOMNode<HTMLDivElement>();
+
+  return (
+    <ThemeProvider theme={theme}>
+      <StoreProvider store={store}>
+        <FloatingLayerContainerProvider value={container}>
+          {children}
+          <div ref={containerRefCallback} />
+        </FloatingLayerContainerProvider>
+      </StoreProvider>
+    </ThemeProvider>
+  );
+};

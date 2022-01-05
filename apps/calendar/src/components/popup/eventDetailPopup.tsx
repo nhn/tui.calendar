@@ -6,6 +6,7 @@ import { EventDetailSectionButton } from '@src/components/popup/eventDetailSecti
 import { EventDetailSectionDetail } from '@src/components/popup/eventDetailSectionDetail';
 import { EventDetailSectionHeader } from '@src/components/popup/eventDetailSectionHeader';
 import { useStore } from '@src/contexts/calendarStore';
+import { useFloatingLayerContainer } from '@src/contexts/floatingLayerRef';
 import { cls } from '@src/helpers/css';
 import TZDate from '@src/time/date';
 import { isNil } from '@src/utils/type';
@@ -22,6 +23,7 @@ export const EventDetailPopup: FunctionComponent = () => {
   const { event, eventRect } = useStore(
     (state) => (state.popup.param as EventDetailPopupParam) ?? {}
   );
+  const floatingLayerContainer = useFloatingLayerContainer();
   const popupContainerRef = useRef<HTMLDivElement>(null);
 
   const [style, setStyle] = useState<StyleProp>({});
@@ -35,7 +37,7 @@ export const EventDetailPopup: FunctionComponent = () => {
     }
   }, [eventRect]);
 
-  if (isNil(event) || isNil(eventRect)) {
+  if (isNil(event) || isNil(eventRect) || isNil(floatingLayerContainer)) {
     return null;
   }
 
@@ -70,6 +72,6 @@ export const EventDetailPopup: FunctionComponent = () => {
       </div>
       <div className={cls('popup-top-line')} style={{ backgroundColor: bgColor }} />
     </div>,
-    document.getElementById(cls('portal')) as HTMLElement
+    floatingLayerContainer
   );
 };
