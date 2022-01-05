@@ -1822,6 +1822,10 @@ Calendar.prototype.setOptions = function(options, silent) {
 
     this._setAdditionalInternalOptions(options);
 
+    if (util.isObject(options.timezone) && util.isArray(options.timezone.zones)) {
+        this._options.timezones = options.timezone.zones;
+    }
+
     if (!silent) {
         this.changeView(this._viewName, true);
     }
