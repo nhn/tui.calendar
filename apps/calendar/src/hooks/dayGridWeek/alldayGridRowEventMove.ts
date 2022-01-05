@@ -31,9 +31,11 @@ export function useAlldayGridRowEventMove({ rowStyleInfo, mousePositionDataGrabb
     }
   }, [hasDraggingCoords, mousePositionDataGrabber, movingEvent, x, y]);
 
-  const targetEventStartGridX = isNil(movingEvent)
-    ? null
-    : rowStyleInfo.findIndex(({ left }) => left === movingEvent.left);
+  const targetEventStartGridX = useMemo(
+    () =>
+      isNil(movingEvent) ? null : rowStyleInfo.findIndex(({ left }) => left === movingEvent.left),
+    [rowStyleInfo, movingEvent]
+  );
 
   const currentMovingLeft = isNil(currentGridX) ? null : rowStyleInfo[currentGridX].left;
 
