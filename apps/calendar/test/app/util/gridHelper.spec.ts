@@ -13,7 +13,6 @@ import TZDate from '@src/time/date';
 import { createDate } from '@test/helper';
 
 import { CalendarData } from '@t/events';
-import { Cells } from '@t/panel';
 
 const data = [
   { start: createDate(2021, 4, 30), end: createDate(2021, 5, 2) }, // Fri ~ Sun
@@ -44,7 +43,7 @@ describe('gridHelper', () => {
 
   it('getRenderedEventUIModels', () => {
     const narrowWeekend = false;
-    const cells: Cells = [
+    const row: TZDate[] = [
       new TZDate(2021, 5, 2),
       new TZDate(2021, 5, 3),
       new TZDate(2021, 5, 4),
@@ -56,7 +55,7 @@ describe('gridHelper', () => {
       idsOfDay: {},
     };
 
-    expect(getRenderedEventUIModels(cells, calendarData, narrowWeekend)).toEqual({
+    expect(getRenderedEventUIModels(row, calendarData, narrowWeekend)).toEqual({
       uiModels: [],
       gridDateEventModelMap: {},
     });
@@ -65,7 +64,7 @@ describe('gridHelper', () => {
   describe('getGridWidthAndLeftPercentValues', () => {
     const totalWidth = 100;
     let narrowWeekend: boolean;
-    let cells: Cells;
+    let row: TZDate[];
 
     describe('narrowWeekend is true', () => {
       beforeAll(() => {
@@ -73,10 +72,10 @@ describe('gridHelper', () => {
       });
 
       it('should return single PanelEventInfo', () => {
-        cells = [createDate(2021, 4, 16)];
+        row = [createDate(2021, 4, 16)];
 
         const { widthList, leftList } = getGridWidthAndLeftPercentValues(
-          cells,
+          row,
           narrowWeekend,
           totalWidth
         );
@@ -89,10 +88,10 @@ describe('gridHelper', () => {
 
       it('should return PanelEventInfo list (only weekday)', () => {
         // Mon, Tue, Wed, Thu, Fri
-        cells = [12, 13, 14, 15, 16].map((d) => createDate(2021, 4, d));
+        row = [12, 13, 14, 15, 16].map((d) => createDate(2021, 4, d));
 
         const { widthList, leftList } = getGridWidthAndLeftPercentValues(
-          cells,
+          row,
           narrowWeekend,
           totalWidth
         );
@@ -105,10 +104,10 @@ describe('gridHelper', () => {
 
       it('should return PanelEventInfo list (only weekend)', () => {
         // Sat, Sun
-        cells = [17, 18].map((d) => createDate(2021, 4, d));
+        row = [17, 18].map((d) => createDate(2021, 4, d));
 
         const { widthList, leftList } = getGridWidthAndLeftPercentValues(
-          cells,
+          row,
           narrowWeekend,
           totalWidth
         );
@@ -121,10 +120,10 @@ describe('gridHelper', () => {
 
       it('should return PanelEventInfo list', () => {
         // Thu, Fri, Sat
-        cells = [15, 16, 17].map((d) => createDate(2021, 4, d));
+        row = [15, 16, 17].map((d) => createDate(2021, 4, d));
 
         const { widthList, leftList } = getGridWidthAndLeftPercentValues(
-          cells,
+          row,
           narrowWeekend,
           totalWidth
         );
@@ -142,10 +141,10 @@ describe('gridHelper', () => {
       });
 
       it('should return single grid width and left percent value', () => {
-        cells = [createDate(2021, 4, 16)];
+        row = [createDate(2021, 4, 16)];
 
         const { widthList, leftList } = getGridWidthAndLeftPercentValues(
-          cells,
+          row,
           narrowWeekend,
           totalWidth
         );
@@ -158,10 +157,10 @@ describe('gridHelper', () => {
 
       it('should return list for grid width and left percent values (only weekday)', () => {
         // Mon, Tue, Wed, Thu, Fri
-        cells = [12, 13, 14, 15, 16].map((d) => createDate(2021, 4, d));
+        row = [12, 13, 14, 15, 16].map((d) => createDate(2021, 4, d));
 
         const { widthList, leftList } = getGridWidthAndLeftPercentValues(
-          cells,
+          row,
           narrowWeekend,
           totalWidth
         );
@@ -174,10 +173,10 @@ describe('gridHelper', () => {
 
       it('should return list for grid width and left percent values (only weekend)', () => {
         // Sat, Sun
-        cells = [17, 18].map((d) => createDate(2021, 4, d));
+        row = [17, 18].map((d) => createDate(2021, 4, d));
 
         const { widthList, leftList } = getGridWidthAndLeftPercentValues(
-          cells,
+          row,
           narrowWeekend,
           totalWidth
         );
@@ -190,10 +189,10 @@ describe('gridHelper', () => {
 
       it('should return list for grid width and left percent values', () => {
         // Thu, Fri, Sat, Sun
-        cells = [15, 16, 17, 18].map((d) => createDate(2021, 4, d));
+        row = [15, 16, 17, 18].map((d) => createDate(2021, 4, d));
 
         const { widthList, leftList } = getGridWidthAndLeftPercentValues(
-          cells,
+          row,
           narrowWeekend,
           totalWidth
         );

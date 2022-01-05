@@ -14,14 +14,14 @@ import TZDate from '@src/time/date';
 import { addDate } from '@src/time/datetime';
 
 import { WeekOptions } from '@t/options';
-import { AlldayEventCategory, Cells } from '@t/panel';
+import { AlldayEventCategory } from '@t/panel';
 
 type GridRowTitleTemplate = `${AlldayEventCategory}Title`;
 
 interface Props {
   category: Exclude<AlldayEventCategory, 'allday'>;
   events: EventUIModel[];
-  cells?: Cells;
+  row?: TZDate[];
   timesWidth?: number;
   timezonesCount?: number;
   height?: number;
@@ -37,7 +37,7 @@ const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
 
 export const OtherGridRow: FunctionComponent<Props> = ({
   events,
-  cells = defaultPanelInfoList,
+  row = defaultPanelInfoList,
   category,
   height = DEFAULT_PANEL_HEIGHT,
   options = {},
@@ -73,7 +73,7 @@ export const OtherGridRow: FunctionComponent<Props> = ({
         <div className={cls('panel-grid-wrapper')}>
           <GridCells
             uiModels={events}
-            cells={cells}
+            row={row}
             narrowWeekend={narrowWeekend}
             height={height}
             clickedIndex={clickedIndex}

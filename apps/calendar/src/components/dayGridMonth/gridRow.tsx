@@ -6,20 +6,21 @@ import { GridCell } from '@src/components/dayGridMonth/gridCell';
 import { useTheme } from '@src/contexts/theme';
 import { cls, toPercent } from '@src/helpers/css';
 import EventUIModel from '@src/model/eventUIModel';
+import TZDate from '@src/time/date';
 import { toFormat, toStartOfDay } from '@src/time/datetime';
 
-import { Cells } from '@t/panel';
+import { CellStyle } from '@t/time/datetime';
 
 interface Props {
   cssHeight?: CSSValue;
   gridDateEventModelMap?: Record<string, EventUIModel[]>;
-  week: Cells;
-  gridInfo: GridInfo[];
+  week: TZDate[];
+  rowInfo: CellStyle[];
   height?: number;
 }
 
 export const GridRow: FunctionComponent<Props> = memo(
-  ({ cssHeight, week, gridInfo, gridDateEventModelMap = {}, height = 0 }) => {
+  ({ cssHeight, week, rowInfo, gridDateEventModelMap = {}, height = 0 }) => {
     const container = useRef<HTMLDivElement>(null);
     const { common } = useTheme();
 
@@ -34,7 +35,7 @@ export const GridRow: FunctionComponent<Props> = memo(
       >
         {week.map((date, columnIndex) => {
           const dayIndex = date.getDay();
-          const { width, left } = gridInfo[columnIndex];
+          const { width, left } = rowInfo[columnIndex];
           const ymd = toFormat(toStartOfDay(date), 'YYYYMMDD');
 
           return (

@@ -22,20 +22,21 @@ import TZDate from '@src/time/date';
 import { addDate } from '@src/time/datetime';
 
 import { WeekOptions } from '@t/options';
-import { AlldayEventCategory, Cells } from '@t/panel';
+import { AlldayEventCategory } from '@t/panel';
+import { CellStyle } from '@t/time/datetime';
 
 type GridRowTitleTemplate = `${Props['category']}Title`;
 
 interface Props {
   category: Exclude<AlldayEventCategory, 'milestone' | 'task'>;
   events: EventUIModel[];
-  cells?: Cells;
+  row?: TZDate[];
   timesWidth?: number;
   timezonesCount?: number;
   height?: number;
   options?: WeekOptions;
   shouldRenderDefaultPopup?: boolean;
-  gridInfo: GridInfo[];
+  rowStyleInfo: CellStyle[];
   gridColWidthMap: string[][];
 }
 
@@ -47,11 +48,11 @@ const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
 
 export const AlldayGridRow: FunctionComponent<Props> = ({
   events,
-  cells = defaultPanelInfoList,
+  row = defaultPanelInfoList,
   category,
   height = DEFAULT_PANEL_HEIGHT,
   options = {},
-  gridInfo,
+  rowStyleInfo,
   gridColWidthMap,
   timesWidth = 120,
   timezonesCount = 1,
@@ -67,19 +68,18 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
   const mousePositionDataGrabber = useMemo(
     () =>
       panelContainer
-        ? createMousePositionDataGrabberWeek(cells, gridInfo, panelContainer)
+        ? createMousePositionDataGrabberWeek(row, rowStyleInfo, panelContainer)
         : () => null,
-    [cells, gridInfo, panelContainer]
+    [row, rowStyleInfo, panelContainer]
   );
 
   const { resizingEvent, resizingWidth } = useAlldayGridRowEventResize({
-    cells,
+    row,
     gridColWidthMap,
     mousePositionDataGrabber,
   });
   const { movingEvent, movingLeft } = useAlldayGridRowEventMove({
-    cells,
-    gridInfo,
+    rowStyleInfo,
     mousePositionDataGrabber,
   });
 
@@ -93,7 +93,7 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
 
   const onMouseDown = usePopupWithDayGridSelection({
     gridSelection,
-    dateMatrix: [cells],
+    dateMatrix: [row],
   });
 
   const { clickedIndex, isClickedCount, onClickExceedCount, onClickCollapseButton } =
@@ -122,7 +122,7 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
         <div className={cls('panel-grid-wrapper')}>
           <GridCells
             uiModels={events}
-            cells={cells}
+            row={row}
             narrowWeekend={narrowWeekend}
             height={height}
             clickedIndex={clickedIndex}
@@ -133,7 +133,7 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
         </div>
         <GridSelection
           gridSelectionData={gridSelectionData}
-          cells={cells}
+          row={row}
           narrowWeekend={narrowWeekend}
         />
         <div className={cls(`panel-${category}-events`)}>{horizontalEvents}</div>

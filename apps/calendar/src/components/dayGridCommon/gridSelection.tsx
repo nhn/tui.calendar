@@ -2,18 +2,17 @@ import { FunctionComponent, h } from 'preact';
 
 import { cls, toPercent } from '@src/helpers/css';
 import { getLeftAndWidth } from '@src/helpers/grid';
-
-import { Cells } from '@t/panel';
+import TZDate from '@src/time/date';
 
 interface Props {
   gridSelectionData: GridSelectionDataByRow | null;
-  cells: Cells;
+  row: TZDate[];
   narrowWeekend: boolean;
 }
 
 export const GridSelection: FunctionComponent<Props> = ({
   gridSelectionData,
-  cells,
+  row,
   narrowWeekend,
 }) => {
   if (!gridSelectionData) {
@@ -24,7 +23,7 @@ export const GridSelection: FunctionComponent<Props> = ({
   const { left, width } = getLeftAndWidth(
     Math.min(startCellIndex, endCellIndex),
     Math.max(startCellIndex, endCellIndex),
-    cells,
+    row,
     narrowWeekend
   );
 

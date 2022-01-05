@@ -7,15 +7,14 @@ import { DraggingState } from '@src/slices/dnd';
 import TZDate from '@src/time/date';
 import { isNil } from '@src/utils/type';
 
-import { Cells } from '@t/panel';
+import { CellStyle } from '@t/time/datetime';
 
 interface Params {
-  cells: Cells;
-  gridInfo: GridInfo[];
+  rowStyleInfo: CellStyle[];
   mousePositionDataGrabber: (e: MouseEvent) => MousePositionData | null;
 }
 
-export function useAlldayGridRowEventMove({ cells, gridInfo, mousePositionDataGrabber }: Params) {
+export function useAlldayGridRowEventMove({ rowStyleInfo, mousePositionDataGrabber }: Params) {
   const { x, y, draggingState } = useStore(dndSelector);
   const { draggingEvent: movingEvent, clearDraggingEvent } = useDraggingEvent('move');
   const { updateEvent } = useDispatch('calendar');
@@ -33,11 +32,12 @@ export function useAlldayGridRowEventMove({ cells, gridInfo, mousePositionDataGr
   }, [hasDraggingCoords, mousePositionDataGrabber, movingEvent, x, y]);
 
   const targetEventStartGridX = useMemo(
-    () => (isNil(movingEvent) ? null : gridInfo.findIndex(({ left }) => left === movingEvent.left)),
-    [gridInfo, movingEvent]
+    () =>
+      isNil(movingEvent) ? null : rowStyleInfo.findIndex(({ left }) => left === movingEvent.left),
+    [rowStyleInfo, movingEvent]
   );
 
-  const currentMovingLeft = isNil(currentGridX) ? null : gridInfo[currentGridX].left;
+  const currentMovingLeft = isNil(currentGridX) ? null : rowStyleInfo[currentGridX].left;
 
   useEffect(() => {
     const shouldUpdate =

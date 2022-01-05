@@ -3,7 +3,7 @@ import { h } from 'preact';
 import { Story } from '@storybook/preact';
 
 import GridHeader from '@src/components/dayGridCommon/gridHeader';
-import { getGridInfo } from '@src/time/datetime';
+import { getRowStyleInfo } from '@src/time/datetime';
 
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 
@@ -17,7 +17,7 @@ interface DayNamesStory {
 }
 
 const Template: Story<DayNamesStory> = ({ dayNames, marginLeft }) => {
-  const { gridInfo } = getGridInfo(dayNames.length, true, 0, true);
+  const { rowStyleInfo } = getRowStyleInfo(dayNames.length, true, 0, true);
 
   return (
     <ProviderWrapper>
@@ -25,7 +25,7 @@ const Template: Story<DayNamesStory> = ({ dayNames, marginLeft }) => {
         templateType="monthDayname"
         dayNames={dayNames}
         marginLeft={marginLeft}
-        gridInfo={gridInfo}
+        rowStyleInfo={rowStyleInfo}
       />
     </ProviderWrapper>
   );

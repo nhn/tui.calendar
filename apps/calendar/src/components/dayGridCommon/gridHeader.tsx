@@ -6,6 +6,7 @@ import { cls, toPercent } from '@src/helpers/css';
 import { CalendarViewType } from '@t/components/common';
 import { CalendarMonthOptions, CalendarWeekOptions } from '@t/store';
 import { Template, TemplateMonthDayName, TemplateWeekDay } from '@t/template';
+import { CellStyle } from '@t/time/datetime';
 
 type TemplateDayNames = (TemplateWeekDay | TemplateMonthDayName)[];
 
@@ -15,7 +16,7 @@ interface Props {
   options?: CalendarMonthOptions | CalendarWeekOptions;
   marginLeft?: number;
   templateType: keyof Template;
-  gridInfo: GridInfo[];
+  rowStyleInfo: CellStyle[];
   type?: CalendarViewType;
 }
 
@@ -37,7 +38,7 @@ const GridHeader: FunctionComponent<Props> = ({
   options = defaultDayNameOptions,
   marginLeft = defaultMarginLeft,
   templateType,
-  gridInfo,
+  rowStyleInfo,
   type = 'month',
 }) => {
   const { borderLeft, backgroundColor } = theme;
@@ -58,8 +59,8 @@ const GridHeader: FunctionComponent<Props> = ({
           dayIndex={dayName.day}
           key={`dayNames-${dayName.day}`}
           style={{
-            width: toPercent(gridInfo[index].width),
-            left: toPercent(gridInfo[index].left),
+            width: toPercent(rowStyleInfo[index].width),
+            left: toPercent(rowStyleInfo[index].left),
           }}
           type={type}
         />

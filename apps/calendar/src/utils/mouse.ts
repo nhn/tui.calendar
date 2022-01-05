@@ -1,3 +1,5 @@
+import { CellStyle } from '@t/time/datetime';
+
 export type ContainerPosition = {
   left: number;
   top: number;
@@ -5,8 +7,13 @@ export type ContainerPosition = {
   clientTop: number;
 };
 
-export function getX(grids: GridInfo[], left: number) {
-  return grids.findIndex((item) => item.left <= left && left <= item.left + item.width) ?? -1;
+export function getX(rowStyleInfo: CellStyle[], left: number) {
+  return (
+    rowStyleInfo.findIndex(
+      (cellStyleInfo) =>
+        cellStyleInfo.left <= left && left <= cellStyleInfo.left + cellStyleInfo.width
+    ) ?? -1
+  );
 }
 
 export function getRelativeMousePosition(

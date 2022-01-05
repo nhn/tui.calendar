@@ -9,7 +9,7 @@ import { Panel } from '@src/components/panel';
 import { createEventCollection } from '@src/controller/base';
 import { getDayGridEvents } from '@src/helpers/grid';
 import TZDate from '@src/time/date';
-import { addDate, getGridInfo, toStartOfDay } from '@src/time/datetime';
+import { addDate, getRowStyleInfo, toStartOfDay } from '@src/time/datetime';
 
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { createRandomEventModelsForMonth } from '@stories/util/randomEvents';
@@ -24,7 +24,7 @@ export default {
 
 const events = createRandomEventModelsForMonth(40);
 
-const cells = range(0, 7).map((day) => {
+const row = range(0, 7).map((day) => {
   const now = toStartOfDay(new TZDate());
 
   return addDate(now, day - now.getDay());
@@ -34,10 +34,10 @@ const calendarData: CalendarData = {
   events: createEventCollection(...events),
   idsOfDay: {},
 };
-const dayGridEvents = getDayGridEvents(cells, calendarData, { narrowWeekend: false });
+const dayGridEvents = getDayGridEvents(row, calendarData, { narrowWeekend: false });
 
 const Template: Story = (args) => {
-  const { gridColWidthMap } = getGridInfo(cells.length, true, 0, true);
+  const { cellWidthMap } = getRowStyleInfo(row.length, true, 0, true);
 
   return (
     <ProviderWrapper options={args.options} events={events}>
@@ -47,7 +47,7 @@ const Template: Story = (args) => {
             events={dayGridEvents.milestone}
             category="milestone"
             options={{ narrowWeekend: false }}
-            gridColWidthMap={gridColWidthMap}
+            gridColWidthMap={cellWidthMap}
           />
         </Panel>
       </Layout>

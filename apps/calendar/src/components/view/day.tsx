@@ -22,7 +22,7 @@ import {
   weekViewLayoutSelector,
 } from '@src/selectors';
 import TZDate from '@src/time/date';
-import { getGridInfo, toEndOfDay, toStartOfDay } from '@src/time/datetime';
+import { getRowStyleInfo, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 
 import { WeekOptions } from '@t/options';
 import { AlldayEventCategory } from '@t/panel';
@@ -55,20 +55,20 @@ export const Day: FunctionComponent = () => {
   const weekOptions = options.week as Required<WeekOptions>;
   const { narrowWeekend, startDayOfWeek, workweek, hourStart, hourEnd } = weekOptions;
   // @TODO: calculate based on today(need to calculate date when prev & next used)
-  const cells = [new TZDate()];
-  const dayNames = getDayNames(cells);
-  const { gridInfo, gridColWidthMap } = getGridInfo(
-    cells.length,
+  const row = [new TZDate()];
+  const dayNames = getDayNames(row);
+  const { rowStyleInfo, cellWidthMap } = getRowStyleInfo(
+    row.length,
     narrowWeekend,
     startDayOfWeek,
     workweek
   );
-  const dayGridEvents = getDayGridEvents(cells, calendarData, {
+  const dayGridEvents = getDayGridEvents(row, calendarData, {
     narrowWeekend,
     hourStart,
     hourEnd,
   });
-  const columnInfoList = cells.map(
+  const columnInfoList = row.map(
     (cell) =>
       ({ start: toStartOfDay(cell), end: toEndOfDay(cell), unit: 'minute', slot: 30 } as ColumnInfo)
   );
@@ -84,9 +84,9 @@ export const Day: FunctionComponent = () => {
             <AlldayGridRow
               category={rowType}
               events={dayGridEvents[rowType]}
-              gridInfo={gridInfo}
-              gridColWidthMap={gridColWidthMap}
-              cells={cells}
+              rowStyleInfo={rowStyleInfo}
+              gridColWidthMap={cellWidthMap}
+              row={row}
               height={gridRowLayout[rowType].height}
               options={weekOptions}
             />
@@ -94,10 +94,10 @@ export const Day: FunctionComponent = () => {
             <OtherGridRow
               category={rowType}
               events={dayGridEvents[rowType]}
-              cells={cells}
+              row={row}
               height={gridRowLayout[rowType].height}
               options={options.week}
-              gridColWidthMap={gridColWidthMap}
+              gridColWidthMap={cellWidthMap}
             />
           )}
         </Panel>
@@ -111,7 +111,7 @@ export const Day: FunctionComponent = () => {
           dayNames={dayNames}
           marginLeft={120}
           templateType="weekDayname"
-          gridInfo={gridInfo}
+          rowStyleInfo={rowStyleInfo}
           type="week"
         />
       </Panel>

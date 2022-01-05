@@ -1,3 +1,5 @@
+import type TZDate from '@src/time/date';
+
 type RawDate = {
   y: number;
   M: number;
@@ -8,8 +10,11 @@ type RawDate = {
   ms: number;
 };
 
-type GridInfo = {
-  day: number;
+interface CellStyle {
   width: number;
   left: number;
-};
+}
+
+interface CellInfo extends CellStyle {
+  date: TZDate;
+}

@@ -1,5 +1,3 @@
-import TZDate from '@src/time/date';
-
 export type AlldayEventCategory = 'milestone' | 'allday' | 'task';
 
 export type PanelType = 'daygrid' | 'timegrid';
@@ -14,5 +12,3 @@ export interface Panel {
   handlers?: ['click', 'creation', 'move', 'resize'];
   show?: boolean;
 }
-
-export type Cells = TZDate[];
