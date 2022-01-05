@@ -20,24 +20,19 @@ const classNames = {
   detailContainer: cls('detail-container'),
 };
 
-function adjustTopPosition(eventRect: Rect, layoutRect: Rect, popupRect: Rect) {
+function adjustPosition(eventRect: Rect, layoutRect: Rect, popupRect: Rect) {
   let top = eventRect.top + eventRect.height / 2 - popupRect.height / 2;
+  let left = eventRect.left + eventRect.width;
 
   if (top + popupRect.height > layoutRect.top + layoutRect.height) {
     top = layoutRect.top + layoutRect.height - popupRect.height;
   }
 
-  return top < 0 ? 0 : top;
-}
-
-function adjustLeftPosition(eventRect: Rect, layoutRect: Rect, popupRect: Rect) {
-  let left = eventRect.left + eventRect.width;
-
   if (left + popupRect.width > layoutRect.left + layoutRect.width) {
     left = eventRect.left - popupRect.width;
   }
 
-  return left < layoutRect.left ? layoutRect.left : left;
+  return [Math.max(0, top), Math.max(left, layoutRect.left)];
 }
 
 export const EventDetailPopup: FunctionComponent = () => {
@@ -55,8 +50,7 @@ export const EventDetailPopup: FunctionComponent = () => {
       const layoutRect = layoutContainer.getBoundingClientRect();
       const popupRect = popupContainerRef.current.getBoundingClientRect();
 
-      const top = adjustTopPosition(eventRect, layoutRect, popupRect);
-      const left = adjustLeftPosition(eventRect, layoutRect, popupRect);
+      const [top, left] = adjustPosition(eventRect, layoutRect, popupRect);
 
       setStyle({ top, left });
     }
