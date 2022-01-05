@@ -32,7 +32,7 @@ describe('event detail popup', () => {
   beforeEach(() => {
     render(
       <Wrapper>
-        <EventDetailPopup event={event} popupPosition={{}} />
+        <EventDetailPopup />
       </Wrapper>
     );
   });

@@ -2,6 +2,7 @@ import { ComponentChildren, ComponentProps, FunctionComponent, h, toChildArray }
 import { useLayoutEffect, useMemo } from 'preact/hooks';
 
 import { Panel } from '@src/components/panel';
+import { EventDetailPopup } from '@src/components/popup/eventDetailPopup';
 import { useDispatch } from '@src/contexts/calendarStore';
 import { LayoutContainerProvider } from '@src/contexts/layoutContainerRef';
 import { cls, toPercent } from '@src/helpers/css';
@@ -77,6 +78,7 @@ export const Layout: FunctionComponent<Props> = ({
         style={getLayoutStylesFromInfo(width, height)}
       >
         {container ? children : null}
+        <EventDetailPopup />
       </div>
     </LayoutContainerProvider>
   );

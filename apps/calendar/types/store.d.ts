@@ -22,8 +22,16 @@ interface OptionsData {
   week: CalendarWeekOptions;
 }
 
+interface Rect {
+  top: number;
+  left: number;
+  width: number;
+  height: number;
+}
+
 interface BasePopupParam {
-  popupPosition: PopupPosition;
+  popupPosition?: PopupPosition;
+  eventRect?: Rect;
   close?: () => void;
 }
 

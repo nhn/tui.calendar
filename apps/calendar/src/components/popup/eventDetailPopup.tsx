@@ -1,11 +1,16 @@
 import { FunctionComponent, h } from 'preact';
+import { createPortal } from 'preact/compat';
+import { useLayoutEffect, useRef, useState } from 'preact/hooks';
 
 import { EventDetailSectionButton } from '@src/components/popup/eventDetailSectionButton';
 import { EventDetailSectionDetail } from '@src/components/popup/eventDetailSectionDetail';
 import { EventDetailSectionHeader } from '@src/components/popup/eventDetailSectionHeader';
+import { useStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
 import TZDate from '@src/time/date';
+import { isNil } from '@src/utils/type';
 
+import { StyleProp } from '@t/components/common';
 import { EventDetailPopupParam } from '@t/store';
 
 const classNames = {
@@ -13,7 +18,27 @@ const classNames = {
   detailContainer: cls('detail-container'),
 };
 
-export const EventDetailPopup: FunctionComponent<EventDetailPopupParam> = ({ event = {} }) => {
+export const EventDetailPopup: FunctionComponent = () => {
+  const { event, eventRect } = useStore(
+    (state) => (state.popup.param as EventDetailPopupParam) ?? {}
+  );
+  const popupContainerRef = useRef<HTMLDivElement>(null);
+
+  const [style, setStyle] = useState<StyleProp>({});
+
+  useLayoutEffect(() => {
+    if (popupContainerRef.current && eventRect) {
+      const popupRect = popupContainerRef.current.getBoundingClientRect();
+      const top = eventRect.top + eventRect.height / 2 - popupRect.height / 2;
+
+      setStyle({ top });
+    }
+  }, [eventRect]);
+
+  if (isNil(event) || isNil(eventRect)) {
+    return null;
+  }
+
   const {
     title = '',
     isAllDay = false,
@@ -29,8 +54,8 @@ export const EventDetailPopup: FunctionComponent<EventDetailPopupParam> = ({ eve
     isReadOnly,
   } = event;
 
-  return (
-    <div className={classNames.popupContainer}>
+  return createPortal(
+    <div className={classNames.popupContainer} ref={popupContainerRef} style={style}>
       <div className={classNames.detailContainer}>
         <EventDetailSectionHeader title={title} isAllday={isAllDay} start={start} end={end} />
         <EventDetailSectionDetail
@@ -44,6 +69,7 @@ export const EventDetailPopup: FunctionComponent<EventDetailPopupParam> = ({ eve
         {!isReadOnly && <EventDetailSectionButton />}
       </div>
       <div className={cls('popup-top-line')} style={{ backgroundColor: bgColor }} />
-    </div>
+    </div>,
+    document.getElementById(cls('portal')) as HTMLElement
   );
 };

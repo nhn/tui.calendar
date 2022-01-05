@@ -1,4 +1,5 @@
 import { FunctionComponent, h } from 'preact';
+import { useRef } from 'preact/hooks';
 
 import ResizeIcon from '@src/components/events/resizeIcon';
 import Template from '@src/components/template';
@@ -165,6 +166,8 @@ export const HorizontalEvent: FunctionComponent<Props> = ({
   const { show } = useDispatch('popup');
   const isDragging = draggingState > DraggingState.INIT;
 
+  const eventContainerRef = useRef<HTMLDivElement>(null);
+
   const { onMouseDown: onResizeStart } = useDrag(
     DRAGGING_TYPE_CREATORS.resizeEvent(`${uiModel.cid()}`),
     {
@@ -180,15 +183,14 @@ export const HorizontalEvent: FunctionComponent<Props> = ({
         setDraggingEventUIModel(uiModel);
       },
       onDragEnd: () => {
-        if (!isDragging) {
+        if (!isDragging && eventContainerRef.current) {
+          const { top, left, width, height } = eventContainerRef.current.getBoundingClientRect();
+
           show({
             type: PopupType.detail,
             param: {
               event: uiModel.model,
-              popupPosition: {
-                left: 0,
-                top: 0,
-              },
+              eventRect: { top, left, width, height },
             },
           });
         }
@@ -213,6 +215,7 @@ export const HorizontalEvent: FunctionComponent<Props> = ({
       className={dayEventBlockClassName}
       style={containerStyle}
       data-test-id={getTestId(uiModel)}
+      ref={eventContainerRef}
     >
       <div className={cls('weekday-event')} style={eventItemStyle} onMouseDown={handleMoveStart}>
         <span className={cls('weekday-event-title')}>

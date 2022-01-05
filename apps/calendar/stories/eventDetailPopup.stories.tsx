@@ -15,9 +15,9 @@ export default {
   title: 'Popups/EventDetailPopup',
 };
 
-const Template: Story<EventDetailPopupParam> = (args) => (
+const Template: Story<EventDetailPopupParam> = () => (
   <ProviderWrapper>
-    <EventDetailPopup {...args} />
+    <EventDetailPopup />
   </ProviderWrapper>
 );
 

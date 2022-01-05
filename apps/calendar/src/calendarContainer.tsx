@@ -1,8 +1,8 @@
 import { FunctionComponent, h } from 'preact';
 
-import FloatingLayer from '@src/components/floatingLayer';
 import { StoreProvider } from '@src/contexts/calendarStore';
 import { ThemeProvider } from '@src/contexts/theme';
+import { cls } from '@src/helpers/css';
 import Theme from '@src/theme';
 
 import { CalendarStore, InternalStoreAPI } from '@t/store';
@@ -16,7 +16,7 @@ export const CalendarContainer: FunctionComponent<Props> = ({ theme, store, chil
   <ThemeProvider theme={theme}>
     <StoreProvider store={store}>
       {children}
-      <FloatingLayer />
+      <div id={cls('portal')} />
     </StoreProvider>
   </ThemeProvider>
 );
