@@ -21,7 +21,7 @@ const renderPopup = (popupType: PopupType | null, param: PopupParamMap[PopupType
     case PopupType.seeMore:
       return <SeeMoreEventsPopup />;
     case PopupType.form:
-      return <EventFormPopup {...(param as EventFormPopupParam)} />;
+      return <EventFormPopup />;
     case PopupType.detail:
       return <EventDetailPopup />;
     default:

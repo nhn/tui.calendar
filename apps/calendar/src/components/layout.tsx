@@ -3,6 +3,7 @@ import { useLayoutEffect, useMemo } from 'preact/hooks';
 
 import { Panel } from '@src/components/panel';
 import { EventDetailPopup } from '@src/components/popup/eventDetailPopup';
+import { EventFormPopup } from '@src/components/popup/eventFormPopup';
 import { SeeMoreEventsPopup } from '@src/components/popup/seeMoreEventsPopup';
 import { useDispatch } from '@src/contexts/calendarStore';
 import { LayoutContainerProvider } from '@src/contexts/layoutContainerRef';
@@ -79,6 +80,7 @@ export const Layout: FunctionComponent<Props> = ({
         style={getLayoutStylesFromInfo(width, height)}
       >
         {container ? children : null}
+        <EventFormPopup />
         <EventDetailPopup />
         <SeeMoreEventsPopup />
       </div>

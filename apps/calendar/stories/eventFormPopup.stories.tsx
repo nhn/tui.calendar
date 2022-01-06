@@ -22,7 +22,7 @@ interface EventFormPopupStoryProps extends EventFormPopupParam {
 
 const Template: Story<EventFormPopupStoryProps> = (args) => (
   <ProviderWrapper options={{ calendars: args.calendars }}>
-    <EventFormPopup {...args} />
+    <EventFormPopup />
   </ProviderWrapper>
 );
 
