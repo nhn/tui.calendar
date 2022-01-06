@@ -257,7 +257,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   render() {
     if (this.container) {
       render(
-        <CalendarContainer theme={this.theme} store={this.store}>
+        <CalendarContainer theme={this.theme} store={this.store} eventBus={this.eventBus}>
           {this.getComponent()}
         </CalendarContainer>,
         this.container
@@ -273,7 +273,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    */
   renderToString(): string {
     return renderToString(
-      <CalendarContainer theme={this.theme} store={this.store}>
+      <CalendarContainer theme={this.theme} store={this.store} eventBus={this.eventBus}>
         {this.getComponent()}
       </CalendarContainer>
     );
