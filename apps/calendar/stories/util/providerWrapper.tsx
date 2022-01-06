@@ -4,6 +4,7 @@ import { CalendarContainer } from '@src/calendarContainer';
 import { initCalendarStore } from '@src/contexts/calendarStore';
 import EventModel from '@src/model/eventModel';
 import Theme from '@src/theme';
+import { EventBusImpl } from '@src/utils/eventBus';
 
 import { Options } from '@t/options';
 
@@ -27,6 +28,7 @@ export function ProviderWrapper({
 }: RenderableProps<Props>) {
   const theme = new Theme();
   const store = initCalendarStore(optionsUserInput);
+  const eventBus = new EventBusImpl();
   const { dispatch } = store.getState();
 
   dispatch.options.setOptions(optionsUserInput);
@@ -37,7 +39,7 @@ export function ProviderWrapper({
   }
 
   return (
-    <CalendarContainer theme={theme} store={store}>
+    <CalendarContainer theme={theme} store={store} eventBus={eventBus}>
       <div style={rootContainerStyle}>{children}</div>
     </CalendarContainer>
   );
