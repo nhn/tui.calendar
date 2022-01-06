@@ -128,6 +128,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
     }
 
     this.store.clearListeners();
+    this.eventBus.off();
   }
 
   /**
@@ -536,7 +537,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
     return this.renderDate.toDate();
   }
 
-  _getDateInterface(): DateInterface {
+  getDateInterface(): DateInterface {
     return this.renderDate.toCustomDate();
   }
 
@@ -591,7 +592,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
     // console.log('openCreationPopup', event);
   }
 
-  fire<EventName extends keyof ExternalEventTypes | string>(
+  fire<EventName extends keyof ExternalEventTypes>(
     eventName: EventName,
     ...args: Parameters<ExternalEventTypes[EventName]>
   ): EventBus<ExternalEventTypes> {
@@ -600,15 +601,15 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
     return this.eventBus;
   }
 
-  off<EventName extends keyof ExternalEventTypes | string>(
-    eventName: EventName
+  off<EventName extends keyof ExternalEventTypes>(
+    eventName?: EventName
   ): EventBus<ExternalEventTypes> {
     this.eventBus.off(eventName);
 
     return this.eventBus;
   }
 
-  on<EventName extends keyof ExternalEventTypes | string>(
+  on<EventName extends keyof ExternalEventTypes>(
     eventName: EventName,
     handler: ExternalEventTypes[EventName]
   ): EventBus<ExternalEventTypes> {
@@ -617,7 +618,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
     return this.eventBus;
   }
 
-  once<EventName extends keyof ExternalEventTypes | string>(
+  once<EventName extends keyof ExternalEventTypes>(
     eventName: EventName,
     handler: ExternalEventTypes[EventName]
   ): EventBus<ExternalEventTypes> {

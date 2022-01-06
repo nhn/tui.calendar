@@ -9,7 +9,7 @@ export interface EventBus<
     eventName: EventName,
     handler: EventTypes[EventName]
   ): EventBus<EventTypes>;
-  off<EventName extends keyof EventTypes>(eventName: EventName): EventBus<EventTypes>;
+  off<EventName extends keyof EventTypes>(eventName?: EventName): EventBus<EventTypes>;
   once<EventName extends keyof EventTypes>(
     eventName: EventName,
     handler: EventTypes[EventName]
