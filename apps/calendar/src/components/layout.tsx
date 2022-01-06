@@ -3,6 +3,7 @@ import { useLayoutEffect, useMemo } from 'preact/hooks';
 
 import { Panel } from '@src/components/panel';
 import { EventDetailPopup } from '@src/components/popup/eventDetailPopup';
+import { SeeMoreEventsPopup } from '@src/components/popup/seeMoreEventsPopup';
 import { useDispatch } from '@src/contexts/calendarStore';
 import { LayoutContainerProvider } from '@src/contexts/layoutContainerRef';
 import { cls, toPercent } from '@src/helpers/css';
@@ -79,6 +80,7 @@ export const Layout: FunctionComponent<Props> = ({
       >
         {container ? children : null}
         <EventDetailPopup />
+        <SeeMoreEventsPopup />
       </div>
     </LayoutContainerProvider>
   );

@@ -19,7 +19,7 @@ import {
 const renderPopup = (popupType: PopupType | null, param: PopupParamMap[PopupType]) => {
   switch (popupType) {
     case PopupType.seeMore:
-      return <SeeMoreEventsPopup {...(param as SeeMorePopupParam)} />;
+      return <SeeMoreEventsPopup />;
     case PopupType.form:
       return <EventFormPopup {...(param as EventFormPopupParam)} />;
     case PopupType.detail:
