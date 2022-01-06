@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 
 import { useStore } from '@src/contexts/calendarStore';
 import { DRAGGING_TYPE_CONSTANTS } from '@src/helpers/drag';
@@ -11,57 +11,40 @@ export function useDayGridSelection(
   mousePositionDataGrabber: MousePositionDataGrabber
 ): GridSelectionData | null {
   const { draggingItemType, draggingState, x, y, initX, initY } = useStore(dndSelector);
-
-  const [currentSelectionData, setCurrentSelectionData] = useState<CurrentGridSelectionData | null>(
-    null
-  );
-  const initSelectionDataRef = useRef<InitGridSelectionData | null>(null);
-  const prevSelectionDataRef = useRef<CurrentGridSelectionData | null>(null);
+  const [gridSelectionData, setGridSelectionData] = useState<GridSelectionData | null>(null);
 
   const isSelectingGrid =
     draggingItemType === DRAGGING_TYPE_CONSTANTS.dayGridSelection &&
     draggingState >= DraggingState.INIT;
-  const hasCurrentCoords = isPresent(x) && isPresent(y);
 
   useEffect(() => {
-    if (isSelectingGrid && isPresent(initX) && isPresent(initY) && !prevSelectionDataRef.current) {
+    const hasInitCoords = isPresent(initX) && isPresent(initY);
+    if (isSelectingGrid && hasInitCoords) {
       const data = mousePositionDataGrabber({ clientX: initX, clientY: initY } as MouseEvent);
       if (data) {
-        initSelectionDataRef.current = {
-          initRowIndex: data.gridY,
+        setGridSelectionData({
+          currentColIndex: data.gridX,
+          currentRowIndex: data.gridY,
           initColIndex: data.gridX,
-        };
-        setCurrentSelectionData({ currentColIndex: data.gridX, currentRowIndex: data.gridY });
+          initRowIndex: data.gridY,
+        });
       }
     }
   }, [initX, initY, isSelectingGrid, mousePositionDataGrabber]);
 
   useEffect(() => {
+    const hasCurrentCoords = isPresent(x) && isPresent(y);
     if (isSelectingGrid && hasCurrentCoords) {
       const data = mousePositionDataGrabber({ clientX: x, clientY: y } as MouseEvent);
       if (data) {
-        setCurrentSelectionData({ currentColIndex: data.gridX, currentRowIndex: data.gridY });
-        prevSelectionDataRef.current = { currentColIndex: data.gridX, currentRowIndex: data.gridY };
+        setGridSelectionData((prev) => ({
+          ...(prev as GridSelectionData),
+          currentColIndex: data.gridX,
+          currentRowIndex: data.gridY,
+        }));
       }
     }
-  }, [hasCurrentCoords, isSelectingGrid, mousePositionDataGrabber, x, y]);
+  }, [isSelectingGrid, mousePositionDataGrabber, x, y]);
 
-  useEffect(() => {
-    if (draggingState === DraggingState.IDLE && isPresent(prevSelectionDataRef.current)) {
-      setCurrentSelectionData(prevSelectionDataRef.current);
-      prevSelectionDataRef.current = null;
-    }
-  }, [draggingState]);
-
-  return useMemo(
-    () =>
-      isPresent(initSelectionDataRef.current) && isPresent(currentSelectionData)
-        ? {
-            ...currentSelectionData,
-            initRowIndex: initSelectionDataRef.current.initRowIndex,
-            initColIndex: initSelectionDataRef.current.initColIndex,
-          }
-        : null,
-    [currentSelectionData]
-  );
+  return gridSelectionData;
 }
