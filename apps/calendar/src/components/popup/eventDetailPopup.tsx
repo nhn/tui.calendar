@@ -1,6 +1,6 @@
 import { FunctionComponent, h } from 'preact';
 import { createPortal } from 'preact/compat';
-import { useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
 
 import { EventDetailSectionButton } from '@src/components/popup/eventDetailSectionButton';
 import { EventDetailSectionDetail } from '@src/components/popup/eventDetailSectionDetail';
@@ -56,7 +56,7 @@ function adjustPopupArrowPosition(eventRect: Rect, layoutRect: Rect, popupRect: 
 
 export const EventDetailPopup: FunctionComponent = () => {
   const { event, eventRect } = useStore(
-    (state) => (state.popup.param as EventDetailPopupParam) ?? {}
+    useCallback((state) => (state.popup.param as EventDetailPopupParam) ?? {}, [])
   );
   const layoutContainer = useLayoutContainer();
   const floatingLayerContainer = useFloatingLayerContainer();
