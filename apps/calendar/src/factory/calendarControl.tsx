@@ -598,7 +598,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   ): EventBus<ExternalEventTypes> {
     this.eventBus.fire(eventName, ...args);
 
-    return this.eventBus;
+    return this;
   }
 
   off<EventName extends keyof ExternalEventTypes>(
@@ -606,7 +606,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   ): EventBus<ExternalEventTypes> {
     this.eventBus.off(eventName);
 
-    return this.eventBus;
+    return this;
   }
 
   on<EventName extends keyof ExternalEventTypes>(
@@ -615,7 +615,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   ): EventBus<ExternalEventTypes> {
     this.eventBus.on(eventName, handler);
 
-    return this.eventBus;
+    return this;
   }
 
   once<EventName extends keyof ExternalEventTypes>(
@@ -624,6 +624,6 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   ): EventBus<ExternalEventTypes> {
     this.eventBus.once(eventName, handler);
 
-    return this.eventBus;
+    return this;
   }
 }
