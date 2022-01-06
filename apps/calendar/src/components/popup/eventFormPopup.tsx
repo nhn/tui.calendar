@@ -35,6 +35,7 @@ export const EventFormPopup: FunctionComponent = () => {
     isAllday = false,
     eventState = 'Busy',
     popupPosition,
+    close,
   } = useStore(useCallback((state) => (state.popup.param as EventFormPopupParam) ?? {}, []));
 
   const floatingLayerContainer = useFloatingLayerContainer();
