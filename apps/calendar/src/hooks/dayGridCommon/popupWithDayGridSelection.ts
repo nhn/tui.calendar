@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 
 import { EVENT_FORM_POPUP_WIDTH } from '@src/constants/popup';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
@@ -27,33 +27,40 @@ function useCreationPopupOptionSelector(state: CalendarState) {
 export function usePopupWithDayGridSelection({ gridSelection, dateMatrix }: Params) {
   // @TODO: use better naming
   const useCreationPopup = useStore(useCreationPopupOptionSelector);
-  const { show } = useDispatch('popup');
+  const { show, hide } = useDispatch('popup');
 
-  const startPos = useRef<{ x: number; y: number } | null>(null);
+  const [startPos, setStartPos] = useState<{ x: number; y: number } | null>(null);
   const [endPos, setEndPos] = useState<{ x: number; y: number } | null>(null);
 
   const { onMouseDown } = useDrag(DRAGGING_TYPE_CONSTANTS.dayGridSelection, {
     onDragStart: ({ pageX, pageY }) => {
-      startPos.current = { x: pageX, y: pageY };
+      setStartPos({ x: pageX, y: pageY });
+      hide();
     },
     onDragEnd: (e) => {
-      setEndPos({ x: e.pageX, y: e.pageY });
+      const pos = { x: e.pageX, y: e.pageY };
+      if (!startPos) {
+        setStartPos(pos);
+      }
+
+      setEndPos(pos);
       e.stopPropagation();
     },
   });
 
   useEffect(() => {
-    if (gridSelection && useCreationPopup && startPos.current && endPos) {
+    if (gridSelection && useCreationPopup && startPos && endPos) {
       const { initRowIndex, initColIndex, currentRowIndex, currentColIndex } = gridSelection;
-      const { x: startX, y: startY } = startPos.current;
+      const { x: startX, y: startY } = startPos;
       const { x: endX, y: endY } = endPos;
 
       const selectionStartDate = dateMatrix[initRowIndex][initColIndex];
       const selectionEndDate = dateMatrix[currentRowIndex][currentColIndex];
       const [start, end] = sortDate(selectionStartDate, selectionEndDate);
 
-      startPos.current = null;
+      setStartPos(null);
       setEndPos(null);
+
       show({
         type: PopupType.form,
         param: {
@@ -67,7 +74,7 @@ export function usePopupWithDayGridSelection({ gridSelection, dateMatrix }: Para
         },
       });
     }
-  }, [dateMatrix, gridSelection, endPos, show, useCreationPopup]);
+  }, [dateMatrix, endPos, gridSelection, show, startPos, useCreationPopup]);
 
   return onMouseDown;
 }
