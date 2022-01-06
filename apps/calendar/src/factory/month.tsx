@@ -9,17 +9,11 @@ export default class Month extends CalendarControl {
   constructor(container: Element, options: Options = {}) {
     super(container, options);
 
-    this._internalEvent.on('render', this.onRender, this);
-
     this.render();
   }
 
   protected getComponent() {
     return <MonthComponent />;
-  }
-
-  private onRender() {
-    this.render();
   }
 
   /**

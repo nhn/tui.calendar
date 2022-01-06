@@ -7,12 +7,12 @@ import { CalendarContainer } from '@src/calendarContainer';
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
 import { ThemeProvider } from '@src/contexts/theme';
 import { createEventCollection } from '@src/controller/base';
-import { EventHandler, ExternalEventName, InternalEventName } from '@src/event';
 import { registerTemplateConfig } from '@src/template';
 import Theme from '@src/theme';
 import { ThemeKeyValue } from '@src/theme/themeProps';
 import TZDate from '@src/time/date';
 import { toStartOfDay } from '@src/time/datetime';
+import { EventBus, EventBusImpl } from '@src/utils/eventBus';
 import { isNumber, isString } from '@src/utils/type';
 
 import { CalendarData, DateType, EventModelData } from '@t/events';
@@ -24,20 +24,14 @@ interface AppContext {
   options: Options;
   calendarData: CalendarData;
   templates: Template;
-  internalEvent: EventHandler<InternalEventName>;
-  externalEvent: EventHandler<ExternalEventName>;
 }
 
-export default abstract class CalendarControl extends EventHandler<ExternalEventName> {
+export default abstract class CalendarControl implements EventBus<ExternalEventTypes> {
   protected _container: Element | null;
 
   protected _options: Options;
 
   protected _context: AppContext;
-
-  protected _internalEvent: EventHandler<InternalEventName>;
-
-  protected _externalEvent: EventHandler<ExternalEventName>;
 
   protected _viewName: ViewType = 'month';
 
@@ -58,6 +52,8 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
     end: TZDate;
   };
 
+  protected eventBus: EventBus<ExternalEventTypes>;
+
   protected theme: Theme;
 
   protected store: InternalStoreAPI<CalendarStore>;
@@ -65,8 +61,6 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
   private _mainApp?: AnyComponent<any, any>;
 
   constructor(container: string | Element, options: Options = {}) {
-    super();
-
     const { timezone } = options;
     if (timezone) {
       this.setTimezone(timezone);
@@ -74,8 +68,6 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
 
     this._container = isString(container) ? document.querySelector(container) : container;
     this._options = this.initOptions(options);
-    this._internalEvent = new EventHandler<InternalEventName>();
-    this._externalEvent = this;
     this._context = {
       options: {
         defaultView: 'month',
@@ -86,8 +78,6 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
         idsOfDay: {},
       },
       templates: registerTemplateConfig(options.template),
-      internalEvent: this._internalEvent,
-      externalEvent: this._externalEvent,
     };
 
     this._renderDate = toStartOfDay();
@@ -97,7 +87,7 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
     };
 
     this.theme = new Theme(options.theme);
-
+    this.eventBus = new EventBusImpl<ExternalEventTypes>();
     this.store = initCalendarStore(this._options);
   }
 
@@ -628,5 +618,40 @@ export default abstract class CalendarControl extends EventHandler<ExternalEvent
    */
   openCreationPopup(event: EventModelData) {
     // console.log('openCreationPopup', event);
+  }
+
+  fire<EventName extends keyof ExternalEventTypes | string>(
+    eventName: EventName,
+    ...args: Parameters<ExternalEventTypes[EventName]>
+  ): EventBus<ExternalEventTypes> {
+    this.eventBus.fire(eventName, ...args);
+
+    return this.eventBus;
+  }
+
+  off<EventName extends keyof ExternalEventTypes | string>(
+    eventName: EventName
+  ): EventBus<ExternalEventTypes> {
+    this.eventBus.off(eventName);
+
+    return this.eventBus;
+  }
+
+  on<EventName extends keyof ExternalEventTypes | string>(
+    eventName: EventName,
+    handler: ExternalEventTypes[EventName]
+  ): EventBus<ExternalEventTypes> {
+    this.eventBus.on(eventName, handler);
+
+    return this.eventBus;
+  }
+
+  once<EventName extends keyof ExternalEventTypes | string>(
+    eventName: EventName,
+    handler: ExternalEventTypes[EventName]
+  ): EventBus<ExternalEventTypes> {
+    this.eventBus.once(eventName, handler);
+
+    return this.eventBus;
   }
 }
