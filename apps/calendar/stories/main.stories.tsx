@@ -2,7 +2,7 @@ import { FunctionComponent, h } from 'preact';
 
 import { Story } from '@storybook/preact';
 
-import FloatingLayer from '@src/components/floatingLayer';
+import { Layout } from '@src/components/layout';
 import { Button } from '@src/components/ui/button';
 import { Main } from '@src/components/view/main';
 import { useDispatch } from '@src/contexts/calendarStore';
@@ -45,8 +45,9 @@ const Template: Story = (args) => (
   <ProviderWrapper options={args.options} events={args.events}>
     <Wrapper>
       <Toolbar />
-      <Main />
-      <FloatingLayer />
+      <Layout>
+        <Main />
+      </Layout>
     </Wrapper>
   </ProviderWrapper>
 );
