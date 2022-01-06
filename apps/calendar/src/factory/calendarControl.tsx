@@ -1,13 +1,10 @@
-import { AnyComponent, ComponentChild, h, render } from 'preact';
+import { ComponentChild, h, render } from 'preact';
 import renderToString from 'preact-render-to-string';
 
 import { DateInterface, LocalDate } from '@toast-ui/date';
 
 import { CalendarContainer } from '@src/calendarContainer';
-import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
-import { ThemeProvider } from '@src/contexts/theme';
-import { createEventCollection } from '@src/controller/base';
-import { registerTemplateConfig } from '@src/template';
+import { initCalendarStore } from '@src/contexts/calendarStore';
 import Theme from '@src/theme';
 import { ThemeKeyValue } from '@src/theme/themeProps';
 import TZDate from '@src/time/date';
@@ -15,39 +12,26 @@ import { toStartOfDay } from '@src/time/datetime';
 import { EventBus, EventBusImpl } from '@src/utils/eventBus';
 import { isNumber, isString } from '@src/utils/type';
 
-import { CalendarData, DateType, EventModelData } from '@t/events';
-import { CalendarColor, CalendarInfo, CustomTimezone, Options, ViewType } from '@t/options';
+import { DateType, EventModelData } from '@t/events';
+import { CalendarColor, CalendarInfo, CustomTimezone, Options } from '@t/options';
 import { CalendarStore, Dispatchers, InternalStoreAPI } from '@t/store';
-import { Template } from '@t/template';
-
-interface AppContext {
-  options: Options;
-  calendarData: CalendarData;
-  templates: Template;
-}
 
 export default abstract class CalendarControl implements EventBus<ExternalEventTypes> {
-  protected _container: Element | null;
-
-  protected _options: Options;
-
-  protected _context: AppContext;
-
-  protected _viewName: ViewType = 'month';
+  protected container: Element | null;
 
   /**
    * Current rendered date
    * @type {TZDate}
    * @private
    */
-  protected _renderDate: TZDate;
+  protected renderDate: TZDate;
 
   /**
    * start and end date of weekly, monthly
    * @type {object}
    * @private
    */
-  protected _renderRange: {
+  protected renderRange: {
     start: TZDate;
     end: TZDate;
   };
@@ -58,37 +42,23 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
 
   protected store: InternalStoreAPI<CalendarStore>;
 
-  private _mainApp?: AnyComponent<any, any>;
-
   constructor(container: string | Element, options: Options = {}) {
     const { timezone } = options;
     if (timezone) {
       this.setTimezone(timezone);
     }
 
-    this._container = isString(container) ? document.querySelector(container) : container;
-    this._options = this.initOptions(options);
-    this._context = {
-      options: {
-        defaultView: 'month',
-      },
-      calendarData: {
-        calendars: [],
-        events: createEventCollection(),
-        idsOfDay: {},
-      },
-      templates: registerTemplateConfig(options.template),
-    };
+    this.container = isString(container) ? document.querySelector(container) : container;
 
-    this._renderDate = toStartOfDay();
-    this._renderRange = {
+    this.renderDate = toStartOfDay();
+    this.renderRange = {
       start: toStartOfDay(),
       end: toStartOfDay(),
     };
 
     this.theme = new Theme(options.theme);
     this.eventBus = new EventBusImpl<ExternalEventTypes>();
-    this.store = initCalendarStore(this._options);
+    this.store = initCalendarStore(this.initOptions(options));
   }
 
   protected abstract getComponent(): ComponentChild;
@@ -103,7 +73,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
 
   private initOptions(options: Options = {}): Options {
     const {
-      defaultView = this._viewName,
+      defaultView = 'month',
       taskView = true,
       eventView = true,
       template = {},
@@ -147,8 +117,8 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    * Destroys the instance.
    */
   destroy() {
-    if (this._container) {
-      render('', this._container);
+    if (this.container) {
+      render('', this.container);
     }
 
     for (const key in this) {
@@ -156,6 +126,8 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
         delete this[key];
       }
     }
+
+    this.store.clearListeners();
   }
 
   /**
@@ -283,12 +255,12 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    */
 
   render() {
-    if (this._container) {
+    if (this.container) {
       render(
         <CalendarContainer theme={this.theme} store={this.store}>
           {this.getComponent()}
         </CalendarContainer>,
-        this._container
+        this.container
       );
     }
 
@@ -301,10 +273,9 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    */
   renderToString(): string {
     return renderToString(
-      <ThemeProvider theme={this.theme}>
-        <StoreProvider store={this.store}>{this.getComponent()}</StoreProvider>
-      </ThemeProvider>,
-      this._context
+      <CalendarContainer theme={this.theme} store={this.store}>
+        {this.getComponent()}
+      </CalendarContainer>
     );
   }
 
@@ -360,7 +331,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    * });
    */
   setDate(date: DateType) {
-    this._renderDate = new TZDate(date);
+    this.renderDate = new TZDate(date);
   }
 
   /**
@@ -554,7 +525,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    * @returns {Options} options
    */
   getOptions() {
-    return this._options;
+    return this.store.getState().options;
   }
 
   /**
@@ -562,11 +533,11 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    * @returns {Date}
    */
   getDate(): Date {
-    return this._renderDate.toDate();
+    return this.renderDate.toDate();
   }
 
   _getDateInterface(): DateInterface {
-    return this._renderDate.toCustomDate();
+    return this.renderDate.toCustomDate();
   }
 
   /**
@@ -577,7 +548,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   getDateRangeStart() {
     // console.log('getDateRangeStart');
 
-    return this._renderRange.start;
+    return this.renderRange.start;
   }
 
   /**
@@ -588,7 +559,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   getDateRangeEnd() {
     // console.log('getDateRangeEnd');
 
-    return this._renderRange.end;
+    return this.renderRange.end;
   }
 
   /**
