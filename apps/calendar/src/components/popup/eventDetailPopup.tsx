@@ -1,10 +1,11 @@
 import { FunctionComponent, h } from 'preact';
 import { createPortal } from 'preact/compat';
-import { useLayoutEffect, useRef, useState } from 'preact/hooks';
+import { useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
 
 import { EventDetailSectionButton } from '@src/components/popup/eventDetailSectionButton';
 import { EventDetailSectionDetail } from '@src/components/popup/eventDetailSectionDetail';
 import { EventDetailSectionHeader } from '@src/components/popup/eventDetailSectionHeader';
+import { HALF_OF_POPUP_ARROW_HEIGHT } from '@src/constants/popup';
 import { useStore } from '@src/contexts/calendarStore';
 import { useFloatingLayerContainer } from '@src/contexts/floatingLayerRef';
 import { useLayoutContainer } from '@src/contexts/layoutContainerRef';
@@ -15,12 +16,20 @@ import { isNil } from '@src/utils/type';
 import { StyleProp } from '@t/components/common';
 import { EventDetailPopupParam, Rect } from '@t/store';
 
+enum PopupArrowDirection {
+  right = 'right',
+  left = 'left',
+}
+
 const classNames = {
   popupContainer: cls('popup-container'),
   detailContainer: cls('detail-container'),
+  topLine: cls('popup-top-line'),
+  border: cls('popup-arrow-border'),
+  fill: cls('popup-arrow-fill'),
 };
 
-function adjustPosition(eventRect: Rect, layoutRect: Rect, popupRect: Rect) {
+function adjustPopupPosition(eventRect: Rect, layoutRect: Rect, popupRect: Rect) {
   let top = eventRect.top + eventRect.height / 2 - popupRect.height / 2;
   let left = eventRect.left + eventRect.width;
 
@@ -35,6 +44,16 @@ function adjustPosition(eventRect: Rect, layoutRect: Rect, popupRect: Rect) {
   return [Math.max(0, top), Math.max(left, layoutRect.left)];
 }
 
+function adjustPopupArrowPosition(eventRect: Rect, layoutRect: Rect, popupRect: Rect) {
+  const top = eventRect.top + eventRect.height / 2;
+  const popupLeft = eventRect.left + eventRect.width;
+
+  const isOverLayoutContainer = popupLeft + popupRect.width > layoutRect.left + layoutRect.width;
+  const direction = isOverLayoutContainer ? PopupArrowDirection.right : PopupArrowDirection.left;
+
+  return { top, direction };
+}
+
 export const EventDetailPopup: FunctionComponent = () => {
   const { event, eventRect } = useStore(
     (state) => (state.popup.param as EventDetailPopupParam) ?? {}
@@ -44,15 +63,33 @@ export const EventDetailPopup: FunctionComponent = () => {
   const popupContainerRef = useRef<HTMLDivElement>(null);
 
   const [style, setStyle] = useState<StyleProp>({});
+  const [arrowTop, setArrowTop] = useState<number>(0);
+  const [arrowDirection, setArrowDirection] = useState<PopupArrowDirection>(
+    PopupArrowDirection.left
+  );
+
+  const popupArrowClassName = useMemo(() => {
+    const right = arrowDirection === PopupArrowDirection.right;
+    const left = arrowDirection === PopupArrowDirection.left;
+
+    return cls('popup-arrow', { right, left });
+  }, [arrowDirection]);
 
   useLayoutEffect(() => {
     if (popupContainerRef.current && eventRect && layoutContainer) {
       const layoutRect = layoutContainer.getBoundingClientRect();
       const popupRect = popupContainerRef.current.getBoundingClientRect();
 
-      const [top, left] = adjustPosition(eventRect, layoutRect, popupRect);
+      const [top, left] = adjustPopupPosition(eventRect, layoutRect, popupRect);
+      const { top: arrowTopPosition, direction } = adjustPopupArrowPosition(
+        eventRect,
+        layoutRect,
+        popupRect
+      );
 
       setStyle({ top, left });
+      setArrowTop(arrowTopPosition - top - HALF_OF_POPUP_ARROW_HEIGHT);
+      setArrowDirection(direction);
     }
   }, [eventRect, layoutContainer]);
 
@@ -89,7 +126,12 @@ export const EventDetailPopup: FunctionComponent = () => {
         />
         {!isReadOnly && <EventDetailSectionButton />}
       </div>
-      <div className={cls('popup-top-line')} style={{ backgroundColor: bgColor }} />
+      <div className={classNames.topLine} style={{ backgroundColor: bgColor }} />
+      <div className={popupArrowClassName}>
+        <div className={classNames.border} style={{ top: arrowTop }}>
+          <div className={classNames.fill} />
+        </div>
+      </div>
     </div>,
     floatingLayerContainer
   );

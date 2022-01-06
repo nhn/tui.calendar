@@ -3,7 +3,7 @@ import { useContext } from 'preact/hooks';
 
 import { isUndefined } from '@src/utils/type';
 
-export const FloatingLayerContainerContext = createContext<HTMLDivElement | null>(null);
+const FloatingLayerContainerContext = createContext<HTMLDivElement | null>(null);
 
 export const FloatingLayerContainerProvider = FloatingLayerContainerContext.Provider;
 

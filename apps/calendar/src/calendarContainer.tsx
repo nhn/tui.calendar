@@ -3,6 +3,7 @@ import { FunctionComponent, h } from 'preact';
 import { StoreProvider } from '@src/contexts/calendarStore';
 import { FloatingLayerContainerProvider } from '@src/contexts/floatingLayerRef';
 import { ThemeProvider } from '@src/contexts/theme';
+import { cls } from '@src/helpers/css';
 import { useDOMNode } from '@src/hooks/common/domNode';
 import Theme from '@src/theme';
 
@@ -21,7 +22,7 @@ export const CalendarContainer: FunctionComponent<Props> = ({ theme, store, chil
       <StoreProvider store={store}>
         <FloatingLayerContainerProvider value={container}>
           {children}
-          <div ref={containerRefCallback} />
+          <div ref={containerRefCallback} className={cls('floating-layer')} />
         </FloatingLayerContainerProvider>
       </StoreProvider>
     </ThemeProvider>
