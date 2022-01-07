@@ -8,6 +8,7 @@ import { cls, toPercent, toPx } from '@src/helpers/css';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/drag';
 import EventUIModel from '@src/model/eventUIModel';
+import { optionsSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import { PopupType } from '@src/slices/popup';
 
@@ -162,6 +163,7 @@ export const HorizontalEvent: FunctionComponent<Props> = ({
   const { isReadOnly } = uiModel.model;
 
   const isDragging = useStore(isDraggingSelector);
+  const { useDetailPopup } = useStore(optionsSelector);
   const { setDraggingEventUIModel } = useDispatch('dnd');
   const { show } = useDispatch('popup');
 
@@ -182,7 +184,7 @@ export const HorizontalEvent: FunctionComponent<Props> = ({
         setDraggingEventUIModel(uiModel);
       },
       onDragEnd: () => {
-        if (!isDragging && eventContainerRef.current) {
+        if (useDetailPopup && !isDragging && eventContainerRef.current) {
           const { top, left, width, height } = eventContainerRef.current.getBoundingClientRect();
 
           show({
