@@ -137,8 +137,8 @@ function getTestId({ model }: EventUIModel) {
   return `${calendarId}${id}${model.title}`;
 }
 
-function draggingStateSelector(state: CalendarState) {
-  return state.dnd.draggingState;
+function isDraggingSelector(state: CalendarState) {
+  return state.dnd.draggingState > DraggingState.INIT;
 }
 
 export const HorizontalEvent: FunctionComponent<Props> = ({
@@ -161,10 +161,9 @@ export const HorizontalEvent: FunctionComponent<Props> = ({
   });
   const { isReadOnly } = uiModel.model;
 
-  const draggingState = useStore(draggingStateSelector);
+  const isDragging = useStore(isDraggingSelector);
   const { setDraggingEventUIModel } = useDispatch('dnd');
   const { show } = useDispatch('popup');
-  const isDragging = draggingState > DraggingState.INIT;
 
   const eventContainerRef = useRef<HTMLDivElement>(null);
 
