@@ -12,6 +12,7 @@ import TZDate from '@src/time/date';
 const selectors = {
   calendarSection: `.${cls('calendar-section')}`,
   privateButton: `.${cls('popup-section-private')}.${cls('popup-button')}`,
+  privateIcon: `.${cls('ic-private')}`,
   hiddenDatePicker: `.${cls('datepicker-container')} .tui-datepicker.tui-hidden`,
   timePicker: '.tui-datepicker-footer .tui-timepicker',
 };
@@ -54,8 +55,10 @@ describe('event form popup', () => {
   });
 
   it('should display CalendarSelector when `calendars` is exists', () => {
-    const store = initCalendarStore({ calendars: [{ id: '1', name: '1' }] });
-    const { container } = render(
+    const calendars = [{ id: '1', name: 'calendar name' }];
+    const store = initCalendarStore({ calendars });
+
+    render(
       <StoreProvider store={store}>
         <Wrapper>
           <EventFormPopup />
@@ -63,9 +66,9 @@ describe('event form popup', () => {
       </StoreProvider>
     );
 
-    const calendarSelector = container.querySelector(selectors.calendarSection);
+    const calendarSelectorContent = screen.getByRole('button', { name: calendars[0].name });
 
-    expect(calendarSelector).not.toBeNull();
+    expect(calendarSelectorContent).not.toBeNull();
   });
 
   it('should display CalendarSelector when `calendars` is not exists', () => {
@@ -80,14 +83,14 @@ describe('event form popup', () => {
     const { container } = renderResult;
 
     const privateButton = container.querySelector(selectors.privateButton) ?? container;
-    let privateIcon = container.querySelector(`.${cls('ic-private')}`);
+    let privateIcon = container.querySelector(selectors.privateIcon);
 
     expect(privateButton).not.toBeNull();
     expect(privateIcon).toBeNull();
 
     fireEvent.click(privateButton);
 
-    privateIcon = container.querySelector(`.${cls('ic-private')}`);
+    privateIcon = container.querySelector(selectors.privateIcon);
 
     expect(privateIcon).not.toBeNull();
   });
