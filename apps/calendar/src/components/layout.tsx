@@ -80,10 +80,10 @@ export const Layout: FunctionComponent<Props> = ({
         style={getLayoutStylesFromInfo(width, height)}
       >
         {container ? children : null}
-        <EventFormPopup />
-        <EventDetailPopup />
-        <SeeMoreEventsPopup />
       </div>
+      <EventFormPopup />
+      <EventDetailPopup />
+      <SeeMoreEventsPopup />
     </LayoutContainerProvider>
   );
 };
