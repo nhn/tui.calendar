@@ -1,3 +1,5 @@
+import { PopupType } from '@src/slices/popup';
+
 import {
   CalendarState,
   EventDetailPopupParam,
@@ -5,11 +7,20 @@ import {
   SeeMorePopupParam,
 } from '@t/store';
 
-export const eventFormPopupParamSelector = (state: CalendarState) =>
-  (state.popup.param as EventFormPopupParam) ?? {};
+export const eventFormPopupParamSelector = (state: CalendarState) => {
+  const isEventFormPopupType = state.popup.type === PopupType.form;
 
-export const eventDetailPopupParamSelector = (state: CalendarState) =>
-  (state.popup.param as EventDetailPopupParam) ?? {};
+  return (isEventFormPopupType ? state.popup.param : {}) as EventFormPopupParam;
+};
 
-export const seeMorePopupParamSelector = (state: CalendarState) =>
-  (state.popup.param as SeeMorePopupParam) ?? {};
+export const eventDetailPopupParamSelector = (state: CalendarState) => {
+  const isEventDetailPopupType = state.popup.type === PopupType.detail;
+
+  return (isEventDetailPopupType ? state.popup.param : {}) as EventDetailPopupParam;
+};
+
+export const seeMorePopupParamSelector = (state: CalendarState) => {
+  const isSeeMorePopupType = state.popup.type === PopupType.seeMore;
+
+  return (isSeeMorePopupType ? state.popup.param : {}) as SeeMorePopupParam;
+};
