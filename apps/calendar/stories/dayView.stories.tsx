@@ -31,4 +31,5 @@ export const basic = Template.bind({});
 export const randomEvents = Template.bind({});
 randomEvents.args = {
   events: [...createRandomEventModelsForMonth(40), ...createTimeGridEvents()],
+  options: { useCreationPopup: true, useDetailPopup: true },
 };
