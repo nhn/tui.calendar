@@ -5,7 +5,6 @@ import { render, screen } from '@testing-library/preact';
 import { EventDetailPopup } from '@src/components/popup/eventDetailPopup';
 import { initCalendarStore, StoreProvider, useDispatch } from '@src/contexts/calendarStore';
 import { FloatingLayerContainerProvider } from '@src/contexts/floatingLayerRef';
-import { useDOMNode } from '@src/hooks/common/domNode';
 import EventModel from '@src/model/eventModel';
 import { PopupType } from '@src/slices/popup';
 import TZDate from '@src/time/date';
@@ -27,7 +26,6 @@ describe('event detail popup', () => {
     state: 'Busy',
   });
   const Wrapper: FunctionComponent = ({ children }) => {
-    const [container, containerRefCallback] = useDOMNode<HTMLDivElement>();
     const { show } = useDispatch('popup');
     show({
       type: PopupType.detail,
@@ -42,12 +40,7 @@ describe('event detail popup', () => {
       },
     });
 
-    return (
-      <FloatingLayerContainerProvider value={container}>
-        {children}
-        <div ref={containerRefCallback} />
-      </FloatingLayerContainerProvider>
-    );
+    return <FloatingLayerContainerProvider>{children}</FloatingLayerContainerProvider>;
   };
 
   beforeEach(() => {

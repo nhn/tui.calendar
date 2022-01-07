@@ -6,7 +6,6 @@ import { EventFormPopup } from '@src/components/popup/eventFormPopup';
 import { initCalendarStore, StoreProvider, useDispatch } from '@src/contexts/calendarStore';
 import { FloatingLayerContainerProvider } from '@src/contexts/floatingLayerRef';
 import { cls } from '@src/helpers/css';
-import { useDOMNode } from '@src/hooks/common/domNode';
 import { PopupType } from '@src/slices/popup';
 import TZDate from '@src/time/date';
 
@@ -23,7 +22,6 @@ describe('event form popup', () => {
   const end = new TZDate();
 
   const Wrapper: FunctionComponent = ({ children }) => {
-    const [container, containerRefCallback] = useDOMNode<HTMLDivElement>();
     const { show } = useDispatch('popup');
     show({
       type: PopupType.form,
@@ -40,12 +38,7 @@ describe('event form popup', () => {
       },
     });
 
-    return (
-      <FloatingLayerContainerProvider value={container}>
-        {children}
-        <div ref={containerRefCallback} />
-      </FloatingLayerContainerProvider>
-    );
+    return <FloatingLayerContainerProvider>{children}</FloatingLayerContainerProvider>;
   };
 
   beforeEach(() => {
