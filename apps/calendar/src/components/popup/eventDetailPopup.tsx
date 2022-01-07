@@ -29,7 +29,7 @@ const classNames = {
   fill: cls('popup-arrow-fill'),
 };
 
-function adjustPopupPosition(eventRect: Rect, layoutRect: Rect, popupRect: Rect) {
+function calculatePopupPosition(eventRect: Rect, layoutRect: Rect, popupRect: Rect) {
   let top = eventRect.top + eventRect.height / 2 - popupRect.height / 2;
   let left = eventRect.left + eventRect.width;
 
@@ -44,7 +44,7 @@ function adjustPopupPosition(eventRect: Rect, layoutRect: Rect, popupRect: Rect)
   return [Math.max(0, top), Math.max(left, layoutRect.left)];
 }
 
-function adjustPopupArrowPosition(eventRect: Rect, layoutRect: Rect, popupRect: Rect) {
+function calculatePopupArrowPosition(eventRect: Rect, layoutRect: Rect, popupRect: Rect) {
   const top = eventRect.top + eventRect.height / 2;
   const popupLeft = eventRect.left + eventRect.width;
 
@@ -80,8 +80,8 @@ export const EventDetailPopup: FunctionComponent = () => {
       const layoutRect = layoutContainer.getBoundingClientRect();
       const popupRect = popupContainerRef.current.getBoundingClientRect();
 
-      const [top, left] = adjustPopupPosition(eventRect, layoutRect, popupRect);
-      const { top: arrowTopPosition, direction } = adjustPopupArrowPosition(
+      const [top, left] = calculatePopupPosition(eventRect, layoutRect, popupRect);
+      const { top: arrowTopPosition, direction } = calculatePopupArrowPosition(
         eventRect,
         layoutRect,
         popupRect
