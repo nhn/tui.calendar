@@ -12,7 +12,7 @@ import {
   MONTH_MORE_VIEW_PADDING,
 } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
-import { useFloatingLayerContainer } from '@src/contexts/floatingLayerRef';
+import { useFloatingLayerContainer } from '@src/contexts/floatingLayer';
 import { useTheme } from '@src/contexts/theme';
 import { cls } from '@src/helpers/css';
 import { toFormat } from '@src/time/datetime';

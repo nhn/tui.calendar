@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/preact';
 
 import { EventDetailPopup } from '@src/components/popup/eventDetailPopup';
 import { initCalendarStore, StoreProvider, useDispatch } from '@src/contexts/calendarStore';
-import { FloatingLayerContainerProvider } from '@src/contexts/floatingLayerRef';
+import { FloatingLayerContainerProvider } from '@src/contexts/floatingLayer';
 import EventModel from '@src/model/eventModel';
 import { PopupType } from '@src/slices/popup';
 import TZDate from '@src/time/date';

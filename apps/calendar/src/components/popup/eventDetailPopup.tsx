@@ -7,8 +7,8 @@ import { EventDetailSectionDetail } from '@src/components/popup/eventDetailSecti
 import { EventDetailSectionHeader } from '@src/components/popup/eventDetailSectionHeader';
 import { HALF_OF_POPUP_ARROW_HEIGHT } from '@src/constants/popup';
 import { useStore } from '@src/contexts/calendarStore';
-import { useFloatingLayerContainer } from '@src/contexts/floatingLayerRef';
-import { useLayoutContainer } from '@src/contexts/layoutContainerRef';
+import { useFloatingLayerContainer } from '@src/contexts/floatingLayer';
+import { useLayoutContainer } from '@src/contexts/layoutContainer';
 import { cls } from '@src/helpers/css';
 import TZDate from '@src/time/date';
 import { isNil } from '@src/utils/type';

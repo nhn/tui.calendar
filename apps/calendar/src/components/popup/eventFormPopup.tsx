@@ -11,7 +11,7 @@ import { LocationInputBox } from '@src/components/popup/locationInputBox';
 import { PopupSection } from '@src/components/popup/popupSection';
 import { TitleInputBox } from '@src/components/popup/titleInputBox';
 import { useStore } from '@src/contexts/calendarStore';
-import { useFloatingLayerContainer } from '@src/contexts/floatingLayerRef';
+import { useFloatingLayerContainer } from '@src/contexts/floatingLayer';
 import { cls } from '@src/helpers/css';
 import { calendarSelector } from '@src/selectors';
 import { isNil } from '@src/utils/type';
