@@ -1,6 +1,5 @@
 import { FunctionComponent, h } from 'preact';
 import { createPortal } from 'preact/compat';
-import { useCallback } from 'preact/hooks';
 
 import { CalendarSelector } from '@src/components/popup/calendarSelector';
 import { ClosePopupButton } from '@src/components/popup/closePopupButton';
@@ -14,9 +13,8 @@ import { useStore } from '@src/contexts/calendarStore';
 import { useFloatingLayerContainer } from '@src/contexts/floatingLayer';
 import { cls } from '@src/helpers/css';
 import { calendarSelector } from '@src/selectors';
+import { eventFormPopupParamSelector } from '@src/selectors/popup';
 import { isNil } from '@src/utils/type';
-
-import { EventFormPopupParam } from '@t/store';
 
 const classNames = {
   formPopupContainer: cls('form-popup-container'),
@@ -36,7 +34,7 @@ export const EventFormPopup: FunctionComponent = () => {
     eventState = 'Busy',
     popupPosition,
     close,
-  } = useStore(useCallback((state) => (state.popup.param as EventFormPopupParam) ?? {}, []));
+  } = useStore(eventFormPopupParamSelector);
 
   const floatingLayerContainer = useFloatingLayerContainer();
 

@@ -1,6 +1,5 @@
 import { FunctionComponent, h } from 'preact';
 import { createPortal } from 'preact/compat';
-import { useCallback } from 'preact/hooks';
 
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import { ClosePopupButton } from '@src/components/popup/closePopupButton';
@@ -15,18 +14,13 @@ import { useStore } from '@src/contexts/calendarStore';
 import { useFloatingLayerContainer } from '@src/contexts/floatingLayer';
 import { useTheme } from '@src/contexts/theme';
 import { cls } from '@src/helpers/css';
+import { seeMorePopupParamSelector } from '@src/selectors/popup';
 import { toFormat } from '@src/time/datetime';
 import { isNil } from '@src/utils/type';
 
-import { SeeMorePopupParam } from '@t/store';
-
 export const SeeMoreEventsPopup: FunctionComponent = () => {
   const floatingLayerContainer = useFloatingLayerContainer();
-  const {
-    date,
-    events = [],
-    popupPosition,
-  } = useStore(useCallback((state) => (state.popup.param as SeeMorePopupParam) ?? {}, []));
+  const { date, events = [], popupPosition } = useStore(seeMorePopupParamSelector);
   const {
     month: { moreView, moreViewTitle },
   } = useTheme();

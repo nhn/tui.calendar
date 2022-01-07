@@ -1,6 +1,6 @@
 import { FunctionComponent, h } from 'preact';
 import { createPortal } from 'preact/compat';
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
 
 import { EventDetailSectionButton } from '@src/components/popup/eventDetailSectionButton';
 import { EventDetailSectionDetail } from '@src/components/popup/eventDetailSectionDetail';
@@ -10,11 +10,12 @@ import { useStore } from '@src/contexts/calendarStore';
 import { useFloatingLayerContainer } from '@src/contexts/floatingLayer';
 import { useLayoutContainer } from '@src/contexts/layoutContainer';
 import { cls } from '@src/helpers/css';
+import { eventDetailPopupParamSelector } from '@src/selectors/popup';
 import TZDate from '@src/time/date';
 import { isNil } from '@src/utils/type';
 
 import { StyleProp } from '@t/components/common';
-import { EventDetailPopupParam, Rect } from '@t/store';
+import { Rect } from '@t/store';
 
 enum PopupArrowDirection {
   right = 'right',
@@ -55,9 +56,7 @@ function calculatePopupArrowPosition(eventRect: Rect, layoutRect: Rect, popupRec
 }
 
 export const EventDetailPopup: FunctionComponent = () => {
-  const { event, eventRect } = useStore(
-    useCallback((state) => (state.popup.param as EventDetailPopupParam) ?? {}, [])
-  );
+  const { event, eventRect } = useStore(eventDetailPopupParamSelector);
   const layoutContainer = useLayoutContainer();
   const floatingLayerContainer = useFloatingLayerContainer();
   const popupContainerRef = useRef<HTMLDivElement>(null);
