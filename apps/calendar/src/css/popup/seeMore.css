@@ -1,3 +1,9 @@
+.see-more-container {
+  display: block;
+  position: absolute;
+  z-index: 1;
+}
+
 .see-more {
   height: inherit;
 }

@@ -112,7 +112,7 @@ export const EventDetailPopup: FunctionComponent = () => {
   } = event;
 
   return createPortal(
-    <div className={classNames.popupContainer} ref={popupContainerRef} style={style}>
+    <div role="dialog" className={classNames.popupContainer} ref={popupContainerRef} style={style}>
       <div className={classNames.detailContainer}>
         <EventDetailSectionHeader title={title} isAllday={isAllDay} start={start} end={end} />
         <EventDetailSectionDetail

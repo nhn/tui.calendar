@@ -1,3 +1,9 @@
+.form-popup-container {
+  display: block;
+  position: absolute;
+  z-index: 1;
+}
+
 .form-container {
   min-width: 474px;
   box-shadow: 0 2px 6px 0 rgb(0 0 0 / 10%);

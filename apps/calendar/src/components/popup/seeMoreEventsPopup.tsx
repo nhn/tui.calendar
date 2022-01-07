@@ -29,13 +29,6 @@ export const SeeMoreEventsPopup: FunctionComponent = () => {
     return null;
   }
 
-  const containerStyle = {
-    display: 'block',
-    position: 'absolute',
-    zIndex: 1,
-    ...popupPosition,
-  };
-
   const style = {
     height: MONTH_MORE_VIEW_HEADER_HEIGHT,
     marginBottom: MONTH_MORE_VIEW_HEADER_MARGIN_BOTTOM,
@@ -49,12 +42,8 @@ export const SeeMoreEventsPopup: FunctionComponent = () => {
   };
 
   return createPortal(
-    <div className={cls('see-more-container')} style={containerStyle}>
-      <div
-        role="dialog"
-        className={cls('see-more')}
-        style={{ ...moreView, padding: MONTH_MORE_VIEW_PADDING }}
-      >
+    <div role="dialog" className={cls('see-more-container')} style={popupPosition}>
+      <div className={cls('see-more')} style={{ ...moreView, padding: MONTH_MORE_VIEW_PADDING }}>
         <div className={cls('see-more-header')} style={style}>
           <Template template="monthMoreTitleDate" model={moreTitle} />
           <ClosePopupButton />

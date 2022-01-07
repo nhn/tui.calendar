@@ -38,20 +38,13 @@ export const EventFormPopup: FunctionComponent = () => {
 
   const floatingLayerContainer = useFloatingLayerContainer();
 
-  const style = {
-    display: 'block',
-    position: 'absolute',
-    zIndex: 1,
-    ...popupPosition,
-  };
-
   if (isNil(floatingLayerContainer) || isNil(start) || isNil(end)) {
     return null;
   }
 
   return createPortal(
-    <div className={classNames.formPopupContainer} style={style}>
-      <div role="dialog" className={classNames.popupContainer}>
+    <div role="dialog" className={classNames.formPopupContainer} style={popupPosition}>
+      <div className={classNames.popupContainer}>
         <div className={classNames.formContainer}>
           {calendars?.length ? <CalendarSelector calendars={calendars} /> : <PopupSection />}
           <TitleInputBox />
