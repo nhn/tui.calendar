@@ -47,10 +47,10 @@ interface SeeMorePopupParam extends BasePopupParam {
 }
 
 interface EventFormPopupParam extends BasePopupParam {
-  // @TODO: 팝업 작성 시 타입 정의
   start: TZDate;
   end: TZDate;
   isAllday: boolean;
+  isPrivate: boolean;
   eventState?: EventState;
 }
 

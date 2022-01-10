@@ -67,6 +67,7 @@ export function usePopupWithDayGridSelection({ gridSelection, dateMatrix }: Para
           start,
           end,
           isAllday: true,
+          isPrivate: false,
           popupPosition: {
             left: (endX + startX - EVENT_FORM_POPUP_WIDTH) / 2,
             top: (endY + startY) / 2,

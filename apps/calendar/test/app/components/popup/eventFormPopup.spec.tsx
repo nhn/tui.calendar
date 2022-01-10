@@ -30,6 +30,7 @@ describe('event form popup', () => {
         start,
         end,
         isAllday: false,
+        isPrivate: false,
         popupPosition: {
           top: 0,
           left: 0,

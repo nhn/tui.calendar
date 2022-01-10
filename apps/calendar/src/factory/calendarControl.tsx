@@ -12,6 +12,7 @@ import { toStartOfDay } from '@src/time/datetime';
 import { EventBus, EventBusImpl } from '@src/utils/eventBus';
 import { isNumber, isString } from '@src/utils/type';
 
+import { ExternalEventTypes } from '@t/eventBus';
 import { DateType, EventModelData } from '@t/events';
 import { CalendarColor, CalendarInfo, CustomTimezone, Options } from '@t/options';
 import { CalendarStore, Dispatchers, InternalStoreAPI } from '@t/store';

@@ -13,6 +13,7 @@ import { LocationInputBox } from '@src/components/popup/locationInputBox';
 import { PopupSection } from '@src/components/popup/popupSection';
 import { TitleInputBox } from '@src/components/popup/titleInputBox';
 import { useStore } from '@src/contexts/calendarStore';
+import { useEventBus } from '@src/contexts/eventBus';
 import { useFloatingLayerContainer } from '@src/contexts/floatingLayer';
 import { cls } from '@src/helpers/css';
 import { calendarSelector } from '@src/selectors';
@@ -73,16 +74,19 @@ export const EventFormPopup: FunctionComponent = () => {
     start,
     end,
     isAllday = false,
+    isPrivate = false,
     eventState = 'Busy',
     popupPosition,
     close,
   } = useStore(eventFormPopupParamSelector);
+  const eventBus = useEventBus();
 
   const floatingLayerContainer = useFloatingLayerContainer();
   const [formState, formStateDispatch] = useReducer(formStateReducer, {
     start,
     end,
     isAllday,
+    isPrivate,
     state: eventState,
   });
   const datePickerRef = useRef<DateRangePicker>(null);
@@ -103,6 +107,8 @@ export const EventFormPopup: FunctionComponent = () => {
 
     eventData.start = new TZDate(datePickerRef.current?.getStartDate());
     eventData.end = new TZDate(datePickerRef.current?.getEndDate());
+
+    eventBus.fire('beforeCreateEvent', eventData);
   };
 
   return createPortal(
