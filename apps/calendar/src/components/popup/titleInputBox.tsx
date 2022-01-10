@@ -1,8 +1,14 @@
 import { FunctionComponent, h } from 'preact';
-import { useState } from 'preact/hooks';
 
 import { PopupSection } from '@src/components/popup/popupSection';
 import { cls } from '@src/helpers/css';
+
+import { FormStateDispatcher } from './eventFormPopup';
+
+interface Props {
+  isPrivate?: boolean;
+  formStateDispatch: FormStateDispatcher;
+}
 
 const classNames = {
   popupSectionItem: cls('popup-section-item', 'popup-section-title'),
@@ -11,18 +17,27 @@ const classNames = {
   content: cls('content'),
 };
 
-export const TitleInputBox: FunctionComponent = () => {
-  const [isPrivate, setPrivate] = useState(false);
-  const togglePrivate = () => setPrivate((prev) => !prev);
+export const TitleInputBox: FunctionComponent<Props> = ({
+  isPrivate = false,
+  formStateDispatch,
+}) => {
+  const togglePrivate = () => formStateDispatch({ type: 'setPrivate', isPrivate: !isPrivate });
 
   return (
     <PopupSection>
       <div className={classNames.popupSectionItem}>
         <span className={classNames.titleIcon} />
-        <input className={classNames.content} placeholder="Subject" />
+        <input name="title" className={classNames.content} placeholder="Subject" required />
       </div>
-      <button className={classNames.privateButton} onClick={togglePrivate}>
+      <button type="button" className={classNames.privateButton} onClick={togglePrivate}>
         <span className={cls('icon', { 'ic-private': isPrivate, 'ic-public': !isPrivate })} />
+        <input
+          name="isPrivate"
+          type="checkbox"
+          className={cls('hidden-input')}
+          value={isPrivate ? 'true' : 'false'}
+          checked={isPrivate}
+        />
       </button>
     </PopupSection>
   );
