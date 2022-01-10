@@ -5,7 +5,7 @@ import { compare, MS_PER_DAY, parse, toEndOfDay, toStartOfDay } from '@src/time/
 import { stamp } from '@src/utils/stamp';
 import { isString } from '@src/utils/type';
 
-import { DateType, EventCategory, EventModelData } from '@t/events';
+import { DateType, EventCategory, EventModelData, EventState } from '@t/events';
 
 export default class EventModel {
   /**
@@ -142,9 +142,9 @@ export default class EventModel {
 
   /**
    * state. 'Busy' is default.
-   * @type {string}
+   * @type {EventState}
    */
-  state = '';
+  state: EventState = 'Busy';
 
   /**
    * travelTime: going-Duration minutes
@@ -192,13 +192,13 @@ export default class EventModel {
   init(event: EventModelData) {
     event = { ...event };
     if (event.category === 'allday') {
-      event.isAllDay = true;
+      event.isAllday = true;
     }
 
     this.id = event.id || '';
     this.title = event.title || '';
     this.body = event.body || '';
-    this.isAllDay = event.isAllDay ?? false;
+    this.isAllDay = event.isAllday ?? false;
     this.isVisible = event.isVisible ?? true;
 
     this.color = event.color || this.color;
@@ -218,7 +218,7 @@ export default class EventModel {
     this.isReadOnly = event.isReadOnly || false;
     this.goingDuration = event.goingDuration || 0;
     this.comingDuration = event.comingDuration || 0;
-    this.state = event.state || '';
+    this.state = event.state || 'Busy';
 
     if (this.isAllDay) {
       this.setAllDayPeriod(event.start, event.end);

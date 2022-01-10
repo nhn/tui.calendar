@@ -24,25 +24,25 @@ describe('controller/base', () => {
     eventDataList = [
       {
         title: 'hunting',
-        isAllDay: true,
+        isAllday: true,
         start: '2015/05/01',
         end: '2015/05/02',
       },
       {
         title: 'meeting',
-        isAllDay: false,
+        isAllday: false,
         start: '2015/05/03 12:30:00',
         end: '2015/05/03 16:00:00',
       },
       {
         title: 'physical training',
-        isAllDay: false,
+        isAllday: false,
         start: '2015/05/03 18:30:00',
         end: '2015/05/03 19:30:00',
       },
       {
         title: 'A',
-        isAllDay: false,
+        isAllday: false,
         start: '2015/05/02 12:30:00',
         end: '2015/05/03 09:20:00',
       },
@@ -61,7 +61,7 @@ describe('controller/base', () => {
 
       event = EventModel.create({
         title: 'A',
-        isAllDay: true,
+        isAllday: true,
         start: '2015/05/01',
         end: '2015/05/03',
       });
@@ -78,7 +78,7 @@ describe('controller/base', () => {
 
       event = EventModel.create({
         title: 'A',
-        isAllDay: false,
+        isAllday: false,
         start: '2015/05/01 12:30:00',
         end: '2015/05/03 09:20:00',
       });
@@ -164,7 +164,7 @@ describe('controller/base', () => {
     it('update owned event and date matrix.', () => {
       const model = createEvent(calendarData, {
         title: 'Go to work',
-        isAllDay: false,
+        isAllday: false,
         start: '2015/05/01 09:30:00',
         end: '2015/05/01 18:30:00',
       });
@@ -172,7 +172,7 @@ describe('controller/base', () => {
 
       updateEvent(calendarData, model.id, model.calendarId, {
         title: 'Go to work',
-        isAllDay: false,
+        isAllday: false,
         start: '2015/05/02',
         end: '2015/05/02',
       });
@@ -205,7 +205,7 @@ describe('controller/base', () => {
     beforeEach(() => {
       event = createEvent(calendarData, {
         title: 'Go to work',
-        isAllDay: false,
+        isAllday: false,
         start: '2015/05/01 09:30:00',
         end: '2015/05/01 18:30:00',
       });

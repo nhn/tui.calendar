@@ -35,7 +35,7 @@ describe('model/event basic', () => {
       event.init({
         id: '123',
         title: 'Go home',
-        isAllDay: false,
+        isAllday: false,
         start: '2015-05-01T00:00:00',
         end: '2015-05-02T00:00:00',
       });
@@ -155,13 +155,13 @@ describe('model/event basic', () => {
     it('Check type A, B', () => {
       const a = EventModel.create({
         title: 'A',
-        isAllDay: false,
+        isAllday: false,
         start: '2015-05-01T09:30:00',
         end: '2015-05-01T10:00:00',
       });
       const b = EventModel.create({
         title: 'B',
-        isAllDay: false,
+        isAllday: false,
         start: '2015-05-01T09:40:00',
         end: '2015-05-01T10:10:00',
       });
@@ -189,13 +189,13 @@ describe('model/event basic', () => {
     it('check type C, D', () => {
       const a = EventModel.create({
         title: 'A',
-        isAllDay: false,
+        isAllday: false,
         start: '2015-05-01T09:30:00',
         end: '2015-05-01T10:00:00',
       });
       const b = EventModel.create({
         title: 'B',
-        isAllDay: false,
+        isAllday: false,
         start: '2015-05-01T09:00:00',
         end: '2015-05-01T10:30:00',
       });
@@ -224,13 +224,13 @@ describe('model/event basic', () => {
     it('check type E, F', () => {
       const a = EventModel.create({
         title: 'A',
-        isAllDay: false,
+        isAllday: false,
         start: '2015-05-01T09:30:00',
         end: '2015-05-01T10:00:00',
       });
       const b = EventModel.create({
         title: 'B',
-        isAllDay: false,
+        isAllday: false,
         start: '2015-05-01T10:00:00',
         end: '2015-05-01T10:30:00',
       });
@@ -261,13 +261,13 @@ describe('model/event basic', () => {
     it('check type G, H', () => {
       const a = EventModel.create({
         title: 'A',
-        isAllDay: false,
+        isAllday: false,
         start: '2015-05-01T09:30:00',
         end: '2015-05-01T09:50:00',
       });
       const b = EventModel.create({
         title: 'B',
-        isAllDay: false,
+        isAllday: false,
         start: '2015-05-01T10:10:00',
         end: '2015-05-01T10:30:00',
       });
@@ -323,7 +323,7 @@ describe('model/EventModel advanced', () => {
       title: '스크럼',
       category: 'time',
       dueDateClass: '',
-      isAllDay: false,
+      isAllday: false,
       start: new TZDate('2015-10-26T09:40:00'),
       end: new TZDate('2015-10-26T10:00:00'),
     };
@@ -335,7 +335,7 @@ describe('model/EventModel advanced', () => {
       title: '[홍길동]연차',
       category: 'allday',
       dueDateClass: '',
-      isAllDay: true,
+      isAllday: true,
       start: new TZDate(2015, 9, 26),
       end: new TZDate(2015, 9, 26, 23, 59, 59),
     };
@@ -347,7 +347,7 @@ describe('model/EventModel advanced', () => {
       title: '테스트 마일스톤1',
       category: 'milestone',
       dueDateClass: '',
-      isAllDay: false,
+      isAllday: false,
       start: new TZDate('2015-10-26T23:59:59'),
       end: new TZDate('2015-10-26T23:59:59'),
     };
@@ -359,7 +359,7 @@ describe('model/EventModel advanced', () => {
       title: '테스트 업무',
       category: 'task',
       dueDateClass: 'morning',
-      isAllDay: false,
+      isAllday: false,
       start: new TZDate('2015-10-26T23:59:59'),
       end: new TZDate('2015-10-26T23:59:59'),
     };
@@ -378,7 +378,7 @@ describe('model/EventModel advanced', () => {
       title: '굿',
       category: 'task',
       dueDateClass: 'morning',
-      isAllDay: false,
+      isAllday: false,
       start: new TZDate('2015-10-26T23:59:59'),
       end: new TZDate('2015-10-26T23:59:59'),
       raw,
