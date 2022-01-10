@@ -1,12 +1,15 @@
-import { FunctionComponent, h } from 'preact';
-import { useLayoutEffect } from 'preact/hooks';
+import { Fragment, FunctionComponent, h } from 'preact';
+import { useState } from 'preact/hooks';
 
+import { expect } from '@playwright/test';
 import { fireEvent, render, screen } from '@testing-library/preact';
 
-import { EventBusProvider, useEventBus } from '@src/contexts/eventBus';
+import { EventBusProvider } from '@src/contexts/eventBus';
+import { useCustomEvent } from '@src/hooks/common/customEvent';
 import { EventBus, EventBusImpl } from '@src/utils/eventBus';
 
-describe('Event Bus Context', () => {
+describe('useCustomEvent', () => {
+  const TEST_EVENT_NAME = 'test';
   let eventBus: EventBus<any>;
   let mockHandler: jest.Mock;
 
@@ -17,18 +20,9 @@ describe('Event Bus Context', () => {
     handler: (...args: any[]) => any;
     fireOnce?: boolean;
   }> = ({ handler, fireOnce = false }) => {
-    const eb = useEventBus();
+    const fire = useCustomEvent(TEST_EVENT_NAME, handler, fireOnce);
 
-    useLayoutEffect(() => {
-      eb[fireOnce ? 'once' : 'on']('test', handler);
-    }, [eb, fireOnce, handler]);
-
-    return (
-      <div>
-        <button onClick={() => eb.fire('test')}>Fire Event</button>
-        <button onClick={() => eb.off('test')}>Remove Event</button>
-      </div>
-    );
+    return <button onClick={fire}>Fire Event</button>;
   };
 
   beforeEach(() => {
@@ -40,7 +34,7 @@ describe('Event Bus Context', () => {
     jest.clearAllMocks();
   });
 
-  it('should accessible via "useEventBus" hook', () => {
+  it('should register custom event handler', () => {
     render(<Component handler={mockHandler} />, { wrapper });
 
     const fireButton = screen.getByText(/fire event/i);
@@ -60,15 +54,29 @@ describe('Event Bus Context', () => {
     expect(mockHandler).toHaveBeenCalledTimes(1);
   });
 
-  it('should be able to remove registered event', () => {
-    render(<Component handler={mockHandler} />, { wrapper });
+  it('should unregister custom event handler when the component is unmounted', () => {
+    const Parent: FunctionComponent = () => {
+      const [isComponentVisible, setIsComponentVisible] = useState(true);
+
+      return (
+        <Fragment>
+          {isComponentVisible ? <Component handler={mockHandler} /> : null}
+          <button onClick={() => setIsComponentVisible(false)}>Unmount component</button>
+        </Fragment>
+      );
+    };
+
+    render(<Parent />, { wrapper });
 
     const fireButton = screen.getByText(/fire event/i);
-    const removeButton = screen.getByText(/remove event/i);
     fireEvent.click(fireButton);
-    fireEvent.click(removeButton);
-    fireEvent.click(fireButton);
-
     expect(mockHandler).toHaveBeenCalledTimes(1);
+
+    const unmountButton = screen.getByText(/unmount component/i);
+    fireEvent.click(unmountButton);
+
+    eventBus.fire(TEST_EVENT_NAME);
+
+    expect(mockHandler).not.toHaveBeenCalledTimes(3);
   });
 });
