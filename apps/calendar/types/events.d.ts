@@ -64,4 +64,12 @@ export interface EventModelData {
   raw?: any;
 }
 
+export type BooleanKeyOfEventModelData =
+  | 'isPrivate'
+  | 'isAllday'
+  | 'isPending'
+  | 'isFocused'
+  | 'isVisible'
+  | 'isReadOnly';
+
 export type TimeUnit = 'second' | 'minute' | 'hour' | 'date' | 'month' | 'year';

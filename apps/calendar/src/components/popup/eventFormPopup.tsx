@@ -21,7 +21,7 @@ import TZDate from '@src/time/date';
 import { isNil } from '@src/utils/type';
 
 import { SubmitHandler } from '@t/components/common';
-import { EventModelData, EventState } from '@t/events';
+import { BooleanKeyOfEventModelData, EventModelData, EventState } from '@t/events';
 
 const classNames = {
   formPopupContainer: cls('form-popup-container'),
@@ -56,6 +56,17 @@ function formStateReducer(prevState: EventModelData, action: FormStateAction): E
   }
 }
 
+function isBooleanKey(key: string): key is BooleanKeyOfEventModelData {
+  return (
+    key === 'isPrivate' ||
+    key === 'isAllday' ||
+    key === 'isPending' ||
+    key === 'isFocused' ||
+    key === 'isVisible' ||
+    key === 'isReadOnly'
+  );
+}
+
 export const EventFormPopup: FunctionComponent = () => {
   const { calendars } = useStore(calendarSelector);
   const {
@@ -87,15 +98,11 @@ export const EventFormPopup: FunctionComponent = () => {
     const eventData: EventModelData = { ...formState };
 
     formData.forEach((data, key) => {
-      eventData[key as keyof EventModelData] = data;
+      eventData[key as keyof EventModelData] = isBooleanKey(key) ? data === 'true' : data;
     });
 
     eventData.start = new TZDate(datePickerRef.current?.getStartDate());
     eventData.end = new TZDate(datePickerRef.current?.getEndDate());
-
-    // NOTE: boolean 값의 key에 대한 처리
-
-    console.log({ formState, eventData });
   };
 
   return createPortal(
