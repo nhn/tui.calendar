@@ -1,4 +1,4 @@
-import { useRef } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 
 import { EVENT_FORM_POPUP_WIDTH } from '@src/constants/popup';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
@@ -27,32 +27,39 @@ function useCreationPopupOptionSelector(state: CalendarState) {
 export function usePopupWithDayGridSelection({ gridSelection, dateMatrix }: Params) {
   // @TODO: use better naming
   const useCreationPopup = useStore(useCreationPopupOptionSelector);
-  const { show } = useDispatch('popup');
+  const { show, hide } = useDispatch('popup');
 
-  const dragStartPos = useRef<{ x: number; y: number } | null>(null);
+  const [startPos, setStartPos] = useState<{ x: number; y: number } | null>(null);
+  const [endPos, setEndPos] = useState<{ x: number; y: number } | null>(null);
 
   const { onMouseDown } = useDrag(DRAGGING_TYPE_CONSTANTS.dayGridSelection, {
-    onDragStart: (e) => {
-      dragStartPos.current = {
-        x: e.pageX,
-        y: e.pageY,
-      };
+    onDragStart: ({ pageX, pageY }) => {
+      setStartPos({ x: pageX, y: pageY });
+      hide();
     },
     onDragEnd: (e) => {
-      if (!gridSelection || !useCreationPopup || !dragStartPos.current) {
-        return;
+      const pos = { x: e.pageX, y: e.pageY };
+      if (!startPos) {
+        setStartPos(pos);
       }
 
-      const { initRowIndex, initColIndex, currentRowIndex, currentColIndex } = gridSelection;
-      const { x, y } = dragStartPos.current;
-      const { pageX, pageY } = e;
-
-      dragStartPos.current = null;
+      setEndPos(pos);
       e.stopPropagation();
+    },
+  });
+
+  useEffect(() => {
+    if (gridSelection && useCreationPopup && startPos && endPos) {
+      const { initRowIndex, initColIndex, currentRowIndex, currentColIndex } = gridSelection;
+      const { x: startX, y: startY } = startPos;
+      const { x: endX, y: endY } = endPos;
 
       const selectionStartDate = dateMatrix[initRowIndex][initColIndex];
       const selectionEndDate = dateMatrix[currentRowIndex][currentColIndex];
       const [start, end] = sortDate(selectionStartDate, selectionEndDate);
+
+      setStartPos(null);
+      setEndPos(null);
 
       show({
         type: PopupType.form,
@@ -61,13 +68,13 @@ export function usePopupWithDayGridSelection({ gridSelection, dateMatrix }: Para
           end,
           isAllday: true,
           popupPosition: {
-            left: (pageX + x - EVENT_FORM_POPUP_WIDTH) / 2,
-            top: (pageY + y) / 2,
+            left: (endX + startX - EVENT_FORM_POPUP_WIDTH) / 2,
+            top: (endY + startY) / 2,
           },
         },
       });
-    },
-  });
+    }
+  }, [dateMatrix, endPos, gridSelection, show, startPos, useCreationPopup]);
 
   return onMouseDown;
 }

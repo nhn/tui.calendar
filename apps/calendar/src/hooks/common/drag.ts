@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
+import { MINIMUM_DRAG_MOUSE_DISTANCE } from '@src/constants/mouse';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
@@ -19,13 +20,25 @@ function isLeftClick(buttonNum: number) {
   return buttonNum === 0;
 }
 
+function isMouseMoved(initX: number, initY: number, x: number, y: number) {
+  return (
+    Math.abs(initX - x) >= MINIMUM_DRAG_MOUSE_DISTANCE ||
+    Math.abs(initY - y) >= MINIMUM_DRAG_MOUSE_DISTANCE
+  );
+}
+
 export function useDrag(
   draggingItemType: DraggingTypes,
   { onDragStart = noop, onDrag = noop, onDragEnd = noop, onPressESCKey = noop }: DragListeners = {}
 ) {
   const { initDrag, setDraggingState, reset } = useDispatch('dnd');
 
-  const { draggingState, draggingItemType: currentDraggingItemType } = useStore(dndSelector);
+  const {
+    draggingState,
+    draggingItemType: currentDraggingItemType,
+    initX,
+    initY,
+  } = useStore(dndSelector);
   const [isStarted, setStarted] = useState(false);
 
   const isDragging = draggingState > DraggingState.INIT;
@@ -68,6 +81,10 @@ export function useDrag(
         return;
       }
 
+      if (initX && initY && !isMouseMoved(initX, initY, e.clientX, e.clientY)) {
+        return;
+      }
+
       if (!isDragging) {
         onDragStart(e);
         setDraggingState({ x: e.clientX, y: e.clientY });
@@ -78,7 +95,7 @@ export function useDrag(
       setDraggingState({ x: e.clientX, y: e.clientY });
       onDrag(e);
     },
-    [isDragging, isRightItemType, onDrag, onDragStart, setDraggingState]
+    [initX, initY, isDragging, isRightItemType, onDrag, onDragStart, setDraggingState]
   );
 
   const onMouseUp = useCallback<MouseEventListener>(

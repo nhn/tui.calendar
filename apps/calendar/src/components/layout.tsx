@@ -2,8 +2,11 @@ import { ComponentChildren, ComponentProps, FunctionComponent, h, toChildArray }
 import { useLayoutEffect, useMemo } from 'preact/hooks';
 
 import { Panel } from '@src/components/panel';
+import { EventDetailPopup } from '@src/components/popup/eventDetailPopup';
+import { EventFormPopup } from '@src/components/popup/eventFormPopup';
+import { SeeMoreEventsPopup } from '@src/components/popup/seeMoreEventsPopup';
 import { useDispatch } from '@src/contexts/calendarStore';
-import { LayoutContainerProvider } from '@src/contexts/layoutContainerRef';
+import { LayoutContainerProvider } from '@src/contexts/layoutContainer';
 import { cls, toPercent } from '@src/helpers/css';
 import { useDOMNode } from '@src/hooks/common/domNode';
 import { noop } from '@src/utils/noop';
@@ -78,6 +81,9 @@ export const Layout: FunctionComponent<Props> = ({
       >
         {container ? children : null}
       </div>
+      <EventFormPopup />
+      <EventDetailPopup />
+      <SeeMoreEventsPopup />
     </LayoutContainerProvider>
   );
 };

@@ -3,8 +3,10 @@ import { FunctionComponent, h } from 'preact';
 import { render, screen } from '@testing-library/preact';
 
 import { EventDetailPopup } from '@src/components/popup/eventDetailPopup';
-import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
+import { initCalendarStore, StoreProvider, useDispatch } from '@src/contexts/calendarStore';
+import { FloatingLayerContainerProvider } from '@src/contexts/floatingLayer';
 import EventModel from '@src/model/eventModel';
+import { PopupType } from '@src/slices/popup';
 import TZDate from '@src/time/date';
 
 describe('event detail popup', () => {
@@ -24,16 +26,32 @@ describe('event detail popup', () => {
     state: 'Busy',
   });
   const Wrapper: FunctionComponent = ({ children }) => {
-    const store = initCalendarStore();
+    const { show } = useDispatch('popup');
+    show({
+      type: PopupType.detail,
+      param: {
+        event,
+        eventRect: {
+          width: 10,
+          height: 10,
+          left: 0,
+          top: 0,
+        },
+      },
+    });
 
-    return <StoreProvider store={store}>{children}</StoreProvider>;
+    return <FloatingLayerContainerProvider>{children}</FloatingLayerContainerProvider>;
   };
 
   beforeEach(() => {
+    const store = initCalendarStore();
+
     render(
-      <Wrapper>
-        <EventDetailPopup event={event} popupPosition={{}} />
-      </Wrapper>
+      <StoreProvider store={store}>
+        <Wrapper>
+          <EventDetailPopup />
+        </Wrapper>
+      </StoreProvider>
     );
   });
 

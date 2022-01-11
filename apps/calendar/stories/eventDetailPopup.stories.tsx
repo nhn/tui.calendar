@@ -1,9 +1,11 @@
-import { h } from 'preact';
+import { Fragment, FunctionComponent, h } from 'preact';
 
 import { Story } from '@storybook/preact';
 
 import { EventDetailPopup } from '@src/components/popup/eventDetailPopup';
+import { useDispatch } from '@src/contexts/calendarStore';
 import EventModel from '@src/model/eventModel';
+import { PopupType } from '@src/slices/popup';
 import TZDate from '@src/time/date';
 
 import { ProviderWrapper } from '@stories/util/providerWrapper';
@@ -15,9 +17,29 @@ export default {
   title: 'Popups/EventDetailPopup',
 };
 
-const Template: Story<EventDetailPopupParam> = (args) => (
+const Wrapper: FunctionComponent<EventDetailPopupParam> = ({ children, event }) => {
+  const { show } = useDispatch('popup');
+  show({
+    type: PopupType.detail,
+    param: {
+      event,
+      eventRect: {
+        top: 0,
+        left: 0,
+        width: 100,
+        height: 100,
+      },
+    },
+  });
+
+  return <Fragment>{children}</Fragment>;
+};
+
+const Template: Story<EventDetailPopupParam> = ({ event }) => (
   <ProviderWrapper>
-    <EventDetailPopup {...args} />
+    <Wrapper event={event}>
+      <EventDetailPopup />
+    </Wrapper>
   </ProviderWrapper>
 );
 

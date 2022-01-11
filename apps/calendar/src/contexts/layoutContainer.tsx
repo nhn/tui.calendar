@@ -3,7 +3,7 @@ import { useContext } from 'preact/hooks';
 
 import { isUndefined } from '@src/utils/type';
 
-export const LayoutContainerContext = createContext<HTMLDivElement | null>(null);
+const LayoutContainerContext = createContext<HTMLDivElement | null>(null);
 
 export const LayoutContainerProvider = LayoutContainerContext.Provider;
 

@@ -85,3 +85,42 @@
   border: none;
   top: 0;
 }
+
+.popup-arrow-border,
+.popup-arrow-fill {
+  position: absolute;
+}
+
+.popup-arrow.left .popup-arrow-border {
+  border-top: 8px solid transparent;
+  border-right: 8px solid #d5d5d5;
+  border-bottom: 8px solid transparent;
+  border-left: none;
+  left: -7px;
+}
+
+.popup-arrow.left .popup-arrow-fill {
+  border-top: 7px solid transparent;
+  border-right: 7px solid #fff;
+  border-bottom: 7px solid transparent;
+  border-left: none;
+  top: -7px;
+  left: 1px;
+}
+
+.popup-arrow.right .popup-arrow-border {
+  border-top: 8px solid transparent;
+  border-right: none;
+  border-bottom: 8px solid transparent;
+  border-left: 8px solid #d5d5d5;
+  right: -7px;
+}
+
+.popup-arrow.right .popup-arrow-fill {
+  border-top: 7px solid transparent;
+  border-right: none;
+  border-bottom: 7px solid transparent;
+  border-left: 7px solid #fff;
+  top: -7px;
+  right: 1px;
+}

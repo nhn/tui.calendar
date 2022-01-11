@@ -2,7 +2,6 @@ import { FunctionComponent, h } from 'preact';
 
 import { Story } from '@storybook/preact';
 
-import FloatingLayer from '@src/components/floatingLayer';
 import { Button } from '@src/components/ui/button';
 import { Main } from '@src/components/view/main';
 import { useDispatch } from '@src/contexts/calendarStore';
@@ -46,7 +45,6 @@ const Template: Story = (args) => (
     <Wrapper>
       <Toolbar />
       <Main />
-      <FloatingLayer />
     </Wrapper>
   </ProviderWrapper>
 );
@@ -54,4 +52,5 @@ const Template: Story = (args) => (
 export const Default = Template.bind({});
 Default.args = {
   events,
+  options: { useCreationPopup: true, useDetailPopup: true },
 };

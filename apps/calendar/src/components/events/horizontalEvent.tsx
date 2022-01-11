@@ -1,13 +1,18 @@
 import { FunctionComponent, h } from 'preact';
+import { useRef } from 'preact/hooks';
 
 import ResizeIcon from '@src/components/events/resizeIcon';
 import Template from '@src/components/template';
-import { useDispatch } from '@src/contexts/calendarStore';
+import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { cls, toPercent, toPx } from '@src/helpers/css';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/drag';
 import EventUIModel from '@src/model/eventUIModel';
-import { noop } from '@src/utils/noop';
+import { optionsSelector } from '@src/selectors';
+import { DraggingState } from '@src/slices/dnd';
+import { PopupType } from '@src/slices/popup';
+
+import { CalendarState } from '@t/store';
 
 interface Props {
   uiModel: EventUIModel;
@@ -133,6 +138,10 @@ function getTestId({ model }: EventUIModel) {
   return `${calendarId}${id}${model.title}`;
 }
 
+function isDraggingSelector(state: CalendarState) {
+  return state.dnd.draggingState > DraggingState.INIT;
+}
+
 export const HorizontalEvent: FunctionComponent<Props> = ({
   flat = false,
   uiModel,
@@ -153,7 +162,12 @@ export const HorizontalEvent: FunctionComponent<Props> = ({
   });
   const { isReadOnly } = uiModel.model;
 
+  const isDragging = useStore(isDraggingSelector);
+  const { useDetailPopup } = useStore(optionsSelector);
   const { setDraggingEventUIModel } = useDispatch('dnd');
+  const { show } = useDispatch('popup');
+
+  const eventContainerRef = useRef<HTMLDivElement>(null);
 
   const { onMouseDown: onResizeStart } = useDrag(
     DRAGGING_TYPE_CREATORS.resizeEvent(`${uiModel.cid()}`),
@@ -169,6 +183,19 @@ export const HorizontalEvent: FunctionComponent<Props> = ({
       onDragStart: () => {
         setDraggingEventUIModel(uiModel);
       },
+      onDragEnd: () => {
+        if (useDetailPopup && !isDragging && eventContainerRef.current) {
+          const { top, left, width, height } = eventContainerRef.current.getBoundingClientRect();
+
+          show({
+            type: PopupType.detail,
+            param: {
+              event: uiModel.model,
+              eventRect: { top, left, width, height },
+            },
+          });
+        }
+      },
     }
   );
 
@@ -177,12 +204,10 @@ export const HorizontalEvent: FunctionComponent<Props> = ({
     onResizeStart(e);
   };
 
-  const handleMoveStart = isReadOnly
-    ? noop
-    : (e: MouseEvent) => {
-        e.stopPropagation();
-        onMoveStart(e);
-      };
+  const handleMoveStart = (e: MouseEvent) => {
+    e.stopPropagation();
+    onMoveStart(e);
+  };
 
   const shouldHideResizeHandler = flat || isDraggingTarget || isReadOnly;
 
@@ -191,6 +216,7 @@ export const HorizontalEvent: FunctionComponent<Props> = ({
       className={dayEventBlockClassName}
       style={containerStyle}
       data-test-id={getTestId(uiModel)}
+      ref={eventContainerRef}
     >
       <div className={cls('weekday-event')} style={eventItemStyle} onMouseDown={handleMoveStart}>
         <span className={cls('weekday-event-title')}>

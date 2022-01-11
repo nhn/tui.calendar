@@ -1,49 +1,78 @@
-import { h } from 'preact';
+import { FunctionComponent, h } from 'preact';
 
-import { fireEvent, render, screen } from '@testing-library/preact';
+import { fireEvent, render, RenderResult, screen } from '@testing-library/preact';
 
 import { EventFormPopup } from '@src/components/popup/eventFormPopup';
-import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
+import { initCalendarStore, StoreProvider, useDispatch } from '@src/contexts/calendarStore';
+import { FloatingLayerContainerProvider } from '@src/contexts/floatingLayer';
 import { cls } from '@src/helpers/css';
+import { PopupType } from '@src/slices/popup';
 import TZDate from '@src/time/date';
-
-import { CalendarStore, InternalStoreAPI } from '@t/store';
 
 const selectors = {
   calendarSection: `.${cls('calendar-section')}`,
   privateButton: `.${cls('popup-section-private')}.${cls('popup-button')}`,
+  privateIcon: `.${cls('ic-private')}`,
   hiddenDatePicker: `.${cls('datepicker-container')} .tui-datepicker.tui-hidden`,
   timePicker: '.tui-datepicker-footer .tui-timepicker',
 };
 
 describe('event form popup', () => {
-  let store: InternalStoreAPI<CalendarStore>;
+  let renderResult: RenderResult;
   const start = new TZDate();
   const end = new TZDate();
 
+  const Wrapper: FunctionComponent = ({ children }) => {
+    const { show } = useDispatch('popup');
+    show({
+      type: PopupType.form,
+      param: {
+        start,
+        end,
+        isAllday: false,
+        popupPosition: {
+          top: 0,
+          left: 0,
+          right: 100,
+          bottom: 100,
+        },
+      },
+    });
+
+    return <FloatingLayerContainerProvider>{children}</FloatingLayerContainerProvider>;
+  };
+
   beforeEach(() => {
-    store = initCalendarStore();
+    const store = initCalendarStore();
+
+    renderResult = render(
+      <StoreProvider store={store}>
+        <Wrapper>
+          <EventFormPopup />
+        </Wrapper>
+      </StoreProvider>
+    );
   });
 
   it('should display CalendarSelector when `calendars` is exists', () => {
-    store = initCalendarStore({ calendars: [{ id: '1', name: '1' }] });
-    const { container } = render(
+    const calendars = [{ id: '1', name: 'calendar name' }];
+    const store = initCalendarStore({ calendars });
+
+    render(
       <StoreProvider store={store}>
-        <EventFormPopup start={start} end={end} isAllday={false} popupPosition={{}} />
+        <Wrapper>
+          <EventFormPopup />
+        </Wrapper>
       </StoreProvider>
     );
 
-    const calendarSelector = container.querySelector(selectors.calendarSection);
+    const calendarSelectorContent = screen.getByRole('button', { name: calendars[0].name });
 
-    expect(calendarSelector).not.toBeNull();
+    expect(calendarSelectorContent).not.toBeNull();
   });
 
   it('should display CalendarSelector when `calendars` is not exists', () => {
-    const { container } = render(
-      <StoreProvider store={store}>
-        <EventFormPopup start={start} end={end} isAllday={false} popupPosition={{}} />
-      </StoreProvider>
-    );
+    const { container } = renderResult;
 
     const calendarSelector = container.querySelector(selectors.calendarSection);
 
@@ -51,31 +80,23 @@ describe('event form popup', () => {
   });
 
   it('should be changed private icon when private button is clicked', () => {
-    const { container } = render(
-      <StoreProvider store={store}>
-        <EventFormPopup start={start} end={end} isAllday={false} popupPosition={{}} />
-      </StoreProvider>
-    );
+    const { container } = renderResult;
 
     const privateButton = container.querySelector(selectors.privateButton) ?? container;
-    let privateIcon = container.querySelector(`.${cls('ic-private')}`);
+    let privateIcon = container.querySelector(selectors.privateIcon);
 
     expect(privateButton).not.toBeNull();
     expect(privateIcon).toBeNull();
 
     fireEvent.click(privateButton);
 
-    privateIcon = container.querySelector(`.${cls('ic-private')}`);
+    privateIcon = container.querySelector(selectors.privateIcon);
 
     expect(privateIcon).not.toBeNull();
   });
 
   it('should render range-picker but range-picker is hidden', () => {
-    const { container } = render(
-      <StoreProvider store={store}>
-        <EventFormPopup start={start} end={end} isAllday={false} popupPosition={{}} />
-      </StoreProvider>
-    );
+    const { container } = renderResult;
 
     const datePicker = container.querySelectorAll(selectors.hiddenDatePicker);
 
@@ -84,11 +105,7 @@ describe('event form popup', () => {
 
   ['Start date', 'End date'].forEach((placeholder) => {
     it(`should render range picker when ${placeholder} input is clicked`, () => {
-      const { container } = render(
-        <StoreProvider store={store}>
-          <EventFormPopup start={start} end={end} isAllday={false} popupPosition={{}} />
-        </StoreProvider>
-      );
+      const { container } = renderResult;
 
       fireEvent.click(screen.getByPlaceholderText(placeholder));
       const datePicker = container.querySelectorAll(selectors.hiddenDatePicker);
@@ -98,11 +115,7 @@ describe('event form popup', () => {
   });
 
   it('should not render time-picker in range-picker when allday button is clicked', () => {
-    const { container } = render(
-      <StoreProvider store={store}>
-        <EventFormPopup start={start} end={end} isAllday={false} popupPosition={{}} />
-      </StoreProvider>
-    );
+    const { container } = renderResult;
 
     fireEvent.click(screen.getByText('All day'));
     const timePicker = container.querySelector(selectors.timePicker);

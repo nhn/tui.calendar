@@ -1,1 +1,3 @@
 export const EVENT_FORM_POPUP_WIDTH = 474;
+
+export const HALF_OF_POPUP_ARROW_HEIGHT = 8;

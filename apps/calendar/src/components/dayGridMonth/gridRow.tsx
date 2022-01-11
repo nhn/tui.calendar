@@ -1,10 +1,10 @@
 import { FunctionComponent, h } from 'preact';
 import { memo } from 'preact/compat';
-import { useRef } from 'preact/hooks';
 
 import { GridCell } from '@src/components/dayGridMonth/gridCell';
 import { useTheme } from '@src/contexts/theme';
 import { cls, toPercent } from '@src/helpers/css';
+import { useDOMNode } from '@src/hooks/common/domNode';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { toFormat, toStartOfDay } from '@src/time/datetime';
@@ -21,7 +21,7 @@ interface Props {
 
 export const GridRow: FunctionComponent<Props> = memo(
   ({ cssHeight, week, rowInfo, gridDateEventModelMap = {}, height = 0 }) => {
-    const container = useRef<HTMLDivElement>(null);
+    const [container, containerRefCallback] = useDOMNode<HTMLDivElement>();
     const { common } = useTheme();
 
     return (
@@ -31,7 +31,7 @@ export const GridRow: FunctionComponent<Props> = memo(
           height: cssHeight ?? height,
           borderTop: common.border,
         }}
-        ref={container}
+        ref={containerRefCallback}
       >
         {week.map((date, columnIndex) => {
           const dayIndex = date.getDay();
@@ -48,7 +48,7 @@ export const GridRow: FunctionComponent<Props> = memo(
                 width: toPercent(width),
                 left: toPercent(left),
               }}
-              parentContainer={container.current}
+              parentContainer={container}
               events={gridDateEventModelMap[ymd]}
               height={height}
             />

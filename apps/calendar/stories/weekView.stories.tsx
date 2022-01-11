@@ -94,8 +94,6 @@ RandomEvents.args = {
 
 export const FixedEvents = Template.bind({});
 FixedEvents.args = {
-  options: {
-    useCreationPopup: true,
-  },
+  options: { useCreationPopup: true, useDetailPopup: true },
   events: createWeekEvents(),
 };

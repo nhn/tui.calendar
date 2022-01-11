@@ -1,8 +1,8 @@
 import { FunctionComponent, h } from 'preact';
 
-import FloatingLayer from '@src/components/floatingLayer';
 import { StoreProvider } from '@src/contexts/calendarStore';
 import { EventBusProvider } from '@src/contexts/eventBus';
+import { FloatingLayerContainerProvider } from '@src/contexts/floatingLayer';
 import { ThemeProvider } from '@src/contexts/theme';
 import Theme from '@src/theme';
 import { EventBus } from '@src/utils/eventBus';
@@ -24,8 +24,7 @@ export const CalendarContainer: FunctionComponent<Props> = ({
   <EventBusProvider value={eventBus}>
     <ThemeProvider theme={theme}>
       <StoreProvider store={store}>
-        {children}
-        <FloatingLayer />
+        <FloatingLayerContainerProvider>{children}</FloatingLayerContainerProvider>
       </StoreProvider>
     </ThemeProvider>
   </EventBusProvider>
