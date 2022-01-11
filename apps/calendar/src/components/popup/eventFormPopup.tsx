@@ -49,6 +49,7 @@ export const EventFormPopup: FunctionComponent = () => {
     eventState = 'Busy',
     popupPosition,
     close,
+    isCreationPopup,
   } = useStore(eventFormPopupParamSelector);
   const eventBus = useEventBus();
 
@@ -107,7 +108,7 @@ export const EventFormPopup: FunctionComponent = () => {
             />
             <ClosePopupButton close={close} />
             <PopupSection>
-              <ConfirmPopupButton />
+              <ConfirmPopupButton isCreationPopup={isCreationPopup} />
             </PopupSection>
           </div>
           <div className={classNames.popupArrowTop}>
