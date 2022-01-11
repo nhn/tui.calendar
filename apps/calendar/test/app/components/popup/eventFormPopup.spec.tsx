@@ -26,6 +26,9 @@ describe('event form popup', () => {
   let renderResult: RenderResult;
   const start = new TZDate();
   const end = new TZDate();
+  const isAllday = false;
+  const isPrivate = false;
+  const state = 'Busy';
   const mockFn = jest.fn();
 
   const Wrapper: FunctionComponent = ({ children }) => {
@@ -38,8 +41,9 @@ describe('event form popup', () => {
       param: {
         start,
         end,
-        isAllday: false,
-        isPrivate: false,
+        isAllday,
+        isPrivate,
+        eventState: state,
         popupPosition: {
           top: 0,
           left: 0,
@@ -145,5 +149,35 @@ describe('event form popup', () => {
     fireEvent.click(screen.getByRole('button', { name: /Save/i }));
 
     expect(mockFn).toBeCalled();
+    expect(mockFn).toHaveBeenCalledWith({
+      start,
+      end,
+      isAllday,
+      isPrivate,
+      state,
+      title: '',
+      location: '',
+    });
+  });
+
+  it('should fire `beforeCreateEvent` custom event with changed values when save button is clicked', () => {
+    const changedTitle = 'changed title';
+    const changedLocation = 'changed location';
+
+    fireEvent.change(screen.getByPlaceholderText('Subject'), { target: { value: changedTitle } });
+    fireEvent.change(screen.getByPlaceholderText('Location'), {
+      target: { value: changedLocation },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /Save/i }));
+
+    expect(mockFn).toHaveBeenCalledWith({
+      start,
+      end,
+      isAllday,
+      isPrivate,
+      state,
+      title: changedTitle,
+      location: changedLocation,
+    });
   });
 });
