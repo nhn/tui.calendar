@@ -49,19 +49,19 @@ type FormStateAction =
 
 export type FormStateDispatcher = (action: FormStateAction) => void;
 
-function formStateReducer(prevState: EventModelData, action: FormStateAction): EventModelData {
+function formStateReducer(state: EventModelData, action: FormStateAction): EventModelData {
   switch (action.type) {
     case FormStateActionType.setCalendarId:
-      return { ...prevState, calendarId: action.calendarId };
+      return { ...state, calendarId: action.calendarId };
     case FormStateActionType.setPrivate:
-      return { ...prevState, isPrivate: action.isPrivate };
+      return { ...state, isPrivate: action.isPrivate };
     case FormStateActionType.setAllday:
-      return { ...prevState, isAllday: action.isAllday };
+      return { ...state, isAllday: action.isAllday };
     case FormStateActionType.setState:
-      return { ...prevState, state: action.state };
+      return { ...state, state: action.state };
 
     default:
-      return prevState;
+      return state;
   }
 }
 
