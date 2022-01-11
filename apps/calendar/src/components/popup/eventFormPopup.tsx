@@ -22,7 +22,7 @@ import { eventFormPopupParamSelector } from '@src/selectors/popup';
 import TZDate from '@src/time/date';
 import { isNil } from '@src/utils/type';
 
-import { SubmitHandler } from '@t/components/common';
+import { FormEvent } from '@t/components/common';
 import { BooleanKeyOfEventModelData, EventModelData, EventState } from '@t/events';
 
 const classNames = {
@@ -96,7 +96,7 @@ export const EventFormPopup: FunctionComponent = () => {
     return null;
   }
 
-  const onSubmit: SubmitHandler = (e) => {
+  const onSubmit = (e: FormEvent) => {
     e.preventDefault();
 
     const formData = new FormData(e.target as HTMLFormElement);
