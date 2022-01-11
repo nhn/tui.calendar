@@ -32,7 +32,7 @@ describe('gridHelper', () => {
     it('should calculate the number of events that exceed height of container', () => {
       const uiModels = data.map((e) => {
         const event = EventModel.create(e);
-        event.isAllDay = true;
+        event.isAllday = true;
 
         return EventUIModel.create(event);
       });

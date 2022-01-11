@@ -69,7 +69,7 @@ describe('common/array', () => {
         events = [];
       });
 
-      it('isAllDay ASC, start ASC, duration DESC, id ASC', () => {
+      it('isAllday ASC, start ASC, duration DESC, id ASC', () => {
         mockData.forEach((data) => {
           events.push(EventModel.create(data));
         });
@@ -93,13 +93,13 @@ describe('common/array', () => {
         const fixtures = [
           {
             title: 'A',
-            isAllDay: false,
+            isAllday: false,
             start: '2015/05/03 12:00:00',
             end: '2015/05/03 12:10:00',
           },
           {
             title: 'B',
-            isAllDay: false,
+            isAllday: false,
             start: '2015/05/03 12:00:00',
             end: '2015/05/03 12:20:00',
           },

@@ -213,7 +213,7 @@ export const templates: Template = {
     return toFormat(time, format);
   },
 
-  popupIsAllDay() {
+  popupIsAllday() {
     return 'All day';
   },
 
@@ -257,11 +257,11 @@ export const templates: Template = {
     return 'Delete';
   },
 
-  popupDetailDate(isAllDay: boolean, start: TZDate, end: TZDate) {
+  popupDetailDate(isAllday: boolean, start: TZDate, end: TZDate) {
     const isSame = isSameDate(start, end);
     const endFormat = `${isSame ? '' : 'YYYY.MM.DD '}hh:mm tt`;
 
-    if (isAllDay) {
+    if (isAllday) {
       return `${toFormat(start, 'YYYY.MM.DD')}${isSame ? '' : ` - ${toFormat(end, 'YYYY.MM.DD')}`}`;
     }
 

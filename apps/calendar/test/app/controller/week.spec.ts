@@ -313,19 +313,19 @@ describe('Base.Week', () => {
       events = [
         {
           title: 'A',
-          isAllDay: false,
+          isAllday: false,
           start: '2015/05/01 09:30:00',
           end: '2015/05/01 18:30:00',
         },
         {
           title: 'B',
-          isAllDay: false,
+          isAllday: false,
           start: '2015/05/02 09:30:00',
           end: '2015/05/02 18:30:00',
         },
         {
           title: 'C',
-          isAllDay: true,
+          isAllday: true,
           start: '2015/05/01 09:00:00',
           end: '2015/05/02 09:00:00',
         },

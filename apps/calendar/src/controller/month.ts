@@ -21,8 +21,8 @@ import { CalendarData, IDS_OF_DAY } from '@t/events';
  * @param {EventUIModel} uiModel - ui model
  * @returns {boolean} whether model is allday event?
  */
-function _isAllDay({ model }: EventUIModel) {
-  return model.isAllDay || model.hasMultiDates;
+function _isAllday({ model }: EventUIModel) {
+  return model.isAllday || model.hasMultiDates;
 }
 
 /**
@@ -31,7 +31,7 @@ function _isAllDay({ model }: EventUIModel) {
  * @returns {boolean} whether model is time event?
  */
 function _isNotAllday(uiModel: EventUIModel) {
-  return !_isAllDay(uiModel);
+  return !_isAllday(uiModel);
 }
 
 /**
@@ -54,7 +54,7 @@ function _weightTopValue(uiModel: EventUIModel) {
  */
 function _adjustRenderRange(start: TZDate, end: TZDate, uiModelColl: Collection<EventUIModel>) {
   uiModelColl.each((uiModel) => {
-    if (uiModel.model.isAllDay || uiModel.model.hasMultiDates) {
+    if (uiModel.model.isAllday || uiModel.model.hasMultiDates) {
       limitRenderRange(toStartOfDay(start), toEndOfDay(end), uiModel);
     }
   });
@@ -93,7 +93,7 @@ function _getAlldayMaxTopIndexAtYMD(
  * @param {Collection} uiModelColl - collection of ui ui model
  */
 function _adjustTimeTopIndex(idsOfDay: IDS_OF_DAY, uiModelColl: Collection<EventUIModel>) {
-  const vAlldayColl = uiModelColl.find(_isAllDay);
+  const vAlldayColl = uiModelColl.find(_isAllday);
   const sortedTimeEvents = uiModelColl.find(_isNotAllday).sort(array.compare.event.asc);
   const maxIndexInYMD: Record<string, number> = {};
 
@@ -118,7 +118,7 @@ function _adjustTimeTopIndex(idsOfDay: IDS_OF_DAY, uiModelColl: Collection<Event
  * @param {Collection} uiModelColl - collection of ui ui model
  */
 function _stackTimeFromTop(idsOfDay: IDS_OF_DAY, uiModelColl: Collection<EventUIModel>) {
-  const uiModelAlldayColl = uiModelColl.find(_isAllDay);
+  const uiModelAlldayColl = uiModelColl.find(_isAllday);
   const sortedTimeEvents = uiModelColl.find(_isNotAllday).sort(array.compare.event.asc);
   const indiceInYMD: Record<string, number[]> = {};
 
@@ -161,7 +161,7 @@ function _addMultiDatesInfo(uiModelColl: Collection<EventUIModel>) {
 
     model.hasMultiDates = !isSameDate(start, end);
 
-    if (!model.isAllDay && model.hasMultiDates) {
+    if (!model.isAllday && model.hasMultiDates) {
       uiModel.renderStarts = toStartOfDay(start);
       uiModel.renderEnds = toEndOfDay(end);
     }

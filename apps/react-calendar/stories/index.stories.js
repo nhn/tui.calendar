@@ -170,7 +170,7 @@ stories.add('Simple Example', () => {
       const schedule = {
         id: String(Math.random()),
         title: scheduleData.title,
-        isAllDay: scheduleData.isAllday,
+        isAllday: scheduleData.isAllday,
         start: scheduleData.start,
         end: scheduleData.end,
         category: scheduleData.isAllday ? 'allday' : 'time',

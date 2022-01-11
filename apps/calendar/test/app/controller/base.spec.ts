@@ -186,7 +186,7 @@ describe('controller/base', () => {
       expect(event).toEqual(
         expect.objectContaining<CompatableEvent>({
           title: 'Go to work',
-          isAllDay: false,
+          isAllday: false,
           start: new TZDate('2015/05/02'),
           end: new TZDate('2015/05/02'),
         })

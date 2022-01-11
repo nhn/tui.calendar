@@ -79,7 +79,7 @@ export interface Template {
   timegridDisplayPrimaryTime: (props: TemplateCurrentTime) => TemplateReturnType;
   timegridDisplayTime: (props: TemplateCurrentTime) => TemplateReturnType;
   timegridCurrentTime: (props: TemplateCurrentTime) => TemplateReturnType;
-  popupIsAllDay: () => TemplateReturnType;
+  popupIsAllday: () => TemplateReturnType;
   popupStateFree: () => TemplateReturnType;
   popupStateBusy: () => TemplateReturnType;
   titlePlaceholder: () => TemplateReturnType;
@@ -88,7 +88,7 @@ export interface Template {
   endDatePlaceholder: () => TemplateReturnType;
   popupSave: () => TemplateReturnType;
   popupUpdate: () => TemplateReturnType;
-  popupDetailDate: (isAllDay: boolean, start: TZDate, end: TZDate) => TemplateReturnType;
+  popupDetailDate: (isAllday: boolean, start: TZDate, end: TZDate) => TemplateReturnType;
   popupDetailLocation: (event: EventModel) => TemplateReturnType;
   popupDetailUser: (event: EventModel) => TemplateReturnType;
   popupDetailState: (event: EventModel) => TemplateReturnType;

@@ -98,7 +98,7 @@ export const EventDetailPopup: FunctionComponent = () => {
 
   const {
     title = '',
-    isAllDay = false,
+    isAllday = false,
     start = new TZDate(),
     end = new TZDate(),
     location,
@@ -114,7 +114,7 @@ export const EventDetailPopup: FunctionComponent = () => {
   return createPortal(
     <div role="dialog" className={classNames.popupContainer} ref={popupContainerRef} style={style}>
       <div className={classNames.detailContainer}>
-        <EventDetailSectionHeader title={title} isAllday={isAllDay} start={start} end={end} />
+        <EventDetailSectionHeader title={title} isAllday={isAllday} start={start} end={end} />
         <EventDetailSectionDetail
           location={location}
           recurrenceRule={recurrenceRule}

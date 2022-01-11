@@ -4,10 +4,12 @@ import { fireEvent, render, RenderResult, screen } from '@testing-library/preact
 
 import { EventFormPopup } from '@src/components/popup/eventFormPopup';
 import { initCalendarStore, StoreProvider, useDispatch } from '@src/contexts/calendarStore';
+import { EventBusProvider } from '@src/contexts/eventBus';
 import { FloatingLayerContainerProvider } from '@src/contexts/floatingLayer';
 import { cls } from '@src/helpers/css';
 import { PopupType } from '@src/slices/popup';
 import TZDate from '@src/time/date';
+import { EventBusImpl } from '@src/utils/eventBus';
 
 const selectors = {
   calendarSection: `.${cls('calendar-section')}`,
@@ -23,6 +25,7 @@ describe('event form popup', () => {
   const end = new TZDate();
 
   const Wrapper: FunctionComponent = ({ children }) => {
+    const eventBus = new EventBusImpl<any>();
     const { show } = useDispatch('popup');
     show({
       type: PopupType.form,
@@ -40,7 +43,11 @@ describe('event form popup', () => {
       },
     });
 
-    return <FloatingLayerContainerProvider>{children}</FloatingLayerContainerProvider>;
+    return (
+      <EventBusProvider value={eventBus}>
+        <FloatingLayerContainerProvider>{children}</FloatingLayerContainerProvider>
+      </EventBusProvider>
+    );
   };
 
   beforeEach(() => {

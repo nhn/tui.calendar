@@ -463,7 +463,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
 
   /**
    * @deprecated
-   * Toggle event view('AllDay', TimeGrid') panel
+   * Toggle event view('Allday', TimeGrid') panel
    * @param {boolean} enabled - use task view
    * @todo remove this
    * @example
