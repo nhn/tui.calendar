@@ -22,7 +22,7 @@ describe('useCustomEvent', () => {
   }> = ({ handler, fireOnce = false }) => {
     const fire = useCustomEvent(TEST_EVENT_NAME, handler, fireOnce);
 
-    return <button onClick={fire}>Fire Event</button>;
+    return <button onClick={() => fire('arg1', 'arg2')}>Fire Event</button>;
   };
 
   beforeEach(() => {
@@ -35,13 +35,14 @@ describe('useCustomEvent', () => {
   });
 
   it('should register custom event handler', () => {
-    render(<Component handler={mockHandler} />, { wrapper });
+    render(<Component handler={(arg1, arg2) => mockHandler(arg1, arg2)} />, { wrapper });
 
     const fireButton = screen.getByText(/fire event/i);
     fireEvent.click(fireButton);
     fireEvent.click(fireButton);
 
     expect(mockHandler).toHaveBeenCalledTimes(2);
+    expect(mockHandler).toHaveBeenCalledWith('arg1', 'arg2');
   });
 
   it('should fire event once when needed', () => {
@@ -77,6 +78,6 @@ describe('useCustomEvent', () => {
 
     eventBus.fire(TEST_EVENT_NAME);
 
-    expect(mockHandler).not.toHaveBeenCalledTimes(3);
+    expect(mockHandler).not.toHaveBeenCalledTimes(2);
   });
 });
