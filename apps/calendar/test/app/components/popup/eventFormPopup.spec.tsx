@@ -1,4 +1,5 @@
 import { FunctionComponent, h } from 'preact';
+import { useCallback, useEffect, useMemo } from 'preact/hooks';
 
 import { fireEvent, render, RenderResult, screen } from '@testing-library/preact';
 
@@ -10,6 +11,8 @@ import { cls } from '@src/helpers/css';
 import { PopupType } from '@src/slices/popup';
 import TZDate from '@src/time/date';
 import { EventBusImpl } from '@src/utils/eventBus';
+
+import { ExternalEventTypes } from '@t/eventBus';
 
 const selectors = {
   calendarSection: `.${cls('calendar-section')}`,
@@ -23,10 +26,13 @@ describe('event form popup', () => {
   let renderResult: RenderResult;
   const start = new TZDate();
   const end = new TZDate();
+  const mockFn = jest.fn();
 
   const Wrapper: FunctionComponent = ({ children }) => {
-    const eventBus = new EventBusImpl<any>();
+    const eventBus = useMemo(() => new EventBusImpl<ExternalEventTypes>(), []);
     const { show } = useDispatch('popup');
+    const mockHandler = useCallback(mockFn, [mockFn]);
+
     show({
       type: PopupType.form,
       param: {
@@ -42,6 +48,10 @@ describe('event form popup', () => {
         },
       },
     });
+
+    useEffect(() => {
+      eventBus.on('beforeCreateEvent', mockHandler);
+    }, [eventBus, mockHandler]);
 
     return (
       <EventBusProvider value={eventBus}>
@@ -129,5 +139,11 @@ describe('event form popup', () => {
     const timePicker = container.querySelector(selectors.timePicker);
 
     expect(timePicker).toBeNull();
+  });
+
+  it('should fire `beforeCreateEvent` custom event when save button is clicked', () => {
+    fireEvent.click(screen.getByRole('button', { name: /Save/i }));
+
+    expect(mockFn).toBeCalled();
   });
 });
