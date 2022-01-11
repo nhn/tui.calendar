@@ -109,6 +109,7 @@ export const EventDetailPopup: FunctionComponent = () => {
     bgColor,
     body,
     isReadOnly,
+    isPrivate,
   } = event;
 
   return createPortal(
@@ -123,7 +124,16 @@ export const EventDetailPopup: FunctionComponent = () => {
           calendarId={calendarId}
           body={body}
         />
-        {!isReadOnly && <EventDetailSectionButton />}
+        {!isReadOnly && (
+          <EventDetailSectionButton
+            isCreationPopup={false}
+            start={start}
+            end={end}
+            isAllday={isAllday}
+            isPrivate={isPrivate}
+            popupPosition={{}}
+          />
+        )}
       </div>
       <div className={classNames.topLine} style={{ backgroundColor: bgColor }} />
       <div className={popupArrowClassName}>

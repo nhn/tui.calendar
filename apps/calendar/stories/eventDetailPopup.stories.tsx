@@ -3,6 +3,7 @@ import { Fragment, FunctionComponent, h } from 'preact';
 import { Story } from '@storybook/preact';
 
 import { EventDetailPopup } from '@src/components/popup/eventDetailPopup';
+import { EventFormPopup } from '@src/components/popup/eventFormPopup';
 import { useDispatch } from '@src/contexts/calendarStore';
 import EventModel from '@src/model/eventModel';
 import { PopupType } from '@src/slices/popup';
@@ -39,6 +40,7 @@ const Template: Story<EventDetailPopupParam> = ({ event }) => (
   <ProviderWrapper>
     <Wrapper event={event}>
       <EventDetailPopup />
+      <EventFormPopup />
     </Wrapper>
   </ProviderWrapper>
 );

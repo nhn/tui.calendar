@@ -1,6 +1,10 @@
 import { FunctionComponent, h } from 'preact';
 
+import { useDispatch } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
+import { PopupType } from '@src/slices/popup';
+
+import { EventFormPopupParam } from '@t/store';
 
 const classNames = {
   sectionButton: cls('popup-section', 'section-button'),
@@ -12,15 +16,39 @@ const classNames = {
   verticalLine: cls('vertical-line'),
 };
 
-export const EventDetailSectionButton: FunctionComponent = () => {
+export const EventDetailSectionButton: FunctionComponent<EventFormPopupParam> = ({
+  isCreationPopup,
+  start,
+  end,
+  isAllday,
+  isPrivate,
+  eventState,
+  popupPosition,
+}) => {
+  const { show } = useDispatch('popup');
+
+  const onClickEditButton = () =>
+    show({
+      type: PopupType.form,
+      param: {
+        isCreationPopup,
+        start,
+        end,
+        isAllday,
+        isPrivate,
+        eventState,
+        popupPosition,
+      },
+    });
+
   return (
     <div className={classNames.sectionButton}>
-      <button className={classNames.editButton}>
+      <button type="button" className={classNames.editButton} onClick={onClickEditButton}>
         <span className={classNames.editIcon} />
         <span className={classNames.content}>Edit</span>
       </button>
       <div className={classNames.verticalLine} />
-      <button className={classNames.deleteButton}>
+      <button type="button" className={classNames.deleteButton}>
         <span className={classNames.deleteIcon} />
         <span className={classNames.content}>Delete</span>
       </button>
