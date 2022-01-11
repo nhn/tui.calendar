@@ -8,7 +8,7 @@ interface Props {
   open?: boolean;
   calendars: CalendarInfo[];
   setOpened: (isOpened: boolean) => void;
-  handleChangeIndex: (index: number) => void;
+  onChangeIndex: (index: number) => void;
 }
 
 interface DropdownMenuItemProps {
@@ -40,12 +40,12 @@ const DropdownMenuItem: FunctionComponent<DropdownMenuItemProps> = ({
 export const CalendarDropdownMenu: FunctionComponent<Props> = ({
   calendars,
   setOpened,
-  handleChangeIndex,
+  onChangeIndex,
 }) => {
-  const onClickDropdownMenuItem = (e: MouseEvent, index: number) => {
+  const handleDropdownMenuItemClick = (e: MouseEvent, index: number) => {
     e.stopPropagation();
     setOpened(false);
-    handleChangeIndex(index);
+    onChangeIndex(index);
   };
 
   return (
@@ -56,7 +56,7 @@ export const CalendarDropdownMenu: FunctionComponent<Props> = ({
           index={index}
           name={name}
           bgColor={bgColor}
-          onClick={onClickDropdownMenuItem}
+          onClick={handleDropdownMenuItemClick}
         />
       ))}
     </ul>

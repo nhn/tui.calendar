@@ -24,7 +24,7 @@ export const CalendarSelector: FunctionComponent<Props> = ({ calendars, formStat
   const { isOpened, setOpened, toggleDropdown } = useDropdownState();
   const [{ bgColor, name }] = calendars;
 
-  const handleChangeIndex = (index: number) =>
+  const changeIndex = (index: number) =>
     formStateDispatch({ type: FormStateActionType.setCalendarId, calendarId: calendars[index].id });
 
   return (
@@ -38,7 +38,7 @@ export const CalendarSelector: FunctionComponent<Props> = ({ calendars, formStat
         <CalendarDropdownMenu
           calendars={calendars}
           setOpened={setOpened}
-          handleChangeIndex={handleChangeIndex}
+          onChangeIndex={changeIndex}
         />
       )}
     </PopupSection>
