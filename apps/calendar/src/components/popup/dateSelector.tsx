@@ -39,21 +39,21 @@ export const DateSelector = forwardRef<DateRangePicker, Props>(
       formStateDispatch({ type: FormStateActionType.setAllday, isAllday: !isAllday });
 
     useEffect(() => {
-      const startDate = new TZDate(start);
-      const endDate = new TZDate(end);
-      // NOTE: Setting default start/end time when editing allday event first time.
-      // This logic refers to Apple calendar's behavior.
-      if (isAllday) {
-        startDate.setHours(12, 0, 0);
-        endDate.setHours(13, 0, 0);
-      }
-
       if (
         startPickerContainerRef.current &&
         startPickerInputRef.current &&
         endPickerContainerRef.current &&
         endPickerInputRef.current
       ) {
+        const startDate = new TZDate(start);
+        const endDate = new TZDate(end);
+        // NOTE: Setting default start/end time when editing allday event first time.
+        // This logic refers to Apple calendar's behavior.
+        if (isAllday) {
+          startDate.setHours(12, 0, 0);
+          endDate.setHours(13, 0, 0);
+        }
+
         ref.current = DatePicker.createRangePicker({
           startpicker: {
             date: startDate.toDate(),
