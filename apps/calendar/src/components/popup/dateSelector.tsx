@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'preact/hooks';
 
 import DatePicker, { DateRangePicker } from 'tui-date-picker';
 
-import { FormStateDispatcher } from '@src/components/popup/eventFormPopup';
+import { FormStateActionType, FormStateDispatcher } from '@src/components/popup/eventFormPopup';
 import { PopupSection } from '@src/components/popup/popupSection';
 import { useStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
@@ -35,7 +35,8 @@ export const DateSelector = forwardRef<DateRangePicker, Props>(
     const endPickerContainerRef = useRef<HTMLDivElement>(null);
     const endPickerInputRef = useRef<HTMLInputElement>(null);
 
-    const toggleAllday = () => formStateDispatch({ type: 'setAllday', isAllday: !isAllday });
+    const toggleAllday = () =>
+      formStateDispatch({ type: FormStateActionType.setAllday, isAllday: !isAllday });
 
     // NOTE: Setting default start/end time when editing allday event first time.
     // This logic refers to Apple calendar's behavior.

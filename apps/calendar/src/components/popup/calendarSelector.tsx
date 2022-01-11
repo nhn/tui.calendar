@@ -1,7 +1,7 @@
 import { FunctionComponent, h } from 'preact';
 
 import { CalendarDropdownMenu } from '@src/components/popup/calendarDropdownMenu';
-import { FormStateDispatcher } from '@src/components/popup/eventFormPopup';
+import { FormStateActionType, FormStateDispatcher } from '@src/components/popup/eventFormPopup';
 import { PopupSection } from '@src/components/popup/popupSection';
 import { cls } from '@src/helpers/css';
 import { useDropdownState } from '@src/hooks/common/dropdownState';
@@ -25,7 +25,7 @@ export const CalendarSelector: FunctionComponent<Props> = ({ calendars, formStat
   const [{ bgColor, name }] = calendars;
 
   const handleChangeIndex = (index: number) =>
-    formStateDispatch({ type: 'setCalendarId', calendarId: calendars[index].id });
+    formStateDispatch({ type: FormStateActionType.setCalendarId, calendarId: calendars[index].id });
 
   return (
     <PopupSection onClick={toggleDropdown} classNames={classNames.popupSection}>

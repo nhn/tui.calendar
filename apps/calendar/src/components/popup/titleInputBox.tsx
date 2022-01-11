@@ -1,9 +1,8 @@
 import { FunctionComponent, h } from 'preact';
 
+import { FormStateActionType, FormStateDispatcher } from '@src/components/popup/eventFormPopup';
 import { PopupSection } from '@src/components/popup/popupSection';
 import { cls } from '@src/helpers/css';
-
-import { FormStateDispatcher } from './eventFormPopup';
 
 interface Props {
   isPrivate?: boolean;
@@ -21,7 +20,8 @@ export const TitleInputBox: FunctionComponent<Props> = ({
   isPrivate = false,
   formStateDispatch,
 }) => {
-  const togglePrivate = () => formStateDispatch({ type: 'setPrivate', isPrivate: !isPrivate });
+  const togglePrivate = () =>
+    formStateDispatch({ type: FormStateActionType.setPrivate, isPrivate: !isPrivate });
 
   return (
     <PopupSection>

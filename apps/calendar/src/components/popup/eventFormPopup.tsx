@@ -12,6 +12,7 @@ import { EventStateSelector } from '@src/components/popup/eventStateSelector';
 import { LocationInputBox } from '@src/components/popup/locationInputBox';
 import { PopupSection } from '@src/components/popup/popupSection';
 import { TitleInputBox } from '@src/components/popup/titleInputBox';
+import { BOOLEAN_KEYS_OF_EVENT_MODEL_DATA } from '@src/constants/popup';
 import { useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
 import { useFloatingLayerContainer } from '@src/contexts/floatingLayer';
@@ -33,23 +34,30 @@ const classNames = {
   popupArrowFill: cls('popup-arrow-fill'),
 };
 
-export type FormStateAction =
-  | { type: 'setCalendarId'; calendarId: string }
-  | { type: 'setPrivate'; isPrivate: boolean }
-  | { type: 'setAllday'; isAllday: boolean }
-  | { type: 'setState'; state: EventState };
+export enum FormStateActionType {
+  setCalendarId = 'setCalendarId',
+  setPrivate = 'setPrivate',
+  setAllday = 'setAllday',
+  setState = 'setState',
+}
+
+type FormStateAction =
+  | { type: FormStateActionType.setCalendarId; calendarId: string }
+  | { type: FormStateActionType.setPrivate; isPrivate: boolean }
+  | { type: FormStateActionType.setAllday; isAllday: boolean }
+  | { type: FormStateActionType.setState; state: EventState };
 
 export type FormStateDispatcher = (action: FormStateAction) => void;
 
 function formStateReducer(prevState: EventModelData, action: FormStateAction): EventModelData {
   switch (action.type) {
-    case 'setCalendarId':
+    case FormStateActionType.setCalendarId:
       return { ...prevState, calendarId: action.calendarId };
-    case 'setPrivate':
+    case FormStateActionType.setPrivate:
       return { ...prevState, isPrivate: action.isPrivate };
-    case 'setAllday':
+    case FormStateActionType.setAllday:
       return { ...prevState, isAllday: action.isAllday };
-    case 'setState':
+    case FormStateActionType.setState:
       return { ...prevState, state: action.state };
 
     default:
@@ -58,14 +66,7 @@ function formStateReducer(prevState: EventModelData, action: FormStateAction): E
 }
 
 function isBooleanKey(key: string): key is BooleanKeyOfEventModelData {
-  return (
-    key === 'isPrivate' ||
-    key === 'isAllday' ||
-    key === 'isPending' ||
-    key === 'isFocused' ||
-    key === 'isVisible' ||
-    key === 'isReadOnly'
-  );
+  return BOOLEAN_KEYS_OF_EVENT_MODEL_DATA.indexOf(key as BooleanKeyOfEventModelData) !== -1;
 }
 
 export const EventFormPopup: FunctionComponent = () => {

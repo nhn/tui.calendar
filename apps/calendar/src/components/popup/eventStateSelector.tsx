@@ -1,6 +1,6 @@
 import { FunctionComponent, h } from 'preact';
 
-import { FormStateDispatcher } from '@src/components/popup/eventFormPopup';
+import { FormStateActionType, FormStateDispatcher } from '@src/components/popup/eventFormPopup';
 import { PopupSection } from '@src/components/popup/popupSection';
 import { StateDropdownMenu } from '@src/components/popup/stateDropdownMenu';
 import { cls } from '@src/helpers/css';
@@ -28,7 +28,7 @@ export const EventStateSelector: FunctionComponent<Props> = ({
   const { isOpened, setOpened, toggleDropdown } = useDropdownState();
 
   const handleChangeEventState = (state: EventState) =>
-    formStateDispatch({ type: 'setState', state });
+    formStateDispatch({ type: FormStateActionType.setState, state });
 
   return (
     <PopupSection onClick={toggleDropdown} classNames={classNames.popupSection}>
