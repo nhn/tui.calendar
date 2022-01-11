@@ -34,7 +34,5 @@ function formStateReducer(state: EventModelData, action: FormStateAction): Event
 }
 
 export function useFormState(initialState: EventModelData) {
-  const [formState, formStateDispatch] = useReducer(formStateReducer, initialState);
-
-  return { formState, formStateDispatch };
+  return useReducer(formStateReducer, initialState);
 }

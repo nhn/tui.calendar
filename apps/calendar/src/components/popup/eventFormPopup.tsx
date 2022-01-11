@@ -53,7 +53,7 @@ export const EventFormPopup: FunctionComponent = () => {
   const eventBus = useEventBus();
 
   const floatingLayerContainer = useFloatingLayerContainer();
-  const { formState, formStateDispatch } = useFormState({
+  const [formState, formStateDispatch] = useFormState({
     start,
     end,
     isAllday,
