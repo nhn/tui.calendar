@@ -8,7 +8,7 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   plugins: ['simple-import-sort', 'prettier', 'react', 'react-hooks', '@typescript-eslint', 'jest'],
   extends: [
-    'tui/es6',
+    'tui',
     'prettier',
     'plugin:@typescript-eslint/recommended',
     'plugin:jest/recommended',
