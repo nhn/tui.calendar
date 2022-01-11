@@ -38,14 +38,16 @@ export const DateSelector = forwardRef<DateRangePicker, Props>(
     const toggleAllday = () =>
       formStateDispatch({ type: FormStateActionType.setAllday, isAllday: !isAllday });
 
-    // NOTE: Setting default start/end time when editing allday event first time.
-    // This logic refers to Apple calendar's behavior.
-    if (isAllday) {
-      start.setHours(12, 0, 0);
-      end.setHours(13, 0, 0);
-    }
-
     useEffect(() => {
+      const startDate = new TZDate(start);
+      const endDate = new TZDate(end);
+      // NOTE: Setting default start/end time when editing allday event first time.
+      // This logic refers to Apple calendar's behavior.
+      if (isAllday) {
+        startDate.setHours(12, 0, 0);
+        endDate.setHours(13, 0, 0);
+      }
+
       if (
         startPickerContainerRef.current &&
         startPickerInputRef.current &&
@@ -54,12 +56,12 @@ export const DateSelector = forwardRef<DateRangePicker, Props>(
       ) {
         ref.current = DatePicker.createRangePicker({
           startpicker: {
-            date: start.toDate(),
+            date: startDate.toDate(),
             input: startPickerInputRef.current,
             container: startPickerContainerRef.current,
           },
           endpicker: {
-            date: end.toDate(),
+            date: endDate.toDate(),
             input: endPickerInputRef.current,
             container: endPickerContainerRef.current,
           },
