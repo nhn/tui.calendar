@@ -47,6 +47,7 @@ interface SeeMorePopupParam extends BasePopupParam {
 }
 
 interface EventFormPopupParam extends BasePopupParam {
+  isCreationPopup: boolean;
   start: TZDate;
   end: TZDate;
   isAllday: boolean;

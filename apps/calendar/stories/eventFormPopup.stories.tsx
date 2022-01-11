@@ -28,11 +28,13 @@ const Wrapper: FunctionComponent<EventFormPopupParam> = ({
   end,
   isAllday,
   isPrivate,
+  isCreationPopup,
 }) => {
   const { show } = useDispatch('popup');
   show({
     type: PopupType.form,
     param: {
+      isCreationPopup,
       start,
       end,
       isAllday,
@@ -51,7 +53,13 @@ const Template: Story<EventFormPopupStoryProps> = ({
   isPrivate = false,
 }) => (
   <ProviderWrapper options={{ calendars }}>
-    <Wrapper start={start} end={end} isAllday={isAllday} isPrivate={isPrivate}>
+    <Wrapper
+      start={start}
+      end={end}
+      isAllday={isAllday}
+      isPrivate={isPrivate}
+      isCreationPopup={true}
+    >
       <EventFormPopup />
     </Wrapper>
   </ProviderWrapper>

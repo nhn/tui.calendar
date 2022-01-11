@@ -64,6 +64,7 @@ export function usePopupWithDayGridSelection({ gridSelection, dateMatrix }: Para
       show({
         type: PopupType.form,
         param: {
+          isCreationPopup: true,
           start,
           end,
           isAllday: true,
