@@ -1,10 +1,10 @@
 import { FunctionComponent, h } from 'preact';
 
-import { FormStateActionType, FormStateDispatcher } from '@src/components/popup/eventFormPopup';
 import { PopupSection } from '@src/components/popup/popupSection';
 import { StateDropdownMenu } from '@src/components/popup/stateDropdownMenu';
 import { cls } from '@src/helpers/css';
 import { useDropdownState } from '@src/hooks/common/dropdownState';
+import { FormStateActionType, FormStateDispatcher } from '@src/hooks/popup/formState';
 
 import { EventState } from '@t/events';
 

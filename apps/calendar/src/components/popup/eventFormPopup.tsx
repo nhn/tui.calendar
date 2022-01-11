@@ -1,6 +1,6 @@
 import { FunctionComponent, h } from 'preact';
 import { createPortal } from 'preact/compat';
-import { useReducer, useRef } from 'preact/hooks';
+import { useRef } from 'preact/hooks';
 
 import { DateRangePicker } from 'tui-date-picker';
 
@@ -17,13 +17,14 @@ import { useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
 import { useFloatingLayerContainer } from '@src/contexts/floatingLayer';
 import { cls } from '@src/helpers/css';
+import { useFormState } from '@src/hooks/popup/formState';
 import { calendarSelector } from '@src/selectors';
 import { eventFormPopupParamSelector } from '@src/selectors/popup';
 import TZDate from '@src/time/date';
 import { isNil } from '@src/utils/type';
 
 import { FormEvent } from '@t/components/common';
-import { BooleanKeyOfEventModelData, EventModelData, EventState } from '@t/events';
+import { BooleanKeyOfEventModelData, EventModelData } from '@t/events';
 
 const classNames = {
   formPopupContainer: cls('form-popup-container'),
@@ -33,37 +34,6 @@ const classNames = {
   popupArrowBorder: cls('popup-arrow-border'),
   popupArrowFill: cls('popup-arrow-fill'),
 };
-
-export enum FormStateActionType {
-  setCalendarId = 'setCalendarId',
-  setPrivate = 'setPrivate',
-  setAllday = 'setAllday',
-  setState = 'setState',
-}
-
-type FormStateAction =
-  | { type: FormStateActionType.setCalendarId; calendarId: string }
-  | { type: FormStateActionType.setPrivate; isPrivate: boolean }
-  | { type: FormStateActionType.setAllday; isAllday: boolean }
-  | { type: FormStateActionType.setState; state: EventState };
-
-export type FormStateDispatcher = (action: FormStateAction) => void;
-
-function formStateReducer(state: EventModelData, action: FormStateAction): EventModelData {
-  switch (action.type) {
-    case FormStateActionType.setCalendarId:
-      return { ...state, calendarId: action.calendarId };
-    case FormStateActionType.setPrivate:
-      return { ...state, isPrivate: action.isPrivate };
-    case FormStateActionType.setAllday:
-      return { ...state, isAllday: action.isAllday };
-    case FormStateActionType.setState:
-      return { ...state, state: action.state };
-
-    default:
-      return state;
-  }
-}
 
 function isBooleanKey(key: string): key is BooleanKeyOfEventModelData {
   return BOOLEAN_KEYS_OF_EVENT_MODEL_DATA.indexOf(key as BooleanKeyOfEventModelData) !== -1;
@@ -83,7 +53,7 @@ export const EventFormPopup: FunctionComponent = () => {
   const eventBus = useEventBus();
 
   const floatingLayerContainer = useFloatingLayerContainer();
-  const [formState, formStateDispatch] = useReducer(formStateReducer, {
+  const { formState, formStateDispatch } = useFormState({
     start,
     end,
     isAllday,
