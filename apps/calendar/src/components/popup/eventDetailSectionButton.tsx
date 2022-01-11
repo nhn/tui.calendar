@@ -18,6 +18,7 @@ const classNames = {
 
 export const EventDetailSectionButton: FunctionComponent<EventFormPopupParam> = ({
   isCreationPopup,
+  event,
   start,
   end,
   isAllday,
@@ -32,6 +33,7 @@ export const EventDetailSectionButton: FunctionComponent<EventFormPopupParam> = 
       type: PopupType.form,
       param: {
         isCreationPopup,
+        event,
         start,
         end,
         isAllday,

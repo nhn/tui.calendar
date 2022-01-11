@@ -13,14 +13,16 @@ import { LocationInputBox } from '@src/components/popup/locationInputBox';
 import { PopupSection } from '@src/components/popup/popupSection';
 import { TitleInputBox } from '@src/components/popup/titleInputBox';
 import { BOOLEAN_KEYS_OF_EVENT_MODEL_DATA } from '@src/constants/popup';
-import { useStore } from '@src/contexts/calendarStore';
+import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
 import { useFloatingLayerContainer } from '@src/contexts/floatingLayer';
 import { cls } from '@src/helpers/css';
 import { useFormState } from '@src/hooks/popup/formState';
+import EventModel from '@src/model/eventModel';
 import { calendarSelector } from '@src/selectors';
 import { eventFormPopupParamSelector } from '@src/selectors/popup';
 import TZDate from '@src/time/date';
+import { compare } from '@src/time/datetime';
 import { isNil } from '@src/utils/type';
 
 import { FormEvent } from '@t/components/common';
@@ -39,8 +41,26 @@ function isBooleanKey(key: string): key is BooleanKeyOfEventModelData {
   return BOOLEAN_KEYS_OF_EVENT_MODEL_DATA.indexOf(key as BooleanKeyOfEventModelData) !== -1;
 }
 
+function getChanges(event: EventModel, eventModelData: EventModelData) {
+  return Object.entries(eventModelData).reduce((changes, [key, value]) => {
+    const eventModelDataKey = key as keyof EventModelData;
+
+    if (event[eventModelDataKey] instanceof TZDate) {
+      // NOTE: handle TZDate
+      if (compare(event[eventModelDataKey], value) !== 0) {
+        changes[eventModelDataKey] = value;
+      }
+    } else if (event[eventModelDataKey] !== value) {
+      changes[eventModelDataKey] = value;
+    }
+
+    return changes;
+  }, {} as EventModelData);
+}
+
 export const EventFormPopup: FunctionComponent = () => {
   const { calendars } = useStore(calendarSelector);
+  const { hide } = useDispatch('popup');
   const {
     start,
     end,
@@ -50,6 +70,7 @@ export const EventFormPopup: FunctionComponent = () => {
     popupPosition,
     close,
     isCreationPopup,
+    event,
   } = useStore(eventFormPopupParamSelector);
   const eventBus = useEventBus();
 
@@ -62,10 +83,6 @@ export const EventFormPopup: FunctionComponent = () => {
     state: eventState,
   });
   const datePickerRef = useRef<DateRangePicker>(null);
-
-  if (isNil(floatingLayerContainer) || isNil(start) || isNil(end)) {
-    return null;
-  }
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -80,8 +97,19 @@ export const EventFormPopup: FunctionComponent = () => {
     eventData.start = new TZDate(datePickerRef.current?.getStartDate());
     eventData.end = new TZDate(datePickerRef.current?.getEndDate());
 
-    eventBus.fire('beforeCreateEvent', eventData);
+    if (isCreationPopup) {
+      eventBus.fire('beforeCreateEvent', eventData);
+    } else if (event) {
+      const changes = getChanges(event, eventData);
+
+      eventBus.fire('beforeUpdateEvent', event, changes);
+    }
+    hide();
   };
+
+  if (isNil(floatingLayerContainer) || isNil(start) || isNil(end)) {
+    return null;
+  }
 
   return createPortal(
     <div role="dialog" className={classNames.formPopupContainer} style={popupPosition}>

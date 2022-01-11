@@ -127,6 +127,7 @@ export const EventDetailPopup: FunctionComponent = () => {
         {!isReadOnly && (
           <EventDetailSectionButton
             isCreationPopup={false}
+            event={event}
             start={start}
             end={end}
             isAllday={isAllday}
