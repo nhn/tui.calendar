@@ -7,7 +7,7 @@ module.exports = {
     'jest/globals': true,
   },
   plugins: ['prettier', 'jest'],
-  extends: ['tui/es6', 'plugin:prettier/recommended', 'plugin:jest/recommended'],
+  extends: ['tui', 'plugin:prettier/recommended', 'plugin:jest/recommended'],
   parserOptions: {
     sourceType: 'module',
   },
