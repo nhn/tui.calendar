@@ -40,6 +40,8 @@ describe('event form popup', () => {
       type: PopupType.form,
       param: {
         isCreationPopup: true,
+        title: '',
+        location: '',
         start,
         end,
         isAllday,

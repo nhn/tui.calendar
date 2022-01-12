@@ -131,6 +131,8 @@ export const EventDetailPopup: FunctionComponent = () => {
           <EventDetailSectionButton
             isCreationPopup={false}
             event={event}
+            title={title}
+            location={location}
             start={start}
             end={end}
             isAllday={isAllday}

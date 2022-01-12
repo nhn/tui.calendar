@@ -92,6 +92,8 @@ export const EventFormPopup: FunctionComponent = () => {
   const { calendars } = useStore(calendarSelector);
   const { hide } = useDispatch('popup');
   const {
+    title,
+    location,
     start,
     end,
     isAllday = false,
@@ -106,6 +108,8 @@ export const EventFormPopup: FunctionComponent = () => {
 
   const floatingLayerContainer = useFloatingLayerContainer();
   const [formState, formStateDispatch] = useFormState({
+    title,
+    location,
     start,
     end,
     isAllday,
@@ -183,8 +187,12 @@ export const EventFormPopup: FunctionComponent = () => {
           ) : (
             <PopupSection />
           )}
-          <TitleInputBox isPrivate={formState.isPrivate} formStateDispatch={formStateDispatch} />
-          <LocationInputBox />
+          <TitleInputBox
+            title={title}
+            isPrivate={formState.isPrivate}
+            formStateDispatch={formStateDispatch}
+          />
+          <LocationInputBox location={location} />
           <DateSelector
             start={start}
             end={end}
