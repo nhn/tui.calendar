@@ -4,8 +4,15 @@ import { EventModelData } from '@t/events';
 
 type AnyFunc = (...args: any[]) => any;
 
+interface SelectDateTimeInfo {
+  start: Date;
+  end: Date;
+  isAllday: boolean;
+  nativeEvent?: MouseEvent;
+}
+
 type ExternalEventTypes = {
-  selectDateTime: (/* @TODO */) => void;
+  selectDateTime: (info: SelectDateTimeInfo) => void;
   beforeCreateEvent: (event: EventModelData) => void;
   beforeUpdateEvent: (event: EventModel, changes: EventModelData) => void;
   [eventName: string]: AnyFunc;
