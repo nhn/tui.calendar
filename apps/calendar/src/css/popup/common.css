@@ -1,3 +1,7 @@
+.floating-layer {
+  z-index: 1;
+}
+
 .popup-container {
   position: absolute;
   font-weight: 2.5;
@@ -59,4 +63,9 @@
   font-size: 0;
   border-radius: 2px;
   cursor: pointer;
+}
+
+.popup-arrow-border,
+.popup-arrow-fill {
+  position: absolute;
 }

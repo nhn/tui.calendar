@@ -31,6 +31,7 @@ interface Rect {
 
 interface BasePopupParam {
   popupPosition?: PopupPosition;
+  popupArrowPointPosition?: PopupArrowPointPosition;
   eventRect?: Rect;
   close?: () => void;
 }
@@ -65,6 +66,11 @@ type PopupPosition = {
   bottom?: number | string;
   left?: number | string;
   right?: number | string;
+};
+
+type PopupArrowPointPosition = {
+  top: number;
+  left: number;
 };
 
 export type StateWithActions = Record<string, any>;

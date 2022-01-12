@@ -45,11 +45,9 @@ describe('event form popup', () => {
         isAllday,
         isPrivate,
         eventState: state,
-        popupPosition: {
+        popupArrowPointPosition: {
           top: 0,
           left: 0,
-          right: 100,
-          bottom: 100,
         },
       },
     });

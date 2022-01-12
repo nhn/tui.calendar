@@ -24,7 +24,7 @@ export const EventDetailSectionButton: FunctionComponent<EventFormPopupParam> = 
   isAllday,
   isPrivate,
   eventState,
-  popupPosition,
+  popupArrowPointPosition,
 }) => {
   const { show } = useDispatch('popup');
 
@@ -39,7 +39,7 @@ export const EventDetailSectionButton: FunctionComponent<EventFormPopupParam> = 
         isAllday,
         isPrivate,
         eventState,
-        popupPosition,
+        popupArrowPointPosition,
       },
     });
 

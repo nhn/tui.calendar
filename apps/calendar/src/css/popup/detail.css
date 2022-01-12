@@ -86,11 +86,6 @@
   top: 0;
 }
 
-.popup-arrow-border,
-.popup-arrow-fill {
-  position: absolute;
-}
-
 .popup-arrow.left .popup-arrow-border {
   border-top: 8px solid transparent;
   border-right: 8px solid #d5d5d5;

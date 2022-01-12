@@ -12,3 +12,13 @@ export const BOOLEAN_KEYS_OF_EVENT_MODEL_DATA: BooleanKeyOfEventModelData[] = [
   'isVisible',
   'isReadOnly',
 ];
+
+export enum DetailPopupArrowDirection {
+  right = 'right',
+  left = 'left',
+}
+
+export enum FormPopupArrowDirection {
+  top = 'top',
+  bottom = 'bottom',
+}
