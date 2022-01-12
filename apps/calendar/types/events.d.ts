@@ -33,6 +33,8 @@ export interface CalendarData {
 
 export type EventCategory = 'milestone' | 'task' | 'allday' | 'time' | 'background';
 
+export type EventState = 'Busy' | 'Free';
+
 export interface EventModelData {
   id?: string;
   calendarId?: string;
@@ -42,7 +44,7 @@ export interface EventModelData {
   end?: DateType;
   goingDuration?: number;
   comingDuration?: number;
-  isAllDay?: boolean;
+  isAllday?: boolean;
   category?: EventCategory;
   dueDateClass?: string;
   location?: string;
@@ -58,10 +60,16 @@ export interface EventModelData {
   dragBgColor?: string;
   borderColor?: string;
   customStyle?: string;
-  state?: string;
+  state?: EventState;
   raw?: any;
 }
 
-export type TimeUnit = 'second' | 'minute' | 'hour' | 'date' | 'month' | 'year';
+export type BooleanKeyOfEventModelData =
+  | 'isPrivate'
+  | 'isAllday'
+  | 'isPending'
+  | 'isFocused'
+  | 'isVisible'
+  | 'isReadOnly';
 
-export type EventState = 'Busy' | 'Free';
+export type TimeUnit = 'second' | 'minute' | 'hour' | 'date' | 'month' | 'year';

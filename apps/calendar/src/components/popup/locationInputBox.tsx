@@ -13,7 +13,7 @@ export const LocationInputBox: FunctionComponent = () => (
   <PopupSection>
     <div className={classNames.popupSectionItem}>
       <span className={classNames.locationIcon} />
-      <input className={classNames.content} placeholder="Location" />
+      <input name="location" className={classNames.content} placeholder="Location" />
     </div>
   </PopupSection>
 );

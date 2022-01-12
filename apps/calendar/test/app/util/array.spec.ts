@@ -25,43 +25,43 @@ describe('common/array', () => {
         mockData = [
           {
             title: 'hunting',
-            isAllDay: true,
+            isAllday: true,
             start: '2015/05/01',
             end: '2015/05/02',
           },
           {
             title: 'meeting',
-            isAllDay: false,
+            isAllday: false,
             start: '2015/05/03 12:30:00',
             end: '2015/05/03 16:00:00',
           },
           {
             title: 'physical training',
-            isAllDay: false,
+            isAllday: false,
             start: '2015/05/03 18:30:00',
             end: '2015/05/03 19:30:00',
           },
           {
             title: 'logical training2',
-            isAllDay: false,
+            isAllday: false,
             start: '2015/05/03 18:30:00',
             end: '2015/05/03 19:20:00',
           },
           {
             title: 'logical training',
-            isAllDay: false,
+            isAllday: false,
             start: '2015/05/03 18:30:00',
             end: '2015/05/03 19:20:00',
           },
           {
             title: '평가기간',
-            isAllDay: true,
+            isAllday: true,
             start: '2015/05/03',
             end: '2015/05/12',
           },
           {
             title: 'drawing study',
-            isAllDay: true,
+            isAllday: true,
             start: '2015/05/04 18:40:00',
             end: '2015/05/04 19:40:00',
           },
@@ -69,7 +69,7 @@ describe('common/array', () => {
         events = [];
       });
 
-      it('isAllDay ASC, start ASC, duration DESC, id ASC', () => {
+      it('isAllday ASC, start ASC, duration DESC, id ASC', () => {
         mockData.forEach((data) => {
           events.push(EventModel.create(data));
         });
@@ -93,13 +93,13 @@ describe('common/array', () => {
         const fixtures = [
           {
             title: 'A',
-            isAllDay: false,
+            isAllday: false,
             start: '2015/05/03 12:00:00',
             end: '2015/05/03 12:10:00',
           },
           {
             title: 'B',
-            isAllDay: false,
+            isAllday: false,
             start: '2015/05/03 12:00:00',
             end: '2015/05/03 12:20:00',
           },

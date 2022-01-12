@@ -115,7 +115,7 @@ export interface ITemplateConfig {
   timegridDisplayPrimaryTime?: (time: ITimeGridHourLabel) => string;
   timegridDisplayTime?: (time: ITimeGridHourLabel) => string;
   timegridCurrentTime?: (hourMarker: ITimezoneHourMarker) => string;
-  popupIsAllDay?: () => string;
+  popupIsAllday?: () => string;
   popupStateFree?: () => string;
   popupStateBusy?: () => string;
   titlePlaceholder?: () => string;
@@ -124,7 +124,7 @@ export interface ITemplateConfig {
   endDatePlaceholder?: () => string;
   popupSave?: () => string;
   popupUpdate?: () => string;
-  popupDetailDate?: (isAllDay: boolean, start: DateType, end: DateType) => string;
+  popupDetailDate?: (isAllday: boolean, start: DateType, end: DateType) => string;
   popupDetailLocation?: (eventData: EventModelData) => string;
   popupDetailUser?: (eventData: EventModelData) => string;
   popupDetailState?: (eventData: EventModelData) => string;
@@ -178,7 +178,7 @@ export interface EventModelData {
   end?: DateType;
   goingDuration?: number;
   comingDuration?: number;
-  isAllDay?: boolean;
+  isAllday?: boolean;
   category?: string;
   dueDateClass?: string;
   location?: string;

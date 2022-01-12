@@ -24,7 +24,7 @@ export const ConfirmPopupButton: FunctionComponent<Props> = ({ confirm }) => {
   };
 
   return (
-    <button type="button" className={classNames.confirmButton} onClick={onClickHandler}>
+    <button type="submit" className={classNames.confirmButton} onClick={onClickHandler}>
       <span>Save</span>
     </button>
   );

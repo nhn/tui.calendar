@@ -29,13 +29,13 @@ function compareStringsASC(_a: any, _b: any) {
 function compareEventsASC(a: EventModel | EventUIModel, b: EventModel | EventUIModel) {
   const modelA = a instanceof EventUIModel ? a.model : a;
   const modelB = b instanceof EventUIModel ? b.model : b;
-  const allDayCompare = compareBooleansASC(
-    modelA.isAllDay || modelA.hasMultiDates,
-    modelB.isAllDay || modelB.hasMultiDates
+  const alldayCompare = compareBooleansASC(
+    modelA.isAllday || modelA.hasMultiDates,
+    modelB.isAllday || modelB.hasMultiDates
   );
 
-  if (allDayCompare) {
-    return allDayCompare;
+  if (alldayCompare) {
+    return alldayCompare;
   }
 
   const startsCompare = compare(a.getStarts(), b.getStarts());

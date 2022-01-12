@@ -17,7 +17,7 @@ describe('event detail popup', () => {
     body: 'body',
     start: new TZDate(),
     end: new TZDate(),
-    isAllDay: false,
+    isAllday: false,
     location: 'location',
     attendees: ['attendee1', 'attendee2'],
     recurrenceRule: 'recurrence rule',

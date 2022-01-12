@@ -1,5 +1,7 @@
 import CustomEvents from 'tui-code-snippet/customEvents/customEvents';
 
+import { AnyFunc } from '@t/eventBus';
+
 export interface EventBus<
   EventTypes extends {
     [key: string]: AnyFunc;

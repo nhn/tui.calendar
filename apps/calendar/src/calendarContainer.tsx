@@ -7,6 +7,7 @@ import { ThemeProvider } from '@src/contexts/theme';
 import Theme from '@src/theme';
 import { EventBus } from '@src/utils/eventBus';
 
+import { ExternalEventTypes } from '@t/eventBus';
 import { CalendarStore, InternalStoreAPI } from '@t/store';
 
 interface Props {

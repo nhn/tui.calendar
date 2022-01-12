@@ -1,15 +1,16 @@
 import { FunctionComponent, h } from 'preact';
-import { useState } from 'preact/hooks';
 
 import { CalendarDropdownMenu } from '@src/components/popup/calendarDropdownMenu';
 import { PopupSection } from '@src/components/popup/popupSection';
 import { cls } from '@src/helpers/css';
 import { useDropdownState } from '@src/hooks/common/dropdownState';
+import { FormStateActionType, FormStateDispatcher } from '@src/hooks/popup/formState';
 
 import { CalendarInfo } from '@t/options';
 
 interface Props {
   calendars: CalendarInfo[];
+  formStateDispatch: FormStateDispatcher;
 }
 
 const classNames = {
@@ -19,14 +20,16 @@ const classNames = {
   content: cls('content', 'event-calendar'),
 };
 
-export const CalendarSelector: FunctionComponent<Props> = ({ calendars }) => {
-  const [calendarIndex, setCalendarIndex] = useState(0);
+export const CalendarSelector: FunctionComponent<Props> = ({ calendars, formStateDispatch }) => {
   const { isOpened, setOpened, toggleDropdown } = useDropdownState();
-  const { bgColor, name } = calendars[calendarIndex];
+  const [{ bgColor, name }] = calendars;
+
+  const changeIndex = (index: number) =>
+    formStateDispatch({ type: FormStateActionType.setCalendarId, calendarId: calendars[index].id });
 
   return (
     <PopupSection onClick={toggleDropdown} classNames={classNames.popupSection}>
-      <button className={classNames.popupSectionItem}>
+      <button type="button" className={classNames.popupSectionItem}>
         <span className={classNames.dotIcon} style={{ backgroundColor: bgColor }} />
         <span className={classNames.content}>{name}</span>
         <span className={cls('icon', 'ic-dropdown-arrow', { open: isOpened })} />
@@ -35,7 +38,7 @@ export const CalendarSelector: FunctionComponent<Props> = ({ calendars }) => {
         <CalendarDropdownMenu
           calendars={calendars}
           setOpened={setOpened}
-          setCalendarIndex={setCalendarIndex}
+          onChangeIndex={changeIndex}
         />
       )}
     </PopupSection>

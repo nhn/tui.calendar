@@ -5,7 +5,7 @@ import { compare, MS_PER_DAY, parse, toEndOfDay, toStartOfDay } from '@src/time/
 import { stamp } from '@src/utils/stamp';
 import { isString } from '@src/utils/type';
 
-import { DateType, EventCategory, EventModelData } from '@t/events';
+import { DateType, EventCategory, EventModelData, EventState } from '@t/events';
 
 export default class EventModel {
   /**
@@ -30,7 +30,7 @@ export default class EventModel {
    * is event is all day event?
    * @type {boolean}
    */
-  isAllDay = false;
+  isAllday = false;
 
   /**
    * event start
@@ -142,9 +142,9 @@ export default class EventModel {
 
   /**
    * state. 'Busy' is default.
-   * @type {string}
+   * @type {EventState}
    */
-  state = '';
+  state: EventState = 'Busy';
 
   /**
    * travelTime: going-Duration minutes
@@ -192,13 +192,13 @@ export default class EventModel {
   init(event: EventModelData) {
     event = { ...event };
     if (event.category === 'allday') {
-      event.isAllDay = true;
+      event.isAllday = true;
     }
 
     this.id = event.id || '';
     this.title = event.title || '';
     this.body = event.body || '';
-    this.isAllDay = event.isAllDay ?? false;
+    this.isAllday = event.isAllday ?? false;
     this.isVisible = event.isVisible ?? true;
 
     this.color = event.color || this.color;
@@ -218,10 +218,10 @@ export default class EventModel {
     this.isReadOnly = event.isReadOnly || false;
     this.goingDuration = event.goingDuration || 0;
     this.comingDuration = event.comingDuration || 0;
-    this.state = event.state || '';
+    this.state = event.state || 'Busy';
 
-    if (this.isAllDay) {
-      this.setAllDayPeriod(event.start, event.end);
+    if (this.isAllday) {
+      this.setAlldayPeriod(event.start, event.end);
     } else {
       this.setTimePeriod(event.start, event.end);
     }
@@ -235,7 +235,7 @@ export default class EventModel {
     return this;
   }
 
-  setAllDayPeriod(start?: DateType, end?: DateType) {
+  setAlldayPeriod(start?: DateType, end?: DateType) {
     // If it is an all-day , only the date information of the string is used.
     let startedAt: TZDate;
     let endedAt: TZDate;
@@ -292,7 +292,7 @@ export default class EventModel {
   }
 
   /**
-   * Check two  are equals (means title, isAllDay, start, end are same)
+   * Check two  are equals (means title, isAllday, start, end are same)
    * @param {EventModel}  event model instance to compare.
    * @returns {boolean} Return false when not same.
    */
@@ -310,7 +310,7 @@ export default class EventModel {
       return false;
     }
 
-    if (this.isAllDay !== event.isAllDay) {
+    if (this.isAllday !== event.isAllday) {
       return false;
     }
 
@@ -350,7 +350,7 @@ export default class EventModel {
     const end = Number(this.getEnds());
     let duration: number;
 
-    if (this.isAllDay) {
+    if (this.isAllday) {
       duration = Number(toEndOfDay(end)) - Number(toStartOfDay(start));
     } else {
       duration = end - start;
@@ -392,7 +392,7 @@ export function isBackgroundEvent({ model }: EventUIModel) {
 }
 
 export function isTimeEvent({ model }: EventUIModel) {
-  const { category, isAllDay, hasMultiDates } = model;
+  const { category, isAllday, hasMultiDates } = model;
 
-  return category === 'time' && isAllDay === false && hasMultiDates === false;
+  return category === 'time' && !isAllday && !hasMultiDates;
 }

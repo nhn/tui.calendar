@@ -31,15 +31,11 @@ export function getDateRange(start: TZDate, end: TZDate) {
   return makeDateRange(toStartOfDay(start), toEndOfDay(end), MS_PER_DAY);
 }
 
-export function isAllDay(event: EventModel) {
-  if (
-    event.isAllDay ||
+export function isAllday(event: EventModel) {
+  return (
+    event.isAllday ||
     (event.category === 'time' && Number(event.end) - Number(event.start) > MS_PER_DAY)
-  ) {
-    return true;
-  }
-
-  return false;
+  );
 }
 
 /**
@@ -51,7 +47,7 @@ export function isAllDay(event: EventModel) {
 export function filterByCategory(uiModel: EventUIModel) {
   const { model } = uiModel;
 
-  if (isAllDay(model)) {
+  if (isAllday(model)) {
     return 'allday';
   }
 

@@ -19,8 +19,8 @@ function createTime(event: EventModelData, renderStart: TZDate, renderEnd: TZDat
   let endDate = moment(renderEnd.getTime());
   const diffDate = endDate.diff(startDate, 'days');
 
-  event.isAllDay = chance.bool({ likelihood: 30 });
-  if (event.isAllDay) {
+  event.isAllday = chance.bool({ likelihood: 30 });
+  if (event.isAllday) {
     event.category = 'allday';
   } else if (chance.bool({ likelihood: 30 })) {
     event.category = EVENT_CATEGORY[chance.integer({ min: 0, max: 1 })];
@@ -37,13 +37,13 @@ function createTime(event: EventModelData, renderStart: TZDate, renderEnd: TZDat
   event.start = startDate.toDate();
 
   endDate = moment(startDate);
-  if (event.isAllDay) {
+  if (event.isAllday) {
     endDate.add(chance.integer({ min: 0, max: 3 }), 'days');
   }
 
   event.end = endDate.add(chance.integer({ min: 1, max: 4 }), 'hour').toDate();
 
-  if (!event.isAllDay && chance.bool({ likelihood: 20 })) {
+  if (!event.isAllday && chance.bool({ likelihood: 20 })) {
     event.goingDuration = chance.integer({ min: 30, max: 120 });
     event.comingDuration = chance.integer({ min: 30, max: 120 });
 

@@ -1,13 +1,18 @@
 import { FunctionComponent, h } from 'preact';
+import { useCallback, useEffect, useMemo } from 'preact/hooks';
 
 import { fireEvent, render, RenderResult, screen } from '@testing-library/preact';
 
 import { EventFormPopup } from '@src/components/popup/eventFormPopup';
 import { initCalendarStore, StoreProvider, useDispatch } from '@src/contexts/calendarStore';
+import { EventBusProvider } from '@src/contexts/eventBus';
 import { FloatingLayerContainerProvider } from '@src/contexts/floatingLayer';
 import { cls } from '@src/helpers/css';
 import { PopupType } from '@src/slices/popup';
 import TZDate from '@src/time/date';
+import { EventBusImpl } from '@src/utils/eventBus';
+
+import { ExternalEventTypes } from '@t/eventBus';
 
 const selectors = {
   calendarSection: `.${cls('calendar-section')}`,
@@ -21,15 +26,24 @@ describe('event form popup', () => {
   let renderResult: RenderResult;
   const start = new TZDate();
   const end = new TZDate();
+  const isAllday = false;
+  const isPrivate = false;
+  const state = 'Busy';
+  const mockFn = jest.fn();
 
   const Wrapper: FunctionComponent = ({ children }) => {
+    const eventBus = useMemo(() => new EventBusImpl<ExternalEventTypes>(), []);
     const { show } = useDispatch('popup');
+    const mockHandler = useCallback(mockFn, [mockFn]);
+
     show({
       type: PopupType.form,
       param: {
         start,
         end,
-        isAllday: false,
+        isAllday,
+        isPrivate,
+        eventState: state,
         popupPosition: {
           top: 0,
           left: 0,
@@ -39,7 +53,15 @@ describe('event form popup', () => {
       },
     });
 
-    return <FloatingLayerContainerProvider>{children}</FloatingLayerContainerProvider>;
+    useEffect(() => {
+      eventBus.on('beforeCreateEvent', mockHandler);
+    }, [eventBus, mockHandler]);
+
+    return (
+      <EventBusProvider value={eventBus}>
+        <FloatingLayerContainerProvider>{children}</FloatingLayerContainerProvider>
+      </EventBusProvider>
+    );
   };
 
   beforeEach(() => {
@@ -121,5 +143,41 @@ describe('event form popup', () => {
     const timePicker = container.querySelector(selectors.timePicker);
 
     expect(timePicker).toBeNull();
+  });
+
+  it('should fire `beforeCreateEvent` custom event when save button is clicked', () => {
+    fireEvent.click(screen.getByRole('button', { name: /Save/i }));
+
+    expect(mockFn).toBeCalled();
+    expect(mockFn).toHaveBeenCalledWith({
+      start,
+      end,
+      isAllday,
+      isPrivate,
+      state,
+      title: '',
+      location: '',
+    });
+  });
+
+  it('should fire `beforeCreateEvent` custom event with changed values when save button is clicked', () => {
+    const changedTitle = 'changed title';
+    const changedLocation = 'changed location';
+
+    fireEvent.change(screen.getByPlaceholderText('Subject'), { target: { value: changedTitle } });
+    fireEvent.change(screen.getByPlaceholderText('Location'), {
+      target: { value: changedLocation },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /Save/i }));
+
+    expect(mockFn).toHaveBeenCalledWith({
+      start,
+      end,
+      isAllday,
+      isPrivate,
+      state,
+      title: changedTitle,
+      location: changedLocation,
+    });
   });
 });
