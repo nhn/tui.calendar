@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 import { useMemo } from 'preact/hooks';
 
 import range from 'tui-code-snippet/array/range';
@@ -70,7 +70,7 @@ function useWeekViewState() {
   );
 }
 
-export const Week: FunctionComponent = () => {
+export function Week() {
   const { template, options, calendar, gridRowLayout } = useWeekViewState();
 
   if (!template || !options || !calendar || !gridRowLayout) {
@@ -149,4 +149,4 @@ export const Week: FunctionComponent = () => {
       </Panel>
     </Layout>
   );
-};
+}

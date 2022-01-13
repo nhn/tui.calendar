@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 import { useMemo } from 'preact/hooks';
 
 import { GridHeader } from '@src/components/dayGridCommon/gridHeader';
@@ -44,7 +44,7 @@ function useDayViewState() {
   );
 }
 
-export const Day: FunctionComponent = () => {
+export function Day() {
   const { template, calendarData, options, gridRowLayout } = useDayViewState();
 
   if (!template || !options || !calendarData || !gridRowLayout) {
@@ -121,4 +121,4 @@ export const Day: FunctionComponent = () => {
       </Panel>
     </Layout>
   );
-};
+}

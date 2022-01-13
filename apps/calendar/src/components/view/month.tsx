@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 import { useMemo } from 'preact/hooks';
 
 import { GridHeader } from '@src/components/dayGridCommon/gridHeader';
@@ -33,7 +33,7 @@ function getDayNames(options: CalendarStore['options']) {
   return dayNames;
 }
 
-export const Month: FunctionComponent = () => {
+export function Month() {
   const options = useStore(optionsSelector);
   const theme = useTheme();
 
@@ -68,4 +68,4 @@ export const Month: FunctionComponent = () => {
       <DayGridMonth options={monthOptions} dateMatrix={dateMatrix} rowInfo={rowInfo} />
     </Layout>
   );
-};
+}

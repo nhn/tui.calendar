@@ -17,9 +17,9 @@ const views: {
   day: Day,
 };
 
-export const Main: FunctionComponent = () => {
+export function Main() {
   const { currentView } = useStore(viewSelector);
   const CurrentViewComponent = useMemo(() => views[currentView] || (() => null), [currentView]);
 
   return <CurrentViewComponent />;
-};
+}
