@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 
 import { cls } from '@src/helpers/css';
 import TZDate from '@src/time/date';
@@ -31,12 +31,7 @@ function getDetailDate(isAllday: boolean, start: TZDate, end: TZDate) {
   return `${toFormat(start, detailFormat)} - ${toFormat(end, endDateFormat)}`;
 }
 
-export const EventDetailSectionHeader: FunctionComponent<Props> = ({
-  title,
-  isAllday,
-  start,
-  end,
-}) => {
+export function EventDetailSectionHeader({ title, isAllday, start, end }: Props) {
   return (
     <div className={classNames.sectionHeader}>
       <div>
@@ -45,4 +40,4 @@ export const EventDetailSectionHeader: FunctionComponent<Props> = ({
       <div className={classNames.content}>{getDetailDate(isAllday, start, end)}</div>
     </div>
   );
-};
+}

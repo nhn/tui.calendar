@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 
 import { useDispatch } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
@@ -13,7 +13,7 @@ const classNames = {
   closeIcon: cls('icon', 'ic-close'),
 };
 
-export const ClosePopupButton: FunctionComponent<Props> = ({ close }) => {
+export function ClosePopupButton({ close }: Props) {
   const { hide } = useDispatch('popup');
 
   const onClickHandler = () => {
@@ -29,4 +29,4 @@ export const ClosePopupButton: FunctionComponent<Props> = ({ close }) => {
       <i className={classNames.closeIcon} />
     </button>
   );
-};
+}

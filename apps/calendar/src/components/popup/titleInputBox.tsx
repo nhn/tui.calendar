@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 
 import { PopupSection } from '@src/components/popup/popupSection';
 import { cls } from '@src/helpers/css';
@@ -17,11 +17,7 @@ const classNames = {
   content: cls('content'),
 };
 
-export const TitleInputBox: FunctionComponent<Props> = ({
-  title,
-  isPrivate = false,
-  formStateDispatch,
-}) => {
+export function TitleInputBox({ title, isPrivate = false, formStateDispatch }: Props) {
   const togglePrivate = () =>
     formStateDispatch({ type: FormStateActionType.setPrivate, isPrivate: !isPrivate });
 
@@ -49,4 +45,4 @@ export const TitleInputBox: FunctionComponent<Props> = ({
       </button>
     </PopupSection>
   );
-};
+}

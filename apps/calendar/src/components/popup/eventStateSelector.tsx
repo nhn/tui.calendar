@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 
 import { PopupSection } from '@src/components/popup/popupSection';
 import { StateDropdownMenu } from '@src/components/popup/stateDropdownMenu';
@@ -21,10 +21,7 @@ const classNames = {
   content: cls('content', 'event-state'),
 };
 
-export const EventStateSelector: FunctionComponent<Props> = ({
-  eventState = 'Busy',
-  formStateDispatch,
-}) => {
+export function EventStateSelector({ eventState = 'Busy', formStateDispatch }: Props) {
   const { isOpened, setOpened, toggleDropdown } = useDropdownState();
 
   const handleChangeEventState = (state: EventState) =>
@@ -42,4 +39,4 @@ export const EventStateSelector: FunctionComponent<Props> = ({
       )}
     </PopupSection>
   );
-};
+}
