@@ -2,16 +2,16 @@ import { FunctionComponent, h } from 'preact';
 import { createPortal } from 'preact/compat';
 import { useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
 
-import { EventDetailSectionButton } from '@src/components/popup/eventDetailSectionButton';
 import { EventDetailSectionDetail } from '@src/components/popup/eventDetailSectionDetail';
 import { EventDetailSectionHeader } from '@src/components/popup/eventDetailSectionHeader';
 import { DetailPopupArrowDirection, HALF_OF_POPUP_ARROW_HEIGHT } from '@src/constants/popup';
-import { useStore } from '@src/contexts/calendarStore';
+import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useFloatingLayerContainer } from '@src/contexts/floatingLayer';
 import { useLayoutContainer } from '@src/contexts/layoutContainer';
 import { cls } from '@src/helpers/css';
-import { isLeftOverLayoutContainer, isTopOverLayoutContainer } from '@src/helpers/popup';
+import { isLeftOutOfLayout, isTopOutOfLayout } from '@src/helpers/popup';
 import { eventDetailPopupParamSelector } from '@src/selectors/popup';
+import { PopupType } from '@src/slices/popup';
 import TZDate from '@src/time/date';
 import { isNil } from '@src/utils/type';
 
@@ -24,17 +24,24 @@ const classNames = {
   topLine: cls('popup-top-line'),
   border: cls('popup-arrow-border'),
   fill: cls('popup-arrow-fill'),
+  sectionButton: cls('popup-section', 'section-button'),
+  content: cls('content'),
+  editIcon: cls('icon', 'ic-edit'),
+  deleteIcon: cls('icon', 'ic-delete'),
+  editButton: cls('edit-button'),
+  deleteButton: cls('delete-button'),
+  verticalLine: cls('vertical-line'),
 };
 
 function calculatePopupPosition(eventRect: Rect, layoutRect: Rect, popupRect: Rect) {
   let top = eventRect.top + eventRect.height / 2 - popupRect.height / 2;
   let left = eventRect.left + eventRect.width;
 
-  if (isTopOverLayoutContainer(top, layoutRect, popupRect)) {
+  if (isTopOutOfLayout(top, layoutRect, popupRect)) {
     top = layoutRect.top + layoutRect.height - popupRect.height;
   }
 
-  if (isLeftOverLayoutContainer(left, layoutRect, popupRect)) {
+  if (isLeftOutOfLayout(left, layoutRect, popupRect)) {
     left = eventRect.left - popupRect.width;
   }
 
@@ -45,8 +52,8 @@ function calculatePopupArrowPosition(eventRect: Rect, layoutRect: Rect, popupRec
   const top = eventRect.top + eventRect.height / 2;
   const popupLeft = eventRect.left + eventRect.width;
 
-  const isOverLayoutContainer = popupLeft + popupRect.width > layoutRect.left + layoutRect.width;
-  const direction = isOverLayoutContainer
+  const isOutOfLayout = popupLeft + popupRect.width > layoutRect.left + layoutRect.width;
+  const direction = isOutOfLayout
     ? DetailPopupArrowDirection.right
     : DetailPopupArrowDirection.left;
 
@@ -55,6 +62,7 @@ function calculatePopupArrowPosition(eventRect: Rect, layoutRect: Rect, popupRec
 
 export const EventDetailPopup: FunctionComponent = () => {
   const { event, eventRect } = useStore(eventDetailPopupParamSelector);
+  const { show } = useDispatch('popup');
   const layoutContainer = useLayoutContainer();
   const floatingLayerContainer = useFloatingLayerContainer();
   const popupContainerRef = useRef<HTMLDivElement>(null);
@@ -115,6 +123,23 @@ export const EventDetailPopup: FunctionComponent = () => {
     left: eventRect.left + eventRect.width / 2,
   };
 
+  const onClickEditButton = () =>
+    show({
+      type: PopupType.form,
+      param: {
+        isCreationPopup: false,
+        event,
+        title,
+        location,
+        start,
+        end,
+        isAllday,
+        isPrivate,
+        eventState: state,
+        popupArrowPointPosition,
+      },
+    });
+
   return createPortal(
     <div role="dialog" className={classNames.popupContainer} ref={popupContainerRef} style={style}>
       <div className={classNames.detailContainer}>
@@ -128,17 +153,17 @@ export const EventDetailPopup: FunctionComponent = () => {
           body={body}
         />
         {!isReadOnly && (
-          <EventDetailSectionButton
-            isCreationPopup={false}
-            event={event}
-            title={title}
-            location={location}
-            start={start}
-            end={end}
-            isAllday={isAllday}
-            isPrivate={isPrivate}
-            popupArrowPointPosition={popupArrowPointPosition}
-          />
+          <div className={classNames.sectionButton}>
+            <button type="button" className={classNames.editButton} onClick={onClickEditButton}>
+              <span className={classNames.editIcon} />
+              <span className={classNames.content}>Edit</span>
+            </button>
+            <div className={classNames.verticalLine} />
+            <button type="button" className={classNames.deleteButton}>
+              <span className={classNames.deleteIcon} />
+              <span className={classNames.content}>Delete</span>
+            </button>
+          </div>
         )}
       </div>
       <div className={classNames.topLine} style={{ backgroundColor: bgColor }} />
