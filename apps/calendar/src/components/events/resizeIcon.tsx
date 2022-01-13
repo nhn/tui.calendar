@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 
 import { cls } from '@src/helpers/css';
 
@@ -7,7 +7,7 @@ interface Props {
   onMouseDown: MouseEventListener;
 }
 
-const ResizeIcon: FunctionComponent<Props> = ({ style, onMouseDown }) => {
+export function ResizeIcon({ style, onMouseDown }: Props) {
   return (
     <span
       className={`${cls('weekday-resize-handle')} ${cls('handle-y')}`}
@@ -16,6 +16,4 @@ const ResizeIcon: FunctionComponent<Props> = ({ style, onMouseDown }) => {
       <i className={`${cls('icon')} ${cls('ic-handle-y')}`} style={style} />
     </span>
   );
-};
-
-export default ResizeIcon;
+}

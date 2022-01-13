@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 
 import Template from '@src/components/template';
 import { cls, toPercent } from '@src/helpers/css';
@@ -77,7 +77,7 @@ function getStyles(uiModel: EventUIModel) {
   };
 }
 
-export const TimeEvent: FunctionComponent<Props> = ({ eventModels }) => {
+export function TimeEvent({ eventModels }: Props) {
   const { model, goingDurationHeight, modelDurationHeight, comingDurationHeight, croppedEnd } =
     eventModels;
   const { isReadOnly } = model;
@@ -104,4 +104,4 @@ export const TimeEvent: FunctionComponent<Props> = ({ eventModels }) => {
       {!croppedEnd && !isReadOnly ? <div className={classNames.resizeHandleX} /> : null}
     </div>
   );
-};
+}

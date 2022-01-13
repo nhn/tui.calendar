@@ -1,7 +1,7 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 import { useRef } from 'preact/hooks';
 
-import ResizeIcon from '@src/components/events/resizeIcon';
+import { ResizeIcon } from '@src/components/events/resizeIcon';
 import Template from '@src/components/template';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { cls, toPercent, toPx } from '@src/helpers/css';
@@ -142,7 +142,7 @@ function isDraggingSelector(state: CalendarState) {
   return state.dnd.draggingState > DraggingState.INIT;
 }
 
-export const HorizontalEvent: FunctionComponent<Props> = ({
+export function HorizontalEvent({
   flat = false,
   uiModel,
   eventHeight,
@@ -150,7 +150,7 @@ export const HorizontalEvent: FunctionComponent<Props> = ({
   isDraggingTarget = false,
   resizingWidth = null,
   movingLeft = null,
-}) => {
+}: Props) {
   const { dayEventBlockClassName, containerStyle, eventItemStyle, resizeIconStyle } = getStyles({
     uiModel,
     eventHeight,
@@ -228,4 +228,4 @@ export const HorizontalEvent: FunctionComponent<Props> = ({
       </div>
     </div>
   );
-};
+}

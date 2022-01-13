@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 
 import { cls } from '@src/helpers/css';
 import EventUIModel from '@src/model/eventUIModel';
@@ -17,7 +17,7 @@ interface Props {
   left?: string;
 }
 
-export const BackgroundEvent: FunctionComponent<Props> = ({
+export function BackgroundEvent({
   eventModels,
   width = '100%',
   height = '100px',
@@ -25,7 +25,7 @@ export const BackgroundEvent: FunctionComponent<Props> = ({
   right = '',
   bottom = '',
   left = '',
-}) => {
+}: Props) {
   const style = {
     backgroundColor: eventModels.model.bgColor,
     width,
@@ -37,4 +37,4 @@ export const BackgroundEvent: FunctionComponent<Props> = ({
   };
 
   return <span className={classNames.background} style={style} />;
-};
+}
