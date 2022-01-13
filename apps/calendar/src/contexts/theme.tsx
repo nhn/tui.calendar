@@ -1,8 +1,10 @@
-import { createContext, FunctionComponent, h } from 'preact';
+import { createContext, h } from 'preact';
 import { useContext } from 'preact/hooks';
 
 import Theme from '@src/theme';
 import { isNil } from '@src/utils/type';
+
+import { PropsWithChildren } from '@t/components/common';
 
 export const ThemeContext = createContext<Theme | null>(null);
 
@@ -16,6 +18,6 @@ export const useTheme = (): Theme => {
   return ctx as Theme;
 };
 
-export const ThemeProvider: FunctionComponent<{ theme: Theme }> = ({ theme, children }) => (
-  <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>
-);
+export function ThemeProvider({ theme, children }: PropsWithChildren<{ theme: Theme }>) {
+  return <ThemeContext.Provider value={theme}>{children}</ThemeContext.Provider>;
+}

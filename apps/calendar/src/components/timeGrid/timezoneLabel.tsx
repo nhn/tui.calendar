@@ -1,6 +1,6 @@
-import { FunctionComponent, h, VNode } from 'preact';
+import { h, VNode } from 'preact';
 
-import Template from '@src/components/template';
+import { Template } from '@src/components/template';
 import { addTimeGridPrefix } from '@src/components/timeGrid';
 import { cls } from '@src/helpers/css';
 
@@ -12,11 +12,7 @@ interface Props {
   renderCollapseButton?: () => VNode;
 }
 
-export const TimezoneLabel: FunctionComponent<Props> = ({
-  width = '72px',
-  timezone,
-  renderCollapseButton,
-}) => {
+export function TimezoneLabel({ width = '72px', timezone, renderCollapseButton }: Props) {
   const { tooltip = '' } = timezone;
 
   return (
@@ -25,4 +21,4 @@ export const TimezoneLabel: FunctionComponent<Props> = ({
       {renderCollapseButton ? renderCollapseButton() : null}
     </div>
   );
-};
+}

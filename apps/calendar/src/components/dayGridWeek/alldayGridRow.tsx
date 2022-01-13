@@ -1,4 +1,4 @@
-import { Fragment, FunctionComponent, h } from 'preact';
+import { Fragment, h } from 'preact';
 import { useMemo } from 'preact/hooks';
 
 import range from 'tui-code-snippet/array/range';
@@ -6,7 +6,7 @@ import range from 'tui-code-snippet/array/range';
 import { GridSelection } from '@src/components/dayGridCommon/gridSelection';
 import { GridCells } from '@src/components/dayGridWeek/gridCells';
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
-import Template from '@src/components/template';
+import { Template } from '@src/components/template';
 import { DEFAULT_PANEL_HEIGHT, WEEK_EVENT_MARGIN_TOP } from '@src/constants/style';
 import { cls } from '@src/helpers/css';
 import { EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
@@ -46,7 +46,7 @@ const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
   return addDate(now, day - now.getDay());
 });
 
-export const AlldayGridRow: FunctionComponent<Props> = ({
+export function AlldayGridRow({
   events,
   row = defaultPanelInfoList,
   category,
@@ -56,7 +56,7 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
   gridColWidthMap,
   timesWidth = 120,
   timezonesCount = 1,
-}) => {
+}: Props) {
   const [panelContainer, setPanelContainerRef] = useDOMNode<HTMLDivElement>();
 
   const maxTop = Math.max(0, ...events.map(({ top }) => top));
@@ -156,4 +156,4 @@ export const AlldayGridRow: FunctionComponent<Props> = ({
       </div>
     </Fragment>
   );
-};
+}

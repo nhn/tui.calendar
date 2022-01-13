@@ -1,4 +1,4 @@
-import { Fragment, FunctionComponent, h } from 'preact';
+import { Fragment, h } from 'preact';
 
 import { GridCell } from '@src/components/dayGridWeek/gridCell';
 import { toPercent } from '@src/helpers/css';
@@ -23,7 +23,7 @@ interface Props {
   onClickCollapseButton: () => void;
 }
 
-export const GridCells: FunctionComponent<Props> = ({
+export function GridCells({
   uiModels,
   row,
   narrowWeekend,
@@ -32,7 +32,7 @@ export const GridCells: FunctionComponent<Props> = ({
   isClickedCount,
   onClickExceedCount,
   onClickCollapseButton,
-}) => {
+}: Props) {
   // @TODO: get margin value dynamically
   const eventTopMargin = 2;
   const { widthList, leftList } = getGridWidthAndLeftPercentValues(row, narrowWeekend, TOTAL_WIDTH);
@@ -63,4 +63,4 @@ export const GridCells: FunctionComponent<Props> = ({
       })}
     </Fragment>
   );
-};
+}

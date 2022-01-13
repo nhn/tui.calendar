@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 
 import { CalendarDropdownMenu } from '@src/components/popup/calendarDropdownMenu';
 import { PopupSection } from '@src/components/popup/popupSection';
@@ -20,7 +20,7 @@ const classNames = {
   content: cls('content', 'event-calendar'),
 };
 
-export const CalendarSelector: FunctionComponent<Props> = ({ calendars, formStateDispatch }) => {
+export function CalendarSelector({ calendars, formStateDispatch }: Props) {
   const { isOpened, setOpened, toggleDropdown } = useDropdownState();
   const [{ bgColor, name }] = calendars;
 
@@ -43,4 +43,4 @@ export const CalendarSelector: FunctionComponent<Props> = ({ calendars, formStat
       )}
     </PopupSection>
   );
-};
+}

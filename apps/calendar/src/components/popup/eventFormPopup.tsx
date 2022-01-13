@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 import { createPortal } from 'preact/compat';
 import { useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
 
@@ -88,7 +88,7 @@ function getChanges(event: EventModel, eventModelData: EventModelData) {
   }, {} as EventModelData);
 }
 
-export const EventFormPopup: FunctionComponent = () => {
+export function EventFormPopup() {
   const { calendars } = useStore(calendarSelector);
   const { hide } = useDispatch('popup');
   const {
@@ -216,4 +216,4 @@ export const EventFormPopup: FunctionComponent = () => {
     </div>,
     floatingLayerContainer
   );
-};
+}

@@ -1,7 +1,7 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 
-import MoreEventsButton from '@src/components/dayGridMonth/moreEventsButton';
-import Template from '@src/components/template';
+import { MoreEventsButton } from '@src/components/dayGridMonth/moreEventsButton';
+import { Template } from '@src/components/template';
 import { cls } from '@src/helpers/css';
 import TZDate from '@src/time/date';
 import { toFormat } from '@src/time/datetime';
@@ -18,12 +18,12 @@ interface Props {
   onClickExceedCount: () => void;
 }
 
-const CellHeader: FunctionComponent<Props> = ({
+export function CellHeader({
   type = CellBarType.header,
   exceedCount = 0,
   date,
   onClickExceedCount,
-}) => {
+}: Props) {
   const ymd = toFormat(date, 'YYYYMMDD');
   const todayYmd = toFormat(new TZDate(), 'YYYYMMDD');
   const model = {
@@ -50,6 +50,4 @@ const CellHeader: FunctionComponent<Props> = ({
       ) : null}
     </div>
   );
-};
-
-export default CellHeader;
+}

@@ -1,13 +1,17 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 
 import { cls } from '@src/helpers/css';
+
+import { PropsWithChildren } from '@t/components/common';
 
 const classNames = {
   confirmButton: cls('popup-button', 'popup-confirm'),
 };
 
-export const ConfirmPopupButton: FunctionComponent = ({ children }) => (
-  <button type="submit" className={classNames.confirmButton}>
-    <span>{children}</span>
-  </button>
-);
+export function ConfirmPopupButton({ children }: PropsWithChildren) {
+  return (
+    <button type="submit" className={classNames.confirmButton}>
+      <span>{children}</span>
+    </button>
+  );
+}

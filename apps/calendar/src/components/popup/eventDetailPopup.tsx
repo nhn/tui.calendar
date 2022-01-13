@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 import { createPortal } from 'preact/compat';
 import { useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
 
@@ -60,7 +60,7 @@ function calculatePopupArrowPosition(eventRect: Rect, layoutRect: Rect, popupRec
   return { top, direction };
 }
 
-export const EventDetailPopup: FunctionComponent = () => {
+export function EventDetailPopup() {
   const { event, eventRect } = useStore(eventDetailPopupParamSelector);
   const { show } = useDispatch('popup');
   const layoutContainer = useLayoutContainer();
@@ -175,4 +175,4 @@ export const EventDetailPopup: FunctionComponent = () => {
     </div>,
     floatingLayerContainer
   );
-};
+}

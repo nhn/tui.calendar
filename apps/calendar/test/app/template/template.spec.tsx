@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import renderToString from 'preact-render-to-string';
 
-import Template from '@src/components/template';
+import { Template } from '@src/components/template';
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
 import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';

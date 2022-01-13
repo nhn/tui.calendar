@@ -1,6 +1,6 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 
-import Template from '@src/components/template';
+import { Template } from '@src/components/template';
 import { useDispatch } from '@src/contexts/calendarStore';
 
 interface Props {
@@ -9,7 +9,7 @@ interface Props {
   className: string;
 }
 
-const MoreEventsButton: FunctionComponent<Props> = ({ number, onClickButton, className }) => {
+export function MoreEventsButton({ number, onClickButton, className }: Props) {
   const { reset } = useDispatch('dnd');
 
   const handleMouseDown = (e: MouseEvent) => {
@@ -27,6 +27,4 @@ const MoreEventsButton: FunctionComponent<Props> = ({ number, onClickButton, cla
       <Template template="monthGridHeaderExceed" model={number} />
     </button>
   );
-};
-
-export default MoreEventsButton;
+}

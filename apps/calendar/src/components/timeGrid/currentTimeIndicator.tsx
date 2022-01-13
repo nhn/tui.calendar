@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 
 import { addTimeGridPrefix } from '@src/components/timeGrid';
 import { cls, toPercent } from '@src/helpers/css';
@@ -18,12 +18,7 @@ interface Props {
   columnIndex: number;
 }
 
-export const CurrentTimeIndicator: FunctionComponent<Props> = ({
-  top,
-  columnWidth,
-  columnCount,
-  columnIndex,
-}) => {
+export function CurrentTimeIndicator({ top, columnWidth, columnCount, columnIndex }: Props) {
   const leftLine = {
     left: toPercent(columnWidth * columnIndex),
     width: toPercent(columnWidth * columnIndex),
@@ -64,4 +59,4 @@ export const CurrentTimeIndicator: FunctionComponent<Props> = ({
       />
     </div>
   );
-};
+}

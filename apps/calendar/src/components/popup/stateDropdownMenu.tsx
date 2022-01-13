@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 
 import { cls } from '@src/helpers/css';
 
@@ -17,7 +17,7 @@ const classNames = {
   content: cls('content'),
 };
 
-export const StateDropdownMenu: FunctionComponent<Props> = ({ setOpened, setEventState }) => {
+export function StateDropdownMenu({ setOpened, setEventState }: Props) {
   const onClickDropdown = (e: MouseEvent, state: EventState) => {
     e.stopPropagation();
     setOpened(false);
@@ -38,4 +38,4 @@ export const StateDropdownMenu: FunctionComponent<Props> = ({ setOpened, setEven
       ))}
     </ul>
   );
-};
+}

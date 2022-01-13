@@ -1,8 +1,9 @@
-import { createContext, createElement, FunctionComponent } from 'preact';
+import { createContext, createElement } from 'preact';
 import { useContext, useEffect, useLayoutEffect, useMemo, useReducer, useRef } from 'preact/hooks';
 
 import { isNil, isUndefined } from '@src/utils/type';
 
+import { PropsWithChildren } from '@t/components/common';
 import { EqualityChecker, InternalStoreAPI, StateSelector, StateWithActions } from '@t/store';
 
 /**
@@ -17,12 +18,12 @@ const useIsomorphicLayoutEffect = isSSR ? useEffect : useLayoutEffect;
 export function createStoreContext<State extends StateWithActions>() {
   const StoreContext = createContext<InternalStoreAPI<State> | null>(null);
 
-  const StoreProvider: FunctionComponent<{ store: InternalStoreAPI<State> }> = ({
+  function StoreProvider({
     children,
     store,
-  }) => {
+  }: PropsWithChildren<{ store: InternalStoreAPI<State> }>) {
     return createElement(StoreContext.Provider, { value: store, children });
-  };
+  }
 
   const useStore = <StateSlice>(
     selector: StateSelector<State, StateSlice>,

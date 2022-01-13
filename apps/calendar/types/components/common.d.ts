@@ -1,4 +1,6 @@
-import { h } from 'preact';
+import { ComponentChildren, h } from 'preact';
+
+type PropsWithChildren<Props = {}> = Props & { children?: ComponentChildren };
 
 type StyleProp = h.JSX.CSSProperties;
 

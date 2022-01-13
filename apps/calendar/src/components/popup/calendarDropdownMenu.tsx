@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 
 import { cls } from '@src/helpers/css';
 
@@ -25,23 +25,16 @@ const classNames = {
   content: cls('content'),
 };
 
-const DropdownMenuItem: FunctionComponent<DropdownMenuItemProps> = ({
-  index,
-  name,
-  bgColor,
-  onClick,
-}) => (
-  <li className={classNames.dropdownMenuItem} onClick={(e) => onClick(e, index)}>
-    <span className={classNames.dotIcon} style={{ backgroundColor: bgColor }} />
-    <span className={classNames.content}>{name}</span>
-  </li>
-);
+function DropdownMenuItem({ index, name, bgColor, onClick }: DropdownMenuItemProps) {
+  return (
+    <li className={classNames.dropdownMenuItem} onClick={(e) => onClick(e, index)}>
+      <span className={classNames.dotIcon} style={{ backgroundColor: bgColor }} />
+      <span className={classNames.content}>{name}</span>
+    </li>
+  );
+}
 
-export const CalendarDropdownMenu: FunctionComponent<Props> = ({
-  calendars,
-  setOpened,
-  onChangeIndex,
-}) => {
+export function CalendarDropdownMenu({ calendars, setOpened, onChangeIndex }: Props) {
   const handleDropdownMenuItemClick = (e: MouseEvent, index: number) => {
     e.stopPropagation();
     setOpened(false);
@@ -61,4 +54,4 @@ export const CalendarDropdownMenu: FunctionComponent<Props> = ({
       ))}
     </ul>
   );
-};
+}

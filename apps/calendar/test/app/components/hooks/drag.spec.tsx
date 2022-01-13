@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 
 import { act, renderHook } from '@testing-library/preact-hooks';
 
@@ -8,6 +8,7 @@ import { noop } from '@src/utils/noop';
 
 import { createKeyboardEvent, createMouseEvent, spyOnDragEvent } from '@test/helper';
 
+import { PropsWithChildren } from '@t/components/common';
 import { DraggingTypes } from '@t/drag';
 
 const primaryButton = 0;
@@ -17,7 +18,7 @@ describe('drag hook', () => {
   let mouseMoveEvent: MouseEvent;
   let mouseUpEvent: MouseEvent;
   let listeners: DragListeners;
-  const wrapper: FunctionComponent = ({ children }) => {
+  const wrapper = ({ children }: PropsWithChildren) => {
     const store = initCalendarStore();
 
     return <StoreProvider store={store}>{children}</StoreProvider>;

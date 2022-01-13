@@ -1,4 +1,4 @@
-import { ComponentChildren, FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 import { useState } from 'preact/hooks';
 
 import getTarget from 'tui-code-snippet/domEvent/getTarget';
@@ -12,6 +12,7 @@ import TZDate from '@src/time/date';
 import { addMilliseconds, isSame } from '@src/time/datetime';
 import { closest } from '@src/utils/dom';
 
+import { PropsWithChildren } from '@t/components/common';
 import { TimeGridSelectionInfo } from '@t/components/timeGrid/gridSelection';
 import { TimeUnit } from '@t/events';
 
@@ -27,7 +28,6 @@ interface Props {
   onSelectionChange?: (e: TimeGridSelectionInfo) => void;
   onSelectionEnd?: (e: TimeGridSelectionInfo) => void;
   onSelectionCancel?: () => void;
-  children?: ComponentChildren;
 }
 
 export interface ColumnInfo {
@@ -42,7 +42,7 @@ interface SelectionData extends TimeGridSelectionInfo {
   columnIndex: number;
 }
 
-export const ColumnWithMouse: FunctionComponent<Props> = (props: Props) => {
+export function ColumnWithMouse(props: PropsWithChildren<Props>) {
   const [selectionStartData, setSelectionStartData] = useState<SelectionData | null>(null);
   const [selectionPrevDragData, setSelectionPrevDragData] = useState<SelectionData | null>(null);
 
@@ -158,4 +158,4 @@ export const ColumnWithMouse: FunctionComponent<Props> = (props: Props) => {
       {children}
     </div>
   );
-};
+}

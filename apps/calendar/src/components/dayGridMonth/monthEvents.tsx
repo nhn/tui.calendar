@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 import { useCallback } from 'preact/hooks';
 
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
@@ -17,7 +17,7 @@ interface Props {
   eventTopMargin: number;
 }
 
-export const MonthEvents: FunctionComponent<Props> = ({
+export function MonthEvents({
   height,
   eventHeight = EVENT_HEIGHT,
   events,
@@ -25,7 +25,7 @@ export const MonthEvents: FunctionComponent<Props> = ({
   className,
   headerHeight,
   eventTopMargin,
-}) => {
+}: Props) {
   const draggingEventUIModel = useStore(useCallback((state) => state.dnd.draggingEventUIModel, []));
 
   const dayEvents = events
@@ -41,4 +41,4 @@ export const MonthEvents: FunctionComponent<Props> = ({
     ));
 
   return <div className={className}>{dayEvents}</div>;
-};
+}

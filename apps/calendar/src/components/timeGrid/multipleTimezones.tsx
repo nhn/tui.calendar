@@ -48,6 +48,7 @@ function makeHours(now: TZDate, timezoneOffset?: number): TimeProps[] {
   });
 }
 
+// @TODO: change to function component
 export class MultipleTimezones extends Component<Props> {
   static displayName = 'MultipleTimezones';
 

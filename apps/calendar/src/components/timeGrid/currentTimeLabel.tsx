@@ -1,7 +1,7 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 
-import Template from '@src/components/template';
+import { Template } from '@src/components/template';
 import { addTimeGridPrefix, timeFormats } from '@src/components/timeGrid';
 import { cls, toPercent } from '@src/helpers/css';
 import TZDate from '@src/time/date';
@@ -20,12 +20,7 @@ interface Props {
   dateDifference?: number;
 }
 
-export const CurrentTimeLabel: FunctionComponent<Props> = ({
-  unit,
-  dateDifference = 0,
-  top,
-  time = new TZDate(),
-}) => {
+export function CurrentTimeLabel({ unit, dateDifference = 0, top, time = new TZDate() }: Props) {
   const defaultTop = toPercent(top);
   const [topValue, setTop] = useState(defaultTop);
   const ref = useRef<HTMLDivElement>(null);
@@ -61,4 +56,4 @@ export const CurrentTimeLabel: FunctionComponent<Props> = ({
       </div>
     </div>
   );
-};
+}

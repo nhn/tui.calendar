@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 import { useCallback } from 'preact/hooks';
 
 import { addTimeGridPrefix } from '@src/components/timeGrid';
@@ -10,7 +10,7 @@ interface Props {
   onClick?: (collapsed: boolean) => void;
 }
 
-export const CollapseButton: FunctionComponent<Props> = ({ collapsed = false, onClick = noop }) => {
+export function CollapseButton({ collapsed = false, onClick = noop }: Props) {
   const iconClassName = cls('icon', {
     'ic-arrow-right': collapsed,
     'ic-arrow-left': !collapsed,
@@ -22,4 +22,4 @@ export const CollapseButton: FunctionComponent<Props> = ({ collapsed = false, on
       <span className={iconClassName} />
     </div>
   );
-};
+}

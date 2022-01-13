@@ -1,4 +1,4 @@
-import { ComponentChildren, ComponentProps, FunctionComponent, h, toChildArray } from 'preact';
+import { ComponentChildren, ComponentProps, h, toChildArray } from 'preact';
 import { useLayoutEffect, useMemo } from 'preact/hooks';
 
 import { Panel } from '@src/components/panel';
@@ -12,7 +12,7 @@ import { useDOMNode } from '@src/hooks/common/domNode';
 import { noop } from '@src/utils/noop';
 import { isNil, isNumber, isString } from '@src/utils/type';
 
-import { StyleProp } from '@t/components/common';
+import { PropsWithChildren, StyleProp } from '@t/components/common';
 
 interface Props {
   height?: number;
@@ -36,13 +36,13 @@ function getLayoutStylesFromInfo(width?: number, height?: number) {
 }
 
 // @TODO: consider `direction` and `resizeMode`
-export const Layout: FunctionComponent<Props> = ({
+export function Layout({
   children,
   width,
   height,
   className = '',
   autoAdjustPanels = false,
-}) => {
+}: PropsWithChildren<Props>) {
   const [container, containerRefCallback] = useDOMNode<HTMLDivElement>();
   const { setLastPanelType, updateLayoutHeight } = useDispatch('weekViewLayout');
 
@@ -86,4 +86,4 @@ export const Layout: FunctionComponent<Props> = ({
       <SeeMoreEventsPopup />
     </LayoutContainerProvider>
   );
-};
+}

@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 import { useLayoutEffect } from 'preact/hooks';
 
 import { fireEvent, render, screen } from '@testing-library/preact';
@@ -6,17 +6,22 @@ import { fireEvent, render, screen } from '@testing-library/preact';
 import { EventBusProvider, useEventBus } from '@src/contexts/eventBus';
 import { EventBus, EventBusImpl } from '@src/utils/eventBus';
 
+import { PropsWithChildren } from '@t/components/common';
+
 describe('Event Bus Context', () => {
   let eventBus: EventBus<any>;
   let mockHandler: jest.Mock;
 
-  const wrapper: FunctionComponent = ({ children }) => (
+  const wrapper = ({ children }: PropsWithChildren) => (
     <EventBusProvider value={eventBus}>{children}</EventBusProvider>
   );
-  const Component: FunctionComponent<{
+  const Component = ({
+    handler,
+    fireOnce = false,
+  }: {
     handler: (...args: any[]) => any;
     fireOnce?: boolean;
-  }> = ({ handler, fireOnce = false }) => {
+  }) => {
     const eb = useEventBus();
 
     useLayoutEffect(() => {

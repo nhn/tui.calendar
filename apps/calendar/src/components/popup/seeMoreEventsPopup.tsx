@@ -1,9 +1,9 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 import { createPortal } from 'preact/compat';
 
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import { ClosePopupButton } from '@src/components/popup/closePopupButton';
-import Template from '@src/components/template';
+import { Template } from '@src/components/template';
 import {
   MONTH_EVENT_HEIGHT,
   MONTH_MORE_VIEW_HEADER_HEIGHT,
@@ -18,7 +18,7 @@ import { seeMorePopupParamSelector } from '@src/selectors/popup';
 import { toFormat } from '@src/time/datetime';
 import { isNil } from '@src/utils/type';
 
-export const SeeMoreEventsPopup: FunctionComponent = () => {
+export function SeeMoreEventsPopup() {
   const floatingLayerContainer = useFloatingLayerContainer();
   const { date, events = [], popupPosition } = useStore(seeMorePopupParamSelector);
   const {
@@ -70,4 +70,4 @@ export const SeeMoreEventsPopup: FunctionComponent = () => {
     </div>,
     floatingLayerContainer
   );
-};
+}

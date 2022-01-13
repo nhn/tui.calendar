@@ -1,10 +1,10 @@
-import { Fragment, FunctionComponent, h } from 'preact';
+import { Fragment, h } from 'preact';
 
 import range from 'tui-code-snippet/array/range';
 
 import { GridCells } from '@src/components/dayGridWeek/gridCells';
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
-import Template from '@src/components/template';
+import { Template } from '@src/components/template';
 import { DEFAULT_PANEL_HEIGHT, WEEK_EVENT_MARGIN_TOP } from '@src/constants/style';
 import { cls } from '@src/helpers/css';
 import { EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
@@ -35,7 +35,7 @@ const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
   return addDate(now, day - now.getDay());
 });
 
-export const OtherGridRow: FunctionComponent<Props> = ({
+export function OtherGridRow({
   events,
   row = defaultPanelInfoList,
   category,
@@ -43,7 +43,7 @@ export const OtherGridRow: FunctionComponent<Props> = ({
   options = {},
   timesWidth = 120,
   timezonesCount = 1,
-}) => {
+}: Props) {
   const maxTop = Math.max(0, ...events.map(({ top }) => top));
   const { narrowWeekend = false } = options;
   const rowTitleTemplate: GridRowTitleTemplate = `${category}Title`;
@@ -86,4 +86,4 @@ export const OtherGridRow: FunctionComponent<Props> = ({
       </div>
     </Fragment>
   );
-};
+}

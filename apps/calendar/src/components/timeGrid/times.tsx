@@ -1,11 +1,11 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 import { useEffect, useRef } from 'preact/hooks';
 
 import range from 'tui-code-snippet/array/range';
 import addClass from 'tui-code-snippet/domUtil/addClass';
 import removeClass from 'tui-code-snippet/domUtil/removeClass';
 
-import Template from '@src/components/template';
+import { Template } from '@src/components/template';
 import { addTimeGridPrefix } from '@src/components/timeGrid';
 import { CurrentTimeLabel } from '@src/components/timeGrid/currentTimeLabel';
 import { useTheme } from '@src/contexts/theme';
@@ -82,7 +82,7 @@ function hideOverlappedTime(timesElement: HTMLElement) {
   });
 }
 
-export const Times: FunctionComponent<Props> = ({
+export function Times({
   unit = 'hour',
   width = '72px',
   showFirst = false,
@@ -104,7 +104,7 @@ export const Times: FunctionComponent<Props> = ({
   start = 0,
   end = times.length - 1,
   timeTemplate,
-}) => {
+}: Props) {
   const { week } = useTheme();
   const pastTimeColor = week.pastTime.color;
   const filteredTimes = times.slice(start, end + 1);
@@ -157,4 +157,4 @@ export const Times: FunctionComponent<Props> = ({
       ) : null}
     </div>
   );
-};
+}

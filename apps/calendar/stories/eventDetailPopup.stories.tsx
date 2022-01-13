@@ -1,4 +1,4 @@
-import { Fragment, FunctionComponent, h } from 'preact';
+import { Fragment, h } from 'preact';
 
 import { Story } from '@storybook/preact';
 
@@ -11,6 +11,7 @@ import TZDate from '@src/time/date';
 
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 
+import { PropsWithChildren } from '@t/components/common';
 import { EventDetailPopupParam } from '@t/store';
 
 export default {
@@ -18,7 +19,7 @@ export default {
   title: 'Popups/EventDetailPopup',
 };
 
-const Wrapper: FunctionComponent<EventDetailPopupParam> = ({ children, event }) => {
+function Wrapper({ children, event }: PropsWithChildren<EventDetailPopupParam>) {
   const { show } = useDispatch('popup');
   show({
     type: PopupType.detail,
@@ -34,7 +35,7 @@ const Wrapper: FunctionComponent<EventDetailPopupParam> = ({ children, event }) 
   });
 
   return <Fragment>{children}</Fragment>;
-};
+}
 
 const Template: Story<EventDetailPopupParam> = ({ event }) => (
   <ProviderWrapper>

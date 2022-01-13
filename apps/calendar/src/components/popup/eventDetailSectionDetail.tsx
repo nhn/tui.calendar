@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 
 import { cls } from '@src/helpers/css';
 
@@ -24,14 +24,14 @@ const classNames = {
   calendarDotIcon: cls('icon', 'calendar-dot'),
 };
 
-export const EventDetailSectionDetail: FunctionComponent<Props> = ({
+export function EventDetailSectionDetail({
   location,
   recurrenceRule,
   attendees,
   state,
   calendarId,
   body,
-}) => {
+}: Props) {
   return (
     <div className={classNames.sectionDetail}>
       {location && (
@@ -71,4 +71,4 @@ export const EventDetailSectionDetail: FunctionComponent<Props> = ({
       )}
     </div>
   );
-};
+}
