@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 
 import { useStore } from '@src/contexts/calendarStore';
 import { templateSelector } from '@src/selectors';
@@ -14,7 +14,7 @@ function identity(value: unknown) {
   return value;
 }
 
-const Template: FunctionComponent<Props> = ({ template, model }) => {
+export function Template({ template, model }: Props) {
   const templates = useStore(templateSelector);
   const templateFunc: Function = templates[template] || identity;
   const htmlOrVnode = templateFunc(model, h);
@@ -28,6 +28,4 @@ const Template: FunctionComponent<Props> = ({ template, model }) => {
   ) : (
     htmlOrVnode
   );
-};
-
-export default Template;
+}

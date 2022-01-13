@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { useRef } from 'preact/hooks';
 
 import { ResizeIcon } from '@src/components/events/resizeIcon';
-import Template from '@src/components/template';
+import { Template } from '@src/components/template';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { cls, toPercent, toPx } from '@src/helpers/css';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';

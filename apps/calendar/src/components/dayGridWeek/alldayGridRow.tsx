@@ -6,7 +6,7 @@ import range from 'tui-code-snippet/array/range';
 import { GridSelection } from '@src/components/dayGridCommon/gridSelection';
 import { GridCells } from '@src/components/dayGridWeek/gridCells';
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
-import Template from '@src/components/template';
+import { Template } from '@src/components/template';
 import { DEFAULT_PANEL_HEIGHT, WEEK_EVENT_MARGIN_TOP } from '@src/constants/style';
 import { cls } from '@src/helpers/css';
 import { EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';

@@ -1,7 +1,7 @@
 import { h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 
-import Template from '@src/components/template';
+import { Template } from '@src/components/template';
 import { addTimeGridPrefix, timeFormats } from '@src/components/timeGrid';
 import { cls, toPercent } from '@src/helpers/css';
 import TZDate from '@src/time/date';

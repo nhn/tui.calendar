@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 import { useRef, useState } from 'preact/hooks';
 
 import { useDispatch } from '@src/contexts/calendarStore';
@@ -25,7 +25,7 @@ function getDefaultStyle(width: number, height: number) {
   return { ...DEFAULT_STYLE, height, width: '100%', cursor: 'row-resize' };
 }
 
-export const PanelResizer: FunctionComponent<Props> = ({ name, width, height }) => {
+export function PanelResizer({ name, width, height }: Props) {
   const style = getDefaultStyle(width, height);
   const defaultGuideStyle = {
     ...style,
@@ -67,4 +67,4 @@ export const PanelResizer: FunctionComponent<Props> = ({ name, width, height }) 
       <div className={cls('panel-resizer-guide')} style={guideStyle} />
     </div>
   );
-};
+}

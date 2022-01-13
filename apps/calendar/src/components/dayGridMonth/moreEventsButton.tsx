@@ -1,6 +1,6 @@
 import { h } from 'preact';
 
-import Template from '@src/components/template';
+import { Template } from '@src/components/template';
 import { useDispatch } from '@src/contexts/calendarStore';
 
 interface Props {
