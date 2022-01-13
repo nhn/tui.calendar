@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 
 import { GridSelection } from '@src/components/dayGridCommon/gridSelection';
@@ -106,11 +106,7 @@ function calcGridSelectionData(
   return resultGridSelection;
 }
 
-export const DayGridMonth: FunctionComponent<Props> = ({
-  options,
-  dateMatrix = [],
-  rowInfo = [],
-}) => {
+export function DayGridMonth({ options, dateMatrix = [], rowInfo = [] }: Props) {
   const [gridContainer, setGridContainerRef] = useDOMNode<HTMLDivElement>();
   const calendarData = useStore(calendarSelector);
   const { ref, height } = useGridHeight();
@@ -191,4 +187,4 @@ export const DayGridMonth: FunctionComponent<Props> = ({
       })}
     </div>
   );
-};
+}

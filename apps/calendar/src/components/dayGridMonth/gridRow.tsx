@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 import { memo } from 'preact/compat';
 
 import { GridCell } from '@src/components/dayGridMonth/gridCell';
@@ -19,42 +19,46 @@ interface Props {
   height?: number;
 }
 
-export const GridRow: FunctionComponent<Props> = memo(
-  ({ cssHeight, week, rowInfo, gridDateEventModelMap = {}, height = 0 }) => {
-    const [container, containerRefCallback] = useDOMNode<HTMLDivElement>();
-    const { common } = useTheme();
+export const GridRow = memo(function GridRow({
+  cssHeight,
+  week,
+  rowInfo,
+  gridDateEventModelMap = {},
+  height = 0,
+}: Props) {
+  const [container, containerRefCallback] = useDOMNode<HTMLDivElement>();
+  const { common } = useTheme();
 
-    return (
-      <div
-        className={cls('weekday-grid')}
-        style={{
-          height: cssHeight ?? height,
-          borderTop: common.border,
-        }}
-        ref={containerRefCallback}
-      >
-        {week.map((date, columnIndex) => {
-          const dayIndex = date.getDay();
-          const { width, left } = rowInfo[columnIndex];
-          const ymd = toFormat(toStartOfDay(date), 'YYYYMMDD');
+  return (
+    <div
+      className={cls('weekday-grid')}
+      style={{
+        height: cssHeight ?? height,
+        borderTop: common.border,
+      }}
+      ref={containerRefCallback}
+    >
+      {week.map((date, columnIndex) => {
+        const dayIndex = date.getDay();
+        const { width, left } = rowInfo[columnIndex];
+        const ymd = toFormat(toStartOfDay(date), 'YYYYMMDD');
 
-          return (
-            <GridCell
-              key={`daygrid-cell-${dayIndex}`}
-              date={date}
-              dayIndex={dayIndex}
-              style={{
-                backgroundColor: 'transparent',
-                width: toPercent(width),
-                left: toPercent(left),
-              }}
-              parentContainer={container}
-              events={gridDateEventModelMap[ymd]}
-              height={height}
-            />
-          );
-        })}
-      </div>
-    );
-  }
-);
+        return (
+          <GridCell
+            key={`daygrid-cell-${dayIndex}`}
+            date={date}
+            dayIndex={dayIndex}
+            style={{
+              backgroundColor: 'transparent',
+              width: toPercent(width),
+              left: toPercent(left),
+            }}
+            parentContainer={container}
+            events={gridDateEventModelMap[ymd]}
+            height={height}
+          />
+        );
+      })}
+    </div>
+  );
+});
