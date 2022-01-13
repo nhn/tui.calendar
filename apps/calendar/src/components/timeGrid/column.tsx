@@ -1,4 +1,4 @@
-import { FunctionComponent, h, VNode } from 'preact';
+import { h, VNode } from 'preact';
 
 import range from 'tui-code-snippet/array/range';
 
@@ -112,7 +112,7 @@ function renderGridSelection(
   return <GridSelection {...gridSelection} top={top} height={height} />;
 }
 
-export const Column: FunctionComponent<Props> = ({
+export function Column({
   times = range(0, 25).map((hour) => {
     const time = new TZDate();
     time.setHours(hour, 0, 0, 0);
@@ -130,7 +130,7 @@ export const Column: FunctionComponent<Props> = ({
   readOnly = false,
   index = 0,
   renderGridlineChild,
-}) => {
+}: Props) {
   const filteredTimes = times.slice(start, end + 1);
   const startTime = first(filteredTimes);
   const endTime = last(filteredTimes);
@@ -149,4 +149,4 @@ export const Column: FunctionComponent<Props> = ({
       {!readOnly ? renderGridSelection(gridSelection, startTime, endTime) : null}
     </div>
   );
-};
+}

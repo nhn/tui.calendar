@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 
 import { timeFormats } from '@src/components/timeGrid';
 import { cls, toPercent } from '@src/helpers/css';
@@ -11,14 +11,7 @@ interface Props extends TimeGridSelectionInfo {
   height: number;
 }
 
-export const GridSelection: FunctionComponent<Props> = ({
-  start,
-  end,
-  unit,
-  top,
-  height,
-  textPosition,
-}) => {
+export function GridSelection({ start, end, unit, top, height, textPosition }: Props) {
   const format = timeFormats[unit];
   const text = `${toFormat(start, format)} - ${toFormat(end, format)}`;
   const style = {
@@ -37,4 +30,4 @@ export const GridSelection: FunctionComponent<Props> = ({
       </span>
     </div>
   );
-};
+}

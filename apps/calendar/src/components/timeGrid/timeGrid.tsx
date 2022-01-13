@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 
 import range from 'tui-code-snippet/array/range';
@@ -65,7 +65,7 @@ function useForceUpdate() {
   return () => setForceUpdate((prev) => prev + 1);
 }
 
-export const TimeGrid: FunctionComponent<Props> = ({
+export function TimeGrid({
   currentTime = new TZDate(),
   columnInfoList = range(0, 7).map((day) => {
     const now = new TZDate();
@@ -83,7 +83,7 @@ export const TimeGrid: FunctionComponent<Props> = ({
   timezones = [{}],
   unit = 'hour',
   events,
-}) => {
+}: Props) {
   const [stickyContainer, setStickyContainer] = useState<HTMLElement | null>(null);
   const [columnLeft, setColumnLeft] = useState(0);
   const [gridSelection, setGridSelection] = useState<TimeGridSelectionInfo | null>(null);
@@ -202,4 +202,4 @@ export const TimeGrid: FunctionComponent<Props> = ({
       <div ref={stickyContainerRef} />
     </div>
   );
-};
+}
