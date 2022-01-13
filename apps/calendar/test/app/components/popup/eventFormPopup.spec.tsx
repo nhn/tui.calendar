@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 import { useCallback, useEffect, useMemo } from 'preact/hooks';
 
 import { fireEvent, render, RenderResult, screen } from '@testing-library/preact';
@@ -12,6 +12,7 @@ import { PopupType } from '@src/slices/popup';
 import TZDate from '@src/time/date';
 import { EventBusImpl } from '@src/utils/eventBus';
 
+import { PropsWithChildren } from '@t/components/common';
 import { ExternalEventTypes } from '@t/eventBus';
 
 const selectors = {
@@ -31,7 +32,7 @@ describe('event form popup', () => {
   const state = 'Busy';
   const mockFn = jest.fn();
 
-  const Wrapper: FunctionComponent = ({ children }) => {
+  const Wrapper = ({ children }: PropsWithChildren) => {
     const eventBus = useMemo(() => new EventBusImpl<ExternalEventTypes>(), []);
     const { show } = useDispatch('popup');
     const mockHandler = useCallback(mockFn, [mockFn]);

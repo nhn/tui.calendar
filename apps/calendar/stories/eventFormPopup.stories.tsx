@@ -1,4 +1,4 @@
-import { Fragment, FunctionComponent, h } from 'preact';
+import { Fragment, h } from 'preact';
 
 import { Story } from '@storybook/preact';
 
@@ -10,6 +10,7 @@ import TZDate from '@src/time/date';
 import { calendars as mockCalendars } from '@stories/util/mockCalendars';
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 
+import { PropsWithChildren } from '@t/components/common';
 import { CalendarInfo } from '@t/options';
 import { EventFormPopupParam } from '@t/store';
 
@@ -22,7 +23,7 @@ interface EventFormPopupStoryProps extends EventFormPopupParam {
   calendars?: CalendarInfo[];
 }
 
-const Wrapper: FunctionComponent<EventFormPopupParam> = ({
+function Wrapper({
   children,
   title,
   location,
@@ -31,7 +32,7 @@ const Wrapper: FunctionComponent<EventFormPopupParam> = ({
   isAllday,
   isPrivate,
   isCreationPopup,
-}) => {
+}: PropsWithChildren<EventFormPopupParam>) {
   const { show } = useDispatch('popup');
   show({
     type: PopupType.form,
@@ -47,7 +48,7 @@ const Wrapper: FunctionComponent<EventFormPopupParam> = ({
   });
 
   return <Fragment>{children}</Fragment>;
-};
+}
 
 const Template: Story<EventFormPopupStoryProps> = ({
   calendars,

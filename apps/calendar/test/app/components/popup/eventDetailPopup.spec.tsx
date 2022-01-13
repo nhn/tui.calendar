@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 
 import { render, screen } from '@testing-library/preact';
 
@@ -8,6 +8,8 @@ import { FloatingLayerContainerProvider } from '@src/contexts/floatingLayer';
 import EventModel from '@src/model/eventModel';
 import { PopupType } from '@src/slices/popup';
 import TZDate from '@src/time/date';
+
+import { PropsWithChildren } from '@t/components/common';
 
 describe('event detail popup', () => {
   const event = EventModel.create({
@@ -25,7 +27,7 @@ describe('event detail popup', () => {
     bgColor: '#03bd9e',
     state: 'Busy',
   });
-  const Wrapper: FunctionComponent = ({ children }) => {
+  const Wrapper = ({ children }: PropsWithChildren) => {
     const { show } = useDispatch('popup');
     show({
       type: PopupType.detail,
