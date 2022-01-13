@@ -1,7 +1,7 @@
 import { FunctionComponent, h } from 'preact';
 import { useMemo } from 'preact/hooks';
 
-import GridHeader from '@src/components/dayGridCommon/gridHeader';
+import { GridHeader } from '@src/components/dayGridCommon/gridHeader';
 import { DayGridMonth } from '@src/components/dayGridMonth/dayGridMonth';
 import { Layout } from '@src/components/layout';
 import { useStore } from '@src/contexts/calendarStore';

@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 
 import { cls, toPercent } from '@src/helpers/css';
 import { getLeftAndWidth } from '@src/helpers/grid';
@@ -10,11 +10,7 @@ interface Props {
   narrowWeekend: boolean;
 }
 
-export const GridSelection: FunctionComponent<Props> = ({
-  gridSelectionData,
-  row,
-  narrowWeekend,
-}) => {
+export function GridSelection({ gridSelectionData, row, narrowWeekend }: Props) {
   if (!gridSelectionData) {
     return null;
   }
@@ -34,4 +30,4 @@ export const GridSelection: FunctionComponent<Props> = ({
   };
 
   return width > 0 ? <div className={cls('daygrid-grid-selection')} style={style} /> : null;
-};
+}

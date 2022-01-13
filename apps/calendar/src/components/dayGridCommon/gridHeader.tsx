@@ -1,6 +1,6 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 
-import DayName from '@src/components/dayGridCommon/dayName';
+import { DayName } from '@src/components/dayGridCommon/dayName';
 import { cls, toPercent } from '@src/helpers/css';
 
 import { CalendarViewType } from '@t/components/common';
@@ -20,27 +20,20 @@ interface Props {
   type?: CalendarViewType;
 }
 
-const defaultDayNameOptions = {
-  narrowWeekend: false,
-  startDayOfWeek: 0,
-  workweek: false,
-  timezones: [],
-};
 const defaultDayNameTheme = {
   borderLeft: '1px solid #ddd',
   backgroundColor: 'inherit',
 };
 const defaultMarginLeft = 0;
 
-const GridHeader: FunctionComponent<Props> = ({
+export function GridHeader({
   dayNames = [],
   theme = defaultDayNameTheme,
-  options = defaultDayNameOptions,
   marginLeft = defaultMarginLeft,
   templateType,
   rowStyleInfo,
   type = 'month',
-}) => {
+}: Props) {
   const { borderLeft, backgroundColor } = theme;
 
   return (
@@ -67,6 +60,4 @@ const GridHeader: FunctionComponent<Props> = ({
       ))}
     </div>
   );
-};
-
-export default GridHeader;
+}

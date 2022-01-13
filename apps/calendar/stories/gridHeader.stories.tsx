@@ -2,7 +2,7 @@ import { h } from 'preact';
 
 import { Story } from '@storybook/preact';
 
-import GridHeader from '@src/components/dayGridCommon/gridHeader';
+import { GridHeader } from '@src/components/dayGridCommon/gridHeader';
 import { getRowStyleInfo } from '@src/time/datetime';
 
 import { ProviderWrapper } from '@stories/util/providerWrapper';

@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 
 import Template from '@src/components/template';
 import { cls } from '@src/helpers/css';
@@ -19,12 +19,12 @@ interface Props {
   type?: CalendarViewType;
 }
 
-const DayName: FunctionComponent<Props> = ({ dayname, dayIndex, style, templateType, type }) => (
-  <div className={cls('dayname-item', type)} style={style}>
-    <span className={cls({ [`holiday-${getDayName(dayIndex)}`]: isWeekend(dayIndex) })}>
-      <Template template={templateType} model={dayname} />
-    </span>
-  </div>
-);
-
-export default DayName;
+export function DayName({ dayname, dayIndex, style, templateType, type }: Props) {
+  return (
+    <div className={cls('dayname-item', type)} style={style}>
+      <span className={cls({ [`holiday-${getDayName(dayIndex)}`]: isWeekend(dayIndex) })}>
+        <Template template={templateType} model={dayname} />
+      </span>
+    </div>
+  );
+}
