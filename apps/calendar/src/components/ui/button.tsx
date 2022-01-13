@@ -1,11 +1,13 @@
-import { FunctionComponent, h, JSX } from 'preact';
+import { h } from 'preact';
 
-type Props = JSX.HTMLAttributes<HTMLButtonElement>;
+import { PropsWithChildren } from '@t/components/common';
 
-export const Button: FunctionComponent<Props> = ({ children, ...rest }) => {
+type Props = h.JSX.HTMLAttributes<HTMLButtonElement>;
+
+export function Button({ children, ...rest }: PropsWithChildren<Props>) {
   return (
     <button {...rest} type="button">
       {children}
     </button>
   );
-};
+}
