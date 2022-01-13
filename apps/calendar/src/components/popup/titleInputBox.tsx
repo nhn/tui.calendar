@@ -5,6 +5,7 @@ import { cls } from '@src/helpers/css';
 import { FormStateActionType, FormStateDispatcher } from '@src/hooks/popup/formState';
 
 interface Props {
+  title: string;
   isPrivate?: boolean;
   formStateDispatch: FormStateDispatcher;
 }
@@ -17,6 +18,7 @@ const classNames = {
 };
 
 export const TitleInputBox: FunctionComponent<Props> = ({
+  title,
   isPrivate = false,
   formStateDispatch,
 }) => {
@@ -27,7 +29,13 @@ export const TitleInputBox: FunctionComponent<Props> = ({
     <PopupSection>
       <div className={classNames.popupSectionItem}>
         <span className={classNames.titleIcon} />
-        <input name="title" className={classNames.content} placeholder="Subject" required />
+        <input
+          name="title"
+          className={classNames.content}
+          placeholder="Subject"
+          value={title}
+          required
+        />
       </div>
       <button type="button" className={classNames.privateButton} onClick={togglePrivate}>
         <span className={cls('icon', { 'ic-private': isPrivate, 'ic-public': !isPrivate })} />

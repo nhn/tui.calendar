@@ -24,15 +24,21 @@ interface EventFormPopupStoryProps extends EventFormPopupParam {
 
 const Wrapper: FunctionComponent<EventFormPopupParam> = ({
   children,
+  title,
+  location,
   start,
   end,
   isAllday,
   isPrivate,
+  isCreationPopup,
 }) => {
   const { show } = useDispatch('popup');
   show({
     type: PopupType.form,
     param: {
+      isCreationPopup,
+      title,
+      location,
       start,
       end,
       isAllday,
@@ -45,13 +51,23 @@ const Wrapper: FunctionComponent<EventFormPopupParam> = ({
 
 const Template: Story<EventFormPopupStoryProps> = ({
   calendars,
+  title,
+  location,
   start,
   end,
   isAllday = false,
   isPrivate = false,
 }) => (
   <ProviderWrapper options={{ calendars }}>
-    <Wrapper start={start} end={end} isAllday={isAllday} isPrivate={isPrivate}>
+    <Wrapper
+      title={title}
+      location={location}
+      start={start}
+      end={end}
+      isAllday={isAllday}
+      isPrivate={isPrivate}
+      isCreationPopup={true}
+    >
       <EventFormPopup />
     </Wrapper>
   </ProviderWrapper>

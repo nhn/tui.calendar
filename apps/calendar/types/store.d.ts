@@ -31,6 +31,7 @@ interface Rect {
 
 interface BasePopupParam {
   popupPosition?: PopupPosition;
+  popupArrowPointPosition?: PopupArrowPointPosition;
   eventRect?: Rect;
   close?: () => void;
 }
@@ -47,6 +48,10 @@ interface SeeMorePopupParam extends BasePopupParam {
 }
 
 interface EventFormPopupParam extends BasePopupParam {
+  isCreationPopup: boolean;
+  event?: EventModel;
+  title: string;
+  location: string;
   start: TZDate;
   end: TZDate;
   isAllday: boolean;
@@ -63,6 +68,11 @@ type PopupPosition = {
   bottom?: number | string;
   left?: number | string;
   right?: number | string;
+};
+
+type PopupArrowPointPosition = {
+  top: number;
+  left: number;
 };
 
 export type StateWithActions = Record<string, any>;

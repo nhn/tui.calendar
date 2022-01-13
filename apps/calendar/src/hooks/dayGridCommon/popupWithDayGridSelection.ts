@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'preact/hooks';
 
-import { EVENT_FORM_POPUP_WIDTH } from '@src/constants/popup';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { DRAGGING_TYPE_CONSTANTS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/drag';
@@ -64,13 +63,16 @@ export function usePopupWithDayGridSelection({ gridSelection, dateMatrix }: Para
       show({
         type: PopupType.form,
         param: {
+          isCreationPopup: true,
+          title: '',
+          location: '',
           start,
           end,
           isAllday: true,
           isPrivate: false,
-          popupPosition: {
-            left: (endX + startX - EVENT_FORM_POPUP_WIDTH) / 2,
+          popupArrowPointPosition: {
             top: (endY + startY) / 2,
+            left: (endX + startX) / 2,
           },
         },
       });

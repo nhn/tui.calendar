@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { h, RefObject } from 'preact';
 import { forwardRef } from 'preact/compat';
 import { useEffect, useRef } from 'preact/hooks';
 
@@ -54,7 +54,7 @@ export const DateSelector = forwardRef<DateRangePicker, Props>(
           endDate.setHours(13, 0, 0);
         }
 
-        ref.current = DatePicker.createRangePicker({
+        (ref as RefObject<DateRangePicker>).current = DatePicker.createRangePicker({
           startpicker: {
             date: startDate.toDate(),
             input: startPickerInputRef.current,

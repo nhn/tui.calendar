@@ -39,16 +39,17 @@ describe('event form popup', () => {
     show({
       type: PopupType.form,
       param: {
+        isCreationPopup: true,
+        title: '',
+        location: '',
         start,
         end,
         isAllday,
         isPrivate,
         eventState: state,
-        popupPosition: {
+        popupArrowPointPosition: {
           top: 0,
           left: 0,
-          right: 100,
-          bottom: 100,
         },
       },
     });
