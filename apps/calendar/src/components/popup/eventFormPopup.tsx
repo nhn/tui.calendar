@@ -22,7 +22,7 @@ import { useEventBus } from '@src/contexts/eventBus';
 import { useFloatingLayerContainer } from '@src/contexts/floatingLayer';
 import { useLayoutContainer } from '@src/contexts/layoutContainer';
 import { cls } from '@src/helpers/css';
-import { isLeftOverLayoutContainer, isTopOverLayoutContainer } from '@src/helpers/popup';
+import { isLeftOutOfLayout, isTopOutOfLayout } from '@src/helpers/popup';
 import { useFormState } from '@src/hooks/popup/formState';
 import EventModel from '@src/model/eventModel';
 import { calendarSelector } from '@src/selectors';
@@ -56,11 +56,11 @@ function calculatePopupPosition(
     top = popupArrowPointPosition.top + HALF_OF_POPUP_ARROW_HEIGHT;
   }
 
-  if (isTopOverLayoutContainer(top, layoutRect, popupRect)) {
+  if (isTopOutOfLayout(top, layoutRect, popupRect)) {
     top = layoutRect.top + layoutRect.height - popupRect.height;
   }
 
-  if (isLeftOverLayoutContainer(left, layoutRect, popupRect)) {
+  if (isLeftOutOfLayout(left, layoutRect, popupRect)) {
     left = layoutRect.left + layoutRect.width - popupRect.width;
   }
 

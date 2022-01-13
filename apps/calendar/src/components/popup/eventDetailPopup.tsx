@@ -10,7 +10,7 @@ import { useStore } from '@src/contexts/calendarStore';
 import { useFloatingLayerContainer } from '@src/contexts/floatingLayer';
 import { useLayoutContainer } from '@src/contexts/layoutContainer';
 import { cls } from '@src/helpers/css';
-import { isLeftOverLayoutContainer, isTopOverLayoutContainer } from '@src/helpers/popup';
+import { isLeftOutOfLayout, isTopOutOfLayout } from '@src/helpers/popup';
 import { eventDetailPopupParamSelector } from '@src/selectors/popup';
 import TZDate from '@src/time/date';
 import { isNil } from '@src/utils/type';
@@ -30,11 +30,11 @@ function calculatePopupPosition(eventRect: Rect, layoutRect: Rect, popupRect: Re
   let top = eventRect.top + eventRect.height / 2 - popupRect.height / 2;
   let left = eventRect.left + eventRect.width;
 
-  if (isTopOverLayoutContainer(top, layoutRect, popupRect)) {
+  if (isTopOutOfLayout(top, layoutRect, popupRect)) {
     top = layoutRect.top + layoutRect.height - popupRect.height;
   }
 
-  if (isLeftOverLayoutContainer(left, layoutRect, popupRect)) {
+  if (isLeftOutOfLayout(left, layoutRect, popupRect)) {
     left = eventRect.left - popupRect.width;
   }
 
@@ -45,8 +45,8 @@ function calculatePopupArrowPosition(eventRect: Rect, layoutRect: Rect, popupRec
   const top = eventRect.top + eventRect.height / 2;
   const popupLeft = eventRect.left + eventRect.width;
 
-  const isOverLayoutContainer = popupLeft + popupRect.width > layoutRect.left + layoutRect.width;
-  const direction = isOverLayoutContainer
+  const isOutOfLayout = popupLeft + popupRect.width > layoutRect.left + layoutRect.width;
+  const direction = isOutOfLayout
     ? DetailPopupArrowDirection.right
     : DetailPopupArrowDirection.left;
 
