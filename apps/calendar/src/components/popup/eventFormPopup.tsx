@@ -155,6 +155,7 @@ export const EventFormPopup: FunctionComponent = () => {
 
     return cls('popup-arrow', { top, bottom });
   }, [arrowDirection]);
+  const confirmMessage = isCreationPopup ? 'Save' : 'Update';
 
   useLayoutEffect(() => {
     if (popupContainerRef.current && popupArrowPointPosition && layoutContainer) {
@@ -203,7 +204,7 @@ export const EventFormPopup: FunctionComponent = () => {
           <EventStateSelector eventState={formState.state} formStateDispatch={formStateDispatch} />
           <ClosePopupButton close={close} />
           <PopupSection>
-            <ConfirmPopupButton isCreationPopup={isCreationPopup} />
+            <ConfirmPopupButton>{confirmMessage}</ConfirmPopupButton>
           </PopupSection>
         </div>
         <div className={popupArrowClassName}>
