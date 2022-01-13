@@ -1,4 +1,4 @@
-import { FunctionComponent, h } from 'preact';
+import { h } from 'preact';
 
 import { cls } from '@src/helpers/css';
 
@@ -25,12 +25,7 @@ const DEFAULT_GRID_STYLE = {
   borderLeft: '1px solid #ddd',
 };
 
-const ExceedCount: FunctionComponent<ExceedCountProps> = ({
-  index,
-  exceedCount,
-  isClicked,
-  onClickExceedCount,
-}) => {
+function ExceedCount({ index, exceedCount, isClicked, onClickExceedCount }: ExceedCountProps) {
   const clickExceedCount = () => onClickExceedCount(index);
   const style = { display: isClicked ? 'none' : '' };
 
@@ -41,20 +36,17 @@ const ExceedCount: FunctionComponent<ExceedCountProps> = ({
       style={style}
     >{`+${exceedCount}`}</span>
   ) : null;
-};
+}
 
-const CollapseButton: FunctionComponent<CollapseButtonProps> = ({
-  isClicked,
-  isClickedIndex,
-  onClickCollapseButton,
-}) =>
-  isClicked && isClickedIndex ? (
+function CollapseButton({ isClicked, isClickedIndex, onClickCollapseButton }: CollapseButtonProps) {
+  return isClicked && isClickedIndex ? (
     <span className={cls('weekday-exceed-in-week')} onClick={onClickCollapseButton}>
       <i className={cls('collapse-btn')} />
     </span>
   ) : null;
+}
 
-export const GridCell: FunctionComponent<Props> = ({
+export function GridCell({
   width,
   left,
   index,
@@ -63,18 +55,20 @@ export const GridCell: FunctionComponent<Props> = ({
   onClickExceedCount,
   isClickedIndex,
   onClickCollapseButton,
-}) => (
-  <div className={cls('panel-grid')} style={{ ...DEFAULT_GRID_STYLE, width, left }}>
-    <ExceedCount
-      index={index}
-      exceedCount={exceedCount}
-      isClicked={isClicked}
-      onClickExceedCount={onClickExceedCount}
-    />
-    <CollapseButton
-      isClickedIndex={isClickedIndex}
-      isClicked={isClicked}
-      onClickCollapseButton={onClickCollapseButton}
-    />
-  </div>
-);
+}: Props) {
+  return (
+    <div className={cls('panel-grid')} style={{ ...DEFAULT_GRID_STYLE, width, left }}>
+      <ExceedCount
+        index={index}
+        exceedCount={exceedCount}
+        isClicked={isClicked}
+        onClickExceedCount={onClickExceedCount}
+      />
+      <CollapseButton
+        isClickedIndex={isClickedIndex}
+        isClicked={isClicked}
+        onClickCollapseButton={onClickCollapseButton}
+      />
+    </div>
+  );
+}
