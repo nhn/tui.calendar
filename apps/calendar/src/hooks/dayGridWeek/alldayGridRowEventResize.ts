@@ -61,20 +61,20 @@ export function useAlldayGridRowEventResize({
   }, [hasDraggingCoords, mousePositionDataGrabber, resizingEvent, x, y]);
 
   useEffect(() => {
-    const shouldUpdateEventEnd =
-      draggingState === DraggingState.IDLE &&
-      !isNil(resizingEvent) &&
-      !isNil(currentGridX) &&
-      targetEventGridIndices.start <= currentGridX &&
-      targetEventGridIndices.end !== currentGridX;
+    const isDraggingEnd =
+      draggingState === DraggingState.IDLE && !isNil(resizingEvent) && !isNil(currentGridX);
 
-    if (shouldUpdateEventEnd) {
+    if (isDraggingEnd) {
       const targetDate = row[currentGridX];
+      const shouldUpdateEvent =
+        targetEventGridIndices.start <= currentGridX && targetEventGridIndices.end !== currentGridX;
 
-      updateEvent({
-        event: resizingEvent.model,
-        eventData: { end: targetDate },
-      });
+      if (shouldUpdateEvent) {
+        updateEvent({
+          event: resizingEvent.model,
+          eventData: { end: targetDate },
+        });
+      }
       setCurrentGridX(null);
       clearDraggingEvent();
     }
