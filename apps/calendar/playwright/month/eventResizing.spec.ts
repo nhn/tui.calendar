@@ -22,22 +22,34 @@ test.describe('event resizing', () => {
    *   [28, 29, 30, 31, 32, 33, 34],
    * ]
    */
-  let eventLocator: Locator;
 
-  test.beforeEach(({ page }) => {
-    // NOTE: 'event2' is started at cell #16
-    eventLocator = page.locator('data-test-id=1-event2');
-  });
-
-  test('resize event to the right', async ({ page }) => {
+  test('resize event to the right in the same row', async ({ page }) => {
+    // in the cell #15
+    const eventLocator = page.locator('data-test-id=0-event1').last();
     const boundingBoxBeforeResizing = await getBoundingBox(eventLocator);
-    const resizeIconLocator = eventLocator.locator('[data-test-id=horizontal-event-resize-icon]');
+    const resizeIconLocator = eventLocator.locator('data-test-id=horizontal-event-resize-icon');
     const targetCellLocator = page.locator(`${CELL_SELECTOR} >> nth=19`);
 
     await dragAndDrop(page, resizeIconLocator, targetCellLocator);
 
     const boundingBoxAfterResizing = await getBoundingBox(eventLocator);
 
+    expect(boundingBoxAfterResizing.y).toEqual(boundingBoxBeforeResizing.y);
     expect(boundingBoxAfterResizing.width).toBeGreaterThan(boundingBoxBeforeResizing.width);
+  });
+
+  test('resize event to the left in the same row', async ({ page }) => {
+    // in the cell #15
+    const eventLocator = page.locator('data-test-id=0-event1').last();
+    const boundingBoxBeforeResizing = await getBoundingBox(eventLocator);
+    const resizeIconLocator = eventLocator.locator('data-test-id=horizontal-event-resize-icon');
+    const targetCellLocator = page.locator(`${CELL_SELECTOR} >> nth=14`);
+
+    await dragAndDrop(page, resizeIconLocator, targetCellLocator);
+
+    const boundingBoxAfterResizing = await getBoundingBox(eventLocator);
+
+    expect(boundingBoxAfterResizing.y).toEqual(boundingBoxBeforeResizing.y);
+    expect(boundingBoxAfterResizing.width).toBeLessThan(boundingBoxBeforeResizing.width);
   });
 });
