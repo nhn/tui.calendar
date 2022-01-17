@@ -1,7 +1,6 @@
 import produce from 'immer';
 
 import EventUIModel from '@src/model/eventUIModel';
-import { isNil } from '@src/utils/type';
 
 import { CalendarState, CalendarStore, SetState } from '@t/store';
 
@@ -78,15 +77,7 @@ export function createDndDispatchers(set: SetState<CalendarStore>): DndDispatche
     setDraggingEventUIModel: (eventUIModel) => {
       set(
         produce((state: CalendarState) => {
-          if (isNil(eventUIModel)) {
-            state.dnd.draggingEventUIModel = eventUIModel;
-          } else {
-            const eventUIModelProps = eventUIModel.getUIProps();
-            const clonedEventUIModel = EventUIModel.create(eventUIModel.model);
-            clonedEventUIModel.setUIProps(eventUIModelProps);
-
-            state.dnd.draggingEventUIModel = clonedEventUIModel;
-          }
+          state.dnd.draggingEventUIModel = eventUIModel?.clone() ?? null;
         })
       );
     },
