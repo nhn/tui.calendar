@@ -24,8 +24,10 @@ var MAX_WEEK_OF_MONTH = 6;
  * @param {HTMLElement} container - container element
  * @param {Array.<Calendar>} calendars - calendar list used to create new schedule
  * @param {boolean} usageStatistics - GA tracking options in Calendar
+ * @param {boolean} isSingleDayOnly - is allowed/disallowed to span multiple days
+ * 
  */
-function ScheduleCreationPopup(container, calendars, usageStatistics) {
+function ScheduleCreationPopup(container, calendars, usageStatistics, isSingleDayOnly) {
     View.call(this, container);
     /**
      * @type {FloatingLayer}
@@ -54,7 +56,8 @@ function ScheduleCreationPopup(container, calendars, usageStatistics) {
     this._datepickerState = {
         start: null,
         end: null,
-        isAllDay: false
+        isAllDay: false,
+        isSingleDayOnly: isSingleDayOnly
     };
 
     domevent.on(container, 'click', this._onClick, this);
@@ -622,6 +625,7 @@ ScheduleCreationPopup.prototype._createDatepicker = function() {
     var start = this._datepickerState.start;
     var end = this._datepickerState.end;
     var isAllDay = this._datepickerState.isAllDay;
+    var isSingleDayOnly = this._datepickerState.isSingleDayOnly;
 
     this.rangePicker = DatePicker.createRangePicker({
         startpicker: {
@@ -639,7 +643,10 @@ ScheduleCreationPopup.prototype._createDatepicker = function() {
             showMeridiem: false,
             usageStatistics: this._usageStatistics
         },
-        usageStatistics: this._usageStatistics
+        usageStatistics: this._usageStatistics,
+        selectableRanges: isSingleDayOnly ? [
+            [new Date(start), new Date(start)]
+        ] : null
     });
     this.rangePicker.on('change:start', function() {
         this._setDatepickerState({start: this.rangePicker.getStartDate()});

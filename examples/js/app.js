@@ -168,6 +168,13 @@
 
                 target.querySelector('input').checked = !options.month.workweek;
                 break;
+            case 'toggle-single-day-only':
+                options.month.isSingleDayOnly = !options.month.isSingleDayOnly;
+                options.week.isSingleDayOnly = !options.week.isSingleDayOnly;
+                viewName = cal.getViewName();
+
+                target.querySelector('input').checked = options.month.isSingleDayOnly;
+                break;
             default:
                 break;
         }
