@@ -26,7 +26,7 @@ import { calendarSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
 import { getSize } from '@src/utils/dom';
 import { isBetween } from '@src/utils/math';
-import { isPresent } from '@src/utils/type';
+import { isNil, isPresent } from '@src/utils/type';
 
 import { CalendarMonthOptions } from '@t/store';
 import { CellInfo } from '@t/time/datetime';
@@ -110,36 +110,21 @@ function calcGridSelectionData(
   return resultGridSelection;
 }
 
-const ResizingMonthEvents = memo(function ResizingMonthEvents({
-  resizingEvent,
-  uiModels,
-  resizingWidth,
+const ResizingEventShadow = memo(function ResizingEventShadow({
+  shadowData,
 }: {
-  resizingEvent: EventUIModel | null;
-  uiModels: EventUIModel[];
-  resizingWidth: string | null;
+  shadowData: [EventUIModel] | [EventUIModel, string];
 }) {
-  const resizingEventUiModels = useMemo(
-    () =>
-      resizingEvent ? uiModels.filter((uiModel) => uiModel.cid() === resizingEvent.cid()) : null,
-    [resizingEvent, uiModels]
-  );
-
-  if (!resizingEventUiModels) {
-    return null;
-  }
-
+  const [uiModel, resizingWidth] = shadowData;
   return (
     <div className={cls('weekday-events')}>
-      {resizingEventUiModels.map((uiModel) => (
-        <HorizontalEvent
-          key={`resizing-event-${uiModel.cid()}`}
-          uiModel={uiModel}
-          eventHeight={MONTH_EVENT_HEIGHT}
-          headerHeight={MONTH_CELL_PADDING_TOP + MONTH_CELL_BAR_HEIGHT}
-          resizingWidth={resizingWidth}
-        />
-      ))}
+      <HorizontalEvent
+        key={`resizing-event-${uiModel.cid()}`}
+        uiModel={uiModel}
+        eventHeight={MONTH_EVENT_HEIGHT}
+        headerHeight={MONTH_CELL_PADDING_TOP + MONTH_CELL_BAR_HEIGHT}
+        resizingWidth={resizingWidth}
+      />
     </div>
   );
 });
@@ -161,7 +146,7 @@ export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidth
     [dateMatrix, gridContainer, rowInfo]
   );
 
-  const renderedEventUiModels = useMemo(
+  const renderedEventUIModels = useMemo(
     () => dateMatrix.map((week) => getRenderedEventUIModels(week, calendarData, narrowWeekend)),
     [calendarData, dateMatrix, narrowWeekend]
   );
@@ -173,22 +158,21 @@ export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidth
     rowInfo,
     mousePositionDataGrabber,
   });
-  const {
-    resizingWidth,
-    resizingEvent,
-    currentGridPos: currentResizingPos,
-  } = useDayGridMonthEventResize({
+  const { resizingData, currentGridPos: currentResizingPos } = useDayGridMonthEventResize({
     dateMatrix,
     mousePositionDataGrabber,
     cellWidthMap,
+    renderedUIModels: renderedEventUIModels,
   });
 
   return (
     <div ref={setGridContainerRef} onMouseDown={onMouseDown} className={cls('month-daygrid')}>
       {dateMatrix.map((week, rowIndex) => {
-        const { uiModels, gridDateEventModelMap } = renderedEventUiModels[rowIndex];
+        const { uiModels, gridDateEventModelMap } = renderedEventUIModels[rowIndex];
         const isMouseInWeek = rowIndex === currentGridPos?.y || rowIndex === currentResizingPos?.y;
         const gridSelectionDataByRow = calcGridSelectionData(gridSelection, rowIndex, week.length);
+        const shouldRenderResizingEventShadow =
+          isPresent(resizingData) && (resizingData[rowIndex]?.length ?? -1) > 0;
 
         return (
           <div
@@ -205,12 +189,8 @@ export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidth
                 rowInfo={rowInfo}
                 height={height}
               />
-              {resizingEvent && resizingWidth && (
-                <ResizingMonthEvents
-                  resizingEvent={resizingEvent}
-                  uiModels={uiModels}
-                  resizingWidth={isMouseInWeek ? resizingWidth : null}
-                />
+              {shouldRenderResizingEventShadow && (
+                <ResizingEventShadow shadowData={resizingData[rowIndex]} />
               )}
               <MonthEvents
                 name="month"
