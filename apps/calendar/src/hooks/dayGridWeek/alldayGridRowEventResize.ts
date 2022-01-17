@@ -7,7 +7,7 @@ import EventUIModel from '@src/model/eventUIModel';
 import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import TZDate from '@src/time/date';
-import { isNil } from '@src/utils/type';
+import { isPresent } from '@src/utils/type';
 
 function getEventColIndex(uiModel: EventUIModel, row: TZDate[]) {
   const start = getGridDateIndex(uiModel.getStarts(), row);
@@ -34,7 +34,7 @@ export function useAlldayGridRowEventResize({
 
   const [currentGridX, setCurrentGridX] = useState<number | null>(null);
 
-  const hasDraggingCoords = !isNil(x) && !isNil(y);
+  const hasDraggingCoords = isPresent(x) && isPresent(y);
 
   const targetEventGridIndices = useMemo(() => {
     if (resizingEvent) {
@@ -45,7 +45,7 @@ export function useAlldayGridRowEventResize({
   }, [row, resizingEvent]);
 
   const resizingWidth = useMemo(() => {
-    if (targetEventGridIndices.start > -1 && !isNil(currentGridX)) {
+    if (targetEventGridIndices.start > -1 && isPresent(currentGridX)) {
       return gridColWidthMap[targetEventGridIndices.start][currentGridX];
     }
 
@@ -53,7 +53,7 @@ export function useAlldayGridRowEventResize({
   }, [currentGridX, gridColWidthMap, targetEventGridIndices.start]);
 
   useEffect(() => {
-    if (!isNil(resizingEvent) && hasDraggingCoords) {
+    if (isPresent(resizingEvent) && hasDraggingCoords) {
       const data = mousePositionDataGrabber({ clientX: x, clientY: y } as MouseEvent);
 
       setCurrentGridX(data?.gridX ?? null);
@@ -62,7 +62,7 @@ export function useAlldayGridRowEventResize({
 
   useEffect(() => {
     const isDraggingEnd =
-      draggingState === DraggingState.IDLE && !isNil(resizingEvent) && !isNil(currentGridX);
+      draggingState === DraggingState.IDLE && isPresent(resizingEvent) && isPresent(currentGridX);
 
     if (isDraggingEnd) {
       const targetDate = row[currentGridX];
