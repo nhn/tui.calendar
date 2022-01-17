@@ -65,11 +65,12 @@ export function useAlldayGridRowEventResize({
       draggingState === DraggingState.IDLE && isPresent(resizingEvent) && isPresent(currentGridX);
 
     if (isDraggingEnd) {
-      const targetDate = row[currentGridX];
       const shouldUpdateEvent =
         targetEventGridIndices.start <= currentGridX && targetEventGridIndices.end !== currentGridX;
 
       if (shouldUpdateEvent) {
+        const targetDate = row[currentGridX];
+
         updateEvent({
           event: resizingEvent.model,
           eventData: { end: targetDate },
