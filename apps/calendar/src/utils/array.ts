@@ -108,6 +108,16 @@ export function last<T>(array: Array<T>) {
   return array[array.length - 1];
 }
 
+export function findLastIndex<T>(array: T[], predicate: (value: T) => boolean): number {
+  for (let i = array.length - 1; i >= 0; i -= 1) {
+    if (predicate(array[i])) {
+      return i;
+    }
+  }
+
+  return -1;
+}
+
 export function fill<T>(length: number, value: T): T[] {
   if (length > 0) {
     return Array.from<T, T>({ length }, () => {
