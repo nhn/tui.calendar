@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { useEffect, useMemo, useState } from 'preact/hooks';
 
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
@@ -8,7 +9,6 @@ import EventUIModel from '@src/model/eventUIModel';
 import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import TZDate from '@src/time/date';
-import { findLastIndex } from '@src/utils/array';
 import { isPresent } from '@src/utils/type';
 
 function getRowPosOfUIModel(uiModel: EventUIModel, dateRow: TZDate[]) {
@@ -45,30 +45,33 @@ export function useDayGridMonthEventResize({
     y: number;
   } | null>(null);
 
-  const targetUIModels: [EventUIModel][] | null = useMemo(
+  const targetUIModels = useMemo(
     () =>
       isPresent(draggingStartUIModel)
-        ? renderedUIModels.map(
-            ({ uiModels }) =>
-              uiModels.filter((uiModel) => uiModel.cid() === draggingStartUIModel.cid()) as [
-                EventUIModel
-              ]
+        ? renderedUIModels.map(({ uiModels }) =>
+            uiModels.filter((uiModel) => uiModel.cid() === draggingStartUIModel.cid())
           )
         : null,
     [renderedUIModels, draggingStartUIModel]
   );
-  const resizingData: ([EventUIModel] | [EventUIModel, string])[] | null = useMemo(() => {
+  const resizingData = useMemo(() => {
     if (
       isPresent(targetUIModels) &&
+      isPresent(draggingStartUIModel) &&
       isPresent(draggingStartUIModelGridPos) &&
       isPresent(currentGridPos)
     ) {
+      // TODO: Rename variables
+      // TODO: Implement edge case
+
       if (currentGridPos.y < draggingStartUIModelGridPos.y) {
         const cloneRange = targetUIModels.slice(0, currentGridPos.y + 1);
         const lastAvailableUIModelRowIndex = cloneRange.length - 1;
+
         return cloneRange.map((row, rowIndex) => {
           if (rowIndex === lastAvailableUIModelRowIndex) {
             const { startX } = getRowPosOfUIModel(row[0], dateMatrix[rowIndex]);
+
             return [row[0], cellWidthMap[startX][Math.max(startX, currentGridPos.x)]];
           }
 
@@ -87,10 +90,48 @@ export function useDayGridMonthEventResize({
             : row
         );
       }
+
+      if (currentGridPos.y > draggingStartUIModelGridPos.y) {
+        return targetUIModels.map((row, rowIndex) => {
+          if (rowIndex < draggingStartUIModelGridPos.y) {
+            return row;
+          }
+
+          if (rowIndex === draggingStartUIModelGridPos.y) {
+            const { startX } = getRowPosOfUIModel(row[0], dateMatrix[rowIndex]);
+
+            return [row[0], cellWidthMap[startX][dateMatrix[rowIndex].length - 1]];
+          }
+
+          if (draggingStartUIModelGridPos.y < rowIndex) {
+            const clonedEventUIModel = draggingStartUIModel.clone();
+            clonedEventUIModel.setUIProps({ left: 0, exceedLeft: true });
+
+            if (rowIndex < currentGridPos.y) {
+              clonedEventUIModel.setUIProps({ exceedRight: true });
+
+              return [clonedEventUIModel, '100%'];
+            }
+
+            if (rowIndex === currentGridPos.y) {
+              return [clonedEventUIModel, cellWidthMap[0][currentGridPos.x]];
+            }
+          }
+
+          return row;
+        });
+      }
     }
 
     return null;
-  }, [cellWidthMap, currentGridPos, dateMatrix, draggingStartUIModelGridPos, targetUIModels]);
+  }, [
+    cellWidthMap,
+    currentGridPos,
+    dateMatrix,
+    draggingStartUIModelGridPos,
+    draggingStartUIModel,
+    targetUIModels,
+  ]);
 
   useEffect(() => {
     const hasInitCoords = isPresent(initX) && isPresent(initY);

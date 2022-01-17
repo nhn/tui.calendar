@@ -145,7 +145,7 @@ export default class EventUIModel implements EventUIProps {
     return pick(this, ...eventUIPropsKey);
   }
 
-  setUIProps(props: EventUIProps) {
+  setUIProps(props: Partial<EventUIProps>) {
     Object.assign(this, props);
   }
 
