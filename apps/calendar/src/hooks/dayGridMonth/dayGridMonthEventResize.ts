@@ -150,6 +150,9 @@ export function useDayGridMonthEventResize({
   const { draggingEvent: draggingStartUIModel, clearDraggingEvent } = useDraggingEvent('resize');
 
   const [currentGridPos, setCurrentGridPos] = useState<GridPosition | null>(null);
+  const [resizingEventStartDatePos, setResizingEventStartDatePos] = useState<GridPosition | null>(
+    null
+  );
   const [draggingStartUIModelGridPos, setDraggingStartUIModelGridPos] =
     useState<DraggingUIModelGridPosition | null>(null);
 
@@ -166,12 +169,97 @@ export function useDayGridMonthEventResize({
     [renderedUIModels, draggingStartUIModel]
   );
 
+  useEffect(() => {
+    if (isPresent(resizeTargetUIModelRows)) {
+      const firstAvailableUIModelRowIndex = resizeTargetUIModelRows.findIndex(
+        (row) => row.length > 0
+      );
+      const { startX } = getRowPosOfUIModel(
+        (resizeTargetUIModelRows[firstAvailableUIModelRowIndex] as [EventUIModel])[0],
+        dateMatrix[firstAvailableUIModelRowIndex]
+      );
+
+      setResizingEventStartDatePos({
+        x: startX,
+        y: firstAvailableUIModelRowIndex,
+      });
+    }
+  }, [dateMatrix, resizeTargetUIModelRows]);
+
+  useEffect(() => {
+    const hasInitCoords = isPresent(initX) && isPresent(initY);
+
+    if (isPresent(draggingStartUIModel) && hasInitCoords) {
+      const pos = mousePositionDataGrabber({ clientX: initX, clientY: initY } as MouseEvent);
+
+      if (pos) {
+        const targetEventGridY = pos.gridY;
+        const row = dateMatrix[targetEventGridY];
+        const { startX, endX } = getRowPosOfUIModel(draggingStartUIModel, row);
+
+        setDraggingStartUIModelGridPos({ startX, endX, y: targetEventGridY });
+      }
+    }
+  }, [dateMatrix, initX, initY, mousePositionDataGrabber, draggingStartUIModel]);
+
+  useEffect(() => {
+    const hasDraggingCoords = isPresent(x) && isPresent(y);
+
+    if (isPresent(draggingStartUIModel) && hasDraggingCoords) {
+      const pos = mousePositionDataGrabber({ clientX: x, clientY: y } as MouseEvent);
+
+      if (pos) {
+        setCurrentGridPos({ x: pos.gridX, y: pos.gridY });
+      }
+    }
+  }, [mousePositionDataGrabber, draggingStartUIModel, x, y]);
+
+  // eslint-disable-next-line complexity
+  useEffect(() => {
+    const isDraggingEnd =
+      draggingState === DraggingState.IDLE &&
+      isPresent(resizingEventStartDatePos) &&
+      isPresent(draggingStartUIModel) &&
+      isPresent(draggingStartUIModelGridPos) &&
+      isPresent(currentGridPos);
+    if (isDraggingEnd) {
+      const shouldUpdate =
+        resizingEventStartDatePos.y <= currentGridPos.y ||
+        (resizingEventStartDatePos.y === currentGridPos.y &&
+          resizingEventStartDatePos.x <= currentGridPos.x &&
+          currentGridPos.x !== draggingStartUIModelGridPos.endX &&
+          currentGridPos.y !== draggingStartUIModelGridPos.y);
+
+      if (shouldUpdate) {
+        const targetEndDate = dateMatrix[currentGridPos.y][currentGridPos.x];
+        updateEvent({
+          event: draggingStartUIModel.model,
+          eventData: {
+            end: targetEndDate,
+          },
+        });
+      }
+
+      setCurrentGridPos(null);
+      clearDraggingEvent();
+    }
+  }, [
+    clearDraggingEvent,
+    currentGridPos,
+    dateMatrix,
+    draggingState,
+    draggingStartUIModel,
+    draggingStartUIModelGridPos,
+    updateEvent,
+    resizingEventStartDatePos,
+  ]);
+
   const canCalculateShadowProps =
     isPresent(resizeTargetUIModelRows) &&
     isPresent(draggingStartUIModel) &&
     isPresent(draggingStartUIModelGridPos) &&
     isPresent(currentGridPos);
-  const resizingEventShadowProps: ResizingEventShadowProps[] | null = useMemo(() => {
+  return useMemo(() => {
     if (canCalculateShadowProps) {
       if (currentGridPos.y < draggingStartUIModelGridPos.y) {
         let slicedTargetUIModelRows = resizeTargetUIModelRows.slice(0, currentGridPos.y + 1);
@@ -228,68 +316,4 @@ export function useDayGridMonthEventResize({
     cellWidthMap,
     draggingStartUIModel,
   ]);
-
-  useEffect(() => {
-    const hasInitCoords = isPresent(initX) && isPresent(initY);
-
-    if (isPresent(draggingStartUIModel) && hasInitCoords) {
-      const pos = mousePositionDataGrabber({ clientX: initX, clientY: initY } as MouseEvent);
-
-      if (pos) {
-        const targetEventGridY = pos.gridY;
-        const row = dateMatrix[targetEventGridY];
-        const { startX, endX } = getRowPosOfUIModel(draggingStartUIModel, row);
-
-        setDraggingStartUIModelGridPos({ startX, endX, y: targetEventGridY });
-      }
-    }
-  }, [dateMatrix, initX, initY, mousePositionDataGrabber, draggingStartUIModel]);
-
-  useEffect(() => {
-    const hasDraggingCoords = isPresent(x) && isPresent(y);
-
-    if (isPresent(draggingStartUIModel) && hasDraggingCoords) {
-      const pos = mousePositionDataGrabber({ clientX: x, clientY: y } as MouseEvent);
-
-      if (pos) {
-        setCurrentGridPos({ x: pos.gridX, y: pos.gridY });
-      }
-    }
-  }, [mousePositionDataGrabber, draggingStartUIModel, x, y]);
-
-  useEffect(() => {
-    const isDraggingEnd =
-      draggingState === DraggingState.IDLE &&
-      isPresent(draggingStartUIModel) &&
-      isPresent(draggingStartUIModelGridPos) &&
-      isPresent(currentGridPos);
-    if (isDraggingEnd) {
-      const shouldUpdate =
-        draggingStartUIModelGridPos.startX <= currentGridPos.x &&
-        currentGridPos.x !== draggingStartUIModelGridPos.endX;
-
-      if (shouldUpdate) {
-        const targetEndDate = dateMatrix[draggingStartUIModelGridPos.y][currentGridPos.x];
-        updateEvent({
-          event: draggingStartUIModel.model,
-          eventData: {
-            end: targetEndDate,
-          },
-        });
-      }
-
-      setCurrentGridPos(null);
-      clearDraggingEvent();
-    }
-  }, [
-    clearDraggingEvent,
-    currentGridPos,
-    dateMatrix,
-    draggingState,
-    draggingStartUIModel,
-    draggingStartUIModelGridPos,
-    updateEvent,
-  ]);
-
-  return resizingEventShadowProps;
 }
