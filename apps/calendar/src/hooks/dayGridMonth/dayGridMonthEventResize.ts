@@ -58,7 +58,7 @@ function mapResizeShadowPropsOutOfRange({
       row.length > 0
         ? [
             row[0] as EventUIModel,
-            cellWidthMap[resizingEventStartDatePos.y][resizingEventStartDatePos.x],
+            cellWidthMap[resizingEventStartDatePos.x][resizingEventStartDatePos.x],
           ]
         : row
     );
@@ -237,7 +237,7 @@ export function useDayGridMonthEventResize({
       isPresent(currentGridPos);
     if (isDraggingEnd) {
       const shouldUpdate =
-        resizingEventStartDatePos.y < currentGridPos.y ||
+        resizingEventStartDatePos.y <= currentGridPos.y ||
         (resizingEventStartDatePos.y === currentGridPos.y &&
           resizingEventStartDatePos.x <= currentGridPos.x &&
           currentGridPos.x !== draggingStartUIModelGridPos.endX &&
