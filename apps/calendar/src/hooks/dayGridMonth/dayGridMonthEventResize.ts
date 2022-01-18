@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'preact/hooks';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { getGridDateIndex, getRenderedEventUIModels } from '@src/helpers/grid';
 import { MousePositionDataGrabber } from '@src/helpers/view';
+import { useKeydownEvent } from '@src/hooks/common/keydownEvent';
 import { useDraggingEvent } from '@src/hooks/event/draggingEvent';
 import EventUIModel from '@src/model/eventUIModel';
 import { dndSelector } from '@src/selectors';
@@ -213,6 +214,13 @@ export function useDayGridMonthEventResize({
       }
     }
   }, [mousePositionDataGrabber, draggingStartUIModel, x, y]);
+
+  useKeydownEvent('Escape', () => {
+    setResizingEventStartDatePos(null);
+    setCurrentGridPos(null);
+    setDraggingStartUIModelGridPos(null);
+    clearDraggingEvent();
+  });
 
   // eslint-disable-next-line complexity
   useEffect(() => {
