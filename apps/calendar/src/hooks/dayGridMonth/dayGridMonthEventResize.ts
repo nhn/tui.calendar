@@ -4,6 +4,7 @@ import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { getGridDateIndex, getRenderedEventUIModels } from '@src/helpers/grid';
 import { MousePositionDataGrabber } from '@src/helpers/view';
 import { useKeydownEvent } from '@src/hooks/common/keydownEvent';
+import { useCurrentPointerPositionInGrid } from '@src/hooks/event/currentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/draggingEvent';
 import EventUIModel from '@src/model/eventUIModel';
 import { dndSelector } from '@src/selectors';
@@ -11,6 +12,8 @@ import { DraggingState } from '@src/slices/dnd';
 import TZDate from '@src/time/date';
 import { findLastIndex } from '@src/utils/array';
 import { isPresent } from '@src/utils/type';
+
+import { GridPosition } from '@t/grid';
 
 function getRowPosOfUIModel(uiModel: EventUIModel, dateRow: TZDate[]) {
   const startX = Math.max(getGridDateIndex(uiModel.getStarts(), dateRow), 0);
@@ -29,7 +32,6 @@ interface EventResizeHookParams {
   mousePositionDataGrabber: MousePositionDataGrabber;
 }
 
-type GridPosition = { x: number; y: number };
 type DraggingUIModelGridPosition = { startX: number; endX: number; y: number };
 type FilteredUIModelRow = [] | [EventUIModel];
 export type AvailableResizingEventShadowProps = [EventUIModel] | [EventUIModel, string];
@@ -149,8 +151,9 @@ export function useDayGridMonthEventResize({
   const { initX, initY, x, y, draggingState } = useStore(dndSelector);
   const { updateEvent } = useDispatch('calendar');
   const { draggingEvent: draggingStartUIModel, clearDraggingEvent } = useDraggingEvent('resize');
+  const [currentGridPos, clearCurrentGridPos] =
+    useCurrentPointerPositionInGrid(mousePositionDataGrabber);
 
-  const [currentGridPos, setCurrentGridPos] = useState<GridPosition | null>(null);
   const [resizingEventStartDatePos, setResizingEventStartDatePos] = useState<GridPosition | null>(
     null
   );
@@ -203,22 +206,10 @@ export function useDayGridMonthEventResize({
     }
   }, [dateMatrix, initX, initY, mousePositionDataGrabber, draggingStartUIModel]);
 
-  useEffect(() => {
-    const hasDraggingCoords = isPresent(x) && isPresent(y);
-
-    if (isPresent(draggingStartUIModel) && hasDraggingCoords) {
-      const pos = mousePositionDataGrabber({ clientX: x, clientY: y } as MouseEvent);
-
-      if (pos) {
-        setCurrentGridPos({ x: pos.gridX, y: pos.gridY });
-      }
-    }
-  }, [mousePositionDataGrabber, draggingStartUIModel, x, y]);
-
   useKeydownEvent('Escape', () => {
     setResizingEventStartDatePos(null);
-    setCurrentGridPos(null);
     setDraggingStartUIModelGridPos(null);
+    clearCurrentGridPos();
     clearDraggingEvent();
   });
 
@@ -248,7 +239,7 @@ export function useDayGridMonthEventResize({
         });
       }
 
-      setCurrentGridPos(null);
+      clearCurrentGridPos();
       clearDraggingEvent();
     }
   }, [
@@ -260,6 +251,7 @@ export function useDayGridMonthEventResize({
     draggingStartUIModelGridPos,
     updateEvent,
     resizingEventStartDatePos,
+    clearCurrentGridPos,
   ]);
 
   const canCalculateShadowProps =

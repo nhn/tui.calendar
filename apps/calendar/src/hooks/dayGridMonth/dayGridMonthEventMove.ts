@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from 'preact/hooks';
+import { useEffect, useMemo } from 'preact/hooks';
 
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
+import { useCurrentPointerPositionInGrid } from '@src/hooks/event/currentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/draggingEvent';
 import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
@@ -21,11 +22,11 @@ export function useDayGridMonthEventMove({
   rowInfo,
   mousePositionDataGrabber,
 }: Params) {
-  const { x, y, draggingState } = useStore(dndSelector);
+  const { draggingState } = useStore(dndSelector);
   const { draggingEvent: movingEvent, clearDraggingEvent } = useDraggingEvent('move');
   const { updateEvent } = useDispatch('calendar');
 
-  const [currentGridPos, setCurrentGridPos] = useState<{ x: number; y: number } | null>(null);
+  const [currentGridPos] = useCurrentPointerPositionInGrid(mousePositionDataGrabber);
 
   const shadowEvent = useMemo(() => {
     let shadowEventUIModel = null;
@@ -37,18 +38,6 @@ export function useDayGridMonthEventMove({
 
     return shadowEventUIModel;
   }, [currentGridPos?.x, rowInfo, movingEvent]);
-
-  useEffect(() => {
-    const hasDraggingCoords = isPresent(x) && isPresent(y);
-
-    if (isPresent(movingEvent) && hasDraggingCoords) {
-      const pos = mousePositionDataGrabber({ clientX: x, clientY: y } as MouseEvent);
-
-      if (pos) {
-        setCurrentGridPos({ x: pos.gridX, y: pos.gridY });
-      }
-    }
-  }, [mousePositionDataGrabber, movingEvent, x, y]);
 
   useEffect(() => {
     const shouldUpdate =

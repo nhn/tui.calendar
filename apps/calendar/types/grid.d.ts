@@ -3,3 +3,8 @@ export interface GridUIModel {
   width: number;
   left: number;
 }
+
+export interface GridPosition {
+  x: number;
+  y: number;
+}
