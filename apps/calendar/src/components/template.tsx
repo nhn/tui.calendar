@@ -1,5 +1,7 @@
 import { h } from 'preact';
 
+import DOMPurify from 'dompurify';
+
 import { useStore } from '@src/contexts/calendarStore';
 import { templateSelector } from '@src/selectors';
 import { TemplateName } from '@src/template/default';
@@ -20,9 +22,9 @@ export function Template({ template, model }: Props) {
   const htmlOrVnode = templateFunc(model, h);
 
   return isString(htmlOrVnode) ? (
-    <span
+    <div
       dangerouslySetInnerHTML={{
-        __html: htmlOrVnode,
+        __html: DOMPurify.sanitize(htmlOrVnode),
       }}
     />
   ) : (
