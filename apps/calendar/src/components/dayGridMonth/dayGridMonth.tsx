@@ -1,10 +1,10 @@
 import { h } from 'preact';
-import { memo } from 'preact/compat';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 
 import { GridSelection } from '@src/components/dayGridCommon/gridSelection';
 import { GridRow } from '@src/components/dayGridMonth/gridRow';
 import { MonthEvents } from '@src/components/dayGridMonth/monthEvents';
+import { ResizingEventShadow } from '@src/components/dayGridMonth/resizingEventShadow';
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import {
   MONTH_CELL_BAR_HEIGHT,
@@ -20,13 +20,15 @@ import { useDOMNode } from '@src/hooks/common/domNode';
 import { useDayGridSelection } from '@src/hooks/dayGridCommon/dayGridSelection';
 import { usePopupWithDayGridSelection } from '@src/hooks/dayGridCommon/popupWithDayGridSelection';
 import { useDayGridMonthEventMove } from '@src/hooks/dayGridMonth/dayGridMonthEventMove';
-import { useDayGridMonthEventResize } from '@src/hooks/dayGridMonth/dayGridMonthEventResize';
-import EventUIModel from '@src/model/eventUIModel';
+import {
+  hasResizingEventShadowProps,
+  useDayGridMonthEventResize,
+} from '@src/hooks/dayGridMonth/dayGridMonthEventResize';
 import { calendarSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
 import { getSize } from '@src/utils/dom';
 import { isBetween } from '@src/utils/math';
-import { isNil, isPresent } from '@src/utils/type';
+import { isPresent } from '@src/utils/type';
 
 import { CalendarMonthOptions } from '@t/store';
 import { CellInfo } from '@t/time/datetime';
@@ -110,25 +112,6 @@ function calcGridSelectionData(
   return resultGridSelection;
 }
 
-const ResizingEventShadow = memo(function ResizingEventShadow({
-  shadowData,
-}: {
-  shadowData: [EventUIModel] | [EventUIModel, string];
-}) {
-  const [uiModel, resizingWidth] = shadowData;
-  return (
-    <div className={cls('weekday-events')}>
-      <HorizontalEvent
-        key={`resizing-event-${uiModel.cid()}`}
-        uiModel={uiModel}
-        eventHeight={MONTH_EVENT_HEIGHT}
-        headerHeight={MONTH_CELL_PADDING_TOP + MONTH_CELL_BAR_HEIGHT}
-        resizingWidth={resizingWidth}
-      />
-    </div>
-  );
-});
-
 export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidthMap = [] }: Props) {
   const [gridContainer, setGridContainerRef] = useDOMNode<HTMLDivElement>();
   const calendarData = useStore(calendarSelector);
@@ -158,7 +141,7 @@ export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidth
     rowInfo,
     mousePositionDataGrabber,
   });
-  const { resizingData, currentGridPos: currentResizingPos } = useDayGridMonthEventResize({
+  const resizingEventShadowProps = useDayGridMonthEventResize({
     dateMatrix,
     mousePositionDataGrabber,
     cellWidthMap,
@@ -169,10 +152,9 @@ export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidth
     <div ref={setGridContainerRef} onMouseDown={onMouseDown} className={cls('month-daygrid')}>
       {dateMatrix.map((week, rowIndex) => {
         const { uiModels, gridDateEventModelMap } = renderedEventUIModels[rowIndex];
-        const isMouseInWeek = rowIndex === currentGridPos?.y || rowIndex === currentResizingPos?.y;
+        const isMouseInWeek = rowIndex === currentGridPos?.y;
         const gridSelectionDataByRow = calcGridSelectionData(gridSelection, rowIndex, week.length);
-        const shouldRenderResizingEventShadow =
-          isPresent(resizingData) && (resizingData[rowIndex]?.length ?? -1) > 0;
+        const resizingEventShadowPropsByRow = resizingEventShadowProps?.[rowIndex];
 
         return (
           <div
@@ -189,8 +171,8 @@ export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidth
                 rowInfo={rowInfo}
                 height={height}
               />
-              {shouldRenderResizingEventShadow && (
-                <ResizingEventShadow shadowData={resizingData[rowIndex]} />
+              {hasResizingEventShadowProps(resizingEventShadowPropsByRow) && (
+                <ResizingEventShadow shadowEventProps={resizingEventShadowPropsByRow} />
               )}
               <MonthEvents
                 name="month"
