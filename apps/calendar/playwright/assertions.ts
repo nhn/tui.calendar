@@ -1,5 +1,6 @@
 import { expect, Page } from '@playwright/test';
 
+import { BoundingBox } from './types';
 import { getBoundingBox } from './utils';
 
 export async function assertGridSelectionMatching(
@@ -46,4 +47,11 @@ export async function assertGridSelectionMatching(
     startCellBoundingBox.width,
     -1
   );
+}
+
+export function assertBoundingBoxIncluded(targetBox: BoundingBox, wrappingBox: BoundingBox) {
+  expect(targetBox.x).toBeGreaterThanOrEqual(wrappingBox.x);
+  expect(targetBox.y).toBeGreaterThanOrEqual(wrappingBox.y);
+  expect(targetBox.x + targetBox.width).toBeLessThanOrEqual(wrappingBox.x + wrappingBox.width);
+  expect(targetBox.y + targetBox.height).toBeLessThanOrEqual(wrappingBox.y + wrappingBox.height);
 }
