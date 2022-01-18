@@ -43,7 +43,28 @@ export function hasResizingEventShadowProps(
   return isPresent(row) && row.length > 0;
 }
 
-function mapResizeShadowPropsWhenShrink({
+function mapResizeShadowPropsOutOfRange({
+  resizeTargetUIModelRows,
+  resizingEventStartDatePos,
+  cellWidthMap,
+}: {
+  resizeTargetUIModelRows: FilteredUIModelRow[];
+  resizingEventStartDatePos: GridPosition;
+  cellWidthMap: EventResizeHookParams['cellWidthMap'];
+}): ResizingEventShadowProps[] {
+  return resizeTargetUIModelRows
+    .slice(0, resizingEventStartDatePos.y + 1)
+    .map((row) =>
+      row.length > 0
+        ? [
+            row[0] as EventUIModel,
+            cellWidthMap[resizingEventStartDatePos.y][resizingEventStartDatePos.x],
+          ]
+        : row
+    );
+}
+
+function mapResizeShadowPropsShrinking({
   filteredUIModelRows,
   lastAvailableUIModelRowIndex,
   dateMatrix,
@@ -60,21 +81,14 @@ function mapResizeShadowPropsWhenShrink({
     if (rowIndex === lastAvailableUIModelRowIndex) {
       const { startX } = getRowPosOfUIModel(row[0] as EventUIModel, dateMatrix[rowIndex]);
 
-      return [
-        row[0] as EventUIModel,
-        cellWidthMap[startX][
-          currentGridPos.y < lastAvailableUIModelRowIndex
-            ? startX
-            : Math.max(startX, currentGridPos.x)
-        ],
-      ];
+      return [row[0] as EventUIModel, cellWidthMap[startX][Math.max(startX, currentGridPos.x)]];
     }
 
     return row;
   });
 }
 
-function mapResizeShadowPropsWhenSame({
+function mapResizeShadowPropsSameRow({
   filteredUIModelRows,
   draggingStartUIModelGridPos,
   cellWidthMap,
@@ -97,7 +111,7 @@ function mapResizeShadowPropsWhenSame({
   );
 }
 
-function mapResizingShadowPropsWhenExtend({
+function mapResizingShadowPropsExtending({
   filteredUIModelRows,
   draggingStartUIModelGridPos,
   dateMatrix,
@@ -148,7 +162,7 @@ export function useDayGridMonthEventResize({
   renderedUIModels,
   cellWidthMap,
 }: EventResizeHookParams) {
-  const { initX, initY, x, y, draggingState } = useStore(dndSelector);
+  const { initX, initY, draggingState } = useStore(dndSelector);
   const { updateEvent } = useDispatch('calendar');
   const { draggingEvent: draggingStartUIModel, clearDraggingEvent } = useDraggingEvent('resize');
   const [currentGridPos, clearCurrentGridPos] =
@@ -223,7 +237,7 @@ export function useDayGridMonthEventResize({
       isPresent(currentGridPos);
     if (isDraggingEnd) {
       const shouldUpdate =
-        resizingEventStartDatePos.y <= currentGridPos.y ||
+        resizingEventStartDatePos.y < currentGridPos.y ||
         (resizingEventStartDatePos.y === currentGridPos.y &&
           resizingEventStartDatePos.x <= currentGridPos.x &&
           currentGridPos.x !== draggingStartUIModelGridPos.endX &&
@@ -256,27 +270,31 @@ export function useDayGridMonthEventResize({
 
   const canCalculateShadowProps =
     isPresent(resizeTargetUIModelRows) &&
+    isPresent(resizingEventStartDatePos) &&
     isPresent(draggingStartUIModel) &&
     isPresent(draggingStartUIModelGridPos) &&
     isPresent(currentGridPos);
   return useMemo(() => {
     if (canCalculateShadowProps) {
+      if (
+        currentGridPos.y < resizingEventStartDatePos.y ||
+        (currentGridPos.y === resizingEventStartDatePos.y &&
+          currentGridPos.x < resizingEventStartDatePos.x)
+      ) {
+        return mapResizeShadowPropsOutOfRange({
+          resizeTargetUIModelRows,
+          resizingEventStartDatePos,
+          cellWidthMap,
+        });
+      }
+
       if (currentGridPos.y < draggingStartUIModelGridPos.y) {
-        let slicedTargetUIModelRows = resizeTargetUIModelRows.slice(0, currentGridPos.y + 1);
-        let lastAvailableUIModelRowIndex = findLastIndex(
+        const slicedTargetUIModelRows = resizeTargetUIModelRows.slice(0, currentGridPos.y + 1);
+        const lastAvailableUIModelRowIndex = findLastIndex(
           slicedTargetUIModelRows,
           (row) => row.length > 0
         );
-
-        if (lastAvailableUIModelRowIndex === -1) {
-          lastAvailableUIModelRowIndex = resizeTargetUIModelRows.findIndex((row) => row.length > 0);
-          slicedTargetUIModelRows = resizeTargetUIModelRows.slice(
-            0,
-            lastAvailableUIModelRowIndex + 1
-          );
-        }
-
-        return mapResizeShadowPropsWhenShrink({
+        return mapResizeShadowPropsShrinking({
           filteredUIModelRows: slicedTargetUIModelRows,
           lastAvailableUIModelRowIndex,
           dateMatrix,
@@ -286,7 +304,7 @@ export function useDayGridMonthEventResize({
       }
 
       if (currentGridPos.y === draggingStartUIModelGridPos.y) {
-        return mapResizeShadowPropsWhenSame({
+        return mapResizeShadowPropsSameRow({
           filteredUIModelRows: resizeTargetUIModelRows,
           draggingStartUIModelGridPos,
           cellWidthMap,
@@ -295,7 +313,7 @@ export function useDayGridMonthEventResize({
       }
 
       if (currentGridPos.y > draggingStartUIModelGridPos.y) {
-        return mapResizingShadowPropsWhenExtend({
+        return mapResizingShadowPropsExtending({
           filteredUIModelRows: resizeTargetUIModelRows,
           draggingStartUIModelGridPos,
           dateMatrix,
@@ -310,10 +328,11 @@ export function useDayGridMonthEventResize({
   }, [
     canCalculateShadowProps,
     currentGridPos,
+    resizingEventStartDatePos,
     draggingStartUIModelGridPos,
     resizeTargetUIModelRows,
-    dateMatrix,
     cellWidthMap,
+    dateMatrix,
     draggingStartUIModel,
   ]);
 }
