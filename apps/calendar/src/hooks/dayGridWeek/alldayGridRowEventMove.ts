@@ -1,11 +1,12 @@
-import { useEffect, useMemo, useState } from 'preact/hooks';
+import { useEffect, useMemo } from 'preact/hooks';
 
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
+import { useCurrentPointerPositionInGrid } from '@src/hooks/event/currentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/draggingEvent';
 import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import TZDate from '@src/time/date';
-import { isNil } from '@src/utils/type';
+import { isNil, isPresent } from '@src/utils/type';
 
 import { CellStyle } from '@t/time/datetime';
 
@@ -15,21 +16,13 @@ interface Params {
 }
 
 export function useAlldayGridRowEventMove({ rowStyleInfo, mousePositionDataGrabber }: Params) {
-  const { x, y, draggingState } = useStore(dndSelector);
+  const { draggingState } = useStore(dndSelector);
   const { draggingEvent: movingEvent, clearDraggingEvent } = useDraggingEvent('move');
   const { updateEvent } = useDispatch('calendar');
 
-  const [currentGridX, setCurrentGridX] = useState<number | null>(null);
-
-  const hasDraggingCoords = !isNil(x) && !isNil(y);
-
-  useEffect(() => {
-    if (!isNil(movingEvent) && hasDraggingCoords) {
-      const posData = mousePositionDataGrabber({ clientX: x, clientY: y } as MouseEvent);
-
-      setCurrentGridX(posData?.gridX ?? null);
-    }
-  }, [hasDraggingCoords, mousePositionDataGrabber, movingEvent, x, y]);
+  const [currentGridPos, clearCurrentGridPos] =
+    useCurrentPointerPositionInGrid(mousePositionDataGrabber);
+  const { x: currentGridX } = currentGridPos ?? {};
 
   const targetEventStartGridX = useMemo(
     () =>
@@ -42,10 +35,10 @@ export function useAlldayGridRowEventMove({ rowStyleInfo, mousePositionDataGrabb
   useEffect(() => {
     const shouldUpdate =
       draggingState === DraggingState.IDLE &&
-      !isNil(movingEvent) &&
-      !isNil(currentGridX) &&
-      !isNil(currentMovingLeft) &&
-      !isNil(targetEventStartGridX);
+      isPresent(movingEvent) &&
+      isPresent(currentGridX) &&
+      isPresent(currentMovingLeft) &&
+      isPresent(targetEventStartGridX);
 
     if (shouldUpdate) {
       const dateOffset = currentGridX - targetEventStartGridX;
@@ -61,6 +54,8 @@ export function useAlldayGridRowEventMove({ rowStyleInfo, mousePositionDataGrabb
           end: newEndDate,
         },
       });
+
+      clearCurrentGridPos();
       clearDraggingEvent();
     }
   }, [
@@ -71,6 +66,7 @@ export function useAlldayGridRowEventMove({ rowStyleInfo, mousePositionDataGrabb
     updateEvent,
     clearDraggingEvent,
     draggingState,
+    clearCurrentGridPos,
   ]);
 
   return useMemo(
