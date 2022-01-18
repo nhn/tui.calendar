@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'preact/hooks';
 
+import { KEY } from '@src/constants/keyboard';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { getGridDateIndex, getRenderedEventUIModels } from '@src/helpers/grid';
 import { MousePositionDataGrabber } from '@src/helpers/view';
@@ -220,7 +221,7 @@ export function useDayGridMonthEventResize({
     }
   }, [dateMatrix, initX, initY, mousePositionDataGrabber, draggingStartUIModel]);
 
-  useKeydownEvent('Escape', () => {
+  useKeydownEvent(KEY.ESCAPE, () => {
     setResizingEventStartDatePos(null);
     setDraggingStartUIModelGridPos(null);
     clearCurrentGridPos();

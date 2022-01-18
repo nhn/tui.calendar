@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
+import { KEY } from '@src/constants/keyboard';
 import { MINIMUM_DRAG_MOUSE_DISTANCE } from '@src/constants/mouse';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
-import { isEscapePressed } from '@src/utils/keyboard';
+import { isKeyPressed } from '@src/utils/keyboard';
 import { noop } from '@src/utils/noop';
 
 import { DraggingTypes } from '@t/drag';
@@ -109,7 +110,7 @@ export function useDrag(
 
   const onKeydown = useCallback<KeyboardEventListener>(
     (e) => {
-      if (isEscapePressed(e)) {
+      if (isKeyPressed(e, KEY.ESCAPE)) {
         onPressESCKey(e);
         setStarted(false);
       }
