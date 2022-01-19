@@ -11,7 +11,10 @@ export interface EventBus<
     eventName: EventName,
     handler: EventTypes[EventName]
   ): EventBus<EventTypes>;
-  off<EventName extends keyof EventTypes>(eventName?: EventName): EventBus<EventTypes>;
+  off<EventName extends keyof EventTypes>(
+    eventName?: EventName,
+    handler?: EventTypes[EventName]
+  ): EventBus<EventTypes>;
   once<EventName extends keyof EventTypes>(
     eventName: EventName,
     handler: EventTypes[EventName]
@@ -30,14 +33,14 @@ export class EventBusImpl<
   extends CustomEvents
   implements EventBus<EventTypes>
 {
-  on<EventName extends keyof EventTypes>(eventName: EventName, callback: EventTypes[EventName]) {
-    super.on(eventName as string, callback);
+  on<EventName extends keyof EventTypes>(eventName: EventName, handler: EventTypes[EventName]) {
+    super.on(eventName as string, handler);
 
     return this;
   }
 
-  off<EventName extends keyof EventTypes>(eventName?: EventName) {
-    super.off(eventName as string);
+  off<EventName extends keyof EventTypes>(eventName?: EventName, handler?: EventTypes[EventName]) {
+    super.off(eventName as string, handler);
 
     return this;
   }
@@ -51,8 +54,8 @@ export class EventBusImpl<
     return this;
   }
 
-  once<EventName extends keyof EventTypes>(eventName: EventName, callback: EventTypes[EventName]) {
-    super.once(eventName as string, callback);
+  once<EventName extends keyof EventTypes>(eventName: EventName, handler: EventTypes[EventName]) {
+    super.once(eventName as string, handler);
 
     return this;
   }
