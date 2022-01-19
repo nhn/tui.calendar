@@ -11,9 +11,15 @@ interface SelectDateTimeInfo {
   nativeEvent?: MouseEvent;
 }
 
+interface EventInfo {
+  event: EventModel;
+  nativeEvent: MouseEvent;
+}
+
 type ExternalEventTypes = {
   selectDateTime: (info: SelectDateTimeInfo) => void;
   beforeCreateEvent: (event: EventModelData) => void;
   beforeUpdateEvent: (event: EventModel, changes: EventModelData) => void;
+  clickEvent: (eventInfo: EventInfo) => void;
   [eventName: string]: AnyFunc;
 };

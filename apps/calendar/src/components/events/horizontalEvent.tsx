@@ -4,6 +4,7 @@ import { useRef } from 'preact/hooks';
 import { ResizeIcon } from '@src/components/events/resizeIcon';
 import { Template } from '@src/components/template';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
+import { useEventBus } from '@src/contexts/eventBus';
 import { cls, toPercent, toPx } from '@src/helpers/css';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/drag';
@@ -166,6 +167,7 @@ export function HorizontalEvent({
   const { useDetailPopup } = useStore(optionsSelector);
   const { setDraggingEventUIModel } = useDispatch('dnd');
   const { show } = useDispatch('popup');
+  const eventBus = useEventBus();
 
   const eventContainerRef = useRef<HTMLDivElement>(null);
 
@@ -183,17 +185,19 @@ export function HorizontalEvent({
       onDragStart: () => {
         setDraggingEventUIModel(uiModel);
       },
-      onDragEnd: () => {
+      onDragEnd: (nativeEvent) => {
         if (useDetailPopup && !isDragging && eventContainerRef.current) {
           const { top, left, width, height } = eventContainerRef.current.getBoundingClientRect();
+          const event = uiModel.model;
 
           show({
             type: PopupType.detail,
             param: {
-              event: uiModel.model,
+              event,
               eventRect: { top, left, width, height },
             },
           });
+          eventBus.fire('clickEvent', { event, nativeEvent });
         }
       },
     }
