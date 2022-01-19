@@ -340,16 +340,16 @@ export function useDayGridMonthEventResize({
       }
     }
 
-    return null;
+    return resizeTargetUIModelRows;
   }, [
     canCalculateShadowProps,
-    currentGridPos,
-    resizingEventStartDatePos,
-    draggingStartUIModelGridPos,
-    resizeTargetUIModelRows,
     cellWidthMap,
+    currentGridPos,
     dateMatrix,
     draggingStartUIModel,
+    draggingStartUIModelGridPos,
+    resizeTargetUIModelRows,
+    resizingEventStartDatePos,
   ]);
 
   return resizingEventShadowProps;
