@@ -97,3 +97,20 @@ FixedEvents.args = {
   options: { useCreationPopup: true, useDetailPopup: true },
   events: createWeekEvents(),
 };
+
+export const CustomTemplate = Template.bind({});
+CustomTemplate.args = {
+  events: createWeekEvents(),
+  options: {
+    useCreationPopup: true,
+    useDetailPopup: true,
+    template: {
+      alldayTitle() {
+        return '<span>CUSTOM All Day</span>';
+      },
+      taskTitle() {
+        return '<span>CUSTOM TASK</span>';
+      },
+    },
+  },
+};
