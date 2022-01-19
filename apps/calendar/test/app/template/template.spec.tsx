@@ -40,7 +40,7 @@ describe('Render Template', () => {
     );
     const html = renderToString(vdom);
 
-    expect(html).toBe('<div>Custom Title 4</div>');
+    expect(html).toBe('<div class="toastui-calendar-template-time">Custom Title 4</div>');
   });
 
   it('getCommonWidth() returns css width percentage with given number.', () => {
