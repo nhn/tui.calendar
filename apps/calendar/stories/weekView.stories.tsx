@@ -106,7 +106,8 @@ CustomTemplate.args = {
     useDetailPopup: true,
     template: {
       alldayTitle() {
-        return '<span>CUSTOM All Day</span>';
+        // Insert <script> for DOM Purify Test
+        return '<span><script></script>CUSTOM All Day</span>';
       },
       taskTitle() {
         return '<span>CUSTOM TASK</span>';
