@@ -22,7 +22,7 @@ export function getDayNames(row: TZDate[]) {
       dayName,
       isToday: true,
       renderDate: 'date',
-      dateObject: day.toDate(),
+      dateInstance: day,
     };
   });
 }

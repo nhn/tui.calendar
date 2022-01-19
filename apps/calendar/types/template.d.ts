@@ -40,7 +40,7 @@ export interface TemplateWeekDayName {
   dayName: string;
   isToday: boolean;
   renderDate: string;
-  dateObject: Date;
+  dateInstance: TZDate;
 }
 
 export interface TemplateMonthDayName {

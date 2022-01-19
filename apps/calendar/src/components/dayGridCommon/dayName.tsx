@@ -4,7 +4,6 @@ import { Template } from '@src/components/template';
 import { useEventBus } from '@src/contexts/eventBus';
 import { cls } from '@src/helpers/css';
 import { getDayName } from '@src/helpers/dayName';
-import TZDate from '@src/time/date';
 import { Day, isWeekend, toFormat } from '@src/time/datetime';
 
 import { CalendarViewType } from '@t/components/common';
@@ -33,7 +32,7 @@ export function DayName({ dayname, dayIndex, style, templateType, type }: Props)
 
   const handleClick = () => {
     if (isWeekDayName(type, dayname)) {
-      eventBus.fire('clickDayname', toFormat(new TZDate(dayname.dateObject), 'YYYYMMDD'));
+      eventBus.fire('clickDayname', { date: toFormat(dayname.dateInstance, 'YYYYMMDD') });
     }
   };
 
