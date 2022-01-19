@@ -16,7 +16,7 @@ import {
   TemplateMonthGrid,
   TemplateMoreTitleDate,
   TemplateTimezone,
-  TemplateWeekDay,
+  TemplateWeekDayName,
 } from '@t/template';
 
 const SIXTY_MINUTES = 60;
@@ -124,7 +124,7 @@ export const templates: Template = {
     return model.label;
   },
 
-  weekDayname(model: TemplateWeekDay) {
+  weekDayname(model: TemplateWeekDayName) {
     const classDate = cls('dayname-date');
     const className = cls('dayname-name');
 

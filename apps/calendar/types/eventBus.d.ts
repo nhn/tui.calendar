@@ -15,5 +15,6 @@ type ExternalEventTypes = {
   selectDateTime: (info: SelectDateTimeInfo) => void;
   beforeCreateEvent: (event: EventModelData) => void;
   beforeUpdateEvent: (event: EventModel, changes: EventModelData) => void;
+  clickDayname: (date: string) => void;
   [eventName: string]: AnyFunc;
 };
