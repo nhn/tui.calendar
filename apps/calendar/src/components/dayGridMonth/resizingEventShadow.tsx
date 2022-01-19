@@ -15,6 +15,7 @@ export function ResizingEventShadow({
   shadowEventProps: AvailableResizingEventShadowProps;
 }) {
   const [uiModel, resizingWidth] = shadowEventProps;
+
   return (
     <div className={cls('weekday-events')}>
       <HorizontalEvent

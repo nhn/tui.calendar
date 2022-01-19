@@ -171,9 +171,6 @@ export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidth
                 rowInfo={rowInfo}
                 height={height}
               />
-              {hasResizingEventShadowProps(resizingEventShadowPropsByRow) && (
-                <ResizingEventShadow shadowEventProps={resizingEventShadowPropsByRow} />
-              )}
               <MonthEvents
                 name="month"
                 events={uiModels}
@@ -190,6 +187,9 @@ export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidth
                 narrowWeekend={narrowWeekend}
               />
             </div>
+            {hasResizingEventShadowProps(resizingEventShadowPropsByRow) && (
+              <ResizingEventShadow shadowEventProps={resizingEventShadowPropsByRow} />
+            )}
             {isMouseInWeek && movingEvent && (
               <HorizontalEvent
                 uiModel={movingEvent}
