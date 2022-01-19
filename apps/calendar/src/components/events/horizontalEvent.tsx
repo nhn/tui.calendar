@@ -192,13 +192,11 @@ export function HorizontalEvent({
           eventBus.fire('clickEvent', { event, nativeEvent });
 
           if (useDetailPopup) {
-            const { top, left, width, height } = eventContainerRef.current.getBoundingClientRect();
-
             show({
               type: PopupType.detail,
               param: {
                 event,
-                eventRect: { top, left, width, height },
+                eventRect: eventContainerRef.current.getBoundingClientRect(),
               },
             });
           }
