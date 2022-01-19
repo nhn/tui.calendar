@@ -186,18 +186,22 @@ export function HorizontalEvent({
         setDraggingEventUIModel(uiModel);
       },
       onDragEnd: (nativeEvent) => {
-        if (useDetailPopup && !isDragging && eventContainerRef.current) {
-          const { top, left, width, height } = eventContainerRef.current.getBoundingClientRect();
+        if (!isDragging && eventContainerRef.current) {
           const event = uiModel.model;
 
-          show({
-            type: PopupType.detail,
-            param: {
-              event,
-              eventRect: { top, left, width, height },
-            },
-          });
           eventBus.fire('clickEvent', { event, nativeEvent });
+
+          if (useDetailPopup) {
+            const { top, left, width, height } = eventContainerRef.current.getBoundingClientRect();
+
+            show({
+              type: PopupType.detail,
+              param: {
+                event,
+                eventRect: { top, left, width, height },
+              },
+            });
+          }
         }
       },
     }
