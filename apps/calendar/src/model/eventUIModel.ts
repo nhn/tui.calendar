@@ -145,7 +145,7 @@ export default class EventUIModel implements EventUIProps {
     return pick(this, ...eventUIPropsKey);
   }
 
-  setUIProps(props: EventUIProps) {
+  setUIProps(props: Partial<EventUIProps>) {
     Object.assign(this, props);
   }
 
@@ -209,5 +209,21 @@ export default class EventUIModel implements EventUIProps {
       targetComingDuration: uiModel.valueOf().comingDuration,
       usingTravelTime, // Daygrid does not use travelTime, TimeGrid uses travelTime.
     });
+  }
+
+  clone() {
+    const eventUIModelProps = this.getUIProps();
+    const clonedEventUIModel = EventUIModel.create(this.model);
+    clonedEventUIModel.setUIProps(eventUIModelProps);
+
+    if (this.renderStarts) {
+      clonedEventUIModel.renderStarts = new TZDate(this.renderStarts);
+    }
+
+    if (this.renderEnds) {
+      clonedEventUIModel.renderEnds = new TZDate(this.renderEnds);
+    }
+
+    return clonedEventUIModel;
   }
 }

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { GridSelection } from '@src/components/dayGridCommon/gridSelection';
 import { GridRow } from '@src/components/dayGridMonth/gridRow';
 import { MonthEvents } from '@src/components/dayGridMonth/monthEvents';
+import { ResizingEventShadow } from '@src/components/dayGridMonth/resizingEventShadow';
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import {
   MONTH_CELL_BAR_HEIGHT,
@@ -19,6 +20,10 @@ import { useDOMNode } from '@src/hooks/common/domNode';
 import { useDayGridSelection } from '@src/hooks/dayGridCommon/dayGridSelection';
 import { usePopupWithDayGridSelection } from '@src/hooks/dayGridCommon/popupWithDayGridSelection';
 import { useDayGridMonthEventMove } from '@src/hooks/dayGridMonth/dayGridMonthEventMove';
+import {
+  hasResizingEventShadowProps,
+  useDayGridMonthEventResize,
+} from '@src/hooks/dayGridMonth/dayGridMonthEventResize';
 import { calendarSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
 import { getSize } from '@src/utils/dom';
@@ -34,6 +39,7 @@ interface Props {
   options: CalendarMonthOptions;
   dateMatrix: TZDate[][];
   rowInfo: CellInfo[];
+  cellWidthMap: string[][];
 }
 
 function useGridHeight() {
@@ -106,7 +112,7 @@ function calcGridSelectionData(
   return resultGridSelection;
 }
 
-export function DayGridMonth({ options, dateMatrix = [], rowInfo = [] }: Props) {
+export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidthMap = [] }: Props) {
   const [gridContainer, setGridContainerRef] = useDOMNode<HTMLDivElement>();
   const calendarData = useStore(calendarSelector);
   const { ref, height } = useGridHeight();
@@ -123,26 +129,32 @@ export function DayGridMonth({ options, dateMatrix = [], rowInfo = [] }: Props) 
     [dateMatrix, gridContainer, rowInfo]
   );
 
+  const renderedEventUIModels = useMemo(
+    () => dateMatrix.map((week) => getRenderedEventUIModels(week, calendarData, narrowWeekend)),
+    [calendarData, dateMatrix, narrowWeekend]
+  );
+
   const gridSelection = useDayGridSelection(mousePositionDataGrabber);
   const onMouseDown = usePopupWithDayGridSelection({ gridSelection, dateMatrix });
-
   const { movingEvent, currentGridPos } = useDayGridMonthEventMove({
     dateMatrix,
     rowInfo,
     mousePositionDataGrabber,
   });
-
-  const renderedEventUiModels = useMemo(
-    () => dateMatrix.map((week) => getRenderedEventUIModels(week, calendarData, narrowWeekend)),
-    [calendarData, dateMatrix, narrowWeekend]
-  );
+  const resizingEventShadowProps = useDayGridMonthEventResize({
+    dateMatrix,
+    mousePositionDataGrabber,
+    cellWidthMap,
+    renderedUIModels: renderedEventUIModels,
+  });
 
   return (
     <div ref={setGridContainerRef} onMouseDown={onMouseDown} className={cls('month-daygrid')}>
       {dateMatrix.map((week, rowIndex) => {
-        const { uiModels, gridDateEventModelMap } = renderedEventUiModels[rowIndex];
+        const { uiModels, gridDateEventModelMap } = renderedEventUIModels[rowIndex];
         const isMouseInWeek = rowIndex === currentGridPos?.y;
         const gridSelectionDataByRow = calcGridSelectionData(gridSelection, rowIndex, week.length);
+        const resizingEventShadowPropsByRow = resizingEventShadowProps?.[rowIndex];
 
         return (
           <div
@@ -169,12 +181,17 @@ export function DayGridMonth({ options, dateMatrix = [], rowInfo = [] }: Props) 
                 headerHeight={MONTH_CELL_PADDING_TOP + MONTH_CELL_BAR_HEIGHT}
                 eventTopMargin={MONTH_EVENT_MARGIN_TOP}
               />
-              <GridSelection
-                gridSelectionData={gridSelectionDataByRow}
-                row={week}
-                narrowWeekend={narrowWeekend}
-              />
+              {gridSelectionDataByRow && (
+                <GridSelection
+                  gridSelectionData={gridSelectionDataByRow}
+                  row={week}
+                  narrowWeekend={narrowWeekend}
+                />
+              )}
             </div>
+            {hasResizingEventShadowProps(resizingEventShadowPropsByRow) && (
+              <ResizingEventShadow shadowEventProps={resizingEventShadowPropsByRow} />
+            )}
             {isMouseInWeek && movingEvent && (
               <HorizontalEvent
                 uiModel={movingEvent}

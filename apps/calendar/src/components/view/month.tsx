@@ -46,7 +46,7 @@ export function Month() {
     () => createDateMatrixOfMonth(new Date(), monthOptions),
     [monthOptions]
   );
-  const { rowStyleInfo } = useMemo(
+  const { rowStyleInfo, cellWidthMap } = useMemo(
     () => getRowStyleInfo(dayNames.length, narrowWeekend, startDayOfWeek, workweek),
     [dayNames.length, narrowWeekend, startDayOfWeek, workweek]
   );
@@ -65,7 +65,12 @@ export function Month() {
         rowStyleInfo={rowStyleInfo}
         type="month"
       />
-      <DayGridMonth options={monthOptions} dateMatrix={dateMatrix} rowInfo={rowInfo} />
+      <DayGridMonth
+        options={monthOptions}
+        dateMatrix={dateMatrix}
+        rowInfo={rowInfo}
+        cellWidthMap={cellWidthMap}
+      />
     </Layout>
   );
 }
