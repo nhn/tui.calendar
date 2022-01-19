@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { memo } from 'preact/compat';
-import { useCallback } from 'preact/hooks';
+import { useCallback, useEffect, useState } from 'preact/hooks';
 
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import { useStore } from '@src/contexts/calendarStore';
@@ -28,6 +28,19 @@ export const MonthEvents = memo(function MonthEvents({
   eventTopMargin,
 }: Props) {
   const draggingEventUIModel = useStore(useCallback((state) => state.dnd.draggingEventUIModel, []));
+  const [draggingEventUIModelCId, setDraggingEventUIModelCId] = useState<number | null>(null);
+
+  // Timing hack to make sure the dragging event state is updated
+  // before changing opacities of target dragging events.
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      if (draggingEventUIModel) {
+        setDraggingEventUIModelCId(draggingEventUIModel.cid());
+      } else {
+        setDraggingEventUIModelCId(null);
+      }
+    });
+  }, [draggingEventUIModel]);
 
   const dayEvents = events
     .filter(isWithinHeight(height - headerHeight, eventHeight + eventTopMargin))
@@ -35,7 +48,7 @@ export const MonthEvents = memo(function MonthEvents({
       <HorizontalEvent
         key={`${name}-DayEvent-${uiModel.cid()}`}
         uiModel={uiModel}
-        isDraggingTarget={uiModel.cid() === draggingEventUIModel?.cid()}
+        isDraggingTarget={uiModel.cid() === draggingEventUIModelCId}
         eventHeight={eventHeight}
         headerHeight={headerHeight}
       />
