@@ -175,6 +175,9 @@ export function useDayGridMonthEventResize({
   const [draggingStartUIModelGridPos, setDraggingStartUIModelGridPos] =
     useState<DraggingUIModelGridPosition | null>(null);
 
+  /**
+   * Filter UIModels that are made from the target event.
+   */
   const resizeTargetUIModelRows = useMemo(
     () =>
       isPresent(draggingStartUIModel)
@@ -188,6 +191,9 @@ export function useDayGridMonthEventResize({
     [renderedUIModels, draggingStartUIModel]
   );
 
+  /**
+   * Save the start position of the target event.
+   */
   useEffect(() => {
     if (isPresent(resizeTargetUIModelRows)) {
       const firstAvailableUIModelRowIndex = resizeTargetUIModelRows.findIndex(
@@ -228,21 +234,20 @@ export function useDayGridMonthEventResize({
     clearDraggingEvent();
   });
 
-  // eslint-disable-next-line complexity
   useEffect(() => {
     const isDraggingEnd =
       draggingState === DraggingState.IDLE &&
       isPresent(resizingEventStartDatePos) &&
       isPresent(draggingStartUIModel) &&
-      isPresent(draggingStartUIModelGridPos) &&
       isPresent(currentGridPos);
     if (isDraggingEnd) {
+      /**
+       * Is current grid position is the same or later comparing to the position of the start date?
+       */
       const shouldUpdate =
-        resizingEventStartDatePos.y <= currentGridPos.y ||
-        (resizingEventStartDatePos.y === currentGridPos.y &&
-          resizingEventStartDatePos.x <= currentGridPos.x &&
-          currentGridPos.x !== draggingStartUIModelGridPos.endX &&
-          currentGridPos.y !== draggingStartUIModelGridPos.y);
+        (currentGridPos.y === resizingEventStartDatePos.y &&
+          currentGridPos.x >= resizingEventStartDatePos.x) ||
+        currentGridPos.y > resizingEventStartDatePos.y;
 
       if (shouldUpdate) {
         const targetEndDate = dateMatrix[currentGridPos.y][currentGridPos.x];
@@ -263,7 +268,6 @@ export function useDayGridMonthEventResize({
     dateMatrix,
     draggingState,
     draggingStartUIModel,
-    draggingStartUIModelGridPos,
     updateEvent,
     resizingEventStartDatePos,
     clearCurrentGridPos,
@@ -277,6 +281,9 @@ export function useDayGridMonthEventResize({
     isPresent(currentGridPos);
   return useMemo(() => {
     if (canCalculateShadowProps) {
+      /**
+       * When resizing is not possible, fix the shadow position to the start of the event.
+       */
       if (
         currentGridPos.y < resizingEventStartDatePos.y ||
         (currentGridPos.y === resizingEventStartDatePos.y &&
@@ -289,6 +296,9 @@ export function useDayGridMonthEventResize({
         });
       }
 
+      /**
+       * When resizing is available and the current position is above the start position.
+       */
       if (currentGridPos.y < draggingStartUIModelGridPos.y) {
         const slicedTargetUIModelRows = resizeTargetUIModelRows.slice(0, currentGridPos.y + 1);
         const lastAvailableUIModelRowIndex = findLastIndex(
@@ -304,6 +314,9 @@ export function useDayGridMonthEventResize({
         });
       }
 
+      /**
+       * When resizing is available and the current position is in the same row as the start position.
+       */
       if (currentGridPos.y === draggingStartUIModelGridPos.y) {
         return mapResizeShadowPropsSameRow({
           filteredUIModelRows: resizeTargetUIModelRows,
@@ -313,6 +326,9 @@ export function useDayGridMonthEventResize({
         });
       }
 
+      /**
+       * When resizing is available and the current position is below the start position.
+       */
       if (currentGridPos.y > draggingStartUIModelGridPos.y) {
         return mapResizingShadowPropsExtending({
           filteredUIModelRows: resizeTargetUIModelRows,
