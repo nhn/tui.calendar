@@ -1,6 +1,6 @@
 import { h } from 'preact';
 
-import DOMPurify from 'dompurify';
+import DOMPurify from 'isomorphic-dompurify';
 
 import { useStore } from '@src/contexts/calendarStore';
 import { templateSelector } from '@src/selectors';
