@@ -32,7 +32,7 @@ export function DayName({ dayname, dayIndex, style, templateType, type }: Props)
 
   const handleClick = () => {
     if (isWeekDayName(type, dayname)) {
-      eventBus.fire('clickDayname', { date: toFormat(dayname.dateInstance, 'YYYYMMDD') });
+      eventBus.fire('clickDayname', { date: toFormat(dayname.dateInstance, 'YYYY-MM-DD') });
     }
   };
 
