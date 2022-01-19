@@ -256,18 +256,20 @@ export function useDayGridMonthEventResize({
         });
       }
 
+      setResizingEventStartDatePos(null);
+      setDraggingStartUIModelGridPos(null);
       clearCurrentGridPos();
       clearDraggingEvent();
     }
   }, [
+    clearCurrentGridPos,
     clearDraggingEvent,
     currentGridPos,
     dateMatrix,
-    draggingState,
     draggingStartUIModel,
-    updateEvent,
+    draggingState,
     resizingEventStartDatePos,
-    clearCurrentGridPos,
+    updateEvent,
   ]);
 
   const canCalculateShadowProps =
