@@ -11,10 +11,14 @@ interface SelectDateTimeInfo {
   nativeEvent?: MouseEvent;
 }
 
+interface DaynameInfo {
+  date: string;
+}
+
 type ExternalEventTypes = {
   selectDateTime: (info: SelectDateTimeInfo) => void;
   beforeCreateEvent: (event: EventModelData) => void;
   beforeUpdateEvent: (event: EventModel, changes: EventModelData) => void;
-  clickDayname: ({ date }: { date: string }) => void;
+  clickDayname: (daynameInfo: DaynameInfo) => void;
   [eventName: string]: AnyFunc;
 };
