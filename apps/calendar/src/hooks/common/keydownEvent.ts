@@ -19,8 +19,6 @@ export function useKeydownEvent(targetKey: KEY, handler: (event: KeyboardEvent) 
 
     window.addEventListener('keydown', handleKeydown);
 
-    return () => {
-      window.removeEventListener('keydown', handleKeydown);
-    };
+    return () => window.removeEventListener('keydown', handleKeydown);
   }, [targetKey]);
 }
