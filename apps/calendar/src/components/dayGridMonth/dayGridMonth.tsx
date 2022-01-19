@@ -181,11 +181,13 @@ export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidth
                 headerHeight={MONTH_CELL_PADDING_TOP + MONTH_CELL_BAR_HEIGHT}
                 eventTopMargin={MONTH_EVENT_MARGIN_TOP}
               />
-              <GridSelection
-                gridSelectionData={gridSelectionDataByRow}
-                row={week}
-                narrowWeekend={narrowWeekend}
-              />
+              {gridSelectionDataByRow && (
+                <GridSelection
+                  gridSelectionData={gridSelectionDataByRow}
+                  row={week}
+                  narrowWeekend={narrowWeekend}
+                />
+              )}
             </div>
             {hasResizingEventShadowProps(resizingEventShadowPropsByRow) && (
               <ResizingEventShadow shadowEventProps={resizingEventShadowPropsByRow} />
