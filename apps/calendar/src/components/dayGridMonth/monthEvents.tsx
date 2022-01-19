@@ -1,4 +1,5 @@
 import { h } from 'preact';
+import { memo } from 'preact/compat';
 import { useCallback } from 'preact/hooks';
 
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
@@ -17,7 +18,7 @@ interface Props {
   eventTopMargin: number;
 }
 
-export function MonthEvents({
+export const MonthEvents = memo(function MonthEvents({
   height,
   eventHeight = EVENT_HEIGHT,
   events,
@@ -41,4 +42,4 @@ export function MonthEvents({
     ));
 
   return <div className={className}>{dayEvents}</div>;
-}
+});
