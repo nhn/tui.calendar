@@ -53,16 +53,11 @@ function mapResizeShadowPropsOutOfRange({
   resizingEventStartDatePos: GridPosition;
   cellWidthMap: EventResizeHookParams['cellWidthMap'];
 }): ResizingEventShadowProps[] {
+  const { x, y } = resizingEventStartDatePos;
+
   return resizeTargetUIModelRows
-    .slice(0, resizingEventStartDatePos.y + 1)
-    .map((row) =>
-      row.length > 0
-        ? [
-            row[0] as EventUIModel,
-            cellWidthMap[resizingEventStartDatePos.x][resizingEventStartDatePos.x],
-          ]
-        : row
-    );
+    .slice(0, y + 1)
+    .map((row) => (row.length > 0 ? [row[0] as EventUIModel, cellWidthMap[x][x]] : row));
 }
 
 function mapResizeShadowPropsShrinking({
@@ -133,9 +128,11 @@ function mapResizingShadowPropsExtending({
     }
 
     if (rowIndex === draggingStartUIModelGridPos.y) {
-      const { startX } = getRowPosOfUIModel(row[0] as EventUIModel, dateMatrix[rowIndex]);
+      const dateRow = dateMatrix[rowIndex];
+      const uiModel = row[0] as EventUIModel;
+      const { startX } = getRowPosOfUIModel(uiModel, dateRow);
 
-      return [row[0] as EventUIModel, cellWidthMap[startX][dateMatrix[rowIndex].length - 1]];
+      return [uiModel, cellWidthMap[startX][dateRow.length - 1]];
     }
 
     if (draggingStartUIModelGridPos.y < rowIndex) {
@@ -200,7 +197,7 @@ export function useDayGridMonthEventResize({
         (row) => row.length > 0
       );
       const { startX } = getRowPosOfUIModel(
-        (resizeTargetUIModelRows[firstAvailableUIModelRowIndex] as [EventUIModel])[0],
+        resizeTargetUIModelRows[firstAvailableUIModelRowIndex][0] as EventUIModel,
         dateMatrix[firstAvailableUIModelRowIndex]
       );
 
@@ -279,7 +276,7 @@ export function useDayGridMonthEventResize({
     isPresent(draggingStartUIModel) &&
     isPresent(draggingStartUIModelGridPos) &&
     isPresent(currentGridPos);
-  return useMemo(() => {
+  const resizingEventShadowProps = useMemo(() => {
     if (canCalculateShadowProps) {
       /**
        * When resizing is not possible, fix the shadow position to the start of the event.
@@ -352,4 +349,6 @@ export function useDayGridMonthEventResize({
     dateMatrix,
     draggingStartUIModel,
   ]);
+
+  return resizingEventShadowProps;
 }
