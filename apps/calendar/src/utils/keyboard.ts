@@ -1,5 +1,5 @@
-import { ESCAPE, KEYCODE } from '@src/constants/keyboard';
+import { KEY, KEYCODE } from '@src/constants/keyboard';
 
-export function isEscapePressed(e: KeyboardEvent) {
-  return e.key ? e.key === ESCAPE : e.keyCode === KEYCODE[ESCAPE];
+export function isKeyPressed(e: KeyboardEvent, key: KEY) {
+  return e.key ? e.key === key : e.keyCode === KEYCODE[key];
 }

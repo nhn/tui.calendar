@@ -215,7 +215,7 @@ export function HorizontalEvent({
     onMoveStart(e);
   };
 
-  const shouldHideResizeHandler = flat || isDraggingTarget || isReadOnly;
+  const shouldHideResizeHandler = flat || isDraggingTarget || uiModel.exceedRight || isReadOnly;
 
   return (
     <div

@@ -12,6 +12,7 @@ export function ResizeIcon({ style, onMouseDown }: Props) {
     <span
       className={`${cls('weekday-resize-handle')} ${cls('handle-y')}`}
       onMouseDown={onMouseDown}
+      data-test-id="horizontal-event-resize-icon"
     >
       <i className={`${cls('icon')} ${cls('ic-handle-y')}`} style={style} />
     </span>

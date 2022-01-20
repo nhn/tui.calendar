@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from 'preact/hooks';
+import { useEffect, useMemo } from 'preact/hooks';
 
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { getGridDateIndex } from '@src/helpers/grid';
+import { useCurrentPointerPositionInGrid } from '@src/hooks/event/currentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/draggingEvent';
 import EventUIModel from '@src/model/eventUIModel';
 import { dndSelector } from '@src/selectors';
@@ -27,14 +28,14 @@ export function useAlldayGridRowEventResize({
   gridColWidthMap,
   mousePositionDataGrabber,
 }: Params) {
-  const { x, y, draggingState } = useStore(dndSelector);
+  const { draggingState } = useStore(dndSelector);
   const { updateEvent } = useDispatch('calendar');
 
   const { draggingEvent: resizingEvent, clearDraggingEvent } = useDraggingEvent('resize');
 
-  const [currentGridX, setCurrentGridX] = useState<number | null>(null);
-
-  const hasDraggingCoords = isPresent(x) && isPresent(y);
+  const [currentGridPos, clearCurrentGridPos] =
+    useCurrentPointerPositionInGrid(mousePositionDataGrabber);
+  const { x: currentGridX } = currentGridPos ?? {};
 
   const targetEventGridIndices = useMemo(() => {
     if (resizingEvent) {
@@ -53,14 +54,6 @@ export function useAlldayGridRowEventResize({
   }, [currentGridX, gridColWidthMap, targetEventGridIndices.start]);
 
   useEffect(() => {
-    if (isPresent(resizingEvent) && hasDraggingCoords) {
-      const data = mousePositionDataGrabber({ clientX: x, clientY: y } as MouseEvent);
-
-      setCurrentGridX(data?.gridX ?? null);
-    }
-  }, [hasDraggingCoords, mousePositionDataGrabber, resizingEvent, x, y]);
-
-  useEffect(() => {
     const isDraggingEnd =
       draggingState === DraggingState.IDLE && isPresent(resizingEvent) && isPresent(currentGridX);
 
@@ -76,7 +69,7 @@ export function useAlldayGridRowEventResize({
           eventData: { end: targetDate },
         });
       }
-      setCurrentGridX(null);
+      clearCurrentGridPos();
       clearDraggingEvent();
     }
   }, [
@@ -88,6 +81,7 @@ export function useAlldayGridRowEventResize({
     targetEventGridIndices.start,
     targetEventGridIndices.end,
     draggingState,
+    clearCurrentGridPos,
   ]);
 
   return useMemo(

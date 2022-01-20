@@ -31,16 +31,16 @@ describe('Render Template', () => {
     expect(template.popupSave()).toBe('given');
   });
 
-  it('Template component renders html string with given template', () => {
+  it('Template component renders html string with given template after sanitizing', () => {
     const store = initCalendarStore();
     const vdom = (
       <StoreProvider store={store}>
-        <Template template="time" model={{ title: 'Custom Title 4' }} />
+        <Template template="time" model={{ title: '<script></script>Custom Title 4' }} />
       </StoreProvider>
     );
     const html = renderToString(vdom);
 
-    expect(html).toBe('<span>Custom Title 4</span>');
+    expect(html).toBe('<div class="toastui-calendar-template-time">Custom Title 4</div>');
   });
 
   it('getCommonWidth() returns css width percentage with given number.', () => {

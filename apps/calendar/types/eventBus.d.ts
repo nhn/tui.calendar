@@ -16,6 +16,10 @@ interface UpdatedEventInfo {
   changes: EventModelData;
 }
 
+interface DaynameInfo {
+  date: string;
+}
+
 interface EventInfo {
   event: EventModel;
   nativeEvent: MouseEvent;
@@ -25,6 +29,7 @@ type ExternalEventTypes = {
   selectDateTime: (info: SelectDateTimeInfo) => void;
   beforeCreateEvent: (event: EventModelData) => void;
   beforeUpdateEvent: (updatedEventInfo: UpdatedEventInfo) => void;
+  clickDayname: (daynameInfo: DaynameInfo) => void;
   clickEvent: (eventInfo: EventInfo) => void;
   [eventName: string]: AnyFunc;
 };

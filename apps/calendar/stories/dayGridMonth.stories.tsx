@@ -65,7 +65,7 @@ export const Month = () => {
 
   const dateMatrix = createDateMatrixOfMonth(new Date(), options);
 
-  const { rowStyleInfo } = getRowStyleInfo(
+  const { rowStyleInfo, cellWidthMap } = getRowStyleInfo(
     dateMatrix[0].length,
     options.narrowWeekend,
     options.startDayOfWeek,
@@ -80,7 +80,12 @@ export const Month = () => {
   return (
     <ProviderWrapper>
       <Layout>
-        <DayGridMonth options={options} dateMatrix={dateMatrix} rowInfo={rowInfo} />
+        <DayGridMonth
+          options={options}
+          dateMatrix={dateMatrix}
+          rowInfo={rowInfo}
+          cellWidthMap={cellWidthMap}
+        />
       </Layout>
     </ProviderWrapper>
   );

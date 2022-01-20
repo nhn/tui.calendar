@@ -5,10 +5,10 @@ import { cls, toPercent } from '@src/helpers/css';
 
 import { CalendarViewType } from '@t/components/common';
 import { CalendarMonthOptions, CalendarWeekOptions } from '@t/store';
-import { Template, TemplateMonthDayName, TemplateWeekDay } from '@t/template';
+import { Template, TemplateMonthDayName, TemplateWeekDayName } from '@t/template';
 import { CellStyle } from '@t/time/datetime';
 
-type TemplateDayNames = (TemplateWeekDay | TemplateMonthDayName)[];
+type TemplateDayNames = (TemplateWeekDayName | TemplateMonthDayName)[];
 
 interface Props {
   dayNames: TemplateDayNames;

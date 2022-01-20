@@ -1,6 +1,6 @@
 import TZDate from '@src/time/date';
 
-import { TemplateWeekDay } from '@t/template';
+import { TemplateWeekDayName } from '@t/template';
 
 export const getDayName = (dayIndex: number) => {
   return ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][dayIndex];
@@ -12,7 +12,7 @@ export function capitalizeDayName(name: string) {
 
 export function getDayNames(row: TZDate[]) {
   // @TODO: apply template daynames
-  return row.map<TemplateWeekDay>((day) => {
+  return row.map<TemplateWeekDayName>((day) => {
     const dayIndex = day.getDay();
     const dayName = capitalizeDayName(getDayName(dayIndex));
 
@@ -22,6 +22,7 @@ export function getDayNames(row: TZDate[]) {
       dayName,
       isToday: true,
       renderDate: 'date',
+      dateInstance: day,
     };
   });
 }

@@ -7,6 +7,7 @@ import { useDrag } from '@src/hooks/common/drag';
 import { PopupType } from '@src/slices/popup';
 import TZDate from '@src/time/date';
 
+import { GridPosition } from '@t/grid';
 import { CalendarState } from '@t/store';
 
 interface Params {
@@ -38,8 +39,8 @@ export function usePopupWithDayGridSelection({ gridSelection, dateMatrix }: Para
   const { show, hide } = useDispatch('popup');
   const eventBus = useEventBus();
 
-  const [startPos, setStartPos] = useState<{ x: number; y: number } | null>(null);
-  const [endPos, setEndPos] = useState<{ x: number; y: number } | null>(null);
+  const [startPos, setStartPos] = useState<GridPosition | null>(null);
+  const [endPos, setEndPos] = useState<GridPosition | null>(null);
 
   const { onMouseDown } = useDrag(DRAGGING_TYPE_CONSTANTS.dayGridSelection, {
     onDragStart: ({ pageX, pageY }) => {
