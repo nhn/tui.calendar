@@ -34,12 +34,13 @@ export interface TemplateMoreTitleDate {
   day: number;
 }
 
-export interface TemplateWeekDay {
+export interface TemplateWeekDayName {
   date: number;
   day: number;
   dayName: string;
   isToday: boolean;
   renderDate: string;
+  dateInstance: TZDate;
 }
 
 export interface TemplateMonthDayName {
@@ -70,7 +71,7 @@ export interface Template {
   monthGridFooter: (model: TemplateMonthGrid) => TemplateReturnType;
   monthGridFooterExceed: (hiddenEvents: number) => TemplateReturnType;
   monthDayname: (model: TemplateMonthDayName) => TemplateReturnType;
-  weekDayname: (model: TemplateWeekDay) => TemplateReturnType;
+  weekDayname: (model: TemplateWeekDayName) => TemplateReturnType;
   weekGridFooterExceed: (hiddenEvents: number) => TemplateReturnType;
   dayGridTitle: (viewName: EventCategory) => TemplateReturnType;
   event: (event: EventModel) => TemplateReturnType;
