@@ -25,11 +25,17 @@ interface EventInfo {
   nativeEvent: MouseEvent;
 }
 
+interface MoreEventsButton {
+  date: Date;
+  target: HTMLDivElement; // NOTE: More events popup element
+}
+
 type ExternalEventTypes = {
   selectDateTime: (info: SelectDateTimeInfo) => void;
   beforeCreateEvent: (event: EventModelData) => void;
   beforeUpdateEvent: (updatedEventInfo: UpdatedEventInfo) => void;
   clickDayname: (daynameInfo: DaynameInfo) => void;
   clickEvent: (eventInfo: EventInfo) => void;
+  clickMoreEventsBtn: (moreEventsBtnInfo: MoreEventsButton) => void;
   [eventName: string]: AnyFunc;
 };
