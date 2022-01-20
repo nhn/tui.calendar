@@ -4,6 +4,7 @@ import { useRef } from 'preact/hooks';
 import { ResizeIcon } from '@src/components/events/resizeIcon';
 import { Template } from '@src/components/template';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
+import { useEventBus } from '@src/contexts/eventBus';
 import { cls, toPercent, toPx } from '@src/helpers/css';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/drag';
@@ -166,6 +167,7 @@ export function HorizontalEvent({
   const { useDetailPopup } = useStore(optionsSelector);
   const { setDraggingEventUIModel } = useDispatch('dnd');
   const { show } = useDispatch('popup');
+  const eventBus = useEventBus();
 
   const eventContainerRef = useRef<HTMLDivElement>(null);
 
@@ -184,20 +186,20 @@ export function HorizontalEvent({
         setDraggingEventUIModel(uiModel);
       },
       onDragEnd: () => {
-        if (useDetailPopup && !isDragging && eventContainerRef.current) {
-          const { top, left, width, height } = eventContainerRef.current.getBoundingClientRect();
-
+        if (!isDragging && eventContainerRef.current && useDetailPopup) {
           show({
             type: PopupType.detail,
             param: {
               event: uiModel.model,
-              eventRect: { top, left, width, height },
+              eventRect: eventContainerRef.current.getBoundingClientRect(),
             },
           });
         }
       },
     }
   );
+  const handleClick = (nativeEvent: MouseEvent) =>
+    eventBus.fire('clickEvent', { event: uiModel.model, nativeEvent });
 
   const handleResizeStart = (e: MouseEvent) => {
     e.stopPropagation();
@@ -217,6 +219,7 @@ export function HorizontalEvent({
       style={containerStyle}
       data-test-id={getTestId(uiModel)}
       ref={eventContainerRef}
+      onClick={handleClick}
     >
       <div className={cls('weekday-event')} style={eventItemStyle} onMouseDown={handleMoveStart}>
         <span className={cls('weekday-event-title')}>
