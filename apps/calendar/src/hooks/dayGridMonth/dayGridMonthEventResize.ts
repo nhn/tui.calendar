@@ -14,8 +14,6 @@ import TZDate from '@src/time/date';
 import { findLastIndex } from '@src/utils/array';
 import { isPresent } from '@src/utils/type';
 
-import { GridPosition } from '@t/grid';
-
 function getRowPosOfUIModel(uiModel: EventUIModel, dateRow: TZDate[]) {
   const startX = Math.max(getGridDateIndex(uiModel.getStarts(), dateRow), 0);
   const endX = getGridDateIndex(uiModel.getEnds(), dateRow);
@@ -51,114 +49,6 @@ export function hasResizingEventShadowProps(
   row: ResizingEventShadowProps | undefined
 ): row is AvailableResizingEventShadowProps {
   return isPresent(row) && row.length > 0;
-}
-
-function mapResizeShadowPropsOutOfRange({
-  resizingState,
-  cellWidthMap,
-}: {
-  resizingState: ResizingState;
-  cellWidthMap: EventResizeHookParams['cellWidthMap'];
-}): ResizingEventShadowProps[] {
-  const { eventStartDateX, eventStartDateY, resizeTargetUIModelRows } = resizingState;
-
-  return resizeTargetUIModelRows
-    .slice(0, eventStartDateY + 1)
-    .map((row) =>
-      row.length > 0
-        ? [row[0] as EventUIModel, cellWidthMap[eventStartDateX][eventStartDateX]]
-        : row
-    );
-}
-
-function mapResizeShadowPropsShrinking({
-  filteredUIModelRows,
-  lastAvailableUIModelRowIndex,
-  dateMatrix,
-  cellWidthMap,
-  currentGridPos,
-}: {
-  filteredUIModelRows: FilteredUIModelRow[];
-  lastAvailableUIModelRowIndex: number;
-  dateMatrix: EventResizeHookParams['dateMatrix'];
-  cellWidthMap: EventResizeHookParams['cellWidthMap'];
-  currentGridPos: GridPosition;
-}): ResizingEventShadowProps[] {
-  return filteredUIModelRows.map((row, rowIndex) => {
-    if (rowIndex === lastAvailableUIModelRowIndex) {
-      const { startX } = getRowPosOfUIModel(row[0] as EventUIModel, dateMatrix[rowIndex]);
-
-      return [row[0] as EventUIModel, cellWidthMap[startX][Math.max(startX, currentGridPos.x)]];
-    }
-
-    return row;
-  });
-}
-
-function mapResizeShadowPropsSameRow({
-  resizingState,
-  cellWidthMap,
-  currentGridPos,
-}: {
-  resizingState: ResizingState;
-  cellWidthMap: EventResizeHookParams['cellWidthMap'];
-  currentGridPos: GridPosition;
-}): ResizingEventShadowProps[] {
-  const { resizeTargetUIModelRows, lastUIModelY, lastUIModelStartX } = resizingState;
-
-  return resizeTargetUIModelRows.map((row, rowIndex) =>
-    rowIndex === lastUIModelY
-      ? [
-          row[0] as EventUIModel,
-          cellWidthMap[lastUIModelStartX][Math.max(lastUIModelStartX, currentGridPos.x)],
-        ]
-      : row
-  );
-}
-
-function mapResizingShadowPropsExtending({
-  resizingState,
-  dateMatrix,
-  cellWidthMap,
-  currentGridPos,
-}: {
-  resizingState: ResizingState;
-  dateMatrix: EventResizeHookParams['dateMatrix'];
-  cellWidthMap: EventResizeHookParams['cellWidthMap'];
-  currentGridPos: GridPosition;
-}): ResizingEventShadowProps[] {
-  const { resizeTargetUIModelRows, lastUIModelY, lastUIModel } = resizingState;
-
-  return resizeTargetUIModelRows.map((row, rowIndex) => {
-    if (rowIndex < lastUIModelY) {
-      return row;
-    }
-
-    if (rowIndex === lastUIModelY) {
-      const dateRow = dateMatrix[rowIndex];
-      const uiModel = row[0] as EventUIModel;
-      const { startX } = getRowPosOfUIModel(uiModel, dateRow);
-
-      return [uiModel, cellWidthMap[startX][dateRow.length - 1]];
-    }
-
-    if (lastUIModelY < rowIndex) {
-      const clonedEventUIModel = lastUIModel.clone();
-      clonedEventUIModel.setUIProps({ left: 0, exceedLeft: true });
-
-      if (rowIndex < currentGridPos.y) {
-        clonedEventUIModel.setUIProps({ exceedRight: true });
-
-        return [clonedEventUIModel, '100%'];
-      }
-
-      if (rowIndex === currentGridPos.y) {
-        return [clonedEventUIModel, cellWidthMap[0][currentGridPos.x]];
-      }
-    }
-
-    return row;
-  });
 }
 
 export function useDayGridMonthEventResize({
@@ -227,11 +117,16 @@ export function useDayGridMonthEventResize({
         (currentGridPos.y === resizingState.eventStartDateY &&
           currentGridPos.x < resizingState.eventStartDateX));
     if (isOutOfBound) {
+      const { eventStartDateX, eventStartDateY, resizeTargetUIModelRows } = resizingState;
+
       setShadowProps(
-        mapResizeShadowPropsOutOfRange({
-          resizingState,
-          cellWidthMap,
-        })
+        resizeTargetUIModelRows
+          .slice(0, eventStartDateY + 1)
+          .map((row) =>
+            row.length > 0
+              ? [row[0] as EventUIModel, cellWidthMap[eventStartDateX][eventStartDateX]]
+              : row
+          )
       );
     }
   }, [canCalculateProps, cellWidthMap, currentGridPos, resizingState]);
@@ -248,40 +143,64 @@ export function useDayGridMonthEventResize({
         (row) => row.length > 0
       );
       setShadowProps(
-        mapResizeShadowPropsShrinking({
-          filteredUIModelRows: slicedTargetUIModelRows,
-          lastAvailableUIModelRowIndex,
-          cellWidthMap,
-          currentGridPos,
-          dateMatrix,
+        slicedTargetUIModelRows.map((row, rowIndex) => {
+          if (rowIndex === lastAvailableUIModelRowIndex) {
+            const { startX } = getRowPosOfUIModel(row[0] as EventUIModel, dateMatrix[rowIndex]);
+
+            return [
+              row[0] as EventUIModel,
+              cellWidthMap[startX][Math.max(startX, currentGridPos.x)],
+            ];
+          }
+
+          return row;
         })
       );
     }
   }, [canCalculateProps, cellWidthMap, currentGridPos, dateMatrix, resizingState]);
 
   useEffect(() => {
-    const isResizingInSameRow =
-      canCalculateProps && currentGridPos.y === resizingState.lastUIModelY;
-    if (isResizingInSameRow) {
+    const isExtendingOrSameRows =
+      canCalculateProps && currentGridPos.y >= resizingState.lastUIModelY;
+    if (isExtendingOrSameRows) {
+      const { resizeTargetUIModelRows, lastUIModelStartX, lastUIModelY, lastUIModel } =
+        resizingState;
       setShadowProps(
-        mapResizeShadowPropsSameRow({
-          resizingState,
-          cellWidthMap,
-          currentGridPos,
-        })
-      );
-    }
-  }, [canCalculateProps, cellWidthMap, currentGridPos, resizingState]);
+        resizeTargetUIModelRows.map((row, rowIndex) => {
+          if (rowIndex < lastUIModelY) {
+            return row;
+          }
 
-  useEffect(() => {
-    const isExtendingRows = canCalculateProps && currentGridPos.y > resizingState.lastUIModelY;
-    if (isExtendingRows) {
-      setShadowProps(
-        mapResizingShadowPropsExtending({
-          resizingState,
-          dateMatrix,
-          cellWidthMap,
-          currentGridPos,
+          if (rowIndex === lastUIModelY) {
+            const dateRow = dateMatrix[rowIndex];
+            const uiModel = row[0] as EventUIModel;
+
+            return [
+              uiModel,
+              cellWidthMap[lastUIModelStartX][
+                currentGridPos.y === lastUIModelY
+                  ? Math.max(currentGridPos.x, lastUIModelStartX)
+                  : dateRow.length - 1
+              ],
+            ];
+          }
+
+          if (lastUIModelY < rowIndex) {
+            const clonedEventUIModel = lastUIModel.clone();
+            clonedEventUIModel.setUIProps({ left: 0, exceedLeft: true });
+
+            if (rowIndex < currentGridPos.y) {
+              clonedEventUIModel.setUIProps({ exceedRight: true });
+
+              return [clonedEventUIModel, '100%'];
+            }
+
+            if (rowIndex === currentGridPos.y) {
+              return [clonedEventUIModel, cellWidthMap[0][currentGridPos.x]];
+            }
+          }
+
+          return row;
         })
       );
     }
