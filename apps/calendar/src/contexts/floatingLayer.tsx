@@ -15,7 +15,11 @@ export function FloatingLayerContainerProvider({ children }: PropsWithChildren) 
   return (
     <FloatingLayerContainerContext.Provider value={container}>
       {children}
-      <div ref={containerRefCallback} className={cls('floating-layer')} />
+      <div ref={containerRefCallback} className={cls('floating-layer')}>
+        <div className={cls('see-more-events-popup-slot')} />
+        <div className={cls('event-form-popup-slot')} />
+        <div className={cls('event-detail-popup-slot')} />
+      </div>
     </FloatingLayerContainerContext.Provider>
   );
 }

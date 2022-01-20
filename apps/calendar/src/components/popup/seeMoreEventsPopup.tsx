@@ -18,7 +18,7 @@ import { useTheme } from '@src/contexts/theme';
 import { cls } from '@src/helpers/css';
 import { seeMorePopupParamSelector } from '@src/selectors/popup';
 import { toFormat } from '@src/time/datetime';
-import { isPresent } from '@src/utils/type';
+import { isNil } from '@src/utils/type';
 
 const classNames = {
   container: cls('see-more-container'),
@@ -35,19 +35,18 @@ export function SeeMoreEventsPopup() {
   } = useTheme();
   const eventBus = useEventBus();
   const moreEventsPopupContainerRef = useRef(null);
-  const isVisible =
-    isPresent(floatingLayerContainer) && isPresent(date) && isPresent(popupPosition);
+  const isHide = isNil(floatingLayerContainer) || isNil(date) || isNil(popupPosition);
 
   useEffect(() => {
-    if (isVisible && moreEventsPopupContainerRef.current) {
+    if (!isHide && moreEventsPopupContainerRef.current) {
       eventBus.fire('clickMoreEventsBtn', {
         date: date.toDate(),
         target: moreEventsPopupContainerRef.current,
       });
     }
-  }, [date, eventBus, isVisible]);
+  }, [date, eventBus, isHide]);
 
-  if (!isVisible) {
+  if (isHide) {
     return null;
   }
 
@@ -62,6 +61,10 @@ export function SeeMoreEventsPopup() {
     day: date.getDay(),
     date: date.getDate(),
   };
+
+  const seeMoreEventsPopupSlot =
+    floatingLayerContainer.querySelector(`.${cls('see-more-events-popup-slot')}`) ??
+    floatingLayerContainer;
 
   return createPortal(
     <div
@@ -95,6 +98,6 @@ export function SeeMoreEventsPopup() {
         </div>
       </div>
     </div>,
-    floatingLayerContainer
+    seeMoreEventsPopupSlot
   );
 }

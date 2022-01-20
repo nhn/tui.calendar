@@ -179,6 +179,10 @@ export function EventFormPopup() {
     return null;
   }
 
+  const eventFormPopupSlot =
+    floatingLayerContainer.querySelector(`.${cls('event-form-popup-slot')}`) ??
+    floatingLayerContainer;
+
   return createPortal(
     <div role="dialog" className={classNames.popupContainer} ref={popupContainerRef} style={style}>
       <form onSubmit={onSubmit}>
@@ -214,6 +218,6 @@ export function EventFormPopup() {
         </div>
       </form>
     </div>,
-    floatingLayerContainer
+    eventFormPopupSlot
   );
 }

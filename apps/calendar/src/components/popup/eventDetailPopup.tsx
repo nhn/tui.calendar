@@ -140,6 +140,10 @@ export function EventDetailPopup() {
       },
     });
 
+  const eventDetailPopupSlot =
+    floatingLayerContainer.querySelector(`.${cls('event-detail-popup-slot')}`) ??
+    floatingLayerContainer;
+
   return createPortal(
     <div role="dialog" className={classNames.popupContainer} ref={popupContainerRef} style={style}>
       <div className={classNames.detailContainer}>
@@ -173,6 +177,6 @@ export function EventDetailPopup() {
         </div>
       </div>
     </div>,
-    floatingLayerContainer
+    eventDetailPopupSlot
   );
 }
