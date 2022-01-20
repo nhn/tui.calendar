@@ -185,25 +185,21 @@ export function HorizontalEvent({
       onDragStart: () => {
         setDraggingEventUIModel(uiModel);
       },
-      onDragEnd: (nativeEvent) => {
-        if (!isDragging && eventContainerRef.current) {
-          const event = uiModel.model;
-
-          eventBus.fire('clickEvent', { event, nativeEvent });
-
-          if (useDetailPopup) {
-            show({
-              type: PopupType.detail,
-              param: {
-                event,
-                eventRect: eventContainerRef.current.getBoundingClientRect(),
-              },
-            });
-          }
+      onDragEnd: () => {
+        if (!isDragging && eventContainerRef.current && useDetailPopup) {
+          show({
+            type: PopupType.detail,
+            param: {
+              event: uiModel.model,
+              eventRect: eventContainerRef.current.getBoundingClientRect(),
+            },
+          });
         }
       },
     }
   );
+  const handleClick = (nativeEvent: MouseEvent) =>
+    eventBus.fire('clickEvent', { event: uiModel.model, nativeEvent });
 
   const handleResizeStart = (e: MouseEvent) => {
     e.stopPropagation();
@@ -223,6 +219,7 @@ export function HorizontalEvent({
       style={containerStyle}
       data-test-id={getTestId(uiModel)}
       ref={eventContainerRef}
+      onClick={handleClick}
     >
       <div className={cls('weekday-event')} style={eventItemStyle} onMouseDown={handleMoveStart}>
         <span className={cls('weekday-event-title')}>
