@@ -1,8 +1,10 @@
 import { h } from 'preact';
 
 import { useStore } from '@src/contexts/calendarStore';
+import { cls } from '@src/helpers/css';
 import { templateSelector } from '@src/selectors';
 import { TemplateName } from '@src/template/default';
+import { sanitize } from '@src/utils/sanitizer';
 import { isString } from '@src/utils/type';
 
 interface Props {
@@ -20,9 +22,10 @@ export function Template({ template, model }: Props) {
   const htmlOrVnode = templateFunc(model, h);
 
   return isString(htmlOrVnode) ? (
-    <span
+    <div
+      className={cls(`template-${template}`)}
       dangerouslySetInnerHTML={{
-        __html: htmlOrVnode,
+        __html: sanitize(htmlOrVnode),
       }}
     />
   ) : (

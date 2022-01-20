@@ -10,6 +10,7 @@ import { ThemeKeyValue } from '@src/theme/themeProps';
 import TZDate from '@src/time/date';
 import { toStartOfDay } from '@src/time/datetime';
 import { EventBus, EventBusImpl } from '@src/utils/eventBus';
+import { addAttributeHooks, removeAttributeHooks } from '@src/utils/sanitizer';
 import { isNumber, isString } from '@src/utils/type';
 
 import { ExternalEventTypes } from '@t/eventBus';
@@ -60,6 +61,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
     this.theme = new Theme(options.theme);
     this.eventBus = new EventBusImpl<ExternalEventTypes>();
     this.store = initCalendarStore(this.initOptions(options));
+    addAttributeHooks();
   }
 
   protected abstract getComponent(): ComponentChild;
@@ -130,6 +132,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
 
     this.store.clearListeners();
     this.eventBus.off();
+    removeAttributeHooks();
   }
 
   /**
