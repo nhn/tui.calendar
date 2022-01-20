@@ -606,9 +606,10 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   off<EventName extends keyof ExternalEventTypes>(
-    eventName?: EventName
+    eventName?: EventName,
+    handler?: ExternalEventTypes[EventName]
   ): EventBus<ExternalEventTypes> {
-    this.eventBus.off(eventName);
+    this.eventBus.off(eventName, handler);
 
     return this;
   }
