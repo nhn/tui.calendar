@@ -89,29 +89,28 @@ describe('Event Bus Context', () => {
 
   it('should be able to remove a specific handler among registered events', () => {
     // Given
-    // Note: jest.fn() is not keeping reference to the handler perhaps because it's a wrapped object.
-    // So declared simple function to keep reference.
-    let handler1CallingCount = 0;
-    let handler2CallingCount = 0;
-    const handler1 = () => {
-      handler1CallingCount += 1;
-    };
-    const handler2 = () => {
-      handler2CallingCount += 1;
-    };
+    const handler1 = jest.fn();
+    const handler2 = jest.fn();
+    // Note: jest.fn() is not an instance of `Function`, so we need to wrap it
+    // so that EventBus recognize and turn off handlers.
+    function wrapMockHandler(mockFn: jest.Mock) {
+      return (...args: any[]) => mockFn(...args);
+    }
+    const wrappedHandler1 = wrapMockHandler(handler1);
+    const wrappedHandler2 = wrapMockHandler(handler2);
 
     function MultipleHandlerComponent() {
       const eb = useEventBus();
 
       useLayoutEffect(() => {
-        eb.on('test', handler1);
-        eb.on('test', handler2);
+        eb.on('test', wrappedHandler1);
+        eb.on('test', wrappedHandler2);
       }, [eb]);
 
       return (
         <div>
           <button onClick={() => eb.fire('test')}>Fire Event</button>
-          <button onClick={() => eb.off('test', handler2)}>Remove handler2 Only</button>
+          <button onClick={() => eb.off('test', wrappedHandler2)}>Remove handler2 Only</button>
         </div>
       );
     }
@@ -125,7 +124,7 @@ describe('Event Bus Context', () => {
     fireEvent.click(fireButton);
 
     // Then
-    expect(handler1CallingCount).toBe(2);
-    expect(handler2CallingCount).toBe(1);
+    expect(handler1).toHaveBeenCalledTimes(2);
+    expect(handler2).toHaveBeenCalledTimes(1);
   });
 });
