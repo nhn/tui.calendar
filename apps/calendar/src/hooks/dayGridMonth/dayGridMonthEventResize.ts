@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'preact/hooks';
+import { useCallback, useEffect, useState } from 'preact/hooks';
 
 import { KEY } from '@src/constants/keyboard';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
@@ -174,8 +174,14 @@ export function useDayGridMonthEventResize({
     useCurrentPointerPositionInGrid(mousePositionDataGrabber);
 
   const [resizingState, setResizingState] = useState<ResizingState | null>(null);
+  const [shadowProps, setShadowProps] = useState<ResizingEventShadowProps[] | null>(null);
 
-  const clearResizingState = () => setResizingState(null);
+  const clearStates = useCallback(() => {
+    setShadowProps(null);
+    setResizingState(null);
+    clearCurrentGridPos();
+    clearDraggingEvent();
+  }, [clearCurrentGridPos, clearDraggingEvent]);
 
   useEffect(() => {
     if (isPresent(resizingStartUIModel)) {
@@ -212,11 +218,76 @@ export function useDayGridMonthEventResize({
     }
   }, [dateMatrix, renderedUIModels, resizingStartUIModel]);
 
-  useKeydownEvent(KEY.ESCAPE, () => {
-    clearResizingState();
-    clearCurrentGridPos();
-    clearDraggingEvent();
-  });
+  const canCalculateProps = isPresent(resizingState) && isPresent(currentGridPos);
+
+  useEffect(() => {
+    const isOutOfBound =
+      canCalculateProps &&
+      (currentGridPos.y < resizingState.eventStartDateY ||
+        (currentGridPos.y === resizingState.eventStartDateY &&
+          currentGridPos.x < resizingState.eventStartDateX));
+    if (isOutOfBound) {
+      setShadowProps(
+        mapResizeShadowPropsOutOfRange({
+          resizingState,
+          cellWidthMap,
+        })
+      );
+    }
+  }, [canCalculateProps, cellWidthMap, currentGridPos, resizingState]);
+
+  useEffect(() => {
+    const isShrinkingRows = canCalculateProps && currentGridPos.y < resizingState.lastUIModelY;
+    if (isShrinkingRows) {
+      const slicedTargetUIModelRows = resizingState.resizeTargetUIModelRows.slice(
+        0,
+        currentGridPos.y + 1
+      );
+      const lastAvailableUIModelRowIndex = findLastIndex(
+        slicedTargetUIModelRows,
+        (row) => row.length > 0
+      );
+      setShadowProps(
+        mapResizeShadowPropsShrinking({
+          filteredUIModelRows: slicedTargetUIModelRows,
+          lastAvailableUIModelRowIndex,
+          cellWidthMap,
+          currentGridPos,
+          dateMatrix,
+        })
+      );
+    }
+  }, [canCalculateProps, cellWidthMap, currentGridPos, dateMatrix, resizingState]);
+
+  useEffect(() => {
+    const isResizingInSameRow =
+      canCalculateProps && currentGridPos.y === resizingState.lastUIModelY;
+    if (isResizingInSameRow) {
+      setShadowProps(
+        mapResizeShadowPropsSameRow({
+          resizingState,
+          cellWidthMap,
+          currentGridPos,
+        })
+      );
+    }
+  }, [canCalculateProps, cellWidthMap, currentGridPos, resizingState]);
+
+  useEffect(() => {
+    const isExtendingRows = canCalculateProps && currentGridPos.y > resizingState.lastUIModelY;
+    if (isExtendingRows) {
+      setShadowProps(
+        mapResizingShadowPropsExtending({
+          resizingState,
+          dateMatrix,
+          cellWidthMap,
+          currentGridPos,
+        })
+      );
+    }
+  }, [canCalculateProps, cellWidthMap, currentGridPos, dateMatrix, resizingState]);
+
+  useKeydownEvent(KEY.ESCAPE, clearStates);
 
   useEffect(() => {
     const isDraggingEnd =
@@ -240,82 +311,13 @@ export function useDayGridMonthEventResize({
         });
       }
 
-      clearResizingState();
-      clearCurrentGridPos();
-      clearDraggingEvent();
+      clearStates();
     }
-  }, [
-    clearCurrentGridPos,
-    clearDraggingEvent,
-    currentGridPos,
-    dateMatrix,
-    draggingState,
-    resizingState,
-    updateEvent,
-  ]);
+  }, [clearStates, currentGridPos, dateMatrix, draggingState, resizingState, updateEvent]);
 
-  const canCalculateProps = isPresent(resizingState) && isPresent(currentGridPos);
-  const resizingEventShadowProps = useMemo(() => {
-    if (canCalculateProps) {
-      const { eventStartDateY, eventStartDateX, resizeTargetUIModelRows, lastUIModelY } =
-        resizingState;
-      /**
-       * When resizing is not possible, fix the shadow position to the start of the event.
-       */
-      if (
-        currentGridPos.y < eventStartDateY ||
-        (currentGridPos.y === eventStartDateY && currentGridPos.x < eventStartDateX)
-      ) {
-        return mapResizeShadowPropsOutOfRange({
-          resizingState,
-          cellWidthMap,
-        });
-      }
-
-      /**
-       * When resizing is available and the current position is above the start position.
-       */
-      if (currentGridPos.y < lastUIModelY) {
-        const slicedTargetUIModelRows = resizeTargetUIModelRows.slice(0, currentGridPos.y + 1);
-        const lastAvailableUIModelRowIndex = findLastIndex(
-          slicedTargetUIModelRows,
-          (row) => row.length > 0
-        );
-        return mapResizeShadowPropsShrinking({
-          filteredUIModelRows: slicedTargetUIModelRows,
-          lastAvailableUIModelRowIndex,
-          dateMatrix,
-          cellWidthMap,
-          currentGridPos,
-        });
-      }
-
-      /**
-       * When resizing is available and the current position is in the same row as the start position.
-       */
-      if (currentGridPos.y === lastUIModelY) {
-        return mapResizeShadowPropsSameRow({
-          resizingState,
-          cellWidthMap,
-          currentGridPos,
-        });
-      }
-
-      /**
-       * When resizing is available and the current position is below the start position.
-       */
-      if (currentGridPos.y > lastUIModelY) {
-        return mapResizingShadowPropsExtending({
-          resizingState,
-          dateMatrix,
-          cellWidthMap,
-          currentGridPos,
-        });
-      }
-    }
-
-    return null;
-  }, [canCalculateProps, cellWidthMap, currentGridPos, dateMatrix, resizingState]);
-
-  return resizingEventShadowProps;
+  return {
+    // To control re-render timing of `MonthEvents` component
+    resizingEvent: shadowProps ? resizingStartUIModel : null,
+    resizingEventShadowProps: shadowProps,
+  };
 }
