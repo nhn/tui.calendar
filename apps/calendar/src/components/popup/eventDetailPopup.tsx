@@ -11,7 +11,6 @@ import { useLayoutContainer } from '@src/contexts/layoutContainer';
 import { cls } from '@src/helpers/css';
 import { isLeftOutOfLayout, isTopOutOfLayout } from '@src/helpers/popup';
 import { eventDetailPopupParamSelector } from '@src/selectors/popup';
-import { PopupType } from '@src/slices/popup';
 import TZDate from '@src/time/date';
 import { isNil } from '@src/utils/type';
 
@@ -62,7 +61,7 @@ function calculatePopupArrowPosition(eventRect: Rect, layoutRect: Rect, popupRec
 
 export function EventDetailPopup() {
   const { event, eventRect } = useStore(eventDetailPopupParamSelector);
-  const { show } = useDispatch('popup');
+  const { showFormPopup } = useDispatch('popup');
   const layoutContainer = useLayoutContainer();
   const floatingLayerContainer = useFloatingLayerContainer();
   const popupContainerRef = useRef<HTMLDivElement>(null);
@@ -124,20 +123,17 @@ export function EventDetailPopup() {
   };
 
   const onClickEditButton = () =>
-    show({
-      type: PopupType.form,
-      param: {
-        isCreationPopup: false,
-        event,
-        title,
-        location,
-        start,
-        end,
-        isAllday,
-        isPrivate,
-        eventState: state,
-        popupArrowPointPosition,
-      },
+    showFormPopup({
+      isCreationPopup: false,
+      event,
+      title,
+      location,
+      start,
+      end,
+      isAllday,
+      isPrivate,
+      eventState: state,
+      popupArrowPointPosition,
     });
 
   const eventDetailPopupSlot =

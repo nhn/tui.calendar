@@ -11,7 +11,6 @@ import { useDrag } from '@src/hooks/common/drag';
 import EventUIModel from '@src/model/eventUIModel';
 import { optionsSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
-import { PopupType } from '@src/slices/popup';
 
 import { CalendarState } from '@t/store';
 
@@ -166,7 +165,7 @@ export function HorizontalEvent({
   const isDragging = useStore(isDraggingSelector);
   const { useDetailPopup } = useStore(optionsSelector);
   const { setDraggingEventUIModel } = useDispatch('dnd');
-  const { show } = useDispatch('popup');
+  const { showDetailPopup } = useDispatch('popup');
   const eventBus = useEventBus();
 
   const eventContainerRef = useRef<HTMLDivElement>(null);
@@ -187,13 +186,13 @@ export function HorizontalEvent({
       },
       onDragEnd: () => {
         if (!isDragging && eventContainerRef.current && useDetailPopup) {
-          show({
-            type: PopupType.detail,
-            param: {
+          showDetailPopup(
+            {
               event: uiModel.model,
               eventRect: eventContainerRef.current.getBoundingClientRect(),
             },
-          });
+            flat
+          );
         }
       },
     }

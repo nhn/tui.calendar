@@ -1,6 +1,6 @@
 import produce from 'immer';
 
-import { CalendarStore, PopupParamMap, SetState } from '@t/store';
+import { CalendarState, CalendarStore, PopupParamMap, SetState } from '@t/store';
 
 export enum PopupType {
   seeMore = 'seeMore',
@@ -8,43 +8,86 @@ export enum PopupType {
   detail = 'detail',
 }
 
-type ShowPopupParams<T extends PopupType> = { type: T; param: PopupParamMap[T] };
-
 export type PopupSlice = {
-  popup:
-    | {
-        type: null;
-        param: null;
-      }
-    | {
-        type: PopupType;
-        param: PopupParamMap[PopupType];
-      };
+  popup: {
+    [PopupType.seeMore]: PopupParamMap[PopupType.seeMore] | null;
+    [PopupType.form]: PopupParamMap[PopupType.form] | null;
+    [PopupType.detail]: PopupParamMap[PopupType.detail] | null;
+  };
 };
 
 export type PopupDispatchers = {
-  show: <T extends PopupType>(params: ShowPopupParams<T>) => void;
-  hide: () => void;
+  showSeeMorePopup: (param: PopupParamMap[PopupType.seeMore]) => void;
+  showFormPopup: (param: PopupParamMap[PopupType.form]) => void;
+  showDetailPopup: (param: PopupParamMap[PopupType.detail], isFlat: boolean) => void;
+  hideSeeMorePopup: () => void;
+  hideFormPopup: () => void;
+  hideDetailPopup: () => void;
+  hideAllPopup: () => void;
 };
 
 export function createPopupSlice(): PopupSlice {
   return {
-    popup: { type: null, param: null },
+    popup: {
+      [PopupType.seeMore]: null,
+      [PopupType.form]: null,
+      [PopupType.detail]: null,
+    },
   };
 }
 
 export function createPopupDispatchers(set: SetState<CalendarStore>): PopupDispatchers {
   return {
-    show: <T extends PopupType>({ type, param }: ShowPopupParams<T>) =>
+    showSeeMorePopup: (param: PopupParamMap[PopupType.seeMore]) =>
       set(
-        produce((state) => {
-          state.popup = { type, param };
+        produce((state: CalendarState) => {
+          state.popup[PopupType.seeMore] = param;
+          state.popup[PopupType.form] = null;
+          state.popup[PopupType.detail] = null;
         })
       ),
-    hide: () =>
+    showFormPopup: (param: PopupParamMap[PopupType.form]) =>
       set(
-        produce((state) => {
-          state.popup = { type: null, param: null };
+        produce((state: CalendarState) => {
+          state.popup[PopupType.form] = param;
+          state.popup[PopupType.seeMore] = null;
+          state.popup[PopupType.detail] = null;
+        })
+      ),
+    showDetailPopup: (param: PopupParamMap[PopupType.detail], isFlat) =>
+      set(
+        produce((state: CalendarState) => {
+          state.popup[PopupType.detail] = param;
+          state.popup[PopupType.form] = null;
+          if (!isFlat) {
+            state.popup[PopupType.seeMore] = null;
+          }
+        })
+      ),
+    hideSeeMorePopup: () =>
+      set(
+        produce((state: CalendarState) => {
+          state.popup[PopupType.seeMore] = null;
+        })
+      ),
+    hideFormPopup: () =>
+      set(
+        produce((state: CalendarState) => {
+          state.popup[PopupType.form] = null;
+        })
+      ),
+    hideDetailPopup: () =>
+      set(
+        produce((state: CalendarState) => {
+          state.popup[PopupType.detail] = null;
+        })
+      ),
+    hideAllPopup: () =>
+      set(
+        produce((state: CalendarState) => {
+          state.popup[PopupType.seeMore] = null;
+          state.popup[PopupType.form] = null;
+          state.popup[PopupType.detail] = null;
         })
       ),
   };

@@ -8,7 +8,6 @@ import { initCalendarStore, StoreProvider, useDispatch } from '@src/contexts/cal
 import { EventBusProvider } from '@src/contexts/eventBus';
 import { FloatingLayerContainerProvider } from '@src/contexts/floatingLayer';
 import { cls } from '@src/helpers/css';
-import { PopupType } from '@src/slices/popup';
 import TZDate from '@src/time/date';
 import { EventBusImpl } from '@src/utils/eventBus';
 
@@ -34,24 +33,21 @@ describe('event form popup', () => {
 
   const Wrapper = ({ children }: PropsWithChildren) => {
     const eventBus = useMemo(() => new EventBusImpl<ExternalEventTypes>(), []);
-    const { show } = useDispatch('popup');
+    const { showFormPopup } = useDispatch('popup');
     const mockHandler = useCallback(mockFn, [mockFn]);
 
-    show({
-      type: PopupType.form,
-      param: {
-        isCreationPopup: true,
-        title: '',
-        location: '',
-        start,
-        end,
-        isAllday,
-        isPrivate,
-        eventState: state,
-        popupArrowPointPosition: {
-          top: 0,
-          left: 0,
-        },
+    showFormPopup({
+      isCreationPopup: true,
+      title: '',
+      location: '',
+      start,
+      end,
+      isAllday,
+      isPrivate,
+      eventState: state,
+      popupArrowPointPosition: {
+        top: 0,
+        left: 0,
       },
     });
 

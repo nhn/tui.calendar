@@ -17,7 +17,6 @@ import { cls, toPercent } from '@src/helpers/css';
 import { getExceedCount } from '@src/helpers/grid';
 import { useDOMNode } from '@src/hooks/common/domNode';
 import EventUIModel from '@src/model/eventUIModel';
-import { PopupType } from '@src/slices/popup';
 import TZDate from '@src/time/date';
 import { Day } from '@src/time/datetime';
 import { getPosition, getRelativePosition, getSize } from '@src/utils/dom';
@@ -181,7 +180,7 @@ function usePopupPosition(
 
 export function GridCell({ date, dayIndex, events = [], style, parentContainer, height }: Props) {
   const layoutContainer = useLayoutContainer();
-  const { show } = useDispatch('popup');
+  const { showSeeMorePopup } = useDispatch('popup');
   const theme = useTheme();
 
   const { common: commonTheme } = theme;
@@ -194,16 +193,13 @@ export function GridCell({ date, dayIndex, events = [], style, parentContainer, 
 
   const onOpenSeeMorePopup = useCallback(() => {
     if (popupPosition) {
-      show({
-        type: PopupType.seeMore,
-        param: {
-          date,
-          popupPosition,
-          events,
-        },
+      showSeeMorePopup({
+        date,
+        popupPosition,
+        events,
       });
     }
-  }, [date, events, popupPosition, show]);
+  }, [date, events, popupPosition, showSeeMorePopup]);
 
   const exceedCount = getExceedCount(events, height, MONTH_EVENT_HEIGHT);
 

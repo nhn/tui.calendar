@@ -90,7 +90,7 @@ function getChanges(event: EventModel, eventModelData: EventModelData) {
 
 export function EventFormPopup() {
   const { calendars } = useStore(calendarSelector);
-  const { hide } = useDispatch('popup');
+  const { hideAllPopup } = useDispatch('popup');
   const {
     title,
     location,
@@ -146,7 +146,7 @@ export function EventFormPopup() {
 
       eventBus.fire('beforeUpdateEvent', { event, changes });
     }
-    hide();
+    hideAllPopup();
   };
 
   const popupArrowClassName = useMemo(() => {
