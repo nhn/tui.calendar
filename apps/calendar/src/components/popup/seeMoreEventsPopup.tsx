@@ -5,6 +5,7 @@ import { useEffect, useRef } from 'preact/hooks';
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import { ClosePopupButton } from '@src/components/popup/closePopupButton';
 import { Template } from '@src/components/template';
+import { SEE_MORE_POPUP_SLOT_CLASS_NAME } from '@src/constants/popup';
 import {
   MONTH_EVENT_HEIGHT,
   MONTH_MORE_VIEW_HEADER_HEIGHT,
@@ -63,7 +64,7 @@ export function SeeMoreEventsPopup() {
   };
 
   const seeMoreEventsPopupSlot =
-    floatingLayerContainer.querySelector(`.${cls('see-more-events-popup-slot')}`) ??
+    floatingLayerContainer.querySelector(`.${SEE_MORE_POPUP_SLOT_CLASS_NAME}`) ??
     floatingLayerContainer;
 
   return createPortal(

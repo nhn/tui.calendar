@@ -1,4 +1,10 @@
+import { cls } from '@src/helpers/css';
+
 import { BooleanKeyOfEventModelData } from '@t/events';
+
+export const SEE_MORE_POPUP_SLOT_CLASS_NAME = cls('see-more-popup-slot');
+export const EVENT_FORM_POPUP_SLOT_CLASS_NAME = cls('event-form-popup-slot');
+export const EVENT_DETAIL_POPUP_SLOT_CLASS_NAME = cls('event-detail-popup-slot');
 
 export const HALF_OF_POPUP_ARROW_HEIGHT = 8;
 

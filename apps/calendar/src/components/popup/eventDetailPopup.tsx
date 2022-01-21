@@ -4,7 +4,11 @@ import { useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
 
 import { EventDetailSectionDetail } from '@src/components/popup/eventDetailSectionDetail';
 import { EventDetailSectionHeader } from '@src/components/popup/eventDetailSectionHeader';
-import { DetailPopupArrowDirection, HALF_OF_POPUP_ARROW_HEIGHT } from '@src/constants/popup';
+import {
+  DetailPopupArrowDirection,
+  EVENT_DETAIL_POPUP_SLOT_CLASS_NAME,
+  HALF_OF_POPUP_ARROW_HEIGHT,
+} from '@src/constants/popup';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useFloatingLayerContainer } from '@src/contexts/floatingLayer';
 import { useLayoutContainer } from '@src/contexts/layoutContainer';
@@ -137,7 +141,7 @@ export function EventDetailPopup() {
     });
 
   const eventDetailPopupSlot =
-    floatingLayerContainer.querySelector(`.${cls('event-detail-popup-slot')}`) ??
+    floatingLayerContainer.querySelector(`.${EVENT_DETAIL_POPUP_SLOT_CLASS_NAME}`) ??
     floatingLayerContainer;
 
   return createPortal(

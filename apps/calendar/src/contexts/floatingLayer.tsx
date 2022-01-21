@@ -1,6 +1,11 @@
 import { createContext, h } from 'preact';
 import { useContext } from 'preact/hooks';
 
+import {
+  EVENT_DETAIL_POPUP_SLOT_CLASS_NAME,
+  EVENT_FORM_POPUP_SLOT_CLASS_NAME,
+  SEE_MORE_POPUP_SLOT_CLASS_NAME,
+} from '@src/constants/popup';
 import { cls } from '@src/helpers/css';
 import { useDOMNode } from '@src/hooks/common/domNode';
 import { isUndefined } from '@src/utils/type';
@@ -16,9 +21,9 @@ export function FloatingLayerContainerProvider({ children }: PropsWithChildren) 
     <FloatingLayerContainerContext.Provider value={container}>
       {children}
       <div ref={containerRefCallback} className={cls('floating-layer')}>
-        <div className={cls('see-more-events-popup-slot')} />
-        <div className={cls('event-form-popup-slot')} />
-        <div className={cls('event-detail-popup-slot')} />
+        <div className={SEE_MORE_POPUP_SLOT_CLASS_NAME} />
+        <div className={EVENT_FORM_POPUP_SLOT_CLASS_NAME} />
+        <div className={EVENT_DETAIL_POPUP_SLOT_CLASS_NAME} />
       </div>
     </FloatingLayerContainerContext.Provider>
   );

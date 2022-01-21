@@ -14,6 +14,7 @@ import { PopupSection } from '@src/components/popup/popupSection';
 import { TitleInputBox } from '@src/components/popup/titleInputBox';
 import {
   BOOLEAN_KEYS_OF_EVENT_MODEL_DATA,
+  EVENT_FORM_POPUP_SLOT_CLASS_NAME,
   FormPopupArrowDirection,
   HALF_OF_POPUP_ARROW_HEIGHT,
 } from '@src/constants/popup';
@@ -180,7 +181,7 @@ export function EventFormPopup() {
   }
 
   const eventFormPopupSlot =
-    floatingLayerContainer.querySelector(`.${cls('event-form-popup-slot')}`) ??
+    floatingLayerContainer.querySelector(`.${EVENT_FORM_POPUP_SLOT_CLASS_NAME}`) ??
     floatingLayerContainer;
 
   return createPortal(
