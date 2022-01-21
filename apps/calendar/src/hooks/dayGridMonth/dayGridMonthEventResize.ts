@@ -111,32 +111,12 @@ export function useDayGridMonthEventResize({
   const canCalculateProps = isPresent(resizingState) && isPresent(currentGridPos);
 
   useEffect(() => {
-    const isOutOfBound =
-      canCalculateProps &&
-      (currentGridPos.y < resizingState.eventStartDateY ||
-        (currentGridPos.y === resizingState.eventStartDateY &&
-          currentGridPos.x < resizingState.eventStartDateX));
-    if (isOutOfBound) {
-      const { eventStartDateX, eventStartDateY, resizeTargetUIModelRows } = resizingState;
-
-      setShadowProps(
-        resizeTargetUIModelRows
-          .slice(0, eventStartDateY + 1)
-          .map((row) =>
-            row.length > 0
-              ? [row[0] as EventUIModel, cellWidthMap[eventStartDateX][eventStartDateX]]
-              : row
-          )
-      );
-    }
-  }, [canCalculateProps, cellWidthMap, currentGridPos, resizingState]);
-
-  useEffect(() => {
     const isShrinkingRows = canCalculateProps && currentGridPos.y < resizingState.lastUIModelY;
     if (isShrinkingRows) {
-      const slicedTargetUIModelRows = resizingState.resizeTargetUIModelRows.slice(
+      const { resizeTargetUIModelRows, eventStartDateY } = resizingState;
+      const slicedTargetUIModelRows = resizeTargetUIModelRows.slice(
         0,
-        currentGridPos.y + 1
+        Math.max(eventStartDateY, currentGridPos.y) + 1
       );
       const lastAvailableUIModelRowIndex = findLastIndex(
         slicedTargetUIModelRows,
