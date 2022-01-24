@@ -36,18 +36,18 @@ export function SeeMoreEventsPopup() {
   } = useTheme();
   const eventBus = useEventBus();
   const moreEventsPopupContainerRef = useRef(null);
-  const isHide = isNil(floatingLayerContainer) || isNil(date) || isNil(popupPosition);
+  const isHidden = isNil(floatingLayerContainer) || isNil(date) || isNil(popupPosition);
 
   useEffect(() => {
-    if (!isHide && moreEventsPopupContainerRef.current) {
+    if (!isHidden && moreEventsPopupContainerRef.current) {
       eventBus.fire('clickMoreEventsBtn', {
         date: date.toDate(),
         target: moreEventsPopupContainerRef.current,
       });
     }
-  }, [date, eventBus, isHide]);
+  }, [date, eventBus, isHidden]);
 
-  if (isHide) {
+  if (isHidden) {
     return null;
   }
 
