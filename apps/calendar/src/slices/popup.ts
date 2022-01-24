@@ -19,7 +19,10 @@ export type PopupSlice = {
 export type PopupDispatchers = {
   showSeeMorePopup: (param: PopupParamMap[PopupType.seeMore]) => void;
   showFormPopup: (param: PopupParamMap[PopupType.form]) => void;
-  showDetailPopup: (param: PopupParamMap[PopupType.detail], isFlat: boolean) => void;
+  showDetailPopup: (
+    param: PopupParamMap[PopupType.detail],
+    isOpenedInSeeMorePopup: boolean
+  ) => void;
   hideSeeMorePopup: () => void;
   hideFormPopup: () => void;
   hideDetailPopup: () => void;
@@ -54,12 +57,12 @@ export function createPopupDispatchers(set: SetState<CalendarStore>): PopupDispa
           state.popup[PopupType.detail] = null;
         })
       ),
-    showDetailPopup: (param: PopupParamMap[PopupType.detail], isFlat) =>
+    showDetailPopup: (param: PopupParamMap[PopupType.detail], isOpenedInSeeMorePopup) =>
       set(
         produce((state: CalendarState) => {
           state.popup[PopupType.detail] = param;
           state.popup[PopupType.form] = null;
-          if (!isFlat) {
+          if (!isOpenedInSeeMorePopup) {
             state.popup[PopupType.seeMore] = null;
           }
         })
