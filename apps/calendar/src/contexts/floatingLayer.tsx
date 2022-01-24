@@ -12,16 +12,16 @@ import { isUndefined } from '@src/utils/type';
 
 import { PropsWithChildren } from '@t/components/common';
 
-interface FloatingLayer {
+interface FloatingLayers {
   container: HTMLDivElement | null;
   seeMorePopupSlot: HTMLDivElement | null;
   formPopupSlot: HTMLDivElement | null;
   detailPopupSlot: HTMLDivElement | null;
 }
 
-type FloatingLayerType = keyof FloatingLayer;
+type FloatingLayerType = keyof FloatingLayers;
 
-const FloatingLayerContainerContext = createContext<FloatingLayer | null>(null);
+const FloatingLayerContext = createContext<FloatingLayers | null>(null);
 
 export function FloatingLayerProvider({ children }: PropsWithChildren) {
   const [containerRef, containerRefCallback] = useDOMNode<HTMLDivElement>();
@@ -37,23 +37,23 @@ export function FloatingLayerProvider({ children }: PropsWithChildren) {
   };
 
   return (
-    <FloatingLayerContainerContext.Provider value={floatingLayer}>
+    <FloatingLayerContext.Provider value={floatingLayer}>
       {children}
       <div ref={containerRefCallback} className={cls('floating-layer')}>
         <div ref={seeMorePopupSlotRefCallback} className={SEE_MORE_POPUP_SLOT_CLASS_NAME} />
         <div ref={formPopupSlotRefCallback} className={EVENT_FORM_POPUP_SLOT_CLASS_NAME} />
         <div ref={detailPopupSlotRefCallback} className={EVENT_DETAIL_POPUP_SLOT_CLASS_NAME} />
       </div>
-    </FloatingLayerContainerContext.Provider>
+    </FloatingLayerContext.Provider>
   );
 }
 
 export const useFloatingLayer = (floatingLayerType: FloatingLayerType) => {
-  const ref = useContext(FloatingLayerContainerContext);
+  const floatingLayers = useContext(FloatingLayerContext);
 
-  if (isUndefined(ref)) {
-    throw new Error('FloatingLayerContainerProvider is not found');
+  if (isUndefined(floatingLayers)) {
+    throw new Error('FloatingLayerProvider is not found');
   }
 
-  return ref?.[floatingLayerType] ?? null;
+  return floatingLayers?.[floatingLayerType] ?? null;
 };
