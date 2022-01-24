@@ -10,7 +10,6 @@ import {
   MONTH_EVENT_HEIGHT,
   MONTH_MORE_VIEW_HEADER_HEIGHT,
   MONTH_MORE_VIEW_HEADER_MARGIN_BOTTOM,
-  MONTH_MORE_VIEW_PADDING,
 } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
@@ -74,7 +73,7 @@ export function SeeMoreEventsPopup() {
       style={popupPosition}
       ref={moreEventsPopupContainerRef}
     >
-      <div className={classNames.seeMore} style={{ ...moreView, padding: MONTH_MORE_VIEW_PADDING }}>
+      <div className={classNames.seeMore} style={moreView}>
         <div className={classNames.header} style={style}>
           <Template template="monthMoreTitleDate" model={moreTitle} />
           <ClosePopupButton />
