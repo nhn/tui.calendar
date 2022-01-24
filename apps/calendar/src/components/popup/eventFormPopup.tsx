@@ -175,7 +175,7 @@ export function EventFormPopup() {
     }
   }, [layoutContainer, popupArrowPointPosition]);
 
-  if (isNil(floatingLayer) || isNil(start) || isNil(end)) {
+  if (isNil(start) || isNil(end) || isNil(floatingLayer) || isNil(floatingLayer.formPopupSlot)) {
     return null;
   }
 

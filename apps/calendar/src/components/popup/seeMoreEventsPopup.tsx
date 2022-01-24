@@ -34,7 +34,11 @@ export function SeeMoreEventsPopup() {
   const floatingLayer = useFloatingLayer();
   const eventBus = useEventBus();
   const moreEventsPopupContainerRef = useRef(null);
-  const isHidden = isNil(floatingLayer) || isNil(date) || isNil(popupPosition);
+  const isHidden =
+    isNil(date) ||
+    isNil(popupPosition) ||
+    isNil(floatingLayer) ||
+    isNil(floatingLayer.seeMorePopupSlot);
 
   useEffect(() => {
     if (!isHidden && moreEventsPopupContainerRef.current) {

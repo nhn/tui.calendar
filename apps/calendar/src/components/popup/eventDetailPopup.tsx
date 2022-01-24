@@ -97,7 +97,12 @@ export function EventDetailPopup() {
     }
   }, [eventRect, layoutContainer]);
 
-  if (isNil(event) || isNil(eventRect) || isNil(floatingLayer)) {
+  if (
+    isNil(event) ||
+    isNil(eventRect) ||
+    isNil(floatingLayer) ||
+    isNil(floatingLayer.detailPopupSlot)
+  ) {
     return null;
   }
 
