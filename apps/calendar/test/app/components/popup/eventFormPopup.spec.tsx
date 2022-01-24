@@ -6,7 +6,7 @@ import { fireEvent, render, RenderResult, screen } from '@testing-library/preact
 import { EventFormPopup } from '@src/components/popup/eventFormPopup';
 import { initCalendarStore, StoreProvider, useDispatch } from '@src/contexts/calendarStore';
 import { EventBusProvider } from '@src/contexts/eventBus';
-import { FloatingLayerContainerProvider } from '@src/contexts/floatingLayer';
+import { FloatingLayerProvider } from '@src/contexts/floatingLayer';
 import { cls } from '@src/helpers/css';
 import TZDate from '@src/time/date';
 import { EventBusImpl } from '@src/utils/eventBus';
@@ -57,7 +57,7 @@ describe('event form popup', () => {
 
     return (
       <EventBusProvider value={eventBus}>
-        <FloatingLayerContainerProvider>{children}</FloatingLayerContainerProvider>
+        <FloatingLayerProvider>{children}</FloatingLayerProvider>
       </EventBusProvider>
     );
   };

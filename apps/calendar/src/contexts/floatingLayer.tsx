@@ -12,24 +12,41 @@ import { isUndefined } from '@src/utils/type';
 
 import { PropsWithChildren } from '@t/components/common';
 
-const FloatingLayerContainerContext = createContext<HTMLDivElement | null>(null);
+interface FloatingLayer {
+  container: HTMLDivElement | null;
+  seeMorePopupSlot: HTMLDivElement | null;
+  formPopupSlot: HTMLDivElement | null;
+  detailPopupSlot: HTMLDivElement | null;
+}
 
-export function FloatingLayerContainerProvider({ children }: PropsWithChildren) {
-  const [container, containerRefCallback] = useDOMNode<HTMLDivElement>();
+const FloatingLayerContainerContext = createContext<FloatingLayer | null>(null);
+
+export function FloatingLayerProvider({ children }: PropsWithChildren) {
+  const [containerRef, containerRefCallback] = useDOMNode<HTMLDivElement>();
+  const [seeMorePopupSlotRef, seeMorePopupSlotRefCallback] = useDOMNode<HTMLDivElement>();
+  const [formPopupSlotRef, formPopupSlotRefCallback] = useDOMNode<HTMLDivElement>();
+  const [detailPopupSlotRef, detailPopupSlotRefCallback] = useDOMNode<HTMLDivElement>();
+
+  const floatingLayer = {
+    container: containerRef,
+    seeMorePopupSlot: seeMorePopupSlotRef,
+    formPopupSlot: formPopupSlotRef,
+    detailPopupSlot: detailPopupSlotRef,
+  };
 
   return (
-    <FloatingLayerContainerContext.Provider value={container}>
+    <FloatingLayerContainerContext.Provider value={floatingLayer}>
       {children}
       <div ref={containerRefCallback} className={cls('floating-layer')}>
-        <div className={SEE_MORE_POPUP_SLOT_CLASS_NAME} />
-        <div className={EVENT_FORM_POPUP_SLOT_CLASS_NAME} />
-        <div className={EVENT_DETAIL_POPUP_SLOT_CLASS_NAME} />
+        <div ref={seeMorePopupSlotRefCallback} className={SEE_MORE_POPUP_SLOT_CLASS_NAME} />
+        <div ref={formPopupSlotRefCallback} className={EVENT_FORM_POPUP_SLOT_CLASS_NAME} />
+        <div ref={detailPopupSlotRefCallback} className={EVENT_DETAIL_POPUP_SLOT_CLASS_NAME} />
       </div>
     </FloatingLayerContainerContext.Provider>
   );
 }
 
-export const useFloatingLayerContainer = () => {
+export const useFloatingLayer = () => {
   const ref = useContext(FloatingLayerContainerContext);
 
   if (isUndefined(ref)) {

@@ -14,13 +14,12 @@ import { PopupSection } from '@src/components/popup/popupSection';
 import { TitleInputBox } from '@src/components/popup/titleInputBox';
 import {
   BOOLEAN_KEYS_OF_EVENT_MODEL_DATA,
-  EVENT_FORM_POPUP_SLOT_CLASS_NAME,
   FormPopupArrowDirection,
   HALF_OF_POPUP_ARROW_HEIGHT,
 } from '@src/constants/popup';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
-import { useFloatingLayerContainer } from '@src/contexts/floatingLayer';
+import { useFloatingLayer } from '@src/contexts/floatingLayer';
 import { useLayoutContainer } from '@src/contexts/layoutContainer';
 import { cls } from '@src/helpers/css';
 import { isLeftOutOfLayout, isTopOutOfLayout } from '@src/helpers/popup';
@@ -107,7 +106,7 @@ export function EventFormPopup() {
   } = useStore(eventFormPopupParamSelector);
   const eventBus = useEventBus();
 
-  const floatingLayerContainer = useFloatingLayerContainer();
+  const floatingLayer = useFloatingLayer();
   const [formState, formStateDispatch] = useFormState({
     title,
     location,
@@ -176,13 +175,9 @@ export function EventFormPopup() {
     }
   }, [layoutContainer, popupArrowPointPosition]);
 
-  if (isNil(floatingLayerContainer) || isNil(start) || isNil(end)) {
+  if (isNil(floatingLayer) || isNil(start) || isNil(end)) {
     return null;
   }
-
-  const eventFormPopupSlot =
-    floatingLayerContainer.querySelector(`.${EVENT_FORM_POPUP_SLOT_CLASS_NAME}`) ??
-    floatingLayerContainer;
 
   return createPortal(
     <div role="dialog" className={classNames.popupContainer} ref={popupContainerRef} style={style}>
@@ -219,6 +214,6 @@ export function EventFormPopup() {
         </div>
       </form>
     </div>,
-    eventFormPopupSlot
+    floatingLayer.formPopupSlot as Element
   );
 }

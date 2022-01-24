@@ -4,13 +4,9 @@ import { useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
 
 import { EventDetailSectionDetail } from '@src/components/popup/eventDetailSectionDetail';
 import { EventDetailSectionHeader } from '@src/components/popup/eventDetailSectionHeader';
-import {
-  DetailPopupArrowDirection,
-  EVENT_DETAIL_POPUP_SLOT_CLASS_NAME,
-  HALF_OF_POPUP_ARROW_HEIGHT,
-} from '@src/constants/popup';
+import { DetailPopupArrowDirection, HALF_OF_POPUP_ARROW_HEIGHT } from '@src/constants/popup';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
-import { useFloatingLayerContainer } from '@src/contexts/floatingLayer';
+import { useFloatingLayer } from '@src/contexts/floatingLayer';
 import { useLayoutContainer } from '@src/contexts/layoutContainer';
 import { cls } from '@src/helpers/css';
 import { isLeftOutOfLayout, isTopOutOfLayout } from '@src/helpers/popup';
@@ -67,7 +63,7 @@ export function EventDetailPopup() {
   const { event, eventRect } = useStore(eventDetailPopupParamSelector);
   const { showFormPopup } = useDispatch('popup');
   const layoutContainer = useLayoutContainer();
-  const floatingLayerContainer = useFloatingLayerContainer();
+  const floatingLayer = useFloatingLayer();
   const popupContainerRef = useRef<HTMLDivElement>(null);
 
   const [style, setStyle] = useState<StyleProp>({});
@@ -101,7 +97,7 @@ export function EventDetailPopup() {
     }
   }, [eventRect, layoutContainer]);
 
-  if (isNil(event) || isNil(eventRect) || isNil(floatingLayerContainer)) {
+  if (isNil(event) || isNil(eventRect) || isNil(floatingLayer)) {
     return null;
   }
 
@@ -140,10 +136,6 @@ export function EventDetailPopup() {
       popupArrowPointPosition,
     });
 
-  const eventDetailPopupSlot =
-    floatingLayerContainer.querySelector(`.${EVENT_DETAIL_POPUP_SLOT_CLASS_NAME}`) ??
-    floatingLayerContainer;
-
   return createPortal(
     <div role="dialog" className={classNames.popupContainer} ref={popupContainerRef} style={style}>
       <div className={classNames.detailContainer}>
@@ -177,6 +169,6 @@ export function EventDetailPopup() {
         </div>
       </div>
     </div>,
-    eventDetailPopupSlot
+    floatingLayer.detailPopupSlot as Element
   );
 }

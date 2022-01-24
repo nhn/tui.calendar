@@ -5,7 +5,6 @@ import { useEffect, useRef } from 'preact/hooks';
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import { ClosePopupButton } from '@src/components/popup/closePopupButton';
 import { Template } from '@src/components/template';
-import { SEE_MORE_POPUP_SLOT_CLASS_NAME } from '@src/constants/popup';
 import {
   MONTH_EVENT_HEIGHT,
   MONTH_MORE_VIEW_HEADER_HEIGHT,
@@ -13,7 +12,7 @@ import {
 } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
-import { useFloatingLayerContainer } from '@src/contexts/floatingLayer';
+import { useFloatingLayer } from '@src/contexts/floatingLayer';
 import { useTheme } from '@src/contexts/theme';
 import { cls } from '@src/helpers/css';
 import { seeMorePopupParamSelector } from '@src/selectors/popup';
@@ -28,14 +27,14 @@ const classNames = {
 };
 
 export function SeeMoreEventsPopup() {
-  const floatingLayerContainer = useFloatingLayerContainer();
   const { date, events = [], popupPosition } = useStore(seeMorePopupParamSelector);
   const {
     month: { moreView, moreViewTitle },
   } = useTheme();
+  const floatingLayer = useFloatingLayer();
   const eventBus = useEventBus();
   const moreEventsPopupContainerRef = useRef(null);
-  const isHidden = isNil(floatingLayerContainer) || isNil(date) || isNil(popupPosition);
+  const isHidden = isNil(floatingLayer) || isNil(date) || isNil(popupPosition);
 
   useEffect(() => {
     if (!isHidden && moreEventsPopupContainerRef.current) {
@@ -61,10 +60,6 @@ export function SeeMoreEventsPopup() {
     day: date.getDay(),
     date: date.getDate(),
   };
-
-  const seeMoreEventsPopupSlot =
-    floatingLayerContainer.querySelector(`.${SEE_MORE_POPUP_SLOT_CLASS_NAME}`) ??
-    floatingLayerContainer;
 
   return createPortal(
     <div
@@ -98,6 +93,6 @@ export function SeeMoreEventsPopup() {
         </div>
       </div>
     </div>,
-    seeMoreEventsPopupSlot
+    floatingLayer.seeMorePopupSlot as Element
   );
 }
