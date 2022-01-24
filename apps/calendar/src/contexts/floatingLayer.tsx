@@ -19,6 +19,8 @@ interface FloatingLayer {
   detailPopupSlot: HTMLDivElement | null;
 }
 
+type FloatingLayerType = keyof FloatingLayer;
+
 const FloatingLayerContainerContext = createContext<FloatingLayer | null>(null);
 
 export function FloatingLayerProvider({ children }: PropsWithChildren) {
@@ -46,12 +48,12 @@ export function FloatingLayerProvider({ children }: PropsWithChildren) {
   );
 }
 
-export const useFloatingLayer = () => {
+export const useFloatingLayer = (floatingLayerType: FloatingLayerType) => {
   const ref = useContext(FloatingLayerContainerContext);
 
   if (isUndefined(ref)) {
     throw new Error('FloatingLayerContainerProvider is not found');
   }
 
-  return ref;
+  return ref?.[floatingLayerType] ?? null;
 };

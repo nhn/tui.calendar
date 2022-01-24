@@ -31,14 +31,10 @@ export function SeeMoreEventsPopup() {
   const {
     month: { moreView, moreViewTitle },
   } = useTheme();
-  const floatingLayer = useFloatingLayer();
+  const seeMorePopupSlot = useFloatingLayer('seeMorePopupSlot');
   const eventBus = useEventBus();
   const moreEventsPopupContainerRef = useRef(null);
-  const isHidden =
-    isNil(date) ||
-    isNil(popupPosition) ||
-    isNil(floatingLayer) ||
-    isNil(floatingLayer.seeMorePopupSlot);
+  const isHidden = isNil(date) || isNil(popupPosition) || isNil(seeMorePopupSlot);
 
   useEffect(() => {
     if (!isHidden && moreEventsPopupContainerRef.current) {
@@ -97,6 +93,6 @@ export function SeeMoreEventsPopup() {
         </div>
       </div>
     </div>,
-    floatingLayer.seeMorePopupSlot as Element
+    seeMorePopupSlot
   );
 }

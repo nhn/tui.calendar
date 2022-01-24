@@ -106,7 +106,7 @@ export function EventFormPopup() {
   } = useStore(eventFormPopupParamSelector);
   const eventBus = useEventBus();
 
-  const floatingLayer = useFloatingLayer();
+  const formPopupSlot = useFloatingLayer('formPopupSlot');
   const [formState, formStateDispatch] = useFormState({
     title,
     location,
@@ -175,7 +175,7 @@ export function EventFormPopup() {
     }
   }, [layoutContainer, popupArrowPointPosition]);
 
-  if (isNil(start) || isNil(end) || isNil(floatingLayer) || isNil(floatingLayer.formPopupSlot)) {
+  if (isNil(start) || isNil(end) || isNil(formPopupSlot)) {
     return null;
   }
 
@@ -214,6 +214,6 @@ export function EventFormPopup() {
         </div>
       </form>
     </div>,
-    floatingLayer.formPopupSlot as Element
+    formPopupSlot
   );
 }

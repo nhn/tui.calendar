@@ -63,7 +63,7 @@ export function EventDetailPopup() {
   const { event, eventRect } = useStore(eventDetailPopupParamSelector);
   const { showFormPopup } = useDispatch('popup');
   const layoutContainer = useLayoutContainer();
-  const floatingLayer = useFloatingLayer();
+  const detailPopupSlot = useFloatingLayer('detailPopupSlot');
   const popupContainerRef = useRef<HTMLDivElement>(null);
 
   const [style, setStyle] = useState<StyleProp>({});
@@ -97,12 +97,7 @@ export function EventDetailPopup() {
     }
   }, [eventRect, layoutContainer]);
 
-  if (
-    isNil(event) ||
-    isNil(eventRect) ||
-    isNil(floatingLayer) ||
-    isNil(floatingLayer.detailPopupSlot)
-  ) {
+  if (isNil(event) || isNil(eventRect) || isNil(detailPopupSlot)) {
     return null;
   }
 
@@ -174,6 +169,6 @@ export function EventDetailPopup() {
         </div>
       </div>
     </div>,
-    floatingLayer.detailPopupSlot as Element
+    detailPopupSlot
   );
 }
