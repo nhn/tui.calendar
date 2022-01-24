@@ -3,24 +3,24 @@ import produce from 'immer';
 import { CalendarState, CalendarStore, PopupParamMap, SetState } from '@t/store';
 
 export enum PopupType {
-  seeMore = 'seeMore',
-  form = 'form',
-  detail = 'detail',
+  SeeMore = 'seeMore',
+  Form = 'form',
+  Detail = 'detail',
 }
 
 export type PopupSlice = {
   popup: {
-    [PopupType.seeMore]: PopupParamMap[PopupType.seeMore] | null;
-    [PopupType.form]: PopupParamMap[PopupType.form] | null;
-    [PopupType.detail]: PopupParamMap[PopupType.detail] | null;
+    [PopupType.SeeMore]: PopupParamMap[PopupType.SeeMore] | null;
+    [PopupType.Form]: PopupParamMap[PopupType.Form] | null;
+    [PopupType.Detail]: PopupParamMap[PopupType.Detail] | null;
   };
 };
 
 export type PopupDispatchers = {
-  showSeeMorePopup: (param: PopupParamMap[PopupType.seeMore]) => void;
-  showFormPopup: (param: PopupParamMap[PopupType.form]) => void;
+  showSeeMorePopup: (param: PopupParamMap[PopupType.SeeMore]) => void;
+  showFormPopup: (param: PopupParamMap[PopupType.Form]) => void;
   showDetailPopup: (
-    param: PopupParamMap[PopupType.detail],
+    param: PopupParamMap[PopupType.Detail],
     isOpenedInSeeMorePopup: boolean
   ) => void;
   hideSeeMorePopup: () => void;
@@ -32,65 +32,65 @@ export type PopupDispatchers = {
 export function createPopupSlice(): PopupSlice {
   return {
     popup: {
-      [PopupType.seeMore]: null,
-      [PopupType.form]: null,
-      [PopupType.detail]: null,
+      [PopupType.SeeMore]: null,
+      [PopupType.Form]: null,
+      [PopupType.Detail]: null,
     },
   };
 }
 
 export function createPopupDispatchers(set: SetState<CalendarStore>): PopupDispatchers {
   return {
-    showSeeMorePopup: (param: PopupParamMap[PopupType.seeMore]) =>
+    showSeeMorePopup: (param: PopupParamMap[PopupType.SeeMore]) =>
       set(
         produce((state: CalendarState) => {
-          state.popup[PopupType.seeMore] = param;
-          state.popup[PopupType.form] = null;
-          state.popup[PopupType.detail] = null;
+          state.popup[PopupType.SeeMore] = param;
+          state.popup[PopupType.Form] = null;
+          state.popup[PopupType.Detail] = null;
         })
       ),
-    showFormPopup: (param: PopupParamMap[PopupType.form]) =>
+    showFormPopup: (param: PopupParamMap[PopupType.Form]) =>
       set(
         produce((state: CalendarState) => {
-          state.popup[PopupType.form] = param;
-          state.popup[PopupType.seeMore] = null;
-          state.popup[PopupType.detail] = null;
+          state.popup[PopupType.Form] = param;
+          state.popup[PopupType.SeeMore] = null;
+          state.popup[PopupType.Detail] = null;
         })
       ),
-    showDetailPopup: (param: PopupParamMap[PopupType.detail], isOpenedInSeeMorePopup) =>
+    showDetailPopup: (param: PopupParamMap[PopupType.Detail], isOpenedInSeeMorePopup) =>
       set(
         produce((state: CalendarState) => {
-          state.popup[PopupType.detail] = param;
-          state.popup[PopupType.form] = null;
+          state.popup[PopupType.Detail] = param;
+          state.popup[PopupType.Form] = null;
           if (!isOpenedInSeeMorePopup) {
-            state.popup[PopupType.seeMore] = null;
+            state.popup[PopupType.SeeMore] = null;
           }
         })
       ),
     hideSeeMorePopup: () =>
       set(
         produce((state: CalendarState) => {
-          state.popup[PopupType.seeMore] = null;
+          state.popup[PopupType.SeeMore] = null;
         })
       ),
     hideFormPopup: () =>
       set(
         produce((state: CalendarState) => {
-          state.popup[PopupType.form] = null;
+          state.popup[PopupType.Form] = null;
         })
       ),
     hideDetailPopup: () =>
       set(
         produce((state: CalendarState) => {
-          state.popup[PopupType.detail] = null;
+          state.popup[PopupType.Detail] = null;
         })
       ),
     hideAllPopup: () =>
       set(
         produce((state: CalendarState) => {
-          state.popup[PopupType.seeMore] = null;
-          state.popup[PopupType.form] = null;
-          state.popup[PopupType.detail] = null;
+          state.popup[PopupType.SeeMore] = null;
+          state.popup[PopupType.Form] = null;
+          state.popup[PopupType.Detail] = null;
         })
       ),
   };
