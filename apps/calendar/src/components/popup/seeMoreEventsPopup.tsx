@@ -1,5 +1,6 @@
 import { h } from 'preact';
 import { createPortal } from 'preact/compat';
+import { useEffect, useRef } from 'preact/hooks';
 
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import { ClosePopupButton } from '@src/components/popup/closePopupButton';
@@ -8,24 +9,43 @@ import {
   MONTH_EVENT_HEIGHT,
   MONTH_MORE_VIEW_HEADER_HEIGHT,
   MONTH_MORE_VIEW_HEADER_MARGIN_BOTTOM,
-  MONTH_MORE_VIEW_PADDING,
 } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
-import { useFloatingLayerContainer } from '@src/contexts/floatingLayer';
+import { useEventBus } from '@src/contexts/eventBus';
+import { useFloatingLayer } from '@src/contexts/floatingLayer';
 import { useTheme } from '@src/contexts/theme';
 import { cls } from '@src/helpers/css';
 import { seeMorePopupParamSelector } from '@src/selectors/popup';
 import { toFormat } from '@src/time/datetime';
 import { isNil } from '@src/utils/type';
 
+const classNames = {
+  container: cls('see-more-container'),
+  seeMore: cls('see-more'),
+  header: cls('see-more-header'),
+  list: cls('month-more-list'),
+};
+
 export function SeeMoreEventsPopup() {
-  const floatingLayerContainer = useFloatingLayerContainer();
   const { date, events = [], popupPosition } = useStore(seeMorePopupParamSelector);
   const {
     month: { moreView, moreViewTitle },
   } = useTheme();
+  const seeMorePopupSlot = useFloatingLayer('seeMorePopupSlot');
+  const eventBus = useEventBus();
+  const moreEventsPopupContainerRef = useRef(null);
+  const isHidden = isNil(date) || isNil(popupPosition) || isNil(seeMorePopupSlot);
 
-  if (isNil(floatingLayerContainer) || isNil(date) || isNil(popupPosition)) {
+  useEffect(() => {
+    if (!isHidden && moreEventsPopupContainerRef.current) {
+      eventBus.fire('clickMoreEventsBtn', {
+        date: date.toDate(),
+        target: moreEventsPopupContainerRef.current,
+      });
+    }
+  }, [date, eventBus, isHidden]);
+
+  if (isHidden) {
     return null;
   }
 
@@ -42,14 +62,19 @@ export function SeeMoreEventsPopup() {
   };
 
   return createPortal(
-    <div role="dialog" className={cls('see-more-container')} style={popupPosition}>
-      <div className={cls('see-more')} style={{ ...moreView, padding: MONTH_MORE_VIEW_PADDING }}>
-        <div className={cls('see-more-header')} style={style}>
+    <div
+      role="dialog"
+      className={classNames.container}
+      style={popupPosition}
+      ref={moreEventsPopupContainerRef}
+    >
+      <div className={classNames.seeMore} style={moreView}>
+        <div className={classNames.header} style={style}>
           <Template template="monthMoreTitleDate" model={moreTitle} />
           <ClosePopupButton />
         </div>
         <div
-          className={cls('month-more-list')}
+          className={classNames.list}
           style={{
             height: `calc(100% - ${
               MONTH_MORE_VIEW_HEADER_HEIGHT + MONTH_MORE_VIEW_HEADER_MARGIN_BOTTOM
@@ -68,6 +93,6 @@ export function SeeMoreEventsPopup() {
         </div>
       </div>
     </div>,
-    floatingLayerContainer
+    seeMorePopupSlot
   );
 }

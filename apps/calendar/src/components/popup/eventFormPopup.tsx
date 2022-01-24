@@ -19,7 +19,7 @@ import {
 } from '@src/constants/popup';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
-import { useFloatingLayerContainer } from '@src/contexts/floatingLayer';
+import { useFloatingLayer } from '@src/contexts/floatingLayer';
 import { useLayoutContainer } from '@src/contexts/layoutContainer';
 import { cls } from '@src/helpers/css';
 import { isLeftOutOfLayout, isTopOutOfLayout } from '@src/helpers/popup';
@@ -90,7 +90,7 @@ function getChanges(event: EventModel, eventModelData: EventModelData) {
 
 export function EventFormPopup() {
   const { calendars } = useStore(calendarSelector);
-  const { hide } = useDispatch('popup');
+  const { hideAllPopup } = useDispatch('popup');
   const {
     title,
     location,
@@ -106,7 +106,7 @@ export function EventFormPopup() {
   } = useStore(eventFormPopupParamSelector);
   const eventBus = useEventBus();
 
-  const floatingLayerContainer = useFloatingLayerContainer();
+  const formPopupSlot = useFloatingLayer('formPopupSlot');
   const [formState, formStateDispatch] = useFormState({
     title,
     location,
@@ -146,7 +146,7 @@ export function EventFormPopup() {
 
       eventBus.fire('beforeUpdateEvent', { event, changes });
     }
-    hide();
+    hideAllPopup();
   };
 
   const popupArrowClassName = useMemo(() => {
@@ -175,7 +175,7 @@ export function EventFormPopup() {
     }
   }, [layoutContainer, popupArrowPointPosition]);
 
-  if (isNil(floatingLayerContainer) || isNil(start) || isNil(end)) {
+  if (isNil(start) || isNil(end) || isNil(formPopupSlot)) {
     return null;
   }
 
@@ -214,6 +214,6 @@ export function EventFormPopup() {
         </div>
       </form>
     </div>,
-    floatingLayerContainer
+    formPopupSlot
   );
 }

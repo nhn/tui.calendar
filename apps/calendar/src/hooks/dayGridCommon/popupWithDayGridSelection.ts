@@ -4,7 +4,6 @@ import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
 import { DRAGGING_TYPE_CONSTANTS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/drag';
-import { PopupType } from '@src/slices/popup';
 import TZDate from '@src/time/date';
 
 import { GridPosition } from '@t/grid';
@@ -36,7 +35,7 @@ function useCreationPopupOptionSelector(state: CalendarState) {
 export function usePopupWithDayGridSelection({ gridSelection, dateMatrix }: Params) {
   // @TODO: use better naming
   const useCreationPopup = useStore(useCreationPopupOptionSelector);
-  const { show, hide } = useDispatch('popup');
+  const { showFormPopup, hideAllPopup } = useDispatch('popup');
   const eventBus = useEventBus();
 
   const [startPos, setStartPos] = useState<GridPosition | null>(null);
@@ -45,7 +44,7 @@ export function usePopupWithDayGridSelection({ gridSelection, dateMatrix }: Para
   const { onMouseDown } = useDrag(DRAGGING_TYPE_CONSTANTS.dayGridSelection, {
     onDragStart: ({ pageX, pageY }) => {
       setStartPos({ x: pageX, y: pageY });
-      hide();
+      hideAllPopup();
     },
     onDragEnd: (e) => {
       const pos = { x: e.pageX, y: e.pageY };
@@ -87,24 +86,21 @@ export function usePopupWithDayGridSelection({ gridSelection, dateMatrix }: Para
       setStartPos(null);
       setEndPos(null);
 
-      show({
-        type: PopupType.form,
-        param: {
-          isCreationPopup: true,
-          title: '',
-          location: '',
-          start,
-          end,
-          isAllday: true,
-          isPrivate: false,
-          popupArrowPointPosition: {
-            top: (endY + startY) / 2,
-            left: (endX + startX) / 2,
-          },
+      showFormPopup({
+        isCreationPopup: true,
+        title: '',
+        location: '',
+        start,
+        end,
+        isAllday: true,
+        isPrivate: false,
+        popupArrowPointPosition: {
+          top: (endY + startY) / 2,
+          left: (endX + startX) / 2,
         },
       });
     }
-  }, [dateMatrix, endPos, gridSelection, show, startPos, useCreationPopup]);
+  }, [dateMatrix, endPos, gridSelection, showFormPopup, startPos, useCreationPopup]);
 
   return onMouseDown;
 }

@@ -6,7 +6,6 @@ import { EventDetailPopup } from '@src/components/popup/eventDetailPopup';
 import { EventFormPopup } from '@src/components/popup/eventFormPopup';
 import { useDispatch } from '@src/contexts/calendarStore';
 import EventModel from '@src/model/eventModel';
-import { PopupType } from '@src/slices/popup';
 import TZDate from '@src/time/date';
 
 import { ProviderWrapper } from '@stories/util/providerWrapper';
@@ -20,10 +19,9 @@ export default {
 };
 
 function Wrapper({ children, event }: PropsWithChildren<EventDetailPopupParam>) {
-  const { show } = useDispatch('popup');
-  show({
-    type: PopupType.detail,
-    param: {
+  const { showDetailPopup } = useDispatch('popup');
+  showDetailPopup(
+    {
       event,
       eventRect: {
         top: 0,
@@ -32,7 +30,8 @@ function Wrapper({ children, event }: PropsWithChildren<EventDetailPopupParam>) 
         height: 100,
       },
     },
-  });
+    false
+  );
 
   return <Fragment>{children}</Fragment>;
 }

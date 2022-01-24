@@ -6,12 +6,11 @@ import { EventDetailSectionDetail } from '@src/components/popup/eventDetailSecti
 import { EventDetailSectionHeader } from '@src/components/popup/eventDetailSectionHeader';
 import { DetailPopupArrowDirection, HALF_OF_POPUP_ARROW_HEIGHT } from '@src/constants/popup';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
-import { useFloatingLayerContainer } from '@src/contexts/floatingLayer';
+import { useFloatingLayer } from '@src/contexts/floatingLayer';
 import { useLayoutContainer } from '@src/contexts/layoutContainer';
 import { cls } from '@src/helpers/css';
 import { isLeftOutOfLayout, isTopOutOfLayout } from '@src/helpers/popup';
 import { eventDetailPopupParamSelector } from '@src/selectors/popup';
-import { PopupType } from '@src/slices/popup';
 import TZDate from '@src/time/date';
 import { isNil } from '@src/utils/type';
 
@@ -62,9 +61,9 @@ function calculatePopupArrowPosition(eventRect: Rect, layoutRect: Rect, popupRec
 
 export function EventDetailPopup() {
   const { event, eventRect } = useStore(eventDetailPopupParamSelector);
-  const { show } = useDispatch('popup');
+  const { showFormPopup } = useDispatch('popup');
   const layoutContainer = useLayoutContainer();
-  const floatingLayerContainer = useFloatingLayerContainer();
+  const detailPopupSlot = useFloatingLayer('detailPopupSlot');
   const popupContainerRef = useRef<HTMLDivElement>(null);
 
   const [style, setStyle] = useState<StyleProp>({});
@@ -98,7 +97,7 @@ export function EventDetailPopup() {
     }
   }, [eventRect, layoutContainer]);
 
-  if (isNil(event) || isNil(eventRect) || isNil(floatingLayerContainer)) {
+  if (isNil(event) || isNil(eventRect) || isNil(detailPopupSlot)) {
     return null;
   }
 
@@ -124,20 +123,17 @@ export function EventDetailPopup() {
   };
 
   const onClickEditButton = () =>
-    show({
-      type: PopupType.form,
-      param: {
-        isCreationPopup: false,
-        event,
-        title,
-        location,
-        start,
-        end,
-        isAllday,
-        isPrivate,
-        eventState: state,
-        popupArrowPointPosition,
-      },
+    showFormPopup({
+      isCreationPopup: false,
+      event,
+      title,
+      location,
+      start,
+      end,
+      isAllday,
+      isPrivate,
+      eventState: state,
+      popupArrowPointPosition,
     });
 
   return createPortal(
@@ -173,6 +169,6 @@ export function EventDetailPopup() {
         </div>
       </div>
     </div>,
-    floatingLayerContainer
+    detailPopupSlot
   );
 }

@@ -14,10 +14,10 @@ const classNames = {
 };
 
 export function ClosePopupButton({ close }: Props) {
-  const { hide } = useDispatch('popup');
+  const { hideAllPopup } = useDispatch('popup');
 
   const onClickHandler = () => {
-    hide();
+    hideAllPopup();
 
     if (isFunction(close)) {
       close();

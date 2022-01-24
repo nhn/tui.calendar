@@ -4,9 +4,8 @@ import { render, screen } from '@testing-library/preact';
 
 import { EventDetailPopup } from '@src/components/popup/eventDetailPopup';
 import { initCalendarStore, StoreProvider, useDispatch } from '@src/contexts/calendarStore';
-import { FloatingLayerContainerProvider } from '@src/contexts/floatingLayer';
+import { FloatingLayerProvider } from '@src/contexts/floatingLayer';
 import EventModel from '@src/model/eventModel';
-import { PopupType } from '@src/slices/popup';
 import TZDate from '@src/time/date';
 
 import { PropsWithChildren } from '@t/components/common';
@@ -28,10 +27,9 @@ describe('event detail popup', () => {
     state: 'Busy',
   });
   const Wrapper = ({ children }: PropsWithChildren) => {
-    const { show } = useDispatch('popup');
-    show({
-      type: PopupType.detail,
-      param: {
+    const { showDetailPopup } = useDispatch('popup');
+    showDetailPopup(
+      {
         event,
         eventRect: {
           width: 10,
@@ -40,9 +38,10 @@ describe('event detail popup', () => {
           top: 0,
         },
       },
-    });
+      false
+    );
 
-    return <FloatingLayerContainerProvider>{children}</FloatingLayerContainerProvider>;
+    return <FloatingLayerProvider>{children}</FloatingLayerProvider>;
   };
 
   beforeEach(() => {

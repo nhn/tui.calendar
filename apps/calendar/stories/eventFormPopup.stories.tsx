@@ -4,7 +4,6 @@ import { Story } from '@storybook/preact';
 
 import { EventFormPopup } from '@src/components/popup/eventFormPopup';
 import { useDispatch } from '@src/contexts/calendarStore';
-import { PopupType } from '@src/slices/popup';
 import TZDate from '@src/time/date';
 
 import { calendars as mockCalendars } from '@stories/util/mockCalendars';
@@ -33,18 +32,15 @@ function Wrapper({
   isPrivate,
   isCreationPopup,
 }: PropsWithChildren<EventFormPopupParam>) {
-  const { show } = useDispatch('popup');
-  show({
-    type: PopupType.form,
-    param: {
-      isCreationPopup,
-      title,
-      location,
-      start,
-      end,
-      isAllday,
-      isPrivate,
-    },
+  const { showFormPopup } = useDispatch('popup');
+  showFormPopup({
+    isCreationPopup,
+    title,
+    location,
+    start,
+    end,
+    isAllday,
+    isPrivate,
   });
 
   return <Fragment>{children}</Fragment>;
