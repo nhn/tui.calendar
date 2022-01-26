@@ -154,33 +154,33 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
 
   /**
    * Create events and render calendar.
-   * @param {Array.<EventModel>} events - {@link EventModelData} data list
-   * @param {boolean} [silent=false] - no auto render after creation when set true
-   * @todo implement this
+   * @param {EventModelData[]} events - list of {@link EventModelData}
    * @example
    * calendar.createEvents([
-   *     {
-   *         id: '1',
-   *         calendarId: '1',
-   *         title: 'my event',
-   *         category: 'time',
-   *         dueDateClass: '',
-   *         start: '2018-01-18T22:30:00+09:00',
-   *         end: '2018-01-19T02:30:00+09:00'
-   *     },
-   *     {
-   *         id: '2',
-   *         calendarId: '1',
-   *         title: 'second event',
-   *         category: 'time',
-   *         dueDateClass: '',
-   *         start: '2018-01-18T17:30:00+09:00',
-   *         end: '2018-01-19T17:31:00+09:00'
-   *     }
+   *   {
+   *     id: '1',
+   *     calendarId: '1',
+   *     title: 'my event',
+   *     category: 'time',
+   *     dueDateClass: '',
+   *     start: '2018-01-18T22:30:00+09:00',
+   *     end: '2018-01-19T02:30:00+09:00',
+   *   },
+   *   {
+   *     id: '2',
+   *     calendarId: '1',
+   *     title: 'second event',
+   *     category: 'time',
+   *     dueDateClass: '',
+   *     start: '2018-01-18T17:30:00+09:00',
+   *     end: '2018-01-19T17:31:00+09:00',
+   *   },
    * ]);
    */
   createEvents(events: EventModelData[]) {
-    this.getStoreDispatchers('calendar').createEvents(events);
+    const { createEvents } = this.getStoreDispatchers('calendar');
+
+    createEvents(events);
   }
 
   /**

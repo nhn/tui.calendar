@@ -10,14 +10,14 @@ import EventModel from '@src/model/eventModel';
 
 import { CalendarData, EventModelData } from '@t/events';
 import { CalendarInfo } from '@t/options';
-import { CalendarStore, SetState } from '@t/store';
+import { CalendarState, CalendarStore, SetState } from '@t/store';
 
 export type CalendarSlice = { calendar: CalendarData };
 
 type UpdateEventParams = { event: EventModel; eventData: EventModelData };
 
 export type CalendarDispatchers = {
-  createEvents: (events: (EventModel | EventModelData)[]) => void;
+  createEvents: (events: EventModelData[]) => void;
   updateEvent: (params: UpdateEventParams) => void;
   clearEvents: () => void;
 };
@@ -34,21 +34,21 @@ export function createCalendarSlice(calendars: CalendarInfo[] = []): CalendarSli
 
 export function createCalendarDispatchers(set: SetState<CalendarStore>): CalendarDispatchers {
   return {
-    createEvents: (events: (EventModel | EventModelData)[]) =>
+    createEvents: (events: EventModelData[]) =>
       set(
-        produce((state) => {
+        produce((state: CalendarState) => {
           createEvents(state.calendar, events);
         })
       ),
     updateEvent: ({ event, eventData }: UpdateEventParams) =>
       set(
-        produce((state) => {
+        produce((state: CalendarState) => {
           updateEvent(state.calendar, event.id, event.calendarId, eventData);
         })
       ),
     clearEvents: () =>
       set(
-        produce((state) => {
+        produce((state: CalendarState) => {
           clearEvents(state.calendar);
         })
       ),
