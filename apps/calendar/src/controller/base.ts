@@ -91,12 +91,6 @@ export function removeFromMatrix(idsOfDay: IDS_OF_DAY, event: EventModel) {
   });
 }
 
-/**
- * Add an event instance.
- * @param {CalendarData} calendarData - data of calendar
- * @param {EventModel} event The instance of EventModel.
- * @returns {EventModel} The instance of EventModel that added.
- */
 export function addEvent(calendarData: CalendarData, event: EventModel) {
   calendarData.events.add(event);
   addToMatrix(calendarData.idsOfDay, event);
@@ -104,24 +98,12 @@ export function addEvent(calendarData: CalendarData, event: EventModel) {
   return event;
 }
 
-/**
- * Create an event instance from raw data.
- * @param {CalendarData} calendarData - data of calendar
- * @param {EventModelData} eventData - Data object to create event.
- * @returns {EventModel[]} The instance of EventModel that created.
- */
 export function createEvent(calendarData: CalendarData, eventData: EventModelData) {
   const event = EventModel.create(eventData);
 
   return addEvent(calendarData, event);
 }
 
-/**
- * Create events from raw data.
- * @param {CalendarData} calendarData - data of calendar
- * @param {EventModelData[]} events - event data list to create event.
- * @returns {EventModel[]} The instance list of EventModel that created.
- */
 export function createEvents(calendarData: CalendarData, events: EventModelData[] = []) {
   return events.map((eventData) => createEvent(calendarData, eventData));
 }
