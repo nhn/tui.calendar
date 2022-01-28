@@ -15,7 +15,7 @@ import { WEEK_DAYNAME_BORDER, WEEK_DAYNAME_HEIGHT } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
 import { getDayNames } from '@src/helpers/dayName';
-import { getDayGridEvents } from '@src/helpers/grid';
+import { getDayGridEvents, getWeekDates } from '@src/helpers/grid';
 import { getDisplayPanel } from '@src/helpers/view';
 import {
   calendarSelector,
@@ -36,23 +36,6 @@ import {
 import { WeekOptions } from '@t/options';
 import { AlldayEventCategory } from '@t/panel';
 
-function getRow(renderDate: TZDate, { startDayOfWeek = 0, workweek }: WeekOptions): TZDate[] {
-  const renderDay = renderDate.getDay();
-  const now = toStartOfDay(renderDate);
-  const nowDay = now.getDay();
-  const prevWeekCount = startDayOfWeek - WEEK_DAYS;
-
-  return range(startDayOfWeek, WEEK_DAYS + startDayOfWeek).reduce<TZDate[]>((acc, day) => {
-    const date = addDate(now, day - nowDay + (startDayOfWeek > renderDay ? prevWeekCount : 0));
-    if (workweek && isWeekend(date.getDay())) {
-      return acc;
-    }
-    acc.push(date);
-
-    return acc;
-  }, []);
-}
-
 function useWeekViewState() {
   const template = useStore(templateSelector);
   const options = useStore(optionsSelector);
@@ -71,18 +54,13 @@ function useWeekViewState() {
 }
 
 export function Week() {
-  const { template, options, calendar, gridRowLayout } = useWeekViewState();
-
-  if (!template || !options || !calendar || !gridRowLayout) {
-    return null;
-  }
+  const { options, calendar, gridRowLayout } = useWeekViewState();
 
   const { eventView, taskView } = options;
   const weekOptions = options.week as Required<WeekOptions>;
   const { narrowWeekend, startDayOfWeek, workweek, hourStart, hourEnd } = weekOptions;
   // @TODO: calculate based on today(need to calculate date when prev & next used)
-  const renderWeekDate = new TZDate();
-  const row = getRow(renderWeekDate, weekOptions);
+  const row = useMemo(() => getWeekDates(new TZDate(), weekOptions), [weekOptions]);
   const dayNames = getDayNames(row);
   const { rowStyleInfo, cellWidthMap } = getRowStyleInfo(
     row.length,

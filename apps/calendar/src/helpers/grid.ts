@@ -345,3 +345,23 @@ export function createDateMatrixOfMonth(
     }, [] as TZDate[])
   );
 }
+
+export function getWeekDates(
+  renderDate: TZDate,
+  { startDayOfWeek = 0, workweek }: WeekOptions
+): TZDate[] {
+  const renderDay = renderDate.getDay();
+  const now = toStartOfDay(renderDate);
+  const nowDay = now.getDay();
+  const prevWeekCount = startDayOfWeek - WEEK_DAYS;
+
+  return range(startDayOfWeek, WEEK_DAYS + startDayOfWeek).reduce<TZDate[]>((acc, day) => {
+    const date = addDate(now, day - nowDay + (startDayOfWeek > renderDay ? prevWeekCount : 0));
+    if (workweek && isWeekend(date.getDay())) {
+      return acc;
+    }
+    acc.push(date);
+
+    return acc;
+  }, []);
+}
