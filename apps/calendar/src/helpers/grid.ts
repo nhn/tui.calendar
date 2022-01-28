@@ -365,3 +365,60 @@ export function getWeekDates(
     return acc;
   }, []);
 }
+
+export function getColumnStyles(
+  datesOfWeek: TZDate[], // 5 or 7 dates
+  narrowWeekend = false
+): { date: TZDate; left: number; width: number }[] {
+  const datesCount = datesOfWeek.length;
+  const shouldApplyNarrowWeekend = datesCount > 5 && narrowWeekend;
+  const defaultWidthByColumns = shouldApplyNarrowWeekend
+    ? 100 / (datesCount - 1)
+    : 100 / datesCount;
+
+  return datesOfWeek
+    .map((date) => {
+      const width =
+        shouldApplyNarrowWeekend && isWeekend(date.getDay())
+          ? defaultWidthByColumns / 2
+          : defaultWidthByColumns;
+
+      return {
+        date,
+        width,
+      };
+    })
+    .reduce((result, currentDateAndWidth, index) => {
+      const prev = result[index - 1];
+
+      result.push({
+        ...currentDateAndWidth,
+        left: index === 0 ? 0 : prev.left + prev.width,
+      });
+
+      return result;
+    }, [] as { date: TZDate; left: number; width: number }[]);
+}
+
+export function createTimeGridData(
+  datesOfWeek: TZDate[],
+
+  options: {
+    hourStart: number;
+    hourEnd: number;
+  }
+): {
+  columns: {
+    date: TZDate;
+    left: number;
+    width: number;
+  }[];
+  rows: {
+    top: number;
+    height: number;
+    startTime: TZDate;
+    endTime: TZDate;
+  }[];
+} | null {
+  return null;
+}

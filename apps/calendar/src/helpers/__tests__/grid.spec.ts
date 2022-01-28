@@ -1,8 +1,13 @@
 import range from 'tui-code-snippet/array/range';
 
-import { createDateMatrixOfMonth } from '@src/helpers/grid';
+import {
+  createDateMatrixOfMonth,
+  createTimeGridData,
+  getColumnStyles,
+  getWeekDates,
+} from '@src/helpers/grid';
 import TZDate from '@src/time/date';
-import { addDate, WEEK_DAYS } from '@src/time/datetime';
+import { addDate, isWeekend, WEEK_DAYS } from '@src/time/datetime';
 
 function createResultMatrix({
   startFrom,
@@ -179,5 +184,101 @@ describe('createDateMatrixOfMonth', () => {
     });
 
     expect(resultStartFromFriday).toEqual(expectStartFromFriday);
+  });
+});
+
+describe('getColumnStyles', () => {
+  it('should create default styles of a week', () => {
+    // Given
+    const weekDates = getWeekDates(new TZDate('2021-01-28T00:00:00'), {
+      startDayOfWeek: 0,
+      workweek: false,
+    });
+    const expectedWidth = 100 / weekDates.length;
+    const getExpectedLeft = (index: number) => expectedWidth * index;
+
+    // When
+    const result = getColumnStyles(weekDates);
+    const totalWidth = result.reduce((acc, curr) => acc + curr.width, 0);
+
+    // Then
+    expect(result).toHaveLength(7);
+    expect(totalWidth).toBeCloseTo(100, 0);
+    weekDates.forEach((date, index) => {
+      expect(result[index]).toEqual({
+        date,
+        width: expectedWidth,
+        left: getExpectedLeft(index),
+      });
+    });
+  });
+
+  it('should create styles of a workweek', () => {
+    // Given
+    const weekDates = getWeekDates(new TZDate('2021-01-28T00:00:00'), {
+      startDayOfWeek: 0,
+      workweek: true,
+    });
+    const expectedWidth = 100 / weekDates.length;
+    const getExpectedLeft = (index: number) => expectedWidth * index;
+
+    // When
+    const result = getColumnStyles(weekDates);
+    const totalWidth = result.reduce((acc, curr) => acc + curr.width, 0);
+
+    // Then
+    expect(result).toHaveLength(5);
+    expect(totalWidth).toBeCloseTo(100, 0);
+    weekDates.forEach((date, index) => {
+      expect(result[index]).toEqual({
+        date,
+        width: expectedWidth,
+        left: getExpectedLeft(index),
+      });
+    });
+  });
+
+  it('should create styles of a week with narrowWeekend option', () => {
+    // Given
+    const weekDates = getWeekDates(new TZDate('2021-01-28T00:00:00'), {
+      startDayOfWeek: 0,
+      workweek: false,
+    });
+    const expectedBasicWidth = 100 / (weekDates.length - 1);
+    const expectedNarrowWidth = expectedBasicWidth / 2;
+    let expectedLeft = 0;
+
+    // When
+    const result = getColumnStyles(weekDates, true);
+    const totalWidth = result.reduce((acc, curr) => acc + curr.width, 0);
+
+    // Then
+    expect(result).toHaveLength(7);
+    expect(totalWidth).toBeCloseTo(100, 0);
+    weekDates.forEach((date, index) => {
+      expect(result[index]).toEqual({
+        date,
+        width: isWeekend(date.getDay()) ? expectedNarrowWidth : expectedBasicWidth,
+        left: expectedLeft,
+      });
+
+      expectedLeft += result[index].width;
+    });
+  });
+});
+
+// @TODO
+describe('createTimeGridData', () => {
+  it('should create data by default values', () => {
+    // Given
+    const rows = getWeekDates(new TZDate('2021-01-28T00:00:00'), {
+      startDayOfWeek: 0,
+    });
+
+    // When
+    const result = createTimeGridData(rows, { hourStart: 0, hourEnd: 24 });
+
+    // Then
+    expect(result).toBeNull();
   });
 });
