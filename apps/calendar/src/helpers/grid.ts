@@ -24,8 +24,10 @@ import {
   Matrix3d,
   TimeGridEventMatrix,
 } from '@t/events';
+import { CommonGridColumn, TimeGridData, TimeGridRow } from '@t/grid';
 import { MonthOptions, WeekOptions } from '@t/options';
 import { Panel } from '@t/panel';
+import { FormattedTimeString } from '@t/time/datetime';
 
 export const EVENT_HEIGHT = 22;
 export const TOTAL_WIDTH = 100;
@@ -366,10 +368,11 @@ export function getWeekDates(
   }, []);
 }
 
-export function getColumnStyles(
+// @TODO: replace `getRowStyleInfo` to this function
+export function getColumnsData(
   datesOfWeek: TZDate[], // 5 or 7 dates
   narrowWeekend = false
-): { date: TZDate; left: number; width: number }[] {
+): CommonGridColumn[] {
   const datesCount = datesOfWeek.length;
   const shouldApplyNarrowWeekend = datesCount > 5 && narrowWeekend;
   const defaultWidthByColumns = shouldApplyNarrowWeekend
@@ -397,28 +400,34 @@ export function getColumnStyles(
       });
 
       return result;
-    }, [] as { date: TZDate; left: number; width: number }[]);
+    }, [] as CommonGridColumn[]);
 }
 
 export function createTimeGridData(
   datesOfWeek: TZDate[],
-
   options: {
     hourStart: number;
     hourEnd: number;
   }
-): {
-  columns: {
-    date: TZDate;
-    left: number;
-    width: number;
-  }[];
-  rows: {
-    top: number;
-    height: number;
-    startTime: TZDate;
-    endTime: TZDate;
-  }[];
-} | null {
-  return null;
+): TimeGridData {
+  const columns = getColumnsData(datesOfWeek);
+
+  const steps = options.hourEnd - options.hourStart;
+  const baseHeight = 100 / steps;
+  const rows = range(options.hourStart, options.hourEnd).map((hour, index) => {
+    const startTime = `${hour}:00`.padStart(5, '0') as FormattedTimeString;
+    const endTime = `${hour + 1}:00`.padStart(5, '0') as FormattedTimeString;
+
+    return {
+      top: baseHeight * index,
+      height: baseHeight,
+      startTime,
+      endTime,
+    };
+  });
+
+  return {
+    columns,
+    rows,
+  };
 }

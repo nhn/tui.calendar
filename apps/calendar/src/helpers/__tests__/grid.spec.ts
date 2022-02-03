@@ -3,7 +3,7 @@ import range from 'tui-code-snippet/array/range';
 import {
   createDateMatrixOfMonth,
   createTimeGridData,
-  getColumnStyles,
+  getColumnsData,
   getWeekDates,
 } from '@src/helpers/grid';
 import TZDate from '@src/time/date';
@@ -198,7 +198,7 @@ describe('getColumnStyles', () => {
     const getExpectedLeft = (index: number) => expectedWidth * index;
 
     // When
-    const result = getColumnStyles(weekDates);
+    const result = getColumnsData(weekDates);
     const totalWidth = result.reduce((acc, curr) => acc + curr.width, 0);
 
     // Then
@@ -223,7 +223,7 @@ describe('getColumnStyles', () => {
     const getExpectedLeft = (index: number) => expectedWidth * index;
 
     // When
-    const result = getColumnStyles(weekDates);
+    const result = getColumnsData(weekDates);
     const totalWidth = result.reduce((acc, curr) => acc + curr.width, 0);
 
     // Then
@@ -249,7 +249,7 @@ describe('getColumnStyles', () => {
     let expectedLeft = 0;
 
     // When
-    const result = getColumnStyles(weekDates, true);
+    const result = getColumnsData(weekDates, true);
     const totalWidth = result.reduce((acc, curr) => acc + curr.width, 0);
 
     // Then
@@ -267,18 +267,73 @@ describe('getColumnStyles', () => {
   });
 });
 
-// @TODO
 describe('createTimeGridData', () => {
   it('should create data by default values', () => {
     // Given
     const rows = getWeekDates(new TZDate('2021-01-28T00:00:00'), {
       startDayOfWeek: 0,
     });
+    const expectedRowHeight = 100 / 24;
+    const expected = {
+      columns: getColumnsData(rows),
+      rows: range(0, 24).map((hour, index) => ({
+        top: expectedRowHeight * index,
+        height: expectedRowHeight,
+        startTime: `${hour}:00`.padStart(5, '0'),
+        endTime: `${hour + 1}:00`.padStart(5, '0'),
+      })),
+    };
 
     // When
     const result = createTimeGridData(rows, { hourStart: 0, hourEnd: 24 });
 
     // Then
-    expect(result).toBeNull();
+    expect(result).toEqual(expected);
+  });
+
+  it('should create data when rendering 00:00 to 12:00', () => {
+    // Given
+    const rows = getWeekDates(new TZDate('2021-01-28T00:00:00'), {
+      startDayOfWeek: 0,
+    });
+    const expectedRowHeight = 100 / 12;
+    const expected = {
+      columns: getColumnsData(rows),
+      rows: range(0, 12).map((hour, index) => ({
+        top: expectedRowHeight * index,
+        height: expectedRowHeight,
+        startTime: `${hour}:00`.padStart(5, '0'),
+        endTime: `${hour + 1}:00`.padStart(5, '0'),
+      })),
+    };
+
+    // When
+    const result = createTimeGridData(rows, { hourStart: 0, hourEnd: 12 });
+
+    // Then
+    expect(result).toEqual(expected);
+  });
+
+  it('should create data when rendering 12:00 to 24:00', () => {
+    // Given
+    const rows = getWeekDates(new TZDate('2021-01-28T00:00:00'), {
+      startDayOfWeek: 0,
+    });
+    const expectedRowHeight = 100 / 12;
+    const expected = {
+      columns: getColumnsData(rows),
+      rows: range(12, 24).map((hour, index) => ({
+        top: expectedRowHeight * index,
+        height: expectedRowHeight,
+        startTime: `${hour}:00`.padStart(5, '0'),
+        endTime: `${hour + 1}:00`.padStart(5, '0'),
+      })),
+    };
+
+    // When
+    const result = createTimeGridData(rows, { hourStart: 12, hourEnd: 24 });
+
+    // Then
+    expect(result).toEqual(expected);
   });
 });
