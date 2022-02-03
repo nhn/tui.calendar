@@ -15,7 +15,7 @@ import { WEEK_DAYNAME_BORDER, WEEK_DAYNAME_HEIGHT } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
 import { getDayNames } from '@src/helpers/dayName';
-import { getDayGridEvents, getWeekDates } from '@src/helpers/grid';
+import { createTimeGridData, getDayGridEvents, getWeekDates } from '@src/helpers/grid';
 import { getDisplayPanel } from '@src/helpers/view';
 import {
   calendarSelector,
@@ -60,25 +60,30 @@ export function Week() {
   const weekOptions = options.week as Required<WeekOptions>;
   const { narrowWeekend, startDayOfWeek, workweek, hourStart, hourEnd } = weekOptions;
   // @TODO: calculate based on today(need to calculate date when prev & next used)
-  const row = useMemo(() => getWeekDates(new TZDate(), weekOptions), [weekOptions]);
-  const dayNames = getDayNames(row);
+  const weekDates = useMemo(() => getWeekDates(new TZDate(), weekOptions), [weekOptions]);
+  const dayNames = getDayNames(weekDates);
   const { rowStyleInfo, cellWidthMap } = getRowStyleInfo(
-    row.length,
+    weekDates.length,
     narrowWeekend,
     startDayOfWeek,
     workweek
   );
-  const dayGridEvents = getDayGridEvents(row, calendar, {
+  const dayGridEvents = getDayGridEvents(weekDates, calendar, {
     narrowWeekend,
     hourStart,
     hourEnd,
   });
-  const columnInfoList = row.map(
-    (cell) =>
-      ({ start: toStartOfDay(cell), end: toEndOfDay(cell), unit: 'minute', slot: 30 } as ColumnInfo)
+  const timeGridData = useMemo(
+    () =>
+      createTimeGridData(weekDates, {
+        hourStart: weekOptions.hourStart,
+        hourEnd: weekOptions.hourEnd,
+      }),
+    [weekDates, weekOptions.hourEnd, weekOptions.hourStart]
   );
+
   const displayPanel = getDisplayPanel(taskView, eventView);
-  const gridRows = displayPanel
+  const dayGridRows = displayPanel
     .filter((panel) => DEFAULT_WEEK_PANEL_TYPES.includes(panel))
     .map((key) => {
       const rowType = key as AlldayEventCategory;
@@ -91,7 +96,7 @@ export function Week() {
               events={dayGridEvents[rowType]}
               rowStyleInfo={rowStyleInfo}
               gridColWidthMap={cellWidthMap}
-              row={row}
+              row={weekDates}
               height={gridRowLayout[rowType].height}
               options={weekOptions}
             />
@@ -99,7 +104,7 @@ export function Week() {
             <OtherGridRow
               category={rowType}
               events={dayGridEvents[rowType]}
-              row={row}
+              row={weekDates}
               height={gridRowLayout[rowType].height}
               options={weekOptions}
               gridColWidthMap={cellWidthMap}
@@ -121,9 +126,9 @@ export function Week() {
           type="week"
         />
       </Panel>
-      {gridRows}
+      {dayGridRows}
       <Panel name="time" autoSize={1}>
-        <TimeGrid events={dayGridEvents.time} columnInfoList={columnInfoList} />
+        <TimeGrid events={dayGridEvents.time} timeGridData={timeGridData} />
       </Panel>
     </Layout>
   );

@@ -1,11 +1,9 @@
-import { h, VNode } from 'preact';
-
-import range from 'tui-code-snippet/array/range';
+import { h } from 'preact';
 
 import { BackgroundEvent } from '@src/components/events/backgroundEvent';
 import { TimeEvent } from '@src/components/events/timeEvent';
 import { GridSelection } from '@src/components/timeGrid/gridSelection';
-import { getUIModels, isBetween } from '@src/controller/column';
+import { getUIModels } from '@src/controller/column';
 import { getTopHeightByTime } from '@src/controller/times';
 import { cls, toPercent } from '@src/helpers/css';
 import { isBackgroundEvent } from '@src/model/eventModel';
@@ -14,7 +12,7 @@ import TZDate from '@src/time/date';
 import { first, last } from '@src/utils/array';
 
 import { TimeGridSelectionInfo } from '@t/components/timeGrid/gridSelection';
-import { TimeUnit } from '@t/events';
+import { TimeGridRow } from '@t/grid';
 
 const classNames = {
   column: cls('column'),
@@ -25,35 +23,27 @@ const classNames = {
   events: cls('events'),
 };
 
-interface Props {
-  unit?: TimeUnit;
-  slot?: number;
-  times?: TZDate[];
-  width?: string;
-  backgroundColor?: string;
-  start?: number;
-  end?: number;
-  events?: EventUIModel[];
-  gridSelection?: TimeGridSelectionInfo | null;
-  index?: number;
-  readOnly?: boolean;
-  renderGridlineChild?: (time: TZDate) => VNode;
-}
-
-function renderGridlines(times: TZDate[], renderGridlineChild?: (time: TZDate) => VNode) {
+function GridLines({ timeGridRows }: { timeGridRows: TimeGridRow[] }) {
   return (
     <div className={classNames.grid}>
-      {times.map((time, index) => (
-        <div className={classNames.gridline} key={`gridline-${index}`}>
+      {timeGridRows.map((time) => (
+        <div className={classNames.gridline} key={`gridline-${time.startTime}`}>
           <div className={classNames.gridlineHalf} />
-          {renderGridlineChild ? renderGridlineChild(time) : null}
         </div>
       ))}
     </div>
   );
 }
 
-function renderBackgroundEvents(events: EventUIModel[], startTime: TZDate, endTime: TZDate) {
+function BackgroundEvents({
+  events,
+  startTime,
+  endTime,
+}: {
+  events: EventUIModel[];
+  startTime: TZDate;
+  endTime: TZDate;
+}) {
   const backgroundEvents = events.filter(isBackgroundEvent);
 
   return (
@@ -79,7 +69,15 @@ function renderBackgroundEvents(events: EventUIModel[], startTime: TZDate, endTi
   );
 }
 
-function renderEvents(events: EventUIModel[], startTime: TZDate, endTime: TZDate) {
+function VerticalEvents({
+  events,
+  startTime,
+  endTime,
+}: {
+  events: EventUIModel[];
+  startTime: TZDate;
+  endTime: TZDate;
+}) {
   const marginRight = 8;
   const style = { marginRight };
   const uiModels = getUIModels(events, startTime, endTime);
@@ -93,11 +91,15 @@ function renderEvents(events: EventUIModel[], startTime: TZDate, endTime: TZDate
   );
 }
 
-function renderGridSelection(
-  gridSelection: TimeGridSelectionInfo | null,
-  startTime: TZDate,
-  endTime: TZDate
-) {
+function TimeGridSelection({
+  gridSelection,
+  startTime,
+  endTime,
+}: {
+  gridSelection: TimeGridSelectionInfo | null;
+  startTime: TZDate;
+  endTime: TZDate;
+}) {
   if (!gridSelection) {
     return null;
   }
@@ -112,41 +114,36 @@ function renderGridSelection(
   return <GridSelection {...gridSelection} top={top} height={height} />;
 }
 
-export function Column({
-  times = range(0, 25).map((hour) => {
-    const time = new TZDate();
-    time.setHours(hour, 0, 0, 0);
+interface Props {
+  timeGridRows: TimeGridRow[];
+  columnDate: TZDate;
+  columnWidth: string;
+  events: EventUIModel[];
+  backgroundColor?: string;
+  readOnly?: boolean;
+}
 
-    return time;
-  }),
-  events = [],
-  unit = 'minute',
-  slot = 30,
-  start = 0,
-  end = times.length,
-  width = '72px',
-  backgroundColor = '',
-  gridSelection = null,
-  readOnly = false,
-  index = 0,
-  renderGridlineChild,
-}: Props) {
-  const filteredTimes = times.slice(start, end + 1);
-  const startTime = first(filteredTimes);
-  const endTime = last(filteredTimes);
-  const filteredEvents = events.filter(isBetween(startTime, endTime));
-  const renderedTimes = filteredTimes.slice(0, filteredTimes.length - 1);
+export function Column({ columnDate, columnWidth, events, timeGridRows, backgroundColor }: Props) {
+  const { startTime: startTimeStr } = first(timeGridRows);
+  const { endTime: endTimeStr } = last(timeGridRows);
+
+  const startTimeArgs = startTimeStr.split(':').map(Number) as [number, number];
+  const endTimeArgs = endTimeStr.split(':').map(Number) as [number, number];
+  const startTime = new TZDate(columnDate);
+  const endTime = new TZDate(columnDate);
+  startTime.setHours(...startTimeArgs);
+  endTime.setHours(...endTimeArgs);
+
   const style = {
-    width,
+    width: columnWidth,
     backgroundColor,
   };
 
   return (
-    <div className={classNames.column} style={style} data-index={index}>
-      {renderGridlines(renderedTimes, renderGridlineChild)}
-      {renderBackgroundEvents(filteredEvents, startTime, endTime)}
-      {renderEvents(filteredEvents, startTime, endTime)}
-      {!readOnly ? renderGridSelection(gridSelection, startTime, endTime) : null}
+    <div className={classNames.column} style={style}>
+      <GridLines timeGridRows={timeGridRows} />
+      <BackgroundEvents events={events} startTime={startTime} endTime={endTime} />
+      <VerticalEvents events={events} startTime={startTime} endTime={endTime} />
     </div>
   );
 }
