@@ -235,14 +235,17 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * Delete a event.
-   * @param {string} eventId - ID of event to delete
+   * Delete an event
+   * @param {string} eventId - event's id to delete
    * @param {string} calendarId - The CalendarId of the event to delete
-   * @param {boolean} [silent=false] - No auto render after creation when set true
-   * @todo implement this
    */
-  deleteEvent(eventId: string, calendarId: string, silent = false) {
-    // console.log('deleteEvent', eventId, calendarId, silent);
+  deleteEvent(eventId: string, calendarId: string) {
+    const { deleteEvent } = this.getStoreDispatchers('calendar');
+    const event = this.getEvent(eventId, calendarId);
+
+    if (event) {
+      deleteEvent(event);
+    }
   }
 
   /**********

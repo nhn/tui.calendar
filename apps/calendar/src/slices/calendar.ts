@@ -4,6 +4,7 @@ import {
   clearEvents,
   createEventCollection,
   createEvents,
+  deleteEvent,
   updateEvent,
 } from '@src/controller/base';
 import EventModel from '@src/model/eventModel';
@@ -19,6 +20,7 @@ type UpdateEventParams = { event: EventModel; eventData: EventModelData };
 export type CalendarDispatchers = {
   createEvents: (events: EventModelData[]) => void;
   updateEvent: (params: UpdateEventParams) => void;
+  deleteEvent: (event: EventModel) => void;
   clearEvents: () => void;
 };
 
@@ -34,16 +36,22 @@ export function createCalendarSlice(calendars: CalendarInfo[] = []): CalendarSli
 
 export function createCalendarDispatchers(set: SetState<CalendarStore>): CalendarDispatchers {
   return {
-    createEvents: (events: EventModelData[]) =>
+    createEvents: (events) =>
       set(
         produce((state: CalendarState) => {
           createEvents(state.calendar, events);
         })
       ),
-    updateEvent: ({ event, eventData }: UpdateEventParams) =>
+    updateEvent: ({ event, eventData }) =>
       set(
         produce((state: CalendarState) => {
           updateEvent(state.calendar, event.id, event.calendarId, eventData);
+        })
+      ),
+    deleteEvent: (event) =>
+      set(
+        produce((state: CalendarState) => {
+          deleteEvent(state.calendar, event);
         })
       ),
     clearEvents: () =>
