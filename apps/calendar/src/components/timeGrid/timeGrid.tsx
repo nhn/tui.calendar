@@ -158,13 +158,7 @@ export function TimeGrid({
           stickyContainer={stickyContainer}
           onChangeCollapsed={onChangeCollapsed}
         />
-        <div
-          className={cls('columns')}
-          style={{
-            width: `calc(100% - ${toPx(timesWidth)})`,
-            left: toPx(timesWidth),
-          }}
-        >
+        <div className={cls('columns')} style={{ left: toPx(timesWidth) }}>
           {columns.map((column, index) => (
             <Column
               key={index}

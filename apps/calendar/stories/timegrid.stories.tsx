@@ -4,6 +4,7 @@ import { StoryFn } from '@storybook/preact';
 import range from 'tui-code-snippet/array/range';
 
 import { TimeGrid } from '@src/components/timeGrid/timeGrid';
+import { cls } from '@src/helpers/css';
 import { createTimeGridData, getWeekDates } from '@src/helpers/grid';
 import TZDate from '@src/time/date';
 import { addDate, addHours, toStartOfDay } from '@src/time/datetime';
@@ -91,7 +92,9 @@ function getTimeGridData() {
 type TimeGridProps = ComponentProps<typeof TimeGrid>;
 const Template: StoryFn<TimeGridProps> = (args: ComponentProps<typeof TimeGrid>) => (
   <ProviderWrapper>
-    <TimeGrid {...args} />
+    <div className={cls('layout')}>
+      <TimeGrid {...args} />
+    </div>
   </ProviderWrapper>
 );
 
