@@ -1,4 +1,5 @@
 import { h } from 'preact';
+import { useMemo } from 'preact/hooks';
 
 import { BackgroundEvent } from '@src/components/events/backgroundEvent';
 import { TimeEvent } from '@src/components/events/timeEvent';
@@ -124,15 +125,19 @@ interface Props {
 }
 
 export function Column({ columnDate, columnWidth, events, timeGridRows, backgroundColor }: Props) {
-  const { startTime: startTimeStr } = first(timeGridRows);
-  const { endTime: endTimeStr } = last(timeGridRows);
+  const { startTime, endTime } = useMemo(() => {
+    const { startTime: startTimeStr } = first(timeGridRows);
+    const { endTime: endTimeStr } = last(timeGridRows);
+    const startHourAndMinutes = startTimeStr.split(':').map(Number) as [number, number];
+    const endHourAndMinutes = endTimeStr.split(':').map(Number) as [number, number];
 
-  const startTimeArgs = startTimeStr.split(':').map(Number) as [number, number];
-  const endTimeArgs = endTimeStr.split(':').map(Number) as [number, number];
-  const startTime = new TZDate(columnDate);
-  const endTime = new TZDate(columnDate);
-  startTime.setHours(...startTimeArgs);
-  endTime.setHours(...endTimeArgs);
+    const start = new TZDate(columnDate);
+    const end = new TZDate(columnDate);
+    start.setHours(...startHourAndMinutes);
+    end.setHours(...endHourAndMinutes);
+
+    return { startTime: start, endTime: end };
+  }, [columnDate, timeGridRows]);
 
   const style = {
     width: columnWidth,
