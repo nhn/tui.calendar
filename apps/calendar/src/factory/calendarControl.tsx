@@ -71,7 +71,9 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   private getStoreState<Group extends keyof CalendarState>(group: Group): CalendarState[Group];
 
   private getStoreState<Group extends keyof CalendarState>(group?: Group) {
-    return group ? this.store.getState()[group] : this.store.getState();
+    const state = this.store.getState();
+
+    return group ? state[group] : state;
   }
 
   private getStoreDispatchers(): Dispatchers;
@@ -79,7 +81,9 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   private getStoreDispatchers<Group extends keyof Dispatchers>(group: Group): Dispatchers[Group];
 
   private getStoreDispatchers<Group extends keyof Dispatchers>(group?: Group) {
-    return group ? this.store.getState().dispatch[group] : this.store.getState().dispatch;
+    const dispatchers = this.store.getState().dispatch;
+
+    return group ? dispatchers[group] : dispatchers;
   }
 
   private initOptions(options: Options = {}): Options {
