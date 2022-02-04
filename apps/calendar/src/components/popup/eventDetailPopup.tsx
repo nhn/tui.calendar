@@ -6,6 +6,7 @@ import { EventDetailSectionDetail } from '@src/components/popup/eventDetailSecti
 import { EventDetailSectionHeader } from '@src/components/popup/eventDetailSectionHeader';
 import { DetailPopupArrowDirection, HALF_OF_POPUP_ARROW_HEIGHT } from '@src/constants/popup';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
+import { useEventBus } from '@src/contexts/eventBus';
 import { useFloatingLayer } from '@src/contexts/floatingLayer';
 import { useLayoutContainer } from '@src/contexts/layoutContainer';
 import { cls } from '@src/helpers/css';
@@ -62,8 +63,10 @@ function calculatePopupArrowPosition(eventRect: Rect, layoutRect: Rect, popupRec
 export function EventDetailPopup() {
   const { event, eventRect } = useStore(eventDetailPopupParamSelector);
   const { showFormPopup } = useDispatch('popup');
+
   const layoutContainer = useLayoutContainer();
   const detailPopupSlot = useFloatingLayer('detailPopupSlot');
+  const eventBus = useEventBus();
   const popupContainerRef = useRef<HTMLDivElement>(null);
 
   const [style, setStyle] = useState<StyleProp>({});
@@ -136,6 +139,8 @@ export function EventDetailPopup() {
       popupArrowPointPosition,
     });
 
+  const onClickDeleteButton = () => eventBus.fire('beforeDeleteEvent', event);
+
   return createPortal(
     <div role="dialog" className={classNames.popupContainer} ref={popupContainerRef} style={style}>
       <div className={classNames.detailContainer}>
@@ -155,7 +160,7 @@ export function EventDetailPopup() {
               <span className={classNames.content}>Edit</span>
             </button>
             <div className={classNames.verticalLine} />
-            <button type="button" className={classNames.deleteButton}>
+            <button type="button" className={classNames.deleteButton} onClick={onClickDeleteButton}>
               <span className={classNames.deleteIcon} />
               <span className={classNames.content}>Delete</span>
             </button>
