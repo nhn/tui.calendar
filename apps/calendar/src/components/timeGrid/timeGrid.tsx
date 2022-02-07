@@ -152,7 +152,7 @@ export function TimeGrid({
         <div className={cls('columns')} style={{ left: toPx(timesWidth) }}>
           {columns.map((column, index) => (
             <Column
-              key={index}
+              key={column.date.toString()}
               timeGridRows={rows}
               columnDate={column.date}
               columnWidth={toPercent(column.width)}
