@@ -4,9 +4,11 @@ import { render, screen } from '@testing-library/preact';
 
 import { EventDetailPopup } from '@src/components/popup/eventDetailPopup';
 import { initCalendarStore, StoreProvider, useDispatch } from '@src/contexts/calendarStore';
+import { EventBusProvider } from '@src/contexts/eventBus';
 import { FloatingLayerProvider } from '@src/contexts/floatingLayer';
 import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
+import { EventBusImpl } from '@src/utils/eventBus';
 
 import { PropsWithChildren } from '@t/components/common';
 
@@ -45,14 +47,17 @@ describe('event detail popup', () => {
   };
 
   beforeEach(() => {
+    const eventBus = new EventBusImpl();
     const store = initCalendarStore();
 
     render(
-      <StoreProvider store={store}>
-        <Wrapper>
-          <EventDetailPopup />
-        </Wrapper>
-      </StoreProvider>
+      <EventBusProvider value={eventBus}>
+        <StoreProvider store={store}>
+          <Wrapper>
+            <EventDetailPopup />
+          </Wrapper>
+        </StoreProvider>
+      </EventBusProvider>
     );
   });
 
