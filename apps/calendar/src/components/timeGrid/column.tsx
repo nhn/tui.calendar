@@ -18,8 +18,6 @@ import { TimeGridRow } from '@t/grid';
 const classNames = {
   column: cls('column'),
   grid: cls('grid'),
-  gridline: cls('gridline'),
-  gridlineHalf: cls('gridline-half'),
   backgrounds: cls('background-events'),
   events: cls('events'),
 };
@@ -27,10 +25,15 @@ const classNames = {
 function GridLines({ timeGridRows }: { timeGridRows: TimeGridRow[] }) {
   return (
     <div className={classNames.grid}>
-      {timeGridRows.map((time) => (
-        <div className={classNames.gridline} key={`gridline-${time.startTime}`}>
-          <div className={classNames.gridlineHalf} />
-        </div>
+      {timeGridRows.map((time, index) => (
+        <div
+          key={`gridline-${time.startTime}-${time.endTime}`}
+          className={cls('gridline-half', `gridline-half--${index % 2 === 1 ? 'lower' : 'upper'}`)}
+          style={{
+            top: toPercent(time.top),
+            height: toPercent(time.height),
+          }}
+        />
       ))}
     </div>
   );
