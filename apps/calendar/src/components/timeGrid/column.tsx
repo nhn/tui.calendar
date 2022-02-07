@@ -125,7 +125,7 @@ interface Props {
 }
 
 export function Column({ columnDate, columnWidth, events, timeGridRows, backgroundColor }: Props) {
-  const { startTime, endTime } = useMemo(() => {
+  const [startTime, endTime] = useMemo(() => {
     const { startTime: startTimeStr } = first(timeGridRows);
     const { endTime: endTimeStr } = last(timeGridRows);
     const startHourAndMinutes = startTimeStr.split(':').map(Number) as [number, number];
@@ -136,7 +136,7 @@ export function Column({ columnDate, columnWidth, events, timeGridRows, backgrou
     start.setHours(...startHourAndMinutes);
     end.setHours(...endHourAndMinutes);
 
-    return { startTime: start, endTime: end };
+    return [start, end];
   }, [columnDate, timeGridRows]);
 
   const style = {
