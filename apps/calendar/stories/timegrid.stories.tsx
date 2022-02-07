@@ -90,7 +90,7 @@ function getTimeGridData() {
 }
 
 type TimeGridProps = ComponentProps<typeof TimeGrid>;
-const Template: StoryFn<TimeGridProps> = (args: ComponentProps<typeof TimeGrid>) => (
+const Template: StoryFn<TimeGridProps> = (args) => (
   <ProviderWrapper>
     <div className={cls('layout')}>
       <TimeGrid {...args} />
