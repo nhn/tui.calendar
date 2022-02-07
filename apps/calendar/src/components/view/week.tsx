@@ -1,14 +1,11 @@
 import { h } from 'preact';
 import { useMemo } from 'preact/hooks';
 
-import range from 'tui-code-snippet/array/range';
-
 import { GridHeader } from '@src/components/dayGridCommon/gridHeader';
 import { AlldayGridRow } from '@src/components/dayGridWeek/alldayGridRow';
 import { OtherGridRow } from '@src/components/dayGridWeek/otherGridRow';
 import { Layout } from '@src/components/layout';
 import { Panel } from '@src/components/panel';
-import { ColumnInfo } from '@src/components/timeGrid/columnWithMouse';
 import { TimeGrid } from '@src/components/timeGrid/timeGrid';
 import { DEFAULT_WEEK_PANEL_TYPES } from '@src/constants/layout';
 import { WEEK_DAYNAME_BORDER, WEEK_DAYNAME_HEIGHT } from '@src/constants/style';
@@ -24,14 +21,7 @@ import {
   weekViewLayoutSelector,
 } from '@src/selectors';
 import TZDate from '@src/time/date';
-import {
-  addDate,
-  getRowStyleInfo,
-  isWeekend,
-  toEndOfDay,
-  toStartOfDay,
-  WEEK_DAYS,
-} from '@src/time/datetime';
+import { getRowStyleInfo } from '@src/time/datetime';
 
 import { WeekOptions } from '@t/options';
 import { AlldayEventCategory } from '@t/panel';

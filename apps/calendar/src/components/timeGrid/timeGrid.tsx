@@ -5,7 +5,6 @@ import range from 'tui-code-snippet/array/range';
 
 import { addTimeGridPrefix, className as timegridClassName } from '@src/components/timeGrid';
 import { Column } from '@src/components/timeGrid/column';
-import { ColumnInfo, ColumnWithMouse } from '@src/components/timeGrid/columnWithMouse';
 import { CurrentTimeIndicator } from '@src/components/timeGrid/currentTimeIndicator';
 import { MultipleTimezones } from '@src/components/timeGrid/multipleTimezones';
 import { isBetween } from '@src/controller/column';
@@ -13,15 +12,7 @@ import { getTopPercentByTime } from '@src/controller/times';
 import { cls, toPercent, toPx } from '@src/helpers/css';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
-import {
-  addDate,
-  clone,
-  isBetweenWithDate,
-  isSameDate,
-  SIXTY_SECONDS,
-  toEndOfDay,
-  toStartOfDay,
-} from '@src/time/datetime';
+import { clone, isSameDate, SIXTY_SECONDS, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 
 import { TimeGridSelectionInfo } from '@t/components/timeGrid/gridSelection';
 import { TimeGridData } from '@t/grid';

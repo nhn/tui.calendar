@@ -24,7 +24,7 @@ import {
   Matrix3d,
   TimeGridEventMatrix,
 } from '@t/events';
-import { CommonGridColumn, TimeGridData, TimeGridRow } from '@t/grid';
+import { CommonGridColumn, TimeGridData } from '@t/grid';
 import { MonthOptions, WeekOptions } from '@t/options';
 import { Panel } from '@t/panel';
 import { FormattedTimeString } from '@t/time/datetime';
