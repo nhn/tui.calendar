@@ -392,7 +392,7 @@ export function getColumnsData(
         width,
       };
     })
-    .reduce((result, currentDateAndWidth, index) => {
+    .reduce<CommonGridColumn[]>((result, currentDateAndWidth, index) => {
       const prev = result[index - 1];
 
       result.push({
@@ -401,7 +401,7 @@ export function getColumnsData(
       });
 
       return result;
-    }, [] as CommonGridColumn[]);
+    }, []);
 }
 
 export function createTimeGridData(
