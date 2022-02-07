@@ -3,10 +3,17 @@ import TZDate from '@src/time/date';
 import { limit, ratio } from '@src/utils/math';
 import { getRelativeMousePosition, getX } from '@src/utils/mouse';
 
+import { TimeGridData } from '@t/grid';
 import { Options } from '@t/options';
 import { CellStyle } from '@t/time/datetime';
 
 export type MousePositionDataGrabber = (mouseEvent: MouseEvent) => MousePositionData | null;
+
+function getIndexFromPosition(arrayLength: number, maxRange: number, currentPosition: number) {
+  const positionRatio = Math.floor(ratio(maxRange, arrayLength, currentPosition));
+
+  return limit(positionRatio, [0], [arrayLength - 1]);
+}
 
 export function createMousePositionDataGrabberMonth(
   dateMatrix: TZDate[][],
@@ -91,6 +98,43 @@ export function createMousePositionDataGrabberWeek(
       x: clientX,
       y: clientY,
       triggerEvent: mouseEvent.type,
+    };
+  };
+}
+
+export function createMousePositionDataGrabberTimeGrid(
+  timeGridData: TimeGridData,
+  container: HTMLElement
+): (mousePosition: Pick<MouseEvent, 'clientX' | 'clientY'>) => MousePositionData | null {
+  return function getGridPositionData(mousePosition) {
+    const {
+      left: containerLeft,
+      top: containerTop,
+      width,
+      height,
+    } = container.getBoundingClientRect();
+    const [left, top] = getRelativeMousePosition(mousePosition, {
+      left: containerLeft,
+      top: containerTop,
+      clientLeft: container.clientLeft,
+      clientTop: container.clientTop,
+    });
+
+    if (left < 0 || top < 0 || left > width || top > height) {
+      return null;
+    }
+
+    const columnsCount = timeGridData.columns.length;
+    const gridX = getIndexFromPosition(columnsCount, width, left);
+
+    const rowsCount = timeGridData.rows.length;
+    const gridY = getIndexFromPosition(rowsCount, height, top);
+
+    return {
+      gridX,
+      gridY,
+      x: mousePosition.clientX,
+      y: mousePosition.clientY,
     };
   };
 }

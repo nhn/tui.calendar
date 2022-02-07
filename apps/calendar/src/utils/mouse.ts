@@ -17,7 +17,7 @@ export function getX(rowStyleInfo: CellStyle[], left: number) {
 }
 
 export function getRelativeMousePosition(
-  { clientX, clientY }: MouseEvent,
+  { clientX, clientY }: Pick<MouseEvent, 'clientX' | 'clientY'>,
   { left, top, clientLeft, clientTop }: ContainerPosition
 ) {
   return [clientX - left - clientLeft, clientY - top - clientTop];
