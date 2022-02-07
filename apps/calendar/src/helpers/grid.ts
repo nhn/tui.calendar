@@ -7,6 +7,7 @@ import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import {
   addDate,
+  Day,
   getDateDifference,
   isWeekend,
   subtractDate,
@@ -350,7 +351,7 @@ export function createDateMatrixOfMonth(
 
 export function getWeekDates(
   renderDate: TZDate,
-  { startDayOfWeek = 0, workweek }: WeekOptions
+  { startDayOfWeek = Day.SUN, workweek }: WeekOptions
 ): TZDate[] {
   const renderDay = renderDate.getDay();
   const now = toStartOfDay(renderDate);

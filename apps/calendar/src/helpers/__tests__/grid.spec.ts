@@ -7,7 +7,7 @@ import {
   getWeekDates,
 } from '@src/helpers/grid';
 import TZDate from '@src/time/date';
-import { addDate, isWeekend, WEEK_DAYS } from '@src/time/datetime';
+import { addDate, Day, isWeekend, WEEK_DAYS } from '@src/time/datetime';
 
 function createResultMatrix({
   startFrom,
@@ -33,8 +33,8 @@ describe('createDateMatrixOfMonth', () => {
     const expected = createResultMatrix({
       startFrom: expectedStartDateOfMonth,
       rows: 6,
-      rangeStart: 0,
-      rangeEnd: 6,
+      rangeStart: Day.SUN,
+      rangeEnd: Day.SAT,
     });
 
     const result = createDateMatrixOfMonth(targetMonth, {});
@@ -49,8 +49,8 @@ describe('createDateMatrixOfMonth', () => {
     const expected = createResultMatrix({
       startFrom: expectedStartDateOfMonth,
       rows: 4,
-      rangeStart: 0,
-      rangeEnd: 6,
+      rangeStart: Day.SUN,
+      rangeEnd: Day.SAT,
     });
 
     const result = createDateMatrixOfMonth(targetMonth, {
@@ -67,8 +67,8 @@ describe('createDateMatrixOfMonth', () => {
     const expected = createResultMatrix({
       startFrom: expectedStartDateOfMonth,
       rows: 2,
-      rangeStart: 0,
-      rangeEnd: 6,
+      rangeStart: Day.SUN,
+      rangeEnd: Day.SAT,
     });
 
     const result = createDateMatrixOfMonth(targetDate, {
@@ -85,8 +85,8 @@ describe('createDateMatrixOfMonth', () => {
     const expected = createResultMatrix({
       startFrom: expectedStartDateOfMonth,
       rows: 6,
-      rangeStart: 1,
-      rangeEnd: 5,
+      rangeStart: Day.MON,
+      rangeEnd: Day.FRI,
     });
 
     const result = createDateMatrixOfMonth(targetMonth, {
@@ -103,8 +103,8 @@ describe('createDateMatrixOfMonth', () => {
     const expected = createResultMatrix({
       startFrom: expectedStartDateOfMonth,
       rows: 4,
-      rangeStart: 0,
-      rangeEnd: 6,
+      rangeStart: Day.SUN,
+      rangeEnd: Day.SAT,
     });
 
     const result = createDateMatrixOfMonth(targetMonth, {
@@ -122,8 +122,8 @@ describe('createDateMatrixOfMonth', () => {
     const expected = createResultMatrix({
       startFrom: expectedStartDateOfMonth,
       rows: 5,
-      rangeStart: 0,
-      rangeEnd: 6,
+      rangeStart: Day.SUN,
+      rangeEnd: Day.SAT,
     });
 
     const result = createDateMatrixOfMonth(targetMonth, {
@@ -140,8 +140,8 @@ describe('createDateMatrixOfMonth', () => {
     const expected = createResultMatrix({
       startFrom: expectedStartDateOfMonth,
       rows: 6,
-      rangeStart: 0,
-      rangeEnd: 6,
+      rangeStart: Day.SUN,
+      rangeEnd: Day.SAT,
     });
 
     const result = createDateMatrixOfMonth(targetMonth, {
@@ -157,8 +157,8 @@ describe('createDateMatrixOfMonth', () => {
       createResultMatrix({
         startFrom,
         rows: 6,
-        rangeStart: 0,
-        rangeEnd: 6,
+        rangeStart: Day.SUN,
+        rangeEnd: Day.SAT,
       });
 
     const startingMonday = new TZDate('2021-11-29T00:00:00');
@@ -191,7 +191,7 @@ describe('getColumnStyles', () => {
   it('should create default styles of a week', () => {
     // Given
     const weekDates = getWeekDates(new TZDate('2021-01-28T00:00:00'), {
-      startDayOfWeek: 0,
+      startDayOfWeek: Day.SUN,
       workweek: false,
     });
     const expectedWidth = 100 / weekDates.length;
@@ -216,7 +216,7 @@ describe('getColumnStyles', () => {
   it('should create styles of a workweek', () => {
     // Given
     const weekDates = getWeekDates(new TZDate('2021-01-28T00:00:00'), {
-      startDayOfWeek: 0,
+      startDayOfWeek: Day.SUN,
       workweek: true,
     });
     const expectedWidth = 100 / weekDates.length;
@@ -241,7 +241,7 @@ describe('getColumnStyles', () => {
   it('should create styles of a week with narrowWeekend option', () => {
     // Given
     const weekDates = getWeekDates(new TZDate('2021-01-28T00:00:00'), {
-      startDayOfWeek: 0,
+      startDayOfWeek: Day.SUN,
       workweek: false,
     });
     const expectedBasicWidth = 100 / (weekDates.length - 1);
@@ -271,7 +271,7 @@ describe('createTimeGridData', () => {
   it('should create data by default values', () => {
     // Given
     const rows = getWeekDates(new TZDate('2021-01-28T00:00:00'), {
-      startDayOfWeek: 0,
+      startDayOfWeek: Day.SUN,
     });
     const expectedRowHeight = 100 / 24;
     const expected = {
@@ -294,7 +294,7 @@ describe('createTimeGridData', () => {
   it('should create data when rendering 00:00 to 12:00', () => {
     // Given
     const rows = getWeekDates(new TZDate('2021-01-28T00:00:00'), {
-      startDayOfWeek: 0,
+      startDayOfWeek: Day.SUN,
     });
     const expectedRowHeight = 100 / 12;
     const expected = {
@@ -317,7 +317,7 @@ describe('createTimeGridData', () => {
   it('should create data when rendering 12:00 to 24:00', () => {
     // Given
     const rows = getWeekDates(new TZDate('2021-01-28T00:00:00'), {
-      startDayOfWeek: 0,
+      startDayOfWeek: Day.SUN,
     });
     const expectedRowHeight = 100 / 12;
     const expected = {
