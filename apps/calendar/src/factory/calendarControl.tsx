@@ -16,7 +16,7 @@ import { isNumber, isString } from '@src/utils/type';
 import { ExternalEventTypes } from '@t/eventBus';
 import { DateType, EventModelData } from '@t/events';
 import { CalendarColor, CalendarInfo, CustomTimezone, Options } from '@t/options';
-import { CalendarStore, Dispatchers, InternalStoreAPI } from '@t/store';
+import { CalendarState, CalendarStore, Dispatchers, InternalStoreAPI } from '@t/store';
 
 export default abstract class CalendarControl implements EventBus<ExternalEventTypes> {
   protected container: Element | null;
@@ -66,12 +66,24 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
 
   protected abstract getComponent(): ComponentChild;
 
+  private getStoreState(): CalendarState;
+
+  private getStoreState<Group extends keyof CalendarState>(group: Group): CalendarState[Group];
+
+  private getStoreState<Group extends keyof CalendarState>(group?: Group) {
+    const state = this.store.getState();
+
+    return group ? state[group] : state;
+  }
+
   private getStoreDispatchers(): Dispatchers;
 
   private getStoreDispatchers<Group extends keyof Dispatchers>(group: Group): Dispatchers[Group];
 
   private getStoreDispatchers<Group extends keyof Dispatchers>(group?: Group) {
-    return group ? this.store.getState().dispatch[group] : this.store.getState().dispatch;
+    const dispatchers = this.store.getState().dispatch;
+
+    return group ? dispatchers[group] : dispatchers;
   }
 
   private initOptions(options: Options = {}): Options {
@@ -184,39 +196,42 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * Get a {@link EventModel} object by event id and calendar id.
-   * @param {string} eventId - ID of event
-   * @param {string} calendarId - calendarId of the event
+   * Get a {@link EventModel} object with event's id and calendar's id.
+   * @param {string} eventId - event's id
+   * @param {string} calendarId - calendar's id of the event
    * @returns {EventModel} event model object
-   * @todo implement this
    * @example
-   * var event = calendar.getEvent(eventId, calendarId);
+   * const event = calendar.getEvent(eventId, calendarId);
+   *
    * console.log(event.title);
    */
   getEvent(eventId: string, calendarId: string) {
-    // console.log('getEvent', eventId, calendarId);
+    const { events } = this.getStoreState('calendar');
+
+    return events.single(
+      ({ id, calendarId: eventCalendarId }) => id === eventId && eventCalendarId === calendarId
+    );
   }
 
   /**
    * Update the event
-   * @param {string} eventId - ID of a event to update
+   * @param {string} eventId - ID of an event to update
    * @param {string} calendarId - The calendarId of the event to update
-   * @param {EventModelData} eventData - The {@link EventModelData} data to update
-   * @param {boolean} [silent=false] - No auto render after creation when set true
-   * @todo implement this
+   * @param {EventModelData} changes - The {@link EventModelData} data to update
    * @example
-   * calendar.on('beforeUpdateEvent', function(event) {
-   *     var event = event.event;
-   *     var startTime = event.start;
-   *     var endTime = event.end;
-   *     calendar.updateEvent(event.id, event.calendarId, {
-   *         start: startTime,
-   *         end: endTime
-   *     });
+   * calendar.on('beforeUpdateEvent', function ({ event, changes }) {
+   *   const { id, calendarId } = event;
+   *
+   *   calendar.updateEvent(id, calendarId, changes);
    * });
    */
-  updateEvent(eventId: string, calendarId: string, eventData: EventModelData, silent = false) {
-    // console.log('updateEvent', eventId, calendarId, eventData, silent);
+  updateEvent(eventId: string, calendarId: string, changes: EventModelData) {
+    const { updateEvent } = this.getStoreDispatchers('calendar');
+    const event = this.getEvent(eventId, calendarId);
+
+    if (event) {
+      updateEvent({ event, eventData: changes });
+    }
   }
 
   /**
