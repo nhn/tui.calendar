@@ -236,6 +236,7 @@ export function setTopForDayGridEvents(models: EventUIModel[]) {
   });
 }
 
+// @TODO: check & remove unused parameters
 const getTimeGridEventModels = (
   eventModels: TimeGridEventMatrix,
   row: TZDate[],
@@ -413,11 +414,16 @@ export function createTimeGridData(
 ): TimeGridData {
   const columns = getColumnsData(datesOfWeek);
 
-  const steps = options.hourEnd - options.hourStart;
+  const steps = (options.hourEnd - options.hourStart) * 2;
   const baseHeight = 100 / steps;
-  const rows = range(options.hourStart, options.hourEnd).map((hour, index) => {
-    const startTime = `${hour}:00`.padStart(5, '0') as FormattedTimeString;
-    const endTime = `${hour + 1}:00`.padStart(5, '0') as FormattedTimeString;
+  const rows = range(steps).map((step, index) => {
+    const isOdd = index % 2 === 1;
+    const hour = options.hourStart + Math.floor(step / 2);
+    const startTime = `${hour}:${isOdd ? '30' : '00'}`.padStart(5, '0') as FormattedTimeString;
+    const endTime = (isOdd ? `${hour + 1}:00` : `${hour}:30`).padStart(
+      5,
+      '0'
+    ) as FormattedTimeString;
 
     return {
       top: baseHeight * index,
