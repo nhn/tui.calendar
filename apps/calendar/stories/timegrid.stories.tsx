@@ -1,8 +1,11 @@
-import { h } from 'preact';
+import { ComponentProps, h } from 'preact';
 
+import { StoryFn } from '@storybook/preact';
 import range from 'tui-code-snippet/array/range';
 
 import { TimeGrid } from '@src/components/timeGrid/timeGrid';
+import { cls } from '@src/helpers/css';
+import { createTimeGridData, getWeekDates } from '@src/helpers/grid';
 import TZDate from '@src/time/date';
 import { addDate, addHours, toStartOfDay } from '@src/time/datetime';
 
@@ -80,32 +83,45 @@ function getEvents() {
   return createEventModels(data);
 }
 
-export const basic = () => {
-  const events = getEvents();
+function getTimeGridData() {
+  const now = new TZDate();
+  const weekDates = getWeekDates(now, { startDayOfWeek: 0, workweek: false });
+  return createTimeGridData(weekDates, { hourStart: 0, hourEnd: 24 });
+}
 
-  return (
-    <ProviderWrapper>
-      <TimeGrid events={events} />
-    </ProviderWrapper>
-  );
+type TimeGridProps = ComponentProps<typeof TimeGrid>;
+const Template: StoryFn<TimeGridProps> = (args) => (
+  <ProviderWrapper>
+    <div className={cls('layout')}>
+      <TimeGrid {...args} />
+    </div>
+  </ProviderWrapper>
+);
+
+export const Basic = Template.bind({});
+Basic.args = {
+  events: getEvents(),
+  timeGridData: getTimeGridData(),
 };
 
-export const randomEvents = () => {
+export const RandomEvents = Template.bind({});
+const getRandomEvents = () => {
   const today = new TZDate();
   const start = addDate(new TZDate(), -today.getDay());
   const end = addDate(start, 6);
   const data: EventModelData[] = createRandomEvents('week', start, end);
-  const eventModels = createEventModels(data);
-
-  return (
-    <ProviderWrapper>
-      <TimeGrid events={eventModels} />
-    </ProviderWrapper>
-  );
+  return createEventModels(data);
+};
+RandomEvents.args = {
+  events: getRandomEvents(),
+  timeGridData: getTimeGridData(),
 };
 
-export const multipleTimezones = () => {
-  const timezones = [
+export const MultipleTimezones = Template.bind({});
+MultipleTimezones.args = {
+  events: getEvents(),
+  timeGridData: getTimeGridData(),
+  timezones: [
     {
       displayLabel: 'Local Time',
       tooltip: 'Local',
@@ -120,16 +136,9 @@ export const multipleTimezones = () => {
       displayLabel: 'GMT+3',
       tooltip: 'Moscow Standard Time',
     },
-  ];
-
-  const eventModels = getEvents();
-
-  return (
-    <ProviderWrapper>
-      <TimeGrid timezones={timezones} timesWidth={60} events={eventModels} />
-    </ProviderWrapper>
-  );
+  ],
+  timesWidth: 60,
 };
-multipleTimezones.story = {
+MultipleTimezones.story = {
   name: 'Multiple timezones',
 };

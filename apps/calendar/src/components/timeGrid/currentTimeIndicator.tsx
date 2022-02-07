@@ -27,23 +27,24 @@ export function CurrentTimeIndicator({ top, columnWidth, columnCount, columnInde
     left: toPercent(columnWidth * (columnIndex + 1)),
     width: toPercent(columnWidth * (columnCount - columnIndex + 1)),
   };
+
   const currentTimeLeftBorderTop = '1px dashed #515ce6';
   const currentTimeBulletBackgroundColor = '#515ce6';
   const currentTimeTodayBorderTop = '1px solid #515ce6';
   const currentTimeRightBorderTop = 'none';
 
   return (
-    <div className={cls(classNames.line)} style={{ top: toPercent(top) }}>
+    <div className={classNames.line} style={{ top: toPercent(top) }}>
       <div
-        className={cls(classNames.left)}
+        className={classNames.left}
         style={{ width: leftLine.width, borderTop: currentTimeLeftBorderTop }}
       />
       <div
-        className={cls(classNames.marker)}
+        className={classNames.marker}
         style={{ left: leftLine.left, backgroundColor: currentTimeBulletBackgroundColor }}
       />
       <div
-        className={cls(classNames.today)}
+        className={classNames.today}
         style={{
           left: leftLine.left,
           width: toPercent(columnWidth),
@@ -51,7 +52,7 @@ export function CurrentTimeIndicator({ top, columnWidth, columnCount, columnInde
         }}
       />
       <div
-        className={cls(classNames.right)}
+        className={classNames.right}
         style={{
           left: rightLine.left,
           borderTop: currentTimeRightBorderTop,

@@ -1,29 +1,21 @@
 import { h } from 'preact';
-import { useEffect, useRef, useState } from 'preact/hooks';
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 
 import range from 'tui-code-snippet/array/range';
 
 import { addTimeGridPrefix, className as timegridClassName } from '@src/components/timeGrid';
 import { Column } from '@src/components/timeGrid/column';
-import { ColumnInfo, ColumnWithMouse } from '@src/components/timeGrid/columnWithMouse';
 import { CurrentTimeIndicator } from '@src/components/timeGrid/currentTimeIndicator';
 import { MultipleTimezones } from '@src/components/timeGrid/multipleTimezones';
+import { isBetween } from '@src/controller/column';
 import { getTopPercentByTime } from '@src/controller/times';
 import { cls, toPercent, toPx } from '@src/helpers/css';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
-import {
-  addDate,
-  clone,
-  isBetweenWithDate,
-  isSameDate,
-  SIXTY_SECONDS,
-  toEndOfDay,
-  toStartOfDay,
-} from '@src/time/datetime';
+import { clone, isSameDate, SIXTY_SECONDS, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 
 import { TimeGridSelectionInfo } from '@t/components/timeGrid/gridSelection';
-import { TimeUnit } from '@t/events';
+import { TimeGridData } from '@t/grid';
 import { TimezoneConfig } from '@t/options';
 
 const REFRESH_INTERVAL = 1000 * SIXTY_SECONDS;
@@ -35,13 +27,10 @@ const classNames = {
 
 interface Props {
   events: EventUIModel[];
+  timeGridData: TimeGridData;
   currentTime?: TZDate;
   timesWidth?: number;
   timezones?: TimezoneConfig[];
-  columnInfoList?: ColumnInfo[];
-  unit?: TimeUnit;
-  start?: number;
-  end?: number;
 }
 
 type TimerID = number | null;
@@ -67,21 +56,9 @@ function useForceUpdate() {
 
 export function TimeGrid({
   currentTime = new TZDate(),
-  columnInfoList = range(0, 7).map((day) => {
-    const now = new TZDate();
-    const start = toStartOfDay(addDate(now, day + -now.getDay()));
-    const end = toEndOfDay(start);
-
-    return {
-      start,
-      end,
-      unit: 'minute',
-      slot: 30,
-    } as ColumnInfo;
-  }),
   timesWidth = 120,
   timezones = [{}],
-  unit = 'hour',
+  timeGridData,
   events,
 }: Props) {
   const [stickyContainer, setStickyContainer] = useState<HTMLElement | null>(null);
@@ -149,16 +126,17 @@ export function TimeGrid({
     };
   }, [currentTime, forceUpdate, intervalId, timerId]);
 
+  const { columns, rows } = timeGridData;
+
+  const eventsByColumns = useMemo(
+    () => columns.map(({ date }) => events.filter(isBetween(toStartOfDay(date), toEndOfDay(date)))),
+    [columns, events]
+  );
+
   const showTimezoneLabel = timezones.length > 1;
-  const columnWidth = 100 / columnInfoList.length;
-  const left = columnLeft || calculateLeft(timesWidth, timezones);
   const now = new TZDate();
   const currentTimeLineTop = getTopPercentByTime(now, toStartOfDay(now), toEndOfDay(now));
-  const columnIndex = columnInfoList.findIndex(({ start, end }) =>
-    isBetweenWithDate(now, start, end)
-  );
-  const showCurrentTime = columnIndex >= 0;
-  const gridSelectionColumnIndex = gridSelection?.columnIndex ?? 0;
+  const currentDateIndexInColumns = columns.findIndex((column) => isSameDate(column.date, now));
 
   return (
     <div className={classNames.timegrid}>
@@ -171,33 +149,26 @@ export function TimeGrid({
           stickyContainer={stickyContainer}
           onChangeCollapsed={onChangeCollapsed}
         />
-        <ColumnWithMouse
-          columnLeft={left}
-          columnInfoList={columnInfoList}
-          onSelectionStart={onSelectionStart}
-          onSelectionChange={onSelectionChange}
-          onSelectionEnd={onSelectionEnd}
-          onSelectionCancel={onSelectionCancel}
-        >
-          {columnInfoList.map(({ start: startTime }, index) => (
+        <div className={cls('columns')} style={{ left: toPx(timesWidth) }}>
+          {columns.map((column, index) => (
             <Column
-              key={index}
-              index={index}
-              width={toPercent(columnWidth)}
-              times={make24Hours(startTime)}
-              events={events}
-              gridSelection={gridSelectionColumnIndex === index ? gridSelection : null}
+              key={column.date.toString()}
+              timeGridRows={rows}
+              columnDate={column.date}
+              columnWidth={toPercent(column.width)}
+              events={eventsByColumns[index]}
             />
           ))}
-          {showCurrentTime ? (
+          {/* @TODO: Should be reimplement `CurrentTimeIndicator` component */}
+          {currentDateIndexInColumns > 0 ? (
             <CurrentTimeIndicator
               top={currentTimeLineTop}
-              columnWidth={columnWidth}
-              columnCount={columnInfoList.length}
-              columnIndex={columnIndex}
+              columnWidth={columns[0].width}
+              columnCount={columns.length}
+              columnIndex={currentDateIndexInColumns}
             />
           ) : null}
-        </ColumnWithMouse>
+        </div>
       </div>
       <div ref={stickyContainerRef} />
     </div>
