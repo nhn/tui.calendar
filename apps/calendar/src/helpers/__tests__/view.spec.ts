@@ -1,8 +1,81 @@
 import { createTimeGridData, getWeekDates } from '@src/helpers/grid';
-import { createMousePositionDataGrabberTimeGrid } from '@src/helpers/view';
+import {
+  createMousePositionDataGrabberMonth,
+  createMousePositionDataGrabberTimeGrid,
+} from '@src/helpers/view';
 import TZDate from '@src/time/date';
 import { Day } from '@src/time/datetime';
 import { noop } from '@src/utils/noop';
+
+describe('createMousePositionDataGrabberMonth', function () {
+  let calendar: TZDate[][] = [];
+  const container = document.createElement('div');
+
+  beforeEach(() => {
+    jest.spyOn(container, 'getBoundingClientRect').mockReturnValue({
+      x: 0,
+      y: 0,
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0,
+      width: 70,
+      height: 100,
+      toJSON: noop,
+    });
+
+    calendar = [
+      [
+        new TZDate(2021, 3, 25),
+        new TZDate(2021, 3, 26),
+        new TZDate(2021, 3, 27),
+        new TZDate(2021, 3, 28),
+        new TZDate(2021, 3, 29),
+        new TZDate(2021, 3, 30),
+        new TZDate(2021, 4, 1),
+      ],
+      [
+        new TZDate(2021, 4, 2),
+        new TZDate(2021, 4, 3),
+        new TZDate(2021, 4, 4),
+        new TZDate(2021, 4, 5),
+        new TZDate(2021, 4, 6),
+        new TZDate(2021, 4, 7),
+        new TZDate(2021, 4, 8),
+      ],
+    ];
+  });
+
+  it('should calculate gridX and gridY', () => {
+    const grabber = createMousePositionDataGrabberMonth(calendar, container);
+
+    let mockMouseEvent = {
+      clientX: 9,
+      clientY: 20,
+      type: 'click',
+    } as MouseEvent;
+
+    expect(grabber(mockMouseEvent)).toEqual({
+      gridX: 0,
+      gridY: 0,
+      x: 9,
+      y: 20,
+    });
+
+    mockMouseEvent = {
+      clientX: 55,
+      clientY: 60,
+      type: 'click',
+    } as MouseEvent;
+
+    expect(grabber(mockMouseEvent)).toEqual({
+      gridX: 5,
+      gridY: 1,
+      x: 55,
+      y: 60,
+    });
+  });
+});
 
 describe('createMousePositionDataGrabberTimeGrid', () => {
   const rows = getWeekDates(new TZDate('2021-02-07T00:00:00'), {

@@ -123,10 +123,8 @@ export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidth
 
   const mousePositionDataGrabber = useMemo(
     () =>
-      gridContainer
-        ? createMousePositionDataGrabberMonth(dateMatrix, rowInfo, gridContainer)
-        : () => null,
-    [dateMatrix, gridContainer, rowInfo]
+      gridContainer ? createMousePositionDataGrabberMonth(dateMatrix, gridContainer) : () => null,
+    [dateMatrix, gridContainer]
   );
 
   const renderedEventUIModels = useMemo(

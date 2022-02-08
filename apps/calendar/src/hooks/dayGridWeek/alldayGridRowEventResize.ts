@@ -2,6 +2,7 @@ import { useEffect, useMemo } from 'preact/hooks';
 
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { getGridDateIndex } from '@src/helpers/grid';
+import { MousePositionDataGrabber } from '@src/helpers/view';
 import { useCurrentPointerPositionInGrid } from '@src/hooks/event/currentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/draggingEvent';
 import EventUIModel from '@src/model/eventUIModel';
@@ -20,7 +21,7 @@ function getEventColIndex(uiModel: EventUIModel, row: TZDate[]) {
 interface Params {
   row: TZDate[];
   gridColWidthMap: string[][];
-  mousePositionDataGrabber: (e: MouseEvent) => MousePositionData | null;
+  mousePositionDataGrabber: MousePositionDataGrabber;
 }
 
 export function useAlldayGridRowEventResize({

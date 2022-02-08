@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from 'preact/hooks';
 
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
+import { MousePositionDataGrabber } from '@src/helpers/view';
 import { useCurrentPointerPositionInGrid } from '@src/hooks/event/currentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/draggingEvent';
 import { dndSelector } from '@src/selectors';
@@ -14,7 +15,7 @@ import { CellStyle } from '@t/time/datetime';
 interface Params {
   dateMatrix: TZDate[][];
   rowInfo: CellStyle[];
-  mousePositionDataGrabber: (e: MouseEvent) => MousePositionData | null;
+  mousePositionDataGrabber: MousePositionDataGrabber;
 }
 
 export function useDayGridMonthEventMove({

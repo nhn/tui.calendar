@@ -7,7 +7,9 @@ import { TimeGridData } from '@t/grid';
 import { Options } from '@t/options';
 import { CellStyle } from '@t/time/datetime';
 
-export type MousePositionDataGrabber = (mouseEvent: MouseEvent) => MousePositionData | null;
+type MousePosition = Pick<MouseEvent, 'clientX' | 'clientY'>;
+
+export type MousePositionDataGrabber = (mousePosition: MousePosition) => MousePositionData | null;
 
 function getIndexFromPosition(arrayLength: number, maxRange: number, currentPosition: number) {
   const positionRatio = Math.floor(ratio(maxRange, arrayLength, currentPosition));
@@ -17,51 +19,37 @@ function getIndexFromPosition(arrayLength: number, maxRange: number, currentPosi
 
 export function createMousePositionDataGrabberMonth(
   dateMatrix: TZDate[][],
-  rowStyleInfo: CellStyle[],
   container: HTMLElement
-): (mouseEvent: MouseEvent) => MousePositionData | null {
-  const weekCount = dateMatrix.length;
-
-  return function getGridPositionData(mouseEvent: MouseEvent) {
+): MousePositionDataGrabber {
+  return function getGridPositionData(mousePosition) {
     const {
       left: containerLeft,
       top: containerTop,
       width,
       height,
     } = container.getBoundingClientRect();
-    const [left, top] = getRelativeMousePosition(mouseEvent, {
+    const [left, top] = getRelativeMousePosition(mousePosition, {
       left: containerLeft,
       top: containerTop,
       clientLeft: container.clientLeft,
       clientTop: container.clientTop,
     });
-    let gridX = getX(rowStyleInfo, ratio(width, 100, left));
-    let gridY = Math.floor(ratio(height, weekCount, top));
 
-    gridY = limit(gridY, [0], [dateMatrix.length - 1]);
-
-    const dateRange = dateMatrix[gridY];
-
-    if (!dateRange) {
+    if (left < 0 || top < 0 || left > width || top > height) {
       return null;
     }
 
-    gridX = limit(gridX, [0], [dateRange.length - 1]);
+    const columnsCount = dateMatrix[0].length;
+    const gridX = getIndexFromPosition(columnsCount, width, left);
 
-    const date = dateRange[gridX];
-
-    if (!date) {
-      return null;
-    }
-
-    const { clientX, clientY } = mouseEvent;
+    const rowsCount = dateMatrix.length;
+    const gridY = getIndexFromPosition(rowsCount, height, top);
 
     return {
       gridX,
       gridY,
-      x: clientX,
-      y: clientY,
-      triggerEvent: mouseEvent.type,
+      x: mousePosition.clientX,
+      y: mousePosition.clientY,
     };
   };
 }
@@ -70,8 +58,8 @@ export function createMousePositionDataGrabberWeek(
   row: TZDate[],
   rowStyleInfo: CellStyle[],
   container: HTMLElement
-): (mouseEvent: MouseEvent) => MousePositionData | null {
-  return function getGridPositionData(mouseEvent: MouseEvent) {
+): MousePositionDataGrabber {
+  return function getGridPositionData(mouseEvent) {
     const { left: containerLeft, top: containerTop, width } = container.getBoundingClientRect();
     const [left] = getRelativeMousePosition(mouseEvent, {
       left: containerLeft,
@@ -97,7 +85,6 @@ export function createMousePositionDataGrabberWeek(
       gridY,
       x: clientX,
       y: clientY,
-      triggerEvent: mouseEvent.type,
     };
   };
 }
@@ -105,7 +92,7 @@ export function createMousePositionDataGrabberWeek(
 export function createMousePositionDataGrabberTimeGrid(
   timeGridData: TimeGridData,
   container: HTMLElement
-): (mousePosition: Pick<MouseEvent, 'clientX' | 'clientY'>) => MousePositionData | null {
+): MousePositionDataGrabber {
   return function getGridPositionData(mousePosition) {
     const {
       left: containerLeft,
