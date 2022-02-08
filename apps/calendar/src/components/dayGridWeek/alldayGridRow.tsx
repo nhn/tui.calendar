@@ -69,8 +69,8 @@ export function AlldayGridRow({
     () =>
       createGridPositionFinder({
         container: panelContainer,
-        rowsCount: row.length,
-        columnsCount: 1,
+        rowsCount: 1,
+        columnsCount: row.length,
       }),
     [row, panelContainer]
   );
