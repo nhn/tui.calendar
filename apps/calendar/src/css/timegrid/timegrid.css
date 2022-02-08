@@ -1,11 +1,15 @@
+.panel.time {
+  overflow-y: auto;
+}
+
 .timegrid {
   user-select: none;
   position: relative;
-  height: 100%;
+  height: 200%;
+  min-height: 900px;
 }
+
 .timegrid .timegrid-scroll-area {
-  overflow: hidden;
-  overflow-y: auto;
   position: relative;
   height: 100%;
 }
@@ -15,6 +19,19 @@
   top: 0;
   right: 0;
   bottom: 0;
+}
+
+.timegrid .columns .gridline-half {
+  position: absolute;
+  width: 100%;
+}
+
+.timegrid .columns .gridline-half--upper {
+  border-bottom: 1px dotted #f9f9f9;
+}
+
+.timegrid .columns .gridline-half--lower {
+  border-bottom: 1px solid #e5e5e5;
 }
 
 .timegrid .columns .column {
@@ -27,9 +44,11 @@
   left: 0;
   right: 0;
 }
+
 .timegrid .timegrid-current-time-line .timegrid-current-time-line-left {
   position: absolute;
 }
+
 .timegrid .timegrid-current-time-line .timegrid-current-time-line-marker {
   position: absolute;
   width: 9px;
@@ -37,13 +56,16 @@
   border-radius: 50%;
   margin: -4px 0 0 -5px;
 }
+
 .timegrid .timegrid-current-time-line .timegrid-current-time-line-today {
   position: absolute;
 }
+
 .timegrid .timegrid-current-time-line .timegrid-current-time-line-right {
   position: absolute;
   right: 0;
 }
+
 .timegrid-sticky {
   position: absolute;
   top: 0;
@@ -52,6 +74,7 @@
   font-size: 11px;
   user-select: none;
 }
+
 .timegrid-sticky .timegrid-timezone-label {
   display: inline-block;
   text-align: right;
@@ -60,6 +83,7 @@
   height: 40px;
   line-height: 40px;
 }
+
 .timegrid-sticky .timegrid-collapse-button {
   cursor: pointer;
   position: absolute;
@@ -71,6 +95,7 @@
   width: 10px;
   border-left: none;
 }
+
 .timegrid-sticky .timegrid-collapse-button .icon {
   width: 5px;
 }
