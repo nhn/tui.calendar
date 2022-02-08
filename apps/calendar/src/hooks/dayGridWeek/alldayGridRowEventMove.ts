@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'preact/hooks';
 
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
-import { MousePositionDataGrabber } from '@src/helpers/view';
+import { GridPositionFinder } from '@src/helpers/view';
 import { useCurrentPointerPositionInGrid } from '@src/hooks/event/currentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/draggingEvent';
 import { dndSelector } from '@src/selectors';
@@ -13,16 +13,15 @@ import { CellStyle } from '@t/time/datetime';
 
 interface Params {
   rowStyleInfo: CellStyle[];
-  mousePositionDataGrabber: MousePositionDataGrabber;
+  gridPositionFinder: GridPositionFinder;
 }
 
-export function useAlldayGridRowEventMove({ rowStyleInfo, mousePositionDataGrabber }: Params) {
+export function useAlldayGridRowEventMove({ rowStyleInfo, gridPositionFinder }: Params) {
   const { draggingState } = useStore(dndSelector);
   const { draggingEvent: movingEvent, clearDraggingEvent } = useDraggingEvent('move');
   const { updateEvent } = useDispatch('calendar');
 
-  const [currentGridPos, clearCurrentGridPos] =
-    useCurrentPointerPositionInGrid(mousePositionDataGrabber);
+  const [currentGridPos, clearCurrentGridPos] = useCurrentPointerPositionInGrid(gridPositionFinder);
   const { x: currentGridX } = currentGridPos ?? {};
 
   const targetEventStartGridX = useMemo(

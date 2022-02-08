@@ -15,7 +15,7 @@ import {
 import { useStore } from '@src/contexts/calendarStore';
 import { cls, toPercent } from '@src/helpers/css';
 import { EVENT_HEIGHT, getRenderedEventUIModels } from '@src/helpers/grid';
-import { createMousePositionDataGrabber } from '@src/helpers/view';
+import { createGridPositionFinder } from '@src/helpers/view';
 import { useDOMNode } from '@src/hooks/common/domNode';
 import { useDayGridSelection } from '@src/hooks/dayGridCommon/dayGridSelection';
 import { usePopupWithDayGridSelection } from '@src/hooks/dayGridCommon/popupWithDayGridSelection';
@@ -121,9 +121,9 @@ export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidth
   const rowHeight =
     TOTAL_PERCENT_HEIGHT / Math.max(visibleWeeksCount === 0 ? 6 : visibleWeeksCount, 1);
 
-  const mousePositionDataGrabber = useMemo(
+  const gridPositionFinder = useMemo(
     () =>
-      createMousePositionDataGrabber({
+      createGridPositionFinder({
         container: gridContainer,
         rowsCount: dateMatrix.length,
         columnsCount: dateMatrix[0].length,
@@ -136,16 +136,16 @@ export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidth
     [calendarData, dateMatrix, narrowWeekend]
   );
 
-  const gridSelection = useDayGridSelection(mousePositionDataGrabber);
+  const gridSelection = useDayGridSelection(gridPositionFinder);
   const onMouseDown = usePopupWithDayGridSelection({ gridSelection, dateMatrix });
   const { movingEvent, currentGridPos } = useDayGridMonthEventMove({
     dateMatrix,
     rowInfo,
-    mousePositionDataGrabber,
+    gridPositionFinder,
   });
   const { resizingEvent, resizingEventShadowProps } = useDayGridMonthEventResize({
     dateMatrix,
-    mousePositionDataGrabber,
+    gridPositionFinder,
     cellWidthMap,
     renderedUIModels: renderedEventUIModels,
   });

@@ -10,7 +10,7 @@ import { Template } from '@src/components/template';
 import { DEFAULT_PANEL_HEIGHT, WEEK_EVENT_MARGIN_TOP } from '@src/constants/style';
 import { cls } from '@src/helpers/css';
 import { EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
-import { createMousePositionDataGrabber } from '@src/helpers/view';
+import { createGridPositionFinder } from '@src/helpers/view';
 import { useDOMNode } from '@src/hooks/common/domNode';
 import { useDayGridSelection } from '@src/hooks/dayGridCommon/dayGridSelection';
 import { usePopupWithDayGridSelection } from '@src/hooks/dayGridCommon/popupWithDayGridSelection';
@@ -65,9 +65,9 @@ export function AlldayGridRow({
 
   const columnWidth = timesWidth * timezonesCount;
 
-  const mousePositionDataGrabber = useMemo(
+  const gridPositionFinder = useMemo(
     () =>
-      createMousePositionDataGrabber({
+      createGridPositionFinder({
         container: panelContainer,
         rowsCount: row.length,
         columnsCount: 1,
@@ -78,14 +78,14 @@ export function AlldayGridRow({
   const { resizingEvent, resizingWidth } = useAlldayGridRowEventResize({
     row,
     gridColWidthMap,
-    mousePositionDataGrabber,
+    gridPositionFinder,
   });
   const { movingEvent, movingLeft } = useAlldayGridRowEventMove({
     rowStyleInfo,
-    mousePositionDataGrabber,
+    gridPositionFinder,
   });
 
-  const gridSelection = useDayGridSelection(mousePositionDataGrabber);
+  const gridSelection = useDayGridSelection(gridPositionFinder);
   const gridSelectionData: GridSelectionDataByRow | null = gridSelection
     ? {
         startCellIndex: gridSelection.initColIndex,

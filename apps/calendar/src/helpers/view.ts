@@ -3,11 +3,12 @@ import { limit, ratio } from '@src/utils/math';
 import { getRelativeMousePosition } from '@src/utils/mouse';
 import { isNil } from '@src/utils/type';
 
+import { GridPosition } from '@t/grid';
 import { Options } from '@t/options';
 
 type MousePosition = Pick<MouseEvent, 'clientX' | 'clientY'>;
 
-export type MousePositionDataGrabber = (mousePosition: MousePosition) => MousePositionData | null;
+export type GridPositionFinder = (mousePosition: MousePosition) => GridPosition | null;
 
 function getIndexFromPosition(arrayLength: number, maxRange: number, currentPosition: number) {
   const positionRatio = Math.floor(ratio(maxRange, arrayLength, currentPosition));
@@ -15,7 +16,7 @@ function getIndexFromPosition(arrayLength: number, maxRange: number, currentPosi
   return limit(positionRatio, [0], [arrayLength - 1]);
 }
 
-export function createMousePositionDataGrabber({
+export function createGridPositionFinder({
   rowsCount,
   columnsCount,
   container,
@@ -23,12 +24,12 @@ export function createMousePositionDataGrabber({
   rowsCount: number;
   columnsCount: number;
   container: HTMLElement | null;
-}): MousePositionDataGrabber {
+}): GridPositionFinder {
   if (isNil(container)) {
     return () => null;
   }
 
-  return function grabMousePositionData(mousePosition) {
+  return function gridPositionFinder(mousePosition) {
     const {
       left: containerLeft,
       top: containerTop,
@@ -46,14 +47,9 @@ export function createMousePositionDataGrabber({
       return null;
     }
 
-    const gridX = getIndexFromPosition(columnsCount, width, left);
-    const gridY = getIndexFromPosition(rowsCount, height, top);
-
     return {
-      gridX,
-      gridY,
-      x: mousePosition.clientX,
-      y: mousePosition.clientY,
+      x: getIndexFromPosition(columnsCount, width, left),
+      y: getIndexFromPosition(rowsCount, height, top),
     };
   };
 }

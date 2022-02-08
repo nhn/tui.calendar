@@ -2,7 +2,7 @@ import { useEffect, useMemo } from 'preact/hooks';
 
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { getGridDateIndex } from '@src/helpers/grid';
-import { MousePositionDataGrabber } from '@src/helpers/view';
+import { GridPositionFinder } from '@src/helpers/view';
 import { useCurrentPointerPositionInGrid } from '@src/hooks/event/currentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/draggingEvent';
 import EventUIModel from '@src/model/eventUIModel';
@@ -21,21 +21,16 @@ function getEventColIndex(uiModel: EventUIModel, row: TZDate[]) {
 interface Params {
   row: TZDate[];
   gridColWidthMap: string[][];
-  mousePositionDataGrabber: MousePositionDataGrabber;
+  gridPositionFinder: GridPositionFinder;
 }
 
-export function useAlldayGridRowEventResize({
-  row,
-  gridColWidthMap,
-  mousePositionDataGrabber,
-}: Params) {
+export function useAlldayGridRowEventResize({ row, gridColWidthMap, gridPositionFinder }: Params) {
   const { draggingState } = useStore(dndSelector);
   const { updateEvent } = useDispatch('calendar');
 
   const { draggingEvent: resizingEvent, clearDraggingEvent } = useDraggingEvent('resize');
 
-  const [currentGridPos, clearCurrentGridPos] =
-    useCurrentPointerPositionInGrid(mousePositionDataGrabber);
+  const [currentGridPos, clearCurrentGridPos] = useCurrentPointerPositionInGrid(gridPositionFinder);
   const { x: currentGridX } = currentGridPos ?? {};
 
   const targetEventGridIndices = useMemo(() => {

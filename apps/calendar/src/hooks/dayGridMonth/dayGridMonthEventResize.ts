@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'preact/hooks';
 import { KEY } from '@src/constants/keyboard';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { getGridDateIndex, getRenderedEventUIModels } from '@src/helpers/grid';
-import { MousePositionDataGrabber } from '@src/helpers/view';
+import { GridPositionFinder } from '@src/helpers/view';
 import { useKeydownEvent } from '@src/hooks/common/keydownEvent';
 import { useCurrentPointerPositionInGrid } from '@src/hooks/event/currentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/draggingEvent';
@@ -28,7 +28,7 @@ interface EventResizeHookParams {
   dateMatrix: TZDate[][];
   renderedUIModels: ReturnType<typeof getRenderedEventUIModels>[];
   cellWidthMap: string[][];
-  mousePositionDataGrabber: MousePositionDataGrabber;
+  gridPositionFinder: GridPositionFinder;
 }
 
 type FilteredUIModelRow = [] | [EventUIModel];
@@ -53,15 +53,14 @@ export function hasResizingEventShadowProps(
 
 export function useDayGridMonthEventResize({
   dateMatrix,
-  mousePositionDataGrabber,
+  gridPositionFinder,
   renderedUIModels,
   cellWidthMap,
 }: EventResizeHookParams) {
   const { draggingState } = useStore(dndSelector);
   const { updateEvent } = useDispatch('calendar');
   const { draggingEvent: resizingStartUIModel, clearDraggingEvent } = useDraggingEvent('resize');
-  const [currentGridPos, clearCurrentGridPos] =
-    useCurrentPointerPositionInGrid(mousePositionDataGrabber);
+  const [currentGridPos, clearCurrentGridPos] = useCurrentPointerPositionInGrid(gridPositionFinder);
 
   const [resizingState, setResizingState] = useState<ResizingState | null>(null);
   const [shadowProps, setShadowProps] = useState<ResizingEventShadowProps[] | null>(null);

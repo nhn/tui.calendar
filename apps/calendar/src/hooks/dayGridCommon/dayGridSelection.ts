@@ -2,13 +2,13 @@ import { useEffect, useState } from 'preact/hooks';
 
 import { useStore } from '@src/contexts/calendarStore';
 import { DRAGGING_TYPE_CONSTANTS } from '@src/helpers/drag';
-import { MousePositionDataGrabber } from '@src/helpers/view';
+import { GridPositionFinder } from '@src/helpers/view';
 import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import { isPresent } from '@src/utils/type';
 
 export function useDayGridSelection(
-  mousePositionDataGrabber: MousePositionDataGrabber
+  gridPositionFinder: GridPositionFinder
 ): GridSelectionData | null {
   const { draggingItemType, draggingState, x, y, initX, initY } = useStore(dndSelector);
   const [gridSelectionData, setGridSelectionData] = useState<GridSelectionData | null>(null);
@@ -20,31 +20,31 @@ export function useDayGridSelection(
   useEffect(() => {
     const hasInitCoords = isPresent(initX) && isPresent(initY);
     if (isSelectingGrid && hasInitCoords) {
-      const data = mousePositionDataGrabber({ clientX: initX, clientY: initY } as MouseEvent);
-      if (data) {
+      const gridPosition = gridPositionFinder({ clientX: initX, clientY: initY });
+      if (gridPosition) {
         setGridSelectionData({
-          currentColIndex: data.gridX,
-          currentRowIndex: data.gridY,
-          initColIndex: data.gridX,
-          initRowIndex: data.gridY,
+          currentColIndex: gridPosition.x,
+          currentRowIndex: gridPosition.y,
+          initColIndex: gridPosition.x,
+          initRowIndex: gridPosition.y,
         });
       }
     }
-  }, [initX, initY, isSelectingGrid, mousePositionDataGrabber]);
+  }, [initX, initY, isSelectingGrid, gridPositionFinder]);
 
   useEffect(() => {
     const hasCurrentCoords = isPresent(x) && isPresent(y);
     if (isSelectingGrid && hasCurrentCoords) {
-      const data = mousePositionDataGrabber({ clientX: x, clientY: y } as MouseEvent);
-      if (data) {
+      const gridPosition = gridPositionFinder({ clientX: x, clientY: y });
+      if (gridPosition) {
         setGridSelectionData((prev) => ({
           ...(prev as GridSelectionData),
-          currentColIndex: data.gridX,
-          currentRowIndex: data.gridY,
+          currentColIndex: gridPosition.x,
+          currentRowIndex: gridPosition.y,
         }));
       }
     }
-  }, [isSelectingGrid, mousePositionDataGrabber, x, y]);
+  }, [isSelectingGrid, gridPositionFinder, x, y]);
 
   return gridSelectionData;
 }
