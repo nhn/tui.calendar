@@ -66,11 +66,8 @@ export function AlldayGridRow({
   const columnWidth = timesWidth * timezonesCount;
 
   const mousePositionDataGrabber = useMemo(
-    () =>
-      panelContainer
-        ? createMousePositionDataGrabberWeek(row, rowStyleInfo, panelContainer)
-        : () => null,
-    [row, rowStyleInfo, panelContainer]
+    () => (panelContainer ? createMousePositionDataGrabberWeek(row, panelContainer) : () => null),
+    [row, panelContainer]
   );
 
   const { resizingEvent, resizingWidth } = useAlldayGridRowEventResize({
