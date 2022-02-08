@@ -19,12 +19,16 @@ function getEventColIndex(uiModel: EventUIModel, row: TZDate[]) {
 }
 
 interface Params {
-  row: TZDate[];
+  weekDates: TZDate[];
   gridColWidthMap: string[][];
   gridPositionFinder: GridPositionFinder;
 }
 
-export function useAlldayGridRowEventResize({ row, gridColWidthMap, gridPositionFinder }: Params) {
+export function useAlldayGridRowEventResize({
+  weekDates,
+  gridColWidthMap,
+  gridPositionFinder,
+}: Params) {
   const { draggingState } = useStore(dndSelector);
   const { updateEvent } = useDispatch('calendar');
 
@@ -35,11 +39,11 @@ export function useAlldayGridRowEventResize({ row, gridColWidthMap, gridPosition
 
   const targetEventGridIndices = useMemo(() => {
     if (resizingEvent) {
-      return getEventColIndex(resizingEvent, row);
+      return getEventColIndex(resizingEvent, weekDates);
     }
 
     return { start: -1, end: -1 };
-  }, [row, resizingEvent]);
+  }, [weekDates, resizingEvent]);
 
   const resizingWidth = useMemo(() => {
     if (targetEventGridIndices.start > -1 && isPresent(currentGridX)) {
@@ -58,7 +62,7 @@ export function useAlldayGridRowEventResize({ row, gridColWidthMap, gridPosition
         targetEventGridIndices.start <= currentGridX && targetEventGridIndices.end !== currentGridX;
 
       if (shouldUpdateEvent) {
-        const targetDate = row[currentGridX];
+        const targetDate = weekDates[currentGridX];
 
         updateEvent({
           event: resizingEvent.model,
@@ -69,7 +73,7 @@ export function useAlldayGridRowEventResize({ row, gridColWidthMap, gridPosition
       clearDraggingEvent();
     }
   }, [
-    row,
+    weekDates,
     currentGridX,
     resizingEvent,
     updateEvent,

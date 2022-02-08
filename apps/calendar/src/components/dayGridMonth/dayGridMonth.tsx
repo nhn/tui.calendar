@@ -187,7 +187,7 @@ export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidth
               {gridSelectionDataByRow && (
                 <GridSelection
                   gridSelectionData={gridSelectionDataByRow}
-                  row={week}
+                  weekDates={week}
                   narrowWeekend={narrowWeekend}
                 />
               )}

@@ -1,8 +1,6 @@
 import { Fragment, h } from 'preact';
 import { useMemo } from 'preact/hooks';
 
-import range from 'tui-code-snippet/array/range';
-
 import { GridSelection } from '@src/components/dayGridCommon/gridSelection';
 import { GridCells } from '@src/components/dayGridWeek/gridCells';
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
@@ -19,7 +17,6 @@ import { useAlldayGridRowEventResize } from '@src/hooks/dayGridWeek/alldayGridRo
 import { useGridRowHeightController } from '@src/hooks/dayGridWeek/gridRowHeightController';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
-import { addDate } from '@src/time/datetime';
 
 import { WeekOptions } from '@t/options';
 import { AlldayEventCategory } from '@t/panel';
@@ -30,7 +27,7 @@ type GridRowTitleTemplate = `${Props['category']}Title`;
 interface Props {
   category: Exclude<AlldayEventCategory, 'milestone' | 'task'>;
   events: EventUIModel[];
-  row?: TZDate[];
+  weekDates: TZDate[];
   timesWidth?: number;
   timezonesCount?: number;
   height?: number;
@@ -40,15 +37,9 @@ interface Props {
   gridColWidthMap: string[][];
 }
 
-const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
-  const now = new TZDate();
-
-  return addDate(now, day - now.getDay());
-});
-
 export function AlldayGridRow({
   events,
-  row = defaultPanelInfoList,
+  weekDates,
   category,
   height = DEFAULT_PANEL_HEIGHT,
   options = {},
@@ -70,13 +61,13 @@ export function AlldayGridRow({
       createGridPositionFinder({
         container: panelContainer,
         rowsCount: 1,
-        columnsCount: row.length,
+        columnsCount: weekDates.length,
       }),
-    [row, panelContainer]
+    [weekDates, panelContainer]
   );
 
   const { resizingEvent, resizingWidth } = useAlldayGridRowEventResize({
-    row,
+    weekDates,
     gridColWidthMap,
     gridPositionFinder,
   });
@@ -95,7 +86,7 @@ export function AlldayGridRow({
 
   const onMouseDown = usePopupWithDayGridSelection({
     gridSelection,
-    dateMatrix: [row],
+    dateMatrix: [weekDates],
   });
 
   const { clickedIndex, isClickedCount, onClickExceedCount, onClickCollapseButton } =
@@ -124,7 +115,7 @@ export function AlldayGridRow({
         <div className={cls('panel-grid-wrapper')}>
           <GridCells
             uiModels={events}
-            row={row}
+            weekDates={weekDates}
             narrowWeekend={narrowWeekend}
             height={height}
             clickedIndex={clickedIndex}
@@ -135,7 +126,7 @@ export function AlldayGridRow({
         </div>
         <GridSelection
           gridSelectionData={gridSelectionData}
-          row={row}
+          weekDates={weekDates}
           narrowWeekend={narrowWeekend}
         />
         <div className={cls(`panel-${category}-events`)}>{horizontalEvents}</div>

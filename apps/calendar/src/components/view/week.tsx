@@ -86,7 +86,7 @@ export function Week() {
               events={dayGridEvents[rowType]}
               rowStyleInfo={rowStyleInfo}
               gridColWidthMap={cellWidthMap}
-              row={weekDates}
+              weekDates={weekDates}
               height={gridRowLayout[rowType].height}
               options={weekOptions}
             />
@@ -94,7 +94,7 @@ export function Week() {
             <OtherGridRow
               category={rowType}
               events={dayGridEvents[rowType]}
-              row={weekDates}
+              weekDates={weekDates}
               height={gridRowLayout[rowType].height}
               options={weekOptions}
               gridColWidthMap={cellWidthMap}

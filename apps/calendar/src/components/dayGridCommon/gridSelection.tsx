@@ -6,11 +6,11 @@ import TZDate from '@src/time/date';
 
 interface Props {
   gridSelectionData: GridSelectionDataByRow | null;
-  row: TZDate[];
+  weekDates: TZDate[];
   narrowWeekend: boolean;
 }
 
-export function GridSelection({ gridSelectionData, row, narrowWeekend }: Props) {
+export function GridSelection({ gridSelectionData, weekDates, narrowWeekend }: Props) {
   if (!gridSelectionData) {
     return null;
   }
@@ -19,7 +19,7 @@ export function GridSelection({ gridSelectionData, row, narrowWeekend }: Props) 
   const { left, width } = getLeftAndWidth(
     Math.min(startCellIndex, endCellIndex),
     Math.max(startCellIndex, endCellIndex),
-    row,
+    weekDates,
     narrowWeekend
   );
 
