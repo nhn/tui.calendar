@@ -4,10 +4,15 @@ import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { addTimeGridPrefix, className as timegridClassName } from '@src/components/timeGrid';
 import { Column } from '@src/components/timeGrid/column';
 import { CurrentTimeIndicator } from '@src/components/timeGrid/currentTimeIndicator';
+import { GridLines } from '@src/components/timeGrid/gridLines';
 import { TimeColumn } from '@src/components/timeGrid/timeColumn';
 import { isBetween } from '@src/controller/column';
 import { getTopPercentByTime } from '@src/controller/times';
 import { cls, toPercent, toPx } from '@src/helpers/css';
+import { DRAGGING_TYPE_CONSTANTS } from '@src/helpers/drag';
+import { createGridPositionFinder } from '@src/helpers/view';
+import { useDOMNode } from '@src/hooks/common/domNode';
+import { useDrag } from '@src/hooks/common/drag';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { isSameDate, SIXTY_SECONDS, toEndOfDay, toStartOfDay } from '@src/time/datetime';
@@ -131,6 +136,7 @@ export function TimeGrid({
       <div className={classNames.scrollArea}>
         <TimeColumn timeGridRows={rows} columnWidth={timesWidth} />
         <div className={cls('columns')} style={{ left: toPx(timesWidth) }}>
+          <GridLines timeGridRows={rows} />
           {columns.map((column, index) => (
             <Column
               key={column.date.toString()}
