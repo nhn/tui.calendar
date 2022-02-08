@@ -1,9 +1,8 @@
 import { DEFAULT_EVENT_PANEL, DEFAULT_TASK_PANEL } from '@src/constants/view';
-import TZDate from '@src/time/date';
 import { limit, ratio } from '@src/utils/math';
 import { getRelativeMousePosition } from '@src/utils/mouse';
+import { isNil } from '@src/utils/type';
 
-import { TimeGridData } from '@t/grid';
 import { Options } from '@t/options';
 
 type MousePosition = Pick<MouseEvent, 'clientX' | 'clientY'>;
@@ -16,11 +15,20 @@ function getIndexFromPosition(arrayLength: number, maxRange: number, currentPosi
   return limit(positionRatio, [0], [arrayLength - 1]);
 }
 
-export function createMousePositionDataGrabberMonth(
-  dateMatrix: TZDate[][],
-  container: HTMLElement
-): MousePositionDataGrabber {
-  return function getGridPositionData(mousePosition) {
+export function createMousePositionDataGrabber({
+  rowsCount,
+  columnsCount,
+  container,
+}: {
+  rowsCount: number;
+  columnsCount: number;
+  container: HTMLElement | null;
+}): MousePositionDataGrabber {
+  if (isNil(container)) {
+    return () => null;
+  }
+
+  return function grabMousePositionData(mousePosition) {
     const {
       left: containerLeft,
       top: containerTop,
@@ -38,81 +46,7 @@ export function createMousePositionDataGrabberMonth(
       return null;
     }
 
-    const columnsCount = dateMatrix[0].length;
     const gridX = getIndexFromPosition(columnsCount, width, left);
-
-    const rowsCount = dateMatrix.length;
-    const gridY = getIndexFromPosition(rowsCount, height, top);
-
-    return {
-      gridX,
-      gridY,
-      x: mousePosition.clientX,
-      y: mousePosition.clientY,
-    };
-  };
-}
-
-export function createMousePositionDataGrabberWeek(
-  row: TZDate[],
-  container: HTMLElement
-): MousePositionDataGrabber {
-  return function getGridPositionData(mousePosition) {
-    const {
-      left: containerLeft,
-      top: containerTop,
-      width,
-      height,
-    } = container.getBoundingClientRect();
-    const [left, top] = getRelativeMousePosition(mousePosition, {
-      left: containerLeft,
-      top: containerTop,
-      clientLeft: container.clientLeft,
-      clientTop: container.clientTop,
-    });
-
-    if (left < 0 || top < 0 || left > width || top > height) {
-      return null;
-    }
-
-    const columnsCount = row.length;
-    const gridX = getIndexFromPosition(columnsCount, width, left);
-
-    return {
-      gridX,
-      gridY: 0,
-      x: mousePosition.clientX,
-      y: mousePosition.clientY,
-    };
-  };
-}
-
-export function createMousePositionDataGrabberTimeGrid(
-  timeGridData: TimeGridData,
-  container: HTMLElement
-): MousePositionDataGrabber {
-  return function getGridPositionData(mousePosition) {
-    const {
-      left: containerLeft,
-      top: containerTop,
-      width,
-      height,
-    } = container.getBoundingClientRect();
-    const [left, top] = getRelativeMousePosition(mousePosition, {
-      left: containerLeft,
-      top: containerTop,
-      clientLeft: container.clientLeft,
-      clientTop: container.clientTop,
-    });
-
-    if (left < 0 || top < 0 || left > width || top > height) {
-      return null;
-    }
-
-    const columnsCount = timeGridData.columns.length;
-    const gridX = getIndexFromPosition(columnsCount, width, left);
-
-    const rowsCount = timeGridData.rows.length;
     const gridY = getIndexFromPosition(rowsCount, height, top);
 
     return {

@@ -1,294 +1,240 @@
-import { createTimeGridData, getWeekDates } from '@src/helpers/grid';
-import {
-  createMousePositionDataGrabberMonth,
-  createMousePositionDataGrabberTimeGrid,
-} from '@src/helpers/view';
-import TZDate from '@src/time/date';
-import { Day } from '@src/time/datetime';
+import { createMousePositionDataGrabber, MousePositionDataGrabber } from '@src/helpers/view';
 import { noop } from '@src/utils/noop';
 
-describe('createMousePositionDataGrabberMonth', function () {
-  let calendar: TZDate[][] = [];
+describe('createMousePositionDataGrabber', () => {
   const container = document.createElement('div');
-
-  beforeEach(() => {
-    jest.spyOn(container, 'getBoundingClientRect').mockReturnValue({
-      x: 0,
-      y: 0,
-      top: 0,
-      bottom: 0,
-      left: 0,
-      right: 0,
-      width: 70,
-      height: 100,
-      toJSON: noop,
-    });
-
-    calendar = [
-      [
-        new TZDate(2021, 3, 25),
-        new TZDate(2021, 3, 26),
-        new TZDate(2021, 3, 27),
-        new TZDate(2021, 3, 28),
-        new TZDate(2021, 3, 29),
-        new TZDate(2021, 3, 30),
-        new TZDate(2021, 4, 1),
-      ],
-      [
-        new TZDate(2021, 4, 2),
-        new TZDate(2021, 4, 3),
-        new TZDate(2021, 4, 4),
-        new TZDate(2021, 4, 5),
-        new TZDate(2021, 4, 6),
-        new TZDate(2021, 4, 7),
-        new TZDate(2021, 4, 8),
-      ],
-    ];
-  });
-
-  it('should calculate gridX and gridY', () => {
-    const grabber = createMousePositionDataGrabberMonth(calendar, container);
-
-    let mockMouseEvent = {
-      clientX: 9,
-      clientY: 20,
-      type: 'click',
-    } as MouseEvent;
-
-    expect(grabber(mockMouseEvent)).toEqual({
-      gridX: 0,
-      gridY: 0,
-      x: 9,
-      y: 20,
-    });
-
-    mockMouseEvent = {
-      clientX: 55,
-      clientY: 60,
-      type: 'click',
-    } as MouseEvent;
-
-    expect(grabber(mockMouseEvent)).toEqual({
-      gridX: 5,
-      gridY: 1,
-      x: 55,
-      y: 60,
-    });
-  });
-});
-
-describe('createMousePositionDataGrabberTimeGrid', () => {
-  const rows = getWeekDates(new TZDate('2021-02-07T00:00:00'), {
-    startDayOfWeek: Day.SUN,
-  });
-  const timegridData = createTimeGridData(rows, { hourStart: 0, hourEnd: 24 });
-  const container = document.createElement('div');
-
-  beforeEach(() => {
-    jest.spyOn(container, 'getBoundingClientRect').mockReturnValue({
-      x: 0,
-      y: 0,
-      top: 0,
-      bottom: 0,
-      left: 0,
-      right: 0,
-      width: 700, // NOTE: total 7 columns
-      height: 960, // NOTE: total 48 rows
-      toJSON: noop,
-    });
-  });
+  let grabber: MousePositionDataGrabber;
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should return a function', () => {
-    const grabber = createMousePositionDataGrabberTimeGrid(timegridData, container);
-
-    expect(grabber).toBeInstanceOf(Function);
-  });
-
-  it('should return null if the mouse is outside the container', () => {
-    const grabber = createMousePositionDataGrabberTimeGrid(timegridData, container);
-    const result = grabber({
-      clientX: -1,
-      clientY: -1,
-    });
-
-    expect(result).toBeNull();
-  });
-
-  it('should calculate gridX from mouse position x', () => {
-    // Given
-    const cases = [
-      {
+  describe('In Month', () => {
+    it('should calculate gridX and gridY', () => {
+      // Given
+      jest.spyOn(container, 'getBoundingClientRect').mockReturnValue({
         x: 0,
-        expectedGridX: 0,
-      },
-      {
-        x: 250,
-        expectedGridX: 2,
-      },
-      {
-        x: 450,
-        expectedGridX: 4,
-      },
-      {
-        x: 650,
-        expectedGridX: 6,
-      },
-      {
-        x: 700,
-        expectedGridX: 6,
-      },
-    ];
-
-    // When
-    const grabber = createMousePositionDataGrabberTimeGrid(timegridData, container);
-    const results = cases.map(({ x }) =>
-      grabber({
-        clientX: x,
-        clientY: 0,
-      })
-    );
-
-    // Then
-    results.forEach((result, index) => {
-      expect(result).toEqual({
-        gridX: cases[index].expectedGridX,
-        gridY: 0,
-        x: cases[index].x,
         y: 0,
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        width: 70,
+        height: 100,
+        toJSON: noop,
+      });
+
+      grabber = createMousePositionDataGrabber({
+        columnsCount: 7,
+        rowsCount: 2,
+        container,
+      });
+      const cases = [
+        {
+          clientX: 9,
+          clientY: 20,
+          expected: {
+            gridX: 0,
+            gridY: 0,
+          },
+        },
+        {
+          clientX: 55,
+          clientY: 60,
+          expected: {
+            gridX: 5,
+            gridY: 1,
+          },
+        },
+      ];
+
+      // When
+      const results = cases.map(({ clientX, clientY }) => grabber({ clientX, clientY }));
+
+      // Then
+      results.forEach((result, index) => {
+        expect(result).toEqual({
+          ...cases[index].expected,
+          x: cases[index].clientX,
+          y: cases[index].clientY,
+        });
       });
     });
   });
 
-  it('should calculate gridY from mouse position y', () => {
-    // Given
-    const cases = [
-      {
-        y: 0,
-        expectedGridY: 0,
-      },
-      {
-        y: 130,
-        expectedGridY: 6,
-      },
-      {
-        y: 230,
-        expectedGridY: 11,
-      },
-      {
-        y: 450,
-        expectedGridY: 22,
-      },
-      {
-        y: 720,
-        expectedGridY: 36,
-      },
-      {
-        y: 730,
-        expectedGridY: 36,
-      },
-      {
-        y: 935,
-        expectedGridY: 46,
-      },
-      {
-        y: 960,
-        expectedGridY: 47,
-      },
-    ];
-
-    // When
-    const grabber = createMousePositionDataGrabberTimeGrid(timegridData, container);
-    const results = cases.map(({ y }) =>
-      grabber({
-        clientX: 0,
-        clientY: y,
-      })
-    );
-
-    // Then
-    results.forEach((result, index) => {
-      expect(result).toEqual({
-        gridX: 0,
-        gridY: cases[index].expectedGridY,
+  describe('In Week', () => {
+    it('should calculate gridX and gridY', () => {
+      // Given
+      jest.spyOn(container, 'getBoundingClientRect').mockReturnValue({
         x: 0,
-        y: cases[index].y,
+        y: 0,
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        width: 560,
+        height: 100,
+        toJSON: noop,
+      });
+
+      grabber = createMousePositionDataGrabber({
+        columnsCount: 7,
+        rowsCount: 1,
+        container,
+      });
+
+      const cases = [
+        {
+          clientX: 0,
+          clientY: 20,
+          expected: {
+            gridX: 0,
+            gridY: 0,
+          },
+        },
+        {
+          clientX: 100,
+          clientY: 40,
+          expected: {
+            gridX: 1,
+            gridY: 0,
+          },
+        },
+        {
+          clientX: 390,
+          clientY: 50,
+          expected: {
+            gridX: 4,
+            gridY: 0,
+          },
+        },
+        {
+          clientX: 500,
+          clientY: 60,
+          expected: {
+            gridX: 6,
+            gridY: 0,
+          },
+        },
+      ];
+
+      // When
+      const results = cases.map(({ clientX, clientY }) => grabber({ clientX, clientY }));
+
+      // Then
+      results.forEach((result, index) => {
+        expect(result).toEqual({
+          ...cases[index].expected,
+          x: cases[index].clientX,
+          y: cases[index].clientY,
+        });
       });
     });
   });
 
-  it('should calculate gridX and gridY from mouse position x and y', () => {
-    // Given
-    const cases = [
-      {
+  describe('In TimeGrid', () => {
+    it('should calculate gridX and gridY', () => {
+      // Given
+      jest.spyOn(container, 'getBoundingClientRect').mockReturnValue({
         x: 0,
         y: 0,
-        expectedGridX: 0,
-        expectedGridY: 0,
-      },
-      {
-        x: 250,
-        y: 130,
-        expectedGridX: 2,
-        expectedGridY: 6,
-      },
-      {
-        x: 450,
-        y: 230,
-        expectedGridX: 4,
-        expectedGridY: 11,
-      },
-      {
-        x: 650,
-        y: 450,
-        expectedGridX: 6,
-        expectedGridY: 22,
-      },
-      {
-        x: 700,
-        y: 720,
-        expectedGridX: 6,
-        expectedGridY: 36,
-      },
-      {
-        x: 700,
-        y: 730,
-        expectedGridX: 6,
-        expectedGridY: 36,
-      },
-      {
-        x: 700,
-        y: 935,
-        expectedGridX: 6,
-        expectedGridY: 46,
-      },
-      {
-        x: 700,
-        y: 960,
-        expectedGridX: 6,
-        expectedGridY: 47,
-      },
-    ];
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        width: 700,
+        height: 960,
+        toJSON: noop,
+      });
 
-    // When
-    const grabber = createMousePositionDataGrabberTimeGrid(timegridData, container);
-    const results = cases.map(({ x, y }) =>
-      grabber({
-        clientX: x,
-        clientY: y,
-      })
-    );
+      grabber = createMousePositionDataGrabber({
+        columnsCount: 7,
+        rowsCount: 48,
+        container,
+      });
 
-    // Then
-    results.forEach((result, index) => {
-      expect(result).toEqual({
-        gridX: cases[index].expectedGridX,
-        gridY: cases[index].expectedGridY,
-        x: cases[index].x,
-        y: cases[index].y,
+      const cases = [
+        {
+          clientX: 0,
+          clientY: 0,
+          expected: {
+            gridX: 0,
+            gridY: 0,
+          },
+        },
+        {
+          clientX: 250,
+          clientY: 130,
+          expected: {
+            gridX: 2,
+            gridY: 6,
+          },
+        },
+        {
+          clientX: 450,
+          clientY: 230,
+          expected: {
+            gridX: 4,
+            gridY: 11,
+          },
+        },
+        {
+          clientX: 650,
+          clientY: 450,
+          expected: {
+            gridX: 6,
+            gridY: 22,
+          },
+        },
+        {
+          clientX: 700,
+          clientY: 720,
+          expected: {
+            gridX: 6,
+            gridY: 36,
+          },
+        },
+        {
+          clientX: 700,
+          clientY: 730,
+          expected: {
+            gridX: 6,
+            gridY: 36,
+          },
+        },
+        {
+          clientX: 700,
+          clientY: 935,
+          expected: {
+            gridX: 6,
+            gridY: 46,
+          },
+        },
+        {
+          clientX: 700,
+          clientY: 960,
+          expected: {
+            gridX: 6,
+            gridY: 47,
+          },
+        },
+      ];
+
+      // When
+      const results = cases.map(({ clientX, clientY }) =>
+        grabber({
+          clientX,
+          clientY,
+        })
+      );
+
+      // Then
+      results.forEach((result, index) => {
+        expect(result).toEqual({
+          ...cases[index].expected,
+          x: cases[index].clientX,
+          y: cases[index].clientY,
+        });
       });
     });
   });

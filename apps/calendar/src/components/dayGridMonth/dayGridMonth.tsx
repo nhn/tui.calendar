@@ -15,7 +15,7 @@ import {
 import { useStore } from '@src/contexts/calendarStore';
 import { cls, toPercent } from '@src/helpers/css';
 import { EVENT_HEIGHT, getRenderedEventUIModels } from '@src/helpers/grid';
-import { createMousePositionDataGrabberMonth } from '@src/helpers/view';
+import { createMousePositionDataGrabber } from '@src/helpers/view';
 import { useDOMNode } from '@src/hooks/common/domNode';
 import { useDayGridSelection } from '@src/hooks/dayGridCommon/dayGridSelection';
 import { usePopupWithDayGridSelection } from '@src/hooks/dayGridCommon/popupWithDayGridSelection';
@@ -123,7 +123,11 @@ export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidth
 
   const mousePositionDataGrabber = useMemo(
     () =>
-      gridContainer ? createMousePositionDataGrabberMonth(dateMatrix, gridContainer) : () => null,
+      createMousePositionDataGrabber({
+        container: gridContainer,
+        rowsCount: dateMatrix.length,
+        columnsCount: dateMatrix[0].length,
+      }),
     [dateMatrix, gridContainer]
   );
 

@@ -10,7 +10,7 @@ import { Template } from '@src/components/template';
 import { DEFAULT_PANEL_HEIGHT, WEEK_EVENT_MARGIN_TOP } from '@src/constants/style';
 import { cls } from '@src/helpers/css';
 import { EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
-import { createMousePositionDataGrabberWeek } from '@src/helpers/view';
+import { createMousePositionDataGrabber } from '@src/helpers/view';
 import { useDOMNode } from '@src/hooks/common/domNode';
 import { useDayGridSelection } from '@src/hooks/dayGridCommon/dayGridSelection';
 import { usePopupWithDayGridSelection } from '@src/hooks/dayGridCommon/popupWithDayGridSelection';
@@ -66,7 +66,12 @@ export function AlldayGridRow({
   const columnWidth = timesWidth * timezonesCount;
 
   const mousePositionDataGrabber = useMemo(
-    () => (panelContainer ? createMousePositionDataGrabberWeek(row, panelContainer) : () => null),
+    () =>
+      createMousePositionDataGrabber({
+        container: panelContainer,
+        rowsCount: row.length,
+        columnsCount: 1,
+      }),
     [row, panelContainer]
   );
 

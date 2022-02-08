@@ -3,5 +3,4 @@ type MousePositionData = {
   gridY: number;
   x: number;
   y: number;
-  triggerEvent?: string; // NOTE: not needed. remove later
 };
