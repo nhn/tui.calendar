@@ -12,7 +12,7 @@ function selectWeekGridCells(page: Page, startCellIndex: number, endCellIndex: n
   return selectGridCells(page, startCellIndex, endCellIndex, '.toastui-calendar-panel-grid');
 }
 
-test.describe('Grid Selection', () => {
+test.describe('DayGrid Selection in week', () => {
   function assertWeekGridSelectionMatching(page: Page, startIndex: number, endIndex: number) {
     return assertGridSelectionMatching(page, startIndex, endIndex, '.toastui-calendar-panel-grid');
   }
@@ -28,12 +28,12 @@ test.describe('Grid Selection', () => {
 
     await assertWeekGridSelectionMatching(page, 14, 15);
   });
-});
 
-test('event form popup with grid selection', async ({ page }) => {
-  await selectWeekGridCells(page, 14, 15);
+  test('event form popup with grid selection', async ({ page }) => {
+    await selectWeekGridCells(page, 14, 15);
 
-  const floatingLayer = page.locator('css=[role=dialog]');
+    const floatingLayer = page.locator('css=[role=dialog]');
 
-  expect(floatingLayer).not.toBeNull();
+    expect(floatingLayer).not.toBeNull();
+  });
 });
