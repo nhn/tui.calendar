@@ -11,6 +11,7 @@ import { useDrag } from '@src/hooks/common/drag';
 import EventUIModel from '@src/model/eventUIModel';
 import { optionsSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
+import { isNil } from '@src/utils/type';
 
 import { CalendarState } from '@t/store';
 
@@ -138,6 +139,11 @@ function getTestId({ model }: EventUIModel) {
   return `${calendarId}${id}${model.title}`;
 }
 
+function passConditionalProp<P>(condition: boolean, prop: P) {
+  // eslint-disable-next-line no-undefined
+  return condition ? prop : undefined;
+}
+
 function isDraggingSelector(state: CalendarState) {
   return state.dnd.draggingState > DraggingState.INIT;
 }
@@ -160,7 +166,6 @@ export function HorizontalEvent({
     resizingWidth,
     movingLeft,
   });
-  const { isReadOnly } = uiModel.model;
 
   const isDragging = useStore(isDraggingSelector);
   const { useDetailPopup } = useStore(optionsSelector);
@@ -210,22 +215,31 @@ export function HorizontalEvent({
     onMoveStart(e);
   };
 
+  const { isReadOnly } = uiModel.model;
   const shouldHideResizeHandler = flat || isDraggingTarget || uiModel.exceedRight || isReadOnly;
+  const isDraggableEvent = isNil(resizingWidth) && isNil(movingLeft);
 
   return (
     <div
       className={dayEventBlockClassName}
       style={containerStyle}
-      data-test-id={getTestId(uiModel)}
+      data-test-id={passConditionalProp(isDraggableEvent, getTestId(uiModel))}
       ref={eventContainerRef}
-      onClick={handleClick}
+      onClick={passConditionalProp(isDraggableEvent, handleClick)}
     >
-      <div className={cls('weekday-event')} style={eventItemStyle} onMouseDown={handleMoveStart}>
+      <div
+        className={cls('weekday-event')}
+        style={eventItemStyle}
+        onMouseDown={passConditionalProp(isDraggableEvent, handleMoveStart)}
+      >
         <span className={cls('weekday-event-title')}>
           <Template template="time" model={uiModel.model} />
         </span>
         {shouldHideResizeHandler ? null : (
-          <ResizeIcon style={resizeIconStyle} onMouseDown={handleResizeStart} />
+          <ResizeIcon
+            style={resizeIconStyle}
+            onMouseDown={passConditionalProp(isDraggableEvent, handleResizeStart)}
+          />
         )}
       </div>
     </div>
