@@ -3,6 +3,7 @@ import { useMemo } from 'preact/hooks';
 
 import { BackgroundEvent } from '@src/components/events/backgroundEvent';
 import { TimeEvent } from '@src/components/events/timeEvent';
+import { GridSelection } from '@src/components/timeGrid/gridSelection';
 import { getUIModels } from '@src/controller/column';
 import { getTopHeightByTime } from '@src/controller/times';
 import { cls, toPercent } from '@src/helpers/css';
@@ -77,6 +78,7 @@ function VerticalEvents({
 
 interface Props {
   timeGridRows: TimeGridRow[];
+  gridSelection: GridSelectionDataByCol | null;
   columnDate: TZDate;
   columnWidth: string;
   events: EventUIModel[];
@@ -84,7 +86,14 @@ interface Props {
   readOnly?: boolean;
 }
 
-export function Column({ columnDate, columnWidth, events, timeGridRows, backgroundColor }: Props) {
+export function Column({
+  columnDate,
+  columnWidth,
+  events,
+  timeGridRows,
+  gridSelection,
+  backgroundColor,
+}: Props) {
   const [startTime, endTime] = useMemo(() => {
     const { startTime: startTimeStr } = first(timeGridRows);
     const { endTime: endTimeStr } = last(timeGridRows);
@@ -104,9 +113,21 @@ export function Column({ columnDate, columnWidth, events, timeGridRows, backgrou
     backgroundColor,
   };
 
+  const { startRowIndex = 0, endRowIndex = 0 } = gridSelection ?? {};
+  const height = timeGridRows.reduce<number>((acc, cur, index) => {
+    if (index < startRowIndex || index > endRowIndex) {
+      return acc;
+    }
+
+    return acc + cur.height;
+  }, 0);
+
   return (
     <div className={classNames.column} style={style}>
       <BackgroundEvents events={events} startTime={startTime} endTime={endTime} />
+      {gridSelection ? (
+        <GridSelection top={timeGridRows[startRowIndex].top} height={height} text={'test'} />
+      ) : null}
       <VerticalEvents events={events} startTime={startTime} endTime={endTime} />
     </div>
   );

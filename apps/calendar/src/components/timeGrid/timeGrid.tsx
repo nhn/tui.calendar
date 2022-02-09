@@ -10,14 +10,15 @@ import { isBetween } from '@src/controller/column';
 import { getTopPercentByTime } from '@src/controller/times';
 import { cls, toPercent, toPx } from '@src/helpers/css';
 import { DRAGGING_TYPE_CONSTANTS } from '@src/helpers/drag';
-import { createGridPositionFinder } from '@src/helpers/view';
+import { createGridPositionFinder } from '@src/helpers/grid';
 import { useDOMNode } from '@src/hooks/common/domNode';
 import { useDrag } from '@src/hooks/common/drag';
+import { useTimeGridSelection } from '@src/hooks/timeGridSelection/timeGridSelection';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { isSameDate, SIXTY_SECONDS, toEndOfDay, toStartOfDay } from '@src/time/datetime';
+import { isBetween as isBetweenValue } from '@src/utils/math';
 
-import { TimeGridSelectionInfo } from '@t/components/timeGrid/gridSelection';
 import { TimeGridData } from '@t/grid';
 import { TimezoneConfig } from '@t/options';
 
@@ -48,6 +49,61 @@ function useForceUpdate() {
   return () => setForceUpdate((prev) => prev + 1);
 }
 
+function sortGridSelection(gridSelection: GridSelectionData) {
+  const { initRowIndex, initColIndex, currentRowIndex, currentColIndex } = gridSelection;
+  const isReversed =
+    initColIndex > currentColIndex ||
+    (initColIndex === currentColIndex && initRowIndex > currentRowIndex);
+
+  return isReversed
+    ? {
+        startRowIndex: currentRowIndex,
+        startColIndex: currentColIndex,
+        endRowIndex: initRowIndex,
+        endColIndex: initColIndex,
+      }
+    : {
+        startRowIndex: initRowIndex,
+        startColIndex: initColIndex,
+        endRowIndex: currentRowIndex,
+        endColIndex: currentColIndex,
+      };
+}
+
+function calculateGridSelection(
+  timeGridSelection: GridSelectionData | null,
+  columnIndex: number
+): GridSelectionDataByCol | null {
+  if (!timeGridSelection) {
+    return null;
+  }
+
+  const { initColIndex, currentColIndex } = timeGridSelection;
+
+  const minColIndex = Math.min(initColIndex, currentColIndex);
+  const maxColIndex = Math.max(initColIndex, currentColIndex);
+  if (!isBetweenValue(columnIndex, minColIndex, maxColIndex)) {
+    return null;
+  }
+
+  const { startRowIndex, startColIndex, endRowIndex, endColIndex } =
+    sortGridSelection(timeGridSelection);
+
+  let resultGridSelection: GridSelectionDataByCol = { startRowIndex, endRowIndex };
+
+  if (startColIndex < columnIndex && columnIndex < endColIndex) {
+    resultGridSelection = { startRowIndex: 0, endRowIndex: 47 };
+  } else if (startColIndex !== endColIndex) {
+    if (startColIndex === columnIndex) {
+      resultGridSelection = { startRowIndex, endRowIndex: 47 };
+    } else if (endColIndex === columnIndex) {
+      resultGridSelection = { startRowIndex: 0, endRowIndex };
+    }
+  }
+
+  return resultGridSelection;
+}
+
 export function TimeGrid({
   currentTime = new TZDate(),
   timesWidth = 120,
@@ -57,19 +113,18 @@ export function TimeGrid({
 }: Props) {
   const [stickyContainer, setStickyContainer] = useState<HTMLElement | null>(null);
   const [columnLeft, setColumnLeft] = useState(0);
-  const [gridSelection, setGridSelection] = useState<TimeGridSelectionInfo | null>(null);
   const [intervalId, setIntervalId] = useState<TimerID>(null);
   const [timerId, setTimerId] = useState<TimerID>(null);
   const stickyContainerRef = useRef<HTMLDivElement>(null);
   const forceUpdate = useForceUpdate();
 
-  const onCreateEvent = (e: TimeGridSelectionInfo) => {
-    // @TODO: beforeCreateEvent 구현
-  };
-  const onSelectionStart = (e: TimeGridSelectionInfo) => setGridSelection(e);
-  const onSelectionChange = (e: TimeGridSelectionInfo) => setGridSelection(e);
-  const onSelectionEnd = (e: TimeGridSelectionInfo) => onCreateEvent(e);
-  const onSelectionCancel = () => setGridSelection(null);
+  // const onCreateEvent = (e: TimeGridSelectionInfo) => {
+  //   // @TODO: beforeCreateEvent 구현
+  // };
+  // const onSelectionStart = (e: TimeGridSelectionInfo) => setGridSelection(e);
+  // const onSelectionChange = (e: TimeGridSelectionInfo) => setGridSelection(e);
+  // const onSelectionEnd = (e: TimeGridSelectionInfo) => onCreateEvent(e);
+  // const onSelectionCancel = () => setGridSelection(null);
 
   const onChangeCollapsed = (collapsed: boolean) =>
     setColumnLeft(collapsed ? timesWidth : calculateLeft(timesWidth, timezones));
@@ -131,21 +186,45 @@ export function TimeGrid({
   const currentTimeLineTop = getTopPercentByTime(now, toStartOfDay(now), toEndOfDay(now));
   const currentDateIndexInColumns = columns.findIndex((column) => isSameDate(column.date, now));
 
+  const [columnsContainer, setColumnsContainer] = useDOMNode();
+  const gridPositionFinder = useMemo(
+    () =>
+      createGridPositionFinder({
+        rowsCount: rows.length,
+        columnsCount: columns.length,
+        container: columnsContainer,
+      }),
+    [columns.length, columnsContainer, rows.length]
+  );
+  const { onMouseDown } = useDrag(DRAGGING_TYPE_CONSTANTS.timeGridColumnSelection, {});
+
+  const timeGridSelection = useTimeGridSelection(gridPositionFinder);
+
   return (
     <div className={classNames.timegrid}>
       <div className={classNames.scrollArea}>
         <TimeColumn timeGridRows={rows} columnWidth={timesWidth} />
-        <div className={cls('columns')} style={{ left: toPx(timesWidth) }}>
+        <div
+          className={cls('columns')}
+          style={{ left: toPx(timesWidth) }}
+          ref={setColumnsContainer}
+          onMouseDown={onMouseDown}
+        >
           <GridLines timeGridRows={rows} />
-          {columns.map((column, index) => (
-            <Column
-              key={column.date.toString()}
-              timeGridRows={rows}
-              columnDate={column.date}
-              columnWidth={toPercent(column.width)}
-              events={eventsByColumns[index]}
-            />
-          ))}
+          {columns.map((column, index) => {
+            const gridSelection = calculateGridSelection(timeGridSelection, index);
+
+            return (
+              <Column
+                key={column.date.toString()}
+                timeGridRows={rows}
+                gridSelection={gridSelection}
+                columnDate={column.date}
+                columnWidth={toPercent(column.width)}
+                events={eventsByColumns[index]}
+              />
+            );
+          })}
           {/* @TODO: Should be reimplement `CurrentTimeIndicator` component */}
           {currentDateIndexInColumns > 0 ? (
             <CurrentTimeIndicator

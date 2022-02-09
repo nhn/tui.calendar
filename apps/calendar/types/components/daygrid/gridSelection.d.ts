@@ -6,3 +6,5 @@ interface GridSelectionData {
 }
 
 type GridSelectionDataByRow = { startCellIndex: number; endCellIndex: number };
+
+type GridSelectionDataByCol = { startRowIndex: number; endRowIndex: number };
