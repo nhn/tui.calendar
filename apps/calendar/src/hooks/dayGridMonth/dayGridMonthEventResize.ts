@@ -40,7 +40,7 @@ interface ResizingState {
   eventStartDateColumnIndex: number;
   eventStartDateRowIndex: number;
   lastUIModelStartColumnIndex: number;
-  lastUIModelEndRowIndex: number;
+  lastUIModelEndColumnIndex: number;
   lastUIModelRowIndex: number;
   lastUIModel: EventUIModel;
   resizeTargetUIModelRows: FilteredUIModelRow[];
@@ -100,7 +100,7 @@ export function useDayGridMonthEventResize({
         eventStartDateColumnIndex: firstUIModelPos.startColumnIndex,
         eventStartDateRowIndex: firstUIModelRowIndex,
         lastUIModelStartColumnIndex: lastUIModelPos.startColumnIndex,
-        lastUIModelEndRowIndex: lastUIModelPos.endColumnIndex,
+        lastUIModelEndColumnIndex: lastUIModelPos.endColumnIndex,
         lastUIModelRowIndex,
         lastUIModel: resizingStartUIModel,
         resizeTargetUIModelRows,
@@ -212,7 +212,7 @@ export function useDayGridMonthEventResize({
         currentGridPos.rowIndex > eventStartDateRowIndex;
 
       if (shouldUpdate) {
-        const targetEndDate = dateMatrix[currentGridPos.rowIndex][currentGridPos.rowIndex];
+        const targetEndDate = dateMatrix[currentGridPos.rowIndex][currentGridPos.columnIndex];
         updateEvent({
           event: lastUIModel.model,
           eventData: {
