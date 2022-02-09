@@ -70,6 +70,7 @@ export function useAlldayGridRowEventResize({
           eventData: { end: targetDate },
         });
       }
+
       clearCurrentGridPos();
       clearDraggingEvent();
     }
