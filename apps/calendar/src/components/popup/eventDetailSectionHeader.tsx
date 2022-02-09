@@ -25,7 +25,7 @@ function getDetailDate(isAllday: boolean, start: TZDate, end: TZDate) {
   const endDateFormat = isSameDate(start, end) ? timeFormat : detailFormat;
 
   if (isAllday) {
-    return `${startDate}${isSameDate(start, end) ? '' : toFormat(end, dayFormat)}}`;
+    return `${startDate}${isSameDate(start, end) ? '' : ` - ${toFormat(end, dayFormat)}`}`;
   }
 
   return `${toFormat(start, detailFormat)} - ${toFormat(end, endDateFormat)}`;
