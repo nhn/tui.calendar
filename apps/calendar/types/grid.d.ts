@@ -9,8 +9,8 @@ export interface GridUIModel {
 }
 
 export interface GridPosition {
-  x: number;
-  y: number;
+  columnIndex: number;
+  rowIndex: number;
 }
 
 export interface CommonGridColumn {

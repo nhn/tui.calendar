@@ -29,12 +29,12 @@ export function useDayGridMonthEventMove({ dateMatrix, rowInfo, gridPositionFind
     let shadowEventUIModel = null;
     if (movingEvent) {
       shadowEventUIModel = movingEvent;
-      shadowEventUIModel.left = rowInfo[currentGridPos?.x ?? 0].left;
-      shadowEventUIModel.width = rowInfo[currentGridPos?.x ?? 0].width;
+      shadowEventUIModel.left = rowInfo[currentGridPos?.columnIndex ?? 0].left;
+      shadowEventUIModel.width = rowInfo[currentGridPos?.columnIndex ?? 0].width;
     }
 
     return shadowEventUIModel;
-  }, [currentGridPos?.x, rowInfo, movingEvent]);
+  }, [currentGridPos?.columnIndex, rowInfo, movingEvent]);
 
   useEffect(() => {
     const shouldUpdate =
@@ -43,7 +43,7 @@ export function useDayGridMonthEventMove({ dateMatrix, rowInfo, gridPositionFind
     if (shouldUpdate) {
       const preStartDate = movingEvent.model.getStarts();
       const eventDuration = movingEvent.duration();
-      const currentDate = dateMatrix[currentGridPos.y][currentGridPos.x];
+      const currentDate = dateMatrix[currentGridPos.rowIndex][currentGridPos?.columnIndex];
 
       const timeOffsetPerDay = getDateDifference(currentDate, preStartDate) * MS_PER_DAY;
 

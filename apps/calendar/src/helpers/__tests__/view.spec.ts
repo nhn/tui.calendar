@@ -94,16 +94,16 @@ describe('createGridPositionFinder', () => {
         clientX: 9,
         clientY: 20,
         expected: {
-          x: 0,
-          y: 0,
+          columnIndex: 0,
+          rowIndex: 0,
         },
       },
       {
         clientX: 55,
         clientY: 60,
         expected: {
-          x: 5,
-          y: 1,
+          columnIndex: 5,
+          rowIndex: 1,
         },
       },
     ];
@@ -143,32 +143,32 @@ describe('createGridPositionFinder', () => {
         clientX: 0,
         clientY: 20,
         expected: {
-          x: 0,
-          y: 0,
+          columnIndex: 0,
+          rowIndex: 0,
         },
       },
       {
         clientX: 100,
         clientY: 40,
         expected: {
-          x: 1,
-          y: 0,
+          columnIndex: 1,
+          rowIndex: 0,
         },
       },
       {
         clientX: 390,
         clientY: 50,
         expected: {
-          x: 4,
-          y: 0,
+          columnIndex: 4,
+          rowIndex: 0,
         },
       },
       {
         clientX: 500,
         clientY: 60,
         expected: {
-          x: 6,
-          y: 0,
+          columnIndex: 6,
+          rowIndex: 0,
         },
       },
     ];
@@ -208,64 +208,64 @@ describe('createGridPositionFinder', () => {
         clientX: 0,
         clientY: 0,
         expected: {
-          x: 0,
-          y: 0,
+          columnIndex: 0,
+          rowIndex: 0,
         },
       },
       {
         clientX: 250,
         clientY: 130,
         expected: {
-          x: 2,
-          y: 6,
+          columnIndex: 2,
+          rowIndex: 6,
         },
       },
       {
         clientX: 450,
         clientY: 230,
         expected: {
-          x: 4,
-          y: 11,
+          columnIndex: 4,
+          rowIndex: 11,
         },
       },
       {
         clientX: 650,
         clientY: 450,
         expected: {
-          x: 6,
-          y: 22,
+          columnIndex: 6,
+          rowIndex: 22,
         },
       },
       {
         clientX: 700,
         clientY: 720,
         expected: {
-          x: 6,
-          y: 36,
+          columnIndex: 6,
+          rowIndex: 36,
         },
       },
       {
         clientX: 700,
         clientY: 730,
         expected: {
-          x: 6,
-          y: 36,
+          columnIndex: 6,
+          rowIndex: 36,
         },
       },
       {
         clientX: 700,
         clientY: 935,
         expected: {
-          x: 6,
-          y: 46,
+          columnIndex: 6,
+          rowIndex: 46,
         },
       },
       {
         clientX: 700,
         clientY: 960,
         expected: {
-          x: 6,
-          y: 47,
+          columnIndex: 6,
+          rowIndex: 47,
         },
       },
     ];

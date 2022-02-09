@@ -35,7 +35,7 @@ export function useAlldayGridRowEventResize({
   const { draggingEvent: resizingEvent, clearDraggingEvent } = useDraggingEvent('resize');
 
   const [currentGridPos, clearCurrentGridPos] = useCurrentPointerPositionInGrid(gridPositionFinder);
-  const { x: currentGridX } = currentGridPos ?? {};
+  const { columnIndex } = currentGridPos ?? {};
 
   const targetEventGridIndices = useMemo(() => {
     if (resizingEvent) {
@@ -46,23 +46,23 @@ export function useAlldayGridRowEventResize({
   }, [weekDates, resizingEvent]);
 
   const resizingWidth = useMemo(() => {
-    if (targetEventGridIndices.start > -1 && isPresent(currentGridX)) {
-      return gridColWidthMap[targetEventGridIndices.start][currentGridX];
+    if (targetEventGridIndices.start > -1 && isPresent(columnIndex)) {
+      return gridColWidthMap[targetEventGridIndices.start][columnIndex];
     }
 
     return null;
-  }, [currentGridX, gridColWidthMap, targetEventGridIndices.start]);
+  }, [columnIndex, gridColWidthMap, targetEventGridIndices.start]);
 
   useEffect(() => {
     const isDraggingEnd =
-      draggingState === DraggingState.IDLE && isPresent(resizingEvent) && isPresent(currentGridX);
+      draggingState === DraggingState.IDLE && isPresent(resizingEvent) && isPresent(columnIndex);
 
     if (isDraggingEnd) {
       const shouldUpdateEvent =
-        targetEventGridIndices.start <= currentGridX && targetEventGridIndices.end !== currentGridX;
+        targetEventGridIndices.start <= columnIndex && targetEventGridIndices.end !== columnIndex;
 
       if (shouldUpdateEvent) {
-        const targetDate = weekDates[currentGridX];
+        const targetDate = weekDates[columnIndex];
 
         updateEvent({
           event: resizingEvent.model,
@@ -74,7 +74,7 @@ export function useAlldayGridRowEventResize({
     }
   }, [
     weekDates,
-    currentGridX,
+    columnIndex,
     resizingEvent,
     updateEvent,
     clearDraggingEvent,

@@ -154,7 +154,7 @@ export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidth
     <div ref={setGridContainerRef} onMouseDown={onMouseDown} className={cls('month-daygrid')}>
       {dateMatrix.map((week, rowIndex) => {
         const { uiModels, gridDateEventModelMap } = renderedEventUIModels[rowIndex];
-        const isMouseInWeek = rowIndex === currentGridPos?.y;
+        const isMouseInWeek = rowIndex === currentGridPos?.rowIndex;
         const gridSelectionDataByRow = calcGridSelectionData(gridSelection, rowIndex, week.length);
         const resizingEventShadowPropsByRow = resizingEventShadowProps?.[rowIndex];
 

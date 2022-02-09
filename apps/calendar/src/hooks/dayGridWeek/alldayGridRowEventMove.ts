@@ -22,7 +22,7 @@ export function useAlldayGridRowEventMove({ rowStyleInfo, gridPositionFinder }: 
   const { updateEvent } = useDispatch('calendar');
 
   const [currentGridPos, clearCurrentGridPos] = useCurrentPointerPositionInGrid(gridPositionFinder);
-  const { x: currentGridX } = currentGridPos ?? {};
+  const { columnIndex } = currentGridPos ?? {};
 
   const targetEventStartGridX = useMemo(
     () =>
@@ -30,18 +30,18 @@ export function useAlldayGridRowEventMove({ rowStyleInfo, gridPositionFinder }: 
     [rowStyleInfo, movingEvent]
   );
 
-  const currentMovingLeft = isNil(currentGridX) ? null : rowStyleInfo[currentGridX].left;
+  const currentMovingLeft = isNil(columnIndex) ? null : rowStyleInfo[columnIndex].left;
 
   useEffect(() => {
     const shouldUpdate =
       draggingState === DraggingState.IDLE &&
       isPresent(movingEvent) &&
-      isPresent(currentGridX) &&
+      isPresent(columnIndex) &&
       isPresent(currentMovingLeft) &&
       isPresent(targetEventStartGridX);
 
     if (shouldUpdate) {
-      const dateOffset = currentGridX - targetEventStartGridX;
+      const dateOffset = columnIndex - targetEventStartGridX;
       let newStartDate = new TZDate(movingEvent.getStarts());
       let newEndDate = new TZDate(movingEvent.getEnds());
       newStartDate = newStartDate.addDate(dateOffset);
@@ -59,7 +59,7 @@ export function useAlldayGridRowEventMove({ rowStyleInfo, gridPositionFinder }: 
       clearDraggingEvent();
     }
   }, [
-    currentGridX,
+    columnIndex,
     currentMovingLeft,
     movingEvent,
     targetEventStartGridX,

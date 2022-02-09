@@ -23,10 +23,10 @@ export function useDayGridSelection(
       const gridPosition = gridPositionFinder({ clientX: initX, clientY: initY });
       if (gridPosition) {
         setGridSelectionData({
-          currentColIndex: gridPosition.x,
-          currentRowIndex: gridPosition.y,
-          initColIndex: gridPosition.x,
-          initRowIndex: gridPosition.y,
+          currentColIndex: gridPosition.columnIndex,
+          currentRowIndex: gridPosition.rowIndex,
+          initColIndex: gridPosition.columnIndex,
+          initRowIndex: gridPosition.rowIndex,
         });
       }
     }
@@ -39,8 +39,8 @@ export function useDayGridSelection(
       if (gridPosition) {
         setGridSelectionData((prev) => ({
           ...(prev as GridSelectionData),
-          currentColIndex: gridPosition.x,
-          currentRowIndex: gridPosition.y,
+          currentColIndex: gridPosition.columnIndex,
+          currentRowIndex: gridPosition.rowIndex,
         }));
       }
     }

@@ -6,9 +6,7 @@ import { isNil } from '@src/utils/type';
 import { GridPosition } from '@t/grid';
 import { Options } from '@t/options';
 
-type MousePosition = Pick<MouseEvent, 'clientX' | 'clientY'>;
-
-export type GridPositionFinder = (mousePosition: MousePosition) => GridPosition | null;
+export type GridPositionFinder = (mousePosition: ClientMousePosition) => GridPosition | null;
 
 function getIndexFromPosition(arrayLength: number, maxRange: number, currentPosition: number) {
   const positionRatio = Math.floor(ratio(maxRange, arrayLength, currentPosition));
@@ -48,8 +46,8 @@ export function createGridPositionFinder({
     }
 
     return {
-      x: getIndexFromPosition(columnsCount, width, left),
-      y: getIndexFromPosition(rowsCount, height, top),
+      columnIndex: getIndexFromPosition(columnsCount, width, left),
+      rowIndex: getIndexFromPosition(rowsCount, height, top),
     };
   };
 }
