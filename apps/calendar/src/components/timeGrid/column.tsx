@@ -3,7 +3,6 @@ import { useMemo } from 'preact/hooks';
 
 import { BackgroundEvent } from '@src/components/events/backgroundEvent';
 import { TimeEvent } from '@src/components/events/timeEvent';
-import { GridSelection } from '@src/components/timeGrid/gridSelection';
 import { getUIModels } from '@src/controller/column';
 import { getTopHeightByTime } from '@src/controller/times';
 import { cls, toPercent } from '@src/helpers/css';
@@ -12,7 +11,6 @@ import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { first, last } from '@src/utils/array';
 
-import { TimeGridSelectionInfo } from '@t/components/timeGrid/gridSelection';
 import { TimeGridRow } from '@t/grid';
 
 const classNames = {
@@ -75,29 +73,6 @@ function VerticalEvents({
       })}
     </div>
   );
-}
-
-function TimeGridSelection({
-  gridSelection,
-  startTime,
-  endTime,
-}: {
-  gridSelection: TimeGridSelectionInfo | null;
-  startTime: TZDate;
-  endTime: TZDate;
-}) {
-  if (!gridSelection) {
-    return null;
-  }
-
-  const { top, height } = getTopHeightByTime(
-    gridSelection.start,
-    gridSelection.end,
-    startTime,
-    endTime
-  );
-
-  return <GridSelection {...gridSelection} top={top} height={height} />;
 }
 
 interface Props {

@@ -8,6 +8,7 @@ import { isPresent } from '@src/utils/type';
 
 import { GridPositionFinder } from '@t/grid';
 
+// @TODO: merge with usePopupWithDayGridSelection
 export function useDayGridSelection(
   gridPositionFinder: GridPositionFinder
 ): GridSelectionData | null {
