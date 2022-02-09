@@ -2,14 +2,12 @@
   display: inline-block;
   position: relative;
   font-size: 11px;
+  height: 100%;
 }
 
 .timegrid-times .timegrid-time {
-  height: 52px;
   text-align: right;
-  position: relative;
-  line-height: 52px;
-  top: -26px;
+  position: absolute;
   right: 5px;
   color: #333;
 }
@@ -19,13 +17,21 @@
 }
 
 .timegrid-times .timegrid-time.timegrid-time-first {
-  top: 5px;
   line-height: normal;
+  visibility: hidden;
 }
 
 .timegrid-times .timegrid-time.timegrid-time-last {
   height: 0;
-  top: -36px;
+  visibility: hidden;
+}
+
+.timegrid-times .timegrid-time .timegrid-time-label,
+.timegrid-times .timegrid-time .template-timegridDisplayPrimaryTime {
+  transform: translateY(-50%);
+  position: absolute;
+  right: 0;
+  top: 50%;
 }
 
 .timegrid-times .timegrid-time-hidden {

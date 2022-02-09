@@ -43,26 +43,26 @@ export function Day() {
   const weekOptions = options.week as Required<WeekOptions>;
   const { narrowWeekend, startDayOfWeek, workweek, hourStart, hourEnd } = weekOptions;
   // @TODO: calculate based on today(need to calculate date when prev & next used)
-  const row = useMemo(() => [new TZDate()], []);
-  const dayNames = getDayNames(row);
+  const weekDates = useMemo(() => [new TZDate()], []);
+  const dayNames = getDayNames(weekDates);
   const { rowStyleInfo, cellWidthMap } = getRowStyleInfo(
-    row.length,
+    weekDates.length,
     narrowWeekend,
     startDayOfWeek,
     workweek
   );
-  const dayGridEvents = getDayGridEvents(row, calendarData, {
+  const dayGridEvents = getDayGridEvents(weekDates, calendarData, {
     narrowWeekend,
     hourStart,
     hourEnd,
   });
   const timeGridData = useMemo(
     () =>
-      createTimeGridData(row, {
+      createTimeGridData(weekDates, {
         hourStart: weekOptions.hourStart,
         hourEnd: weekOptions.hourEnd,
       }),
-    [row, weekOptions.hourEnd, weekOptions.hourStart]
+    [weekDates, weekOptions.hourEnd, weekOptions.hourStart]
   );
   const displayPanel = getDisplayPanel(taskView, eventView);
   const gridRows = displayPanel
@@ -78,7 +78,7 @@ export function Day() {
               events={dayGridEvents[rowType]}
               rowStyleInfo={rowStyleInfo}
               gridColWidthMap={cellWidthMap}
-              row={row}
+              weekDates={weekDates}
               height={gridRowLayout[rowType].height}
               options={weekOptions}
             />
@@ -86,7 +86,7 @@ export function Day() {
             <OtherGridRow
               category={rowType}
               events={dayGridEvents[rowType]}
-              row={row}
+              weekDates={weekDates}
               height={gridRowLayout[rowType].height}
               options={options.week}
               gridColWidthMap={cellWidthMap}

@@ -10,6 +10,8 @@ import { DraggingState } from '@src/slices/dnd';
 import TZDate from '@src/time/date';
 import { isPresent } from '@src/utils/type';
 
+import { GridPositionFinder } from '@t/grid';
+
 function getEventColIndex(uiModel: EventUIModel, row: TZDate[]) {
   const start = getGridDateIndex(uiModel.getStarts(), row);
   const end = getGridDateIndex(uiModel.getEnds(), row);
@@ -18,63 +20,63 @@ function getEventColIndex(uiModel: EventUIModel, row: TZDate[]) {
 }
 
 interface Params {
-  row: TZDate[];
+  weekDates: TZDate[];
   gridColWidthMap: string[][];
-  mousePositionDataGrabber: (e: MouseEvent) => MousePositionData | null;
+  gridPositionFinder: GridPositionFinder;
 }
 
 export function useAlldayGridRowEventResize({
-  row,
+  weekDates,
   gridColWidthMap,
-  mousePositionDataGrabber,
+  gridPositionFinder,
 }: Params) {
   const { draggingState } = useStore(dndSelector);
   const { updateEvent } = useDispatch('calendar');
 
   const { draggingEvent: resizingEvent, clearDraggingEvent } = useDraggingEvent('resize');
 
-  const [currentGridPos, clearCurrentGridPos] =
-    useCurrentPointerPositionInGrid(mousePositionDataGrabber);
-  const { x: currentGridX } = currentGridPos ?? {};
+  const [currentGridPos, clearCurrentGridPos] = useCurrentPointerPositionInGrid(gridPositionFinder);
+  const { columnIndex } = currentGridPos ?? {};
 
   const targetEventGridIndices = useMemo(() => {
     if (resizingEvent) {
-      return getEventColIndex(resizingEvent, row);
+      return getEventColIndex(resizingEvent, weekDates);
     }
 
     return { start: -1, end: -1 };
-  }, [row, resizingEvent]);
+  }, [weekDates, resizingEvent]);
 
   const resizingWidth = useMemo(() => {
-    if (targetEventGridIndices.start > -1 && isPresent(currentGridX)) {
-      return gridColWidthMap[targetEventGridIndices.start][currentGridX];
+    if (targetEventGridIndices.start > -1 && isPresent(columnIndex)) {
+      return gridColWidthMap[targetEventGridIndices.start][columnIndex];
     }
 
     return null;
-  }, [currentGridX, gridColWidthMap, targetEventGridIndices.start]);
+  }, [columnIndex, gridColWidthMap, targetEventGridIndices.start]);
 
   useEffect(() => {
     const isDraggingEnd =
-      draggingState === DraggingState.IDLE && isPresent(resizingEvent) && isPresent(currentGridX);
+      draggingState === DraggingState.IDLE && isPresent(resizingEvent) && isPresent(columnIndex);
 
     if (isDraggingEnd) {
       const shouldUpdateEvent =
-        targetEventGridIndices.start <= currentGridX && targetEventGridIndices.end !== currentGridX;
+        targetEventGridIndices.start <= columnIndex && targetEventGridIndices.end !== columnIndex;
 
       if (shouldUpdateEvent) {
-        const targetDate = row[currentGridX];
+        const targetDate = weekDates[columnIndex];
 
         updateEvent({
           event: resizingEvent.model,
           eventData: { end: targetDate },
         });
       }
+
       clearCurrentGridPos();
       clearDraggingEvent();
     }
   }, [
-    row,
-    currentGridX,
+    weekDates,
+    columnIndex,
     resizingEvent,
     updateEvent,
     clearDraggingEvent,

@@ -8,21 +8,21 @@ import { DraggingState } from '@src/slices/dnd';
 import TZDate from '@src/time/date';
 import { isNil, isPresent } from '@src/utils/type';
 
+import { GridPositionFinder } from '@t/grid';
 import { CellStyle } from '@t/time/datetime';
 
 interface Params {
   rowStyleInfo: CellStyle[];
-  mousePositionDataGrabber: (e: MouseEvent) => MousePositionData | null;
+  gridPositionFinder: GridPositionFinder;
 }
 
-export function useAlldayGridRowEventMove({ rowStyleInfo, mousePositionDataGrabber }: Params) {
+export function useAlldayGridRowEventMove({ rowStyleInfo, gridPositionFinder }: Params) {
   const { draggingState } = useStore(dndSelector);
   const { draggingEvent: movingEvent, clearDraggingEvent } = useDraggingEvent('move');
   const { updateEvent } = useDispatch('calendar');
 
-  const [currentGridPos, clearCurrentGridPos] =
-    useCurrentPointerPositionInGrid(mousePositionDataGrabber);
-  const { x: currentGridX } = currentGridPos ?? {};
+  const [currentGridPos, clearCurrentGridPos] = useCurrentPointerPositionInGrid(gridPositionFinder);
+  const { columnIndex } = currentGridPos ?? {};
 
   const targetEventStartGridX = useMemo(
     () =>
@@ -30,18 +30,18 @@ export function useAlldayGridRowEventMove({ rowStyleInfo, mousePositionDataGrabb
     [rowStyleInfo, movingEvent]
   );
 
-  const currentMovingLeft = isNil(currentGridX) ? null : rowStyleInfo[currentGridX].left;
+  const currentMovingLeft = isNil(columnIndex) ? null : rowStyleInfo[columnIndex].left;
 
   useEffect(() => {
     const shouldUpdate =
       draggingState === DraggingState.IDLE &&
       isPresent(movingEvent) &&
-      isPresent(currentGridX) &&
+      isPresent(columnIndex) &&
       isPresent(currentMovingLeft) &&
       isPresent(targetEventStartGridX);
 
     if (shouldUpdate) {
-      const dateOffset = currentGridX - targetEventStartGridX;
+      const dateOffset = columnIndex - targetEventStartGridX;
       let newStartDate = new TZDate(movingEvent.getStarts());
       let newEndDate = new TZDate(movingEvent.getEnds());
       newStartDate = newStartDate.addDate(dateOffset);
@@ -59,7 +59,7 @@ export function useAlldayGridRowEventMove({ rowStyleInfo, mousePositionDataGrabb
       clearDraggingEvent();
     }
   }, [
-    currentGridX,
+    columnIndex,
     currentMovingLeft,
     movingEvent,
     targetEventStartGridX,

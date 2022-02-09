@@ -2,6 +2,10 @@ import type { Locator, Page } from '@playwright/test';
 
 import { BoundingBox } from './types';
 
+export function getPrefixedClassName(className: string) {
+  return `.toastui-calendar-${className}`;
+}
+
 export async function dragAndDrop(page: Page, sourceLocator: Locator, targetLocator: Locator) {
   const { x, y, width, height } = await getBoundingBox(targetLocator);
 

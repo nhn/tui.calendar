@@ -77,6 +77,12 @@ module.exports = {
       files: ['*.spec.ts', '*.spec.tsx'],
       rules: {
         'max-nested-callbacks': ['error', { max: 5 }],
+        'jest/expect-expect': [
+          'warn',
+          {
+            assertFunctionNames: ['expect', 'assert*'],
+          },
+        ],
       },
     },
     {

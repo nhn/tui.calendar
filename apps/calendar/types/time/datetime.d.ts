@@ -20,4 +20,4 @@ interface CellInfo extends CellStyle {
 }
 
 type HoursString = `${2}${0 | 1 | 2 | 3 | 4}` | `${0 | 1}${0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9}`;
-export type FormattedTimeString = `${HoursString}:00`;
+export type FormattedTimeString = `${HoursString}:${0 | 3}0`;

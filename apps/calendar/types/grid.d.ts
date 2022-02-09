@@ -9,8 +9,8 @@ export interface GridUIModel {
 }
 
 export interface GridPosition {
-  x: number;
-  y: number;
+  columnIndex: number;
+  rowIndex: number;
 }
 
 export interface CommonGridColumn {
@@ -30,3 +30,5 @@ export interface TimeGridData {
   rows: TimeGridRow[];
   columns: CommonGridColumn[];
 }
+
+export type GridPositionFinder = (mousePosition: ClientMousePosition) => GridPosition | null;

@@ -1,18 +1,16 @@
 import { h } from 'preact';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 
-import range from 'tui-code-snippet/array/range';
-
 import { addTimeGridPrefix, className as timegridClassName } from '@src/components/timeGrid';
 import { Column } from '@src/components/timeGrid/column';
 import { CurrentTimeIndicator } from '@src/components/timeGrid/currentTimeIndicator';
-import { MultipleTimezones } from '@src/components/timeGrid/multipleTimezones';
+import { TimeColumn } from '@src/components/timeGrid/timeColumn';
 import { isBetween } from '@src/controller/column';
 import { getTopPercentByTime } from '@src/controller/times';
 import { cls, toPercent, toPx } from '@src/helpers/css';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
-import { clone, isSameDate, SIXTY_SECONDS, toEndOfDay, toStartOfDay } from '@src/time/datetime';
+import { isSameDate, SIXTY_SECONDS, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 
 import { TimeGridSelectionInfo } from '@t/components/timeGrid/gridSelection';
 import { TimeGridData } from '@t/grid';
@@ -37,15 +35,6 @@ type TimerID = number | null;
 
 function calculateLeft(timesWidth: number, timezones: Array<any>) {
   return timesWidth * timezones.length;
-}
-
-function make24Hours(start: TZDate) {
-  return range(0, 25).map((hour) => {
-    const time = clone(start);
-    time.setHours(hour, 0, 0, 0);
-
-    return time;
-  });
 }
 
 function useForceUpdate() {
@@ -133,7 +122,6 @@ export function TimeGrid({
     [columns, events]
   );
 
-  const showTimezoneLabel = timezones.length > 1;
   const now = new TZDate();
   const currentTimeLineTop = getTopPercentByTime(now, toStartOfDay(now), toEndOfDay(now));
   const currentDateIndexInColumns = columns.findIndex((column) => isSameDate(column.date, now));
@@ -141,14 +129,7 @@ export function TimeGrid({
   return (
     <div className={classNames.timegrid}>
       <div className={classNames.scrollArea}>
-        <MultipleTimezones
-          timezones={timezones}
-          currentTime={now}
-          showTimezoneLabel={showTimezoneLabel}
-          width={toPx(timesWidth)}
-          stickyContainer={stickyContainer}
-          onChangeCollapsed={onChangeCollapsed}
-        />
+        <TimeColumn timeGridRows={rows} columnWidth={timesWidth} />
         <div className={cls('columns')} style={{ left: toPx(timesWidth) }}>
           {columns.map((column, index) => (
             <Column

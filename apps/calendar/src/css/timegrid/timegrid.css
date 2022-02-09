@@ -9,12 +9,19 @@
   position: relative;
   height: 100%;
 }
+
 .timegrid .columns {
   position: absolute;
   top: 0;
   right: 0;
+  bottom: 0;
 }
-.timegrid .columns .column { display: inline-block; }
+
+.timegrid .columns .column {
+  display: inline-block;
+  height: 100%;
+}
+
 .timegrid .timegrid-current-time-line {
   position: absolute;
   left: 0;

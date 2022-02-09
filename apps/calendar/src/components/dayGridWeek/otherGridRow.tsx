@@ -1,7 +1,5 @@
 import { Fragment, h } from 'preact';
 
-import range from 'tui-code-snippet/array/range';
-
 import { GridCells } from '@src/components/dayGridWeek/gridCells';
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import { Template } from '@src/components/template';
@@ -11,7 +9,6 @@ import { EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
 import { useGridRowHeightController } from '@src/hooks/dayGridWeek/gridRowHeightController';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
-import { addDate } from '@src/time/datetime';
 
 import { WeekOptions } from '@t/options';
 import { AlldayEventCategory } from '@t/panel';
@@ -21,7 +18,7 @@ type GridRowTitleTemplate = `${AlldayEventCategory}Title`;
 interface Props {
   category: Exclude<AlldayEventCategory, 'allday'>;
   events: EventUIModel[];
-  row?: TZDate[];
+  weekDates: TZDate[];
   timesWidth?: number;
   timezonesCount?: number;
   height?: number;
@@ -29,15 +26,9 @@ interface Props {
   gridColWidthMap: string[][];
 }
 
-const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
-  const now = new TZDate();
-
-  return addDate(now, day - now.getDay());
-});
-
 export function OtherGridRow({
   events,
-  row = defaultPanelInfoList,
+  weekDates,
   category,
   height = DEFAULT_PANEL_HEIGHT,
   options = {},
@@ -73,7 +64,7 @@ export function OtherGridRow({
         <div className={cls('panel-grid-wrapper')}>
           <GridCells
             uiModels={events}
-            row={row}
+            weekDates={weekDates}
             narrowWeekend={narrowWeekend}
             height={height}
             clickedIndex={clickedIndex}

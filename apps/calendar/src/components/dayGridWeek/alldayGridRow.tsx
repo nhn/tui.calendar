@@ -1,16 +1,13 @@
 import { Fragment, h } from 'preact';
 import { useMemo } from 'preact/hooks';
 
-import range from 'tui-code-snippet/array/range';
-
 import { GridSelection } from '@src/components/dayGridCommon/gridSelection';
 import { GridCells } from '@src/components/dayGridWeek/gridCells';
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import { Template } from '@src/components/template';
 import { DEFAULT_PANEL_HEIGHT, WEEK_EVENT_MARGIN_TOP } from '@src/constants/style';
 import { cls } from '@src/helpers/css';
-import { EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
-import { createMousePositionDataGrabberWeek } from '@src/helpers/view';
+import { createGridPositionFinder, EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
 import { useDOMNode } from '@src/hooks/common/domNode';
 import { useDayGridSelection } from '@src/hooks/dayGridCommon/dayGridSelection';
 import { usePopupWithDayGridSelection } from '@src/hooks/dayGridCommon/popupWithDayGridSelection';
@@ -19,7 +16,6 @@ import { useAlldayGridRowEventResize } from '@src/hooks/dayGridWeek/alldayGridRo
 import { useGridRowHeightController } from '@src/hooks/dayGridWeek/gridRowHeightController';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
-import { addDate } from '@src/time/datetime';
 
 import { WeekOptions } from '@t/options';
 import { AlldayEventCategory } from '@t/panel';
@@ -30,7 +26,7 @@ type GridRowTitleTemplate = `${Props['category']}Title`;
 interface Props {
   category: Exclude<AlldayEventCategory, 'milestone' | 'task'>;
   events: EventUIModel[];
-  row?: TZDate[];
+  weekDates: TZDate[];
   timesWidth?: number;
   timezonesCount?: number;
   height?: number;
@@ -40,15 +36,9 @@ interface Props {
   gridColWidthMap: string[][];
 }
 
-const defaultPanelInfoList: TZDate[] = range(0, 7).map((day) => {
-  const now = new TZDate();
-
-  return addDate(now, day - now.getDay());
-});
-
 export function AlldayGridRow({
   events,
-  row = defaultPanelInfoList,
+  weekDates,
   category,
   height = DEFAULT_PANEL_HEIGHT,
   options = {},
@@ -65,25 +55,27 @@ export function AlldayGridRow({
 
   const columnWidth = timesWidth * timezonesCount;
 
-  const mousePositionDataGrabber = useMemo(
+  const gridPositionFinder = useMemo(
     () =>
-      panelContainer
-        ? createMousePositionDataGrabberWeek(row, rowStyleInfo, panelContainer)
-        : () => null,
-    [row, rowStyleInfo, panelContainer]
+      createGridPositionFinder({
+        container: panelContainer,
+        rowsCount: 1,
+        columnsCount: weekDates.length,
+      }),
+    [weekDates, panelContainer]
   );
 
   const { resizingEvent, resizingWidth } = useAlldayGridRowEventResize({
-    row,
+    weekDates,
     gridColWidthMap,
-    mousePositionDataGrabber,
+    gridPositionFinder,
   });
   const { movingEvent, movingLeft } = useAlldayGridRowEventMove({
     rowStyleInfo,
-    mousePositionDataGrabber,
+    gridPositionFinder,
   });
 
-  const gridSelection = useDayGridSelection(mousePositionDataGrabber);
+  const gridSelection = useDayGridSelection(gridPositionFinder);
   const gridSelectionData: GridSelectionDataByRow | null = gridSelection
     ? {
         startCellIndex: gridSelection.initColIndex,
@@ -93,7 +85,7 @@ export function AlldayGridRow({
 
   const onMouseDown = usePopupWithDayGridSelection({
     gridSelection,
-    dateMatrix: [row],
+    dateMatrix: [weekDates],
   });
 
   const { clickedIndex, isClickedCount, onClickExceedCount, onClickCollapseButton } =
@@ -122,7 +114,7 @@ export function AlldayGridRow({
         <div className={cls('panel-grid-wrapper')}>
           <GridCells
             uiModels={events}
-            row={row}
+            weekDates={weekDates}
             narrowWeekend={narrowWeekend}
             height={height}
             clickedIndex={clickedIndex}
@@ -133,7 +125,7 @@ export function AlldayGridRow({
         </div>
         <GridSelection
           gridSelectionData={gridSelectionData}
-          row={row}
+          weekDates={weekDates}
           narrowWeekend={narrowWeekend}
         />
         <div className={cls(`panel-${category}-events`)}>{horizontalEvents}</div>

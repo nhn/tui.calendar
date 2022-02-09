@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { createElement, h } from 'preact';
 
 import { useStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
@@ -10,25 +10,24 @@ import { isString } from '@src/utils/type';
 interface Props {
   template: TemplateName;
   model: any;
+  as?: keyof HTMLElementTagNameMap;
 }
 
 function identity(value: unknown) {
   return value;
 }
 
-export function Template({ template, model }: Props) {
+export function Template({ template, model, as: tagName = 'div' }: Props) {
   const templates = useStore(templateSelector);
   const templateFunc: Function = templates[template] || identity;
   const htmlOrVnode = templateFunc(model, h);
 
-  return isString(htmlOrVnode) ? (
-    <div
-      className={cls(`template-${template}`)}
-      dangerouslySetInnerHTML={{
-        __html: sanitize(htmlOrVnode),
-      }}
-    />
-  ) : (
-    htmlOrVnode
-  );
+  return isString(htmlOrVnode)
+    ? createElement(tagName, {
+        className: cls(`template-${template}`),
+        dangerouslySetInnerHTML: {
+          __html: sanitize(htmlOrVnode),
+        },
+      })
+    : htmlOrVnode;
 }

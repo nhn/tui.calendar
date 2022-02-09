@@ -2,12 +2,16 @@ import range from 'tui-code-snippet/array/range';
 
 import {
   createDateMatrixOfMonth,
+  createGridPositionFinder,
   createTimeGridData,
   getColumnsData,
   getWeekDates,
 } from '@src/helpers/grid';
 import TZDate from '@src/time/date';
 import { addDate, Day, isWeekend, WEEK_DAYS } from '@src/time/datetime';
+import { noop } from '@src/utils/noop';
+
+import { GridPosition, GridPositionFinder, TimeGridRow } from '@t/grid';
 
 function createResultMatrix({
   startFrom,
@@ -268,27 +272,40 @@ describe('getColumnStyles', () => {
 });
 
 describe('createTimeGridData', () => {
+  function assertTimeGridDataRows(
+    expectedRows: TimeGridRow[],
+    options: { hourStart: number; hourEnd: number }
+  ) {
+    const steps = (options.hourEnd - options.hourStart) * 2;
+    const expectedRowHeight = 100 / steps;
+
+    expect(expectedRows).toHaveLength(steps);
+    range(steps).forEach((step, index) => {
+      const isOdd = index % 2 === 1;
+      const hour = options.hourStart + Math.floor(step / 2);
+
+      expect(expectedRows[index]).toEqual({
+        top: expectedRowHeight * index,
+        height: expectedRowHeight,
+        startTime: `${hour}:${isOdd ? '30' : '00'}`.padStart(5, '0'),
+        endTime: (isOdd ? `${hour + 1}:00` : `${hour}:30`).padStart(5, '0'),
+      });
+    });
+  }
+
   it('should create data by default values', () => {
     // Given
     const rows = getWeekDates(new TZDate('2021-01-28T00:00:00'), {
       startDayOfWeek: Day.SUN,
     });
-    const expectedRowHeight = 100 / 24;
-    const expected = {
-      columns: getColumnsData(rows),
-      rows: range(0, 24).map((hour, index) => ({
-        top: expectedRowHeight * index,
-        height: expectedRowHeight,
-        startTime: `${hour}:00`.padStart(5, '0'),
-        endTime: `${hour + 1}:00`.padStart(5, '0'),
-      })),
-    };
+    const options = { hourStart: 0, hourEnd: 24 };
 
     // When
-    const result = createTimeGridData(rows, { hourStart: 0, hourEnd: 24 });
+    const result = createTimeGridData(rows, options);
 
     // Then
-    expect(result).toEqual(expected);
+    expect(result.columns).toEqual(getColumnsData(rows));
+    assertTimeGridDataRows(result.rows, options);
   });
 
   it('should create data when rendering 00:00 to 12:00', () => {
@@ -296,22 +313,14 @@ describe('createTimeGridData', () => {
     const rows = getWeekDates(new TZDate('2021-01-28T00:00:00'), {
       startDayOfWeek: Day.SUN,
     });
-    const expectedRowHeight = 100 / 12;
-    const expected = {
-      columns: getColumnsData(rows),
-      rows: range(0, 12).map((hour, index) => ({
-        top: expectedRowHeight * index,
-        height: expectedRowHeight,
-        startTime: `${hour}:00`.padStart(5, '0'),
-        endTime: `${hour + 1}:00`.padStart(5, '0'),
-      })),
-    };
+    const options = { hourStart: 0, hourEnd: 12 };
 
     // When
-    const result = createTimeGridData(rows, { hourStart: 0, hourEnd: 12 });
+    const result = createTimeGridData(rows, options);
 
     // Then
-    expect(result).toEqual(expected);
+    expect(result.columns).toEqual(getColumnsData(rows));
+    assertTimeGridDataRows(result.rows, options);
   });
 
   it('should create data when rendering 12:00 to 24:00', () => {
@@ -319,21 +328,296 @@ describe('createTimeGridData', () => {
     const rows = getWeekDates(new TZDate('2021-01-28T00:00:00'), {
       startDayOfWeek: Day.SUN,
     });
-    const expectedRowHeight = 100 / 12;
-    const expected = {
-      columns: getColumnsData(rows),
-      rows: range(12, 24).map((hour, index) => ({
-        top: expectedRowHeight * index,
-        height: expectedRowHeight,
-        startTime: `${hour}:00`.padStart(5, '0'),
-        endTime: `${hour + 1}:00`.padStart(5, '0'),
-      })),
-    };
+    const options = { hourStart: 12, hourEnd: 24 };
 
     // When
-    const result = createTimeGridData(rows, { hourStart: 12, hourEnd: 24 });
+    const result = createTimeGridData(rows, options);
 
     // Then
-    expect(result).toEqual(expected);
+    expect(result.columns).toEqual(getColumnsData(rows));
+    assertTimeGridDataRows(result.rows, options);
+  });
+});
+
+describe('createGridPositionFinder', () => {
+  const container = document.createElement('div');
+  let finder: GridPositionFinder;
+
+  function assertGridPosition(results: GridPosition[], expected: GridPosition[]) {
+    expect(results.length).toBe(expected.length);
+    results.forEach((result, index) => {
+      expect(result).toEqual(expected[index]);
+    });
+  }
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should be null returning function if container is null', () => {
+    // Given
+    finder = createGridPositionFinder({
+      columnsCount: 7,
+      rowsCount: 6,
+      container: null,
+    });
+
+    // When
+    const result = finder({ clientX: 100, clientY: 100 });
+
+    // Then
+    expect(result).toBeNull();
+  });
+
+  it('should return null if mouse position is out of container', () => {
+    // Given
+    jest.spyOn(container, 'getBoundingClientRect').mockReturnValue({
+      x: 0,
+      y: 0,
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0,
+      width: 100,
+      height: 100,
+      toJSON: noop,
+    });
+
+    finder = createGridPositionFinder({
+      columnsCount: 7,
+      rowsCount: 6,
+      container,
+    });
+
+    const wrongCases = [
+      { clientX: -1, clientY: -1 },
+      { clientX: -1, clientY: 50 },
+      { clientX: 50, clientY: -1 },
+      { clientX: 50, clientY: 101 },
+      { clientX: 101, clientY: 101 },
+      { clientX: 101, clientY: 50 },
+      { clientX: 101, clientY: -1 },
+      { clientX: 50, clientY: -1 },
+    ];
+
+    // When
+    const results = wrongCases.map(({ clientX, clientY }) => finder({ clientX, clientY }));
+
+    // Then
+    results.forEach((result) => expect(result).toBeNull());
+  });
+
+  it('should calculate columnIndex & rowIndex of grid in month', () => {
+    // Given
+    jest.spyOn(container, 'getBoundingClientRect').mockReturnValue({
+      x: 0,
+      y: 0,
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0,
+      width: 70,
+      height: 100,
+      toJSON: noop,
+    });
+    finder = createGridPositionFinder({
+      columnsCount: 7,
+      rowsCount: 2,
+      container,
+    });
+    const cases = [
+      {
+        clientX: 9,
+        clientY: 20,
+        expected: {
+          columnIndex: 0,
+          rowIndex: 0,
+        },
+      },
+      {
+        clientX: 55,
+        clientY: 60,
+        expected: {
+          columnIndex: 5,
+          rowIndex: 1,
+        },
+      },
+    ];
+
+    // When
+    const results = cases.map(({ clientX, clientY }) => finder({ clientX, clientY }));
+
+    // Then
+    assertGridPosition(
+      results as GridPosition[],
+      cases.map(({ expected }) => expected)
+    );
+  });
+
+  it('should calculate columnIndex & rowIndex of grid in week', () => {
+    // Given
+    jest.spyOn(container, 'getBoundingClientRect').mockReturnValue({
+      x: 0,
+      y: 0,
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0,
+      width: 560,
+      height: 100,
+      toJSON: noop,
+    });
+
+    finder = createGridPositionFinder({
+      columnsCount: 7,
+      rowsCount: 1,
+      container,
+    });
+
+    const cases = [
+      {
+        clientX: 0,
+        clientY: 20,
+        expected: {
+          columnIndex: 0,
+          rowIndex: 0,
+        },
+      },
+      {
+        clientX: 100,
+        clientY: 40,
+        expected: {
+          columnIndex: 1,
+          rowIndex: 0,
+        },
+      },
+      {
+        clientX: 390,
+        clientY: 50,
+        expected: {
+          columnIndex: 4,
+          rowIndex: 0,
+        },
+      },
+      {
+        clientX: 500,
+        clientY: 60,
+        expected: {
+          columnIndex: 6,
+          rowIndex: 0,
+        },
+      },
+    ];
+
+    // When
+    const results = cases.map(({ clientX, clientY }) => finder({ clientX, clientY }));
+
+    // Then
+    assertGridPosition(
+      results as GridPosition[],
+      cases.map(({ expected }) => expected)
+    );
+  });
+
+  it('should calculate columnIndex & rowIndex of grid in time grid', () => {
+    // Given
+    jest.spyOn(container, 'getBoundingClientRect').mockReturnValue({
+      x: 0,
+      y: 0,
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0,
+      width: 700,
+      height: 960,
+      toJSON: noop,
+    });
+
+    finder = createGridPositionFinder({
+      columnsCount: 7,
+      rowsCount: 48,
+      container,
+    });
+
+    const cases = [
+      {
+        clientX: 0,
+        clientY: 0,
+        expected: {
+          columnIndex: 0,
+          rowIndex: 0,
+        },
+      },
+      {
+        clientX: 250,
+        clientY: 130,
+        expected: {
+          columnIndex: 2,
+          rowIndex: 6,
+        },
+      },
+      {
+        clientX: 450,
+        clientY: 230,
+        expected: {
+          columnIndex: 4,
+          rowIndex: 11,
+        },
+      },
+      {
+        clientX: 650,
+        clientY: 450,
+        expected: {
+          columnIndex: 6,
+          rowIndex: 22,
+        },
+      },
+      {
+        clientX: 700,
+        clientY: 720,
+        expected: {
+          columnIndex: 6,
+          rowIndex: 36,
+        },
+      },
+      {
+        clientX: 700,
+        clientY: 730,
+        expected: {
+          columnIndex: 6,
+          rowIndex: 36,
+        },
+      },
+      {
+        clientX: 700,
+        clientY: 935,
+        expected: {
+          columnIndex: 6,
+          rowIndex: 46,
+        },
+      },
+      {
+        clientX: 700,
+        clientY: 960,
+        expected: {
+          columnIndex: 6,
+          rowIndex: 47,
+        },
+      },
+    ];
+
+    // When
+    const results = cases.map(({ clientX, clientY }) =>
+      finder({
+        clientX,
+        clientY,
+      })
+    );
+
+    // Then
+    assertGridPosition(
+      results as GridPosition[],
+      cases.map(({ expected }) => expected)
+    );
   });
 });
