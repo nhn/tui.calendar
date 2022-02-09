@@ -3,7 +3,6 @@ import { useCallback, useEffect, useState } from 'preact/hooks';
 import { KEY } from '@src/constants/keyboard';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { getGridDateIndex, getRenderedEventUIModels } from '@src/helpers/grid';
-import { GridPositionFinder } from '@src/helpers/view';
 import { useKeydownEvent } from '@src/hooks/common/keydownEvent';
 import { useCurrentPointerPositionInGrid } from '@src/hooks/event/currentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/draggingEvent';
@@ -13,6 +12,8 @@ import { DraggingState } from '@src/slices/dnd';
 import TZDate from '@src/time/date';
 import { findLastIndex } from '@src/utils/array';
 import { isPresent } from '@src/utils/type';
+
+import { GridPositionFinder } from '@t/grid';
 
 function getRowPosOfUIModel(uiModel: EventUIModel, dateRow: TZDate[]) {
   const startColumnIndex = Math.max(getGridDateIndex(uiModel.getStarts(), dateRow), 0);

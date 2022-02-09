@@ -2,7 +2,6 @@ import { useEffect, useMemo } from 'preact/hooks';
 
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { getGridDateIndex } from '@src/helpers/grid';
-import { GridPositionFinder } from '@src/helpers/view';
 import { useCurrentPointerPositionInGrid } from '@src/hooks/event/currentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/draggingEvent';
 import EventUIModel from '@src/model/eventUIModel';
@@ -10,6 +9,8 @@ import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import TZDate from '@src/time/date';
 import { isPresent } from '@src/utils/type';
+
+import { GridPositionFinder } from '@t/grid';
 
 function getEventColIndex(uiModel: EventUIModel, row: TZDate[]) {
   const start = getGridDateIndex(uiModel.getStarts(), row);

@@ -14,8 +14,11 @@ import {
 } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
 import { cls, toPercent } from '@src/helpers/css';
-import { EVENT_HEIGHT, getRenderedEventUIModels } from '@src/helpers/grid';
-import { createGridPositionFinder } from '@src/helpers/view';
+import {
+  createGridPositionFinder,
+  EVENT_HEIGHT,
+  getRenderedEventUIModels,
+} from '@src/helpers/grid';
 import { useDOMNode } from '@src/hooks/common/domNode';
 import { useDayGridSelection } from '@src/hooks/dayGridCommon/dayGridSelection';
 import { usePopupWithDayGridSelection } from '@src/hooks/dayGridCommon/popupWithDayGridSelection';

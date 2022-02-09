@@ -2,10 +2,11 @@ import { useEffect, useState } from 'preact/hooks';
 
 import { useStore } from '@src/contexts/calendarStore';
 import { DRAGGING_TYPE_CONSTANTS } from '@src/helpers/drag';
-import { GridPositionFinder } from '@src/helpers/view';
 import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import { isPresent } from '@src/utils/type';
+
+import { GridPositionFinder } from '@t/grid';
 
 export function useDayGridSelection(
   gridPositionFinder: GridPositionFinder

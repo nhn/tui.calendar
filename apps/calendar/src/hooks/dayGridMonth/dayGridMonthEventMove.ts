@@ -1,7 +1,6 @@
 import { useEffect, useMemo } from 'preact/hooks';
 
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
-import { GridPositionFinder } from '@src/helpers/view';
 import { useCurrentPointerPositionInGrid } from '@src/hooks/event/currentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/draggingEvent';
 import { dndSelector } from '@src/selectors';
@@ -10,6 +9,7 @@ import TZDate from '@src/time/date';
 import { getDateDifference, MS_PER_DAY } from '@src/time/datetime';
 import { isPresent } from '@src/utils/type';
 
+import { GridPositionFinder } from '@t/grid';
 import { CellStyle } from '@t/time/datetime';
 
 interface Params {

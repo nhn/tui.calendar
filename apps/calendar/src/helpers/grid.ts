@@ -17,6 +17,8 @@ import {
   toStartOfMonth,
   WEEK_DAYS,
 } from '@src/time/datetime';
+import { limit, ratio } from '@src/utils/math';
+import { isNil } from '@src/utils/type';
 
 import {
   CalendarData,
@@ -25,7 +27,7 @@ import {
   Matrix3d,
   TimeGridEventMatrix,
 } from '@t/events';
-import { CommonGridColumn, TimeGridData } from '@t/grid';
+import { CommonGridColumn, GridPositionFinder, TimeGridData } from '@t/grid';
 import { MonthOptions, WeekOptions } from '@t/options';
 import { Panel } from '@t/panel';
 import { FormattedTimeString } from '@t/time/datetime';
@@ -436,5 +438,63 @@ export function createTimeGridData(
   return {
     columns,
     rows,
+  };
+}
+
+interface ContainerPosition {
+  left: number;
+  top: number;
+  clientLeft: number;
+  clientTop: number;
+}
+
+function getRelativeMousePosition(
+  { clientX, clientY }: ClientMousePosition,
+  { left, top, clientLeft, clientTop }: ContainerPosition
+) {
+  return [clientX - left - clientLeft, clientY - top - clientTop];
+}
+
+function getIndexFromPosition(arrayLength: number, maxRange: number, currentPosition: number) {
+  const calculatedIndex = Math.floor(ratio(maxRange, arrayLength, currentPosition));
+
+  return limit(calculatedIndex, [0], [arrayLength - 1]);
+}
+
+export function createGridPositionFinder({
+  rowsCount,
+  columnsCount,
+  container,
+}: {
+  rowsCount: number;
+  columnsCount: number;
+  container: HTMLElement | null;
+}): GridPositionFinder {
+  if (isNil(container)) {
+    return () => null;
+  }
+
+  return function gridPositionFinder(mousePosition) {
+    const {
+      left: containerLeft,
+      top: containerTop,
+      width,
+      height,
+    } = container.getBoundingClientRect();
+    const [left, top] = getRelativeMousePosition(mousePosition, {
+      left: containerLeft,
+      top: containerTop,
+      clientLeft: container.clientLeft,
+      clientTop: container.clientTop,
+    });
+
+    if (left < 0 || top < 0 || left > width || top > height) {
+      return null;
+    }
+
+    return {
+      columnIndex: getIndexFromPosition(columnsCount, width, left),
+      rowIndex: getIndexFromPosition(rowsCount, height, top),
+    };
   };
 }

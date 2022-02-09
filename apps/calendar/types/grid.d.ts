@@ -30,3 +30,5 @@ export interface TimeGridData {
   rows: TimeGridRow[];
   columns: CommonGridColumn[];
 }
+
+export type GridPositionFinder = (mousePosition: ClientMousePosition) => GridPosition | null;

@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'preact/hooks';
 
 import { useStore } from '@src/contexts/calendarStore';
-import { GridPositionFinder } from '@src/helpers/view';
 import { dndSelector } from '@src/selectors';
 import { isPresent } from '@src/utils/type';
 
-import { GridPosition } from '@t/grid';
+import { GridPosition, GridPositionFinder } from '@t/grid';
 
 export function useCurrentPointerPositionInGrid(
   gridPositionFinder: GridPositionFinder
