@@ -11,7 +11,7 @@ export async function dragAndDrop(page: Page, sourceLocator: Locator, targetLoca
   await page.mouse.up();
 
   // NOTE: Handling re-render timing issue
-  await page.locator('body').click();
+  await page.locator('body').hover();
 }
 
 export async function selectGridCells(
