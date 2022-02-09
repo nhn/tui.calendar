@@ -43,7 +43,7 @@ export function useDayGridMonthEventMove({ dateMatrix, rowInfo, gridPositionFind
     if (shouldUpdate) {
       const preStartDate = movingEvent.model.getStarts();
       const eventDuration = movingEvent.duration();
-      const currentDate = dateMatrix[currentGridPos.rowIndex][currentGridPos?.columnIndex];
+      const currentDate = dateMatrix[currentGridPos.rowIndex][currentGridPos.columnIndex];
 
       const timeOffsetPerDay = getDateDifference(currentDate, preStartDate) * MS_PER_DAY;
 
