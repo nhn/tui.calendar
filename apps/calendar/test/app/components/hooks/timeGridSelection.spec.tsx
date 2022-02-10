@@ -124,7 +124,7 @@ describe('useTimeGridSelection', () => {
     ];
 
     cases.forEach(({ initX, initY, expected }) => {
-      it('should return grid selection data if mousedown fired at initX and initY', () => {
+      it(`should return grid selection data if mousedown fired at (${initX}, ${initY})`, () => {
         // Given
         const result = setup();
 
@@ -198,7 +198,7 @@ describe('useTimeGridSelection', () => {
     ];
 
     cases.forEach(({ x, y, expected }) => {
-      it('should return grid selection data if drag fired at x and y', () => {
+      it(`should return grid selection data if drag fired at (${x}, ${y})`, () => {
         // Given
         const result = setup();
 
