@@ -20,13 +20,12 @@ import {
   getRenderedEventUIModels,
 } from '@src/helpers/grid';
 import { useDOMNode } from '@src/hooks/common/domNode';
-import { useDayGridSelection } from '@src/hooks/dayGridCommon/dayGridSelection';
-import { usePopupWithDayGridSelection } from '@src/hooks/dayGridCommon/popupWithDayGridSelection';
 import { useDayGridMonthEventMove } from '@src/hooks/dayGridMonth/dayGridMonthEventMove';
 import {
   hasResizingEventShadowProps,
   useDayGridMonthEventResize,
 } from '@src/hooks/dayGridMonth/dayGridMonthEventResize';
+import { useGridSelection } from '@src/hooks/gridSelection/gridSelection';
 import { calendarSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
 import { getSize } from '@src/utils/dom';
@@ -139,8 +138,8 @@ export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidth
     [calendarData, dateMatrix, narrowWeekend]
   );
 
-  const gridSelection = useDayGridSelection(gridPositionFinder);
-  const onMouseDown = usePopupWithDayGridSelection({ gridSelection, dateMatrix });
+  const { onMouseDown, gridSelection } = useGridSelection('dayGridMonth', gridPositionFinder);
+  // const onMouseDown = usePopupWithDayGridSelection({ gridSelection, dateMatrix });
   const { movingEvent, currentGridPos } = useDayGridMonthEventMove({
     dateMatrix,
     rowInfo,

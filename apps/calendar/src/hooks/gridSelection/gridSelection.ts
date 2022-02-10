@@ -18,11 +18,14 @@ export function useGridSelection(type: GridSelectionType, gridPositionFinder: Gr
   );
   const { setGridSelection } = useDispatch('gridSelection');
   const currentGridSelectionType = DRAGGING_TYPE_CREATORS.gridSelection(type);
+  const { onMouseDown } = useDrag(currentGridSelectionType);
 
   const isSelectingGrid =
     draggingItemType === currentGridSelectionType && draggingState >= DraggingState.INIT;
-
-  const { onMouseDown } = useDrag(currentGridSelectionType);
+  const clearGridSelection = useCallback(
+    () => setGridSelection(type, null),
+    [setGridSelection, type]
+  );
 
   useEffect(() => {
     const hasInitCoords = isPresent(initX) && isPresent(initY);
@@ -56,6 +59,8 @@ export function useGridSelection(type: GridSelectionType, gridPositionFinder: Gr
       }
     }
   }, [isSelectingGrid, gridPositionFinder, x, y, setGridSelection, type]);
+
+  useEffect(() => clearGridSelection, [clearGridSelection]);
 
   return { onMouseDown, gridSelection };
 }

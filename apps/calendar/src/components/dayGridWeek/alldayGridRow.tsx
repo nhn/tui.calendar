@@ -9,11 +9,10 @@ import { DEFAULT_PANEL_HEIGHT, WEEK_EVENT_MARGIN_TOP } from '@src/constants/styl
 import { cls } from '@src/helpers/css';
 import { createGridPositionFinder, EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
 import { useDOMNode } from '@src/hooks/common/domNode';
-import { useDayGridSelection } from '@src/hooks/dayGridCommon/dayGridSelection';
-import { usePopupWithDayGridSelection } from '@src/hooks/dayGridCommon/popupWithDayGridSelection';
 import { useAlldayGridRowEventMove } from '@src/hooks/dayGridWeek/alldayGridRowEventMove';
 import { useAlldayGridRowEventResize } from '@src/hooks/dayGridWeek/alldayGridRowEventResize';
 import { useGridRowHeightController } from '@src/hooks/dayGridWeek/gridRowHeightController';
+import { useGridSelection } from '@src/hooks/gridSelection/gridSelection';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 
@@ -75,18 +74,11 @@ export function AlldayGridRow({
     gridPositionFinder,
   });
 
-  const gridSelection = useDayGridSelection(gridPositionFinder);
-  const gridSelectionData: GridSelectionDataByRow | null = gridSelection
-    ? {
-        startCellIndex: gridSelection.initColIndex,
-        endCellIndex: gridSelection.currentColIndex,
-      }
-    : null;
-
-  const onMouseDown = usePopupWithDayGridSelection({
-    gridSelection,
-    dateMatrix: [weekDates],
-  });
+  const { onMouseDown, gridSelection } = useGridSelection('dayGridWeek', gridPositionFinder);
+  // const onMouseDown = usePopupWithDayGridSelection({
+  //   gridSelection,
+  //   dateMatrix: [weekDates],
+  // });
 
   const { clickedIndex, isClickedCount, onClickExceedCount, onClickCollapseButton } =
     useGridRowHeightController(maxTop, category);
@@ -123,11 +115,16 @@ export function AlldayGridRow({
             onClickCollapseButton={onClickCollapseButton}
           />
         </div>
-        <GridSelection
-          gridSelectionData={gridSelectionData}
-          weekDates={weekDates}
-          narrowWeekend={narrowWeekend}
-        />
+        {gridSelection ? (
+          <GridSelection
+            gridSelectionData={{
+              startCellIndex: gridSelection.initColIndex,
+              endCellIndex: gridSelection.currentColIndex,
+            }}
+            weekDates={weekDates}
+            narrowWeekend={narrowWeekend}
+          />
+        ) : null}
         <div className={cls(`panel-${category}-events`)}>{horizontalEvents}</div>
         {resizingEvent && (
           <HorizontalEvent

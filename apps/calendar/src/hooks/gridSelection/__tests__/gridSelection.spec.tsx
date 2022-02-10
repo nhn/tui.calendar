@@ -5,7 +5,7 @@ import { act, renderHook } from '@testing-library/preact-hooks';
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
 import { DRAGGING_TYPE_CONSTANTS } from '@src/helpers/drag';
 import { createGridPositionFinder } from '@src/helpers/grid';
-import { useTimeGridSelection } from '@src/hooks/timeGridSelection/timeGridSelection';
+import { useGridSelection } from '@src/hooks/gridSelection/gridSelection';
 import { DndDispatchers } from '@src/slices/dnd';
 import { noop } from '@src/utils/noop';
 
@@ -13,7 +13,7 @@ import { PropsWithChildren } from '@t/components/common';
 import { GridPositionFinder } from '@t/grid';
 import { CalendarStore, InternalStoreAPI } from '@t/store';
 
-describe('useTimeGridSelection', () => {
+describe('useGridSelection', () => {
   let store: InternalStoreAPI<CalendarStore>;
   let dispatchers: DndDispatchers;
   let gridPositionFinder: GridPositionFinder;
@@ -23,7 +23,9 @@ describe('useTimeGridSelection', () => {
     <StoreProvider store={store}>{children}</StoreProvider>
   );
   const setup = () => {
-    const { result } = renderHook(() => useTimeGridSelection(gridPositionFinder), { wrapper });
+    const { result } = renderHook(() => useGridSelection('timeGrid', gridPositionFinder), {
+      wrapper,
+    });
 
     return result;
   };
@@ -56,7 +58,7 @@ describe('useTimeGridSelection', () => {
     // When
 
     // Then
-    expect(result.current).toBeNull();
+    expect(result.current?.gridSelection).toBeNull();
   });
 
   describe('when drag start', () => {
@@ -131,14 +133,14 @@ describe('useTimeGridSelection', () => {
         // When
         act(() => {
           dispatchers.initDrag({
-            draggingItemType: DRAGGING_TYPE_CONSTANTS.timeGridColumnSelection,
+            draggingItemType: DRAGGING_TYPE_CONSTANTS['gridSelection/timeGrid'],
             initX,
             initY,
           });
         });
 
         // Then
-        expect(result.current).toEqual(expected);
+        expect(result.current?.gridSelection).toEqual(expected);
       });
     });
   });
@@ -205,7 +207,7 @@ describe('useTimeGridSelection', () => {
         // When
         act(() => {
           dispatchers.initDrag({
-            draggingItemType: DRAGGING_TYPE_CONSTANTS.timeGridColumnSelection,
+            draggingItemType: DRAGGING_TYPE_CONSTANTS['gridSelection/timeGrid'],
             initX,
             initY,
           });
@@ -216,7 +218,7 @@ describe('useTimeGridSelection', () => {
         });
 
         // Then
-        expect(result.current).toEqual({
+        expect(result.current?.gridSelection).toEqual({
           ...expected,
           initColIndex: initX,
           initRowIndex: initY,

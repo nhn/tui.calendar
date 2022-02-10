@@ -9,11 +9,9 @@ import { TimeColumn } from '@src/components/timeGrid/timeColumn';
 import { isBetween } from '@src/controller/column';
 import { getTopPercentByTime } from '@src/controller/times';
 import { cls, toPercent, toPx } from '@src/helpers/css';
-import { DRAGGING_TYPE_CONSTANTS } from '@src/helpers/drag';
 import { createGridPositionFinder } from '@src/helpers/grid';
 import { useDOMNode } from '@src/hooks/common/domNode';
-import { useDrag } from '@src/hooks/common/drag';
-import { useTimeGridSelection } from '@src/hooks/timeGridSelection/timeGridSelection';
+import { useGridSelection } from '@src/hooks/gridSelection/gridSelection';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { isSameDate, SIXTY_SECONDS, toEndOfDay, toStartOfDay } from '@src/time/datetime';
@@ -196,9 +194,11 @@ export function TimeGrid({
       }),
     [columns.length, columnsContainer, rows.length]
   );
-  const { onMouseDown } = useDrag(DRAGGING_TYPE_CONSTANTS.timeGridColumnSelection, {});
 
-  const timeGridSelection = useTimeGridSelection(gridPositionFinder);
+  const { onMouseDown, gridSelection: timeGridSelection } = useGridSelection(
+    'timeGrid',
+    gridPositionFinder
+  );
 
   return (
     <div className={classNames.timegrid}>

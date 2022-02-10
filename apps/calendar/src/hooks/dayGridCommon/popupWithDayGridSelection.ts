@@ -40,7 +40,7 @@ export function usePopupWithDayGridSelection({ gridSelection, dateMatrix }: Para
   const [startPos, setStartPos] = useState<Coordinates | null>(null);
   const [endPos, setEndPos] = useState<Coordinates | null>(null);
 
-  const { onMouseDown } = useDrag(DRAGGING_TYPE_CONSTANTS.dayGridSelection, {
+  const { onMouseDown } = useDrag(DRAGGING_TYPE_CONSTANTS['gridSelection/dayGridMonth'], {
     onDragStart: ({ pageX, pageY }) => {
       setStartPos({ x: pageX, y: pageY });
       hideAllPopup();
