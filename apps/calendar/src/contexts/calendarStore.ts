@@ -2,6 +2,10 @@ import { useCallback } from 'preact/hooks';
 
 import { createCalendarDispatchers, createCalendarSlice } from '@src/slices/calendar';
 import { createDndDispatchers, createDndSlice } from '@src/slices/dnd';
+import {
+  createGridSelectionDispatchers,
+  createGridSelectionSlice,
+} from '@src/slices/gridSelection';
 import { createWeekViewLayoutDispatchers, createWeekViewLayoutSlice } from '@src/slices/layout';
 import { createOptionsDispatchers, createOptionsSlice } from '@src/slices/options';
 import { createPopupDispatchers, createPopupSlice } from '@src/slices/popup';
@@ -26,6 +30,7 @@ const storeCreator = (options: Options) => (set: SetState<CalendarStore>) => {
     ...createCalendarSlice(options.calendars),
     ...createViewSlice(options.defaultView),
     ...createDndSlice(),
+    ...createGridSelectionSlice(),
     dispatch: {
       options: createOptionsDispatchers(set),
       popup: createPopupDispatchers(set),
@@ -33,6 +38,7 @@ const storeCreator = (options: Options) => (set: SetState<CalendarStore>) => {
       calendar: createCalendarDispatchers(set),
       view: createViewDispatchers(set),
       dnd: createDndDispatchers(set),
+      gridSelection: createGridSelectionDispatchers(set),
     },
   };
 };

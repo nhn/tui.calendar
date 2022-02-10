@@ -2,6 +2,7 @@ import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import { CalendarDispatchers, CalendarSlice } from '@src/slices/calendar';
 import { DndDispatchers, DndSlice } from '@src/slices/dnd';
+import type { GridSelectionDispatchers, GridSelectionSlice } from '@src/slices/gridSelection';
 import { WeekViewLayoutDispatchers, WeekViewLayoutSlice } from '@src/slices/layout';
 import { OptionsDispatchers, OptionsSlice } from '@src/slices/options';
 import { PopupDispatchers, PopupSlice } from '@src/slices/popup';
@@ -120,7 +121,8 @@ export type CalendarState = OptionsSlice &
   WeekViewLayoutSlice &
   CalendarSlice &
   ViewSlice &
-  DndSlice;
+  DndSlice &
+  GridSelectionSlice;
 
 export type Dispatchers = {
   options: OptionsDispatchers;
@@ -129,6 +131,7 @@ export type Dispatchers = {
   calendar: CalendarDispatchers;
   view: ViewDispatchers;
   dnd: DndDispatchers;
+  gridSelection: GridSelectionDispatchers;
 };
 
 export type CalendarStore = CalendarState & {
