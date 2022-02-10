@@ -16,9 +16,27 @@ import { TimeGridRow } from '@t/grid';
 
 const classNames = {
   column: cls('column'),
+  grid: cls('grid'),
   backgrounds: cls('background-events'),
   events: cls('events'),
 };
+
+function GridLines({ timeGridRows }: { timeGridRows: TimeGridRow[] }) {
+  return (
+    <div className={classNames.grid}>
+      {timeGridRows.map((time, index) => (
+        <div
+          key={`gridline-${time.startTime}-${time.endTime}`}
+          className={cls('gridline-half', `gridline-half--${index % 2 === 1 ? 'lower' : 'upper'}`)}
+          style={{
+            top: toPercent(time.top),
+            height: toPercent(time.height),
+          }}
+        />
+      ))}
+    </div>
+  );
+}
 
 function BackgroundEvents({
   events,

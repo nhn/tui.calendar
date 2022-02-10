@@ -407,7 +407,7 @@ describe('createGridPositionFinder', () => {
     results.forEach((result) => expect(result).toBeNull());
   });
 
-  it('should calculate x & y coords in grid in month', () => {
+  it('should calculate columnIndex & rowIndex of grid in month', () => {
     // Given
     jest.spyOn(container, 'getBoundingClientRect').mockReturnValue({
       x: 0,
@@ -454,7 +454,7 @@ describe('createGridPositionFinder', () => {
     );
   });
 
-  it('should calculate x & y coords in grid in week', () => {
+  it('should calculate columnIndex & rowIndex of grid in week', () => {
     // Given
     jest.spyOn(container, 'getBoundingClientRect').mockReturnValue({
       x: 0,
@@ -519,7 +519,7 @@ describe('createGridPositionFinder', () => {
     );
   });
 
-  it('should calculate x & y coords in grid in time grid', () => {
+  it('should calculate columnIndex & rowIndex of grid in time grid', () => {
     // Given
     jest.spyOn(container, 'getBoundingClientRect').mockReturnValue({
       x: 0,

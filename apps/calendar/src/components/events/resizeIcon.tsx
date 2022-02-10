@@ -4,7 +4,7 @@ import { cls } from '@src/helpers/css';
 
 interface Props {
   style: { lineHeight: number | string };
-  onMouseDown: MouseEventListener;
+  onMouseDown?: MouseEventListener;
 }
 
 export function ResizeIcon({ style, onMouseDown }: Props) {

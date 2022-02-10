@@ -3,6 +3,19 @@
   border-left: 1px solid #e5e5e5;
 }
 
+.column .gridline-half {
+  position: absolute;
+  width: 100%;
+}
+
+.column .gridline-half--upper {
+  border-bottom: 1px dotted #f9f9f9;
+}
+
+.column .gridline-half--lower {
+  border-bottom: 1px solid #e5e5e5;
+}
+
 .column .grid-selection {
   position: absolute;
   right: 10px;
