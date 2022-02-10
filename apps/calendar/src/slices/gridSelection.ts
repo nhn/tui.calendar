@@ -1,6 +1,8 @@
 import produce from 'immer';
 
-import { CalendarStore, SetState } from '@t/store';
+import { isFunction } from '@src/utils/type';
+
+import { CalendarState, CalendarStore, SetState } from '@t/store';
 
 export type GridSelectionSlice = {
   gridSelection: {
@@ -12,8 +14,11 @@ export type GridSelectionSlice = {
 
 export type GridSelectionDispatchers = {
   setGridSelection: (
-    area: keyof GridSelectionSlice['gridSelection'],
-    gridSelection: GridSelectionData | null
+    type: keyof GridSelectionSlice['gridSelection'],
+    gridSelection:
+      | GridSelectionData
+      | null
+      | ((prev: GridSelectionData | null) => GridSelectionData | null)
   ) => void;
   clearAll: () => void;
 };
@@ -32,15 +37,18 @@ export function createGridSelectionDispatchers(
   set: SetState<CalendarStore>
 ): GridSelectionDispatchers {
   return {
-    setGridSelection: (area, gridSelection) =>
+    setGridSelection: (type, gridSelection) => {
       set(
-        produce((state) => {
-          state.gridSelection[area] = gridSelection;
+        produce((state: CalendarState) => {
+          state.gridSelection[type] = isFunction(gridSelection)
+            ? gridSelection(state.gridSelection[type])
+            : gridSelection;
         })
-      ),
+      );
+    },
     clearAll: () =>
       set(
-        produce((state) => {
+        produce((state: CalendarState) => {
           state.gridSelection = {
             dayGridMonth: null,
             dayGridWeek: null,
