@@ -31,11 +31,6 @@
   font-weight: bold;
 }
 
-.column .grid-selection .grid-selection-label.grid-selection-label-bottom {
-  position: absolute;
-  bottom: 3px;
-}
-
 .column .events {
   position: absolute;
   left: 0;

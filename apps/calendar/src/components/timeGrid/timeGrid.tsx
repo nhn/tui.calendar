@@ -71,7 +71,7 @@ function sortGridSelection(gridSelection: GridSelectionData) {
 function calculateGridSelection(
   timeGridSelection: GridSelectionData | null,
   columnIndex: number
-): GridSelectionDataByCol | null {
+): TimeGridSelectionDataByCol | null {
   if (!timeGridSelection) {
     return null;
   }
@@ -87,15 +87,23 @@ function calculateGridSelection(
   const { startRowIndex, startColIndex, endRowIndex, endColIndex } =
     sortGridSelection(timeGridSelection);
 
-  let resultGridSelection: GridSelectionDataByCol = { startRowIndex, endRowIndex };
+  const hasMultipleColumns = startColIndex !== endColIndex;
+  const isStartingColumn = columnIndex === startColIndex;
+  const resultGridSelection: TimeGridSelectionDataByCol = {
+    startRowIndex,
+    endRowIndex,
+    isSelectingMultipleColumns: hasMultipleColumns,
+    isStartingColumn,
+  };
 
   if (startColIndex < columnIndex && columnIndex < endColIndex) {
-    resultGridSelection = { startRowIndex: 0, endRowIndex: 47 };
+    resultGridSelection.startRowIndex = 0;
+    resultGridSelection.endRowIndex = 47;
   } else if (startColIndex !== endColIndex) {
     if (startColIndex === columnIndex) {
-      resultGridSelection = { startRowIndex, endRowIndex: 47 };
+      resultGridSelection.endRowIndex = 47;
     } else if (endColIndex === columnIndex) {
-      resultGridSelection = { startRowIndex: 0, endRowIndex };
+      resultGridSelection.startRowIndex = 0;
     }
   }
 

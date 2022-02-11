@@ -96,7 +96,7 @@ function VerticalEvents({
 
 interface Props {
   timeGridRows: TimeGridRow[];
-  gridSelection: GridSelectionDataByCol | null;
+  gridSelection: TimeGridSelectionDataByCol | null;
   columnDate: TZDate;
   columnWidth: string;
   events: EventUIModel[];
@@ -126,26 +126,41 @@ export function Column({
     return [start, end];
   }, [columnDate, timeGridRows]);
 
+  const gridSelectionProps = useMemo(() => {
+    if (!gridSelection) {
+      return null;
+    }
+
+    const { startRowIndex, endRowIndex, isStartingColumn, isSelectingMultipleColumns } =
+      gridSelection;
+
+    const { top } = timeGridRows[startRowIndex];
+    const height = timeGridRows[endRowIndex].top + timeGridRows[endRowIndex].height - top;
+    let text = '';
+    if (isSelectingMultipleColumns && isStartingColumn) {
+      text = timeGridRows[startRowIndex].startTime;
+    } else if (isSelectingMultipleColumns) {
+      text = '';
+    } else {
+      text = `${timeGridRows[startRowIndex].startTime} - ${timeGridRows[endRowIndex].endTime}`;
+    }
+
+    return {
+      top,
+      height,
+      text,
+    };
+  }, [gridSelection, timeGridRows]);
+
   const style = {
     width: columnWidth,
     backgroundColor,
   };
 
-  const { startRowIndex = 0, endRowIndex = 0 } = gridSelection ?? {};
-  const height = timeGridRows.reduce<number>((acc, cur, index) => {
-    if (index < startRowIndex || index > endRowIndex) {
-      return acc;
-    }
-
-    return acc + cur.height;
-  }, 0);
-
   return (
     <div className={classNames.column} style={style}>
       <BackgroundEvents events={events} startTime={startTime} endTime={endTime} />
-      {gridSelection ? (
-        <GridSelection top={timeGridRows[startRowIndex].top} height={height} text={'test'} />
-      ) : null}
+      {gridSelectionProps ? <GridSelection {...gridSelectionProps} /> : null}
       <VerticalEvents events={events} startTime={startTime} endTime={endTime} />
     </div>
   );

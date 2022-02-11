@@ -6,10 +6,9 @@ interface Props {
   top: number;
   height: number;
   text: string;
-  textPosition?: 'top' | 'bottom';
 }
 
-export function GridSelection({ top, height, text, textPosition }: Props) {
+export function GridSelection({ top, height, text }: Props) {
   const style = {
     top: toPercent(top),
     height: toPercent(height),
@@ -21,13 +20,7 @@ export function GridSelection({ top, height, text, textPosition }: Props) {
       style={style}
       data-testId={`time-grid-selection-${top}-${height}`}
     >
-      <span
-        className={cls('grid-selection-label', {
-          'grid-selection-label-bottom': textPosition === 'bottom',
-        })}
-      >
-        {text}
-      </span>
+      {text.length > 0 ? <span className={cls('grid-selection-label')}>{text}</span> : null}
     </div>
   );
 }
