@@ -63,6 +63,7 @@ export function useDrag(
       // prevent text selection on dragging
       e.preventDefault();
 
+      console.log('initDrag');
       setStarted(true);
       initDrag({
         draggingItemType,
@@ -75,7 +76,6 @@ export function useDrag(
 
   const onMouseMove = useCallback<MouseEventListener>(
     (e) => {
-      console.log(e);
       if (!isRightItemType) {
         setStarted(false);
 

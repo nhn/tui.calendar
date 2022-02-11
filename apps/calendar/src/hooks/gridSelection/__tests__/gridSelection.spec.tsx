@@ -181,59 +181,113 @@ describe.only('useGridSelection', () => {
   });
 
   describe('when dragging', () => {
-    const initX = 0;
-    const initY = 0;
+    // NOTE: center of container, index is (3, 24)
+    const initX = 35;
+    const initY = 240;
+    /* 
+       index of directions
+       0  1  2
+       7     3
+       6  5  4
+    */
     const cases = [
       {
         x: 0,
         y: 0,
         expected: {
+          startColumnIndex: 3,
+          startRowIndex: 24,
           endColumnIndex: 0,
           endRowIndex: 0,
         },
       },
-      {
-        x: 0,
-        y: 480,
-        expected: {
-          endColumnIndex: 0,
-          endRowIndex: 47,
-        },
-      },
-      {
-        x: 70,
-        y: 0,
-        expected: {
-          endColumnIndex: 6,
-          endRowIndex: 0,
-        },
-      },
-      {
-        x: 70,
-        y: 480,
-        expected: {
-          endColumnIndex: 6,
-          endRowIndex: 47,
-        },
-      },
-      {
-        x: 15,
-        y: 35,
-        expected: {
-          endColumnIndex: 1,
-          endRowIndex: 3,
-        },
-      },
-      {
-        x: 35,
-        y: 165,
-        expected: {
-          endColumnIndex: 3,
-          endRowIndex: 16,
-        },
-      },
+      // {
+      //   x: initX,
+      //   y: 0,
+      //   expected: {
+      //     endColumnIndex: 0,
+      //     endRowIndex: 0,
+      //   },
+      // },
+      // {
+      //   x: 70,
+      //   y: 0,
+      //   expected: {
+      //     endColumnIndex: 6,
+      //     endRowIndex: 0,
+      //   },
+      // },
+      // {
+      //   x: 70,
+      //   y: initY,
+      //   expected: {
+      //     endColumnIndex: 6,
+      //     endRowIndex: 0,
+      //   },
+      // },
+      // {
+      //   x: 70,
+      //   y: 480,
+      //   expected: {
+      //     endColumnIndex: 6,
+      //     endRowIndex: 47,
+      //   },
+      // },
+      // {
+      //   x: initX,
+      //   y: 480,
+      //   expected: {
+      //     endColumnIndex: 1,
+      //     endRowIndex: 3,
+      //   },
+      // },
+      // {
+      //   x: 0,
+      //   y: 480,
+      //   expected: {
+      //     endColumnIndex: 3,
+      //     endRowIndex: 16,
+      //   },
+      // },
+      // {
+      //   x: 0,
+      //   y: initY,
+      //   expected: {
+      //     endColumnIndex: 3,
+      //     endRowIndex: 16,
+      //   },
+      // },
     ];
 
-    cases.forEach(({ x, y, expected }) => {});
+    cases.forEach(({ x, y, expected }) => {
+      it(`should return grid selection data if drag event is fired at center to (${x}, ${y})`, () => {
+        // Given
+        const result = setup();
+        const container = screen.getByTestId('container');
+
+        // When
+        act(() => {
+          fireEvent.mouseDown(container, {
+            clientX: 0,
+            clientY: 0,
+          });
+        });
+        act(() => {
+          fireEvent.mouseMove(document, {
+            clientX: initX,
+            clientY: initY,
+          });
+        });
+        act(() => {
+          fireEvent.mouseMove(document, {
+            clientX: x,
+            clientY: y,
+          });
+        });
+
+        // Then
+        expect(result.current?.gridSelection).toEqual(expected);
+      });
+    });
   });
 });

@@ -41,6 +41,9 @@ export function useGridSelection<DateCollection>({
   const setGridSelectionByPosition = useCallback(
     (e: MouseEvent) => {
       const gridPosition = gridPositionFinder(e);
+
+      // sorter로 업데이트 하는 것과 아예 새 값으로 업데이트 하는 것으로 분리
+      // sorter 모킹 필요
       if (isPresent(gridPosition)) {
         setGridSelection(type, selectionSorter(gridPosition));
       }
@@ -51,12 +54,16 @@ export function useGridSelection<DateCollection>({
   const { onMouseDown } = useDrag(currentGridSelectionType, {
     onDragStart: (e) => {
       if (isSelectingGrid) {
+        console.log(e.clientX, e.clientY);
         setGridSelectionByPosition(e);
+        console.log(gridSelection);
       }
     },
     onDrag: (e) => {
       if (isSelectingGrid) {
+        console.log(e.clientX, e.clientY);
         setGridSelectionByPosition(e);
+        console.log(gridSelection);
       }
     },
   });
