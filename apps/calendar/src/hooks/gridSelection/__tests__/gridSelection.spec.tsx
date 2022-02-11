@@ -1,38 +1,36 @@
 import { h } from 'preact';
 
+import { fireEvent, screen } from '@testing-library/preact';
 import { act, renderHook } from '@testing-library/preact-hooks';
 
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
-import { DRAGGING_TYPE_CONSTANTS } from '@src/helpers/drag';
 import { createGridPositionFinder } from '@src/helpers/grid';
 import { useGridSelection } from '@src/hooks/gridSelection/gridSelection';
 import { DndDispatchers } from '@src/slices/dnd';
+import TZDate from '@src/time/date';
 import { noop } from '@src/utils/noop';
 
 import { PropsWithChildren } from '@t/components/common';
-import { GridPositionFinder } from '@t/grid';
+import { GridPosition } from '@t/grid';
 import { CalendarStore, InternalStoreAPI } from '@t/store';
 
-describe('useGridSelection', () => {
+/**
+ * 1. 타입별 인자를 받도록 수정한다. (type, gridPositionFinder, sorter, date getter, date context)
+ * 2. GridPosition값이 바뀌면 sort하여 GridSelection을 저장한다.
+ * 3. dragEnd가 발생 시, date getter로 시작 시간과 끝 시간을 가져와서 show popup 액션을 실행한다.
+ */
+
+describe.only('useGridSelection', () => {
   let store: InternalStoreAPI<CalendarStore>;
   let dispatchers: DndDispatchers;
-  let gridPositionFinder: GridPositionFinder;
-  const container = document.createElement('div');
 
   const wrapper = ({ children }: PropsWithChildren) => (
     <StoreProvider store={store}>{children}</StoreProvider>
   );
   const setup = () => {
-    const { result } = renderHook(() => useGridSelection('timeGrid', gridPositionFinder), {
-      wrapper,
-    });
-
-    return result;
-  };
-
-  beforeEach(() => {
-    store = initCalendarStore();
-    dispatchers = store.getState().dispatch.dnd;
+    const container = document.createElement('div');
+    container.setAttribute('data-testId', 'container');
+    document.body.appendChild(container);
     jest.spyOn(container, 'getBoundingClientRect').mockReturnValue({
       x: 0,
       y: 0,
@@ -44,11 +42,48 @@ describe('useGridSelection', () => {
       height: 480,
       toJSON: noop,
     });
-    gridPositionFinder = createGridPositionFinder({
+
+    const gridPositionFinder = createGridPositionFinder({
       rowsCount: 48,
       columnsCount: 7,
       container,
     });
+
+    const { result } = renderHook(
+      () =>
+        useGridSelection({
+          type: 'timeGrid',
+          selectionSorter: jest.fn((gridPosition: GridPosition) => ({
+            startRowIndex: gridPosition.rowIndex,
+            startColumnIndex: gridPosition.columnIndex,
+            endRowIndex: gridPosition.rowIndex,
+            endColumnIndex: gridPosition.columnIndex,
+          })),
+          dateGetter: jest.fn(() => [new TZDate(), new TZDate()]),
+          dateCollection: {} as any,
+          gridPositionFinder,
+        }),
+      {
+        wrapper,
+      }
+    );
+
+    if (result.current) {
+      container.addEventListener('mousedown', result.current.onMouseDown);
+      container.addEventListener('click', result.current.onClick);
+    }
+
+    return result;
+  };
+
+  beforeEach(() => {
+    store = initCalendarStore();
+    dispatchers = store.getState().dispatch.dnd;
+  });
+
+  afterEach(() => {
+    document.body.innerHTML = '';
+    jest.clearAllMocks();
   });
 
   it('should return null if mousedown not fired', () => {
@@ -67,60 +102,60 @@ describe('useGridSelection', () => {
         initX: 0,
         initY: 0,
         expected: {
-          currentColIndex: 0,
-          currentRowIndex: 0,
-          initColIndex: 0,
-          initRowIndex: 0,
+          endColumnIndex: 0,
+          endRowIndex: 0,
+          startColumnIndex: 0,
+          startRowIndex: 0,
         },
       },
       {
         initX: 0,
         initY: 480,
         expected: {
-          currentColIndex: 0,
-          currentRowIndex: 47,
-          initColIndex: 0,
-          initRowIndex: 47,
+          endColumnIndex: 0,
+          endRowIndex: 47,
+          startColumnIndex: 0,
+          startRowIndex: 47,
         },
       },
       {
         initX: 70,
         initY: 0,
         expected: {
-          currentColIndex: 6,
-          currentRowIndex: 0,
-          initColIndex: 6,
-          initRowIndex: 0,
+          endColumnIndex: 6,
+          endRowIndex: 0,
+          startColumnIndex: 6,
+          startRowIndex: 0,
         },
       },
       {
         initX: 70,
         initY: 480,
         expected: {
-          currentColIndex: 6,
-          currentRowIndex: 47,
-          initColIndex: 6,
-          initRowIndex: 47,
+          endColumnIndex: 6,
+          endRowIndex: 47,
+          startColumnIndex: 6,
+          startRowIndex: 47,
         },
       },
       {
         initX: 15,
         initY: 35,
         expected: {
-          currentColIndex: 1,
-          currentRowIndex: 3,
-          initColIndex: 1,
-          initRowIndex: 3,
+          endColumnIndex: 1,
+          endRowIndex: 3,
+          startColumnIndex: 1,
+          startRowIndex: 3,
         },
       },
       {
         initX: 35,
         initY: 165,
         expected: {
-          currentColIndex: 3,
-          currentRowIndex: 16,
-          initColIndex: 3,
-          initRowIndex: 16,
+          endColumnIndex: 3,
+          endRowIndex: 16,
+          startColumnIndex: 3,
+          startRowIndex: 16,
         },
       },
     ];
@@ -129,13 +164,13 @@ describe('useGridSelection', () => {
       it(`should return grid selection data if mousedown fired at (${initX}, ${initY})`, () => {
         // Given
         const result = setup();
+        const container = screen.getByTestId('container');
 
         // When
         act(() => {
-          dispatchers.initDrag({
-            draggingItemType: DRAGGING_TYPE_CONSTANTS['gridSelection/timeGrid'],
-            initX,
-            initY,
+          fireEvent.click(container, {
+            clientX: initX,
+            clientY: initY,
           });
         });
 
@@ -153,77 +188,52 @@ describe('useGridSelection', () => {
         x: 0,
         y: 0,
         expected: {
-          currentColIndex: 0,
-          currentRowIndex: 0,
+          endColumnIndex: 0,
+          endRowIndex: 0,
         },
       },
       {
         x: 0,
         y: 480,
         expected: {
-          currentColIndex: 0,
-          currentRowIndex: 47,
+          endColumnIndex: 0,
+          endRowIndex: 47,
         },
       },
       {
         x: 70,
         y: 0,
         expected: {
-          currentColIndex: 6,
-          currentRowIndex: 0,
+          endColumnIndex: 6,
+          endRowIndex: 0,
         },
       },
       {
         x: 70,
         y: 480,
         expected: {
-          currentColIndex: 6,
-          currentRowIndex: 47,
+          endColumnIndex: 6,
+          endRowIndex: 47,
         },
       },
       {
         x: 15,
         y: 35,
         expected: {
-          currentColIndex: 1,
-          currentRowIndex: 3,
+          endColumnIndex: 1,
+          endRowIndex: 3,
         },
       },
       {
         x: 35,
         y: 165,
         expected: {
-          currentColIndex: 3,
-          currentRowIndex: 16,
+          endColumnIndex: 3,
+          endRowIndex: 16,
         },
       },
     ];
 
-    cases.forEach(({ x, y, expected }) => {
-      it(`should return grid selection data if drag fired at (${x}, ${y})`, () => {
-        // Given
-        const result = setup();
-
-        // When
-        act(() => {
-          dispatchers.initDrag({
-            draggingItemType: DRAGGING_TYPE_CONSTANTS['gridSelection/timeGrid'],
-            initX,
-            initY,
-          });
-        });
-
-        act(() => {
-          dispatchers.setDraggingState({ x, y });
-        });
-
-        // Then
-        expect(result.current?.gridSelection).toEqual({
-          ...expected,
-          initColIndex: initX,
-          initRowIndex: initY,
-        });
-      });
-    });
+    cases.forEach(({ x, y, expected }) => {});
   });
 });

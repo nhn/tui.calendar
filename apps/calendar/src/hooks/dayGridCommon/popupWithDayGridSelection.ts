@@ -14,7 +14,12 @@ interface Params {
 }
 
 function getSelectionRangeDate(gridSelection: GridSelectionData, dateMatrix: TZDate[][]) {
-  const { initRowIndex, initColIndex, currentRowIndex, currentColIndex } = gridSelection;
+  const {
+    startRowIndex: initRowIndex,
+    startColumnIndex: initColIndex,
+    endRowIndex: currentRowIndex,
+    endColumnIndex: currentColIndex,
+  } = gridSelection;
   const selectionStartDate = dateMatrix[initRowIndex][initColIndex];
   const selectionEndDate = dateMatrix[currentRowIndex][currentColIndex];
 

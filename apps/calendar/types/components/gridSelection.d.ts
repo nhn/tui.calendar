@@ -1,8 +1,8 @@
 interface GridSelectionData {
-  initRowIndex: number;
-  initColIndex: number;
-  currentRowIndex: number;
-  currentColIndex: number;
+  startRowIndex: number;
+  startColumnIndex: number;
+  endRowIndex: number;
+  endColumnIndex: number;
 }
 
 interface GridSelectionDataByRow {

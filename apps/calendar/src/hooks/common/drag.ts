@@ -75,6 +75,7 @@ export function useDrag(
 
   const onMouseMove = useCallback<MouseEventListener>(
     (e) => {
+      console.log(e);
       if (!isRightItemType) {
         setStarted(false);
 

@@ -58,7 +58,12 @@ function useGridHeight() {
 }
 
 function sortGridSelection(gridSelection: GridSelectionData) {
-  const { initRowIndex, initColIndex, currentRowIndex, currentColIndex } = gridSelection;
+  const {
+    startRowIndex: initRowIndex,
+    startColumnIndex: initColIndex,
+    endRowIndex: currentRowIndex,
+    endColumnIndex: currentColIndex,
+  } = gridSelection;
   const isReversed =
     initRowIndex > currentRowIndex ||
     (initRowIndex === currentRowIndex && initColIndex > currentColIndex);
@@ -138,7 +143,10 @@ export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidth
     [calendarData, dateMatrix, narrowWeekend]
   );
 
-  const { onMouseDown, gridSelection } = useGridSelection('dayGridMonth', gridPositionFinder);
+  const { onMouseDown, gridSelection } = useGridSelection({
+    type: 'dayGridMonth',
+    gridPositionFinder,
+  });
   // const onMouseDown = usePopupWithDayGridSelection({ gridSelection, dateMatrix });
   const { movingEvent, currentGridPos } = useDayGridMonthEventMove({
     dateMatrix,

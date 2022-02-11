@@ -74,7 +74,10 @@ export function AlldayGridRow({
     gridPositionFinder,
   });
 
-  const { onMouseDown, gridSelection } = useGridSelection('dayGridWeek', gridPositionFinder);
+  const { onMouseDown, gridSelection } = useGridSelection({
+    type: 'dayGridWeek',
+    gridPositionFinder,
+  });
   // const onMouseDown = usePopupWithDayGridSelection({
   //   gridSelection,
   //   dateMatrix: [weekDates],
@@ -118,8 +121,8 @@ export function AlldayGridRow({
         {gridSelection ? (
           <GridSelection
             gridSelectionData={{
-              startCellIndex: gridSelection.initColIndex,
-              endCellIndex: gridSelection.currentColIndex,
+              startCellIndex: gridSelection.startColumnIndex,
+              endCellIndex: gridSelection.endColumnIndex,
             }}
             weekDates={weekDates}
             narrowWeekend={narrowWeekend}

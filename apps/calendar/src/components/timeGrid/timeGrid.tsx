@@ -48,7 +48,12 @@ function useForceUpdate() {
 }
 
 function sortGridSelection(gridSelection: GridSelectionData) {
-  const { initRowIndex, initColIndex, currentRowIndex, currentColIndex } = gridSelection;
+  const {
+    startRowIndex: initRowIndex,
+    startColumnIndex: initColIndex,
+    endRowIndex: currentRowIndex,
+    endColumnIndex: currentColIndex,
+  } = gridSelection;
   const isReversed =
     initColIndex > currentColIndex ||
     (initColIndex === currentColIndex && initRowIndex > currentRowIndex);
@@ -76,7 +81,7 @@ function calculateGridSelection(
     return null;
   }
 
-  const { initColIndex, currentColIndex } = timeGridSelection;
+  const { startColumnIndex: initColIndex, endColumnIndex: currentColIndex } = timeGridSelection;
 
   const minColIndex = Math.min(initColIndex, currentColIndex);
   const maxColIndex = Math.max(initColIndex, currentColIndex);
@@ -203,10 +208,10 @@ export function TimeGrid({
     [columns.length, columnsContainer, rows.length]
   );
 
-  const { onMouseDown, gridSelection: timeGridSelection } = useGridSelection(
-    'timeGrid',
-    gridPositionFinder
-  );
+  const { onMouseDown, gridSelection: timeGridSelection } = useGridSelection({
+    type: 'timeGrid',
+    gridPositionFinder,
+  });
 
   return (
     <div className={classNames.timegrid}>
