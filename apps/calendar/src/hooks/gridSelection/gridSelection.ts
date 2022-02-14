@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'preact/hooks';
+import { useCallback, useEffect, useRef } from 'preact/hooks';
 
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
@@ -41,21 +41,21 @@ export function useGridSelection<DateCollection>({
     useCallback((state: CalendarState) => state.gridSelection[type], [type])
   );
   const { setGridSelection } = useDispatch('gridSelection');
-  const [initGridPosition, setInitGridPosition] = useState<GridPosition | null>(null);
+  const initGridPositionRef = useRef<GridPosition | null>(null);
 
   const currentGridSelectionType = DRAGGING_TYPE_CREATORS.gridSelection(type);
   const isSelectingGrid =
     draggingItemType === currentGridSelectionType && draggingState >= DraggingState.INIT;
 
-  const clearGridSelection = useCallback(
-    () => setGridSelection(type, null),
-    [setGridSelection, type]
-  );
-  const setInitGridPos = useCallback(
+  const clearGridSelection = useCallback(() => {
+    initGridPositionRef.current = null;
+    setGridSelection(type, null);
+  }, [setGridSelection, type]);
+  const setInitGridPosition = useCallback(
     (e: MouseEvent) => {
       const gridPosition = gridPositionFinder(e);
       if (isPresent(gridPosition)) {
-        setInitGridPosition(gridPosition);
+        initGridPositionRef.current = gridPosition;
 
         return gridPosition;
       }
@@ -74,30 +74,30 @@ export function useGridSelection<DateCollection>({
     },
     [gridPositionFinder, setGridSelection, type]
   );
-  const handleClick = useCallback(
+  const initGridSelection = useCallback(
     (e: MouseEvent) => {
-      const initGridPos = setInitGridPos(e);
+      const initGridPos = setInitGridPosition(e);
       if (isPresent(initGridPos)) {
         setGridSelectionByPosition(e, initGridPos);
       }
     },
-    [setGridSelectionByPosition, setInitGridPos]
+    [setGridSelectionByPosition, setInitGridPosition]
   );
 
   const { onMouseDown } = useDrag(currentGridSelectionType, {
     onDragStart: (e) => {
       if (isSelectingGrid) {
-        setInitGridPosition(gridPositionFinder(e));
+        initGridSelection(e);
       }
     },
     onDrag: (e) => {
-      if (isSelectingGrid && isPresent(initGridPosition)) {
-        setGridSelectionByPosition(e, initGridPosition);
+      if (isSelectingGrid && isPresent(initGridPositionRef.current)) {
+        setGridSelectionByPosition(e, initGridPositionRef.current);
       }
     },
   });
 
   useEffect(() => clearGridSelection, [clearGridSelection]);
 
-  return { onMouseDown, gridSelection, onClick: handleClick };
+  return { onMouseDown, gridSelection, onClick: initGridSelection };
 }
