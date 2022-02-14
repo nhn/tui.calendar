@@ -140,11 +140,7 @@ export function TimeGrid({
     [columns.length, columnsContainer, rows.length]
   );
 
-  const {
-    onMouseDown,
-    gridSelection: timeGridSelection,
-    onClick,
-  } = useGridSelection({
+  const { onMouseDown, gridSelection: timeGridSelection } = useGridSelection({
     type: 'timeGrid',
     gridPositionFinder,
     selectionSorter: timeGridSelectionHelpers.selectionSorter,
@@ -161,7 +157,6 @@ export function TimeGrid({
           style={{ left: toPx(timesWidth) }}
           ref={setColumnsContainer}
           onMouseDown={onMouseDown}
-          onClick={onClick}
         >
           <GridLines timeGridRows={rows} />
           {columns.map((column, index) => {

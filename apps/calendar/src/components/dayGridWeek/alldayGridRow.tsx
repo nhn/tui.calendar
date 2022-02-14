@@ -8,6 +8,7 @@ import { Template } from '@src/components/template';
 import { DEFAULT_PANEL_HEIGHT, WEEK_EVENT_MARGIN_TOP } from '@src/constants/style';
 import { cls } from '@src/helpers/css';
 import { createGridPositionFinder, EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
+import { alldayGridRowSelectionHelpers } from '@src/helpers/gridSelection';
 import { useDOMNode } from '@src/hooks/common/domNode';
 import { useAlldayGridRowEventMove } from '@src/hooks/dayGridWeek/alldayGridRowEventMove';
 import { useAlldayGridRowEventResize } from '@src/hooks/dayGridWeek/alldayGridRowEventResize';
@@ -77,11 +78,13 @@ export function AlldayGridRow({
   const { onMouseDown, gridSelection } = useGridSelection({
     type: 'dayGridWeek',
     gridPositionFinder,
+    dateCollection: weekDates,
+    selectionSorter: alldayGridRowSelectionHelpers.selectionSorter,
+    dateGetter: alldayGridRowSelectionHelpers.dateGetter,
   });
-  // const onMouseDown = usePopupWithDayGridSelection({
-  //   gridSelection,
-  //   dateMatrix: [weekDates],
-  // });
+
+  const calculatedGridSelection =
+    alldayGridRowSelectionHelpers.calculatorByCurrentIndex(gridSelection);
 
   const { clickedIndex, isClickedCount, onClickExceedCount, onClickCollapseButton } =
     useGridRowHeightController(maxTop, category);
@@ -118,12 +121,9 @@ export function AlldayGridRow({
             onClickCollapseButton={onClickCollapseButton}
           />
         </div>
-        {gridSelection ? (
+        {calculatedGridSelection ? (
           <GridSelection
-            gridSelectionData={{
-              startCellIndex: gridSelection.startColumnIndex,
-              endCellIndex: gridSelection.endColumnIndex,
-            }}
+            gridSelectionData={calculatedGridSelection}
             weekDates={weekDates}
             narrowWeekend={narrowWeekend}
           />
