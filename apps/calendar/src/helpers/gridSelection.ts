@@ -7,7 +7,7 @@ import { isNil, isPresent } from '@src/utils/type';
 import { GridPosition, TimeGridData } from '@t/grid';
 
 type GridSelectionHelpers<
-  CalculatorByCurrentIndex extends (
+  SelectionCalculator extends (
     gridSelection: GridSelectionData | null,
     ...rest: any[]
   ) => (TimeGridSelectionDataByCol | null) | (GridSelectionDataByRow | null)
@@ -15,7 +15,7 @@ type GridSelectionHelpers<
   Parameters<typeof useGridSelection>[0],
   'type' | 'dateCollection' | 'gridPositionFinder'
 > & {
-  calculatorByCurrentIndex: CalculatorByCurrentIndex;
+  selectionCalculator: SelectionCalculator;
 };
 
 function createSortedGridSelection(
@@ -90,7 +90,7 @@ export const timeGridSelectionHelpers: GridSelectionHelpers<
 
     return [startDate, endDate];
   },
-  calculatorByCurrentIndex: timeGridSelectionCalculatorByCurrentIndex,
+  selectionCalculator: timeGridSelectionCalculatorByCurrentIndex,
 };
 
 function dayGridMonthCalculatorByCurrentIndex(
@@ -145,7 +145,7 @@ export const dayGridMonthSelectionHelpers: GridSelectionHelpers<
       dateMatrix[gridSelection.endRowIndex][gridSelection.endColumnIndex],
     ];
   },
-  calculatorByCurrentIndex: dayGridMonthCalculatorByCurrentIndex,
+  selectionCalculator: dayGridMonthCalculatorByCurrentIndex,
 };
 
 function alldayGridRowCalculatorByCurrentIndex(gridSelection: GridSelectionData | null) {
@@ -169,5 +169,5 @@ export const alldayGridRowSelectionHelpers: GridSelectionHelpers<
 
     return [weekDates[gridSelection.startColumnIndex], weekDates[gridSelection.endColumnIndex]];
   },
-  calculatorByCurrentIndex: alldayGridRowCalculatorByCurrentIndex,
+  selectionCalculator: alldayGridRowCalculatorByCurrentIndex,
 };

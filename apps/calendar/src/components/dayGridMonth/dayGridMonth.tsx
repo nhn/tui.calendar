@@ -104,7 +104,7 @@ export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidth
       {dateMatrix.map((week, rowIndex) => {
         const { uiModels, gridDateEventModelMap } = renderedEventUIModels[rowIndex];
         const isMouseInWeek = rowIndex === currentGridPos?.rowIndex;
-        const gridSelectionDataByRow = dayGridMonthSelectionHelpers.calculatorByCurrentIndex(
+        const gridSelectionDataByRow = dayGridMonthSelectionHelpers.selectionCalculator(
           gridSelection,
           rowIndex,
           week.length

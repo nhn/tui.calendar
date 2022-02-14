@@ -83,8 +83,7 @@ export function AlldayGridRow({
     dateGetter: alldayGridRowSelectionHelpers.dateGetter,
   });
 
-  const calculatedGridSelection =
-    alldayGridRowSelectionHelpers.calculatorByCurrentIndex(gridSelection);
+  const calculatedGridSelection = alldayGridRowSelectionHelpers.selectionCalculator(gridSelection);
 
   const { clickedIndex, isClickedCount, onClickExceedCount, onClickCollapseButton } =
     useGridRowHeightController(maxTop, category);

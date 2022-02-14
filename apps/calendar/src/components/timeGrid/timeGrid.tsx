@@ -160,7 +160,7 @@ export function TimeGrid({
         >
           <GridLines timeGridRows={rows} />
           {columns.map((column, index) => {
-            const gridSelection = timeGridSelectionHelpers.calculatorByCurrentIndex(
+            const gridSelection = timeGridSelectionHelpers.selectionCalculator(
               timeGridSelection,
               index
             );
