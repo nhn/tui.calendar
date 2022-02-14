@@ -11,7 +11,6 @@ import TZDate from '@src/time/date';
 import { noop } from '@src/utils/noop';
 
 import { PropsWithChildren } from '@t/components/common';
-import { GridPosition } from '@t/grid';
 import { CalendarStore, InternalStoreAPI } from '@t/store';
 
 /**
@@ -20,7 +19,7 @@ import { CalendarStore, InternalStoreAPI } from '@t/store';
  * 3. dragEnd가 발생 시, date getter로 시작 시간과 끝 시간을 가져와서 show popup 액션을 실행한다.
  */
 
-describe.only('useGridSelection', () => {
+describe('useGridSelection', () => {
   let store: InternalStoreAPI<CalendarStore>;
   let dispatchers: DndDispatchers;
 
@@ -53,12 +52,6 @@ describe.only('useGridSelection', () => {
       () =>
         useGridSelection({
           type: 'timeGrid',
-          selectionSorter: jest.fn((gridPosition: GridPosition) => ({
-            startRowIndex: gridPosition.rowIndex,
-            startColumnIndex: gridPosition.columnIndex,
-            endRowIndex: gridPosition.rowIndex,
-            endColumnIndex: gridPosition.columnIndex,
-          })),
           dateGetter: jest.fn(() => [new TZDate(), new TZDate()]),
           dateCollection: {} as any,
           gridPositionFinder,
@@ -184,7 +177,7 @@ describe.only('useGridSelection', () => {
     // NOTE: center of container, index is (3, 24)
     const initX = 35;
     const initY = 240;
-    /* 
+    /*
        index of directions
        0  1  2
        7     3
@@ -195,69 +188,107 @@ describe.only('useGridSelection', () => {
         x: 0,
         y: 0,
         expected: {
+          startColumnIndex: 0,
+          startRowIndex: 0,
+          endColumnIndex: 3,
+          endRowIndex: 24,
+        },
+      },
+      {
+        x: initX,
+        y: 0,
+        expected: {
+          startColumnIndex: 3,
+          startRowIndex: 0,
+          endColumnIndex: 3,
+          endRowIndex: 24,
+        },
+      },
+      {
+        x: 70,
+        y: 0,
+        expected: {
           startColumnIndex: 3,
           startRowIndex: 24,
-          endColumnIndex: 0,
+          endColumnIndex: 6,
           endRowIndex: 0,
         },
       },
-      // {
-      //   x: initX,
-      //   y: 0,
-      //   expected: {
-      //     endColumnIndex: 0,
-      //     endRowIndex: 0,
-      //   },
-      // },
-      // {
-      //   x: 70,
-      //   y: 0,
-      //   expected: {
-      //     endColumnIndex: 6,
-      //     endRowIndex: 0,
-      //   },
-      // },
-      // {
-      //   x: 70,
-      //   y: initY,
-      //   expected: {
-      //     endColumnIndex: 6,
-      //     endRowIndex: 0,
-      //   },
-      // },
-      // {
-      //   x: 70,
-      //   y: 480,
-      //   expected: {
-      //     endColumnIndex: 6,
-      //     endRowIndex: 47,
-      //   },
-      // },
-      // {
-      //   x: initX,
-      //   y: 480,
-      //   expected: {
-      //     endColumnIndex: 1,
-      //     endRowIndex: 3,
-      //   },
-      // },
-      // {
-      //   x: 0,
-      //   y: 480,
-      //   expected: {
-      //     endColumnIndex: 3,
-      //     endRowIndex: 16,
-      //   },
-      // },
-      // {
-      //   x: 0,
-      //   y: initY,
-      //   expected: {
-      //     endColumnIndex: 3,
-      //     endRowIndex: 16,
-      //   },
-      // },
+      {
+        x: 70,
+        y: initY,
+        expected: {
+          startColumnIndex: 3,
+          startRowIndex: 24,
+          endColumnIndex: 6,
+          endRowIndex: 24,
+        },
+      },
+      {
+        x: 70,
+        y: 480,
+        expected: {
+          startColumnIndex: 3,
+          startRowIndex: 24,
+          endColumnIndex: 6,
+          endRowIndex: 47,
+        },
+      },
+      {
+        x: initX,
+        y: 480,
+        expected: {
+          startColumnIndex: 3,
+          startRowIndex: 24,
+          endColumnIndex: 3,
+          endRowIndex: 47,
+        },
+      },
+      {
+        x: 0,
+        y: 480,
+        expected: {
+          startColumnIndex: 0,
+          startRowIndex: 47,
+          endColumnIndex: 3,
+          endRowIndex: 24,
+        },
+      },
+      {
+        x: 0,
+        y: initY,
+        expected: {
+          startColumnIndex: 0,
+          startRowIndex: 24,
+          endColumnIndex: 3,
+          endRowIndex: 24,
+        },
+      },
     ];
+
+    function dragMouse(container: HTMLElement, from: ClientMousePosition, to: ClientMousePosition) {
+      act(() => {
+        fireEvent.mouseDown(container, {
+          clientX: 0,
+          clientY: 0,
+        });
+      });
+      act(() => {
+        fireEvent.mouseMove(document, {
+          clientX: from.clientX,
+          clientY: from.clientY,
+        });
+      });
+      act(() => {
+        fireEvent.mouseMove(document, {
+          clientX: to.clientX,
+          clientY: to.clientY,
+        });
+      });
+      act(() => {
+        fireEvent.mouseUp(document);
+      });
+    }
 
     cases.forEach(({ x, y, expected }) => {
       it(`should return grid selection data if drag event is fired at center to (${x}, ${y})`, () => {
@@ -266,24 +297,7 @@ describe.only('useGridSelection', () => {
         const container = screen.getByTestId('container');
 
         // When
-        act(() => {
-          fireEvent.mouseDown(container, {
-            clientX: 0,
-            clientY: 0,
-          });
-        });
-        act(() => {
-          fireEvent.mouseMove(document, {
-            clientX: initX,
-            clientY: initY,
-          });
-        });
-        act(() => {
-          fireEvent.mouseMove(document, {
-            clientX: x,
-            clientY: y,
-          });
-        });
+        dragMouse(container, { clientX: initX, clientY: initY }, { clientX: x, clientY: y });
 
         // Then
         expect(result.current?.gridSelection).toEqual(expected);

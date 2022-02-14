@@ -63,7 +63,6 @@ export function useDrag(
       // prevent text selection on dragging
       e.preventDefault();
 
-      console.log('initDrag');
       setStarted(true);
       initDrag({
         draggingItemType,
