@@ -4,13 +4,14 @@ import { fireEvent, screen } from '@testing-library/preact';
 import { act, renderHook } from '@testing-library/preact-hooks';
 
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
-import { createGridPositionFinder } from '@src/helpers/grid';
+import { createGridPositionFinder, createTimeGridData, getWeekDates } from '@src/helpers/grid';
 import { useGridSelection } from '@src/hooks/gridSelection/gridSelection';
-import { DndDispatchers } from '@src/slices/dnd';
 import TZDate from '@src/time/date';
+import { clone } from '@src/time/datetime';
 import { noop } from '@src/utils/noop';
 
 import { PropsWithChildren } from '@t/components/common';
+import { GridPosition, TimeGridData } from '@t/grid';
 import { CalendarStore, InternalStoreAPI } from '@t/store';
 
 /**
@@ -21,12 +22,32 @@ import { CalendarStore, InternalStoreAPI } from '@t/store';
 
 describe('useGridSelection', () => {
   let store: InternalStoreAPI<CalendarStore>;
-  let dispatchers: DndDispatchers;
 
   const wrapper = ({ children }: PropsWithChildren) => (
     <StoreProvider store={store}>{children}</StoreProvider>
   );
-  const setup = ({ useCreationPopup = false } = {}) => {
+  function setup<DateCollection>({
+    useCreationPopup = false,
+    selectionSorter = jest.fn((init, current) => ({
+      startColumnIndex: current.columnIndex,
+      startRowIndex: current.rowIndex,
+      endColumnIndex: current.columnIndex,
+      endRowIndex: current.rowIndex,
+    })),
+    dateGetter = jest.fn(() => [new TZDate(), new TZDate()]),
+    dateCollection = {} as DateCollection,
+  }: {
+    useCreationPopup?: boolean;
+    dateCollection?: DateCollection;
+    selectionSorter?: (
+      initPosition: GridPosition,
+      currentPosition: GridPosition
+    ) => GridSelectionData;
+    dateGetter?: (
+      dateCollection: DateCollection,
+      gridSelection: GridSelectionData
+    ) => [TZDate, TZDate];
+  } = {}) {
     const container = document.createElement('div');
     container.setAttribute('data-testId', 'container');
     document.body.appendChild(container);
@@ -58,8 +79,9 @@ describe('useGridSelection', () => {
       () =>
         useGridSelection({
           type: 'timeGrid',
-          dateGetter: jest.fn(() => [new TZDate(), new TZDate()]),
-          dateCollection: {} as any,
+          selectionSorter,
+          dateGetter,
+          dateCollection,
           gridPositionFinder,
         }),
       {
@@ -73,7 +95,7 @@ describe('useGridSelection', () => {
     }
 
     return result;
-  };
+  }
   function dragMouse(container: HTMLElement, from: ClientMousePosition, to: ClientMousePosition) {
     act(() => {
       fireEvent.mouseDown(container, {
@@ -97,10 +119,22 @@ describe('useGridSelection', () => {
       fireEvent.mouseUp(document);
     });
   }
+  function mockTimeGridSorter(initPos: GridPosition, currentPos: GridPosition): GridSelectionData {
+    const isReversed =
+      initPos.columnIndex > currentPos.columnIndex ||
+      (initPos.columnIndex === currentPos.columnIndex && initPos.rowIndex > currentPos.rowIndex);
+
+    return {
+      startColumnIndex: isReversed ? currentPos.columnIndex : initPos.columnIndex,
+      startRowIndex: isReversed ? currentPos.rowIndex : initPos.rowIndex,
+      endColumnIndex: isReversed ? initPos.columnIndex : currentPos.columnIndex,
+      endRowIndex: isReversed ? initPos.rowIndex : currentPos.rowIndex,
+    };
+  }
 
   beforeEach(() => {
     store = initCalendarStore();
-    dispatchers = store.getState().dispatch.dnd;
+    store.getState().dispatch.popup.showFormPopup = jest.fn();
   });
 
   afterEach(() => {
@@ -298,7 +332,9 @@ describe('useGridSelection', () => {
     cases.forEach(({ x, y, expected }) => {
       it(`should return grid selection data if drag event is fired at center to (${x}, ${y})`, () => {
         // Given
-        const result = setup();
+        const result = setup({
+          selectionSorter: mockTimeGridSorter,
+        });
         const container = screen.getByTestId('container');
 
         // When
@@ -311,16 +347,71 @@ describe('useGridSelection', () => {
   });
 
   describe('Opening popup', () => {
-    it('should open event form popup when the `useCreationPopup` option is enabled', () => {
+    const weekDates = getWeekDates(new TZDate('2022-02-14T00:00:00.000'), {
+      startDayOfWeek: 0,
+      workweek: false,
+    });
+
+    const timeGridData = createTimeGridData(weekDates, { hourStart: 0, hourEnd: 24 });
+    const dateGetter = (
+      dateCollection: TimeGridData,
+      gridSelection: GridSelectionData
+    ): [TZDate, TZDate] => {
+      const startDate = clone(dateCollection.columns[gridSelection.startColumnIndex].date);
+      const endDate = clone(dateCollection.columns[gridSelection.endColumnIndex].date);
+      const { startTime } = dateCollection.rows[gridSelection.startRowIndex];
+      const { endTime } = dateCollection.rows[gridSelection.endRowIndex];
+
+      startDate.setHours(...(startTime.split(':').map(Number) as [number, number]));
+      endDate.setHours(...(endTime.split(':').map(Number) as [number, number]));
+
+      return [startDate, endDate];
+    };
+
+    it('should open event form popup after dragging when the `useCreationPopup` option is enabled', () => {
       // Given
-      const result = setup({ useCreationPopup: true });
+      const showFormPopupAction = store.getState().dispatch.popup.showFormPopup;
+      setup({
+        useCreationPopup: true,
+        selectionSorter: mockTimeGridSorter,
+        dateCollection: timeGridData,
+        dateGetter,
+      });
       const container = screen.getByTestId('container');
 
       // When
       dragMouse(container, { clientX: 35, clientY: 240 }, { clientX: 35, clientY: 480 });
 
       // Then
-      // expect(result.current?.popupOpen).toBe(true);
+      expect(showFormPopupAction).toHaveBeenCalledWith(
+        expect.objectContaining({
+          start: new TZDate('2022-02-16T12:00:00.000'),
+          end: new TZDate('2022-02-17T00:00:00.000'),
+        })
+      );
+    });
+
+    it('should open event form popup after clicking when the `useCreationPopup` option is enabled', () => {
+      // Given
+      const showFormPopupAction = store.getState().dispatch.popup.showFormPopup;
+      setup({
+        useCreationPopup: true,
+        selectionSorter: mockTimeGridSorter,
+        dateCollection: timeGridData,
+        dateGetter,
+      });
+      const container = screen.getByTestId('container');
+
+      // When
+      fireEvent.click(container, { clientX: 35, clientY: 240 });
+
+      // Then
+      expect(showFormPopupAction).toHaveBeenCalledWith(
+        expect.objectContaining({
+          start: new TZDate('2022-02-16T12:00:00.000'),
+          end: new TZDate('2022-02-16T12:30:00.000'),
+        })
+      );
     });
   });
 });
