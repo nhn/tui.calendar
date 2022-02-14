@@ -4,9 +4,8 @@ import { act, renderHook } from '@testing-library/preact-hooks';
 
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
 import { DragListeners, useDrag } from '@src/hooks/common/drag';
-import { noop } from '@src/utils/noop';
 
-import { createKeyboardEvent, createMouseEvent, spyOnDragEvent } from '@test/helper';
+import { createKeyboardEvent, createMouseEvent } from '@test/helper';
 
 import { PropsWithChildren } from '@t/components/common';
 import { DraggingTypes } from '@t/drag';
@@ -36,17 +35,29 @@ describe('drag hook', () => {
 
   beforeEach(() => {
     listeners = {
-      onDragStart: noop,
-      onDrag: noop,
-      onDragEnd: noop,
-      onPressESCKey: noop,
+      onInit: jest.fn(),
+      onDragStart: jest.fn(),
+      onDrag: jest.fn(),
+      onMouseUp: jest.fn(),
+      onPressESCKey: jest.fn(),
     };
-
-    spyOnDragEvent(listeners);
 
     mouseDownEvent = createMouseEvent('mousedown', { button: primaryButton });
     mouseMoveEvent = createMouseEvent('mousemove');
     mouseUpEvent = createMouseEvent('mouseup');
+  });
+
+  it('should fires onInit when mouse down', () => {
+    // Given
+    const result = setup();
+
+    // When
+    act(() => {
+      result.current?.onMouseDown(mouseDownEvent);
+    });
+
+    // Then
+    expect(listeners.onInit).toBeCalledWith(mouseDownEvent);
   });
 
   it('fires onDragStart', () => {
@@ -90,7 +101,7 @@ describe('drag hook', () => {
       result.current?.onMouseUp(mouseUpEvent);
     });
 
-    expect(listeners.onDragEnd).toHaveBeenCalledWith(mouseUpEvent);
+    expect(listeners.onMouseUp).toHaveBeenCalledWith(mouseUpEvent);
   });
 
   it('ESC fires onCancel and do not fire any more events', () => {
@@ -114,6 +125,6 @@ describe('drag hook', () => {
     });
 
     expect(listeners.onDrag).not.toHaveBeenCalledWith(mouseMoveEvent);
-    expect(listeners.onDragEnd).not.toHaveBeenCalled();
+    expect(listeners.onMouseUp).not.toHaveBeenCalled();
   });
 });

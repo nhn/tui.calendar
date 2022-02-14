@@ -189,7 +189,7 @@ export function HorizontalEvent({
       onDragStart: () => {
         setDraggingEventUIModel(uiModel);
       },
-      onDragEnd: () => {
+      onMouseUp: () => {
         if (!isDragging && eventContainerRef.current && useDetailPopup) {
           showDetailPopup(
             {

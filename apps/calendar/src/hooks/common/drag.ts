@@ -11,9 +11,15 @@ import { noop } from '@src/utils/noop';
 import { DraggingTypes } from '@t/drag';
 
 export interface DragListeners {
+  // when press the mouse button
+  onInit?: MouseEventListener;
+  // when the mouse moving is recognized as a drag
   onDragStart?: MouseEventListener;
+  // while dragging
   onDrag?: MouseEventListener;
-  onDragEnd?: MouseEventListener;
+  // when the mouse button is released while dragging or just after onInit
+  onMouseUp?: MouseEventListener;
+  // when press the escape key while dragging
   onPressESCKey?: KeyboardEventListener;
 }
 
@@ -30,7 +36,7 @@ function isMouseMoved(initX: number, initY: number, x: number, y: number) {
 
 export function useDrag(
   draggingItemType: DraggingTypes,
-  { onDragStart = noop, onDrag = noop, onDragEnd = noop, onPressESCKey = noop }: DragListeners = {}
+  { onInit, onDragStart, onDrag, onMouseUp, onPressESCKey }: DragListeners
 ) {
   const { initDrag, setDraggingState, reset } = useDispatch('dnd');
 
@@ -60,6 +66,7 @@ export function useDrag(
           return false;
         };
       }
+
       // prevent text selection on dragging
       e.preventDefault();
 
@@ -69,8 +76,9 @@ export function useDrag(
         initX: e.clientX,
         initY: e.clientY,
       });
+      onInit?.(e);
     },
-    [draggingItemType, initDrag]
+    [onInit, draggingItemType, initDrag]
   );
 
   const onMouseMove = useCallback<MouseEventListener>(
@@ -86,32 +94,34 @@ export function useDrag(
       }
 
       if (!isDragging) {
-        onDragStart(e);
+        onDragStart?.(e);
         setDraggingState({ x: e.clientX, y: e.clientY });
 
         return;
       }
 
       setDraggingState({ x: e.clientX, y: e.clientY });
-      onDrag(e);
+      onDrag?.(e);
     },
     [initX, initY, isDragging, isRightItemType, onDrag, onDragStart, setDraggingState]
   );
 
-  const onMouseUp = useCallback<MouseEventListener>(
+  const _onMouseUp = useCallback<MouseEventListener>(
     (e) => {
+      e.stopPropagation();
+
       if (isStarted) {
-        onDragEnd(e);
+        onMouseUp?.(e);
         setStarted(false);
       }
     },
-    [isStarted, onDragEnd]
+    [isStarted, onMouseUp]
   );
 
   const onKeydown = useCallback<KeyboardEventListener>(
     (e) => {
       if (isKeyPressed(e, KEY.ESCAPE)) {
-        onPressESCKey(e);
+        onPressESCKey?.(e);
         setStarted(false);
       }
     },
@@ -120,9 +130,9 @@ export function useDrag(
 
   useEffect(() => {
     onMouseMoveRef.current = onMouseMove;
-    onMouseUpRef.current = onMouseUp;
+    onMouseUpRef.current = _onMouseUp;
     onKeyDownRef.current = onKeydown;
-  }, [onKeydown, onMouseMove, onMouseUp]);
+  }, [onKeydown, onMouseMove, _onMouseUp]);
 
   useEffect(() => {
     const handleMouseMove: MouseEventListener = (e) => onMouseMoveRef.current?.(e);
@@ -149,7 +159,7 @@ export function useDrag(
     isDragging,
     onMouseDown,
     onMouseMove,
-    onMouseUp,
+    onMouseUp: _onMouseUp,
     onKeydown,
   };
 }

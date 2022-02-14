@@ -70,13 +70,6 @@ export function createKeyboardEvent(name: string, eventInitDict: KeyboardEventIn
   return event;
 }
 
-export function spyOnDragEvent(listeners: DragListeners) {
-  jest.spyOn(listeners, 'onDragStart');
-  jest.spyOn(listeners, 'onDrag');
-  jest.spyOn(listeners, 'onDragEnd');
-  jest.spyOn(listeners, 'onPressESCKey');
-}
-
 export function createDate(y: number, M: number, d: number): TZDate {
   const year = String(y);
   let month = String(M);

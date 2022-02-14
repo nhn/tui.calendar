@@ -49,7 +49,7 @@ export function PanelResizer({ name, width, height }: Props) {
         setGuideStyle((prev) => ({ ...prev, top, display: null }));
       }
     },
-    onDragEnd: (e) => {
+    onMouseUp: (e) => {
       if (startPos.current) {
         const diff = e.pageY - startPos.current.top;
 
