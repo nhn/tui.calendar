@@ -11,7 +11,7 @@ import { isPresent } from '@src/utils/type';
 
 import { GridSelectionType } from '@t/drag';
 import { GridPosition, GridPositionFinder } from '@t/grid';
-import { CalendarState, PopupArrowPointPosition } from '@t/store';
+import { CalendarState } from '@t/store';
 
 function sortDates(a: TZDate, b: TZDate) {
   const isIncreased = a < b;
@@ -70,64 +70,21 @@ export function useGridSelection<DateCollection>({
       setGridSelectionByPosition(e, gridPosition);
     }
   };
-  const showCreationPopup = (
-    popupArrowPointPosition: PopupArrowPointPosition,
-    startDate: TZDate,
-    endDate: TZDate
-  ) => {
-    showFormPopup({
-      isCreationPopup: true,
-      title: '',
-      location: '',
-      start: startDate,
-      end: endDate,
-      isAllday: type !== 'timeGrid',
-      isPrivate: false,
-      popupArrowPointPosition,
-    });
-  };
-  const handleClick = (e: MouseEvent) => {
-    e.stopPropagation();
-
-    const gridPosition = gridPositionFinder(e);
-
-    if (isPresent(gridPosition)) {
-      initGridSelection(e);
-      const currentGridSelection = selectionSorter(gridPosition, gridPosition);
-      const [startDate, endDate] = dateGetter(dateCollection, currentGridSelection);
-
-      if (useCreationPopup) {
-        showCreationPopup(
-          {
-            top: e.clientY,
-            left: e.clientX,
-          },
-          startDate,
-          endDate
-        );
-      }
-
-      eventBus.fire('selectDateTime', {
-        start: startDate.toDate(),
-        end: endDate.toDate(),
-        isAllday: type !== 'timeGrid',
-        nativeEvent: e,
-      });
-    }
-  };
-
   const { onMouseDown } = useDrag(currentGridSelectionType, {
-    onDragStart: (e) => {
+    onInit: (e) => {
       if (useCreationPopup) {
         setInitMousePosition({
-          x: e.pageX,
-          y: e.pageY,
+          x: e.clientX,
+          y: e.clientY,
         });
         hideAllPopup();
       }
 
-      if (isSelectingGrid) {
-        initGridSelection(e);
+      initGridSelection(e);
+    },
+    onDragStart: (e) => {
+      if (isSelectingGrid && isPresent(initGridPosition)) {
+        setGridSelectionByPosition(e, initGridPosition);
       }
     },
     onDrag: (e) => {
@@ -135,7 +92,7 @@ export function useGridSelection<DateCollection>({
         setGridSelectionByPosition(e, initGridPosition);
       }
     },
-    onDragEnd: (e) => {
+    onMouseUp: (e) => {
       e.stopPropagation();
 
       if (isPresent(gridSelection)) {
@@ -143,10 +100,20 @@ export function useGridSelection<DateCollection>({
 
         if (useCreationPopup && isPresent(initMousePosition)) {
           const popupArrowPointPosition = {
-            top: (e.pageY + initMousePosition.y) / 2,
-            left: (e.pageX + initMousePosition.x) / 2,
+            top: (e.clientY + initMousePosition.y) / 2,
+            left: (e.clientX + initMousePosition.x) / 2,
           };
-          showCreationPopup(popupArrowPointPosition, startDate, endDate);
+
+          showFormPopup({
+            isCreationPopup: true,
+            title: '',
+            location: '',
+            start: startDate,
+            end: endDate,
+            isAllday: type !== 'timeGrid',
+            isPrivate: false,
+            popupArrowPointPosition,
+          });
         }
 
         eventBus.fire('selectDateTime', {
@@ -168,5 +135,5 @@ export function useGridSelection<DateCollection>({
     [setGridSelection, type]
   );
 
-  return { onMouseDown, gridSelection, onClick: handleClick };
+  return { onMouseDown, gridSelection };
 }

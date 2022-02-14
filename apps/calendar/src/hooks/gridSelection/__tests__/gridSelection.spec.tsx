@@ -2,6 +2,7 @@ import { h } from 'preact';
 
 import { fireEvent, screen } from '@testing-library/preact';
 import { act, renderHook } from '@testing-library/preact-hooks';
+import userEvent from '@testing-library/user-event';
 
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
 import { EventBusProvider } from '@src/contexts/eventBus';
@@ -91,7 +92,6 @@ describe('useGridSelection', () => {
 
     if (result.current) {
       container.addEventListener('mousedown', result.current.onMouseDown);
-      container.addEventListener('click', result.current.onClick);
     }
 
     return result;
@@ -99,14 +99,15 @@ describe('useGridSelection', () => {
   function dragMouse(container: HTMLElement, from: ClientMousePosition, to: ClientMousePosition) {
     act(() => {
       fireEvent.mouseDown(container, {
-        clientX: 0,
-        clientY: 0,
-      });
-    });
-    act(() => {
-      fireEvent.mouseMove(document, {
         clientX: from.clientX,
         clientY: from.clientY,
+      });
+    });
+    // to init drag
+    act(() => {
+      fireEvent.mouseMove(document, {
+        clientX: 0,
+        clientY: 0,
       });
     });
     act(() => {
@@ -205,14 +206,14 @@ describe('useGridSelection', () => {
     ];
 
     cases.forEach(({ initX, initY, expected }) => {
-      it(`should return grid selection data if mousedown fired at (${initX}, ${initY})`, () => {
+      it(`should return grid selection data when just click at (${initX}, ${initY})`, () => {
         // Given
         const result = setup();
         const container = screen.getByTestId('container');
 
         // When
         act(() => {
-          fireEvent.click(container, {
+          userEvent.click(container, {
             clientX: initX,
             clientY: initY,
           });
@@ -377,7 +378,7 @@ describe('useGridSelection', () => {
       const container = screen.getByTestId('container');
 
       // When
-      fireEvent.click(container, { clientX: 35, clientY: 240 });
+      userEvent.click(container, { clientX: 35, clientY: 240 });
 
       // Then
       expect(showFormPopupAction).toHaveBeenCalledWith(
@@ -430,7 +431,7 @@ describe('useGridSelection', () => {
       const container = screen.getByTestId('container');
 
       // When
-      fireEvent.click(container, { clientX: 35, clientY: 240 });
+      userEvent.click(container, { clientX: 35, clientY: 240 });
 
       // Then
       expect(mockHandler).toHaveBeenCalledWith(
