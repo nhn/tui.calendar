@@ -4,27 +4,27 @@ import { fireEvent, screen } from '@testing-library/preact';
 import { act, renderHook } from '@testing-library/preact-hooks';
 
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
+import { EventBusProvider } from '@src/contexts/eventBus';
 import { createGridPositionFinder, createTimeGridData, getWeekDates } from '@src/helpers/grid';
 import { useGridSelection } from '@src/hooks/gridSelection/gridSelection';
 import TZDate from '@src/time/date';
 import { clone } from '@src/time/datetime';
+import { EventBusImpl } from '@src/utils/eventBus';
 import { noop } from '@src/utils/noop';
 
 import { PropsWithChildren } from '@t/components/common';
+import { ExternalEventTypes } from '@t/eventBus';
 import { GridPosition, TimeGridData } from '@t/grid';
 import { CalendarStore, InternalStoreAPI } from '@t/store';
 
-/**
- * 1. 타입별 인자를 받도록 수정한다. (type, gridPositionFinder, sorter, date getter, date context)
- * 2. GridPosition값이 바뀌면 sort하여 GridSelection을 저장한다.
- * 3. dragEnd가 발생 시, date getter로 시작 시간과 끝 시간을 가져와서 show popup 액션을 실행한다.
- */
-
 describe('useGridSelection', () => {
   let store: InternalStoreAPI<CalendarStore>;
+  const eventBus = new EventBusImpl<ExternalEventTypes>();
 
   const wrapper = ({ children }: PropsWithChildren) => (
-    <StoreProvider store={store}>{children}</StoreProvider>
+    <EventBusProvider value={eventBus}>
+      <StoreProvider store={store}>{children}</StoreProvider>
+    </EventBusProvider>
   );
   function setup<DateCollection>({
     useCreationPopup = false,
@@ -346,28 +346,27 @@ describe('useGridSelection', () => {
     });
   });
 
+  const weekDates = getWeekDates(new TZDate('2022-02-14T00:00:00.000'), {
+    startDayOfWeek: 0,
+    workweek: false,
+  });
+
+  const timeGridData = createTimeGridData(weekDates, { hourStart: 0, hourEnd: 24 });
+  const dateGetter = (
+    dateCollection: TimeGridData,
+    gridSelection: GridSelectionData
+  ): [TZDate, TZDate] => {
+    const startDate = clone(dateCollection.columns[gridSelection.startColumnIndex].date);
+    const endDate = clone(dateCollection.columns[gridSelection.endColumnIndex].date);
+    const { startTime } = dateCollection.rows[gridSelection.startRowIndex];
+    const { endTime } = dateCollection.rows[gridSelection.endRowIndex];
+
+    startDate.setHours(...(startTime.split(':').map(Number) as [number, number]));
+    endDate.setHours(...(endTime.split(':').map(Number) as [number, number]));
+
+    return [startDate, endDate];
+  };
   describe('Opening popup', () => {
-    const weekDates = getWeekDates(new TZDate('2022-02-14T00:00:00.000'), {
-      startDayOfWeek: 0,
-      workweek: false,
-    });
-
-    const timeGridData = createTimeGridData(weekDates, { hourStart: 0, hourEnd: 24 });
-    const dateGetter = (
-      dateCollection: TimeGridData,
-      gridSelection: GridSelectionData
-    ): [TZDate, TZDate] => {
-      const startDate = clone(dateCollection.columns[gridSelection.startColumnIndex].date);
-      const endDate = clone(dateCollection.columns[gridSelection.endColumnIndex].date);
-      const { startTime } = dateCollection.rows[gridSelection.startRowIndex];
-      const { endTime } = dateCollection.rows[gridSelection.endRowIndex];
-
-      startDate.setHours(...(startTime.split(':').map(Number) as [number, number]));
-      endDate.setHours(...(endTime.split(':').map(Number) as [number, number]));
-
-      return [startDate, endDate];
-    };
-
     it('should open event form popup after dragging when the `useCreationPopup` option is enabled', () => {
       // Given
       const showFormPopupAction = store.getState().dispatch.popup.showFormPopup;
@@ -410,6 +409,59 @@ describe('useGridSelection', () => {
         expect.objectContaining({
           start: new TZDate('2022-02-16T12:00:00.000'),
           end: new TZDate('2022-02-16T12:30:00.000'),
+        })
+      );
+    });
+  });
+
+  describe('Invoking Custom Event', () => {
+    function wrapMockHandler(mockFn: jest.Mock) {
+      return (...args: any[]) => mockFn(...args);
+    }
+    const mockHandler = jest.fn();
+
+    beforeEach(() => {
+      eventBus.on('selectDateTime', wrapMockHandler(mockHandler));
+      setup({
+        useCreationPopup: true,
+        selectionSorter: mockTimeGridSorter,
+        dateCollection: timeGridData,
+        dateGetter,
+      });
+    });
+
+    afterEach(() => {
+      mockHandler.mockReset();
+    });
+
+    it('should fire `selectDateTime` custom event after dragging', () => {
+      // Given
+      const container = screen.getByTestId('container');
+
+      // When
+      dragMouse(container, { clientX: 35, clientY: 240 }, { clientX: 35, clientY: 480 });
+
+      // Then
+      expect(mockHandler).toHaveBeenCalledWith(
+        expect.objectContaining({
+          start: new Date('2022-02-16T12:00:00.000'),
+          end: new Date('2022-02-17T00:00:00.000'),
+        })
+      );
+    });
+
+    it('should fire `selectDateTime` custom event after clicking', () => {
+      // Given
+      const container = screen.getByTestId('container');
+
+      // When
+      fireEvent.click(container, { clientX: 35, clientY: 240 });
+
+      // Then
+      expect(mockHandler).toHaveBeenCalledWith(
+        expect.objectContaining({
+          start: new Date('2022-02-16T12:00:00.000'),
+          end: new Date('2022-02-16T12:30:00.000'),
         })
       );
     });

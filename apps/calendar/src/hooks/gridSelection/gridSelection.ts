@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'preact/hooks';
 
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
+import { useEventBus } from '@src/contexts/eventBus';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/drag';
 import { dndSelector } from '@src/selectors';
@@ -45,6 +46,7 @@ export function useGridSelection<DateCollection>({
   );
   const { setGridSelection } = useDispatch('gridSelection');
   const { hideAllPopup, showFormPopup } = useDispatch('popup');
+  const eventBus = useEventBus();
 
   const [initMousePosition, setInitMousePosition] = useState<Coordinates | null>(null);
   const [initGridPosition, setInitGridPosition] = useState<GridPosition | null>(null);
@@ -79,7 +81,7 @@ export function useGridSelection<DateCollection>({
       location: '',
       start: startDate,
       end: endDate,
-      isAllday: true,
+      isAllday: type !== 'timeGrid',
       isPrivate: false,
       popupArrowPointPosition,
     });
@@ -90,6 +92,7 @@ export function useGridSelection<DateCollection>({
     if (isPresent(gridPosition)) {
       initGridSelection(e);
       const currentGridSelection = selectionSorter(gridPosition, gridPosition);
+      const [startDate, endDate] = dateGetter(dateCollection, currentGridSelection);
 
       if (useCreationPopup) {
         showCreationPopup(
@@ -97,9 +100,17 @@ export function useGridSelection<DateCollection>({
             top: e.clientY,
             left: e.clientX,
           },
-          ...dateGetter(dateCollection, currentGridSelection)
+          startDate,
+          endDate
         );
       }
+
+      eventBus.fire('selectDateTime', {
+        start: startDate.toDate(),
+        end: endDate.toDate(),
+        isAllday: type !== 'timeGrid',
+        nativeEvent: e,
+      });
     }
   };
 
@@ -123,6 +134,8 @@ export function useGridSelection<DateCollection>({
       }
     },
     onDragEnd: (e) => {
+      e.stopPropagation();
+
       if (isPresent(gridSelection)) {
         const [startDate, endDate] = sortDates(...dateGetter(dateCollection, gridSelection));
 
@@ -134,7 +147,12 @@ export function useGridSelection<DateCollection>({
           showCreationPopup(popupArrowPointPosition, startDate, endDate);
         }
 
-        // @TODO: fire 'selectDateTime' custom event
+        eventBus.fire('selectDateTime', {
+          start: startDate.toDate(),
+          end: endDate.toDate(),
+          isAllday: type !== 'timeGrid',
+          nativeEvent: e,
+        });
       }
     },
   });
