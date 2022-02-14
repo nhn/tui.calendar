@@ -87,6 +87,8 @@ export function useGridSelection<DateCollection>({
     });
   };
   const handleClick = (e: MouseEvent) => {
+    e.stopPropagation();
+
     const gridPosition = gridPositionFinder(e);
 
     if (isPresent(gridPosition)) {

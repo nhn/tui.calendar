@@ -10,12 +10,12 @@ import { isBetween } from '@src/controller/column';
 import { getTopPercentByTime } from '@src/controller/times';
 import { cls, toPercent, toPx } from '@src/helpers/css';
 import { createGridPositionFinder } from '@src/helpers/grid';
+import { timeGridSelectionHelpers } from '@src/helpers/gridSelection';
 import { useDOMNode } from '@src/hooks/common/domNode';
 import { useGridSelection } from '@src/hooks/gridSelection/gridSelection';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { isSameDate, SIXTY_SECONDS, toEndOfDay, toStartOfDay } from '@src/time/datetime';
-import { isBetween as isBetweenValue } from '@src/utils/math';
 
 import { TimeGridData } from '@t/grid';
 import { TimezoneConfig } from '@t/options';
@@ -45,74 +45,6 @@ function useForceUpdate() {
   const [, setForceUpdate] = useState(0);
 
   return () => setForceUpdate((prev) => prev + 1);
-}
-
-function sortGridSelection(gridSelection: GridSelectionData) {
-  const {
-    startRowIndex: initRowIndex,
-    startColumnIndex: initColIndex,
-    endRowIndex: currentRowIndex,
-    endColumnIndex: currentColIndex,
-  } = gridSelection;
-  const isReversed =
-    initColIndex > currentColIndex ||
-    (initColIndex === currentColIndex && initRowIndex > currentRowIndex);
-
-  return isReversed
-    ? {
-        startRowIndex: currentRowIndex,
-        startColIndex: currentColIndex,
-        endRowIndex: initRowIndex,
-        endColIndex: initColIndex,
-      }
-    : {
-        startRowIndex: initRowIndex,
-        startColIndex: initColIndex,
-        endRowIndex: currentRowIndex,
-        endColIndex: currentColIndex,
-      };
-}
-
-function calculateGridSelection(
-  timeGridSelection: GridSelectionData | null,
-  columnIndex: number
-): TimeGridSelectionDataByCol | null {
-  if (!timeGridSelection) {
-    return null;
-  }
-
-  const { startColumnIndex: initColIndex, endColumnIndex: currentColIndex } = timeGridSelection;
-
-  const minColIndex = Math.min(initColIndex, currentColIndex);
-  const maxColIndex = Math.max(initColIndex, currentColIndex);
-  if (!isBetweenValue(columnIndex, minColIndex, maxColIndex)) {
-    return null;
-  }
-
-  const { startRowIndex, startColIndex, endRowIndex, endColIndex } =
-    sortGridSelection(timeGridSelection);
-
-  const hasMultipleColumns = startColIndex !== endColIndex;
-  const isStartingColumn = columnIndex === startColIndex;
-  const resultGridSelection: TimeGridSelectionDataByCol = {
-    startRowIndex,
-    endRowIndex,
-    isSelectingMultipleColumns: hasMultipleColumns,
-    isStartingColumn,
-  };
-
-  if (startColIndex < columnIndex && columnIndex < endColIndex) {
-    resultGridSelection.startRowIndex = 0;
-    resultGridSelection.endRowIndex = 47;
-  } else if (startColIndex !== endColIndex) {
-    if (startColIndex === columnIndex) {
-      resultGridSelection.endRowIndex = 47;
-    } else if (endColIndex === columnIndex) {
-      resultGridSelection.startRowIndex = 0;
-    }
-  }
-
-  return resultGridSelection;
 }
 
 export function TimeGrid({
@@ -208,9 +140,16 @@ export function TimeGrid({
     [columns.length, columnsContainer, rows.length]
   );
 
-  const { onMouseDown, gridSelection: timeGridSelection } = useGridSelection({
+  const {
+    onMouseDown,
+    gridSelection: timeGridSelection,
+    onClick,
+  } = useGridSelection({
     type: 'timeGrid',
     gridPositionFinder,
+    selectionSorter: timeGridSelectionHelpers.selectionSorter,
+    dateGetter: timeGridSelectionHelpers.dateGetter,
+    dateCollection: timeGridData,
   });
 
   return (
@@ -222,10 +161,14 @@ export function TimeGrid({
           style={{ left: toPx(timesWidth) }}
           ref={setColumnsContainer}
           onMouseDown={onMouseDown}
+          onClick={onClick}
         >
           <GridLines timeGridRows={rows} />
           {columns.map((column, index) => {
-            const gridSelection = calculateGridSelection(timeGridSelection, index);
+            const gridSelection = timeGridSelectionHelpers.calculatorByCurrentIndex(
+              timeGridSelection,
+              index
+            );
 
             return (
               <Column

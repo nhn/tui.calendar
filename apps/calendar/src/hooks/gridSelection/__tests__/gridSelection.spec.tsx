@@ -6,15 +6,15 @@ import { act, renderHook } from '@testing-library/preact-hooks';
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
 import { EventBusProvider } from '@src/contexts/eventBus';
 import { createGridPositionFinder, createTimeGridData, getWeekDates } from '@src/helpers/grid';
+import { timeGridSelectionHelpers } from '@src/helpers/gridSelection';
 import { useGridSelection } from '@src/hooks/gridSelection/gridSelection';
 import TZDate from '@src/time/date';
-import { clone } from '@src/time/datetime';
 import { EventBusImpl } from '@src/utils/eventBus';
 import { noop } from '@src/utils/noop';
 
 import { PropsWithChildren } from '@t/components/common';
 import { ExternalEventTypes } from '@t/eventBus';
-import { GridPosition, TimeGridData } from '@t/grid';
+import { GridPosition } from '@t/grid';
 import { CalendarStore, InternalStoreAPI } from '@t/store';
 
 describe('useGridSelection', () => {
@@ -118,18 +118,6 @@ describe('useGridSelection', () => {
     act(() => {
       fireEvent.mouseUp(document);
     });
-  }
-  function mockTimeGridSorter(initPos: GridPosition, currentPos: GridPosition): GridSelectionData {
-    const isReversed =
-      initPos.columnIndex > currentPos.columnIndex ||
-      (initPos.columnIndex === currentPos.columnIndex && initPos.rowIndex > currentPos.rowIndex);
-
-    return {
-      startColumnIndex: isReversed ? currentPos.columnIndex : initPos.columnIndex,
-      startRowIndex: isReversed ? currentPos.rowIndex : initPos.rowIndex,
-      endColumnIndex: isReversed ? initPos.columnIndex : currentPos.columnIndex,
-      endRowIndex: isReversed ? initPos.rowIndex : currentPos.rowIndex,
-    };
   }
 
   beforeEach(() => {
@@ -333,7 +321,7 @@ describe('useGridSelection', () => {
       it(`should return grid selection data if drag event is fired at center to (${x}, ${y})`, () => {
         // Given
         const result = setup({
-          selectionSorter: mockTimeGridSorter,
+          selectionSorter: timeGridSelectionHelpers.selectionSorter,
         });
         const container = screen.getByTestId('container');
 
@@ -352,29 +340,16 @@ describe('useGridSelection', () => {
   });
 
   const timeGridData = createTimeGridData(weekDates, { hourStart: 0, hourEnd: 24 });
-  const dateGetter = (
-    dateCollection: TimeGridData,
-    gridSelection: GridSelectionData
-  ): [TZDate, TZDate] => {
-    const startDate = clone(dateCollection.columns[gridSelection.startColumnIndex].date);
-    const endDate = clone(dateCollection.columns[gridSelection.endColumnIndex].date);
-    const { startTime } = dateCollection.rows[gridSelection.startRowIndex];
-    const { endTime } = dateCollection.rows[gridSelection.endRowIndex];
 
-    startDate.setHours(...(startTime.split(':').map(Number) as [number, number]));
-    endDate.setHours(...(endTime.split(':').map(Number) as [number, number]));
-
-    return [startDate, endDate];
-  };
   describe('Opening popup', () => {
     it('should open event form popup after dragging when the `useCreationPopup` option is enabled', () => {
       // Given
       const showFormPopupAction = store.getState().dispatch.popup.showFormPopup;
       setup({
         useCreationPopup: true,
-        selectionSorter: mockTimeGridSorter,
+        selectionSorter: timeGridSelectionHelpers.selectionSorter,
         dateCollection: timeGridData,
-        dateGetter,
+        dateGetter: timeGridSelectionHelpers.dateGetter,
       });
       const container = screen.getByTestId('container');
 
@@ -395,9 +370,9 @@ describe('useGridSelection', () => {
       const showFormPopupAction = store.getState().dispatch.popup.showFormPopup;
       setup({
         useCreationPopup: true,
-        selectionSorter: mockTimeGridSorter,
+        selectionSorter: timeGridSelectionHelpers.selectionSorter,
         dateCollection: timeGridData,
-        dateGetter,
+        dateGetter: timeGridSelectionHelpers.dateGetter,
       });
       const container = screen.getByTestId('container');
 
@@ -424,9 +399,9 @@ describe('useGridSelection', () => {
       eventBus.on('selectDateTime', wrapMockHandler(mockHandler));
       setup({
         useCreationPopup: true,
-        selectionSorter: mockTimeGridSorter,
+        selectionSorter: timeGridSelectionHelpers.selectionSorter,
         dateCollection: timeGridData,
-        dateGetter,
+        dateGetter: timeGridSelectionHelpers.dateGetter,
       });
     });
 
