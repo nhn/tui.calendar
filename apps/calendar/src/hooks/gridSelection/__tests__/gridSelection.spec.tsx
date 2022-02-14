@@ -26,7 +26,7 @@ describe('useGridSelection', () => {
   const wrapper = ({ children }: PropsWithChildren) => (
     <StoreProvider store={store}>{children}</StoreProvider>
   );
-  const setup = () => {
+  const setup = ({ useCreationPopup = false } = {}) => {
     const container = document.createElement('div');
     container.setAttribute('data-testId', 'container');
     document.body.appendChild(container);
@@ -41,6 +41,12 @@ describe('useGridSelection', () => {
       height: 480,
       toJSON: noop,
     });
+
+    if (useCreationPopup) {
+      store.getState().dispatch.options.setOptions({
+        useCreationPopup: true,
+      });
+    }
 
     const gridPositionFinder = createGridPositionFinder({
       rowsCount: 48,
@@ -68,6 +74,29 @@ describe('useGridSelection', () => {
 
     return result;
   };
+  function dragMouse(container: HTMLElement, from: ClientMousePosition, to: ClientMousePosition) {
+    act(() => {
+      fireEvent.mouseDown(container, {
+        clientX: 0,
+        clientY: 0,
+      });
+    });
+    act(() => {
+      fireEvent.mouseMove(document, {
+        clientX: from.clientX,
+        clientY: from.clientY,
+      });
+    });
+    act(() => {
+      fireEvent.mouseMove(document, {
+        clientX: to.clientX,
+        clientY: to.clientY,
+      });
+    });
+    act(() => {
+      fireEvent.mouseUp(document);
+    });
+  }
 
   beforeEach(() => {
     store = initCalendarStore();
@@ -266,30 +295,6 @@ describe('useGridSelection', () => {
       },
     ];
 
-    function dragMouse(container: HTMLElement, from: ClientMousePosition, to: ClientMousePosition) {
-      act(() => {
-        fireEvent.mouseDown(container, {
-          clientX: 0,
-          clientY: 0,
-        });
-      });
-      act(() => {
-        fireEvent.mouseMove(document, {
-          clientX: from.clientX,
-          clientY: from.clientY,
-        });
-      });
-      act(() => {
-        fireEvent.mouseMove(document, {
-          clientX: to.clientX,
-          clientY: to.clientY,
-        });
-      });
-      act(() => {
-        fireEvent.mouseUp(document);
-      });
-    }
-
     cases.forEach(({ x, y, expected }) => {
       it(`should return grid selection data if drag event is fired at center to (${x}, ${y})`, () => {
         // Given
@@ -302,6 +307,20 @@ describe('useGridSelection', () => {
         // Then
         expect(result.current?.gridSelection).toEqual(expected);
       });
+    });
+  });
+
+  describe('Opening popup', () => {
+    it('should open event form popup when the `useCreationPopup` option is enabled', () => {
+      // Given
+      const result = setup({ useCreationPopup: true });
+      const container = screen.getByTestId('container');
+
+      // When
+      dragMouse(container, { clientX: 35, clientY: 240 }, { clientX: 35, clientY: 480 });
+
+      // Then
+      // expect(result.current?.popupOpen).toBe(true);
     });
   });
 });

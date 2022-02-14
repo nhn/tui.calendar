@@ -25,6 +25,16 @@ function sortGridSelection(initPos: GridPosition, currentPos: GridPosition): Gri
   };
 }
 
+function sortDates(a: TZDate, b: TZDate) {
+  const isIncreased = a < b;
+
+  return isIncreased ? [a, b] : [b, a];
+}
+
+function useCreationPopupOptionSelector(state: CalendarState) {
+  return state.options.useCreationPopup;
+}
+
 export function useGridSelection<DateCollection>({
   type,
   dateGetter,
@@ -32,15 +42,22 @@ export function useGridSelection<DateCollection>({
   gridPositionFinder,
 }: {
   type: GridSelectionType;
-  dateGetter: (gridSelection: GridSelectionData) => [TZDate, TZDate];
+  dateGetter: (
+    dateCollection: DateCollection,
+    gridSelection: GridSelectionData
+  ) => [TZDate, TZDate];
   dateCollection: DateCollection;
   gridPositionFinder: GridPositionFinder;
 }) {
   const { draggingItemType, draggingState } = useStore(dndSelector);
+  const useCreationPopup = useStore(useCreationPopupOptionSelector);
   const gridSelection = useStore(
     useCallback((state: CalendarState) => state.gridSelection[type], [type])
   );
   const { setGridSelection } = useDispatch('gridSelection');
+  const { hideAllPopup, showFormPopup } = useDispatch('popup');
+
+  const initMousePositionRef = useRef<Coordinates | null>(null);
   const initGridPositionRef = useRef<GridPosition | null>(null);
 
   const currentGridSelectionType = DRAGGING_TYPE_CREATORS.gridSelection(type);
@@ -86,6 +103,14 @@ export function useGridSelection<DateCollection>({
 
   const { onMouseDown } = useDrag(currentGridSelectionType, {
     onDragStart: (e) => {
+      if (useCreationPopup) {
+        initMousePositionRef.current = {
+          x: e.pageX,
+          y: e.pageY,
+        };
+        hideAllPopup();
+      }
+
       if (isSelectingGrid) {
         initGridSelection(e);
       }
@@ -93,6 +118,34 @@ export function useGridSelection<DateCollection>({
     onDrag: (e) => {
       if (isSelectingGrid && isPresent(initGridPositionRef.current)) {
         setGridSelectionByPosition(e, initGridPositionRef.current);
+      }
+    },
+    onDragEnd: (e) => {
+      if (isPresent(gridSelection)) {
+        const [startDate, endDate] = sortDates(...dateGetter(dateCollection, gridSelection));
+
+        if (useCreationPopup && isPresent(initMousePositionRef.current)) {
+          const endMousePosition = {
+            x: e.pageX,
+            y: e.pageY,
+          };
+          const popupArrowPointPosition = {
+            top: (endMousePosition.y + initMousePositionRef.current.y) / 2,
+            left: (endMousePosition.x + initMousePositionRef.current.x) / 2,
+          };
+          showFormPopup({
+            isCreationPopup: true,
+            title: '',
+            location: '',
+            start: startDate,
+            end: endDate,
+            isAllday: true,
+            isPrivate: false,
+            popupArrowPointPosition,
+          });
+        }
+
+        // @TODO: fire 'selectDateTime' custom event
       }
     },
   });
