@@ -26,7 +26,7 @@ test.describe('event resizing', () => {
     const resizerLocator = targetEventLocator.locator(getPrefixedClassName('handle-y'));
     const endOfWeekCellLocator = page.locator(ALL_DAY_GRID_CELL_SELECTOR).last();
 
-    await dragAndDrop(page, resizerLocator, endOfWeekCellLocator);
+    await dragAndDrop(resizerLocator, endOfWeekCellLocator);
 
     const boundingBoxAfterResizing = await getBoundingBox(targetEventLocator);
 
@@ -41,7 +41,7 @@ test.describe('event moving', () => {
 
     const secondOfWeekCellLocator = page.locator(ALL_DAY_GRID_CELL_SELECTOR).nth(1);
 
-    await dragAndDrop(page, targetEventLocator, secondOfWeekCellLocator, {
+    await dragAndDrop(targetEventLocator, secondOfWeekCellLocator, {
       targetPosition: {
         x: 10,
         y: boundingBoxBeforeMoving.height + 10,

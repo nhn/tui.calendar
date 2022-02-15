@@ -7,7 +7,6 @@ export function getPrefixedClassName(className: string) {
 }
 
 export async function dragAndDrop(
-  page: Page,
   sourceLocator: Locator,
   targetLocator: Locator,
   options: Parameters<Locator['dragTo']>[1] = {}
@@ -24,7 +23,7 @@ export async function selectGridCells(
   const startCellLocator = page.locator(className).nth(startCellIdx);
   const endCellLocator = page.locator(className).nth(endCellIdx);
 
-  await dragAndDrop(page, startCellLocator, endCellLocator);
+  await dragAndDrop(startCellLocator, endCellLocator);
 }
 
 export async function getBoundingBox(locator: Locator): Promise<BoundingBox> {
