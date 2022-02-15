@@ -10,6 +10,7 @@ import { cls, toPercent } from '@src/helpers/css';
 import { isBackgroundEvent } from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
+import { setTimeStrToDate } from '@src/time/datetime';
 import { first, last } from '@src/utils/array';
 
 import { TimeGridRow } from '@t/grid';
@@ -115,13 +116,9 @@ export function Column({
   const [startTime, endTime] = useMemo(() => {
     const { startTime: startTimeStr } = first(timeGridRows);
     const { endTime: endTimeStr } = last(timeGridRows);
-    const startHourAndMinutes = startTimeStr.split(':').map(Number) as [number, number];
-    const endHourAndMinutes = endTimeStr.split(':').map(Number) as [number, number];
 
-    const start = new TZDate(columnDate);
-    const end = new TZDate(columnDate);
-    start.setHours(...startHourAndMinutes);
-    end.setHours(...endHourAndMinutes);
+    const start = setTimeStrToDate(columnDate, startTimeStr);
+    const end = setTimeStrToDate(columnDate, endTimeStr);
 
     return [start, end];
   }, [columnDate, timeGridRows]);

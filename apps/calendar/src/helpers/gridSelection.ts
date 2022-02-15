@@ -1,6 +1,6 @@
 import type { useGridSelection } from '@src/hooks/gridSelection/gridSelection';
 import TZDate from '@src/time/date';
-import { clone } from '@src/time/datetime';
+import { clone, setTimeStrToDate } from '@src/time/datetime';
 import { isBetween, isBetween as isBetweenValue } from '@src/utils/math';
 import { isNil, isPresent } from '@src/utils/type';
 
@@ -80,13 +80,14 @@ export const timeGridSelectionHelpers: GridSelectionHelpers<
   dateGetter: (dateCollection, gridSelection) => {
     const timeGridData = dateCollection as TimeGridData;
 
-    const startDate = clone(timeGridData.columns[gridSelection.startColumnIndex].date);
-    const endDate = clone(timeGridData.columns[gridSelection.endColumnIndex].date);
-    const { startTime } = timeGridData.rows[gridSelection.startRowIndex];
-    const { endTime } = timeGridData.rows[gridSelection.endRowIndex];
-
-    startDate.setHours(...(startTime.split(':').map(Number) as [number, number]));
-    endDate.setHours(...(endTime.split(':').map(Number) as [number, number]));
+    const startDate = setTimeStrToDate(
+      timeGridData.columns[gridSelection.startColumnIndex].date,
+      timeGridData.rows[gridSelection.startRowIndex].startTime
+    );
+    const endDate = setTimeStrToDate(
+      timeGridData.columns[gridSelection.endColumnIndex].date,
+      timeGridData.rows[gridSelection.endRowIndex].endTime
+    );
 
     return [startDate, endDate];
   },
