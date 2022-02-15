@@ -7,6 +7,10 @@ test.beforeEach(async ({ page }) => {
   await page.goto(WEEK_VIEW_PAGE_URL);
 });
 
+const ALL_DAY_GRID_CELL_SELECTOR = `${getPrefixedClassName(
+  'panel'
+)}:has-text("All Day") ${getPrefixedClassName('panel-grid')}`;
+
 test.describe('event resizing', () => {
   /**
    * Suppose we have the following cells in the week view.
@@ -20,9 +24,7 @@ test.describe('event resizing', () => {
     const boundingBoxBeforeResizing = await getBoundingBox(targetEventLocator);
 
     const resizerLocator = targetEventLocator.locator(getPrefixedClassName('handle-y'));
-    const endOfWeekCellLocator = page
-      .locator(`${getPrefixedClassName('allday-panel')} ${getPrefixedClassName('panel-grid')}`)
-      .last();
+    const endOfWeekCellLocator = page.locator(ALL_DAY_GRID_CELL_SELECTOR).last();
 
     await dragAndDrop(page, resizerLocator, endOfWeekCellLocator);
 
@@ -37,11 +39,14 @@ test.describe('event moving', () => {
     const targetEventLocator = page.locator('data-test-id=cal1-1-event1');
     const boundingBoxBeforeMoving = await getBoundingBox(targetEventLocator);
 
-    const secondOfWeekCellLocator = page
-      .locator(`${getPrefixedClassName('allday-panel')} ${getPrefixedClassName('panel-grid')}`)
-      .nth(1);
+    const secondOfWeekCellLocator = page.locator(ALL_DAY_GRID_CELL_SELECTOR).nth(1);
 
-    await dragAndDrop(page, targetEventLocator, secondOfWeekCellLocator);
+    await dragAndDrop(page, targetEventLocator, secondOfWeekCellLocator, {
+      targetPosition: {
+        x: 10,
+        y: boundingBoxBeforeMoving.height + 10,
+      },
+    });
 
     const boundingBoxAfterMoving = await getBoundingBox(targetEventLocator);
 

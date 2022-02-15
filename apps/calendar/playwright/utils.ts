@@ -6,13 +6,13 @@ export function getPrefixedClassName(className: string) {
   return `.toastui-calendar-${className}`;
 }
 
-export async function dragAndDrop(page: Page, sourceLocator: Locator, targetLocator: Locator) {
-  const { x, y, width, height } = await getBoundingBox(targetLocator);
-
-  await sourceLocator.hover();
-  await page.mouse.down();
-  await page.mouse.move(x + width / 2, y + height / 2, { steps: 15 });
-  await page.mouse.up();
+export async function dragAndDrop(
+  page: Page,
+  sourceLocator: Locator,
+  targetLocator: Locator,
+  options: Parameters<Locator['dragTo']>[1] = {}
+) {
+  await sourceLocator.dragTo(targetLocator, { ...options, force: true });
 
   // NOTE: Handling re-render timing issue
   await page.locator('body').hover();
