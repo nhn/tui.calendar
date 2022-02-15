@@ -178,7 +178,7 @@ export function HorizontalEvent({
   const { onMouseDown: onResizeStart } = useDrag(
     DRAGGING_TYPE_CREATORS.resizeEvent(`${uiModel.cid()}`),
     {
-      onDragStart: () => {
+      onInit: () => {
         setDraggingEventUIModel(uiModel);
       },
     }
@@ -186,7 +186,7 @@ export function HorizontalEvent({
   const { onMouseDown: onMoveStart } = useDrag(
     DRAGGING_TYPE_CREATORS.moveEvent(`${uiModel.cid()}`),
     {
-      onDragStart: () => {
+      onInit: () => {
         setDraggingEventUIModel(uiModel);
       },
       onMouseUp: () => {
