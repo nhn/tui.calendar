@@ -61,14 +61,6 @@ export function TimeGrid({
   const stickyContainerRef = useRef<HTMLDivElement>(null);
   const forceUpdate = useForceUpdate();
 
-  // const onCreateEvent = (e: TimeGridSelectionInfo) => {
-  //   // @TODO: beforeCreateEvent 구현
-  // };
-  // const onSelectionStart = (e: TimeGridSelectionInfo) => setGridSelection(e);
-  // const onSelectionChange = (e: TimeGridSelectionInfo) => setGridSelection(e);
-  // const onSelectionEnd = (e: TimeGridSelectionInfo) => onCreateEvent(e);
-  // const onSelectionCancel = () => setGridSelection(null);
-
   const onChangeCollapsed = (collapsed: boolean) =>
     setColumnLeft(collapsed ? timesWidth : calculateLeft(timesWidth, timezones));
 
