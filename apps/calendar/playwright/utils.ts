@@ -13,9 +13,6 @@ export async function dragAndDrop(
   options: Parameters<Locator['dragTo']>[1] = {}
 ) {
   await sourceLocator.dragTo(targetLocator, { ...options, force: true });
-
-  // NOTE: Handling re-render timing issue
-  await page.locator('body').hover();
 }
 
 export async function selectGridCells(

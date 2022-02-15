@@ -40,8 +40,9 @@ async function assertTimeGridSelection(
   );
 }
 
+// NOTE: Only firefox automatically scrolls into view at some random tests, so narrowing the range of movement.
 test.describe('TimeGrid Selection in week', () => {
-  const BASE_GRIDLINE_LOCATOR = 'data-testid=gridline-05:00-05:30';
+  const BASE_GRIDLINE_LOCATOR = 'data-testid=gridline-03:00-03:30';
   const GRID_SELECTION_SELECTOR = '[data-testid*="time-grid-selection"]';
 
   test('should be able to select a time slot with clicking', async ({ page }) => {
@@ -56,7 +57,7 @@ test.describe('TimeGrid Selection in week', () => {
     // Then
     await assertTimeGridSelection(timeGridSelectionLocator, {
       totalElements: 1,
-      formattedTimes: ['05:00', '05:30'],
+      formattedTimes: ['03:00', '03:30'],
       startTop: startGridLineBoundingBox.y,
       endBottom: startGridLineBoundingBox.y + startGridLineBoundingBox.height,
     });
@@ -65,7 +66,7 @@ test.describe('TimeGrid Selection in week', () => {
   test('should be able to select a range of time from top to bottom', async ({ page }) => {
     // Given
     const startGridLineLocator = page.locator(BASE_GRIDLINE_LOCATOR);
-    const targetGridLineLocator = page.locator(getGridLineLocator('10:00', '10:30'));
+    const targetGridLineLocator = page.locator(getGridLineLocator('05:00', '05:30'));
     const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
 
     const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
@@ -77,7 +78,7 @@ test.describe('TimeGrid Selection in week', () => {
     // Then
     await assertTimeGridSelection(timeGridSelectionLocator, {
       totalElements: 1,
-      formattedTimes: ['05:00', '10:30'],
+      formattedTimes: ['03:00', '05:30'],
       startTop: startGridLineBoundingBox.y,
       endBottom: targetGridLineBoundingBox.y + targetGridLineBoundingBox.height,
     });
@@ -103,7 +104,7 @@ test.describe('TimeGrid Selection in week', () => {
     // Then
     await assertTimeGridSelection(timeGridSelectionLocator, {
       totalElements: 4,
-      formattedTimes: ['05:00'],
+      formattedTimes: ['03:00'],
       startTop: startGridLineBoundingBox.y,
       endBottom: targetGridLineBoundingBox.y + targetGridLineBoundingBox.height,
     });
@@ -127,7 +128,7 @@ test.describe('TimeGrid Selection in week', () => {
     // Then
     await assertTimeGridSelection(timeGridSelectionLocator, {
       totalElements: 4,
-      formattedTimes: ['05:00'],
+      formattedTimes: ['03:00'],
       startTop: startGridLineBoundingBox.y,
       endBottom: startGridLineBoundingBox.y + startGridLineBoundingBox.height,
     });
@@ -136,7 +137,7 @@ test.describe('TimeGrid Selection in week', () => {
   test('should be able to select a range of time to lower right', async ({ page }) => {
     // Given
     const startGridLineLocator = page.locator(BASE_GRIDLINE_LOCATOR);
-    const targetGridLineLocator = page.locator(getGridLineLocator('11:00', '11:30'));
+    const targetGridLineLocator = page.locator(getGridLineLocator('05:00', '05:30'));
     const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
 
     const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
@@ -153,7 +154,7 @@ test.describe('TimeGrid Selection in week', () => {
     // Then
     await assertTimeGridSelection(timeGridSelectionLocator, {
       totalElements: 4,
-      formattedTimes: ['05:00'],
+      formattedTimes: ['03:00'],
       startTop: startGridLineBoundingBox.y,
       endBottom: targetGridLineBoundingBox.y + targetGridLineBoundingBox.height,
     });
@@ -174,7 +175,7 @@ test.describe('TimeGrid Selection in week', () => {
     // Then
     await assertTimeGridSelection(timeGridSelectionLocator, {
       totalElements: 1,
-      formattedTimes: ['01:00', '05:30'],
+      formattedTimes: ['01:00', '03:30'],
       startTop: targetGridLineBoundingBox.y,
       endBottom: startGridLineBoundingBox.y + startGridLineBoundingBox.height,
     });
@@ -183,7 +184,7 @@ test.describe('TimeGrid Selection in week', () => {
   test('should be able to select a range of time to lower left', async ({ page }) => {
     // Given
     const startGridLineLocator = page.locator(BASE_GRIDLINE_LOCATOR);
-    const targetGridLineLocator = page.locator(getGridLineLocator('11:00', '11:30'));
+    const targetGridLineLocator = page.locator(getGridLineLocator('05:00', '05:30'));
     const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
 
     const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
@@ -200,7 +201,7 @@ test.describe('TimeGrid Selection in week', () => {
     // Then
     await assertTimeGridSelection(timeGridSelectionLocator, {
       totalElements: 4,
-      formattedTimes: ['11:00'],
+      formattedTimes: ['05:00'],
       startTop: targetGridLineBoundingBox.y,
       endBottom: startGridLineBoundingBox.y + startGridLineBoundingBox.height,
     });
@@ -224,7 +225,7 @@ test.describe('TimeGrid Selection in week', () => {
     // Then
     await assertTimeGridSelection(timeGridSelectionLocator, {
       totalElements: 4,
-      formattedTimes: ['05:00'],
+      formattedTimes: ['03:00'],
       startTop: startGridLineBoundingBox.y,
       endBottom: startGridLineBoundingBox.y + startGridLineBoundingBox.height,
     });
