@@ -15,6 +15,7 @@ export function GridLines({ timeGridRows }: { timeGridRows: TimeGridRow[] }) {
             top: toPercent(time.top),
             height: toPercent(time.height),
           }}
+          data-testid={`gridline-${time.startTime}-${time.endTime}`}
         />
       ))}
     </div>

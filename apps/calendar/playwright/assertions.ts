@@ -3,7 +3,7 @@ import { expect, Page } from '@playwright/test';
 import { BoundingBox } from './types';
 import { getBoundingBox } from './utils';
 
-export async function assertGridSelectionMatching(
+export async function assertDayGridSelectionMatching(
   page: Page,
   startIdx: number,
   endIdx: number,

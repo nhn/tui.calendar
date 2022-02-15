@@ -1,6 +1,6 @@
 import { expect, Page, test } from '@playwright/test';
 
-import { assertGridSelectionMatching } from '../assertions';
+import { assertDayGridSelectionMatching } from '../assertions';
 import { WEEK_VIEW_PAGE_URL } from '../configs';
 import { selectGridCells } from '../utils';
 
@@ -14,7 +14,12 @@ function selectWeekGridCells(page: Page, startCellIndex: number, endCellIndex: n
 
 test.describe('DayGrid Selection in week', () => {
   function assertWeekGridSelectionMatching(page: Page, startIndex: number, endIndex: number) {
-    return assertGridSelectionMatching(page, startIndex, endIndex, '.toastui-calendar-panel-grid');
+    return assertDayGridSelectionMatching(
+      page,
+      startIndex,
+      endIndex,
+      '.toastui-calendar-panel-grid'
+    );
   }
 
   test('select 2 cells from left to right', async ({ page }) => {
