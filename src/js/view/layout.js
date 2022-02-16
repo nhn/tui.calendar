@@ -20,19 +20,14 @@ var View = require('./view');
 function Layout(container, theme) {
     container = domutil.appendHTMLElement('div', container, config.classname('layout'));
 
-    /**
-     * @type {HTMLElement}
-     */
-    this.container = container;
+    View.call(this, container);
 
-    /*eslint-disable*/
     /**
      * @type {Collection} Child view collection.
      */
     this.children = new Collection(function(childView) {
         return childView.viewName;
     });
-    /* eslint-enable*/
 
     /**
      * @type {Theme}
