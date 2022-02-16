@@ -258,7 +258,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options,
 
     // binding popup for schedule detail
     if (options.useDetailPopup) {
-        detailView = new ScheduleDetailPopup(layoutContainer, baseController.calendars);
+        detailView = new ScheduleDetailPopup(layoutContainer);
         onShowDetailPopup = function(eventData) {
             var scheduleId = eventData.schedule.calendarId;
             eventData.calendar = common.find(baseController.calendars, function(calendar) {
