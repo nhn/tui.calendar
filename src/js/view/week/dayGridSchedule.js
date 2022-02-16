@@ -17,7 +17,7 @@ var mmax = Math.max;
  *  make create easy.
  * @param {number} [options.scheduleHeight=18] - height of each schedule block.
  * @param {number} [options.scheduleGutter=2] - gutter height of each schedule block.
- * @param {HTMLDIVElement} container - DOM element to use container for this
+ * @param {HTMLDivElement} container - DOM element to use container for this
  *  view.
  */
 function DayGridSchedule(options, container) {
@@ -68,10 +68,6 @@ DayGridSchedule.prototype._getMinHeight = function(maxScheduleInDay) {
     var opt = this.options;
     var contentHeight = (maxScheduleInDay * opt.scheduleHeight)
         + ((maxScheduleInDay - 1) * opt.scheduleGutter);
-
-    // if (this.collapsed && this.aboutMe.maxHeight >= contentHeight + opt.containerBottomGutter) {
-    //     contentHeight += opt.containerBottomGutter;
-    // }
 
     return contentHeight;
 };
