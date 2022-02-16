@@ -209,11 +209,11 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
             });
         });
 
-        if (options.useCreationPopup && options.useDetailPopup) {
+        if (options.useCreationPopup && options.useDetailPopup && createView && detailView) {
             createView.off('beforeUpdateSchedule', onUpdateSchedule);
         }
 
-        if (options.useCreationPopup) {
+        if (options.useCreationPopup && createView) {
             if (creationHandler) {
                 creationHandler.off('beforeCreateSchedule', onShowCreationPopup);
             }
@@ -221,7 +221,7 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
             createView.destroy();
         }
 
-        if (options.useDetailPopup) {
+        if (options.useDetailPopup && detailView) {
             clickHandler.off('clickSchedule', onShowDetailPopup);
             detailView.off('beforeUpdateSchedule', onUpdateSchedule);
             detailView.off('beforeDeleteSchedule', onDeleteSchedule);

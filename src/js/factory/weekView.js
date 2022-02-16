@@ -320,12 +320,12 @@ module.exports = function(baseController, layoutContainer, dragHandler, options,
             });
         });
 
-        if (options.useCreationPopup) {
+        if (options.useCreationPopup && createView) {
             createView.off('beforeCreateSchedule', onSaveNewSchedule);
             createView.destroy();
         }
 
-        if (options.useDetailPopup) {
+        if (options.useDetailPopup && detailView) {
             detailView.off('beforeDeleteSchedule', onDeleteSchedule);
             detailView.destroy();
         }
