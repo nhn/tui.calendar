@@ -19,7 +19,7 @@ import {
   EVENT_HEIGHT,
   getRenderedEventUIModels,
 } from '@src/helpers/grid';
-import { dayGridMonthSelectionHelpers } from '@src/helpers/gridSelection';
+import { dayGridMonthSelectionHelper } from '@src/helpers/gridSelection';
 import { useDOMNode } from '@src/hooks/common/domNode';
 import { useDayGridMonthEventMove } from '@src/hooks/dayGridMonth/dayGridMonthEventMove';
 import {
@@ -84,8 +84,8 @@ export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidth
     type: 'dayGridMonth',
     gridPositionFinder,
     dateCollection: dateMatrix,
-    dateGetter: dayGridMonthSelectionHelpers.dateGetter,
-    selectionSorter: dayGridMonthSelectionHelpers.selectionSorter,
+    dateGetter: dayGridMonthSelectionHelper.getDateFromCollection,
+    selectionSorter: dayGridMonthSelectionHelper.sortSelection,
   });
   const { movingEvent, currentGridPos } = useDayGridMonthEventMove({
     dateMatrix,
@@ -104,7 +104,7 @@ export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidth
       {dateMatrix.map((week, rowIndex) => {
         const { uiModels, gridDateEventModelMap } = renderedEventUIModels[rowIndex];
         const isMouseInWeek = rowIndex === currentGridPos?.rowIndex;
-        const gridSelectionDataByRow = dayGridMonthSelectionHelpers.selectionCalculator(
+        const gridSelectionDataByRow = dayGridMonthSelectionHelper.calculateSelection(
           gridSelection,
           rowIndex,
           week.length

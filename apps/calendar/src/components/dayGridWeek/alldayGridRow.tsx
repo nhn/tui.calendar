@@ -8,7 +8,7 @@ import { Template } from '@src/components/template';
 import { DEFAULT_PANEL_HEIGHT, WEEK_EVENT_MARGIN_TOP } from '@src/constants/style';
 import { cls } from '@src/helpers/css';
 import { createGridPositionFinder, EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
-import { alldayGridRowSelectionHelpers } from '@src/helpers/gridSelection';
+import { alldayGridRowSelectionHelper } from '@src/helpers/gridSelection';
 import { useDOMNode } from '@src/hooks/common/domNode';
 import { useAlldayGridRowEventMove } from '@src/hooks/dayGridWeek/alldayGridRowEventMove';
 import { useAlldayGridRowEventResize } from '@src/hooks/dayGridWeek/alldayGridRowEventResize';
@@ -79,11 +79,11 @@ export function AlldayGridRow({
     type: 'dayGridWeek',
     gridPositionFinder,
     dateCollection: weekDates,
-    selectionSorter: alldayGridRowSelectionHelpers.selectionSorter,
-    dateGetter: alldayGridRowSelectionHelpers.dateGetter,
+    selectionSorter: alldayGridRowSelectionHelper.sortSelection,
+    dateGetter: alldayGridRowSelectionHelper.getDateFromCollection,
   });
 
-  const calculatedGridSelection = alldayGridRowSelectionHelpers.selectionCalculator(gridSelection);
+  const calculatedGridSelection = alldayGridRowSelectionHelper.calculateSelection(gridSelection);
 
   const { clickedIndex, isClickedCount, onClickExceedCount, onClickCollapseButton } =
     useGridRowHeightController(maxTop, category);

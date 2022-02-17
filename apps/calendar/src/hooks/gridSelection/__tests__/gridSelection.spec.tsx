@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event';
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
 import { EventBusProvider } from '@src/contexts/eventBus';
 import { createGridPositionFinder, createTimeGridData, getWeekDates } from '@src/helpers/grid';
-import { timeGridSelectionHelpers } from '@src/helpers/gridSelection';
+import { timeGridSelectionHelper } from '@src/helpers/gridSelection';
 import { useGridSelection } from '@src/hooks/gridSelection/gridSelection';
 import TZDate from '@src/time/date';
 import { EventBusImpl } from '@src/utils/eventBus';
@@ -322,7 +322,7 @@ describe('useGridSelection', () => {
       it(`should return grid selection data if drag event is fired at center to (${x}, ${y})`, () => {
         // Given
         const result = setup({
-          selectionSorter: timeGridSelectionHelpers.selectionSorter,
+          selectionSorter: timeGridSelectionHelper.sortSelection,
         });
         const container = screen.getByTestId('container');
 
@@ -348,9 +348,9 @@ describe('useGridSelection', () => {
       const showFormPopupAction = store.getState().dispatch.popup.showFormPopup;
       setup({
         useCreationPopup: true,
-        selectionSorter: timeGridSelectionHelpers.selectionSorter,
+        selectionSorter: timeGridSelectionHelper.sortSelection,
         dateCollection: timeGridData,
-        dateGetter: timeGridSelectionHelpers.dateGetter,
+        dateGetter: timeGridSelectionHelper.getDateFromCollection,
       });
       const container = screen.getByTestId('container');
 
@@ -371,9 +371,9 @@ describe('useGridSelection', () => {
       const showFormPopupAction = store.getState().dispatch.popup.showFormPopup;
       setup({
         useCreationPopup: true,
-        selectionSorter: timeGridSelectionHelpers.selectionSorter,
+        selectionSorter: timeGridSelectionHelper.sortSelection,
         dateCollection: timeGridData,
-        dateGetter: timeGridSelectionHelpers.dateGetter,
+        dateGetter: timeGridSelectionHelper.getDateFromCollection,
       });
       const container = screen.getByTestId('container');
 
@@ -400,9 +400,9 @@ describe('useGridSelection', () => {
       eventBus.on('selectDateTime', wrapMockHandler(mockHandler));
       setup({
         useCreationPopup: true,
-        selectionSorter: timeGridSelectionHelpers.selectionSorter,
+        selectionSorter: timeGridSelectionHelper.sortSelection,
         dateCollection: timeGridData,
-        dateGetter: timeGridSelectionHelpers.dateGetter,
+        dateGetter: timeGridSelectionHelper.getDateFromCollection,
       });
     });
 

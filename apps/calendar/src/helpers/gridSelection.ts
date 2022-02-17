@@ -1,21 +1,24 @@
 import type { useGridSelection } from '@src/hooks/gridSelection/gridSelection';
 import TZDate from '@src/time/date';
-import { clone, setTimeStrToDate } from '@src/time/datetime';
+import { setTimeStrToDate } from '@src/time/datetime';
 import { isBetween, isBetween as isBetweenValue } from '@src/utils/math';
 import { isNil, isPresent } from '@src/utils/type';
 
 import { GridPosition, TimeGridData } from '@t/grid';
 
-type GridSelectionHelpers<
+type RequiredGridSelectionHookParams = Pick<
+  Parameters<typeof useGridSelection>[0],
+  'selectionSorter' | 'dateGetter'
+>;
+type GridSelectionHelper<
   SelectionCalculator extends (
     gridSelection: GridSelectionData | null,
     ...rest: any[]
   ) => (TimeGridSelectionDataByCol | null) | (GridSelectionDataByRow | null)
-> = Omit<
-  Parameters<typeof useGridSelection>[0],
-  'type' | 'dateCollection' | 'gridPositionFinder'
-> & {
-  selectionCalculator: SelectionCalculator;
+> = {
+  sortSelection: RequiredGridSelectionHookParams['selectionSorter'];
+  getDateFromCollection: RequiredGridSelectionHookParams['dateGetter'];
+  calculateSelection: SelectionCalculator;
 };
 
 function createSortedGridSelection(
@@ -31,7 +34,7 @@ function createSortedGridSelection(
   };
 }
 
-function timeGridSelectionCalculatorByCurrentIndex(
+function calculateTimeGridSelectionByCurrentIndex(
   timeGridSelection: GridSelectionData | null,
   columnIndex: number
 ) {
@@ -67,17 +70,17 @@ function timeGridSelectionCalculatorByCurrentIndex(
 
   return resultGridSelection;
 }
-export const timeGridSelectionHelpers: GridSelectionHelpers<
-  typeof timeGridSelectionCalculatorByCurrentIndex
+export const timeGridSelectionHelper: GridSelectionHelper<
+  typeof calculateTimeGridSelectionByCurrentIndex
 > = {
-  selectionSorter: (initPos, currentPos) => {
+  sortSelection: (initPos, currentPos) => {
     const isReversed =
       initPos.columnIndex > currentPos.columnIndex ||
       (initPos.columnIndex === currentPos.columnIndex && initPos.rowIndex > currentPos.rowIndex);
 
     return createSortedGridSelection(initPos, currentPos, isReversed);
   },
-  dateGetter: (dateCollection, gridSelection) => {
+  getDateFromCollection: (dateCollection, gridSelection) => {
     const timeGridData = dateCollection as TimeGridData;
 
     const startDate = setTimeStrToDate(
@@ -91,10 +94,10 @@ export const timeGridSelectionHelpers: GridSelectionHelpers<
 
     return [startDate, endDate];
   },
-  selectionCalculator: timeGridSelectionCalculatorByCurrentIndex,
+  calculateSelection: calculateTimeGridSelectionByCurrentIndex,
 };
 
-function dayGridMonthCalculatorByCurrentIndex(
+function calculateDayGridMonthSelectionByCurrentIndex(
   gridSelection: GridSelectionData | null,
   currentIndex: number,
   weekLength: number
@@ -128,17 +131,17 @@ function dayGridMonthCalculatorByCurrentIndex(
 
   return resultGridSelection;
 }
-export const dayGridMonthSelectionHelpers: GridSelectionHelpers<
-  typeof dayGridMonthCalculatorByCurrentIndex
+export const dayGridMonthSelectionHelper: GridSelectionHelper<
+  typeof calculateDayGridMonthSelectionByCurrentIndex
 > = {
-  selectionSorter: (initPos, currentPos) => {
+  sortSelection: (initPos, currentPos) => {
     const isReversed =
       initPos.rowIndex > currentPos.rowIndex ||
       (initPos.rowIndex === currentPos.rowIndex && initPos.columnIndex > currentPos.columnIndex);
 
     return createSortedGridSelection(initPos, currentPos, isReversed);
   },
-  dateGetter: (dateCollection, gridSelection) => {
+  getDateFromCollection: (dateCollection, gridSelection) => {
     const dateMatrix = dateCollection as TZDate[][];
 
     return [
@@ -146,10 +149,10 @@ export const dayGridMonthSelectionHelpers: GridSelectionHelpers<
       dateMatrix[gridSelection.endRowIndex][gridSelection.endColumnIndex],
     ];
   },
-  selectionCalculator: dayGridMonthCalculatorByCurrentIndex,
+  calculateSelection: calculateDayGridMonthSelectionByCurrentIndex,
 };
 
-function alldayGridRowCalculatorByCurrentIndex(gridSelection: GridSelectionData | null) {
+function calculateAlldayGridRowSelectionByCurrentIndex(gridSelection: GridSelectionData | null) {
   return isPresent(gridSelection)
     ? {
         startCellIndex: gridSelection.startColumnIndex,
@@ -157,18 +160,18 @@ function alldayGridRowCalculatorByCurrentIndex(gridSelection: GridSelectionData 
       }
     : null;
 }
-export const alldayGridRowSelectionHelpers: GridSelectionHelpers<
-  typeof alldayGridRowCalculatorByCurrentIndex
+export const alldayGridRowSelectionHelper: GridSelectionHelper<
+  typeof calculateAlldayGridRowSelectionByCurrentIndex
 > = {
-  selectionSorter: (initPos, currentPos) => {
+  sortSelection: (initPos, currentPos) => {
     const isReversed = initPos.columnIndex > currentPos.columnIndex;
 
     return createSortedGridSelection(initPos, currentPos, isReversed);
   },
-  dateGetter: (dateCollection, gridSelection) => {
+  getDateFromCollection: (dateCollection, gridSelection) => {
     const weekDates = dateCollection as TZDate[];
 
     return [weekDates[gridSelection.startColumnIndex], weekDates[gridSelection.endColumnIndex]];
   },
-  selectionCalculator: alldayGridRowCalculatorByCurrentIndex,
+  calculateSelection: calculateAlldayGridRowSelectionByCurrentIndex,
 };

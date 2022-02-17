@@ -10,7 +10,7 @@ import { isBetween } from '@src/controller/column';
 import { getTopPercentByTime } from '@src/controller/times';
 import { cls, toPercent, toPx } from '@src/helpers/css';
 import { createGridPositionFinder } from '@src/helpers/grid';
-import { timeGridSelectionHelpers } from '@src/helpers/gridSelection';
+import { timeGridSelectionHelper } from '@src/helpers/gridSelection';
 import { useDOMNode } from '@src/hooks/common/domNode';
 import { useGridSelection } from '@src/hooks/gridSelection/gridSelection';
 import EventUIModel from '@src/model/eventUIModel';
@@ -135,8 +135,8 @@ export function TimeGrid({
   const { onMouseDown, gridSelection: timeGridSelection } = useGridSelection({
     type: 'timeGrid',
     gridPositionFinder,
-    selectionSorter: timeGridSelectionHelpers.selectionSorter,
-    dateGetter: timeGridSelectionHelpers.dateGetter,
+    selectionSorter: timeGridSelectionHelper.sortSelection,
+    dateGetter: timeGridSelectionHelper.getDateFromCollection,
     dateCollection: timeGridData,
   });
 
@@ -152,7 +152,7 @@ export function TimeGrid({
         >
           <GridLines timeGridRows={rows} />
           {columns.map((column, index) => {
-            const gridSelection = timeGridSelectionHelpers.selectionCalculator(
+            const gridSelection = timeGridSelectionHelper.calculateSelection(
               timeGridSelection,
               index
             );
