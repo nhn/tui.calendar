@@ -41,6 +41,8 @@ async function assertTimeGridSelection(
 }
 
 // NOTE: Only firefox automatically scrolls into view at some random tests, so narrowing the range of movement.
+// Maybe `scrollIntoViewIfNeeded` is not supported in the firefox?
+// reference: https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoViewIfNeeded
 test.describe('TimeGrid Selection in week', () => {
   const BASE_GRIDLINE_LOCATOR = 'data-testid=gridline-03:00-03:30';
   const GRID_SELECTION_SELECTOR = '[data-testid*="time-grid-selection"]';
