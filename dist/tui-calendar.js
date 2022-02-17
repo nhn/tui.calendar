@@ -1,6 +1,6 @@
 /*!
  * TOAST UI Calendar
- * @version 1.15.2 | Wed Jan 05 2022
+ * @version 1.15.3 | Thu Feb 17 2022
  * @author NHN FE Development Lab <dl_javascript@nhn.com>
  * @license MIT
  */
@@ -6609,7 +6609,7 @@ var config = __webpack_require__(/*! ../config */ "./src/js/config.js"),
  * @constructor
  * @extends {View}
  * @param {object} options - options for floating layer module
- * @param {HTMLElement} container - parent continer for floating layer
+ * @param {HTMLElement} container - parent container for floating layer
  */
 function FloatingLayer(options, container) {
     var sibling = container[FloatingLayer.PROP_KEY],
@@ -12435,7 +12435,7 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
 
     // binding popup for schedule detail
     if (options.useDetailPopup) {
-        detailView = new ScheduleDetailPopup(layoutContainer, baseController.calendars);
+        detailView = new ScheduleDetailPopup(layoutContainer);
         onShowDetailPopup = function(eventData) {
             var scheduleId = eventData.schedule.calendarId;
             eventData.calendar = common.find(baseController.calendars, function(calendar) {
@@ -12517,11 +12517,11 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
             });
         });
 
-        if (options.useCreationPopup && options.useDetailPopup) {
+        if (options.useCreationPopup && options.useDetailPopup && createView && detailView) {
             createView.off('beforeUpdateSchedule', onUpdateSchedule);
         }
 
-        if (options.useCreationPopup) {
+        if (options.useCreationPopup && createView) {
             if (creationHandler) {
                 creationHandler.off('beforeCreateSchedule', onShowCreationPopup);
             }
@@ -12529,7 +12529,7 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
             createView.destroy();
         }
 
-        if (options.useDetailPopup) {
+        if (options.useDetailPopup && detailView) {
             clickHandler.off('clickSchedule', onShowDetailPopup);
             detailView.off('beforeUpdateSchedule', onUpdateSchedule);
             detailView.off('beforeDeleteSchedule', onDeleteSchedule);
@@ -12837,7 +12837,7 @@ module.exports = function(baseController, layoutContainer, dragHandler, options,
 
     // binding popup for schedule detail
     if (options.useDetailPopup) {
-        detailView = new ScheduleDetailPopup(layoutContainer, baseController.calendars);
+        detailView = new ScheduleDetailPopup(layoutContainer);
         onShowDetailPopup = function(eventData) {
             var scheduleId = eventData.schedule.calendarId;
             eventData.calendar = common.find(baseController.calendars, function(calendar) {
@@ -12899,12 +12899,12 @@ module.exports = function(baseController, layoutContainer, dragHandler, options,
             });
         });
 
-        if (options.useCreationPopup) {
+        if (options.useCreationPopup && createView) {
             createView.off('beforeCreateSchedule', onSaveNewSchedule);
             createView.destroy();
         }
 
-        if (options.useDetailPopup) {
+        if (options.useDetailPopup && detailView) {
             detailView.off('beforeDeleteSchedule', onDeleteSchedule);
             detailView.destroy();
         }
@@ -20418,6 +20418,8 @@ var common = __webpack_require__(/*! ../common/common */ "./src/js/common/common
 
 /**
  * Theme manager
+ *
+ * @constructor
  * @param {object} customTheme - custom theme
  */
 function Theme(customTheme) {
@@ -20803,19 +20805,14 @@ var View = __webpack_require__(/*! ./view */ "./src/js/view/view.js");
 function Layout(container, theme) {
     container = domutil.appendHTMLElement('div', container, config.classname('layout'));
 
-    /**
-     * @type {HTMLElement}
-     */
-    this.container = container;
+    View.call(this, container);
 
-    /*eslint-disable*/
     /**
      * @type {Collection} Child view collection.
      */
     this.children = new Collection(function(childView) {
         return childView.viewName;
     });
-    /* eslint-enable*/
 
     /**
      * @type {Theme}
@@ -25254,7 +25251,7 @@ module.exports = (Handlebars['default'] || Handlebars).template({"1":function(co
     + alias1(container.lambda(((stack1 = (data && lookupProperty(data,"root"))) && lookupProperty(stack1,"scheduleHeight")), depth0))
     + "px;\">&nbsp;</span>";
 },"compiler":[8,">= 4.3.0"],"main":function(container,depth0,helpers,partials,data) {
-    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=container.hooks.helperMissing, alias3="function", alias4=container.escapeExpression, lookupProperty = container.lookupProperty || function(parent, propertyName) {
+    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=container.escapeExpression, lookupProperty = container.lookupProperty || function(parent, propertyName) {
         if (Object.prototype.hasOwnProperty.call(parent, propertyName)) {
           return parent[propertyName];
         }
@@ -25262,11 +25259,9 @@ module.exports = (Handlebars['default'] || Handlebars).template({"1":function(co
     };
 
   return "<div class=\""
-    + alias4(((helper = (helper = lookupProperty(helpers,"CSS_PREFIX") || (depth0 != null ? lookupProperty(depth0,"CSS_PREFIX") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data,"loc":{"start":{"line":1,"column":12},"end":{"line":1,"column":26}}}) : helper)))
-    + "weekday-schedules "
-    + alias4(((helper = (helper = lookupProperty(helpers,"collapsed") || (depth0 != null ? lookupProperty(depth0,"collapsed") : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"collapsed","hash":{},"data":data,"loc":{"start":{"line":1,"column":44},"end":{"line":1,"column":57}}}) : helper)))
-    + "\"style=\"top:"
-    + alias4(container.lambda(((stack1 = (data && lookupProperty(data,"root"))) && lookupProperty(stack1,"scheduleContainerTop")), depth0))
+    + alias2(((helper = (helper = lookupProperty(helpers,"CSS_PREFIX") || (depth0 != null ? lookupProperty(depth0,"CSS_PREFIX") : depth0)) != null ? helper : container.hooks.helperMissing),(typeof helper === "function" ? helper.call(alias1,{"name":"CSS_PREFIX","hash":{},"data":data,"loc":{"start":{"line":1,"column":12},"end":{"line":1,"column":26}}}) : helper)))
+    + "weekday-schedules\" style=\"top:"
+    + alias2(container.lambda(((stack1 = (data && lookupProperty(data,"root"))) && lookupProperty(stack1,"scheduleContainerTop")), depth0))
     + "px;\">\n"
     + ((stack1 = lookupProperty(helpers,"each").call(alias1,(depth0 != null ? lookupProperty(depth0,"matrices") : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data,"loc":{"start":{"line":2,"column":4},"end":{"line":28,"column":15}}})) != null ? stack1 : "")
     + "</div>\n";
@@ -26693,7 +26688,7 @@ var mmax = Math.max;
  *  make create easy.
  * @param {number} [options.scheduleHeight=18] - height of each schedule block.
  * @param {number} [options.scheduleGutter=2] - gutter height of each schedule block.
- * @param {HTMLDIVElement} container - DOM element to use container for this
+ * @param {HTMLDivElement} container - DOM element to use container for this
  *  view.
  */
 function DayGridSchedule(options, container) {
@@ -26744,10 +26739,6 @@ DayGridSchedule.prototype._getMinHeight = function(maxScheduleInDay) {
     var opt = this.options;
     var contentHeight = (maxScheduleInDay * opt.scheduleHeight)
         + ((maxScheduleInDay - 1) * opt.scheduleGutter);
-
-    // if (this.collapsed && this.aboutMe.maxHeight >= contentHeight + opt.containerBottomGutter) {
-    //     contentHeight += opt.containerBottomGutter;
-    // }
 
     return contentHeight;
 };
