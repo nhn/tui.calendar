@@ -65,10 +65,10 @@ test.describe('TimeGrid Selection in week', () => {
     });
   });
 
-  test('should be able to select a range of time from top to bottom', async ({ page }) => {
+  test('should be able to select a range of time from bottom to top', async ({ page }) => {
     // Given
     const startGridLineLocator = page.locator(BASE_GRIDLINE_LOCATOR);
-    const targetGridLineLocator = page.locator(getGridLineLocator('05:00', '05:30'));
+    const targetGridLineLocator = page.locator(getGridLineLocator('01:00', '01:30'));
     const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
 
     const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
@@ -80,9 +80,9 @@ test.describe('TimeGrid Selection in week', () => {
     // Then
     await assertTimeGridSelection(timeGridSelectionLocator, {
       totalElements: 1,
-      formattedTimes: ['03:00', '05:30'],
-      startTop: startGridLineBoundingBox.y,
-      endBottom: targetGridLineBoundingBox.y + targetGridLineBoundingBox.height,
+      formattedTimes: ['01:00', '03:30'],
+      startTop: targetGridLineBoundingBox.y,
+      endBottom: startGridLineBoundingBox.y + startGridLineBoundingBox.height,
     });
   });
 
@@ -162,10 +162,10 @@ test.describe('TimeGrid Selection in week', () => {
     });
   });
 
-  test('should be able to select a range of time from bottom to top', async ({ page }) => {
+  test('should be able to select a range of time from top to bottom', async ({ page }) => {
     // Given
     const startGridLineLocator = page.locator(BASE_GRIDLINE_LOCATOR);
-    const targetGridLineLocator = page.locator(getGridLineLocator('01:00', '01:30'));
+    const targetGridLineLocator = page.locator(getGridLineLocator('05:00', '05:30'));
     const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
 
     const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
@@ -177,9 +177,9 @@ test.describe('TimeGrid Selection in week', () => {
     // Then
     await assertTimeGridSelection(timeGridSelectionLocator, {
       totalElements: 1,
-      formattedTimes: ['01:00', '03:30'],
-      startTop: targetGridLineBoundingBox.y,
-      endBottom: startGridLineBoundingBox.y + startGridLineBoundingBox.height,
+      formattedTimes: ['03:00', '05:30'],
+      startTop: startGridLineBoundingBox.y,
+      endBottom: targetGridLineBoundingBox.y + targetGridLineBoundingBox.height,
     });
   });
 
