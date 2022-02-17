@@ -1,6 +1,6 @@
 import { expect, Page, test } from '@playwright/test';
 
-import { assertGridSelectionMatching } from '../assertions';
+import { assertDayGridSelectionMatching } from '../assertions';
 import { MONTH_VIEW_PAGE_URL } from '../configs';
 import { selectGridCells } from '../utils';
 
@@ -27,7 +27,7 @@ test.describe('Selection', () => {
   }
 
   function assertMonthGridSelectionMatching(page: Page, startIndex: number, endIndex: number) {
-    return assertGridSelectionMatching(
+    return assertDayGridSelectionMatching(
       page,
       startIndex,
       endIndex,

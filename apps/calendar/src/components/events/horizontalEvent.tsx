@@ -175,33 +175,27 @@ export function HorizontalEvent({
 
   const eventContainerRef = useRef<HTMLDivElement>(null);
 
-  const { onMouseDown: onResizeStart } = useDrag(
-    DRAGGING_TYPE_CREATORS.resizeEvent(`${uiModel.cid()}`),
-    {
-      onDragStart: () => {
-        setDraggingEventUIModel(uiModel);
-      },
-    }
-  );
-  const { onMouseDown: onMoveStart } = useDrag(
-    DRAGGING_TYPE_CREATORS.moveEvent(`${uiModel.cid()}`),
-    {
-      onDragStart: () => {
-        setDraggingEventUIModel(uiModel);
-      },
-      onDragEnd: () => {
-        if (!isDragging && eventContainerRef.current && useDetailPopup) {
-          showDetailPopup(
-            {
-              event: uiModel.model,
-              eventRect: eventContainerRef.current.getBoundingClientRect(),
-            },
-            flat
-          );
-        }
-      },
-    }
-  );
+  const onResizeStart = useDrag(DRAGGING_TYPE_CREATORS.resizeEvent(`${uiModel.cid()}`), {
+    onInit: () => {
+      setDraggingEventUIModel(uiModel);
+    },
+  });
+  const onMoveStart = useDrag(DRAGGING_TYPE_CREATORS.moveEvent(`${uiModel.cid()}`), {
+    onInit: () => {
+      setDraggingEventUIModel(uiModel);
+    },
+    onMouseUp: () => {
+      if (!isDragging && eventContainerRef.current && useDetailPopup) {
+        showDetailPopup(
+          {
+            event: uiModel.model,
+            eventRect: eventContainerRef.current.getBoundingClientRect(),
+          },
+          flat
+        );
+      }
+    },
+  });
   const handleClick = (nativeEvent: MouseEvent) =>
     eventBus.fire('clickEvent', { event: uiModel.model, nativeEvent });
 
@@ -223,7 +217,7 @@ export function HorizontalEvent({
     <div
       className={dayEventBlockClassName}
       style={containerStyle}
-      data-test-id={passConditionalProp(isDraggableEvent, getTestId(uiModel))}
+      data-testid={passConditionalProp(isDraggableEvent, getTestId(uiModel))}
       ref={eventContainerRef}
       onClick={passConditionalProp(isDraggableEvent, handleClick)}
     >

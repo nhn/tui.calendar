@@ -12,6 +12,7 @@ interface Props {
 export function MoreEventsButton({ number, onClickButton, className }: Props) {
   const { reset } = useDispatch('dnd');
 
+  // prevent unexpected grid selection when clicking on the button
   const handleMouseDown = (e: MouseEvent) => {
     e.stopPropagation();
   };
@@ -22,7 +23,6 @@ export function MoreEventsButton({ number, onClickButton, className }: Props) {
   };
 
   return (
-    // NOTE: use `onMouseDown` event to prevent `useDrag` from firing
     <button type="button" onMouseDown={handleMouseDown} onClick={handleClick} className={className}>
       <Template template="monthGridHeaderExceed" model={number} />
     </button>

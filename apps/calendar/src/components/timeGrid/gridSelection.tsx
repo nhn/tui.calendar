@@ -1,33 +1,26 @@
 import { h } from 'preact';
 
-import { timeFormats } from '@src/components/timeGrid';
 import { cls, toPercent } from '@src/helpers/css';
-import { toFormat } from '@src/time/datetime';
 
-import { TimeGridSelectionInfo } from '@t/components/timeGrid/gridSelection';
-
-interface Props extends TimeGridSelectionInfo {
+interface Props {
   top: number;
   height: number;
+  text: string;
 }
 
-export function GridSelection({ start, end, unit, top, height, textPosition }: Props) {
-  const format = timeFormats[unit];
-  const text = `${toFormat(start, format)} - ${toFormat(end, format)}`;
+export function GridSelection({ top, height, text }: Props) {
   const style = {
     top: toPercent(top),
     height: toPercent(height),
   };
 
   return (
-    <div className={cls('grid-selection')} style={style}>
-      <span
-        className={cls('grid-selection-label', {
-          'grid-selection-label-bottom': textPosition === 'bottom',
-        })}
-      >
-        {text}
-      </span>
+    <div
+      className={cls('grid-selection')}
+      style={style}
+      data-testid={`time-grid-selection-${top}-${height}`}
+    >
+      {text.length > 0 ? <span className={cls('grid-selection-label')}>{text}</span> : null}
     </div>
   );
 }

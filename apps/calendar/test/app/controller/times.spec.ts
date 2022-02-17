@@ -1,23 +1,5 @@
-import {
-  getNextGridTime,
-  getPrevGridTime,
-  getPrevGridTimeFromMouseEvent,
-  getTopPercentByTime,
-} from '@src/controller/times';
-import { cls } from '@src/helpers/css';
+import { getNextGridTime, getPrevGridTime, getTopPercentByTime } from '@src/controller/times';
 import TZDate from '@src/time/date';
-
-import { createMouseEvent } from '@test/helper';
-
-import { TimeUnit } from '@t/events';
-
-interface TestData {
-  unit: TimeUnit;
-  slot: number;
-  startGridTime: TZDate;
-  endGridTime: TZDate;
-  expected: TZDate;
-}
 
 describe('times controller', () => {
   describe('getTopPercentByTimeUnit() calculate top pixel value between start date, end date', () => {
@@ -240,85 +222,5 @@ describe('times controller', () => {
     const nextGridTime = new TZDate('2016-01-01T00:00:00');
 
     expect(result).toEqual(nextGridTime);
-  });
-
-  const tests: Array<TestData> = [
-    {
-      unit: 'minute',
-      slot: 10,
-      startGridTime: new TZDate('2015-05-05T00:00:00'),
-      endGridTime: new TZDate('2015-05-05T12:40:00'),
-      expected: new TZDate('2015-05-05T06:20:00'),
-    },
-    {
-      unit: 'hour',
-      slot: 1,
-      startGridTime: new TZDate('2015-05-05T00:00:00'),
-      endGridTime: new TZDate('2015-05-06T00:00:00'),
-      expected: new TZDate('2015-05-05T12:00:00'),
-    },
-    {
-      unit: 'date',
-      slot: 1,
-      startGridTime: new TZDate('2015-05-01T00:00:00'),
-      endGridTime: new TZDate('2015-05-31T00:00:00'),
-      expected: new TZDate('2015-05-16T00:00:00'),
-    },
-    {
-      unit: 'month',
-      slot: 1,
-      startGridTime: new TZDate('2015-01-01T00:00:00'),
-      endGridTime: new TZDate('2016-01-01T00:00:00'),
-      expected: new TZDate('2015-07-01T00:00:00'),
-    },
-    {
-      unit: 'year',
-      slot: 1,
-      startGridTime: new TZDate('2015-01-01T00:00:00'),
-      endGridTime: new TZDate('2025-01-01T00:00:00'),
-      expected: new TZDate('2020-01-01T00:00:00'),
-    },
-  ];
-
-  describe('getPrevGridTimeFromMouseEvent() with unit', () => {
-    let container = document.createElement('div');
-
-    beforeEach(() => {
-      container = document.createElement('div');
-      container.className = cls('column');
-      container.style.position = 'absolute';
-      container.style.top = '0px';
-      container.style.height = '230px';
-      container.style.width = '70px';
-      document.body.appendChild(container);
-    });
-
-    afterEach(() => {
-      document.body.removeChild(container);
-    });
-
-    tests.forEach(({ unit, slot, startGridTime, endGridTime, expected }) => {
-      it(`'${unit}'`, () => {
-        return new Promise((done) => {
-          const vMouseEvent = createMouseEvent('click', {
-            clientX: 10,
-            clientY: 115,
-          });
-          container.addEventListener('click', () => {
-            const result = getPrevGridTimeFromMouseEvent(
-              vMouseEvent,
-              { start: startGridTime, end: endGridTime, slot, unit },
-              cls('column')
-            );
-
-            expect(result).toEqual(expected);
-
-            done(true);
-          });
-
-          container.dispatchEvent(vMouseEvent);
-        });
-      });
-    });
   });
 });

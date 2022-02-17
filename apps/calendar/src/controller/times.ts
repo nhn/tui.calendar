@@ -1,17 +1,8 @@
-import getMousePosition from 'tui-code-snippet/domEvent/getMousePosition';
-import getTarget from 'tui-code-snippet/domEvent/getTarget';
-
-import { ColumnInfo } from '@src/components/timeGrid/columnWithMouse';
 import TZDate from '@src/time/date';
-import { addMilliseconds, addSeconds, clone, millisecondsTo } from '@src/time/datetime';
-import { closest, getSize } from '@src/utils/dom';
+import { clone } from '@src/time/datetime';
 import { limit, ratio } from '@src/utils/math';
 
 import { TimeUnit } from '@t/events';
-
-const DEFAULT_SLOT = 30;
-
-type GridColumnInfo = Omit<ColumnInfo, 'times'>;
 
 /**
  * @param date
@@ -115,55 +106,4 @@ export function getNextGridTime(time: TZDate, slot: number, unit: TimeUnit) {
   } while (nextGridTime < time);
 
   return nextGridTime;
-}
-
-/**
- * Get Y index ratio(unit like hour) in time grids by supplied parameters.
- * @param {TZDate} startTime - start time
- * @param {number} y - Y coordinate to calculate hour ratio.
- * @param {number} height - container element height.
- * @param {number} baseMs - base milliseconds number for supplied height.
- * @returns {number} hour index ratio value.
- */
-function convertYPosToTime(startTime: TZDate, y: number, height: number, baseMs: number) {
-  const secondsOfY = millisecondsTo('second', (y * baseMs) / height);
-
-  return addSeconds(startTime, secondsOfY);
-}
-
-/**
- * Get a nearest grid time from mouseEvent between startTime and endTime
- * @param {MouseEvent} mouseEvent - mouse event
- * @param gridColumnInfo
- * @param {string} containerSelector - a selector of container element to limit
- * @returns {number} nearestGridTimeY - nearest grid time of yAxis
- */
-export function getPrevGridTimeFromMouseEvent(
-  mouseEvent: MouseEvent,
-  gridColumnInfo: GridColumnInfo,
-  containerSelector: string
-) {
-  const {
-    start: startGridTime,
-    end: endGridTime,
-    slot = DEFAULT_SLOT,
-    unit = 'minute',
-  } = gridColumnInfo;
-  const target = getTarget(mouseEvent);
-  const container = closest(target, containerSelector) || target;
-  const { height: containerHeight } = getSize(container);
-  const containerMilliseconds = endGridTime.getTime() - startGridTime.getTime();
-
-  const [, mouseY] = getMousePosition(mouseEvent, container);
-  let time = convertYPosToTime(startGridTime, mouseY, containerHeight, containerMilliseconds);
-
-  if (time < startGridTime) {
-    time = clone(startGridTime);
-  } else if (time >= endGridTime) {
-    time = addMilliseconds(endGridTime, -1);
-  } else {
-    time = addMilliseconds(time, 1);
-  }
-
-  return getPrevGridTime(time, slot, unit);
 }

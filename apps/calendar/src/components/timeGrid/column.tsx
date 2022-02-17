@@ -10,34 +10,16 @@ import { cls, toPercent } from '@src/helpers/css';
 import { isBackgroundEvent } from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
+import { setTimeStrToDate } from '@src/time/datetime';
 import { first, last } from '@src/utils/array';
 
-import { TimeGridSelectionInfo } from '@t/components/timeGrid/gridSelection';
 import { TimeGridRow } from '@t/grid';
 
 const classNames = {
   column: cls('column'),
-  grid: cls('grid'),
   backgrounds: cls('background-events'),
   events: cls('events'),
 };
-
-function GridLines({ timeGridRows }: { timeGridRows: TimeGridRow[] }) {
-  return (
-    <div className={classNames.grid}>
-      {timeGridRows.map((time, index) => (
-        <div
-          key={`gridline-${time.startTime}-${time.endTime}`}
-          className={cls('gridline-half', `gridline-half--${index % 2 === 1 ? 'lower' : 'upper'}`)}
-          style={{
-            top: toPercent(time.top),
-            height: toPercent(time.height),
-          }}
-        />
-      ))}
-    </div>
-  );
-}
 
 function BackgroundEvents({
   events,
@@ -95,31 +77,9 @@ function VerticalEvents({
   );
 }
 
-function TimeGridSelection({
-  gridSelection,
-  startTime,
-  endTime,
-}: {
-  gridSelection: TimeGridSelectionInfo | null;
-  startTime: TZDate;
-  endTime: TZDate;
-}) {
-  if (!gridSelection) {
-    return null;
-  }
-
-  const { top, height } = getTopHeightByTime(
-    gridSelection.start,
-    gridSelection.end,
-    startTime,
-    endTime
-  );
-
-  return <GridSelection {...gridSelection} top={top} height={height} />;
-}
-
 interface Props {
   timeGridRows: TimeGridRow[];
+  gridSelection: TimeGridSelectionDataByCol | null;
   columnDate: TZDate;
   columnWidth: string;
   events: EventUIModel[];
@@ -127,20 +87,52 @@ interface Props {
   readOnly?: boolean;
 }
 
-export function Column({ columnDate, columnWidth, events, timeGridRows, backgroundColor }: Props) {
+export function Column({
+  columnDate,
+  columnWidth,
+  events,
+  timeGridRows,
+  gridSelection,
+  backgroundColor,
+}: Props) {
   const [startTime, endTime] = useMemo(() => {
     const { startTime: startTimeStr } = first(timeGridRows);
     const { endTime: endTimeStr } = last(timeGridRows);
-    const startHourAndMinutes = startTimeStr.split(':').map(Number) as [number, number];
-    const endHourAndMinutes = endTimeStr.split(':').map(Number) as [number, number];
 
-    const start = new TZDate(columnDate);
-    const end = new TZDate(columnDate);
-    start.setHours(...startHourAndMinutes);
-    end.setHours(...endHourAndMinutes);
+    const start = setTimeStrToDate(columnDate, startTimeStr);
+    const end = setTimeStrToDate(columnDate, endTimeStr);
 
     return [start, end];
   }, [columnDate, timeGridRows]);
+
+  const gridSelectionProps = useMemo(() => {
+    if (!gridSelection) {
+      return null;
+    }
+
+    const { startRowIndex, endRowIndex, isStartingColumn, isSelectingMultipleColumns } =
+      gridSelection;
+
+    const { top: startRowTop, startTime: startRowStartTime } = timeGridRows[startRowIndex];
+    const {
+      top: endRowTop,
+      height: endRowHeight,
+      endTime: endRowEndTime,
+    } = timeGridRows[endRowIndex];
+
+    const gridSelectionHeight = endRowTop + endRowHeight - startRowTop;
+
+    let text = `${startRowStartTime} - ${endRowEndTime}`;
+    if (isSelectingMultipleColumns) {
+      text = isStartingColumn ? startRowStartTime : '';
+    }
+
+    return {
+      top: startRowTop,
+      height: gridSelectionHeight,
+      text,
+    };
+  }, [gridSelection, timeGridRows]);
 
   const style = {
     width: columnWidth,
@@ -149,8 +141,8 @@ export function Column({ columnDate, columnWidth, events, timeGridRows, backgrou
 
   return (
     <div className={classNames.column} style={style}>
-      <GridLines timeGridRows={timeGridRows} />
       <BackgroundEvents events={events} startTime={startTime} endTime={endTime} />
+      {gridSelectionProps ? <GridSelection {...gridSelectionProps} /> : null}
       <VerticalEvents events={events} startTime={startTime} endTime={endTime} />
     </div>
   );

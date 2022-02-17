@@ -1,4 +1,4 @@
-import { PlaywrightTestConfig } from '@playwright/test';
+import { PlaywrightTestConfig, devices } from '@playwright/test';
 
 const config: PlaywrightTestConfig = {
   testDir: 'apps/calendar/playwright',
@@ -6,7 +6,14 @@ const config: PlaywrightTestConfig = {
   forbidOnly: !!process.env.CI,
   workers: process.env.CI ? 2 : undefined,
   use: {
-    screenshot: process.env.CI ? undefined : 'only-on-failure',
+    trace: process.env.CI ? undefined : 'retain-on-failure',
+    viewport: {
+      width: 1600,
+      height: 900,
+    },
+    launchOptions: {
+      slowMo: 100,
+    }
   },
   webServer: {
     command: process.env.CI

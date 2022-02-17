@@ -5,15 +5,12 @@ import { getLeftAndWidth } from '@src/helpers/grid';
 import TZDate from '@src/time/date';
 
 interface Props {
-  gridSelectionData: GridSelectionDataByRow | null;
+  gridSelectionData: GridSelectionDataByRow;
   weekDates: TZDate[];
   narrowWeekend: boolean;
 }
 
 export function GridSelection({ gridSelectionData, weekDates, narrowWeekend }: Props) {
-  if (!gridSelectionData) {
-    return null;
-  }
   const { startCellIndex, endCellIndex } = gridSelectionData;
 
   const { left, width } = getLeftAndWidth(

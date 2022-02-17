@@ -25,10 +25,10 @@ test.describe('event resizing', () => {
    */
 
   // target event is rendered from #7 to #16
-  const RESIZE_TARGET_SELECTOR = 'data-test-id=0-event1';
+  const RESIZE_TARGET_SELECTOR = 'data-testid=0-event1';
 
   function getResizeIconOfEvent(eventLocator: Locator) {
-    return eventLocator.last().locator('data-test-id=horizontal-event-resize-icon');
+    return eventLocator.last().locator('data-testid=horizontal-event-resize-icon');
   }
 
   function getTargetCellSelector(cellIndex: number) {
@@ -42,7 +42,7 @@ test.describe('event resizing', () => {
     const targetCellLocator = page.locator(getTargetCellSelector(19));
 
     // When
-    await dragAndDrop(page, resizeIconLocator, targetCellLocator);
+    await dragAndDrop(resizeIconLocator, targetCellLocator);
 
     // Then
     expect(await renderedEventsLocator.count()).toBe(2);
@@ -59,7 +59,7 @@ test.describe('event resizing', () => {
     const targetCellLocator = page.locator(getTargetCellSelector(14));
 
     // When
-    await dragAndDrop(page, resizeIconLocator, targetCellLocator);
+    await dragAndDrop(resizeIconLocator, targetCellLocator);
 
     // Then
     expect(await renderedEventsLocator.count()).toBe(2);
@@ -76,7 +76,7 @@ test.describe('event resizing', () => {
     const targetCellLocator = page.locator(getTargetCellSelector(31));
 
     // When
-    await dragAndDrop(page, resizeIconLocator, targetCellLocator);
+    await dragAndDrop(resizeIconLocator, targetCellLocator);
 
     // Then
     expect(await renderedEventsLocator.count()).toBe(4);
@@ -93,7 +93,7 @@ test.describe('event resizing', () => {
     const targetCellLocator = page.locator(getTargetCellSelector(28));
 
     // When
-    await dragAndDrop(page, resizeIconLocator, targetCellLocator);
+    await dragAndDrop(resizeIconLocator, targetCellLocator);
 
     // Then
     expect(await eventsLocator.count()).toBe(4);
@@ -110,7 +110,7 @@ test.describe('event resizing', () => {
     const targetCellLocator = page.locator(getTargetCellSelector(13));
 
     // When
-    await dragAndDrop(page, resizeIconLocator, targetCellLocator);
+    await dragAndDrop(resizeIconLocator, targetCellLocator);
 
     // Then
     expect(await eventsLocator.count()).toBe(1);
@@ -127,7 +127,7 @@ test.describe('event resizing', () => {
     const targetCellLocator = page.locator(getTargetCellSelector(7));
 
     // When
-    await dragAndDrop(page, resizeIconLocator, targetCellLocator);
+    await dragAndDrop(resizeIconLocator, targetCellLocator);
 
     // Then
     expect(await eventsLocator.count()).toBe(1);
@@ -147,7 +147,7 @@ test.describe('event resizing', () => {
     const expectedCellLocator = page.locator(getTargetCellSelector(16));
 
     // When
-    await dragAndDrop(page, resizeIconLocator, targetCellLocator);
+    await dragAndDrop(resizeIconLocator, targetCellLocator);
 
     // Then
     expect(await eventsLocator.count()).toBe(2);

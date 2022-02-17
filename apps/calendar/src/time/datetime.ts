@@ -6,7 +6,7 @@ import { fill } from '@src/utils/array';
 
 import { TimeUnit } from '@t/events';
 import { MonthOptions } from '@t/options';
-import { CellStyle, RawDate } from '@t/time/datetime';
+import { CellStyle, FormattedTimeString, RawDate } from '@t/time/datetime';
 
 export enum Day {
   SUN,
@@ -741,6 +741,13 @@ export function addMinutes(d: TZDate, step: number) {
 export function addHours(d: TZDate, step: number) {
   const date = clone(d);
   date.setHours(d.getHours() + step);
+
+  return date;
+}
+
+export function setTimeStrToDate(d: TZDate, timeStr: FormattedTimeString) {
+  const date = clone(d);
+  date.setHours(...(timeStr.split(':').map(Number) as [number, number]));
 
   return date;
 }

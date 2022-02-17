@@ -147,7 +147,7 @@ export function useDayGridMonthEventResize({
 
   useEffect(() => {
     const isExtendingOrSameRows =
-      canCalculateProps && currentGridPos.columnIndex >= resizingState.lastUIModelRowIndex;
+      canCalculateProps && currentGridPos.rowIndex >= resizingState.lastUIModelRowIndex;
     if (isExtendingOrSameRows) {
       const {
         resizeTargetUIModelRows,

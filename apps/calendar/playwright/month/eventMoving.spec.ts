@@ -27,7 +27,7 @@ test.describe('event moving', () => {
 
   test.beforeEach(({ page }) => {
     // NOTE: 'event2' is started at cell #16
-    eventLocator = page.locator('data-test-id=1-event2');
+    eventLocator = page.locator('data-testid=1-event2');
   });
 
   test('moving month grid event to right', async ({ page }) => {
@@ -35,7 +35,7 @@ test.describe('event moving', () => {
     const targetCellBoundingBox = await getBoundingBox(targetCellLocator);
 
     const boundingBoxBeforeMoving = await getBoundingBox(eventLocator);
-    await dragAndDrop(page, eventLocator, targetCellLocator);
+    await dragAndDrop(eventLocator, targetCellLocator);
     const boundingBoxAfterMoving = await getBoundingBox(eventLocator);
 
     expect(boundingBoxAfterMoving.x).toBeGreaterThan(boundingBoxBeforeMoving.x);
@@ -51,7 +51,7 @@ test.describe('event moving', () => {
     const targetCellBoundingBox = await getBoundingBox(targetCellLocator);
 
     const boundingBoxBeforeMoving = await getBoundingBox(eventLocator);
-    await dragAndDrop(page, eventLocator, targetCellLocator);
+    await dragAndDrop(eventLocator, targetCellLocator);
     const boundingBoxAfterMoving = await getBoundingBox(eventLocator);
 
     expect(boundingBoxAfterMoving.x).toBeLessThan(boundingBoxBeforeMoving.x);
@@ -67,7 +67,7 @@ test.describe('event moving', () => {
     const targetCellBoundingBox = await getBoundingBox(targetCellLocator);
 
     const boundingBoxBeforeMoving = await getBoundingBox(eventLocator);
-    await dragAndDrop(page, eventLocator, targetCellLocator);
+    await dragAndDrop(eventLocator, targetCellLocator);
     const boundingBoxAfterMoving = await getBoundingBox(eventLocator);
 
     expect(boundingBoxAfterMoving.y).toBeGreaterThan(boundingBoxBeforeMoving.y);
@@ -83,7 +83,7 @@ test.describe('event moving', () => {
     const targetCellBoundingBox = await getBoundingBox(targetCellLocator);
 
     const boundingBoxBeforeMoving = await getBoundingBox(eventLocator);
-    await dragAndDrop(page, eventLocator, targetCellLocator);
+    await dragAndDrop(eventLocator, targetCellLocator);
     const boundingBoxAfterMoving = await getBoundingBox(eventLocator);
 
     expect(boundingBoxAfterMoving.y).toBeLessThan(boundingBoxBeforeMoving.y);
@@ -100,7 +100,7 @@ test.describe('event moving', () => {
     const secondOfWeekCellLocator = page.locator(`${CELL_SELECTOR} >> nth=22`);
     const secondOfWeekCellBoundingBox = await getBoundingBox(secondOfWeekCellLocator);
 
-    await dragAndDrop(page, eventLocator, endOfWeekCellLocator);
+    await dragAndDrop(eventLocator, endOfWeekCellLocator);
 
     const targetEventsCount = await eventLocator.evaluateAll((events) => events.length);
     const targetEventLength = await eventLocator.evaluateAll((events) =>

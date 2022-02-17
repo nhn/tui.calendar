@@ -19,19 +19,17 @@ import {
   EVENT_HEIGHT,
   getRenderedEventUIModels,
 } from '@src/helpers/grid';
+import { dayGridMonthSelectionHelper } from '@src/helpers/gridSelection';
 import { useDOMNode } from '@src/hooks/common/domNode';
-import { useDayGridSelection } from '@src/hooks/dayGridCommon/dayGridSelection';
-import { usePopupWithDayGridSelection } from '@src/hooks/dayGridCommon/popupWithDayGridSelection';
 import { useDayGridMonthEventMove } from '@src/hooks/dayGridMonth/dayGridMonthEventMove';
 import {
   hasResizingEventShadowProps,
   useDayGridMonthEventResize,
 } from '@src/hooks/dayGridMonth/dayGridMonthEventResize';
+import { useGridSelection } from '@src/hooks/gridSelection/gridSelection';
 import { calendarSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
 import { getSize } from '@src/utils/dom';
-import { isBetween } from '@src/utils/math';
-import { isPresent } from '@src/utils/type';
 
 import { CalendarMonthOptions } from '@t/store';
 import { CellInfo } from '@t/time/datetime';
@@ -58,63 +56,6 @@ function useGridHeight() {
   return { ref, height };
 }
 
-function sortGridSelection(gridSelection: GridSelectionData) {
-  const { initRowIndex, initColIndex, currentRowIndex, currentColIndex } = gridSelection;
-  const isReversed =
-    initRowIndex > currentRowIndex ||
-    (initRowIndex === currentRowIndex && initColIndex > currentColIndex);
-
-  return isReversed
-    ? {
-        startRowIndex: currentRowIndex,
-        startColIndex: currentColIndex,
-        endRowIndex: initRowIndex,
-        endColIndex: initColIndex,
-      }
-    : {
-        startRowIndex: initRowIndex,
-        startColIndex: initColIndex,
-        endRowIndex: currentRowIndex,
-        endColIndex: currentColIndex,
-      };
-}
-
-function calcGridSelectionData(
-  gridSelection: GridSelectionData | null,
-  rowIndex: number,
-  weekLength: number
-): GridSelectionDataByRow | null {
-  let resultGridSelection: GridSelectionDataByRow | null = null;
-
-  if (isPresent(gridSelection)) {
-    const { startRowIndex, startColIndex, endRowIndex, endColIndex } =
-      sortGridSelection(gridSelection);
-
-    if (
-      isBetween(
-        rowIndex,
-        Math.min(startRowIndex, endRowIndex),
-        Math.max(startRowIndex, endRowIndex)
-      )
-    ) {
-      let startCellIndex = startColIndex;
-      let endCellIndex = endColIndex;
-
-      if (startRowIndex < rowIndex) {
-        startCellIndex = 0;
-      }
-
-      if (endRowIndex > rowIndex) {
-        endCellIndex = weekLength - 1;
-      }
-
-      resultGridSelection = { startCellIndex, endCellIndex };
-    }
-  }
-
-  return resultGridSelection;
-}
-
 export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidthMap = [] }: Props) {
   const [gridContainer, setGridContainerRef] = useDOMNode<HTMLDivElement>();
   const calendarData = useStore(calendarSelector);
@@ -139,8 +80,13 @@ export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidth
     [calendarData, dateMatrix, narrowWeekend]
   );
 
-  const gridSelection = useDayGridSelection(gridPositionFinder);
-  const onMouseDown = usePopupWithDayGridSelection({ gridSelection, dateMatrix });
+  const { onMouseDown, gridSelection } = useGridSelection({
+    type: 'dayGridMonth',
+    gridPositionFinder,
+    dateCollection: dateMatrix,
+    dateGetter: dayGridMonthSelectionHelper.getDateFromCollection,
+    selectionSorter: dayGridMonthSelectionHelper.sortSelection,
+  });
   const { movingEvent, currentGridPos } = useDayGridMonthEventMove({
     dateMatrix,
     rowInfo,
@@ -158,7 +104,11 @@ export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidth
       {dateMatrix.map((week, rowIndex) => {
         const { uiModels, gridDateEventModelMap } = renderedEventUIModels[rowIndex];
         const isMouseInWeek = rowIndex === currentGridPos?.rowIndex;
-        const gridSelectionDataByRow = calcGridSelectionData(gridSelection, rowIndex, week.length);
+        const gridSelectionDataByRow = dayGridMonthSelectionHelper.calculateSelection(
+          gridSelection,
+          rowIndex,
+          week.length
+        );
         const resizingEventShadowPropsByRow = resizingEventShadowProps?.[rowIndex];
 
         return (

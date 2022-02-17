@@ -34,7 +34,11 @@ export function CurrentTimeIndicator({ top, columnWidth, columnCount, columnInde
   const currentTimeRightBorderTop = 'none';
 
   return (
-    <div className={classNames.line} style={{ top: toPercent(top) }}>
+    <div
+      className={classNames.line}
+      style={{ top: toPercent(top) }}
+      data-testid="timegrid-current-time-line"
+    >
       <div
         className={classNames.left}
         style={{ width: leftLine.width, borderTop: currentTimeLeftBorderTop }}
