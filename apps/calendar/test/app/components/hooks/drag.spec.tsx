@@ -1,130 +1,193 @@
 import { h } from 'preact';
 
-import { act, renderHook } from '@testing-library/preact-hooks';
+import { act, fireEvent, render, screen } from '@testing-library/preact';
+import userEvent from '@testing-library/user-event';
 
+import { MINIMUM_DRAG_MOUSE_DISTANCE } from '@src/constants/mouse';
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
 import { DragListeners, useDrag } from '@src/hooks/common/drag';
 
-import { createKeyboardEvent, createMouseEvent } from '@test/helper';
-
 import { PropsWithChildren } from '@t/components/common';
 import { DraggingTypes } from '@t/drag';
-
-const primaryButton = 0;
+import { CalendarStore, InternalStoreAPI } from '@t/store';
 
 describe('drag hook', () => {
-  let mouseDownEvent: MouseEvent;
-  let mouseMoveEvent: MouseEvent;
-  let mouseUpEvent: MouseEvent;
-  let listeners: DragListeners;
+  const TEST_DRAGGING_TYPE = 'drag-test';
+  let store: InternalStoreAPI<CalendarStore>;
+  const listeners: DragListeners = {
+    onInit: jest.fn(),
+    onDragStart: jest.fn(),
+    onDrag: jest.fn(),
+    onMouseUp: jest.fn(),
+    onPressESCKey: jest.fn(),
+  };
   const wrapper = ({ children }: PropsWithChildren) => {
-    const store = initCalendarStore();
+    store = initCalendarStore();
 
     return <StoreProvider store={store}>{children}</StoreProvider>;
   };
-  const setup = () => {
-    const { result } = renderHook(() => useDrag('drag-test' as DraggingTypes, listeners), {
-      wrapper,
-    });
-    act(() => {
-      result.current?.onMouseDown(mouseDownEvent);
-    });
+  const Component = () => {
+    const onMouseDown = useDrag(TEST_DRAGGING_TYPE as DraggingTypes, listeners);
 
-    return result;
+    return <button onMouseDown={onMouseDown} />;
   };
+  const setup = () => render(<Component />, { wrapper });
+  const getDndState = () => store.getState().dnd;
 
-  beforeEach(() => {
-    listeners = {
-      onInit: jest.fn(),
-      onDragStart: jest.fn(),
-      onDrag: jest.fn(),
-      onMouseUp: jest.fn(),
-      onPressESCKey: jest.fn(),
-    };
-
-    mouseDownEvent = createMouseEvent('mousedown', { button: primaryButton });
-    mouseMoveEvent = createMouseEvent('mousemove');
-    mouseUpEvent = createMouseEvent('mouseup');
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
-  it('should fires onInit when mouse down', () => {
+  it('should fire onInit when mouse down', () => {
     // Given
-    const result = setup();
+    setup();
+    const button = screen.getByRole('button');
 
     // When
     act(() => {
-      result.current?.onMouseDown(mouseDownEvent);
+      fireEvent.mouseDown(button);
     });
 
     // Then
-    expect(listeners.onInit).toBeCalledWith(mouseDownEvent);
+    expect(listeners.onInit).toBeCalledWith(expect.objectContaining({ button: 0 }));
+    expect(getDndState()).toMatchObject({
+      draggingItemType: TEST_DRAGGING_TYPE,
+      initX: 0,
+      initY: 0,
+      x: null,
+      y: null,
+    });
   });
 
-  it('fires onDragStart', () => {
-    const result = setup();
+  it('should fire onDragStart when move more than equal 3px from the staring point', () => {
+    // Given
+    setup();
+    const button = screen.getByRole('button');
+    const targetCoords = {
+      clientX: MINIMUM_DRAG_MOUSE_DISTANCE + 1,
+      clientY: MINIMUM_DRAG_MOUSE_DISTANCE + 1,
+    };
 
+    // When
     act(() => {
-      result.current?.onMouseMove(mouseMoveEvent);
+      fireEvent.mouseDown(button);
+    });
+    act(() => {
+      fireEvent.mouseMove(document, targetCoords);
     });
 
-    expect(listeners.onDragStart).toHaveBeenCalledWith(mouseMoveEvent);
+    // Then
+    expect(listeners.onDragStart).toBeCalledWith(expect.objectContaining(targetCoords));
+    expect(getDndState()).toMatchObject({
+      draggingItemType: TEST_DRAGGING_TYPE,
+      initX: 0,
+      initY: 0,
+      x: targetCoords.clientX,
+      y: targetCoords.clientY,
+    });
   });
 
-  it('fires onDrag when onMouseMove invoked more than twice', () => {
-    const result = setup();
+  it('should not fire onDragStart when move less than 3px from the staring point', () => {
+    // Given
+    setup();
+    const button = screen.getByRole('button');
 
+    // When
     act(() => {
-      result.current?.onMouseMove(mouseMoveEvent);
+      fireEvent.mouseDown(button);
+    });
+    act(() => {
+      fireEvent.mouseMove(document, {
+        clientX: MINIMUM_DRAG_MOUSE_DISTANCE - 1,
+        clientY: MINIMUM_DRAG_MOUSE_DISTANCE - 1,
+      });
     });
 
-    act(() => {
-      result.current?.onMouseMove(mouseMoveEvent);
+    // Then
+    expect(listeners.onDragStart).not.toHaveBeenCalled();
+    expect(getDndState()).toMatchObject({
+      draggingItemType: TEST_DRAGGING_TYPE,
+      initX: 0,
+      initY: 0,
+      x: null,
+      y: null,
     });
-
-    expect(listeners.onDrag).toHaveBeenCalledWith(mouseMoveEvent);
   });
 
-  it('fires onDragEnd', () => {
-    const result = setup();
+  it('fires onDrag when mousemove after onDragStart', () => {
+    // Given
+    setup();
+    const button = screen.getByRole('button');
+    const targetCoords = {
+      clientX: MINIMUM_DRAG_MOUSE_DISTANCE + 1,
+      clientY: MINIMUM_DRAG_MOUSE_DISTANCE + 1,
+    };
 
+    // When
     act(() => {
-      result.current?.onMouseMove(mouseMoveEvent);
+      fireEvent.mouseDown(button);
+    });
+    act(() => {
+      fireEvent.mouseMove(document, {
+        clientX: MINIMUM_DRAG_MOUSE_DISTANCE,
+        clientY: MINIMUM_DRAG_MOUSE_DISTANCE,
+      });
+    });
+    act(() => {
+      fireEvent.mouseMove(document, targetCoords);
     });
 
-    // fire onDrag
-    act(() => {
-      result.current?.onMouseMove(mouseMoveEvent);
+    // Then
+    expect(listeners.onDrag).toHaveBeenCalledWith(expect.objectContaining(targetCoords));
+    expect(getDndState()).toMatchObject({
+      draggingItemType: TEST_DRAGGING_TYPE,
+      initX: 0,
+      initY: 0,
+      x: targetCoords.clientX,
+      y: targetCoords.clientY,
     });
-
-    // fire onDragEnd
-    act(() => {
-      result.current?.onMouseUp(mouseUpEvent);
-    });
-
-    expect(listeners.onMouseUp).toHaveBeenCalledWith(mouseUpEvent);
   });
 
-  it('ESC fires onCancel and do not fire any more events', () => {
-    const keyEvent = createKeyboardEvent('keydown', { key: 'Escape' });
-    const result = setup();
+  it('fires onMouseUp right after dragging is started', () => {
+    // Given
+    setup();
+    const button = screen.getByRole('button');
 
+    // When
+    userEvent.click(button);
+
+    // Then
+    expect(listeners.onMouseUp).toHaveBeenCalled();
+    expect(getDndState()).toMatchObject({
+      draggingItemType: null,
+      initX: null,
+      initY: null,
+      x: null,
+      y: null,
+    });
+  });
+
+  it('fires onPressESCKey when press ESC key', () => {
+    // Given
+    setup();
+    const button = screen.getByRole('button');
+
+    // When
     act(() => {
-      result.current?.onMouseMove(mouseMoveEvent);
+      fireEvent.mouseDown(button);
+    });
+    act(() => {
+      fireEvent.keyDown(document, { key: 'Escape' });
     });
 
-    act(() => {
-      result.current?.onKeydown(keyEvent);
-    });
-
-    expect(listeners.onDragStart).toHaveBeenCalledWith(mouseMoveEvent);
+    // Then
     expect(listeners.onPressESCKey).toHaveBeenCalled();
-
-    act(() => {
-      result.current?.onMouseMove(mouseMoveEvent);
-      result.current?.onMouseUp(mouseUpEvent);
+    expect(getDndState()).toMatchObject({
+      draggingItemType: null,
+      initX: null,
+      initY: null,
+      x: null,
+      y: null,
     });
-
-    expect(listeners.onDrag).not.toHaveBeenCalledWith(mouseMoveEvent);
-    expect(listeners.onMouseUp).not.toHaveBeenCalled();
   });
 });

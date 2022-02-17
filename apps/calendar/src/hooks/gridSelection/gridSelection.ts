@@ -70,7 +70,7 @@ export function useGridSelection<DateCollection>({
       setGridSelectionByPosition(e, gridPosition);
     }
   };
-  const { onMouseDown } = useDrag(currentGridSelectionType, {
+  const onMouseDown = useDrag(currentGridSelectionType, {
     onInit: (e) => {
       if (useCreationPopup) {
         setInitMousePosition({

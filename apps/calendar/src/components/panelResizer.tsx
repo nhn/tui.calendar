@@ -38,7 +38,7 @@ export function PanelResizer({ name, width, height }: Props) {
   const startPos = useRef<{ left: number; top: number } | null>(null);
   const { updateDayGridRowHeightByDiff } = useDispatch('weekViewLayout');
 
-  const { onMouseDown } = useDrag(DRAGGING_TYPE_CONSTANTS.panelResizer, {
+  const onMouseDown = useDrag(DRAGGING_TYPE_CONSTANTS.panelResizer, {
     onDragStart: (e) => {
       startPos.current = { left: e.pageX, top: e.pageY };
     },

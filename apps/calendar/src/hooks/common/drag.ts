@@ -7,6 +7,7 @@ import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import { isKeyPressed } from '@src/utils/keyboard';
 import { noop } from '@src/utils/noop';
+import { isPresent } from '@src/utils/type';
 
 import { DraggingTypes } from '@t/drag';
 
@@ -51,11 +52,11 @@ export function useDrag(
   const isDragging = draggingState > DraggingState.INIT;
   const isRightItemType = currentDraggingItemType === draggingItemType;
 
-  const onMouseMoveRef = useRef<MouseEventListener | null>(null);
-  const onMouseUpRef = useRef<MouseEventListener | null>(null);
-  const onKeyDownRef = useRef<KeyboardEventListener | null>(null);
+  const handleMouseMoveRef = useRef<MouseEventListener | null>(null);
+  const handleMouseUpRef = useRef<MouseEventListener | null>(null);
+  const handleKeyDownRef = useRef<KeyboardEventListener | null>(null);
 
-  const onMouseDown = useCallback<MouseEventListener>(
+  const handleMouseDown = useCallback<MouseEventListener>(
     (e) => {
       if (!isLeftClick(e.button)) {
         return;
@@ -81,7 +82,7 @@ export function useDrag(
     [onInit, draggingItemType, initDrag]
   );
 
-  const onMouseMove = useCallback<MouseEventListener>(
+  const handleMouseMove = useCallback<MouseEventListener>(
     (e) => {
       if (!isRightItemType) {
         setStarted(false);
@@ -89,7 +90,11 @@ export function useDrag(
         return;
       }
 
-      if (initX && initY && !isMouseMoved(initX, initY, e.clientX, e.clientY)) {
+      if (
+        isPresent(initX) &&
+        isPresent(initY) &&
+        !isMouseMoved(initX, initY, e.clientX, e.clientY)
+      ) {
         return;
       }
 
@@ -106,7 +111,7 @@ export function useDrag(
     [initX, initY, isDragging, isRightItemType, onDrag, onDragStart, setDraggingState]
   );
 
-  const _onMouseUp = useCallback<MouseEventListener>(
+  const handleMouseUp = useCallback<MouseEventListener>(
     (e) => {
       e.stopPropagation();
 
@@ -118,7 +123,7 @@ export function useDrag(
     [isStarted, onMouseUp]
   );
 
-  const onKeydown = useCallback<KeyboardEventListener>(
+  const handleKeyDown = useCallback<KeyboardEventListener>(
     (e) => {
       if (isKeyPressed(e, KEY.ESCAPE)) {
         onPressESCKey?.(e);
@@ -129,37 +134,31 @@ export function useDrag(
   );
 
   useEffect(() => {
-    onMouseMoveRef.current = onMouseMove;
-    onMouseUpRef.current = _onMouseUp;
-    onKeyDownRef.current = onKeydown;
-  }, [onKeydown, onMouseMove, _onMouseUp]);
+    handleMouseMoveRef.current = handleMouseMove;
+    handleMouseUpRef.current = handleMouseUp;
+    handleKeyDownRef.current = handleKeyDown;
+  }, [handleKeyDown, handleMouseMove, handleMouseUp]);
 
   useEffect(() => {
-    const handleMouseMove: MouseEventListener = (e) => onMouseMoveRef.current?.(e);
-    const handleMouseUp: MouseEventListener = (e) => onMouseUpRef.current?.(e);
-    const handleKeydown: KeyboardEventListener = (e) => onKeyDownRef.current?.(e);
+    const wrappedHandleMouseMove: MouseEventListener = (e) => handleMouseMoveRef.current?.(e);
+    const wrappedHandleMouseUp: MouseEventListener = (e) => handleMouseUpRef.current?.(e);
+    const wrappedHandleKeyDown: KeyboardEventListener = (e) => handleKeyDownRef.current?.(e);
 
     if (isStarted) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-      document.addEventListener('keydown', handleKeydown);
+      document.addEventListener('mousemove', wrappedHandleMouseMove);
+      document.addEventListener('mouseup', wrappedHandleMouseUp);
+      document.addEventListener('keydown', wrappedHandleKeyDown);
 
       return () => {
         reset();
-        document.removeEventListener('mousemove', handleMouseMove);
-        document.removeEventListener('mouseup', handleMouseUp);
-        document.removeEventListener('keydown', handleKeydown);
+        document.removeEventListener('mousemove', wrappedHandleMouseMove);
+        document.removeEventListener('mouseup', wrappedHandleMouseUp);
+        document.removeEventListener('keydown', wrappedHandleKeyDown);
       };
     }
 
     return noop;
   }, [isStarted, reset]);
 
-  return {
-    isDragging,
-    onMouseDown,
-    onMouseMove,
-    onMouseUp: _onMouseUp,
-    onKeydown,
-  };
+  return handleMouseDown;
 }
