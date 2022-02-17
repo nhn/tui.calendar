@@ -102,34 +102,34 @@ function calculateDayGridMonthSelectionByCurrentIndex(
   currentIndex: number,
   weekLength: number
 ) {
-  let resultGridSelection: GridSelectionDataByRow | null = null;
-
-  if (isPresent(gridSelection) && isPresent(currentIndex) && isPresent(weekLength)) {
-    const { startRowIndex, startColumnIndex, endRowIndex, endColumnIndex } = gridSelection;
-
-    if (
-      isBetween(
-        currentIndex,
-        Math.min(startRowIndex, endRowIndex),
-        Math.max(startRowIndex, endRowIndex)
-      )
-    ) {
-      let startCellIndex = startColumnIndex;
-      let endCellIndex = endColumnIndex;
-
-      if (startRowIndex < currentIndex) {
-        startCellIndex = 0;
-      }
-
-      if (endRowIndex > currentIndex) {
-        endCellIndex = weekLength - 1;
-      }
-
-      resultGridSelection = { startCellIndex, endCellIndex };
-    }
+  if (!(isPresent(gridSelection) && isPresent(currentIndex) && isPresent(weekLength))) {
+    return null;
   }
 
-  return resultGridSelection;
+  const { startRowIndex, startColumnIndex, endRowIndex, endColumnIndex } = gridSelection;
+
+  if (
+    !isBetween(
+      currentIndex,
+      Math.min(startRowIndex, endRowIndex),
+      Math.max(startRowIndex, endRowIndex)
+    )
+  ) {
+    return null;
+  }
+
+  let startCellIndex = startColumnIndex;
+  let endCellIndex = endColumnIndex;
+
+  if (startRowIndex < currentIndex) {
+    startCellIndex = 0;
+  }
+
+  if (endRowIndex > currentIndex) {
+    endCellIndex = weekLength - 1;
+  }
+
+  return { startCellIndex, endCellIndex };
 }
 export const dayGridMonthSelectionHelper: GridSelectionHelper<
   typeof calculateDayGridMonthSelectionByCurrentIndex
