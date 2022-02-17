@@ -17,27 +17,9 @@ import { TimeGridRow } from '@t/grid';
 
 const classNames = {
   column: cls('column'),
-  grid: cls('grid'),
   backgrounds: cls('background-events'),
   events: cls('events'),
 };
-
-function GridLines({ timeGridRows }: { timeGridRows: TimeGridRow[] }) {
-  return (
-    <div className={classNames.grid}>
-      {timeGridRows.map((time, index) => (
-        <div
-          key={`gridline-${time.startTime}-${time.endTime}`}
-          className={cls('gridline-half', `gridline-half--${index % 2 === 1 ? 'lower' : 'upper'}`)}
-          style={{
-            top: toPercent(time.top),
-            height: toPercent(time.height),
-          }}
-        />
-      ))}
-    </div>
-  );
-}
 
 function BackgroundEvents({
   events,
@@ -131,20 +113,23 @@ export function Column({
     const { startRowIndex, endRowIndex, isStartingColumn, isSelectingMultipleColumns } =
       gridSelection;
 
-    const { top } = timeGridRows[startRowIndex];
-    const height = timeGridRows[endRowIndex].top + timeGridRows[endRowIndex].height - top;
-    let text = '';
-    if (isSelectingMultipleColumns && isStartingColumn) {
-      text = timeGridRows[startRowIndex].startTime;
-    } else if (isSelectingMultipleColumns) {
-      text = '';
-    } else {
-      text = `${timeGridRows[startRowIndex].startTime} - ${timeGridRows[endRowIndex].endTime}`;
+    const { top: startRowTop, startTime: startRowStartTime } = timeGridRows[startRowIndex];
+    const {
+      top: endRowTop,
+      height: endRowHeight,
+      endTime: endRowEndTime,
+    } = timeGridRows[endRowIndex];
+
+    const gridSelectionHeight = endRowTop + endRowHeight - startRowTop;
+
+    let text = `${startRowStartTime} - ${endRowEndTime}`;
+    if (isSelectingMultipleColumns) {
+      text = isStartingColumn ? startRowStartTime : '';
     }
 
     return {
-      top,
-      height,
+      top: startRowTop,
+      height: gridSelectionHeight,
       text,
     };
   }, [gridSelection, timeGridRows]);
