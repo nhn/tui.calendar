@@ -127,7 +127,7 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
 
     // binding popup for schedule detail
     if (options.useDetailPopup) {
-        detailView = new ScheduleDetailPopup(layoutContainer, baseController.calendars);
+        detailView = new ScheduleDetailPopup(layoutContainer);
         onShowDetailPopup = function(eventData) {
             var scheduleId = eventData.schedule.calendarId;
             eventData.calendar = common.find(baseController.calendars, function(calendar) {
@@ -209,11 +209,11 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
             });
         });
 
-        if (options.useCreationPopup && options.useDetailPopup) {
+        if (options.useCreationPopup && options.useDetailPopup && createView && detailView) {
             createView.off('beforeUpdateSchedule', onUpdateSchedule);
         }
 
-        if (options.useCreationPopup) {
+        if (options.useCreationPopup && createView) {
             if (creationHandler) {
                 creationHandler.off('beforeCreateSchedule', onShowCreationPopup);
             }
@@ -221,7 +221,7 @@ function createMonthView(baseController, layoutContainer, dragHandler, options) 
             createView.destroy();
         }
 
-        if (options.useDetailPopup) {
+        if (options.useDetailPopup && detailView) {
             clickHandler.off('clickSchedule', onShowDetailPopup);
             detailView.off('beforeUpdateSchedule', onUpdateSchedule);
             detailView.off('beforeDeleteSchedule', onDeleteSchedule);

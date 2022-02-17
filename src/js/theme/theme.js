@@ -11,6 +11,8 @@ var common = require('../common/common');
 
 /**
  * Theme manager
+ *
+ * @constructor
  * @param {object} customTheme - custom theme
  */
 function Theme(customTheme) {

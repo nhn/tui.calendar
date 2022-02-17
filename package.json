@@ -54,7 +54,7 @@
     "jsdoc": "^3.5.5",
     "karma": "^6.3.14",
     "karma-chrome-launcher": "^2.2.0",
-    "karma-cli": "^1.0.1",
+    "karma-cli": "^2.0.0",
     "karma-coverage": "^2.0.3",
     "karma-fixture": "^0.2.6",
     "karma-html2js-preprocessor": "^1.1.0",
