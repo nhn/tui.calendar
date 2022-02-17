@@ -50,7 +50,7 @@ describe('useGridSelection', () => {
     ) => [TZDate, TZDate];
   } = {}) {
     const container = document.createElement('div');
-    container.setAttribute('data-testId', 'container');
+    container.setAttribute('data-testid', 'container');
     document.body.appendChild(container);
     jest.spyOn(container, 'getBoundingClientRect').mockReturnValue({
       x: 0,

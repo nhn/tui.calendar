@@ -18,7 +18,7 @@ export function GridSelection({ top, height, text }: Props) {
     <div
       className={cls('grid-selection')}
       style={style}
-      data-testId={`time-grid-selection-${top}-${height}`}
+      data-testid={`time-grid-selection-${top}-${height}`}
     >
       {text.length > 0 ? <span className={cls('grid-selection-label')}>{text}</span> : null}
     </div>

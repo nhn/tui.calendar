@@ -25,10 +25,10 @@ test.describe('event resizing', () => {
    */
 
   // target event is rendered from #7 to #16
-  const RESIZE_TARGET_SELECTOR = 'data-test-id=0-event1';
+  const RESIZE_TARGET_SELECTOR = 'data-testid=0-event1';
 
   function getResizeIconOfEvent(eventLocator: Locator) {
-    return eventLocator.last().locator('data-test-id=horizontal-event-resize-icon');
+    return eventLocator.last().locator('data-testid=horizontal-event-resize-icon');
   }
 
   function getTargetCellSelector(cellIndex: number) {

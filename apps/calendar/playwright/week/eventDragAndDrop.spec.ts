@@ -20,7 +20,7 @@ test.describe('event resizing', () => {
    */
 
   test('resizing allday grid row event from left to right', async ({ page }) => {
-    const targetEventLocator = page.locator('data-test-id=cal1-1-event1');
+    const targetEventLocator = page.locator('data-testid=cal1-1-event1');
     const boundingBoxBeforeResizing = await getBoundingBox(targetEventLocator);
 
     const resizerLocator = targetEventLocator.locator(getPrefixedClassName('handle-y'));
@@ -36,7 +36,7 @@ test.describe('event resizing', () => {
 
 test.describe('event moving', () => {
   test('moving allday grid row event', async ({ page }) => {
-    const targetEventLocator = page.locator('data-test-id=cal1-1-event1');
+    const targetEventLocator = page.locator('data-testid=cal1-1-event1');
     const boundingBoxBeforeMoving = await getBoundingBox(targetEventLocator);
 
     const secondOfWeekCellLocator = page.locator(ALL_DAY_GRID_CELL_SELECTOR).nth(1);

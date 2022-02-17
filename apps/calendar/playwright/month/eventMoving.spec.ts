@@ -27,7 +27,7 @@ test.describe('event moving', () => {
 
   test.beforeEach(({ page }) => {
     // NOTE: 'event2' is started at cell #16
-    eventLocator = page.locator('data-test-id=1-event2');
+    eventLocator = page.locator('data-testid=1-event2');
   });
 
   test('moving month grid event to right', async ({ page }) => {

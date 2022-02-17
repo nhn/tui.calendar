@@ -223,7 +223,7 @@ export function HorizontalEvent({
     <div
       className={dayEventBlockClassName}
       style={containerStyle}
-      data-test-id={passConditionalProp(isDraggableEvent, getTestId(uiModel))}
+      data-testid={passConditionalProp(isDraggableEvent, getTestId(uiModel))}
       ref={eventContainerRef}
       onClick={passConditionalProp(isDraggableEvent, handleClick)}
     >
