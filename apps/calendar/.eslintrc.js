@@ -54,8 +54,6 @@ module.exports = {
           ['^(\\w|@)(?!src/|test/|stories/|t/)'],
           // Source files.
           ['^@src/'],
-          // test files
-          ['^@test/'],
           // stories files
           ['^@stories/'],
           // Types.

@@ -1,4 +1,4 @@
-/* eslint-disable prefer-template */
+import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 
 // eslint-disable-next-line no-undefined
@@ -44,7 +44,7 @@ function getMatcher(comparator: (uiModel: EventUIModel, value: string | number) 
     let bValue;
 
     if (actual.length !== expected.length) {
-      return fail('Matrix number mismatch\nactual: ' + actual + '\nexpected: ' + expected);
+      return fail(`Matrix number mismatch\nactual: ${actual}\nexpected: ${expected}`);
     }
 
     for (let i = 0, cnt = actual.length; i < cnt; i += 1) {
@@ -55,13 +55,9 @@ function getMatcher(comparator: (uiModel: EventUIModel, value: string | number) 
 
       if (aLength !== bLength) {
         return fail(
-          i +
-            'th matrix is different\n' +
-            'actual: ' +
-            pickTitle(aMatrix) +
-            '\n' +
-            'expected: ' +
-            bMatrix
+          `${i}th matrix is different\n` +
+            `actual: ${pickTitle(aMatrix)}\n` +
+            `expected: ${bMatrix}`
         );
       }
 
@@ -77,16 +73,9 @@ function getMatcher(comparator: (uiModel: EventUIModel, value: string | number) 
 
         if (!comparator(aUIModel, bValue)) {
           return fail(
-            '[' +
-              i +
-              '][' +
-              j +
-              '] th matrix is different\n' +
-              'actual: ' +
-              aUIModel +
-              '\n' +
-              'expected: ' +
-              bValue
+            `[${i}][${j}] th matrix is different\n` +
+              `actual: ${aUIModel}\n` +
+              `expected: ${bValue}`
           );
         }
       }
@@ -102,4 +91,31 @@ function getMatcher(comparator: (uiModel: EventUIModel, value: string | number) 
 expect.extend({
   toEqualMatricesTitle: getMatcher(titleComparator),
   toEqualMatricesTop: getMatcher(topComparator),
+  toEqualUIModelByTitle(actual: Record<string, EventModel[]>, expected: Record<string, string[]>) {
+    const result = {
+      pass: false,
+      message: () => '',
+    };
+    let isEqual = true;
+
+    Object.keys(expected).findIndex((ymd) => {
+      const models = actual[ymd];
+
+      if (!models) {
+        isEqual = false;
+
+        return false;
+      }
+
+      const titleList = models.map((item) => item.title);
+
+      isEqual = this.equals(titleList.sort(), expected[ymd].sort());
+
+      return isEqual;
+    });
+
+    result.pass = isEqual;
+
+    return result;
+  },
 });

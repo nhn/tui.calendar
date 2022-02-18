@@ -5,13 +5,13 @@ import { Template } from '@src/components/template';
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
 import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
+import { templates } from '@src/template/default';
 import {
   getCommonWidth,
   getMonthEventBlock,
   getTimeEventBlock,
   registerTemplateConfig,
-} from '@src/template';
-import { templates } from '@src/template/default';
+} from '@src/template/index';
 
 describe('Render Template', () => {
   it('registerTemplateConfig() returns Template instance with given config and defaults.', () => {

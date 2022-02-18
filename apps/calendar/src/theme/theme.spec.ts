@@ -1,4 +1,4 @@
-import Theme from '@src/theme';
+import Theme from '@src/theme/index';
 import preset from '@src/theme/preset';
 import { ThemeKeyValue, ThemePropKeys } from '@src/theme/themeProps';
 
