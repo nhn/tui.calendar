@@ -5,7 +5,7 @@ import TZDate from '@src/time/date';
 
 import { EventModelData } from '@t/events';
 
-jest.mock('../../../src/utils/stamp');
+jest.mock('../utils/stamp');
 
 describe('model/event basic', () => {
   let event: EventModel;

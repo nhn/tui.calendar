@@ -3,7 +3,7 @@ import { useEffect, useState } from 'preact/hooks';
 
 import { fireEvent, render, screen } from '@testing-library/preact';
 
-import { createStoreContext } from '@src/store';
+import { createStoreContext } from '@src/store/index';
 import { createStore } from '@src/store/internal';
 
 import { InternalStoreAPI } from '@t/store';

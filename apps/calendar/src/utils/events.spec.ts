@@ -1,7 +1,6 @@
 import { collidesWith } from '@src/helpers/events';
+import { createDate } from '@src/test/helpers';
 import TZDate from '@src/time/date';
-
-import { createDate } from '@test/helper';
 
 describe('events util', () => {
   describe('collidesWith', () => {

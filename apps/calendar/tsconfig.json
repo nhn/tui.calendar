@@ -16,7 +16,6 @@
       "@src/*": ["./src/*"],
       "@t/*": ["./types/*"],
       "@stories/*": ["./stories/*"],
-      "@test/*": ["./test/*"]
     },
     "sourceMap": true,
     "lib": ["esnext", "dom"],
@@ -27,8 +26,6 @@
     "src/**/*.tsx",
     "stories/**/*.ts",
     "stories/**/*.tsx",
-    "test/**/*.ts",
-    "test/**/*.tsx",
     "types/**/*"
   ]
 }
