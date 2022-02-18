@@ -37,7 +37,7 @@ function isMouseMoved(initX: number, initY: number, x: number, y: number) {
 
 export function useDrag(
   draggingItemType: DraggingTypes,
-  { onInit, onDragStart, onDrag, onMouseUp, onPressESCKey }: DragListeners
+  { onInit, onDragStart, onDrag, onMouseUp, onPressESCKey }: DragListeners = {}
 ) {
   const { initDrag, setDraggingState, reset } = useDispatch('dnd');
 
