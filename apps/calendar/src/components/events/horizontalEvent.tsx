@@ -10,10 +10,8 @@ import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/drag';
 import EventUIModel from '@src/model/eventUIModel';
 import { optionsSelector } from '@src/selectors';
-import { DraggingState } from '@src/slices/dnd';
+import { isDraggingSelector } from '@src/selectors/dnd';
 import { isNil } from '@src/utils/type';
-
-import { CalendarState } from '@t/store';
 
 interface Props {
   uiModel: EventUIModel;
@@ -142,10 +140,6 @@ function getTestId({ model }: EventUIModel) {
 function passConditionalProp<P>(condition: boolean, prop: P) {
   // eslint-disable-next-line no-undefined
   return condition ? prop : undefined;
-}
-
-function isDraggingSelector(state: CalendarState) {
-  return state.dnd.draggingState > DraggingState.INIT;
 }
 
 export function HorizontalEvent({
