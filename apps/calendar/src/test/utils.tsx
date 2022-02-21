@@ -1,6 +1,6 @@
 import { h } from 'preact';
 
-import { render as ptlRender } from '@testing-library/preact';
+import { act, fireEvent, render as ptlRender } from '@testing-library/preact';
 import { renderHook as ptlRenderHook } from '@testing-library/preact-hooks';
 import { Callback } from '@testing-library/preact-hooks/lib/_types';
 import { RenderHookOptions } from '@testing-library/preact-hooks/lib/renderHook';
@@ -57,6 +57,36 @@ function renderHook<P, R>(
   );
 
   return ptlRenderHook(hook, { wrapper: Wrapper, ...options });
+}
+
+export function dragAndDrop(
+  element: HTMLElement,
+  targetPosition: ClientMousePosition,
+  hold = false
+) {
+  act(() => {
+    fireEvent.mouseDown(element);
+  });
+
+  act(() => {
+    fireEvent.mouseMove(document, {
+      clientX: targetPosition.clientX + 3,
+      clientY: targetPosition.clientY + 3,
+    });
+  });
+
+  act(() => {
+    fireEvent.mouseMove(document, {
+      clientX: targetPosition.clientX,
+      clientY: targetPosition.clientY,
+    });
+  });
+
+  if (!hold) {
+    act(() => {
+      fireEvent.mouseUp(document);
+    });
+  }
 }
 
 export * from '@testing-library/preact';
