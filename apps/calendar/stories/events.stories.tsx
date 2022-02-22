@@ -18,7 +18,7 @@ export const timeEvent = () => {
 
   return (
     <ProviderWrapper>
-      <TimeEvent eventModels={eventModels} />
+      <TimeEvent uiModel={eventModels} />
     </ProviderWrapper>
   );
 };

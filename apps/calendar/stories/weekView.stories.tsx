@@ -5,7 +5,7 @@ import { Story } from '@storybook/preact';
 import { Week } from '@src/components/view/week';
 import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
-import { addDate, Day } from '@src/time/datetime';
+import { addDate, Day, setTimeStrToDate } from '@src/time/datetime';
 
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { createRandomEventModelsForMonth, createRandomEvents } from '@stories/util/randomEvents';
@@ -55,6 +55,24 @@ function createWeekEvents() {
       isAllday: true,
       start: thursday,
       end: saturday,
+    },
+    {
+      id: '4',
+      calendarId: 'cal1',
+      title: 'timed-event',
+      category: 'time',
+      isAllday: false,
+      start: setTimeStrToDate(thursday, '05:00'),
+      end: setTimeStrToDate(thursday, '10:00'),
+    },
+    {
+      id: '5',
+      calendarId: 'cal1',
+      title: 'timed-event2',
+      category: 'time',
+      isAllday: false,
+      start: setTimeStrToDate(tuesday, '09:00'),
+      end: setTimeStrToDate(tuesday, '18:00'),
     },
   ];
 
