@@ -62,8 +62,8 @@ function createWeekEvents() {
       title: 'timed-event',
       category: 'time',
       isAllday: false,
-      start: setTimeStrToDate(thursday, '05:00'),
-      end: setTimeStrToDate(thursday, '10:00'),
+      start: setTimeStrToDate(thursday, '22:00'),
+      end: setTimeStrToDate(addDate(thursday, 1), '02:00'),
     },
     {
       id: '5',

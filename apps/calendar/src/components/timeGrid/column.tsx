@@ -1,8 +1,6 @@
 import { h } from 'preact';
 import { memo } from 'preact/compat';
-import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
-
-import produce from 'immer';
+import { useCallback, useMemo, useState } from 'preact/hooks';
 
 import { BackgroundEvent } from '@src/components/events/backgroundEvent';
 import { TimeEvent } from '@src/components/events/timeEvent';
@@ -13,13 +11,14 @@ import { getTopHeightByTime } from '@src/controller/times';
 import { cls, toPercent } from '@src/helpers/css';
 import { isBackgroundEvent } from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
-import { dndSelector } from '@src/selectors';
+import { draggingEventUIModelSelector } from '@src/selectors/dnd';
 import TZDate from '@src/time/date';
 import { setTimeStrToDate } from '@src/time/datetime';
 import { first, last } from '@src/utils/array';
 import { isPresent } from '@src/utils/type';
 
 import { TimeGridRow } from '@t/grid';
+import { CalendarState } from '@t/store';
 
 const classNames = {
   column: cls('column'),
@@ -62,27 +61,32 @@ function BackgroundEvents({
 }
 
 function VerticalEvents({
+  columnIndex,
   events,
   startTime,
   endTime,
 }: {
+  columnIndex: number;
   events: EventUIModel[];
   startTime: TZDate;
   endTime: TZDate;
 }) {
-  const draggingEventUIModel = useStore((store) => store.dnd.draggingEventUIModel);
+  const draggingEventUIModel = useStore(draggingEventUIModelSelector);
 
   // @TODO: use dynamic value
   const style = { marginRight: 8 };
-  const uiModels = getUIModels(events, startTime, endTime);
+  const uiModels = useMemo(
+    () => getUIModels(events, startTime, endTime),
+    [endTime, events, startTime]
+  );
 
   return (
     <div className={classNames.events} style={style}>
-      {uiModels.map((uiModel, index) => (
+      {uiModels.map((uiModel) => (
         <TimeEvent
+          key={`column-${columnIndex}-${startTime.getTime()}-${endTime.getTime()}-${uiModel.cid()}`}
           uiModel={uiModel}
           isDraggingTarget={uiModel.cid() === draggingEventUIModel?.cid()}
-          key={index}
         />
       ))}
     </div>
@@ -94,8 +98,9 @@ interface Props {
   gridSelection: TimeGridSelectionDataByCol | null;
   columnDate: TZDate;
   columnWidth: string;
+  columnIndex: number;
   events: EventUIModel[];
-  movingEvent: EventUIModel | null;
+  movingEventTop: number | null;
   backgroundColor?: string;
   readOnly?: boolean;
 }
@@ -103,12 +108,20 @@ interface Props {
 export const Column = memo(function Column({
   columnDate,
   columnWidth,
+  columnIndex,
   events,
   timeGridRows,
   gridSelection,
   backgroundColor,
-  movingEvent,
+  movingEventTop,
 }: Props) {
+  const draggingEventUIModel = useStore(
+    useCallback(
+      (state: CalendarState) => (isPresent(movingEventTop) ? state.dnd.draggingEventUIModel : null),
+      [movingEventTop]
+    )
+  );
+
   const [startTime, endTime] = useMemo(() => {
     const { startTime: startTimeStr } = first(timeGridRows);
     const { endTime: endTimeStr } = last(timeGridRows);
@@ -153,12 +166,21 @@ export const Column = memo(function Column({
     backgroundColor,
   };
 
+  const shouldRenderMovingEvent = isPresent(draggingEventUIModel) && isPresent(movingEventTop);
+
   return (
     <div className={classNames.column} style={style}>
       <BackgroundEvents events={events} startTime={startTime} endTime={endTime} />
+      {shouldRenderMovingEvent ? (
+        <TimeEvent uiModel={draggingEventUIModel} movingEventTop={movingEventTop} />
+      ) : null}
       {gridSelectionProps ? <GridSelection {...gridSelectionProps} /> : null}
-      <VerticalEvents events={events} startTime={startTime} endTime={endTime} />
-      {movingEvent ? <TimeEvent uiModel={movingEvent} /> : null}
+      <VerticalEvents
+        columnIndex={columnIndex}
+        events={events}
+        startTime={startTime}
+        endTime={endTime}
+      />
     </div>
   );
 });

@@ -117,7 +117,7 @@ describe('useTimeGridEventMove', () => {
     userEvent.click(event);
 
     // Then
-    expect(result.current?.movingEvent).toBeNull();
+    expect(result.current?.movingEventTop).toBeNull();
   });
 
   /**
@@ -206,15 +206,12 @@ describe('useTimeGridEventMove', () => {
       });
 
       // Then
-      if (isNil(result.current) || isNil(result.current.movingEvent)) {
+      if (isNil(result.current) || isNil(result.current.movingEventTop)) {
         throw new Error('movingEvent is null');
       } else {
-        const { movingEvent } = result.current;
-        const topDiff = movingEvent.top - initTop;
-        const leftDiff = movingEvent.left - initLeft;
+        const topDiff = result.current.movingEventTop - initTop;
 
         expect(topDiff).toBeCloseTo(expected.topDiff, 1);
-        expect(leftDiff).toBeCloseTo(expected.leftDiff, 1);
       }
     });
   });

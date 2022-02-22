@@ -141,7 +141,7 @@ export function TimeGrid({
     dateGetter: timeGridSelectionHelper.getDateFromCollection,
     dateCollection: timeGridData,
   });
-  const { movingEvent, currentGridPos } = useTimeGridEventMove({
+  const { movingEventTop, movingEventColumnIndex } = useTimeGridEventMove({
     gridPositionFinder,
     timeGridData,
   });
@@ -158,7 +158,7 @@ export function TimeGrid({
         >
           <GridLines timeGridRows={rows} />
           {columns.map((column, index) => {
-            const shouldRenderMovingEvent = currentGridPos?.columnIndex === index;
+            const shouldRenderMovingEvent = movingEventColumnIndex === index;
             const gridSelection = timeGridSelectionHelper.calculateSelection(
               timeGridSelection,
               index
@@ -167,12 +167,13 @@ export function TimeGrid({
             return (
               <Column
                 key={column.date.toString()}
+                columnIndex={index}
                 timeGridRows={rows}
                 gridSelection={gridSelection}
                 columnDate={column.date}
                 columnWidth={toPercent(column.width)}
                 events={eventsByColumns[index]}
-                movingEvent={shouldRenderMovingEvent ? movingEvent : null}
+                movingEventTop={shouldRenderMovingEvent ? movingEventTop : null}
               />
             );
           })}

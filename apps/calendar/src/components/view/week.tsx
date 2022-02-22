@@ -58,11 +58,15 @@ export function Week() {
     startDayOfWeek,
     workweek
   );
-  const dayGridEvents = getDayGridEvents(weekDates, calendar, {
-    narrowWeekend,
-    hourStart,
-    hourEnd,
-  });
+  const dayGridEvents = useMemo(
+    () =>
+      getDayGridEvents(weekDates, calendar, {
+        narrowWeekend,
+        hourStart,
+        hourEnd,
+      }),
+    [calendar, hourEnd, hourStart, narrowWeekend, weekDates]
+  );
   const timeGridData = useMemo(
     () =>
       createTimeGridData(weekDates, {

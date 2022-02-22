@@ -19,7 +19,7 @@ export function useTimeGridEventMove({
   const { initX, initY, draggingState } = useStore(dndSelector);
   const { draggingEvent: movingEvent, clearDraggingEvent } = useDraggingEvent('move');
 
-  const [currentGridPos] = useCurrentPointerPositionInGrid(gridPositionFinder);
+  const [currentGridPos, clearCurrentGridPos] = useCurrentPointerPositionInGrid(gridPositionFinder);
 
   const [initGridPosition, setInitGridPosition] = useState<GridPosition | null>(null);
   const [gridDiff, setGridDiff] = useState<GridPosition | null>(null);
@@ -40,19 +40,12 @@ export function useTimeGridEventMove({
   }, [currentGridPos, initGridPosition]);
 
   const rowHeight = timeGridData.rows[0].height;
-  const shadowEvent = useMemo(() => {
+  const movingEventTop = useMemo(() => {
     if (isNil(movingEvent) || isNil(gridDiff)) {
       return null;
     }
 
-    const nextTop = movingEvent.top + gridDiff.rowIndex * rowHeight;
-
-    const clonedEvent = movingEvent.clone();
-    clonedEvent.top = nextTop;
-    clonedEvent.left = 0;
-    clonedEvent.width = 100;
-
-    return clonedEvent;
+    return movingEvent.top + gridDiff.rowIndex * rowHeight;
   }, [movingEvent, gridDiff, rowHeight]);
 
   useEffect(() => {
@@ -62,11 +55,12 @@ export function useTimeGridEventMove({
       isPresent(currentGridPos)
     ) {
       clearDraggingEvent();
+      clearCurrentGridPos();
     }
-  }, [clearDraggingEvent, currentGridPos, draggingState, movingEvent]);
+  }, [clearCurrentGridPos, clearDraggingEvent, currentGridPos, draggingState, movingEvent]);
 
   return {
-    movingEvent: shadowEvent,
-    currentGridPos,
+    movingEventTop,
+    movingEventColumnIndex: currentGridPos?.columnIndex ?? -1,
   };
 }

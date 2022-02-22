@@ -17,9 +17,12 @@ const classNames = {
 interface Props {
   uiModel: EventUIModel;
   isDraggingTarget?: boolean;
+  movingEventTop?: number;
 }
 
-function getStyles(uiModel: EventUIModel, isDraggingTarget: boolean) {
+// @TODO: refactor
+// eslint-disable-next-line complexity
+function getStyles(uiModel: EventUIModel, isDraggingTarget: boolean, movingEventTop?: number) {
   const {
     top,
     left,
@@ -41,10 +44,10 @@ function getStyles(uiModel: EventUIModel, isDraggingTarget: boolean) {
 
   const { color, bgColor, borderColor } = model;
   const containerStyle: Record<string, string | number> = {
-    width: width >= 0 ? `calc(${toPercent(width)} - ${marginLeft}px)` : '',
+    width: width >= 0 ? `calc(${toPercent(movingEventTop ? 100 : width)} - ${marginLeft}px)` : '',
     height: `calc(${toPercent(height)} - ${defaultMarginBottom}px)`,
-    top: toPercent(top),
-    left: toPercent(left),
+    top: toPercent(movingEventTop ?? top),
+    left: toPercent(movingEventTop ? 0 : left),
     borderRadius,
     borderLeft: `3px solid ${borderColor}`,
     marginLeft,
@@ -82,7 +85,7 @@ function getStyles(uiModel: EventUIModel, isDraggingTarget: boolean) {
   };
 }
 
-export function TimeEvent({ uiModel, isDraggingTarget = false }: Props) {
+export function TimeEvent({ uiModel, movingEventTop, isDraggingTarget = false }: Props) {
   const { setDraggingEventUIModel } = useDispatch('dnd');
 
   const { model, goingDurationHeight, modelDurationHeight, comingDurationHeight, croppedEnd } =
@@ -90,7 +93,8 @@ export function TimeEvent({ uiModel, isDraggingTarget = false }: Props) {
   const { isReadOnly } = model;
   const { containerStyle, goingDurationStyle, modelDurationStyle, comingDurationStyle } = getStyles(
     uiModel,
-    isDraggingTarget
+    isDraggingTarget,
+    movingEventTop
   );
 
   const startEventMove = useDrag(DRAGGING_TYPE_CREATORS.moveEvent(`${uiModel.cid()}`), {
