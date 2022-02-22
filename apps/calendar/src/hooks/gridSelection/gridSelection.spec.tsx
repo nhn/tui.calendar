@@ -1,7 +1,7 @@
 import { h } from 'preact';
 
 import { fireEvent, screen } from '@testing-library/preact';
-import { act, renderHook } from '@testing-library/preact-hooks';
+import { renderHook } from '@testing-library/preact-hooks';
 import userEvent from '@testing-library/user-event';
 
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
@@ -97,28 +97,20 @@ describe('useGridSelection', () => {
     return result;
   }
   function dragMouse(container: HTMLElement, from: ClientMousePosition, to: ClientMousePosition) {
-    act(() => {
-      fireEvent.mouseDown(container, {
-        clientX: from.clientX,
-        clientY: from.clientY,
-      });
+    fireEvent.mouseDown(container, {
+      clientX: from.clientX,
+      clientY: from.clientY,
     });
     // to init drag
-    act(() => {
-      fireEvent.mouseMove(document, {
-        clientX: 0,
-        clientY: 0,
-      });
+    fireEvent.mouseMove(document, {
+      clientX: 0,
+      clientY: 0,
     });
-    act(() => {
-      fireEvent.mouseMove(document, {
-        clientX: to.clientX,
-        clientY: to.clientY,
-      });
+    fireEvent.mouseMove(document, {
+      clientX: to.clientX,
+      clientY: to.clientY,
     });
-    act(() => {
-      fireEvent.mouseUp(document);
-    });
+    fireEvent.mouseUp(document);
   }
 
   beforeEach(() => {
@@ -212,11 +204,9 @@ describe('useGridSelection', () => {
         const container = screen.getByTestId('container');
 
         // When
-        act(() => {
-          userEvent.click(container, {
-            clientX: initX,
-            clientY: initY,
-          });
+        userEvent.click(container, {
+          clientX: initX,
+          clientY: initY,
         });
 
         // Then

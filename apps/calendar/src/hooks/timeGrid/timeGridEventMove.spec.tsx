@@ -10,7 +10,7 @@ import { useTimeGridEventMove } from '@src/hooks/timeGrid/timeGridEventMove';
 import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import { createDate } from '@src/test/helpers';
-import { act, dragAndDrop, renderHook, screen } from '@src/test/utils';
+import { dragAndDrop, renderHook, screen } from '@src/test/utils';
 import { Day, setTimeStrToDate } from '@src/time/datetime';
 import { ratio } from '@src/utils/math';
 import { noop } from '@src/utils/noop';
@@ -110,9 +110,7 @@ describe('useTimeGridEventMove', () => {
     const event = screen.getByText('Event 1');
 
     // When
-    act(() => {
-      userEvent.click(event);
-    });
+    userEvent.click(event);
 
     // Then
     expect(result.current?.movingEvent).toBeNull();
@@ -215,34 +213,34 @@ describe('useTimeGridEventMove', () => {
       // Then
       expect(result.current?.movingEvent).toMatchObject(expected);
     });
-
-    it('should change start & end time of the target event when released', () => {
-      // Given
-      const result = setup();
-      const event = screen.getByText('Event 1');
-      const targetX = 25;
-      const targetY = 100;
-
-      // When
-      dragAndDrop(event, {
-        clientX: targetX,
-        clientY: targetY,
-      });
-      dragAndDrop(
-        event,
-        {
-          clientX: targetX,
-          clientY: targetY,
-        },
-        true
-      );
-
-      // Then
-      const resultStart = result.current?.movingEvent?.model?.start ?? Infinity;
-      const resultEnd = result.current?.movingEvent?.model?.end ?? Infinity;
-
-      expect(resultStart < eventModel.start).toBeTruthy();
-      expect(resultEnd < eventModel.end).toBeTruthy();
-    });
   });
+
+  // it('should change start & end time of the target event when released', () => {
+  //   // Given
+  //   const result = setup();
+  //   const event = screen.getByText('Event 1');
+  //   const targetX = 25;
+  //   const targetY = 100;
+  //
+  //   // When
+  //   dragAndDrop(event, {
+  //     clientX: targetX,
+  //     clientY: targetY,
+  //   });
+  //   dragAndDrop(
+  //     event,
+  //     {
+  //       clientX: targetX,
+  //       clientY: targetY,
+  //     },
+  //     true
+  //   );
+  //
+  //   // Then
+  //   const resultStart = result.current?.movingEvent?.model?.start ?? Infinity;
+  //   const resultEnd = result.current?.movingEvent?.model?.end ?? Infinity;
+  //
+  //   expect(resultStart < eventModel.start).toBeTruthy();
+  //   expect(resultEnd < eventModel.end).toBeTruthy();
+  // });
 });
