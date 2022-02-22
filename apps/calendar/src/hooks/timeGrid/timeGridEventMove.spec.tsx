@@ -12,8 +12,8 @@ import EventUIModel from '@src/model/eventUIModel';
 import { createDate } from '@src/test/helpers';
 import { dragAndDrop, renderHook, screen } from '@src/test/utils';
 import { Day, setTimeStrToDate } from '@src/time/datetime';
-import { ratio } from '@src/utils/math';
 import { noop } from '@src/utils/noop';
+import { isNil } from '@src/utils/type';
 
 describe('useTimeGridEventMove', () => {
   let eventModel: EventModel;
@@ -25,13 +25,16 @@ describe('useTimeGridEventMove', () => {
   const DEFAULT_CONTAINER_WIDTH = 70;
   const DEFAULT_CONTAINER_HEIGHT = 480;
   const DEFAULT_START_ROW_INDEX = 20;
-  const DEFAULT_END_ROW_INDEX = 20;
+  const DEFAULT_END_ROW_INDEX = 28;
   const DEFAULT_COLUMN_INDEX = 2;
-  function getColumnIndex(x: number) {
-    return Math.floor(ratio(DEFAULT_CONTAINER_WIDTH, timeGridData.columns.length, x));
-  }
-  function getRowIndex(y: number) {
-    return Math.floor(ratio(DEFAULT_CONTAINER_HEIGHT, timeGridData.rows.length, y));
+  const BASE_ROW_HEIGHT = timeGridData.rows[0].height;
+  const BASE_COLUMN_WIDTH = timeGridData.columns[0].width;
+
+  function toMousePosition(gridX: number, gridY: number) {
+    return {
+      clientX: gridX * 10 + 5,
+      clientY: gridY * 10 + 5,
+    };
   }
 
   const setup = () => {
@@ -100,11 +103,12 @@ describe('useTimeGridEventMove', () => {
     eventUIModel = EventUIModel.create(eventModel);
     eventUIModel.setUIProps({
       top: startRowTop,
+      left: timeGridData.columns[DEFAULT_COLUMN_INDEX].left,
       height: endRowTop + endRowHeight - startRowTop,
     });
   });
 
-  it('should return null when not dragging', () => {
+  it.skip('should return null when not dragging', () => {
     // Given
     const result = setup();
     const event = screen.getByText('Event 1');
@@ -122,125 +126,96 @@ describe('useTimeGridEventMove', () => {
   const cases = [
     {
       name: 'to the top',
-      clientX: 25,
-      clientY: 100,
+      targetPosition: toMousePosition(DEFAULT_COLUMN_INDEX, DEFAULT_START_ROW_INDEX - 2),
       expected: {
-        top: timeGridData.rows[getRowIndex(100)].top,
-        left: timeGridData.columns[getColumnIndex(25)].left,
+        topDiff: -BASE_ROW_HEIGHT * 2,
+        leftDiff: 0,
       },
     },
     {
       name: 'to the upper right',
-      clientX: 45,
-      clientY: 100,
+      targetPosition: toMousePosition(DEFAULT_COLUMN_INDEX + 1, DEFAULT_START_ROW_INDEX - 2),
       expected: {
-        top: timeGridData.rows[getRowIndex(100)].top,
-        left: timeGridData.columns[getColumnIndex(45)].left,
+        topDiff: -BASE_ROW_HEIGHT * 2,
+        leftDiff: BASE_COLUMN_WIDTH,
       },
     },
     {
       name: 'to the right',
-      clientX: 45,
-      clientY: 240,
+      targetPosition: toMousePosition(DEFAULT_COLUMN_INDEX + 1, DEFAULT_START_ROW_INDEX),
       expected: {
-        top: timeGridData.rows[getRowIndex(240)].top,
-        left: timeGridData.columns[getColumnIndex(45)].left,
+        topDiff: 0,
+        leftDiff: BASE_COLUMN_WIDTH,
       },
     },
     {
       name: 'to the lower right',
-      clientX: 45,
-      clientY: 360,
+      targetPosition: toMousePosition(DEFAULT_COLUMN_INDEX + 1, DEFAULT_START_ROW_INDEX + 2),
       expected: {
-        top: timeGridData.rows[getRowIndex(360)].top,
-        left: timeGridData.columns[getColumnIndex(45)].left,
+        topDiff: BASE_ROW_HEIGHT * 2,
+        leftDiff: BASE_COLUMN_WIDTH,
       },
     },
     {
       name: 'to the bottom',
-      clientX: 25,
-      clientY: 360,
+      targetPosition: toMousePosition(DEFAULT_COLUMN_INDEX, DEFAULT_START_ROW_INDEX + 2),
       expected: {
-        top: timeGridData.rows[getRowIndex(360)].top,
-        left: timeGridData.columns[getColumnIndex(25)].left,
+        topDiff: BASE_ROW_HEIGHT * 2,
+        leftDiff: 0,
       },
     },
     {
       name: 'to the lower left',
-      clientX: 5,
-      clientY: 360,
+      targetPosition: toMousePosition(DEFAULT_COLUMN_INDEX - 1, DEFAULT_START_ROW_INDEX + 2),
       expected: {
-        top: timeGridData.rows[getRowIndex(360)].top,
-        left: timeGridData.columns[getColumnIndex(5)].left,
+        topDiff: BASE_ROW_HEIGHT * 2,
+        leftDiff: -BASE_COLUMN_WIDTH,
       },
     },
     {
       name: 'to the left',
-      clientX: 5,
-      clientY: 240,
+      targetPosition: toMousePosition(DEFAULT_COLUMN_INDEX - 1, DEFAULT_START_ROW_INDEX),
       expected: {
-        top: timeGridData.rows[getRowIndex(240)].top,
-        left: timeGridData.columns[getColumnIndex(5)].left,
+        topDiff: 0,
+        leftDiff: -BASE_COLUMN_WIDTH,
       },
     },
     {
       name: 'to the upper left',
-      clientX: 5,
-      clientY: 100,
+      targetPosition: toMousePosition(DEFAULT_COLUMN_INDEX - 1, DEFAULT_START_ROW_INDEX - 2),
       expected: {
-        top: timeGridData.rows[getRowIndex(100)].top,
-        left: timeGridData.columns[getColumnIndex(5)].left,
+        topDiff: -BASE_ROW_HEIGHT * 2,
+        leftDiff: -BASE_COLUMN_WIDTH,
       },
     },
   ];
 
-  cases.forEach(({ name, clientX, clientY, expected }) => {
+  cases.forEach(({ name, targetPosition, expected }) => {
     it(`should change top & left value of moving event while dragging ${name}`, () => {
       // Given
       const result = setup();
       const event = screen.getByText('Event 1');
+      const { top: initTop, left: initLeft } = eventUIModel.getUIProps();
 
       // When
-      dragAndDrop(
-        event,
-        {
-          clientX,
-          clientY,
-        },
-        true
-      );
+      dragAndDrop({
+        element: event,
+        initPosition: toMousePosition(DEFAULT_COLUMN_INDEX, DEFAULT_START_ROW_INDEX),
+        targetPosition,
+        hold: true,
+      });
 
       // Then
-      expect(result.current?.movingEvent).toMatchObject(expected);
+      if (isNil(result.current) || isNil(result.current.movingEvent)) {
+        throw new Error('movingEvent is null');
+      } else {
+        const { movingEvent } = result.current;
+        const topDiff = movingEvent.top - initTop;
+        const leftDiff = movingEvent.left - initLeft;
+
+        expect(topDiff).toBeCloseTo(expected.topDiff, 1);
+        expect(leftDiff).toBeCloseTo(expected.leftDiff, 1);
+      }
     });
   });
-
-  // it('should change start & end time of the target event when released', () => {
-  //   // Given
-  //   const result = setup();
-  //   const event = screen.getByText('Event 1');
-  //   const targetX = 25;
-  //   const targetY = 100;
-  //
-  //   // When
-  //   dragAndDrop(event, {
-  //     clientX: targetX,
-  //     clientY: targetY,
-  //   });
-  //   dragAndDrop(
-  //     event,
-  //     {
-  //       clientX: targetX,
-  //       clientY: targetY,
-  //     },
-  //     true
-  //   );
-  //
-  //   // Then
-  //   const resultStart = result.current?.movingEvent?.model?.start ?? Infinity;
-  //   const resultEnd = result.current?.movingEvent?.model?.end ?? Infinity;
-  //
-  //   expect(resultStart < eventModel.start).toBeTruthy();
-  //   expect(resultEnd < eventModel.end).toBeTruthy();
-  // });
 });

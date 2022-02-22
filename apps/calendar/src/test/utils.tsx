@@ -59,20 +59,20 @@ function renderHook<P, R>(
   return ptlRenderHook(hook, { wrapper: Wrapper, ...options });
 }
 
-export function dragAndDrop(
-  element: HTMLElement,
-  targetPosition: ClientMousePosition,
-  hold = false
-) {
-  fireEvent.mouseDown(element);
-  fireEvent.mouseMove(document, {
-    clientX: targetPosition.clientX + 3,
-    clientY: targetPosition.clientY + 3,
-  });
-  fireEvent.mouseMove(document, {
-    clientX: targetPosition.clientX,
-    clientY: targetPosition.clientY,
-  });
+export function dragAndDrop({
+  element,
+  initPosition,
+  targetPosition,
+  hold = false,
+}: {
+  element: HTMLElement;
+  targetPosition: ClientMousePosition;
+  initPosition?: ClientMousePosition;
+  hold?: boolean;
+}) {
+  fireEvent.mouseDown(element, initPosition);
+  fireEvent.mouseMove(document, targetPosition);
+  fireEvent.mouseMove(document, targetPosition);
   if (!hold) {
     fireEvent.mouseUp(document);
   }

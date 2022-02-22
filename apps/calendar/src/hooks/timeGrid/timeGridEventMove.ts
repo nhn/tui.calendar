@@ -1,12 +1,13 @@
-import { useEffect, useMemo } from 'preact/hooks';
+import { useEffect, useMemo, useState } from 'preact/hooks';
 
 import { useStore } from '@src/contexts/calendarStore';
 import { useCurrentPointerPositionInGrid } from '@src/hooks/event/currentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/draggingEvent';
-import { isNotDraggingSelector } from '@src/selectors/dnd';
+import { dndSelector } from '@src/selectors';
+import { DraggingState } from '@src/slices/dnd';
 import { isNil, isPresent } from '@src/utils/type';
 
-import { GridPositionFinder, TimeGridData } from '@t/grid';
+import { GridPosition, GridPositionFinder, TimeGridData } from '@t/grid';
 
 export function useTimeGridEventMove({
   gridPositionFinder,
@@ -15,36 +16,56 @@ export function useTimeGridEventMove({
   gridPositionFinder: GridPositionFinder;
   timeGridData: TimeGridData;
 }) {
-  const isNotDragging = useStore(isNotDraggingSelector);
+  const { initX, initY, draggingState } = useStore(dndSelector);
   const { draggingEvent: movingEvent, clearDraggingEvent } = useDraggingEvent('move');
 
   const [currentGridPos] = useCurrentPointerPositionInGrid(gridPositionFinder);
 
+  const [initGridPosition, setInitGridPosition] = useState<GridPosition | null>(null);
+  const [gridDiff, setGridDiff] = useState<GridPosition | null>(null);
+
+  useEffect(() => {
+    if (isPresent(initX) && isPresent(initY) && isPresent(movingEvent)) {
+      setInitGridPosition(gridPositionFinder({ clientX: initX, clientY: initY }));
+    }
+  }, [gridPositionFinder, initX, initY, movingEvent]);
+
+  useEffect(() => {
+    if (isPresent(currentGridPos) && isPresent(initGridPosition)) {
+      setGridDiff({
+        columnIndex: currentGridPos.columnIndex - initGridPosition.columnIndex,
+        rowIndex: currentGridPos.rowIndex - initGridPosition.rowIndex,
+      });
+    }
+  }, [currentGridPos, initGridPosition]);
+
+  const rowHeight = timeGridData.rows[0].height;
+  const columnWidth = timeGridData.columns[0].width;
   const shadowEvent = useMemo(() => {
-    if (isNil(movingEvent) || isNil(currentGridPos)) {
+    if (isNil(movingEvent) || isNil(gridDiff)) {
       return null;
     }
 
-    const { top } = timeGridData.rows[currentGridPos?.rowIndex ?? 0];
-    const { left } = timeGridData.columns[currentGridPos?.columnIndex ?? 0];
+    const nextTop = movingEvent.top + gridDiff.rowIndex * rowHeight;
+    const nextLeft = movingEvent.left + gridDiff.columnIndex * columnWidth;
 
     const clonedEvent = movingEvent.clone();
-    clonedEvent.top = top;
-    clonedEvent.left = left;
+    clonedEvent.top = nextTop;
+    clonedEvent.left = nextLeft;
     clonedEvent.width = 100;
 
     return clonedEvent;
-  }, [movingEvent, timeGridData, currentGridPos]);
+  }, [movingEvent, gridDiff, rowHeight, columnWidth]);
 
   useEffect(() => {
-    if (isNotDragging && isPresent(movingEvent) && isPresent(currentGridPos)) {
-      // const { rowIndex, columnIndex } = currentGridPos;
-      // const eventDuration = movingEvent.duration();
-      // const prevStartDate = movingEvent.getStarts();
-      //
+    if (
+      draggingState === DraggingState.IDLE &&
+      isPresent(movingEvent) &&
+      isPresent(currentGridPos)
+    ) {
       clearDraggingEvent();
     }
-  }, [clearDraggingEvent, currentGridPos, isNotDragging, movingEvent]);
+  }, [clearDraggingEvent, currentGridPos, draggingState, movingEvent]);
 
   return {
     movingEvent: shadowEvent,
