@@ -40,22 +40,20 @@ export function useTimeGridEventMove({
   }, [currentGridPos, initGridPosition]);
 
   const rowHeight = timeGridData.rows[0].height;
-  const columnWidth = timeGridData.columns[0].width;
   const shadowEvent = useMemo(() => {
     if (isNil(movingEvent) || isNil(gridDiff)) {
       return null;
     }
 
     const nextTop = movingEvent.top + gridDiff.rowIndex * rowHeight;
-    const nextLeft = movingEvent.left + gridDiff.columnIndex * columnWidth;
 
     const clonedEvent = movingEvent.clone();
     clonedEvent.top = nextTop;
-    clonedEvent.left = nextLeft;
+    clonedEvent.left = 0;
     clonedEvent.width = 100;
 
     return clonedEvent;
-  }, [movingEvent, gridDiff, rowHeight, columnWidth]);
+  }, [movingEvent, gridDiff, rowHeight]);
 
   useEffect(() => {
     if (
@@ -69,5 +67,6 @@ export function useTimeGridEventMove({
 
   return {
     movingEvent: shadowEvent,
+    currentGridPos,
   };
 }

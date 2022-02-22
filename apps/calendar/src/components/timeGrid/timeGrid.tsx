@@ -1,6 +1,7 @@
 import { h } from 'preact';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 
+import { TimeEvent } from '@src/components/events/timeEvent';
 import { addTimeGridPrefix, className as timegridClassName } from '@src/components/timeGrid';
 import { Column } from '@src/components/timeGrid/column';
 import { CurrentTimeIndicator } from '@src/components/timeGrid/currentTimeIndicator';
@@ -13,6 +14,7 @@ import { createGridPositionFinder } from '@src/helpers/grid';
 import { timeGridSelectionHelper } from '@src/helpers/gridSelection';
 import { useDOMNode } from '@src/hooks/common/domNode';
 import { useGridSelection } from '@src/hooks/gridSelection/gridSelection';
+import { useTimeGridEventMove } from '@src/hooks/timeGrid/timeGridEventMove';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { isSameDate, SIXTY_SECONDS, toEndOfDay, toStartOfDay } from '@src/time/datetime';
@@ -139,6 +141,10 @@ export function TimeGrid({
     dateGetter: timeGridSelectionHelper.getDateFromCollection,
     dateCollection: timeGridData,
   });
+  const { movingEvent, currentGridPos } = useTimeGridEventMove({
+    gridPositionFinder,
+    timeGridData,
+  });
 
   return (
     <div className={classNames.timegrid}>
@@ -152,6 +158,7 @@ export function TimeGrid({
         >
           <GridLines timeGridRows={rows} />
           {columns.map((column, index) => {
+            const shouldRenderMovingEvent = currentGridPos?.columnIndex === index;
             const gridSelection = timeGridSelectionHelper.calculateSelection(
               timeGridSelection,
               index
@@ -165,6 +172,7 @@ export function TimeGrid({
                 columnDate={column.date}
                 columnWidth={toPercent(column.width)}
                 events={eventsByColumns[index]}
+                movingEvent={shouldRenderMovingEvent ? movingEvent : null}
               />
             );
           })}

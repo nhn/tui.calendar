@@ -1,7 +1,10 @@
 import { h } from 'preact';
 
 import { Template } from '@src/components/template';
+import { useDispatch } from '@src/contexts/calendarStore';
 import { cls, toPercent } from '@src/helpers/css';
+import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
+import { useDrag } from '@src/hooks/common/drag';
 import EventUIModel from '@src/model/eventUIModel';
 
 const classNames = {
@@ -12,10 +15,11 @@ const classNames = {
 };
 
 interface Props {
-  eventModels: EventUIModel;
+  uiModel: EventUIModel;
+  isDraggingTarget?: boolean;
 }
 
-function getStyles(uiModel: EventUIModel) {
+function getStyles(uiModel: EventUIModel, isDraggingTarget: boolean) {
   const {
     top,
     left,
@@ -46,6 +50,7 @@ function getStyles(uiModel: EventUIModel) {
     marginLeft,
     color,
     backgroundColor: bgColor,
+    opacity: isDraggingTarget ? 0.5 : 1,
   };
   const goingDurationStyle = {
     height: toPercent(goingDurationHeight),
@@ -77,15 +82,29 @@ function getStyles(uiModel: EventUIModel) {
   };
 }
 
-export function TimeEvent({ eventModels }: Props) {
+export function TimeEvent({ uiModel, isDraggingTarget = false }: Props) {
+  const { setDraggingEventUIModel } = useDispatch('dnd');
+
   const { model, goingDurationHeight, modelDurationHeight, comingDurationHeight, croppedEnd } =
-    eventModels;
+    uiModel;
   const { isReadOnly } = model;
-  const { containerStyle, goingDurationStyle, modelDurationStyle, comingDurationStyle } =
-    getStyles(eventModels);
+  const { containerStyle, goingDurationStyle, modelDurationStyle, comingDurationStyle } = getStyles(
+    uiModel,
+    isDraggingTarget
+  );
+
+  const startEventMove = useDrag(DRAGGING_TYPE_CREATORS.moveEvent(`${uiModel.cid()}`), {
+    onInit: () => {
+      setDraggingEventUIModel(uiModel);
+    },
+  });
+  const handleEventMoveStart = (e: MouseEvent) => {
+    e.stopPropagation();
+    startEventMove(e);
+  };
 
   return (
-    <div className={classNames.time} style={containerStyle}>
+    <div className={classNames.time} style={containerStyle} onMouseDown={handleEventMoveStart}>
       {goingDurationHeight ? (
         <div className={classNames.travelTime} style={goingDurationStyle}>
           <Template template="goingDuration" model={model} />
