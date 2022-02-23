@@ -6,6 +6,9 @@ import { cls, toPercent } from '@src/helpers/css';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/drag';
 import EventUIModel from '@src/model/eventUIModel';
+import type TZDate from '@src/time/date';
+import { passConditionalProp } from '@src/utils/preact';
+import { isNil } from '@src/utils/type';
 
 const classNames = {
   time: cls('event-time'),
@@ -17,12 +20,12 @@ const classNames = {
 interface Props {
   uiModel: EventUIModel;
   isDraggingTarget?: boolean;
-  movingEventTop?: number;
+  nextStartTime?: TZDate | null;
 }
 
 // @TODO: refactor
 // eslint-disable-next-line complexity
-function getStyles(uiModel: EventUIModel, isDraggingTarget: boolean, movingEventTop?: number) {
+function getStyles(uiModel: EventUIModel, isDraggingTarget: boolean) {
   const {
     top,
     left,
@@ -44,10 +47,10 @@ function getStyles(uiModel: EventUIModel, isDraggingTarget: boolean, movingEvent
 
   const { color, bgColor, borderColor } = model;
   const containerStyle: Record<string, string | number> = {
-    width: width >= 0 ? `calc(${toPercent(movingEventTop ? 100 : width)} - ${marginLeft}px)` : '',
+    width: width >= 0 ? `calc(${toPercent(width)} - ${marginLeft}px)` : '',
     height: `calc(${toPercent(height)} - ${defaultMarginBottom}px)`,
-    top: toPercent(movingEventTop ?? top),
-    left: toPercent(movingEventTop ? 0 : left),
+    top: toPercent(top),
+    left: toPercent(left),
     borderRadius,
     borderLeft: `3px solid ${borderColor}`,
     marginLeft,
@@ -85,7 +88,7 @@ function getStyles(uiModel: EventUIModel, isDraggingTarget: boolean, movingEvent
   };
 }
 
-export function TimeEvent({ uiModel, movingEventTop, isDraggingTarget = false }: Props) {
+export function TimeEvent({ uiModel, isDraggingTarget = false, nextStartTime }: Props) {
   const { setDraggingEventUIModel } = useDispatch('dnd');
 
   const { model, goingDurationHeight, modelDurationHeight, comingDurationHeight, croppedEnd } =
@@ -93,11 +96,10 @@ export function TimeEvent({ uiModel, movingEventTop, isDraggingTarget = false }:
   const { isReadOnly } = model;
   const { containerStyle, goingDurationStyle, modelDurationStyle, comingDurationStyle } = getStyles(
     uiModel,
-    isDraggingTarget,
-    movingEventTop
+    isDraggingTarget
   );
 
-  const startEventMove = useDrag(DRAGGING_TYPE_CREATORS.moveEvent(`${uiModel.cid()}`), {
+  const startEventMove = useDrag(DRAGGING_TYPE_CREATORS.moveEvent('timeGrid', `${uiModel.cid()}`), {
     onInit: () => {
       setDraggingEventUIModel(uiModel);
     },
@@ -108,7 +110,11 @@ export function TimeEvent({ uiModel, movingEventTop, isDraggingTarget = false }:
   };
 
   return (
-    <div className={classNames.time} style={containerStyle} onMouseDown={handleEventMoveStart}>
+    <div
+      className={classNames.time}
+      style={containerStyle}
+      onMouseDown={passConditionalProp(isNil(nextStartTime), handleEventMoveStart)}
+    >
       {goingDurationHeight ? (
         <div className={classNames.travelTime} style={goingDurationStyle}>
           <Template template="goingDuration" model={model} />
@@ -116,7 +122,13 @@ export function TimeEvent({ uiModel, movingEventTop, isDraggingTarget = false }:
       ) : null}
       {modelDurationHeight ? (
         <div className={classNames.content} style={modelDurationStyle}>
-          <Template template="time" model={model} />
+          <Template
+            template="time"
+            model={{
+              start: isNil(nextStartTime) ? model.start : nextStartTime,
+              title: model.title,
+            }}
+          />
         </div>
       ) : null}
       {comingDurationHeight ? (

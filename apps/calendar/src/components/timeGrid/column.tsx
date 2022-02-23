@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { memo } from 'preact/compat';
-import { useCallback, useMemo, useState } from 'preact/hooks';
+import { useMemo } from 'preact/hooks';
 
 import { BackgroundEvent } from '@src/components/events/backgroundEvent';
 import { TimeEvent } from '@src/components/events/timeEvent';
@@ -15,10 +15,8 @@ import { draggingEventUIModelSelector } from '@src/selectors/dnd';
 import TZDate from '@src/time/date';
 import { setTimeStrToDate } from '@src/time/datetime';
 import { first, last } from '@src/utils/array';
-import { isPresent } from '@src/utils/type';
 
 import { TimeGridRow } from '@t/grid';
-import { CalendarState } from '@t/store';
 
 const classNames = {
   column: cls('column'),
@@ -103,7 +101,6 @@ interface Props {
   columnDate: TZDate;
   columnWidth: string;
   events: EventUIModel[];
-  movingEventTop: number | null;
   backgroundColor?: string;
   readOnly?: boolean;
 }
@@ -115,15 +112,7 @@ export const Column = memo(function Column({
   timeGridRows,
   gridSelection,
   backgroundColor,
-  movingEventTop,
 }: Props) {
-  const draggingEventUIModel = useStore(
-    useCallback(
-      (state: CalendarState) => (isPresent(movingEventTop) ? state.dnd.draggingEventUIModel : null),
-      [movingEventTop]
-    )
-  );
-
   const [startTime, endTime] = useMemo(() => {
     const { startTime: startTimeStr } = first(timeGridRows);
     const { endTime: endTimeStr } = last(timeGridRows);
@@ -168,14 +157,9 @@ export const Column = memo(function Column({
     backgroundColor,
   };
 
-  const shouldRenderMovingEvent = isPresent(draggingEventUIModel) && isPresent(movingEventTop);
-
   return (
     <div className={classNames.column} style={style}>
       <BackgroundEvents events={events} startTime={startTime} endTime={endTime} />
-      {shouldRenderMovingEvent ? (
-        <TimeEvent uiModel={draggingEventUIModel} movingEventTop={movingEventTop} />
-      ) : null}
       {gridSelectionProps ? <GridSelection {...gridSelectionProps} /> : null}
       <VerticalEvents events={events} startTime={startTime} endTime={endTime} />
     </div>

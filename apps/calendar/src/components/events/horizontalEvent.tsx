@@ -11,6 +11,7 @@ import { useDrag } from '@src/hooks/common/drag';
 import EventUIModel from '@src/model/eventUIModel';
 import { optionsSelector } from '@src/selectors';
 import { isDraggingSelector } from '@src/selectors/dnd';
+import { passConditionalProp } from '@src/utils/preact';
 import { isNil } from '@src/utils/type';
 
 interface Props {
@@ -135,11 +136,6 @@ function getTestId({ model }: EventUIModel) {
   const id = model.id ? `${model.id}-` : '';
 
   return `${calendarId}${id}${model.title}`;
-}
-
-function passConditionalProp<P>(condition: boolean, prop: P) {
-  // eslint-disable-next-line no-undefined
-  return condition ? prop : undefined;
 }
 
 export function HorizontalEvent({

@@ -11,7 +11,7 @@ import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import { createDate } from '@src/test/helpers';
 import { dragAndDrop, renderHook, screen } from '@src/test/utils';
-import { Day, setTimeStrToDate } from '@src/time/datetime';
+import { Day, setTimeStrToDate, toFormat } from '@src/time/datetime';
 import { noop } from '@src/utils/noop';
 import { isNil } from '@src/utils/type';
 
@@ -24,9 +24,12 @@ describe('useTimeGridEventMove', () => {
   const timeGridData = createTimeGridData(rows, { hourStart: 0, hourEnd: 24 });
   const DEFAULT_CONTAINER_WIDTH = 70;
   const DEFAULT_CONTAINER_HEIGHT = 480;
+
+  // Starts from the third day of the week, 10:00 AM ~ 12:00 PM
   const DEFAULT_START_ROW_INDEX = 20;
   const DEFAULT_END_ROW_INDEX = 28;
   const DEFAULT_COLUMN_INDEX = 2;
+
   const BASE_ROW_HEIGHT = timeGridData.rows[0].height;
   const BASE_COLUMN_WIDTH = timeGridData.columns[0].width;
 
@@ -111,7 +114,7 @@ describe('useTimeGridEventMove', () => {
     });
   });
 
-  it.skip('should return null when not dragging', () => {
+  it('should return null when not dragging', () => {
     // Given
     const result = setup();
     const event = screen.getByText('Event 1');
@@ -120,7 +123,7 @@ describe('useTimeGridEventMove', () => {
     userEvent.click(event);
 
     // Then
-    expect(result.current).toBeNull();
+    expect(result.current?.movingEvent).toBeNull();
   });
 
   /**
@@ -133,6 +136,7 @@ describe('useTimeGridEventMove', () => {
       expected: {
         topDiff: -BASE_ROW_HEIGHT * 2,
         leftDiff: 0,
+        timeLabel: '09:00',
       },
     },
     {
@@ -141,6 +145,7 @@ describe('useTimeGridEventMove', () => {
       expected: {
         topDiff: -BASE_ROW_HEIGHT * 2,
         leftDiff: BASE_COLUMN_WIDTH,
+        timeLabel: '09:00',
       },
     },
     {
@@ -149,6 +154,7 @@ describe('useTimeGridEventMove', () => {
       expected: {
         topDiff: 0,
         leftDiff: BASE_COLUMN_WIDTH,
+        timeLabel: '10:00',
       },
     },
     {
@@ -157,6 +163,7 @@ describe('useTimeGridEventMove', () => {
       expected: {
         topDiff: BASE_ROW_HEIGHT * 2,
         leftDiff: BASE_COLUMN_WIDTH,
+        timeLabel: '11:00',
       },
     },
     {
@@ -165,6 +172,7 @@ describe('useTimeGridEventMove', () => {
       expected: {
         topDiff: BASE_ROW_HEIGHT * 2,
         leftDiff: 0,
+        timeLabel: '11:00',
       },
     },
     {
@@ -173,6 +181,7 @@ describe('useTimeGridEventMove', () => {
       expected: {
         topDiff: BASE_ROW_HEIGHT * 2,
         leftDiff: -BASE_COLUMN_WIDTH,
+        timeLabel: '11:00',
       },
     },
     {
@@ -181,6 +190,7 @@ describe('useTimeGridEventMove', () => {
       expected: {
         topDiff: 0,
         leftDiff: -BASE_COLUMN_WIDTH,
+        timeLabel: '10:00',
       },
     },
     {
@@ -189,6 +199,7 @@ describe('useTimeGridEventMove', () => {
       expected: {
         topDiff: -BASE_ROW_HEIGHT * 2,
         leftDiff: -BASE_COLUMN_WIDTH,
+        timeLabel: '09:00',
       },
     },
   ];
@@ -209,14 +220,19 @@ describe('useTimeGridEventMove', () => {
       });
 
       // Then
-      if (isNil(result.current)) {
+      if (
+        isNil(result.current) ||
+        isNil(result.current.movingEvent) ||
+        isNil(result.current.nextStartTime)
+      ) {
         throw new Error('movingEvent is null');
       } else {
-        const topDiff = result.current.top - initTop;
-        const leftDiff = result.current.left - initLeft;
+        const topDiff = result.current.movingEvent.top - initTop;
+        const leftDiff = result.current.movingEvent.left - initLeft;
 
         expect(topDiff).toBeCloseTo(expected.topDiff, 1);
         expect(leftDiff).toBeCloseTo(expected.leftDiff, 1);
+        expect(toFormat(result.current.nextStartTime, 'HH:mm')).toBe(expected.timeLabel);
       }
     });
   });
