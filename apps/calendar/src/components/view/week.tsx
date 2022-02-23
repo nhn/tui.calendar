@@ -58,7 +58,7 @@ export function Week() {
     startDayOfWeek,
     workweek
   );
-  const dayGridEvents = useMemo(
+  const eventByPanel = useMemo(
     () =>
       getDayGridEvents(weekDates, calendar, {
         narrowWeekend,
@@ -87,7 +87,7 @@ export function Week() {
           {rowType === 'allday' ? (
             <AlldayGridRow
               category={rowType}
-              events={dayGridEvents[rowType]}
+              events={eventByPanel[rowType]}
               rowStyleInfo={rowStyleInfo}
               gridColWidthMap={cellWidthMap}
               weekDates={weekDates}
@@ -97,7 +97,7 @@ export function Week() {
           ) : (
             <OtherGridRow
               category={rowType}
-              events={dayGridEvents[rowType]}
+              events={eventByPanel[rowType]}
               weekDates={weekDates}
               height={gridRowLayout[rowType].height}
               options={weekOptions}
@@ -122,7 +122,7 @@ export function Week() {
       </Panel>
       {dayGridRows}
       <Panel name="time" autoSize={1}>
-        <TimeGrid events={dayGridEvents.time} timeGridData={timeGridData} />
+        <TimeGrid events={eventByPanel.time} timeGridData={timeGridData} />
       </Panel>
     </Layout>
   );

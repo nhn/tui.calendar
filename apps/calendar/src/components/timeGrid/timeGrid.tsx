@@ -1,7 +1,6 @@
 import { h } from 'preact';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 
-import { TimeEvent } from '@src/components/events/timeEvent';
 import { addTimeGridPrefix, className as timegridClassName } from '@src/components/timeGrid';
 import { Column } from '@src/components/timeGrid/column';
 import { CurrentTimeIndicator } from '@src/components/timeGrid/currentTimeIndicator';
@@ -115,7 +114,13 @@ export function TimeGrid({
   const { columns, rows } = timeGridData;
 
   const eventsByColumns = useMemo(
-    () => columns.map(({ date }) => events.filter(isBetween(toStartOfDay(date), toEndOfDay(date)))),
+    () =>
+      columns.map(({ date }) =>
+        events
+          .filter(isBetween(toStartOfDay(date), toEndOfDay(date)))
+          // NOTE: prevent shared reference between columns
+          .map((uiModel) => uiModel.clone())
+      ),
     [columns, events]
   );
 
@@ -167,7 +172,6 @@ export function TimeGrid({
             return (
               <Column
                 key={column.date.toString()}
-                columnIndex={index}
                 timeGridRows={rows}
                 gridSelection={gridSelection}
                 columnDate={column.date}

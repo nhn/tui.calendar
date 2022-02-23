@@ -6,7 +6,7 @@ import { BackgroundEvent } from '@src/components/events/backgroundEvent';
 import { TimeEvent } from '@src/components/events/timeEvent';
 import { GridSelection } from '@src/components/timeGrid/gridSelection';
 import { useStore } from '@src/contexts/calendarStore';
-import { getUIModels } from '@src/controller/column';
+import { setRenderInfoOfUIModels } from '@src/controller/column';
 import { getTopHeightByTime } from '@src/controller/times';
 import { cls, toPercent } from '@src/helpers/css';
 import { isBackgroundEvent } from '@src/model/eventModel';
@@ -61,34 +61,38 @@ function BackgroundEvents({
 }
 
 function VerticalEvents({
-  columnIndex,
   events,
   startTime,
   endTime,
 }: {
-  columnIndex: number;
   events: EventUIModel[];
   startTime: TZDate;
   endTime: TZDate;
 }) {
   const draggingEventUIModel = useStore(draggingEventUIModelSelector);
+  const draggingEventUIModelCID = draggingEventUIModel?.cid();
 
   // @TODO: use dynamic value
   const style = { marginRight: 8 };
   const uiModels = useMemo(
-    () => getUIModels(events, startTime, endTime),
+    () => setRenderInfoOfUIModels(events, startTime, endTime),
     [endTime, events, startTime]
+  );
+  const verticalEvents = useMemo(
+    () =>
+      uiModels.map((uiModel) => (
+        <TimeEvent
+          key={`${uiModel.valueOf()}-${uiModel.cid()}`}
+          uiModel={uiModel}
+          isDraggingTarget={uiModel.cid() === draggingEventUIModelCID}
+        />
+      )),
+    [draggingEventUIModelCID, uiModels]
   );
 
   return (
     <div className={classNames.events} style={style}>
-      {uiModels.map((uiModel) => (
-        <TimeEvent
-          key={`column-${columnIndex}-${startTime.getTime()}-${endTime.getTime()}-${uiModel.cid()}`}
-          uiModel={uiModel}
-          isDraggingTarget={uiModel.cid() === draggingEventUIModel?.cid()}
-        />
-      ))}
+      {verticalEvents}
     </div>
   );
 }
@@ -98,7 +102,6 @@ interface Props {
   gridSelection: TimeGridSelectionDataByCol | null;
   columnDate: TZDate;
   columnWidth: string;
-  columnIndex: number;
   events: EventUIModel[];
   movingEventTop: number | null;
   backgroundColor?: string;
@@ -108,7 +111,6 @@ interface Props {
 export const Column = memo(function Column({
   columnDate,
   columnWidth,
-  columnIndex,
   events,
   timeGridRows,
   gridSelection,
@@ -175,12 +177,7 @@ export const Column = memo(function Column({
         <TimeEvent uiModel={draggingEventUIModel} movingEventTop={movingEventTop} />
       ) : null}
       {gridSelectionProps ? <GridSelection {...gridSelectionProps} /> : null}
-      <VerticalEvents
-        columnIndex={columnIndex}
-        events={events}
-        startTime={startTime}
-        endTime={endTime}
-      />
+      <VerticalEvents events={events} startTime={startTime} endTime={endTime} />
     </div>
   );
 });

@@ -240,17 +240,21 @@ export function setTopForDayGridEvents(models: EventUIModel[]) {
 
 // @TODO: check & remove unused parameters
 const getTimeGridEventModels = (
-  eventModels: TimeGridEventMatrix,
+  eventMatrix: TimeGridEventMatrix,
   row: TZDate[],
   narrowWeekend = false
-): EventUIModel[] => {
-  const result: EventUIModel[] = [];
+): EventUIModel[] =>
+  // NOTE: there are same ui models in different rows. so we need to get unique ui models.
+  Array.from(
+    new Set(
+      Object.values(eventMatrix).reduce<EventUIModel[]>(
+        (result, matrix3d) => result.concat(...flattenMatrix3d(matrix3d)),
+        []
+      )
+    )
+  );
 
-  Object.values(eventModels).forEach((matrices) => result.push(...flattenMatrix3d(matrices)));
-
-  return result;
-};
-
+// @TODO: rename it. it is only used in the week & day view.
 export const getDayGridEvents = (
   row: TZDate[],
   calendarData: CalendarData,
