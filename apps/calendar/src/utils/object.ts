@@ -1,18 +1,14 @@
 import TZDate from '@src/time/date';
 import { isObject } from '@src/utils/type';
 
-type PickedKey<T, K extends keyof T> = keyof Pick<T, K>;
-
 export function pick<T extends object, K extends keyof T>(obj: T, ...propNames: K[]) {
-  const resultMap = {} as Pick<T, K>;
-
-  Object.keys(obj).forEach((key) => {
-    if (propNames.includes(key as K)) {
-      resultMap[key as PickedKey<T, K>] = obj[key as PickedKey<T, K>];
+  return propNames.reduce((acc, key) => {
+    if (obj.hasOwnProperty(key)) {
+      acc[key] = obj[key];
     }
-  });
 
-  return resultMap;
+    return acc;
+  }, {} as Pick<T, K>);
 }
 
 type NestedPartial<Obj> = {
