@@ -1,24 +1,19 @@
 import produce from 'immer';
 
-import { isFunction } from '@src/utils/type';
-
 import { CalendarState, CalendarStore, SetState } from '@t/store';
 
 export type GridSelectionSlice = {
   gridSelection: {
-    dayGridMonth: GridSelectionData | null;
-    dayGridWeek: GridSelectionData | null;
-    timeGrid: GridSelectionData | null;
+    dayGridMonth: GridSelectionData[] | [];
+    dayGridWeek: [];
+    timeGrid: [];
   };
 };
 
 export type GridSelectionDispatchers = {
-  setGridSelection: (
+  addGridSelection: (
     type: keyof GridSelectionSlice['gridSelection'],
-    gridSelection:
-      | GridSelectionData
-      | null
-      | ((prev: GridSelectionData | null) => GridSelectionData | null)
+    gridSelection: GridSelectionData | null
   ) => void;
   clearAll: () => void;
 };
@@ -26,9 +21,9 @@ export type GridSelectionDispatchers = {
 export function createGridSelectionSlice(): GridSelectionSlice {
   return {
     gridSelection: {
-      dayGridMonth: null,
-      dayGridWeek: null,
-      timeGrid: null,
+      dayGridMonth: [],
+      dayGridWeek: [],
+      timeGrid: [],
     },
   };
 }
@@ -37,23 +32,19 @@ export function createGridSelectionDispatchers(
   set: SetState<CalendarStore>
 ): GridSelectionDispatchers {
   return {
-    setGridSelection: (type, gridSelection) => {
+    addGridSelection: (type, gridSelection) => {
       set(
         produce((state: CalendarState) => {
-          state.gridSelection[type] = isFunction(gridSelection)
-            ? gridSelection(state.gridSelection[type])
-            : gridSelection;
+          if (type === 'dayGridMonth' && gridSelection) {
+            state.gridSelection[type] = [...state.gridSelection[type], gridSelection];
+          }
         })
       );
     },
     clearAll: () =>
       set(
         produce((state: CalendarState) => {
-          state.gridSelection = {
-            dayGridMonth: null,
-            dayGridWeek: null,
-            timeGrid: null,
-          };
+          state.gridSelection = createGridSelectionSlice().gridSelection;
         })
       ),
   };

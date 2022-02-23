@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
@@ -41,10 +41,7 @@ export function useGridSelection<DateCollection>({
 }) {
   const { draggingItemType, draggingState } = useStore(dndSelector);
   const useCreationPopup = useStore(useCreationPopupOptionSelector);
-  const gridSelection = useStore(
-    useCallback((state: CalendarState) => state.gridSelection[type], [type])
-  );
-  const { setGridSelection } = useDispatch('gridSelection');
+  const [gridSelection, setGridSelection] = useState<GridSelectionData | null>(null);
   const { hideAllPopup, showFormPopup } = useDispatch('popup');
   const eventBus = useEventBus();
 
@@ -59,7 +56,7 @@ export function useGridSelection<DateCollection>({
     const gridPosition = gridPositionFinder(e);
 
     if (isPresent(gridPosition)) {
-      setGridSelection(type, selectionSorter(initGridPos, gridPosition));
+      setGridSelection(selectionSorter(initGridPos, gridPosition));
     }
   };
   const initGridSelection = (e: MouseEvent) => {
@@ -130,9 +127,9 @@ export function useGridSelection<DateCollection>({
     () => () => {
       setInitMousePosition(null);
       setInitGridPosition(null);
-      setGridSelection(type, null);
+      setGridSelection(null);
     },
-    [setGridSelection, type]
+    [type]
   );
 
   return { onMouseDown, gridSelection };
