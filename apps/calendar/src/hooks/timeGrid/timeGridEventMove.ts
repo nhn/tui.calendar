@@ -17,7 +17,7 @@ export function useTimeGridEventMove({
   timeGridData: TimeGridData;
 }) {
   const { initX, initY, draggingState } = useStore(dndSelector);
-  const { draggingEvent: movingEvent, clearDraggingEvent } = useDraggingEvent('move');
+  const { draggingEvent, clearDraggingEvent } = useDraggingEvent('timeGrid', 'move');
 
   const [currentGridPos, clearCurrentGridPos] = useCurrentPointerPositionInGrid(gridPositionFinder);
 
@@ -25,10 +25,10 @@ export function useTimeGridEventMove({
   const [gridDiff, setGridDiff] = useState<GridPosition | null>(null);
 
   useEffect(() => {
-    if (isPresent(initX) && isPresent(initY) && isPresent(movingEvent)) {
+    if (isPresent(initX) && isPresent(initY) && isPresent(draggingEvent)) {
       setInitGridPosition(gridPositionFinder({ clientX: initX, clientY: initY }));
     }
-  }, [gridPositionFinder, initX, initY, movingEvent]);
+  }, [gridPositionFinder, initX, initY, draggingEvent]);
 
   useEffect(() => {
     if (isPresent(currentGridPos) && isPresent(initGridPosition)) {
@@ -40,13 +40,18 @@ export function useTimeGridEventMove({
   }, [currentGridPos, initGridPosition]);
 
   const rowHeight = timeGridData.rows[0].height;
-  const movingEventTop = useMemo(() => {
-    if (isNil(movingEvent) || isNil(gridDiff)) {
+  const movingEvent = useMemo(() => {
+    if (isNil(draggingEvent) || isNil(gridDiff) || isNil(currentGridPos)) {
       return null;
     }
 
-    return movingEvent.top + gridDiff.rowIndex * rowHeight;
-  }, [movingEvent, gridDiff, rowHeight]);
+    const clonedEvent = draggingEvent.clone();
+    clonedEvent.top = clonedEvent.top + gridDiff.rowIndex * rowHeight;
+    clonedEvent.left = timeGridData.columns[currentGridPos.columnIndex].left;
+    clonedEvent.width = timeGridData.columns[currentGridPos.columnIndex].width;
+
+    return clonedEvent;
+  }, [draggingEvent, gridDiff, currentGridPos, rowHeight, timeGridData]);
 
   useEffect(() => {
     if (
@@ -59,8 +64,5 @@ export function useTimeGridEventMove({
     }
   }, [clearCurrentGridPos, clearDraggingEvent, currentGridPos, draggingState, movingEvent]);
 
-  return {
-    movingEventTop,
-    movingEventColumnIndex: currentGridPos?.columnIndex ?? -1,
-  };
+  return movingEvent;
 }

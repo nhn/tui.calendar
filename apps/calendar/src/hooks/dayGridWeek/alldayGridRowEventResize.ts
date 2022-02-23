@@ -33,7 +33,10 @@ export function useAlldayGridRowEventResize({
   const { draggingState } = useStore(dndSelector);
   const { updateEvent } = useDispatch('calendar');
 
-  const { draggingEvent: resizingEvent, clearDraggingEvent } = useDraggingEvent('resize');
+  const { draggingEvent: resizingEvent, clearDraggingEvent } = useDraggingEvent(
+    'dayGrid',
+    'resize'
+  );
 
   const [currentGridPos, clearCurrentGridPos] = useCurrentPointerPositionInGrid(gridPositionFinder);
   const { columnIndex } = currentGridPos ?? {};

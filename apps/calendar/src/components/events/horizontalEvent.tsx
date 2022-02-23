@@ -169,12 +169,12 @@ export function HorizontalEvent({
 
   const eventContainerRef = useRef<HTMLDivElement>(null);
 
-  const onResizeStart = useDrag(DRAGGING_TYPE_CREATORS.resizeEvent(`${uiModel.cid()}`), {
+  const onResizeStart = useDrag(DRAGGING_TYPE_CREATORS.resizeEvent('dayGrid', `${uiModel.cid()}`), {
     onInit: () => {
       setDraggingEventUIModel(uiModel);
     },
   });
-  const onMoveStart = useDrag(DRAGGING_TYPE_CREATORS.moveEvent(`${uiModel.cid()}`), {
+  const onMoveStart = useDrag(DRAGGING_TYPE_CREATORS.moveEvent('dayGrid', `${uiModel.cid()}`), {
     onInit: () => {
       setDraggingEventUIModel(uiModel);
     },

@@ -60,11 +60,14 @@ describe('useTimeGridEventMove', () => {
     });
     store.getState().dispatch.calendar.createEvents([eventModel]);
     const MockBody = () => {
-      const onMouseDown = useDrag(DRAGGING_TYPE_CREATORS.moveEvent(`${eventUIModel.cid()}`), {
-        onInit: () => {
-          store.getState().dispatch.dnd.setDraggingEventUIModel(eventUIModel);
-        },
-      });
+      const onMouseDown = useDrag(
+        DRAGGING_TYPE_CREATORS.moveEvent('timeGrid', `${eventUIModel.cid()}`),
+        {
+          onInit: () => {
+            store.getState().dispatch.dnd.setDraggingEventUIModel(eventUIModel);
+          },
+        }
+      );
       return <div onMouseDown={onMouseDown}>Event 1</div>;
     };
     const { result } = renderHook(
@@ -117,7 +120,7 @@ describe('useTimeGridEventMove', () => {
     userEvent.click(event);
 
     // Then
-    expect(result.current?.movingEventTop).toBeNull();
+    expect(result.current).toBeNull();
   });
 
   /**
@@ -206,12 +209,14 @@ describe('useTimeGridEventMove', () => {
       });
 
       // Then
-      if (isNil(result.current) || isNil(result.current.movingEventTop)) {
+      if (isNil(result.current)) {
         throw new Error('movingEvent is null');
       } else {
-        const topDiff = result.current.movingEventTop - initTop;
+        const topDiff = result.current.top - initTop;
+        const leftDiff = result.current.left - initLeft;
 
         expect(topDiff).toBeCloseTo(expected.topDiff, 1);
+        expect(leftDiff).toBeCloseTo(expected.leftDiff, 1);
       }
     });
   });
