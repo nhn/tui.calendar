@@ -6,6 +6,7 @@ import userEvent from '@testing-library/user-event';
 import { MINIMUM_DRAG_MOUSE_DISTANCE } from '@src/constants/mouse';
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
 import { DragListeners, useDrag } from '@src/hooks/common/drag';
+import { dragAndDrop } from '@src/test/utils';
 
 import { PropsWithChildren } from '@t/components/common';
 import { DraggingTypes } from '@t/drag';
@@ -114,12 +115,12 @@ describe('drag hook', () => {
     };
 
     // When
-    fireEvent.mouseDown(button);
-    fireEvent.mouseMove(document, {
-      clientX: MINIMUM_DRAG_MOUSE_DISTANCE,
-      clientY: MINIMUM_DRAG_MOUSE_DISTANCE,
+    dragAndDrop({
+      element: button,
+      initPosition: { clientX: 0, clientY: 0 },
+      targetPosition: targetCoords,
+      hold: true,
     });
-    fireEvent.mouseMove(document, targetCoords);
 
     // Then
     expect(listeners.onDrag).toHaveBeenCalledWith(expect.objectContaining(targetCoords));

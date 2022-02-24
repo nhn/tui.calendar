@@ -52,17 +52,7 @@ export function useDrag(
     [store]
   );
 
-  const {
-    draggingState,
-    draggingItemType: currentDraggingItemType,
-    initX,
-    initY,
-  } = dndSliceRef.current;
-
   const [isStarted, setStarted] = useState(false);
-
-  const isDragging = draggingState > DraggingState.INIT;
-  const isRightItemType = currentDraggingItemType === draggingItemType;
 
   const handleMouseMoveRef = useRef<MouseEventListener | null>(null);
   const handleMouseUpRef = useRef<MouseEventListener | null>(null);
@@ -96,7 +86,14 @@ export function useDrag(
 
   const handleMouseMove = useCallback<MouseEventListener>(
     (e) => {
-      if (!isRightItemType) {
+      const {
+        initX,
+        initY,
+        draggingState,
+        draggingItemType: currentDraggingItemType,
+      } = dndSliceRef.current;
+
+      if (currentDraggingItemType !== draggingItemType) {
         setStarted(false);
 
         return;
@@ -110,7 +107,7 @@ export function useDrag(
         return;
       }
 
-      if (!isDragging) {
+      if (draggingState <= DraggingState.INIT) {
         onDragStart?.(e);
         setDraggingState({ x: e.clientX, y: e.clientY });
 
@@ -120,7 +117,7 @@ export function useDrag(
       setDraggingState({ x: e.clientX, y: e.clientY });
       onDrag?.(e);
     },
-    [initX, initY, isDragging, isRightItemType, onDrag, onDragStart, setDraggingState]
+    [draggingItemType, onDrag, onDragStart, setDraggingState]
   );
 
   const handleMouseUp = useCallback<MouseEventListener>(
