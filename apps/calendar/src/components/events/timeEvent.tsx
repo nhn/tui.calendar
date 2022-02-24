@@ -23,8 +23,6 @@ interface Props {
   nextStartTime?: TZDate | null;
 }
 
-// @TODO: refactor
-// eslint-disable-next-line complexity
 function getStyles(uiModel: EventUIModel, isDraggingTarget: boolean, hasNextStartTime: boolean) {
   const {
     top,
