@@ -6,6 +6,6 @@ export function isDraggingSelector(state: CalendarState) {
   return state.dnd.draggingState > DraggingState.INIT;
 }
 
-export function draggingEventUIModelSelector(state: CalendarState) {
-  return state.dnd.draggingEventUIModel;
+export function draggingEventUIModelCIDSelector(state: CalendarState) {
+  return state.dnd.draggingEventUIModel?.cid();
 }
