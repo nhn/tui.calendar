@@ -26,6 +26,7 @@ function createWeekEvents() {
   const today = new TZDate();
   const sunday = addDate(today, -today.getDay());
   const tuesday = addDate(sunday, 2);
+  const wednesday = addDate(sunday, 3);
   const thursday = addDate(sunday, 4);
   const saturday = addDate(sunday, 6);
   const events: EventModelData[] = [
@@ -59,20 +60,20 @@ function createWeekEvents() {
     {
       id: '4',
       calendarId: 'cal1',
-      title: 'timed-event',
+      title: 'long time event',
       category: 'time',
       isAllday: false,
-      start: setTimeStrToDate(thursday, '22:00'),
-      end: setTimeStrToDate(addDate(thursday, 1), '02:00'),
+      start: setTimeStrToDate(sunday, '10:00'),
+      end: setTimeStrToDate(addDate(sunday, 1), '06:00'),
     },
     {
       id: '5',
       calendarId: 'cal1',
-      title: 'timed-event2',
+      title: 'short time event',
       category: 'time',
       isAllday: false,
-      start: setTimeStrToDate(tuesday, '09:00'),
-      end: setTimeStrToDate(tuesday, '18:00'),
+      start: setTimeStrToDate(wednesday, '04:00'),
+      end: setTimeStrToDate(wednesday, '06:00'),
     },
   ];
 

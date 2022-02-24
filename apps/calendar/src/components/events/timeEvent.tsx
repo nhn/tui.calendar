@@ -113,6 +113,7 @@ export function TimeEvent({ uiModel, isDraggingTarget = false, nextStartTime }: 
 
   return (
     <div
+      data-testid={`time-event-${model.title}-${uiModel.cid()}`}
       className={classNames.time}
       style={containerStyle}
       onMouseDown={passConditionalProp(isNil(nextStartTime), handleEventMoveStart)}

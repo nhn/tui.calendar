@@ -158,7 +158,11 @@ export const Column = memo(function Column({
   };
 
   return (
-    <div className={classNames.column} style={style}>
+    <div
+      className={classNames.column}
+      style={style}
+      data-testid={`timegrid-column-${columnDate.getDay()}`}
+    >
       <BackgroundEvents events={events} startTime={startTime} endTime={endTime} />
       {gridSelectionProps ? <GridSelection {...gridSelectionProps} /> : null}
       <VerticalEvents events={events} startTime={startTime} endTime={endTime} />
