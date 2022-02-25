@@ -96,9 +96,11 @@ export function useGridSelection<DateCollection>({
       if (isPresent(gridSelection)) {
         const [startDate, endDate] = sortDates(...dateGetter(dateCollection, gridSelection));
 
-        if (useCreationPopup && isPresent(initMousePosition)) {
+        if (!useCreationPopup) {
           addGridSelection(type, gridSelection);
+        }
 
+        if (useCreationPopup && isPresent(initMousePosition)) {
           const popupArrowPointPosition = {
             top: (e.clientY + initMousePosition.y) / 2,
             left: (e.clientX + initMousePosition.x) / 2,

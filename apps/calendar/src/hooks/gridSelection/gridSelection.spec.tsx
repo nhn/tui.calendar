@@ -372,10 +372,11 @@ describe('useGridSelection', () => {
       expect(store.getState().gridSelection.dayGridWeek).toEqual([]);
     });
 
-    it('should not add grid selection in dayGridMonth when useCreationPopup is false', () => {
+    it('should not add grid selection in dayGridMonth when useCreationPopup is true', () => {
       // Given
       setup({
         type: 'dayGridMonth',
+        useCreationPopup: true,
       });
       const container = screen.getByTestId('container');
 
@@ -386,11 +387,10 @@ describe('useGridSelection', () => {
       expect(store.getState().gridSelection.dayGridMonth).toEqual([]);
     });
 
-    it('should add grid selection in dayGridMonth when useCreationPopup is true', () => {
+    it('should add grid selection in dayGridMonth when useCreationPopup is false', () => {
       // Given
       setup({
         type: 'dayGridMonth',
-        useCreationPopup: true,
       });
       const container = screen.getByTestId('container');
 
