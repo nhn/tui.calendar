@@ -1,4 +1,4 @@
-import { useState } from 'preact/hooks';
+import { useCallback, useState } from 'preact/hooks';
 
 import { DEFAULT_PANEL_HEIGHT } from '@src/constants/style';
 import { useDispatch } from '@src/contexts/calendarStore';
@@ -12,21 +12,25 @@ export function useGridRowHeightController(maxTop: number, category: AlldayEvent
   const [isClickedCount, setClickedCount] = useState(false);
   const { updateDayGridRowHeight } = useDispatch('weekViewLayout');
 
-  const onClickExceedCount = (index: number) => {
-    setClickedCount(true);
-    setClickedIndex(index);
-    updateDayGridRowHeight({
-      rowName: category as WeekGridRows,
-      height: (maxTop + 1) * EVENT_HEIGHT,
-    });
-  };
-  const onClickCollapseButton = () => {
+  const onClickExceedCount = useCallback(
+    (index: number) => {
+      setClickedCount(true);
+      setClickedIndex(index);
+      updateDayGridRowHeight({
+        rowName: category as WeekGridRows,
+        height: (maxTop + 1) * EVENT_HEIGHT,
+      });
+    },
+    [category, maxTop, updateDayGridRowHeight]
+  );
+
+  const onClickCollapseButton = useCallback(() => {
     setClickedCount(false);
     updateDayGridRowHeight({
       rowName: category as WeekGridRows,
       height: DEFAULT_PANEL_HEIGHT,
     });
-  };
+  }, [category, updateDayGridRowHeight]);
 
   return {
     clickedIndex,
