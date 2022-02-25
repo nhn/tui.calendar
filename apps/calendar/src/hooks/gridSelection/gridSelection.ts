@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useState } from 'preact/hooks';
+import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/drag';
-import { dndSelector } from '@src/selectors';
+import { useDndTransientState } from '@src/hooks/dnd/dndTransientState';
 import { DraggingState } from '@src/slices/dnd';
 import TZDate from '@src/time/date';
 import { isPresent } from '@src/utils/type';
@@ -39,7 +39,6 @@ export function useGridSelection<DateCollection>({
   dateCollection: DateCollection;
   gridPositionFinder: GridPositionFinder;
 }) {
-  const { draggingItemType, draggingState } = useStore(dndSelector);
   const useCreationPopup = useStore(useCreationPopupOptionSelector);
   const gridSelection = useStore(
     useCallback((state: CalendarState) => state.gridSelection[type], [type])
@@ -50,10 +49,14 @@ export function useGridSelection<DateCollection>({
 
   const [initMousePosition, setInitMousePosition] = useState<Coordinates | null>(null);
   const [initGridPosition, setInitGridPosition] = useState<GridPosition | null>(null);
+  const isSelectingGridRef = useRef(false);
+
+  useDndTransientState(({ draggingState, draggingItemType }) => {
+    isSelectingGridRef.current =
+      draggingItemType === currentGridSelectionType && draggingState >= DraggingState.INIT;
+  });
 
   const currentGridSelectionType = DRAGGING_TYPE_CREATORS.gridSelection(type);
-  const isSelectingGrid =
-    draggingItemType === currentGridSelectionType && draggingState >= DraggingState.INIT;
 
   const setGridSelectionByPosition = (e: MouseEvent, initGridPos: GridPosition) => {
     const gridPosition = gridPositionFinder(e);
@@ -83,12 +86,12 @@ export function useGridSelection<DateCollection>({
       initGridSelection(e);
     },
     onDragStart: (e) => {
-      if (isSelectingGrid && isPresent(initGridPosition)) {
+      if (isSelectingGridRef.current && isPresent(initGridPosition)) {
         setGridSelectionByPosition(e, initGridPosition);
       }
     },
     onDrag: (e) => {
-      if (isSelectingGrid && isPresent(initGridPosition)) {
+      if (isSelectingGridRef.current && isPresent(initGridPosition)) {
         setGridSelectionByPosition(e, initGridPosition);
       }
     },

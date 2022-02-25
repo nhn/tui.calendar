@@ -7,8 +7,7 @@ import { useKeydownEvent } from '@src/hooks/common/keydownEvent';
 import { useCurrentPointerPositionInGrid } from '@src/hooks/event/currentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/draggingEvent';
 import EventUIModel from '@src/model/eventUIModel';
-import { dndSelector } from '@src/selectors';
-import { DraggingState } from '@src/slices/dnd';
+import { isNotDraggingSelector } from '@src/selectors/dnd';
 import TZDate from '@src/time/date';
 import { findLastIndex } from '@src/utils/array';
 import { isPresent } from '@src/utils/type';
@@ -58,7 +57,7 @@ export function useDayGridMonthEventResize({
   renderedUIModels,
   cellWidthMap,
 }: EventResizeHookParams) {
-  const { draggingState } = useStore(dndSelector);
+  const isNotDragging = useStore(isNotDraggingSelector);
   const { updateEvent } = useDispatch('calendar');
   const { draggingEvent: resizingStartUIModel, clearDraggingEvent } = useDraggingEvent(
     'dayGrid',
@@ -202,8 +201,7 @@ export function useDayGridMonthEventResize({
   useKeydownEvent(KEY.ESCAPE, clearStates);
 
   useEffect(() => {
-    const isDraggingEnd =
-      draggingState === DraggingState.IDLE && isPresent(resizingState) && isPresent(currentGridPos);
+    const isDraggingEnd = isNotDragging && isPresent(resizingState) && isPresent(currentGridPos);
     if (isDraggingEnd) {
       /**
        * Is current grid position is the same or later comparing to the position of the start date?
@@ -226,7 +224,7 @@ export function useDayGridMonthEventResize({
 
       clearStates();
     }
-  }, [clearStates, currentGridPos, dateMatrix, draggingState, resizingState, updateEvent]);
+  }, [clearStates, currentGridPos, dateMatrix, isNotDragging, resizingState, updateEvent]);
 
   return shadowProps;
 }

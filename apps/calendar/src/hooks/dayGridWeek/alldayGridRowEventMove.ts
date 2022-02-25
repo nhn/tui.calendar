@@ -3,8 +3,7 @@ import { useEffect, useMemo } from 'preact/hooks';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useCurrentPointerPositionInGrid } from '@src/hooks/event/currentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/draggingEvent';
-import { dndSelector } from '@src/selectors';
-import { DraggingState } from '@src/slices/dnd';
+import { isNotDraggingSelector } from '@src/selectors/dnd';
 import TZDate from '@src/time/date';
 import { isNil, isPresent } from '@src/utils/type';
 
@@ -17,7 +16,7 @@ interface Params {
 }
 
 export function useAlldayGridRowEventMove({ rowStyleInfo, gridPositionFinder }: Params) {
-  const { draggingState } = useStore(dndSelector);
+  const isNotDragging = useStore(isNotDraggingSelector);
   const { draggingEvent: movingEvent, clearDraggingEvent } = useDraggingEvent('dayGrid', 'move');
   const { updateEvent } = useDispatch('calendar');
 
@@ -34,7 +33,7 @@ export function useAlldayGridRowEventMove({ rowStyleInfo, gridPositionFinder }: 
 
   useEffect(() => {
     const shouldUpdate =
-      draggingState === DraggingState.IDLE &&
+      isNotDragging &&
       isPresent(movingEvent) &&
       isPresent(columnIndex) &&
       isPresent(currentMovingLeft) &&
@@ -65,7 +64,7 @@ export function useAlldayGridRowEventMove({ rowStyleInfo, gridPositionFinder }: 
     targetEventStartGridX,
     updateEvent,
     clearDraggingEvent,
-    draggingState,
+    isNotDragging,
     clearCurrentGridPos,
   ]);
 

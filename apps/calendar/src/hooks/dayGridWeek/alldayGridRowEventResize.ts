@@ -5,8 +5,7 @@ import { getGridDateIndex } from '@src/helpers/grid';
 import { useCurrentPointerPositionInGrid } from '@src/hooks/event/currentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/draggingEvent';
 import EventUIModel from '@src/model/eventUIModel';
-import { dndSelector } from '@src/selectors';
-import { DraggingState } from '@src/slices/dnd';
+import { isNotDraggingSelector } from '@src/selectors/dnd';
 import TZDate from '@src/time/date';
 import { isPresent } from '@src/utils/type';
 
@@ -30,7 +29,7 @@ export function useAlldayGridRowEventResize({
   gridColWidthMap,
   gridPositionFinder,
 }: Params) {
-  const { draggingState } = useStore(dndSelector);
+  const isNotDragging = useStore(isNotDraggingSelector);
   const { updateEvent } = useDispatch('calendar');
 
   const { draggingEvent: resizingEvent, clearDraggingEvent } = useDraggingEvent(
@@ -58,8 +57,7 @@ export function useAlldayGridRowEventResize({
   }, [columnIndex, gridColWidthMap, targetEventGridIndices.start]);
 
   useEffect(() => {
-    const isDraggingEnd =
-      draggingState === DraggingState.IDLE && isPresent(resizingEvent) && isPresent(columnIndex);
+    const isDraggingEnd = isNotDragging && isPresent(resizingEvent) && isPresent(columnIndex);
 
     if (isDraggingEnd) {
       const shouldUpdateEvent =
@@ -83,10 +81,9 @@ export function useAlldayGridRowEventResize({
     resizingEvent,
     updateEvent,
     clearDraggingEvent,
-    targetEventGridIndices.start,
-    targetEventGridIndices.end,
-    draggingState,
+    targetEventGridIndices,
     clearCurrentGridPos,
+    isNotDragging,
   ]);
 
   return useMemo(
