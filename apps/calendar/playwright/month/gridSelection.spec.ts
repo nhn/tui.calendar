@@ -4,7 +4,7 @@ import {
   assertAccumulatedDayGridSelectionMatching,
   assertDayGridSelectionMatching,
 } from '../assertions';
-import { MONTH_VIEW_PAGE_URL } from '../configs';
+import { MONTH_VIEW_BASIC_PAGE_URL, MONTH_VIEW_PAGE_URL } from '../configs';
 import { selectGridCells } from '../utils';
 
 test.beforeEach(async ({ page }) => {
@@ -84,6 +84,10 @@ test.describe('Selection', () => {
   });
 
   test.describe('Accumulated grid selection', () => {
+    test.beforeEach(async ({ page }) => {
+      await page.goto(MONTH_VIEW_BASIC_PAGE_URL);
+    });
+
     test('select 2 cells in each week', async ({ page }) => {
       await selectMonthGridCells(page, 21, 23);
       await selectMonthGridCells(page, 28, 30);
