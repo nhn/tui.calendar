@@ -27,6 +27,7 @@ describe('useGridSelection', () => {
       <StoreProvider store={store}>{children}</StoreProvider>
     </EventBusProvider>
   );
+
   function setup<DateCollection>({
     useCreationPopup = false,
     selectionSorter = jest.fn((init, current) => ({
@@ -96,6 +97,7 @@ describe('useGridSelection', () => {
 
     return result;
   }
+
   function dragMouse(container: HTMLElement, from: ClientMousePosition, to: ClientMousePosition) {
     act(() => {
       fireEvent.mouseDown(container, {

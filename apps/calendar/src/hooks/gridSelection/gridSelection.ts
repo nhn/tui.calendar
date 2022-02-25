@@ -41,6 +41,7 @@ export function useGridSelection<DateCollection>({
 }) {
   const { draggingItemType, draggingState } = useStore(dndSelector);
   const useCreationPopup = useStore(useCreationPopupOptionSelector);
+  const { addGridSelection } = useDispatch('gridSelection');
   const [gridSelection, setGridSelection] = useState<GridSelectionData | null>(null);
   const { hideAllPopup, showFormPopup } = useDispatch('popup');
   const eventBus = useEventBus();
@@ -96,6 +97,8 @@ export function useGridSelection<DateCollection>({
         const [startDate, endDate] = sortDates(...dateGetter(dateCollection, gridSelection));
 
         if (useCreationPopup && isPresent(initMousePosition)) {
+          addGridSelection(type, gridSelection);
+
           const popupArrowPointPosition = {
             top: (e.clientY + initMousePosition.y) / 2,
             left: (e.clientX + initMousePosition.x) / 2,
