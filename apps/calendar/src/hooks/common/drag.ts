@@ -3,24 +3,27 @@ import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import { KEY } from '@src/constants/keyboard';
 import { MINIMUM_DRAG_MOUSE_DISTANCE } from '@src/constants/mouse';
 import { useDispatch, useInternalStore } from '@src/contexts/calendarStore';
-import { DraggingState } from '@src/slices/dnd';
+import { DndSlice, DraggingState } from '@src/slices/dnd';
 import { isKeyPressed } from '@src/utils/keyboard';
 import { noop } from '@src/utils/noop';
 import { isPresent } from '@src/utils/type';
 
 import { DraggingTypes } from '@t/drag';
 
+type MouseListener = (e: MouseEvent, dndSlice: DndSlice['dnd']) => void;
+type KeyboardListener = (e: KeyboardEvent, dndSlice: DndSlice['dnd']) => void;
+
 export interface DragListeners {
   // when press the mouse button
-  onInit?: MouseEventListener;
+  onInit?: MouseListener;
   // when the mouse moving is recognized as a drag
-  onDragStart?: MouseEventListener;
+  onDragStart?: MouseListener;
   // while dragging
-  onDrag?: MouseEventListener;
+  onDrag?: MouseListener;
   // when the mouse button is released while dragging or just after onInit
-  onMouseUp?: MouseEventListener;
+  onMouseUp?: MouseListener;
   // when press the escape key while dragging
-  onPressESCKey?: KeyboardEventListener;
+  onPressESCKey?: KeyboardListener;
 }
 
 function isLeftClick(buttonNum: number) {
@@ -79,7 +82,7 @@ export function useDrag(
         initX: e.clientX,
         initY: e.clientY,
       });
-      onInit?.(e);
+      onInit?.(e, dndSliceRef.current);
     },
     [onInit, draggingItemType, initDrag]
   );
@@ -108,14 +111,14 @@ export function useDrag(
       }
 
       if (draggingState <= DraggingState.INIT) {
-        onDragStart?.(e);
+        onDragStart?.(e, dndSliceRef.current);
         setDraggingState({ x: e.clientX, y: e.clientY });
 
         return;
       }
 
       setDraggingState({ x: e.clientX, y: e.clientY });
-      onDrag?.(e);
+      onDrag?.(e, dndSliceRef.current);
     },
     [draggingItemType, onDrag, onDragStart, setDraggingState]
   );
@@ -125,7 +128,7 @@ export function useDrag(
       e.stopPropagation();
 
       if (isStarted) {
-        onMouseUp?.(e);
+        onMouseUp?.(e, dndSliceRef.current);
         setStarted(false);
       }
     },
@@ -135,7 +138,7 @@ export function useDrag(
   const handleKeyDown = useCallback<KeyboardEventListener>(
     (e) => {
       if (isKeyPressed(e, KEY.ESCAPE)) {
-        onPressESCKey?.(e);
+        onPressESCKey?.(e, dndSliceRef.current);
         setStarted(false);
       }
     },

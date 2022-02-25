@@ -92,7 +92,7 @@ export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidth
     rowInfo,
     gridPositionFinder,
   });
-  const { resizingEvent, resizingEventShadowProps } = useDayGridMonthEventResize({
+  const resizingEventShadowProps = useDayGridMonthEventResize({
     dateMatrix,
     gridPositionFinder,
     cellWidthMap,
@@ -135,7 +135,6 @@ export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidth
                 className={cls('weekday-events')}
                 headerHeight={MONTH_CELL_PADDING_TOP + MONTH_CELL_BAR_HEIGHT}
                 eventTopMargin={MONTH_EVENT_MARGIN_TOP}
-                draggingEvent={movingEvent || resizingEvent}
               />
               {gridSelectionDataByRow && (
                 <GridSelection
@@ -151,6 +150,7 @@ export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidth
             {isMouseInWeek && movingEvent && (
               <HorizontalEvent
                 uiModel={movingEvent}
+                movingLeft={movingEvent.left}
                 eventHeight={EVENT_HEIGHT}
                 headerHeight={MONTH_CELL_PADDING_TOP + MONTH_CELL_BAR_HEIGHT}
               />

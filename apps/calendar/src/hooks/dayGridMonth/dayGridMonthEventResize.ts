@@ -228,9 +228,5 @@ export function useDayGridMonthEventResize({
     }
   }, [clearStates, currentGridPos, dateMatrix, draggingState, resizingState, updateEvent]);
 
-  return {
-    // To control re-render timing of `MonthEvents` component
-    resizingEvent: shadowProps ? resizingStartUIModel : null,
-    resizingEventShadowProps: shadowProps,
-  };
+  return shadowProps;
 }

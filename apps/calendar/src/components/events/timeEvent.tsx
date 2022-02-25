@@ -1,10 +1,11 @@
 import { h } from 'preact';
+import { useState } from 'preact/hooks';
 
 import { Template } from '@src/components/template';
 import { useDispatch } from '@src/contexts/calendarStore';
 import { cls, toPercent } from '@src/helpers/css';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
-import { useDrag } from '@src/hooks/common/drag';
+import { DragListeners, useDrag } from '@src/hooks/common/drag';
 import EventUIModel from '@src/model/eventUIModel';
 import type TZDate from '@src/time/date';
 import { passConditionalProp } from '@src/utils/preact';
@@ -87,7 +88,9 @@ function getStyles(uiModel: EventUIModel, isDraggingTarget: boolean, hasNextStar
   };
 }
 
-export function TimeEvent({ uiModel, isDraggingTarget = false, nextStartTime }: Props) {
+// @TODO: separate logics from resizing & moving shadows
+export function TimeEvent({ uiModel, nextStartTime }: Props) {
+  const [isDraggingTarget, setIsDraggingTarget] = useState<boolean>(false);
   const { setDraggingEventUIModel } = useDispatch('dnd');
 
   const { model, goingDurationHeight, modelDurationHeight, comingDurationHeight, croppedEnd } =
@@ -99,10 +102,19 @@ export function TimeEvent({ uiModel, isDraggingTarget = false, nextStartTime }: 
     isPresent(nextStartTime)
   );
 
+  const handleDrag: DragListeners['onDrag'] = (_, { draggingEventUIModel }) => {
+    if (draggingEventUIModel?.cid() === uiModel.cid() && isNil(nextStartTime)) {
+      setIsDraggingTarget(true);
+    }
+  };
+  const clearIsDraggingTarget = () => setIsDraggingTarget(false);
+
   const startEventMove = useDrag(DRAGGING_TYPE_CREATORS.moveEvent('timeGrid', `${uiModel.cid()}`), {
     onInit: () => {
       setDraggingEventUIModel(uiModel);
     },
+    onDragStart: handleDrag,
+    onMouseUp: clearIsDraggingTarget,
   });
   const handleEventMoveStart = (e: MouseEvent) => {
     e.stopPropagation();

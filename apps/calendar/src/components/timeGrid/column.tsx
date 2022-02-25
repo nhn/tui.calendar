@@ -5,13 +5,11 @@ import { useMemo } from 'preact/hooks';
 import { BackgroundEvent } from '@src/components/events/backgroundEvent';
 import { TimeEvent } from '@src/components/events/timeEvent';
 import { GridSelection } from '@src/components/timeGrid/gridSelection';
-import { useStore } from '@src/contexts/calendarStore';
 import { setRenderInfoOfUIModels } from '@src/controller/column';
 import { getTopHeightByTime } from '@src/controller/times';
 import { cls, toPercent } from '@src/helpers/css';
 import { isBackgroundEvent } from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
-import { draggingEventUIModelCIDSelector } from '@src/selectors/dnd';
 import TZDate from '@src/time/date';
 import { setTimeStrToDate } from '@src/time/datetime';
 import { first, last } from '@src/utils/array';
@@ -67,8 +65,6 @@ function VerticalEvents({
   startTime: TZDate;
   endTime: TZDate;
 }) {
-  const draggingEventUIModelCID = useStore(draggingEventUIModelCIDSelector);
-
   // @TODO: use dynamic value
   const style = { marginRight: 8 };
   const uiModels = useMemo(
@@ -78,13 +74,9 @@ function VerticalEvents({
   const verticalEvents = useMemo(
     () =>
       uiModels.map((uiModel) => (
-        <TimeEvent
-          key={`${uiModel.valueOf()}-${uiModel.cid()}`}
-          uiModel={uiModel}
-          isDraggingTarget={uiModel.cid() === draggingEventUIModelCID}
-        />
+        <TimeEvent key={`${uiModel.valueOf()}-${uiModel.cid()}`} uiModel={uiModel} />
       )),
-    [draggingEventUIModelCID, uiModels]
+    [uiModels]
   );
 
   return (
