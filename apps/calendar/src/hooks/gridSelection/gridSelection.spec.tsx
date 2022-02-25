@@ -14,6 +14,7 @@ import { EventBusImpl } from '@src/utils/eventBus';
 import { noop } from '@src/utils/noop';
 
 import { PropsWithChildren } from '@t/components/common';
+import { GridSelectionType } from '@t/drag';
 import { ExternalEventTypes } from '@t/eventBus';
 import { GridPosition } from '@t/grid';
 import { CalendarStore, InternalStoreAPI } from '@t/store';
@@ -29,6 +30,7 @@ describe('useGridSelection', () => {
   );
 
   function setup<DateCollection>({
+    type = 'timeGrid',
     useCreationPopup = false,
     selectionSorter = jest.fn((init, current) => ({
       startColumnIndex: current.columnIndex,
@@ -39,6 +41,7 @@ describe('useGridSelection', () => {
     dateGetter = jest.fn(() => [new TZDate(), new TZDate()]),
     dateCollection = {} as DateCollection,
   }: {
+    type?: GridSelectionType;
     useCreationPopup?: boolean;
     dateCollection?: DateCollection;
     selectionSorter?: (
@@ -80,7 +83,7 @@ describe('useGridSelection', () => {
     const { result } = renderHook(
       () =>
         useGridSelection({
-          type: 'timeGrid',
+          type,
           selectionSorter,
           dateGetter,
           dateCollection,
@@ -334,6 +337,70 @@ describe('useGridSelection', () => {
         // Then
         expect(result.current?.gridSelection).toEqual(expected);
       });
+    });
+  });
+
+  describe('Accumulated gridSelection', () => {
+    const from = { clientX: 0, clientY: 0 };
+    const to = { clientX: 50, clientY: 50 };
+
+    it('should not add grid selection in timeGrid', () => {
+      // Given
+      setup({
+        type: 'timeGrid',
+      });
+      const container = screen.getByTestId('container');
+
+      // When
+      dragMouse(container, from, to);
+
+      // Then
+      expect(store.getState().gridSelection.timeGrid).toEqual([]);
+    });
+
+    it('should not add grid selection in dayGridWeek', () => {
+      // Given
+      setup({
+        type: 'dayGridWeek',
+      });
+      const container = screen.getByTestId('container');
+
+      // When
+      dragMouse(container, from, to);
+
+      // Then
+      expect(store.getState().gridSelection.dayGridWeek).toEqual([]);
+    });
+
+    it('should not add grid selection in dayGridMonth when useCreationPopup is false', () => {
+      // Given
+      setup({
+        type: 'dayGridMonth',
+      });
+      const container = screen.getByTestId('container');
+
+      // When
+      dragMouse(container, from, to);
+
+      // Then
+      expect(store.getState().gridSelection.dayGridMonth).toEqual([]);
+    });
+
+    it('should add grid selection in dayGridMonth when useCreationPopup is true', () => {
+      // Given
+      setup({
+        type: 'dayGridMonth',
+        useCreationPopup: true,
+      });
+      const container = screen.getByTestId('container');
+
+      // When
+      dragMouse(container, from, to);
+
+      // Then
+      const accumulatedGridSelection = store.getState().gridSelection.dayGridMonth;
+      expect(accumulatedGridSelection).not.toEqual([]);
+      expect(accumulatedGridSelection).toHaveLength(1);
     });
   });
 
