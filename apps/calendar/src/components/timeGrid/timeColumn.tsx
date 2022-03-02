@@ -1,4 +1,5 @@
 import { h } from 'preact';
+import { memo } from 'preact/compat';
 
 import { Template } from '@src/components/template';
 import { addTimeGridPrefix } from '@src/components/timeGrid';
@@ -21,7 +22,7 @@ interface Props {
 }
 
 // @TODO: replace MultipleTimezones component
-export function TimeColumn({ timeGridRows, columnWidth }: Props) {
+export const TimeColumn = memo(function TimeColumn({ timeGridRows, columnWidth }: Props) {
   return (
     <div className={cls(classNames.times)} style={{ width: columnWidth }}>
       {timeGridRows.map((row, index) => {
@@ -49,4 +50,4 @@ export function TimeColumn({ timeGridRows, columnWidth }: Props) {
       })}
     </div>
   );
-}
+});

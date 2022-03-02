@@ -1,10 +1,15 @@
 import { h } from 'preact';
+import { memo } from 'preact/compat';
 
 import { cls, toPercent } from '@src/helpers/css';
 
 import { TimeGridRow } from '@t/grid';
 
-export function GridLines({ timeGridRows }: { timeGridRows: TimeGridRow[] }) {
+export const GridLines = memo(function GridLines({
+  timeGridRows,
+}: {
+  timeGridRows: TimeGridRow[];
+}) {
   return (
     <div className={cls('gridlines')}>
       {timeGridRows.map((time, index) => (
@@ -20,4 +25,4 @@ export function GridLines({ timeGridRows }: { timeGridRows: TimeGridRow[] }) {
       ))}
     </div>
   );
-}
+});
