@@ -45,7 +45,7 @@ function BackgroundEvents({
 
         return (
           <BackgroundEvent
-            eventModels={event}
+            uiModel={event}
             top={toPercent(top)}
             height={toPercent(height)}
             key={`backgroundEvent-${index}`}

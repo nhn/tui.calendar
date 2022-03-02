@@ -12,7 +12,7 @@ const config: PlaywrightTestConfig = {
       height: 900,
     },
     launchOptions: {
-      slowMo: 100,
+      slowMo: 200,
     }
   },
   webServer: {
