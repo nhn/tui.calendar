@@ -1,6 +1,7 @@
 import type { Locator, Page } from '@playwright/test';
 
-import { BoundingBox } from './types';
+import type { FormattedTimeString } from '../types/time/datetime';
+import type { BoundingBox } from './types';
 
 export function getPrefixedClassName(className: string) {
   return `.toastui-calendar-${className}`;
@@ -34,4 +35,8 @@ export async function getBoundingBox(locator: Locator): Promise<BoundingBox> {
   }
 
   return boundingBox;
+}
+
+export function getTimeGridLineLocator(start: FormattedTimeString): string {
+  return `[data-testid*="gridline-${start}"]`;
 }

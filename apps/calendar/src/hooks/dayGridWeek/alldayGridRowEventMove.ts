@@ -18,7 +18,7 @@ interface Params {
 
 export function useAlldayGridRowEventMove({ rowStyleInfo, gridPositionFinder }: Params) {
   const { draggingState } = useStore(dndSelector);
-  const { draggingEvent: movingEvent, clearDraggingEvent } = useDraggingEvent('move');
+  const { draggingEvent: movingEvent, clearDraggingEvent } = useDraggingEvent('dayGrid', 'move');
   const { updateEvent } = useDispatch('calendar');
 
   const [currentGridPos, clearCurrentGridPos] = useCurrentPointerPositionInGrid(gridPositionFinder);

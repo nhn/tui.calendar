@@ -1,11 +1,12 @@
 import { h } from 'preact';
 
-import { act, fireEvent, render, screen } from '@testing-library/preact';
+import { fireEvent, render, screen } from '@testing-library/preact';
 import userEvent from '@testing-library/user-event';
 
 import { MINIMUM_DRAG_MOUSE_DISTANCE } from '@src/constants/mouse';
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
 import { DragListeners, useDrag } from '@src/hooks/common/drag';
+import { dragAndDrop } from '@src/test/utils';
 
 import { PropsWithChildren } from '@t/components/common';
 import { DraggingTypes } from '@t/drag';
@@ -44,9 +45,7 @@ describe('drag hook', () => {
     const button = screen.getByRole('button');
 
     // When
-    act(() => {
-      fireEvent.mouseDown(button);
-    });
+    fireEvent.mouseDown(button);
 
     // Then
     expect(listeners.onInit).toBeCalledWith(expect.objectContaining({ button: 0 }));
@@ -69,12 +68,8 @@ describe('drag hook', () => {
     };
 
     // When
-    act(() => {
-      fireEvent.mouseDown(button);
-    });
-    act(() => {
-      fireEvent.mouseMove(document, targetCoords);
-    });
+    fireEvent.mouseDown(button);
+    fireEvent.mouseMove(document, targetCoords);
 
     // Then
     expect(listeners.onDragStart).toBeCalledWith(expect.objectContaining(targetCoords));
@@ -93,14 +88,10 @@ describe('drag hook', () => {
     const button = screen.getByRole('button');
 
     // When
-    act(() => {
-      fireEvent.mouseDown(button);
-    });
-    act(() => {
-      fireEvent.mouseMove(document, {
-        clientX: MINIMUM_DRAG_MOUSE_DISTANCE - 1,
-        clientY: MINIMUM_DRAG_MOUSE_DISTANCE - 1,
-      });
+    fireEvent.mouseDown(button);
+    fireEvent.mouseMove(document, {
+      clientX: MINIMUM_DRAG_MOUSE_DISTANCE - 1,
+      clientY: MINIMUM_DRAG_MOUSE_DISTANCE - 1,
     });
 
     // Then
@@ -124,17 +115,11 @@ describe('drag hook', () => {
     };
 
     // When
-    act(() => {
-      fireEvent.mouseDown(button);
-    });
-    act(() => {
-      fireEvent.mouseMove(document, {
-        clientX: MINIMUM_DRAG_MOUSE_DISTANCE,
-        clientY: MINIMUM_DRAG_MOUSE_DISTANCE,
-      });
-    });
-    act(() => {
-      fireEvent.mouseMove(document, targetCoords);
+    dragAndDrop({
+      element: button,
+      initPosition: { clientX: 0, clientY: 0 },
+      targetPosition: targetCoords,
+      hold: true,
     });
 
     // Then
@@ -173,12 +158,8 @@ describe('drag hook', () => {
     const button = screen.getByRole('button');
 
     // When
-    act(() => {
-      fireEvent.mouseDown(button);
-    });
-    act(() => {
-      fireEvent.keyDown(document, { key: 'Escape' });
-    });
+    fireEvent.mouseDown(button);
+    fireEvent.keyDown(document, { key: 'Escape' });
 
     // Then
     expect(listeners.onPressESCKey).toHaveBeenCalled();

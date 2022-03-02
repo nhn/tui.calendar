@@ -2,8 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
 import { KEY } from '@src/constants/keyboard';
 import { MINIMUM_DRAG_MOUSE_DISTANCE } from '@src/constants/mouse';
-import { useDispatch, useStore } from '@src/contexts/calendarStore';
-import { dndSelector } from '@src/selectors';
+import { useDispatch, useInternalStore } from '@src/contexts/calendarStore';
 import { DraggingState } from '@src/slices/dnd';
 import { isKeyPressed } from '@src/utils/keyboard';
 import { noop } from '@src/utils/noop';
@@ -37,20 +36,23 @@ function isMouseMoved(initX: number, initY: number, x: number, y: number) {
 
 export function useDrag(
   draggingItemType: DraggingTypes,
-  { onInit, onDragStart, onDrag, onMouseUp, onPressESCKey }: DragListeners
+  { onInit, onDragStart, onDrag, onMouseUp, onPressESCKey }: DragListeners = {}
 ) {
   const { initDrag, setDraggingState, reset } = useDispatch('dnd');
 
-  const {
-    draggingState,
-    draggingItemType: currentDraggingItemType,
-    initX,
-    initY,
-  } = useStore(dndSelector);
-  const [isStarted, setStarted] = useState(false);
+  // Transient Updates for better performance
+  // Reference: https://github.com/pmndrs/zustand#transient-updates-for-often-occuring-state-changes
+  const store = useInternalStore();
+  const dndSliceRef = useRef(store.getState().dnd);
+  useEffect(
+    () =>
+      store.subscribe((state) => {
+        dndSliceRef.current = state.dnd;
+      }),
+    [store]
+  );
 
-  const isDragging = draggingState > DraggingState.INIT;
-  const isRightItemType = currentDraggingItemType === draggingItemType;
+  const [isStarted, setStarted] = useState(false);
 
   const handleMouseMoveRef = useRef<MouseEventListener | null>(null);
   const handleMouseUpRef = useRef<MouseEventListener | null>(null);
@@ -84,7 +86,14 @@ export function useDrag(
 
   const handleMouseMove = useCallback<MouseEventListener>(
     (e) => {
-      if (!isRightItemType) {
+      const {
+        initX,
+        initY,
+        draggingState,
+        draggingItemType: currentDraggingItemType,
+      } = dndSliceRef.current;
+
+      if (currentDraggingItemType !== draggingItemType) {
         setStarted(false);
 
         return;
@@ -98,7 +107,7 @@ export function useDrag(
         return;
       }
 
-      if (!isDragging) {
+      if (draggingState <= DraggingState.INIT) {
         onDragStart?.(e);
         setDraggingState({ x: e.clientX, y: e.clientY });
 
@@ -108,7 +117,7 @@ export function useDrag(
       setDraggingState({ x: e.clientX, y: e.clientY });
       onDrag?.(e);
     },
-    [initX, initY, isDragging, isRightItemType, onDrag, onDragStart, setDraggingState]
+    [draggingItemType, onDrag, onDragStart, setDraggingState]
   );
 
   const handleMouseUp = useCallback<MouseEventListener>(
