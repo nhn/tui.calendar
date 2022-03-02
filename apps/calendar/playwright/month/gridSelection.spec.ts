@@ -2,7 +2,7 @@ import { expect, Page, test } from '@playwright/test';
 
 import { assertDayGridSelectionMatching } from '../assertions';
 import { MONTH_VIEW_PAGE_URL } from '../configs';
-import { selectGridCells } from '../utils';
+import { selectMonthGridCells } from '../utils';
 
 test.beforeEach(async ({ page }) => {
   await page.goto(MONTH_VIEW_PAGE_URL);
@@ -22,16 +22,13 @@ test.describe('Selection', () => {
    * ]
    */
 
-  function selectMonthGridCells(page: Page, startCellIndex: number, endCellIndex: number) {
-    return selectGridCells(page, startCellIndex, endCellIndex, '.toastui-calendar-daygrid-cell');
-  }
-
   function assertMonthGridSelectionMatching(page: Page, startIndex: number, endIndex: number) {
     return assertDayGridSelectionMatching(
       page,
       startIndex,
       endIndex,
-      '.toastui-calendar-daygrid-cell'
+      '.toastui-calendar-daygrid-cell',
+      '.toastui-calendar-weekday > .toastui-calendar-daygrid-grid-selection'
     );
   }
 

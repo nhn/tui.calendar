@@ -2,6 +2,7 @@ import { h } from 'preact';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 
 import { GridSelection } from '@src/components/dayGridCommon/gridSelection';
+import { AccumulatedGridSelection } from '@src/components/dayGridMonth/accumulatedGridSelection';
 import { GridRow } from '@src/components/dayGridMonth/gridRow';
 import { MonthEvents } from '@src/components/dayGridMonth/monthEvents';
 import { ResizingEventShadow } from '@src/components/dayGridMonth/resizingEventShadow';
@@ -144,6 +145,12 @@ export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidth
                   narrowWeekend={narrowWeekend}
                 />
               )}
+              <AccumulatedGridSelection
+                currentIndex={rowIndex}
+                weekLength={week.length}
+                weekDates={week}
+                narrowWeekend={narrowWeekend}
+              />
             </div>
             {hasResizingEventShadowProps(resizingEventShadowPropsByRow) && (
               <ResizingEventShadow shadowEventProps={resizingEventShadowPropsByRow} />

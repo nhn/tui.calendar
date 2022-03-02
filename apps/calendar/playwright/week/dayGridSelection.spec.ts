@@ -18,7 +18,8 @@ test.describe('DayGrid Selection in week', () => {
       page,
       startIndex,
       endIndex,
-      '.toastui-calendar-panel-grid'
+      '.toastui-calendar-panel-grid',
+      '.toastui-calendar-daygrid-grid-selection'
     );
   }
 

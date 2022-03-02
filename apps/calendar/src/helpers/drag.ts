@@ -1,4 +1,6 @@
-import { DraggingTypes, EventDraggingArea, GridSelectionType } from '@t/drag';
+import { GridSelectionType } from '@src/slices/gridSelection';
+
+import { DraggingTypes, EventDraggingArea } from '@t/drag';
 
 export const DRAGGING_TYPE_CONSTANTS: { [K in DraggingTypes]: DraggingTypes } = {
   'gridSelection/dayGridMonth': 'gridSelection/dayGridMonth',

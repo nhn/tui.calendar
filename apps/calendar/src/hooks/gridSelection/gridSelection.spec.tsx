@@ -9,6 +9,7 @@ import { EventBusProvider } from '@src/contexts/eventBus';
 import { createGridPositionFinder, createTimeGridData, getWeekDates } from '@src/helpers/grid';
 import { timeGridSelectionHelper } from '@src/helpers/gridSelection';
 import { useGridSelection } from '@src/hooks/gridSelection/gridSelection';
+import { GridSelectionType } from '@src/slices/gridSelection';
 import { dragAndDrop } from '@src/test/utils';
 import TZDate from '@src/time/date';
 import { EventBusImpl } from '@src/utils/eventBus';
@@ -28,7 +29,9 @@ describe('useGridSelection', () => {
       <StoreProvider store={store}>{children}</StoreProvider>
     </EventBusProvider>
   );
+
   function setup<DateCollection>({
+    type = 'timeGrid',
     useCreationPopup = false,
     selectionSorter = jest.fn((init, current) => ({
       startColumnIndex: current.columnIndex,
@@ -39,6 +42,7 @@ describe('useGridSelection', () => {
     dateGetter = jest.fn(() => [new TZDate(), new TZDate()]),
     dateCollection = {} as DateCollection,
   }: {
+    type?: GridSelectionType;
     useCreationPopup?: boolean;
     dateCollection?: DateCollection;
     selectionSorter?: (
@@ -80,7 +84,7 @@ describe('useGridSelection', () => {
     const { result } = renderHook(
       () =>
         useGridSelection({
-          type: 'timeGrid',
+          type,
           selectionSorter,
           dateGetter,
           dateCollection,
@@ -311,6 +315,42 @@ describe('useGridSelection', () => {
         // Then
         expect(result.current?.gridSelection).toEqual(expected);
       });
+    });
+  });
+
+  describe('Accumulated gridSelection', () => {
+    const initPosition = { clientX: 0, clientY: 0 };
+    const targetPosition = { clientX: 50, clientY: 50 };
+
+    it('should not add grid selection in dayGridMonth when useCreationPopup is true', () => {
+      // Given
+      setup({
+        type: 'dayGridMonth',
+        useCreationPopup: true,
+      });
+      const container = screen.getByTestId('container');
+
+      // When
+      dragAndDrop({ element: container, initPosition, targetPosition });
+
+      // Then
+      expect(store.getState().gridSelection.accumulated.dayGridMonth).toEqual([]);
+    });
+
+    it('should add grid selection in dayGridMonth when useCreationPopup is false', () => {
+      // Given
+      setup({
+        type: 'dayGridMonth',
+      });
+      const container = screen.getByTestId('container');
+
+      // When
+      dragAndDrop({ element: container, initPosition, targetPosition });
+
+      // Then
+      const accumulatedGridSelection = store.getState().gridSelection.accumulated.dayGridMonth;
+      expect(accumulatedGridSelection).not.toEqual([]);
+      expect(accumulatedGridSelection).toHaveLength(1);
     });
   });
 
