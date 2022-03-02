@@ -45,12 +45,6 @@ interface ResizingState {
   resizeTargetUIModelRows: FilteredUIModelRow[];
 }
 
-export function hasResizingEventShadowProps(
-  row: ResizingEventShadowProps | undefined
-): row is AvailableResizingEventShadowProps {
-  return isPresent(row) && row.length > 0;
-}
-
 export function useDayGridMonthEventResize({
   dateMatrix,
   gridPositionFinder,
