@@ -4,7 +4,7 @@ import { useMemo } from 'preact/hooks';
 
 import { BackgroundEvent } from '@src/components/events/backgroundEvent';
 import { TimeEvent } from '@src/components/events/timeEvent';
-import { GridSelection } from '@src/components/timeGrid/gridSelection';
+import { GridSelectionByColumn } from '@src/components/timeGrid/gridSelectionByColumn';
 import { setRenderInfoOfUIModels } from '@src/controller/column';
 import { getTopHeightByTime } from '@src/controller/times';
 import { cls, toPercent } from '@src/helpers/css';
@@ -88,9 +88,9 @@ function VerticalEvents({
 
 interface Props {
   timeGridRows: TimeGridRow[];
-  gridSelection: TimeGridSelectionDataByCol | null;
   columnDate: TZDate;
   columnWidth: string;
+  columnIndex: number;
   events: EventUIModel[];
   backgroundColor?: string;
   readOnly?: boolean;
@@ -99,9 +99,9 @@ interface Props {
 export const Column = memo(function Column({
   columnDate,
   columnWidth,
+  columnIndex,
   events,
   timeGridRows,
-  gridSelection,
   backgroundColor,
 }: Props) {
   const [startTime, endTime] = useMemo(() => {
@@ -113,35 +113,6 @@ export const Column = memo(function Column({
 
     return [start, end];
   }, [columnDate, timeGridRows]);
-
-  const gridSelectionProps = useMemo(() => {
-    if (!gridSelection) {
-      return null;
-    }
-
-    const { startRowIndex, endRowIndex, isStartingColumn, isSelectingMultipleColumns } =
-      gridSelection;
-
-    const { top: startRowTop, startTime: startRowStartTime } = timeGridRows[startRowIndex];
-    const {
-      top: endRowTop,
-      height: endRowHeight,
-      endTime: endRowEndTime,
-    } = timeGridRows[endRowIndex];
-
-    const gridSelectionHeight = endRowTop + endRowHeight - startRowTop;
-
-    let text = `${startRowStartTime} - ${endRowEndTime}`;
-    if (isSelectingMultipleColumns) {
-      text = isStartingColumn ? startRowStartTime : '';
-    }
-
-    return {
-      top: startRowTop,
-      height: gridSelectionHeight,
-      text,
-    };
-  }, [gridSelection, timeGridRows]);
 
   const style = {
     width: columnWidth,
@@ -155,7 +126,7 @@ export const Column = memo(function Column({
       data-testid={`timegrid-column-${columnDate.getDay()}`}
     >
       <BackgroundEvents events={events} startTime={startTime} endTime={endTime} />
-      {gridSelectionProps ? <GridSelection {...gridSelectionProps} /> : null}
+      <GridSelectionByColumn columnIndex={columnIndex} timeGridRows={timeGridRows} />
       <VerticalEvents events={events} startTime={startTime} endTime={endTime} />
     </div>
   );
