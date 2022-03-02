@@ -6,12 +6,10 @@ import { useDraggingEvent } from '@src/hooks/event/draggingEvent';
 import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import type TZDate from '@src/time/date';
-import { addMilliseconds, MS_PER_DAY } from '@src/time/datetime';
+import { addMilliseconds, MS_PER_DAY, MS_PER_THIRTY_MINUTES } from '@src/time/datetime';
 import { isNil, isPresent } from '@src/utils/type';
 
 import { GridPosition, GridPositionFinder, TimeGridData } from '@t/grid';
-
-const THIRTY_MINUTES = 30 * 60 * 1000;
 
 export function useTimeGridEventMove({
   gridPositionFinder,
@@ -57,7 +55,7 @@ export function useTimeGridEventMove({
 
     return addMilliseconds(
       startDateTimeRef.current,
-      gridDiff.rowIndex * THIRTY_MINUTES + gridDiff.columnIndex * MS_PER_DAY
+      gridDiff.rowIndex * MS_PER_THIRTY_MINUTES + gridDiff.columnIndex * MS_PER_DAY
     );
   }, [canCalculate, gridDiff]);
 

@@ -174,9 +174,9 @@ export const MS_PER_MINUTES = 60000;
  */
 export const MS_EVENT_MIN_DURATION = 20 * MS_PER_MINUTES;
 
-export const SIXTY_SECONDS = 60;
+export const MS_PER_THIRTY_MINUTES = 30 * 60 * 1000;
 
-export const SIXTY_MINUTES = 60;
+export const SIXTY_SECONDS = 60;
 
 /**
  * Return formatted string as basis of supplied string.
