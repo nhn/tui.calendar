@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useState } from 'preact/hooks';
+import { useState } from 'preact/hooks';
 
-import { useStore } from '@src/contexts/calendarStore';
-import { useDndTransientState } from '@src/hooks/dnd/dndTransientState';
+import { useTransientUpdate } from '@src/hooks/common/transientUpdate';
 import EventUIModel from '@src/model/eventUIModel';
+import { dndSelector } from '@src/selectors';
 import { last } from '@src/utils/array';
 import { isNil } from '@src/utils/type';
 
@@ -27,7 +27,7 @@ const getTargetEventId = (
 export function useDraggingEvent(area: EventDraggingArea, behavior: EventDraggingBehavior) {
   const [draggingEvent, setDraggingEvent] = useState<EventUIModel | null>(null);
 
-  useDndTransientState(({ draggingItemType, draggingEventUIModel }) => {
+  useTransientUpdate(dndSelector, ({ draggingItemType, draggingEventUIModel }) => {
     const targetEventId = getTargetEventId(draggingItemType, area, behavior);
     const hasMatchingTargetEvent = Number(targetEventId) === draggingEventUIModel?.cid();
 

@@ -22,7 +22,7 @@ export const ContainerWithGridSelection = forwardRef<HTMLDivElement, Props>(
     { children, gridPositionFinder, weekDates, narrowWeekend },
     ref
   ) {
-    const { onMouseDown, gridSelection } = useGridSelection({
+    const onMouseDown = useGridSelection({
       type: 'dayGridWeek',
       gridPositionFinder,
       dateCollection: weekDates,
@@ -30,21 +30,21 @@ export const ContainerWithGridSelection = forwardRef<HTMLDivElement, Props>(
       dateGetter: alldayGridRowSelectionHelper.getDateFromCollection,
     });
 
-    const calculatedGridSelection = useMemo(
-      () => alldayGridRowSelectionHelper.calculateSelection(gridSelection),
-      [gridSelection]
-    );
+    // const calculatedGridSelection = useMemo(
+    //   () => alldayGridRowSelectionHelper.calculateSelection(gridSelection),
+    //   [gridSelection]
+    // );
 
     return (
       <div className={cls('allday-panel')} ref={ref} onMouseDown={onMouseDown}>
         {children}
-        {calculatedGridSelection ? (
-          <GridSelection
-            gridSelectionData={calculatedGridSelection}
-            weekDates={weekDates}
-            narrowWeekend={narrowWeekend}
-          />
-        ) : null}
+        {/* {calculatedGridSelection ? (*/}
+        {/*  <GridSelection*/}
+        {/*    gridSelectionData={calculatedGridSelection}*/}
+        {/*    weekDates={weekDates}*/}
+        {/*    narrowWeekend={narrowWeekend}*/}
+        {/*  />*/}
+        {/* ) : null}*/}
       </div>
     );
   }

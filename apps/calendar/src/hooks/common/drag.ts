@@ -3,7 +3,8 @@ import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import { KEY } from '@src/constants/keyboard';
 import { MINIMUM_DRAG_MOUSE_DISTANCE } from '@src/constants/mouse';
 import { useDispatch, useInternalStore } from '@src/contexts/calendarStore';
-import { useDndTransientState } from '@src/hooks/dnd/dndTransientState';
+import { useTransientUpdate } from '@src/hooks/common/transientUpdate';
+import { dndSelector } from '@src/selectors';
 import { DndSlice, DraggingState } from '@src/slices/dnd';
 import { isKeyPressed } from '@src/utils/keyboard';
 import { noop } from '@src/utils/noop';
@@ -46,7 +47,7 @@ export function useDrag(
 
   const store = useInternalStore();
   const dndSliceRef = useRef(store.getState().dnd);
-  useDndTransientState((dndState) => {
+  useTransientUpdate(dndSelector, (dndState) => {
     dndSliceRef.current = dndState;
   });
 

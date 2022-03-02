@@ -160,13 +160,13 @@ export function TimeGrid({
     [columns.length, columnsContainer, rows.length]
   );
 
-  // const { onMouseDown, gridSelection: timeGridSelection } = useGridSelection({
-  //   type: 'timeGrid',
-  //   gridPositionFinder,
-  //   selectionSorter: timeGridSelectionHelper.sortSelection,
-  //   dateGetter: timeGridSelectionHelper.getDateFromCollection,
-  //   dateCollection: timeGridData,
-  // });
+  const onMouseDown = useGridSelection({
+    type: 'timeGrid',
+    gridPositionFinder,
+    selectionSorter: timeGridSelectionHelper.sortSelection,
+    dateGetter: timeGridSelectionHelper.getDateFromCollection,
+    dateCollection: timeGridData,
+  });
 
   return (
     <div className={classNames.timegrid}>
@@ -176,27 +176,20 @@ export function TimeGrid({
           className={cls('columns')}
           style={{ left: toPx(timesWidth) }}
           ref={setColumnsContainer}
-          // onMouseDown={onMouseDown}
+          onMouseDown={onMouseDown}
         >
           <GridLines timeGridRows={rows} />
           <MovingEventShadow gridPositionFinder={gridPositionFinder} timeGridData={timeGridData} />
-          {columns.map((column, index) => {
-            // const gridSelection = timeGridSelectionHelper.calculateSelection(
-            //   timeGridSelection,
-            //   index
-            // );
-
-            return (
-              <Column
-                key={column.date.toString()}
-                timeGridRows={rows}
-                gridSelection={null}
-                columnDate={column.date}
-                columnWidth={toPercent(column.width)}
-                events={eventsByColumns[index]}
-              />
-            );
-          })}
+          {columns.map((column, index) => (
+            <Column
+              key={column.date.toString()}
+              timeGridRows={rows}
+              columnDate={column.date}
+              columnWidth={toPercent(column.width)}
+              columnIndex={index}
+              events={eventsByColumns[index]}
+            />
+          ))}
           {/* @TODO: Should be reimplement `CurrentTimeIndicator` component */}
           {currentDateIndexInColumns > 0 ? (
             <CurrentTimeIndicator

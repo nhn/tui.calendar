@@ -4,7 +4,8 @@ import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/drag';
-import { useDndTransientState } from '@src/hooks/dnd/dndTransientState';
+import { useTransientUpdate } from '@src/hooks/common/transientUpdate';
+import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import TZDate from '@src/time/date';
 import { isPresent } from '@src/utils/type';
@@ -40,9 +41,7 @@ export function useGridSelection<DateCollection>({
   gridPositionFinder: GridPositionFinder;
 }) {
   const useCreationPopup = useStore(useCreationPopupOptionSelector);
-  const gridSelection = useStore(
-    useCallback((state: CalendarState) => state.gridSelection[type], [type])
-  );
+
   const { setGridSelection } = useDispatch('gridSelection');
   const { hideAllPopup, showFormPopup } = useDispatch('popup');
   const eventBus = useEventBus();
@@ -50,8 +49,16 @@ export function useGridSelection<DateCollection>({
   const [initMousePosition, setInitMousePosition] = useState<Coordinates | null>(null);
   const [initGridPosition, setInitGridPosition] = useState<GridPosition | null>(null);
   const isSelectingGridRef = useRef(false);
+  const gridSelectionRef = useRef<GridSelectionData | null>(null);
 
-  useDndTransientState(({ draggingState, draggingItemType }) => {
+  useTransientUpdate(
+    useCallback((state: CalendarState) => state.gridSelection[type], [type]),
+    (gridSelection) => {
+      gridSelectionRef.current = gridSelection;
+    }
+  );
+
+  useTransientUpdate(dndSelector, ({ draggingState, draggingItemType }) => {
     isSelectingGridRef.current =
       draggingItemType === currentGridSelectionType && draggingState >= DraggingState.INIT;
   });
@@ -98,8 +105,10 @@ export function useGridSelection<DateCollection>({
     onMouseUp: (e) => {
       e.stopPropagation();
 
-      if (isPresent(gridSelection)) {
-        const [startDate, endDate] = sortDates(...dateGetter(dateCollection, gridSelection));
+      if (isPresent(gridSelectionRef.current)) {
+        const [startDate, endDate] = sortDates(
+          ...dateGetter(dateCollection, gridSelectionRef.current)
+        );
 
         if (useCreationPopup && isPresent(initMousePosition)) {
           const popupArrowPointPosition = {
@@ -138,5 +147,5 @@ export function useGridSelection<DateCollection>({
     [setGridSelection, type]
   );
 
-  return { onMouseDown, gridSelection };
+  return onMouseDown;
 }

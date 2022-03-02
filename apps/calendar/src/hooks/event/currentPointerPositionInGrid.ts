@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'preact/hooks';
 
-import { useDndTransientState } from '@src/hooks/dnd/dndTransientState';
+import { useTransientUpdate } from '@src/hooks/common/transientUpdate';
+import { dndSelector } from '@src/selectors';
 import { isPresent } from '@src/utils/type';
 
 import { GridPosition, GridPositionFinder } from '@t/grid';
@@ -10,7 +11,7 @@ export function useCurrentPointerPositionInGrid(
 ): [GridPosition | null, () => void] {
   const [currentGridPos, setCurrentGridPos] = useState<GridPosition | null>(null);
 
-  useDndTransientState((dndState) => {
+  useTransientUpdate(dndSelector, (dndState) => {
     if (isPresent(dndState.x) && isPresent(dndState.y)) {
       const gridPosition = gridPositionFinder({
         clientX: dndState.x,

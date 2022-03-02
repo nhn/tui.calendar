@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
-import { useDndTransientState } from '@src/hooks/dnd/dndTransientState';
+import { useTransientUpdate } from '@src/hooks/common/transientUpdate';
 import { useCurrentPointerPositionInGrid } from '@src/hooks/event/currentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/draggingEvent';
+import { dndSelector } from '@src/selectors';
 import { isNotDraggingSelector } from '@src/selectors/dnd';
 import type TZDate from '@src/time/date';
 import { addMilliseconds, MS_PER_DAY, MS_PER_THIRTY_MINUTES } from '@src/time/datetime';
@@ -29,7 +30,7 @@ export function useTimeGridEventMove({
   const initGridPositionRef = useRef<GridPosition | null>(null);
 
   // Setting up initial grid position
-  useDndTransientState(({ initX, initY }) => {
+  useTransientUpdate(dndSelector, ({ initX, initY }) => {
     if (isPresent(initX) && isPresent(initY) && isPresent(draggingEvent)) {
       initGridPositionRef.current = gridPositionFinder({
         clientX: initX,

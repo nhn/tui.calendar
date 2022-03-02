@@ -71,7 +71,7 @@ export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidth
     [calendarData, dateMatrix, narrowWeekend]
   );
 
-  const { onMouseDown } = useGridSelection({
+  const onMouseDown = useGridSelection({
     type: 'dayGridMonth',
     gridPositionFinder,
     dateCollection: dateMatrix,
