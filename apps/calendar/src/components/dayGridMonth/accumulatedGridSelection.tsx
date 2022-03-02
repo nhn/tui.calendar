@@ -8,24 +8,20 @@ import { dayGridMonthSelectionHelper } from '@src/helpers/gridSelection';
 import TZDate from '@src/time/date';
 
 interface Props {
-  currentIndex: number;
-  weekLength: number;
+  rowIndex: number;
   weekDates: TZDate[];
   narrowWeekend: boolean;
 }
 
-export function AccumulatedGridSelection({
-  currentIndex,
-  weekLength,
-  weekDates,
-  narrowWeekend,
-}: Props) {
-  const gridSelections = useStore(
-    useCallback((state) => state.gridSelection.accumulated.dayGridMonth, [])
-  );
-
-  const gridSelectionDataByRow = gridSelections.map((gridSelection) =>
-    dayGridMonthSelectionHelper.calculateSelection(gridSelection, currentIndex, weekLength)
+export function AccumulatedGridSelection({ rowIndex, weekDates, narrowWeekend }: Props) {
+  const gridSelectionDataByRow = useStore(
+    useCallback(
+      (state) =>
+        state.gridSelection.accumulated.dayGridMonth.map((gridSelection) =>
+          dayGridMonthSelectionHelper.calculateSelection(gridSelection, rowIndex, weekDates.length)
+        ),
+      [rowIndex, weekDates]
+    )
   );
 
   return (
