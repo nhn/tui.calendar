@@ -26,6 +26,10 @@ export async function selectGridCells(
   await dragAndDrop(startCellLocator, endCellLocator);
 }
 
+export function selectMonthGridCells(page: Page, startCellIndex: number, endCellIndex: number) {
+  return selectGridCells(page, startCellIndex, endCellIndex, '.toastui-calendar-daygrid-cell');
+}
+
 export async function getBoundingBox(locator: Locator): Promise<BoundingBox> {
   const boundingBox = await locator.boundingBox();
 
