@@ -1,7 +1,7 @@
 import { Fragment, h } from 'preact';
 import { useMemo } from 'preact/hooks';
 
-import { ContainerWithGridSelection } from '@src/components/dayGridWeek/containerWithGridSelection';
+import { AlldayGridSelection } from '@src/components/dayGridWeek/alldayGridSelection';
 import { GridCells } from '@src/components/dayGridWeek/gridCells';
 import { MovingEventShadow } from '@src/components/dayGridWeek/movingEventShadow';
 import { ResizingEventShadow } from '@src/components/dayGridWeek/resizingEventShadow';
@@ -10,8 +10,10 @@ import { Template } from '@src/components/template';
 import { DEFAULT_PANEL_HEIGHT, WEEK_EVENT_MARGIN_TOP } from '@src/constants/style';
 import { cls } from '@src/helpers/css';
 import { createGridPositionFinder, EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
+import { alldayGridRowSelectionHelper } from '@src/helpers/gridSelection';
 import { useDOMNode } from '@src/hooks/common/domNode';
 import { useGridRowHeightController } from '@src/hooks/dayGridWeek/gridRowHeightController';
+import { useGridSelection } from '@src/hooks/gridSelection/gridSelection';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 
@@ -77,17 +79,20 @@ export function AlldayGridRow({
     [events, height]
   );
 
+  const onMouseDown = useGridSelection({
+    type: 'dayGridWeek',
+    gridPositionFinder,
+    dateCollection: weekDates,
+    selectionSorter: alldayGridRowSelectionHelper.sortSelection,
+    dateGetter: alldayGridRowSelectionHelper.getDateFromCollection,
+  });
+
   return (
     <Fragment>
       <div className={cls('panel-title')} style={{ width: columnWidth }}>
         <Template template={rowTitleTemplate} model="allday" />
       </div>
-      <ContainerWithGridSelection
-        weekDates={weekDates}
-        ref={setPanelContainerRef}
-        narrowWeekend={narrowWeekend}
-        gridPositionFinder={gridPositionFinder}
-      >
+      <div className={cls('allday-panel')} ref={setPanelContainerRef} onMouseDown={onMouseDown}>
         <div className={cls('panel-grid-wrapper')}>
           <GridCells
             uiModels={events}
@@ -107,7 +112,8 @@ export function AlldayGridRow({
           gridColWidthMap={gridColWidthMap}
         />
         <MovingEventShadow rowStyleInfo={rowStyleInfo} gridPositionFinder={gridPositionFinder} />
-      </ContainerWithGridSelection>
+        <AlldayGridSelection weekDates={weekDates} narrowWeekend={narrowWeekend} />
+      </div>
     </Fragment>
   );
 }
