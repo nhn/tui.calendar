@@ -1,7 +1,7 @@
 import { h } from 'preact';
 
-import { fireEvent, screen } from '@testing-library/preact';
-import { act, renderHook } from '@testing-library/preact-hooks';
+import { screen } from '@testing-library/preact';
+import { renderHook } from '@testing-library/preact-hooks';
 import userEvent from '@testing-library/user-event';
 
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
@@ -9,6 +9,7 @@ import { EventBusProvider } from '@src/contexts/eventBus';
 import { createGridPositionFinder, createTimeGridData, getWeekDates } from '@src/helpers/grid';
 import { timeGridSelectionHelper } from '@src/helpers/gridSelection';
 import { useGridSelection } from '@src/hooks/gridSelection/gridSelection';
+import { dragAndDrop } from '@src/test/utils';
 import TZDate from '@src/time/date';
 import { EventBusImpl } from '@src/utils/eventBus';
 import { noop } from '@src/utils/noop';
@@ -99,31 +100,6 @@ describe('useGridSelection', () => {
     }
 
     return result;
-  }
-
-  function dragMouse(container: HTMLElement, from: ClientMousePosition, to: ClientMousePosition) {
-    act(() => {
-      fireEvent.mouseDown(container, {
-        clientX: from.clientX,
-        clientY: from.clientY,
-      });
-    });
-    // to init drag
-    act(() => {
-      fireEvent.mouseMove(document, {
-        clientX: 0,
-        clientY: 0,
-      });
-    });
-    act(() => {
-      fireEvent.mouseMove(document, {
-        clientX: to.clientX,
-        clientY: to.clientY,
-      });
-    });
-    act(() => {
-      fireEvent.mouseUp(document);
-    });
   }
 
   beforeEach(() => {
@@ -217,11 +193,9 @@ describe('useGridSelection', () => {
         const container = screen.getByTestId('container');
 
         // When
-        act(() => {
-          userEvent.click(container, {
-            clientX: initX,
-            clientY: initY,
-          });
+        userEvent.click(container, {
+          clientX: initX,
+          clientY: initY,
         });
 
         // Then
@@ -332,7 +306,11 @@ describe('useGridSelection', () => {
         const container = screen.getByTestId('container');
 
         // When
-        dragMouse(container, { clientX: initX, clientY: initY }, { clientX: x, clientY: y });
+        dragAndDrop({
+          element: container,
+          initPosition: { clientX: initX, clientY: initY },
+          targetPosition: { clientX: x, clientY: y },
+        });
 
         // Then
         expect(result.current?.gridSelection).toEqual(expected);
@@ -341,8 +319,8 @@ describe('useGridSelection', () => {
   });
 
   describe('Accumulated gridSelection', () => {
-    const from = { clientX: 0, clientY: 0 };
-    const to = { clientX: 50, clientY: 50 };
+    const initPosition = { clientX: 0, clientY: 0 };
+    const targetPosition = { clientX: 50, clientY: 50 };
 
     it('should not add grid selection in timeGrid', () => {
       // Given
@@ -352,7 +330,7 @@ describe('useGridSelection', () => {
       const container = screen.getByTestId('container');
 
       // When
-      dragMouse(container, from, to);
+      dragAndDrop({ element: container, initPosition, targetPosition });
 
       // Then
       expect(store.getState().gridSelection.timeGrid).toEqual([]);
@@ -366,7 +344,7 @@ describe('useGridSelection', () => {
       const container = screen.getByTestId('container');
 
       // When
-      dragMouse(container, from, to);
+      dragAndDrop({ element: container, initPosition, targetPosition });
 
       // Then
       expect(store.getState().gridSelection.dayGridWeek).toEqual([]);
@@ -381,7 +359,7 @@ describe('useGridSelection', () => {
       const container = screen.getByTestId('container');
 
       // When
-      dragMouse(container, from, to);
+      dragAndDrop({ element: container, initPosition, targetPosition });
 
       // Then
       expect(store.getState().gridSelection.dayGridMonth).toEqual([]);
@@ -395,7 +373,7 @@ describe('useGridSelection', () => {
       const container = screen.getByTestId('container');
 
       // When
-      dragMouse(container, from, to);
+      dragAndDrop({ element: container, initPosition, targetPosition });
 
       // Then
       const accumulatedGridSelection = store.getState().gridSelection.dayGridMonth;
@@ -424,7 +402,11 @@ describe('useGridSelection', () => {
       const container = screen.getByTestId('container');
 
       // When
-      dragMouse(container, { clientX: 35, clientY: 240 }, { clientX: 35, clientY: 480 });
+      dragAndDrop({
+        element: container,
+        initPosition: { clientX: 35, clientY: 240 },
+        targetPosition: { clientX: 35, clientY: 480 },
+      });
 
       // Then
       expect(showFormPopupAction).toHaveBeenCalledWith(
@@ -484,7 +466,11 @@ describe('useGridSelection', () => {
       const container = screen.getByTestId('container');
 
       // When
-      dragMouse(container, { clientX: 35, clientY: 240 }, { clientX: 35, clientY: 480 });
+      dragAndDrop({
+        element: container,
+        initPosition: { clientX: 35, clientY: 240 },
+        targetPosition: { clientX: 35, clientY: 480 },
+      });
 
       // Then
       expect(mockHandler).toHaveBeenCalledWith(

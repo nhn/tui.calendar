@@ -2,15 +2,11 @@ import { expect, Locator, test } from '@playwright/test';
 
 import type { FormattedTimeString } from '../../types/time/datetime';
 import { WEEK_VIEW_PAGE_URL } from '../configs';
-import { dragAndDrop, getBoundingBox } from '../utils';
+import { dragAndDrop, getBoundingBox, getTimeGridLineLocator } from '../utils';
 
 test.beforeEach(async ({ page }) => {
   await page.goto(WEEK_VIEW_PAGE_URL);
 });
-
-function getGridLineLocator(start: FormattedTimeString, end: FormattedTimeString): string {
-  return `data-testid=gridline-${start}-${end}`;
-}
 
 async function assertTimeGridSelection(
   selectionLocator: Locator,
@@ -68,7 +64,7 @@ test.describe('TimeGrid Selection in week', () => {
   test('should be able to select a range of time from bottom to top', async ({ page }) => {
     // Given
     const startGridLineLocator = page.locator(BASE_GRIDLINE_LOCATOR);
-    const targetGridLineLocator = page.locator(getGridLineLocator('01:00', '01:30'));
+    const targetGridLineLocator = page.locator(getTimeGridLineLocator('01:00'));
     const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
 
     const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
@@ -89,7 +85,7 @@ test.describe('TimeGrid Selection in week', () => {
   test('should be able to select a range of time to upper right', async ({ page }) => {
     // Given
     const startGridLineLocator = page.locator(BASE_GRIDLINE_LOCATOR);
-    const targetGridLineLocator = page.locator(getGridLineLocator('01:00', '01:30'));
+    const targetGridLineLocator = page.locator(getTimeGridLineLocator('01:00'));
     const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
 
     const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
@@ -139,7 +135,7 @@ test.describe('TimeGrid Selection in week', () => {
   test('should be able to select a range of time to lower right', async ({ page }) => {
     // Given
     const startGridLineLocator = page.locator(BASE_GRIDLINE_LOCATOR);
-    const targetGridLineLocator = page.locator(getGridLineLocator('05:00', '05:30'));
+    const targetGridLineLocator = page.locator(getTimeGridLineLocator('05:00'));
     const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
 
     const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
@@ -165,7 +161,7 @@ test.describe('TimeGrid Selection in week', () => {
   test('should be able to select a range of time from top to bottom', async ({ page }) => {
     // Given
     const startGridLineLocator = page.locator(BASE_GRIDLINE_LOCATOR);
-    const targetGridLineLocator = page.locator(getGridLineLocator('05:00', '05:30'));
+    const targetGridLineLocator = page.locator(getTimeGridLineLocator('05:00'));
     const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
 
     const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
@@ -186,7 +182,7 @@ test.describe('TimeGrid Selection in week', () => {
   test('should be able to select a range of time to lower left', async ({ page }) => {
     // Given
     const startGridLineLocator = page.locator(BASE_GRIDLINE_LOCATOR);
-    const targetGridLineLocator = page.locator(getGridLineLocator('05:00', '05:30'));
+    const targetGridLineLocator = page.locator(getTimeGridLineLocator('05:00'));
     const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
 
     const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
@@ -236,7 +232,7 @@ test.describe('TimeGrid Selection in week', () => {
   test('should be able to select a range of time to upper left', async ({ page }) => {
     // Given
     const startGridLineLocator = page.locator(BASE_GRIDLINE_LOCATOR);
-    const targetGridLineLocator = page.locator(getGridLineLocator('01:00', '01:30'));
+    const targetGridLineLocator = page.locator(getTimeGridLineLocator('01:00'));
     const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
 
     const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);

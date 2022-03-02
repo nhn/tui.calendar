@@ -152,7 +152,7 @@ function setRenderInfo(
  * @param {TZDate} startColumnTime - start date
  * @param {TZDate} endColumnTime - end date
  */
-export function getUIModels(
+export function setRenderInfoOfUIModels(
   events: EventUIModel[],
   startColumnTime: TZDate,
   endColumnTime: TZDate

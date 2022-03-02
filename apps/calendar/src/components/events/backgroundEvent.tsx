@@ -8,7 +8,7 @@ const classNames = {
 };
 
 interface Props {
-  eventModels: EventUIModel;
+  uiModel: EventUIModel;
   width?: string;
   height?: string;
   top?: string;
@@ -18,7 +18,7 @@ interface Props {
 }
 
 export function BackgroundEvent({
-  eventModels,
+  uiModel,
   width = '100%',
   height = '100px',
   top = '',
@@ -27,7 +27,7 @@ export function BackgroundEvent({
   left = '',
 }: Props) {
   const style = {
-    backgroundColor: eventModels.model.bgColor,
+    backgroundColor: uiModel.model.bgColor,
     width,
     height,
     top,

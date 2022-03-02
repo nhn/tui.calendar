@@ -1,6 +1,7 @@
 import { h } from 'preact';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 
+import { TimeEvent } from '@src/components/events/timeEvent';
 import { addTimeGridPrefix, className as timegridClassName } from '@src/components/timeGrid';
 import { Column } from '@src/components/timeGrid/column';
 import { CurrentTimeIndicator } from '@src/components/timeGrid/currentTimeIndicator';
@@ -13,6 +14,7 @@ import { createGridPositionFinder } from '@src/helpers/grid';
 import { timeGridSelectionHelper } from '@src/helpers/gridSelection';
 import { useDOMNode } from '@src/hooks/common/domNode';
 import { useGridSelection } from '@src/hooks/gridSelection/gridSelection';
+import { useTimeGridEventMove } from '@src/hooks/timeGrid/timeGridEventMove';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { isSameDate, SIXTY_SECONDS, toEndOfDay, toStartOfDay } from '@src/time/datetime';
@@ -113,7 +115,13 @@ export function TimeGrid({
   const { columns, rows } = timeGridData;
 
   const eventsByColumns = useMemo(
-    () => columns.map(({ date }) => events.filter(isBetween(toStartOfDay(date), toEndOfDay(date)))),
+    () =>
+      columns.map(({ date }) =>
+        events
+          .filter(isBetween(toStartOfDay(date), toEndOfDay(date)))
+          // NOTE: prevent shared reference between columns
+          .map((uiModel) => uiModel.clone())
+      ),
     [columns, events]
   );
 
@@ -139,6 +147,10 @@ export function TimeGrid({
     dateGetter: timeGridSelectionHelper.getDateFromCollection,
     dateCollection: timeGridData,
   });
+  const { movingEvent, nextStartTime } = useTimeGridEventMove({
+    gridPositionFinder,
+    timeGridData,
+  });
 
   return (
     <div className={classNames.timegrid}>
@@ -151,6 +163,7 @@ export function TimeGrid({
           onMouseDown={onMouseDown}
         >
           <GridLines timeGridRows={rows} />
+          {movingEvent ? <TimeEvent uiModel={movingEvent} nextStartTime={nextStartTime} /> : null}
           {columns.map((column, index) => {
             const gridSelection = timeGridSelectionHelper.calculateSelection(
               timeGridSelection,

@@ -60,7 +60,10 @@ export function useDayGridMonthEventResize({
 }: EventResizeHookParams) {
   const { draggingState } = useStore(dndSelector);
   const { updateEvent } = useDispatch('calendar');
-  const { draggingEvent: resizingStartUIModel, clearDraggingEvent } = useDraggingEvent('resize');
+  const { draggingEvent: resizingStartUIModel, clearDraggingEvent } = useDraggingEvent(
+    'dayGrid',
+    'resize'
+  );
   const [currentGridPos, clearCurrentGridPos] = useCurrentPointerPositionInGrid(gridPositionFinder);
 
   const [resizingState, setResizingState] = useState<ResizingState | null>(null);
