@@ -16,7 +16,7 @@ const targetEventSelector = `[data-testid*="time-event-${TARGET_EVENT_TITLE}"]`;
 const cases: { name: string; targetStartTime: FormattedTimeString; targetColumnIndex: number }[] = [
   {
     name: 'drag event to the top of the day',
-    targetStartTime: '02:00' as const,
+    targetStartTime: '02:00',
     targetColumnIndex: 3,
   },
   {
