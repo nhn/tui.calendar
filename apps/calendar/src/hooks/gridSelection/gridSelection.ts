@@ -7,10 +7,10 @@ import { useDrag } from '@src/hooks/common/drag';
 import { useTransientUpdate } from '@src/hooks/common/transientUpdate';
 import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
+import { GridSelectionType } from '@src/slices/gridSelection';
 import TZDate from '@src/time/date';
 import { isPresent } from '@src/utils/type';
 
-import { GridSelectionType } from '@t/drag';
 import { GridPosition, GridPositionFinder } from '@t/grid';
 import { CalendarState } from '@t/store';
 
@@ -42,7 +42,7 @@ export function useGridSelection<DateCollection>({
 }) {
   const useCreationPopup = useStore(useCreationPopupOptionSelector);
 
-  const { setGridSelection } = useDispatch('gridSelection');
+  const { setGridSelection, addGridSelection } = useDispatch('gridSelection');
   const { hideAllPopup, showFormPopup } = useDispatch('popup');
   const eventBus = useEventBus();
 
@@ -109,6 +109,10 @@ export function useGridSelection<DateCollection>({
         const [startDate, endDate] = sortDates(
           ...dateGetter(dateCollection, gridSelectionRef.current)
         );
+
+        if (!useCreationPopup) {
+          addGridSelection(type, gridSelectionRef.current);
+        }
 
         if (useCreationPopup && isPresent(initMousePosition)) {
           const popupArrowPointPosition = {
