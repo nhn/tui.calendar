@@ -88,7 +88,6 @@ function getStyles(uiModel: EventUIModel, isDraggingTarget: boolean, hasNextStar
   };
 }
 
-// @TODO: separate logics from resizing & moving shadows
 export function TimeEvent({ uiModel, nextStartTime }: Props) {
   const [isDraggingTarget, setIsDraggingTarget] = useState<boolean>(false);
   const { setDraggingEventUIModel } = useDispatch('dnd');

@@ -1,11 +1,11 @@
 import { h } from 'preact';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 
-import { TimeEvent } from '@src/components/events/timeEvent';
 import { addTimeGridPrefix, className as timegridClassName } from '@src/components/timeGrid';
 import { Column } from '@src/components/timeGrid/column';
 import { CurrentTimeIndicator } from '@src/components/timeGrid/currentTimeIndicator';
 import { GridLines } from '@src/components/timeGrid/gridLines';
+import { MovingEventShadow } from '@src/components/timeGrid/movingEventShadow';
 import { TimeColumn } from '@src/components/timeGrid/timeColumn';
 import { isBetween } from '@src/controller/column';
 import { getTopPercentByTime } from '@src/controller/times';
@@ -14,13 +14,11 @@ import { createGridPositionFinder } from '@src/helpers/grid';
 import { timeGridSelectionHelper } from '@src/helpers/gridSelection';
 import { useDOMNode } from '@src/hooks/common/domNode';
 import { useGridSelection } from '@src/hooks/gridSelection/gridSelection';
-import { useTimeGridEventMove } from '@src/hooks/timeGrid/timeGridEventMove';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { isSameDate, SIXTY_SECONDS, toEndOfDay, toStartOfDay } from '@src/time/datetime';
-import { isNil } from '@src/utils/type';
 
-import { GridPositionFinder, TimeGridData } from '@t/grid';
+import { TimeGridData } from '@t/grid';
 import { TimezoneConfig } from '@t/options';
 
 const REFRESH_INTERVAL = 1000 * SIXTY_SECONDS;
@@ -42,25 +40,6 @@ type TimerID = number | null;
 
 function calculateLeft(timesWidth: number, timezones: Array<any>) {
   return timesWidth * timezones.length;
-}
-
-function MovingEventShadow({
-  gridPositionFinder,
-  timeGridData,
-}: {
-  gridPositionFinder: GridPositionFinder;
-  timeGridData: TimeGridData;
-}) {
-  const { movingEvent, nextStartTime } = useTimeGridEventMove({
-    gridPositionFinder,
-    timeGridData,
-  });
-
-  if (isNil(movingEvent)) {
-    return null;
-  }
-
-  return <TimeEvent uiModel={movingEvent} nextStartTime={nextStartTime} />;
 }
 
 function useForceUpdate() {

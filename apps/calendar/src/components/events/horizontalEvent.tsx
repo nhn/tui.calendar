@@ -137,7 +137,6 @@ function getTestId({ model }: EventUIModel) {
   return `${calendarId}${id}${model.title}`;
 }
 
-// @TODO: separate logics from resizing & moving shadows
 export function HorizontalEvent({
   flat = false,
   uiModel,
