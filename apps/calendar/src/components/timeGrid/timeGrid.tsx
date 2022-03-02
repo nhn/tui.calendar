@@ -18,8 +18,9 @@ import { useTimeGridEventMove } from '@src/hooks/timeGrid/timeGridEventMove';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { isSameDate, SIXTY_SECONDS, toEndOfDay, toStartOfDay } from '@src/time/datetime';
+import { isNil } from '@src/utils/type';
 
-import { TimeGridData } from '@t/grid';
+import { GridPositionFinder, TimeGridData } from '@t/grid';
 import { TimezoneConfig } from '@t/options';
 
 const REFRESH_INTERVAL = 1000 * SIXTY_SECONDS;
@@ -41,6 +42,25 @@ type TimerID = number | null;
 
 function calculateLeft(timesWidth: number, timezones: Array<any>) {
   return timesWidth * timezones.length;
+}
+
+function MovingEventShadow({
+  gridPositionFinder,
+  timeGridData,
+}: {
+  gridPositionFinder: GridPositionFinder;
+  timeGridData: TimeGridData;
+}) {
+  const { movingEvent, nextStartTime } = useTimeGridEventMove({
+    gridPositionFinder,
+    timeGridData,
+  });
+
+  if (isNil(movingEvent)) {
+    return null;
+  }
+
+  return <TimeEvent uiModel={movingEvent} nextStartTime={nextStartTime} />;
 }
 
 function useForceUpdate() {
@@ -140,17 +160,13 @@ export function TimeGrid({
     [columns.length, columnsContainer, rows.length]
   );
 
-  const { onMouseDown, gridSelection: timeGridSelection } = useGridSelection({
-    type: 'timeGrid',
-    gridPositionFinder,
-    selectionSorter: timeGridSelectionHelper.sortSelection,
-    dateGetter: timeGridSelectionHelper.getDateFromCollection,
-    dateCollection: timeGridData,
-  });
-  const { movingEvent, nextStartTime } = useTimeGridEventMove({
-    gridPositionFinder,
-    timeGridData,
-  });
+  // const { onMouseDown, gridSelection: timeGridSelection } = useGridSelection({
+  //   type: 'timeGrid',
+  //   gridPositionFinder,
+  //   selectionSorter: timeGridSelectionHelper.sortSelection,
+  //   dateGetter: timeGridSelectionHelper.getDateFromCollection,
+  //   dateCollection: timeGridData,
+  // });
 
   return (
     <div className={classNames.timegrid}>
@@ -160,21 +176,21 @@ export function TimeGrid({
           className={cls('columns')}
           style={{ left: toPx(timesWidth) }}
           ref={setColumnsContainer}
-          onMouseDown={onMouseDown}
+          // onMouseDown={onMouseDown}
         >
           <GridLines timeGridRows={rows} />
-          {movingEvent ? <TimeEvent uiModel={movingEvent} nextStartTime={nextStartTime} /> : null}
+          <MovingEventShadow gridPositionFinder={gridPositionFinder} timeGridData={timeGridData} />
           {columns.map((column, index) => {
-            const gridSelection = timeGridSelectionHelper.calculateSelection(
-              timeGridSelection,
-              index
-            );
+            // const gridSelection = timeGridSelectionHelper.calculateSelection(
+            //   timeGridSelection,
+            //   index
+            // );
 
             return (
               <Column
                 key={column.date.toString()}
                 timeGridRows={rows}
-                gridSelection={gridSelection}
+                gridSelection={null}
                 columnDate={column.date}
                 columnWidth={toPercent(column.width)}
                 events={eventsByColumns[index]}
