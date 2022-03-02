@@ -4,15 +4,16 @@ import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { TimeEvent } from '@src/components/events/timeEvent';
 import { addTimeGridPrefix, className as timegridClassName } from '@src/components/timeGrid';
 import { Column } from '@src/components/timeGrid/column';
-import { ColumnsContainerWithGridSelection } from '@src/components/timeGrid/columnsContainerWithGridSelection';
 import { CurrentTimeIndicator } from '@src/components/timeGrid/currentTimeIndicator';
 import { GridLines } from '@src/components/timeGrid/gridLines';
 import { TimeColumn } from '@src/components/timeGrid/timeColumn';
 import { isBetween } from '@src/controller/column';
 import { getTopPercentByTime } from '@src/controller/times';
-import { cls, toPercent } from '@src/helpers/css';
+import { cls, toPercent, toPx } from '@src/helpers/css';
 import { createGridPositionFinder } from '@src/helpers/grid';
+import { timeGridSelectionHelper } from '@src/helpers/gridSelection';
 import { useDOMNode } from '@src/hooks/common/domNode';
+import { useGridSelection } from '@src/hooks/gridSelection/gridSelection';
 import { useTimeGridEventMove } from '@src/hooks/timeGrid/timeGridEventMove';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
@@ -159,28 +160,43 @@ export function TimeGrid({
     [columns.length, columnsContainer, rows.length]
   );
 
+  // const { onMouseDown, gridSelection: timeGridSelection } = useGridSelection({
+  //   type: 'timeGrid',
+  //   gridPositionFinder,
+  //   selectionSorter: timeGridSelectionHelper.sortSelection,
+  //   dateGetter: timeGridSelectionHelper.getDateFromCollection,
+  //   dateCollection: timeGridData,
+  // });
+
   return (
     <div className={classNames.timegrid}>
       <div className={classNames.scrollArea}>
         <TimeColumn timeGridRows={rows} columnWidth={timesWidth} />
-        <ColumnsContainerWithGridSelection
-          gridPositionFinder={gridPositionFinder}
-          timesWidth={timesWidth}
+        <div
+          className={cls('columns')}
+          style={{ left: toPx(timesWidth) }}
           ref={setColumnsContainer}
-          timeGridData={timeGridData}
+          // onMouseDown={onMouseDown}
         >
           <GridLines timeGridRows={rows} />
           <MovingEventShadow gridPositionFinder={gridPositionFinder} timeGridData={timeGridData} />
-          {columns.map((column, index) => (
-            <Column
-              key={column.date.toString()}
-              timeGridRows={rows}
-              gridSelection={null}
-              columnDate={column.date}
-              columnWidth={toPercent(column.width)}
-              events={eventsByColumns[index]}
-            />
-          ))}
+          {columns.map((column, index) => {
+            // const gridSelection = timeGridSelectionHelper.calculateSelection(
+            //   timeGridSelection,
+            //   index
+            // );
+
+            return (
+              <Column
+                key={column.date.toString()}
+                timeGridRows={rows}
+                gridSelection={null}
+                columnDate={column.date}
+                columnWidth={toPercent(column.width)}
+                events={eventsByColumns[index]}
+              />
+            );
+          })}
           {/* @TODO: Should be reimplement `CurrentTimeIndicator` component */}
           {currentDateIndexInColumns > 0 ? (
             <CurrentTimeIndicator
@@ -190,7 +206,7 @@ export function TimeGrid({
               columnIndex={currentDateIndexInColumns}
             />
           ) : null}
-        </ColumnsContainerWithGridSelection>
+        </div>
       </div>
       <div ref={stickyContainerRef} />
     </div>

@@ -56,7 +56,7 @@ function getStyles(uiModel: EventUIModel, isDraggingTarget: boolean, hasNextStar
     color,
     backgroundColor: bgColor,
     opacity: isDraggingTarget ? 0.5 : 1,
-    zIndex: hasNextStartTime ? 1 : 'auto',
+    zIndex: hasNextStartTime ? 1 : 0,
   };
   const goingDurationStyle = {
     height: toPercent(goingDurationHeight),
