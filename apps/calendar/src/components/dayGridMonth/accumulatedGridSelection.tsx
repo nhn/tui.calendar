@@ -20,7 +20,9 @@ export function AccumulatedGridSelection({
   weekDates,
   narrowWeekend,
 }: Props) {
-  const gridSelections = useStore(useCallback((state) => state.gridSelection.dayGridMonth, []));
+  const gridSelections = useStore(
+    useCallback((state) => state.gridSelection.accumulated.dayGridMonth, [])
+  );
 
   const gridSelectionDataByRow = gridSelections.map((gridSelection) =>
     dayGridMonthSelectionHelper.calculateSelection(gridSelection, currentIndex, weekLength)

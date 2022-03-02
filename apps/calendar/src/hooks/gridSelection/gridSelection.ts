@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'preact/hooks';
+import { useCallback, useEffect, useState } from 'preact/hooks';
 
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
@@ -6,10 +6,10 @@ import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/drag';
 import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
+import { GridSelectionType } from '@src/slices/gridSelection';
 import TZDate from '@src/time/date';
 import { isPresent } from '@src/utils/type';
 
-import { GridSelectionType } from '@t/drag';
 import { GridPosition, GridPositionFinder } from '@t/grid';
 import { CalendarState } from '@t/store';
 
@@ -41,8 +41,10 @@ export function useGridSelection<DateCollection>({
 }) {
   const { draggingItemType, draggingState } = useStore(dndSelector);
   const useCreationPopup = useStore(useCreationPopupOptionSelector);
-  const { addGridSelection } = useDispatch('gridSelection');
-  const [gridSelection, setGridSelection] = useState<GridSelectionData | null>(null);
+  const gridSelection = useStore(
+    useCallback((state: CalendarState) => state.gridSelection[type], [type])
+  );
+  const { setGridSelection, addGridSelection } = useDispatch('gridSelection');
   const { hideAllPopup, showFormPopup } = useDispatch('popup');
   const eventBus = useEventBus();
 
@@ -57,7 +59,7 @@ export function useGridSelection<DateCollection>({
     const gridPosition = gridPositionFinder(e);
 
     if (isPresent(gridPosition)) {
-      setGridSelection(selectionSorter(initGridPos, gridPosition));
+      setGridSelection(type, selectionSorter(initGridPos, gridPosition));
     }
   };
   const initGridSelection = (e: MouseEvent) => {
@@ -132,9 +134,9 @@ export function useGridSelection<DateCollection>({
     () => () => {
       setInitMousePosition(null);
       setInitGridPosition(null);
-      setGridSelection(null);
+      setGridSelection(type, null);
     },
-    [type]
+    [setGridSelection, type]
   );
 
   return { onMouseDown, gridSelection };

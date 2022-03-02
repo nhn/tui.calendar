@@ -9,13 +9,13 @@ import { EventBusProvider } from '@src/contexts/eventBus';
 import { createGridPositionFinder, createTimeGridData, getWeekDates } from '@src/helpers/grid';
 import { timeGridSelectionHelper } from '@src/helpers/gridSelection';
 import { useGridSelection } from '@src/hooks/gridSelection/gridSelection';
+import { GridSelectionType } from '@src/slices/gridSelection';
 import { dragAndDrop } from '@src/test/utils';
 import TZDate from '@src/time/date';
 import { EventBusImpl } from '@src/utils/eventBus';
 import { noop } from '@src/utils/noop';
 
 import { PropsWithChildren } from '@t/components/common';
-import { GridSelectionType } from '@t/drag';
 import { ExternalEventTypes } from '@t/eventBus';
 import { GridPosition } from '@t/grid';
 import { CalendarStore, InternalStoreAPI } from '@t/store';
