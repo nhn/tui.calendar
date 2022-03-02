@@ -479,12 +479,10 @@ export function createGridPositionFinder({
   }
 
   return function gridPositionFinder(mousePosition) {
-    const {
-      left: containerLeft,
-      top: containerTop,
-      width,
-      height,
-    } = container.getBoundingClientRect();
+    const containerLeft = container.offsetLeft;
+    const containerTop = container.offsetTop;
+    const containerWidth = container.offsetWidth;
+    const containerHeight = container.offsetHeight;
     const [left, top] = getRelativeMousePosition(mousePosition, {
       left: containerLeft,
       top: containerTop,
@@ -492,13 +490,13 @@ export function createGridPositionFinder({
       clientTop: container.clientTop,
     });
 
-    if (left < 0 || top < 0 || left > width || top > height) {
+    if (left < 0 || top < 0 || left > containerWidth || top > containerHeight) {
       return null;
     }
 
     return {
-      columnIndex: getIndexFromPosition(columnsCount, width, left),
-      rowIndex: getIndexFromPosition(rowsCount, height, top),
+      columnIndex: getIndexFromPosition(columnsCount, containerWidth, left),
+      rowIndex: getIndexFromPosition(rowsCount, containerHeight, top),
     };
   };
 }
