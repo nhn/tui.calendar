@@ -3,12 +3,26 @@
   overflow: hidden;
   cursor: pointer;
 }
+
+/* Stacking context trick. Normally `.timegrid-selections` is on time events */
+.event-time:before {
+  content: "";
+  position: absolute;
+  display: block;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
 .event-time .travel-time,
 .event-time .event-time-content {
   overflow: hidden;
   padding: 1px 0 0 3px;
   font-size: 12px;
 }
+
 .resize-handler-x {
   position: absolute;
   right: 0;
