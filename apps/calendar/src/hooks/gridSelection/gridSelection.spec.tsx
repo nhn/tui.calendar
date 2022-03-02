@@ -322,34 +322,6 @@ describe('useGridSelection', () => {
     const initPosition = { clientX: 0, clientY: 0 };
     const targetPosition = { clientX: 50, clientY: 50 };
 
-    it('should not add grid selection in timeGrid', () => {
-      // Given
-      setup({
-        type: 'timeGrid',
-      });
-      const container = screen.getByTestId('container');
-
-      // When
-      dragAndDrop({ element: container, initPosition, targetPosition });
-
-      // Then
-      expect(store.getState().gridSelection.timeGrid).toEqual([]);
-    });
-
-    it('should not add grid selection in dayGridWeek', () => {
-      // Given
-      setup({
-        type: 'dayGridWeek',
-      });
-      const container = screen.getByTestId('container');
-
-      // When
-      dragAndDrop({ element: container, initPosition, targetPosition });
-
-      // Then
-      expect(store.getState().gridSelection.dayGridWeek).toEqual([]);
-    });
-
     it('should not add grid selection in dayGridMonth when useCreationPopup is true', () => {
       // Given
       setup({
@@ -362,7 +334,7 @@ describe('useGridSelection', () => {
       dragAndDrop({ element: container, initPosition, targetPosition });
 
       // Then
-      expect(store.getState().gridSelection.dayGridMonth).toEqual([]);
+      expect(store.getState().gridSelection.accumulated.dayGridMonth).toEqual([]);
     });
 
     it('should add grid selection in dayGridMonth when useCreationPopup is false', () => {
@@ -376,7 +348,7 @@ describe('useGridSelection', () => {
       dragAndDrop({ element: container, initPosition, targetPosition });
 
       // Then
-      const accumulatedGridSelection = store.getState().gridSelection.dayGridMonth;
+      const accumulatedGridSelection = store.getState().gridSelection.accumulated.dayGridMonth;
       expect(accumulatedGridSelection).not.toEqual([]);
       expect(accumulatedGridSelection).toHaveLength(1);
     });
