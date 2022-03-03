@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useMemo } from 'preact/hooks';
+import { useCallback, useMemo } from 'preact/hooks';
 
 import { useStore } from '@src/contexts/calendarStore';
 import { cls, toPercent } from '@src/helpers/css';
@@ -26,22 +26,20 @@ function GridSelection({ top, height, text }: { top: number; height: number; tex
   );
 }
 
-function timeGridSelectionSelector(state: CalendarState) {
-  return state.gridSelection.timeGrid;
-}
-
 interface Props {
   columnIndex: number;
   timeGridRows: TimeGridRow[];
 }
 
 export function GridSelectionByColumn({ columnIndex, timeGridRows }: Props) {
-  const timeGridSelection = useStore(timeGridSelectionSelector);
-
-  const gridSelectionData = useMemo(
-    () => timeGridSelectionHelper.calculateSelection(timeGridSelection, columnIndex),
-    [columnIndex, timeGridSelection]
+  const gridSelectionData = useStore(
+    useCallback(
+      (state: CalendarState) =>
+        timeGridSelectionHelper.calculateSelection(state.gridSelection.timeGrid, columnIndex),
+      [columnIndex]
+    )
   );
+
   const gridSelectionProps = useMemo(() => {
     if (!gridSelectionData) {
       return null;
