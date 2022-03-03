@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useState } from 'preact/hooks';
+import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/drag';
+import { useTransientUpdate } from '@src/hooks/common/transientUpdate';
 import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import { GridSelectionType } from '@src/slices/gridSelection';
@@ -39,21 +40,30 @@ export function useGridSelection<DateCollection>({
   dateCollection: DateCollection;
   gridPositionFinder: GridPositionFinder;
 }) {
-  const { draggingItemType, draggingState } = useStore(dndSelector);
   const useCreationPopup = useStore(useCreationPopupOptionSelector);
-  const gridSelection = useStore(
-    useCallback((state: CalendarState) => state.gridSelection[type], [type])
-  );
+
   const { setGridSelection, addGridSelection } = useDispatch('gridSelection');
   const { hideAllPopup, showFormPopup } = useDispatch('popup');
   const eventBus = useEventBus();
 
   const [initMousePosition, setInitMousePosition] = useState<Coordinates | null>(null);
   const [initGridPosition, setInitGridPosition] = useState<GridPosition | null>(null);
+  const isSelectingGridRef = useRef(false);
+  const gridSelectionRef = useRef<GridSelectionData | null>(null);
+
+  useTransientUpdate(
+    useCallback((state: CalendarState) => state.gridSelection[type], [type]),
+    (gridSelection) => {
+      gridSelectionRef.current = gridSelection;
+    }
+  );
+
+  useTransientUpdate(dndSelector, ({ draggingState, draggingItemType }) => {
+    isSelectingGridRef.current =
+      draggingItemType === currentGridSelectionType && draggingState >= DraggingState.INIT;
+  });
 
   const currentGridSelectionType = DRAGGING_TYPE_CREATORS.gridSelection(type);
-  const isSelectingGrid =
-    draggingItemType === currentGridSelectionType && draggingState >= DraggingState.INIT;
 
   const setGridSelectionByPosition = (e: MouseEvent, initGridPos: GridPosition) => {
     const gridPosition = gridPositionFinder(e);
@@ -83,23 +93,25 @@ export function useGridSelection<DateCollection>({
       initGridSelection(e);
     },
     onDragStart: (e) => {
-      if (isSelectingGrid && isPresent(initGridPosition)) {
+      if (isSelectingGridRef.current && isPresent(initGridPosition)) {
         setGridSelectionByPosition(e, initGridPosition);
       }
     },
     onDrag: (e) => {
-      if (isSelectingGrid && isPresent(initGridPosition)) {
+      if (isSelectingGridRef.current && isPresent(initGridPosition)) {
         setGridSelectionByPosition(e, initGridPosition);
       }
     },
     onMouseUp: (e) => {
       e.stopPropagation();
 
-      if (isPresent(gridSelection)) {
-        const [startDate, endDate] = sortDates(...dateGetter(dateCollection, gridSelection));
+      if (isPresent(gridSelectionRef.current)) {
+        const [startDate, endDate] = sortDates(
+          ...dateGetter(dateCollection, gridSelectionRef.current)
+        );
 
         if (!useCreationPopup) {
-          addGridSelection(type, gridSelection);
+          addGridSelection(type, gridSelectionRef.current);
         }
 
         if (useCreationPopup && isPresent(initMousePosition)) {
@@ -139,5 +151,5 @@ export function useGridSelection<DateCollection>({
     [setGridSelection, type]
   );
 
-  return { onMouseDown, gridSelection };
+  return onMouseDown;
 }

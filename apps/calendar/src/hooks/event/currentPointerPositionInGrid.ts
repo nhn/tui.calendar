@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'preact/hooks';
+import { useCallback, useState } from 'preact/hooks';
 
-import { useStore } from '@src/contexts/calendarStore';
+import { useTransientUpdate } from '@src/hooks/common/transientUpdate';
 import { dndSelector } from '@src/selectors';
 import { isPresent } from '@src/utils/type';
 
@@ -9,21 +9,21 @@ import { GridPosition, GridPositionFinder } from '@t/grid';
 export function useCurrentPointerPositionInGrid(
   gridPositionFinder: GridPositionFinder
 ): [GridPosition | null, () => void] {
-  const { x, y } = useStore(dndSelector);
   const [currentGridPos, setCurrentGridPos] = useState<GridPosition | null>(null);
 
-  const clearCurrentGridPos = () => setCurrentGridPos(null);
-
-  useEffect(() => {
-    const hasDraggingCoords = isPresent(x) && isPresent(y);
-
-    if (hasDraggingCoords) {
-      const gridPosition = gridPositionFinder({ clientX: x, clientY: y });
+  useTransientUpdate(dndSelector, (dndState) => {
+    if (isPresent(dndState.x) && isPresent(dndState.y)) {
+      const gridPosition = gridPositionFinder({
+        clientX: dndState.x,
+        clientY: dndState.y,
+      });
       if (gridPosition) {
         setCurrentGridPos(gridPosition);
       }
     }
-  }, [gridPositionFinder, x, y]);
+  });
+
+  const clearCurrentGridPos = useCallback(() => setCurrentGridPos(null), []);
 
   return [currentGridPos, clearCurrentGridPos];
 }

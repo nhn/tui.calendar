@@ -1,11 +1,15 @@
 import { h } from 'preact';
+import { useState } from 'preact/hooks';
 
 import { Template } from '@src/components/template';
 import { useDispatch } from '@src/contexts/calendarStore';
 import { cls, toPercent } from '@src/helpers/css';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/drag';
+import { useTransientUpdate } from '@src/hooks/common/transientUpdate';
 import EventUIModel from '@src/model/eventUIModel';
+import { dndSelector } from '@src/selectors';
+import { DraggingState } from '@src/slices/dnd';
 import type TZDate from '@src/time/date';
 import { passConditionalProp } from '@src/utils/preact';
 import { isNil, isPresent } from '@src/utils/type';
@@ -87,7 +91,8 @@ function getStyles(uiModel: EventUIModel, isDraggingTarget: boolean, hasNextStar
   };
 }
 
-export function TimeEvent({ uiModel, isDraggingTarget = false, nextStartTime }: Props) {
+export function TimeEvent({ uiModel, nextStartTime }: Props) {
+  const [isDraggingTarget, setIsDraggingTarget] = useState<boolean>(false);
   const { setDraggingEventUIModel } = useDispatch('dnd');
 
   const { model, goingDurationHeight, modelDurationHeight, comingDurationHeight, croppedEnd } =
@@ -99,10 +104,25 @@ export function TimeEvent({ uiModel, isDraggingTarget = false, nextStartTime }: 
     isPresent(nextStartTime)
   );
 
+  useTransientUpdate(dndSelector, ({ draggingEventUIModel, draggingState }) => {
+    if (
+      draggingState === DraggingState.DRAGGING &&
+      draggingEventUIModel?.cid() === uiModel.cid() &&
+      isNil(nextStartTime)
+    ) {
+      setIsDraggingTarget(true);
+    } else {
+      setIsDraggingTarget(false);
+    }
+  });
+
+  const clearIsDraggingTarget = () => setIsDraggingTarget(false);
+
   const startEventMove = useDrag(DRAGGING_TYPE_CREATORS.moveEvent('timeGrid', `${uiModel.cid()}`), {
     onInit: () => {
       setDraggingEventUIModel(uiModel);
     },
+    onMouseUp: clearIsDraggingTarget,
   });
   const handleEventMoveStart = (e: MouseEvent) => {
     e.stopPropagation();

@@ -14,7 +14,6 @@ interface Props {
   className: string;
   headerHeight: number;
   eventTopMargin: number;
-  draggingEvent: EventUIModel | null;
 }
 
 export const MonthEvents = memo(function MonthEvents({
@@ -25,7 +24,6 @@ export const MonthEvents = memo(function MonthEvents({
   className,
   headerHeight,
   eventTopMargin,
-  draggingEvent,
 }: Props) {
   const dayEvents = events
     .filter(isWithinHeight(height - headerHeight, eventHeight + eventTopMargin))
@@ -33,7 +31,6 @@ export const MonthEvents = memo(function MonthEvents({
       <HorizontalEvent
         key={`${name}-DayEvent-${uiModel.cid()}`}
         uiModel={uiModel}
-        isDraggingTarget={uiModel.cid() === draggingEvent?.cid()}
         eventHeight={eventHeight}
         headerHeight={headerHeight}
       />

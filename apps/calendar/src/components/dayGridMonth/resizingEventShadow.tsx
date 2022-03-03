@@ -1,5 +1,6 @@
-import { h } from 'preact';
+import { ComponentProps, h } from 'preact';
 
+import type { DayGridMonth } from '@src/components/dayGridMonth/dayGridMonth';
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import {
   MONTH_CELL_BAR_HEIGHT,
@@ -7,14 +8,38 @@ import {
   MONTH_EVENT_HEIGHT,
 } from '@src/constants/style';
 import { cls } from '@src/helpers/css';
-import { AvailableResizingEventShadowProps } from '@src/hooks/dayGridMonth/dayGridMonthEventResize';
+import { getRenderedEventUIModels } from '@src/helpers/grid';
+import { useDayGridMonthEventResize } from '@src/hooks/dayGridMonth/dayGridMonthEventResize';
+import { isNil } from '@src/utils/type';
+
+import { GridPositionFinder } from '@t/grid';
+
+type Props = Pick<ComponentProps<typeof DayGridMonth>, 'dateMatrix' | 'cellWidthMap'> & {
+  gridPositionFinder: GridPositionFinder;
+  renderedUIModels: ReturnType<typeof getRenderedEventUIModels>[];
+  rowIndex: number;
+};
 
 export function ResizingEventShadow({
-  shadowEventProps,
-}: {
-  shadowEventProps: AvailableResizingEventShadowProps;
-}) {
-  const [uiModel, resizingWidth] = shadowEventProps;
+  dateMatrix,
+  cellWidthMap,
+  gridPositionFinder,
+  renderedUIModels,
+  rowIndex,
+}: Props) {
+  const resizingEventShadowProps = useDayGridMonthEventResize({
+    dateMatrix,
+    gridPositionFinder,
+    cellWidthMap,
+    renderedUIModels,
+    rowIndex,
+  });
+
+  if (isNil(resizingEventShadowProps)) {
+    return null;
+  }
+
+  const [uiModel, resizingWidth] = resizingEventShadowProps;
 
   return (
     <div className={cls('weekday-events')}>

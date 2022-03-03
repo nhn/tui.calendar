@@ -86,7 +86,6 @@ export function Week() {
         <Panel name={rowType} key={rowType} resizable>
           {rowType === 'allday' ? (
             <AlldayGridRow
-              category={rowType}
               events={eventByPanel[rowType]}
               rowStyleInfo={rowStyleInfo}
               gridColWidthMap={cellWidthMap}

@@ -63,6 +63,7 @@ export function createGridSelectionDispatchers(
               ...state.gridSelection.accumulated[type],
               gridSelection,
             ];
+            state.gridSelection.dayGridMonth = null;
           }
         })
       );

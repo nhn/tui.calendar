@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useRef } from 'preact/hooks';
+import { useRef, useState } from 'preact/hooks';
 
 import { ResizeIcon } from '@src/components/events/resizeIcon';
 import { Template } from '@src/components/template';
@@ -8,9 +8,10 @@ import { useEventBus } from '@src/contexts/eventBus';
 import { cls, toPercent, toPx } from '@src/helpers/css';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/drag';
+import { useTransientUpdate } from '@src/hooks/common/transientUpdate';
 import EventUIModel from '@src/model/eventUIModel';
-import { optionsSelector } from '@src/selectors';
-import { isDraggingSelector } from '@src/selectors/dnd';
+import { dndSelector, optionsSelector } from '@src/selectors';
+import { DraggingState } from '@src/slices/dnd';
 import { passConditionalProp } from '@src/utils/preact';
 import { isNil } from '@src/utils/type';
 
@@ -18,13 +19,12 @@ interface Props {
   uiModel: EventUIModel;
   eventHeight: number;
   headerHeight: number;
-  isDraggingTarget?: boolean;
   resizingWidth?: string | null;
   flat?: boolean;
   movingLeft?: number | null;
 }
 
-type StyleProps = Required<Props>;
+type StyleProps = Required<Props> & { isDraggingTarget: boolean };
 
 function getMargin(flat: boolean) {
   return {
@@ -143,10 +143,11 @@ export function HorizontalEvent({
   uiModel,
   eventHeight,
   headerHeight,
-  isDraggingTarget = false,
   resizingWidth = null,
   movingLeft = null,
 }: Props) {
+  const [isDraggingTarget, setIsDraggingTarget] = useState<boolean>(false);
+
   const { dayEventBlockClassName, containerStyle, eventItemStyle, resizeIconStyle } = getStyles({
     uiModel,
     eventHeight,
@@ -157,7 +158,6 @@ export function HorizontalEvent({
     movingLeft,
   });
 
-  const isDragging = useStore(isDraggingSelector);
   const { useDetailPopup } = useStore(optionsSelector);
   const { setDraggingEventUIModel } = useDispatch('dnd');
   const { showDetailPopup } = useDispatch('popup');
@@ -165,17 +165,36 @@ export function HorizontalEvent({
 
   const eventContainerRef = useRef<HTMLDivElement>(null);
 
+  const clearIsDraggingTarget = () => setIsDraggingTarget(false);
+
+  useTransientUpdate(dndSelector, ({ draggingEventUIModel, draggingState }) => {
+    if (
+      draggingState === DraggingState.DRAGGING &&
+      draggingEventUIModel?.cid() === uiModel.cid() &&
+      isNil(resizingWidth) &&
+      isNil(movingLeft)
+    ) {
+      setIsDraggingTarget(true);
+    } else {
+      setIsDraggingTarget(false);
+    }
+  });
+
   const onResizeStart = useDrag(DRAGGING_TYPE_CREATORS.resizeEvent('dayGrid', `${uiModel.cid()}`), {
     onInit: () => {
       setDraggingEventUIModel(uiModel);
     },
+    onMouseUp: clearIsDraggingTarget,
   });
   const onMoveStart = useDrag(DRAGGING_TYPE_CREATORS.moveEvent('dayGrid', `${uiModel.cid()}`), {
     onInit: () => {
       setDraggingEventUIModel(uiModel);
     },
-    onMouseUp: () => {
-      if (!isDragging && eventContainerRef.current && useDetailPopup) {
+    onMouseUp: (e, { draggingState }) => {
+      clearIsDraggingTarget();
+
+      const isNotDragging = draggingState <= DraggingState.INIT;
+      if (isNotDragging && useDetailPopup && eventContainerRef.current) {
         showDetailPopup(
           {
             event: uiModel.model,
@@ -184,10 +203,10 @@ export function HorizontalEvent({
           flat
         );
       }
+
+      eventBus.fire('clickEvent', { event: uiModel.model, nativeEvent: e });
     },
   });
-  const handleClick = (nativeEvent: MouseEvent) =>
-    eventBus.fire('clickEvent', { event: uiModel.model, nativeEvent });
 
   const handleResizeStart = (e: MouseEvent) => {
     e.stopPropagation();
@@ -209,7 +228,6 @@ export function HorizontalEvent({
       style={containerStyle}
       data-testid={passConditionalProp(isDraggableEvent, getTestId(uiModel))}
       ref={eventContainerRef}
-      onClick={passConditionalProp(isDraggableEvent, handleClick)}
     >
       <div
         className={cls('weekday-event')}

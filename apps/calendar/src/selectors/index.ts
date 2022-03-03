@@ -1,9 +1,9 @@
-import { CalendarStore } from '@t/store';
+import { CalendarState, CalendarStore } from '@t/store';
 
-export function topLevelStateSelector<Group extends keyof CalendarStore>(
+export function topLevelStateSelector<Group extends Exclude<keyof CalendarStore, 'dispatch'>>(
   group: Group
-): (state: CalendarStore) => CalendarStore[Group] {
-  return (state: CalendarStore) => state[group];
+): (state: CalendarState) => CalendarState[Group] {
+  return (state: CalendarState) => state[group];
 }
 
 export const popupSelector = topLevelStateSelector('popup');

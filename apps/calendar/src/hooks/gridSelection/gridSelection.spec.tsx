@@ -96,10 +96,13 @@ describe('useGridSelection', () => {
     );
 
     if (result.current) {
-      container.addEventListener('mousedown', result.current.onMouseDown);
+      container.addEventListener('mousedown', result.current);
     }
 
     return result;
+  }
+  function getGridSelectionState() {
+    return store.getState().gridSelection;
   }
 
   beforeEach(() => {
@@ -114,12 +117,13 @@ describe('useGridSelection', () => {
 
   it('should return null if mousedown not fired', () => {
     // Given
-    const result = setup();
+    setup();
 
     // When
+    // Do nothing
 
     // Then
-    expect(result.current?.gridSelection).toBeNull();
+    expect(getGridSelectionState().timeGrid).toBeNull();
   });
 
   describe('when drag start', () => {
@@ -199,7 +203,7 @@ describe('useGridSelection', () => {
         });
 
         // Then
-        expect(result.current?.gridSelection).toEqual(expected);
+        expect(getGridSelectionState().timeGrid).toEqual(expected);
       });
     });
   });
@@ -300,7 +304,7 @@ describe('useGridSelection', () => {
     cases.forEach(({ x, y, expected }) => {
       it(`should return grid selection data if drag event is fired at center to (${x}, ${y})`, () => {
         // Given
-        const result = setup({
+        setup({
           selectionSorter: timeGridSelectionHelper.sortSelection,
         });
         const container = screen.getByTestId('container');
@@ -313,7 +317,7 @@ describe('useGridSelection', () => {
         });
 
         // Then
-        expect(result.current?.gridSelection).toEqual(expected);
+        expect(getGridSelectionState().timeGrid).toEqual(expected);
       });
     });
   });

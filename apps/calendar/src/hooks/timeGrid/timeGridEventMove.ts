@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
+import { useTransientUpdate } from '@src/hooks/common/transientUpdate';
 import { useCurrentPointerPositionInGrid } from '@src/hooks/event/currentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/draggingEvent';
 import { dndSelector } from '@src/selectors';
-import { DraggingState } from '@src/slices/dnd';
+import { isNotDraggingSelector } from '@src/selectors/dnd';
 import type TZDate from '@src/time/date';
 import { addMilliseconds, MS_PER_DAY, MS_PER_THIRTY_MINUTES } from '@src/time/datetime';
 import { isNil, isPresent } from '@src/utils/type';
@@ -18,33 +19,36 @@ export function useTimeGridEventMove({
   gridPositionFinder: GridPositionFinder;
   timeGridData: TimeGridData;
 }) {
-  const { initX, initY, draggingState } = useStore(dndSelector);
+  const isNotDragging = useStore(isNotDraggingSelector);
   const { updateEvent } = useDispatch('calendar');
   const { draggingEvent, clearDraggingEvent } = useDraggingEvent('timeGrid', 'move');
 
   const [currentGridPos, clearCurrentGridPos] = useCurrentPointerPositionInGrid(gridPositionFinder);
 
-  const [initGridPosition, setInitGridPosition] = useState<GridPosition | null>(null);
   const [gridDiff, setGridDiff] = useState<GridPosition | null>(null);
   const startDateTimeRef = useRef<TZDate | null>(null);
+  const initGridPositionRef = useRef<GridPosition | null>(null);
 
   // Setting up initial grid position
-  useEffect(() => {
+  useTransientUpdate(dndSelector, ({ initX, initY }) => {
     if (isPresent(initX) && isPresent(initY) && isPresent(draggingEvent)) {
-      setInitGridPosition(gridPositionFinder({ clientX: initX, clientY: initY }));
+      initGridPositionRef.current = gridPositionFinder({
+        clientX: initX,
+        clientY: initY,
+      });
       startDateTimeRef.current = draggingEvent.getStarts();
     }
-  }, [gridPositionFinder, initX, initY, draggingEvent]);
+  });
 
   // Calculate and update grid diff
   useEffect(() => {
-    if (isPresent(currentGridPos) && isPresent(initGridPosition)) {
+    if (isPresent(currentGridPos) && isPresent(initGridPositionRef.current)) {
       setGridDiff({
-        columnIndex: currentGridPos.columnIndex - initGridPosition.columnIndex,
-        rowIndex: currentGridPos.rowIndex - initGridPosition.rowIndex,
+        columnIndex: currentGridPos.columnIndex - initGridPositionRef.current.columnIndex,
+        rowIndex: currentGridPos.rowIndex - initGridPositionRef.current.rowIndex,
       });
     }
-  }, [currentGridPos, initGridPosition]);
+  }, [currentGridPos]);
 
   const canCalculate = isPresent(draggingEvent) && isPresent(currentGridPos) && isPresent(gridDiff);
 
@@ -74,7 +78,7 @@ export function useTimeGridEventMove({
   }, [canCalculate, currentGridPos, draggingEvent, gridDiff, rowHeight, timeGridData]);
 
   useEffect(() => {
-    if (draggingState === DraggingState.IDLE && canCalculate && isPresent(nextStartTime)) {
+    if (isNotDragging && canCalculate && isPresent(nextStartTime)) {
       const shouldUpdate = gridDiff.rowIndex !== 0 || gridDiff.columnIndex !== 0;
 
       if (shouldUpdate) {
@@ -97,7 +101,7 @@ export function useTimeGridEventMove({
     clearCurrentGridPos,
     clearDraggingEvent,
     draggingEvent,
-    draggingState,
+    isNotDragging,
     gridDiff,
     nextStartTime,
     updateEvent,

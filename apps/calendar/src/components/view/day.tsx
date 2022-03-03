@@ -74,7 +74,6 @@ export function Day() {
         <Panel key={rowType} name={rowType} resizable>
           {rowType === 'allday' ? (
             <AlldayGridRow
-              category={rowType}
               events={dayGridEvents[rowType]}
               rowStyleInfo={rowStyleInfo}
               gridColWidthMap={cellWidthMap}

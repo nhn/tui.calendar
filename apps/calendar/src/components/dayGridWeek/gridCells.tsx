@@ -1,4 +1,5 @@
 import { Fragment, h } from 'preact';
+import { memo } from 'preact/compat';
 
 import { GridCell } from '@src/components/dayGridWeek/gridCell';
 import { toPercent } from '@src/helpers/css';
@@ -23,7 +24,7 @@ interface Props {
   onClickCollapseButton: () => void;
 }
 
-export function GridCells({
+export const GridCells = memo(function GridCells({
   uiModels,
   weekDates,
   narrowWeekend,
@@ -67,4 +68,4 @@ export function GridCells({
       })}
     </Fragment>
   );
-}
+});
