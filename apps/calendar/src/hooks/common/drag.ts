@@ -107,8 +107,8 @@ export function useDrag(
       }
 
       if (draggingState <= DraggingState.INIT) {
-        onDragStart?.(e, dndSliceRef.current);
         setDraggingState({ x: e.clientX, y: e.clientY });
+        onDragStart?.(e, dndSliceRef.current);
 
         return;
       }

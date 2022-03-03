@@ -33,7 +33,6 @@ describe('drag hook', () => {
     return <button onMouseDown={onMouseDown} />;
   };
   const setup = () => render(<Component />, { wrapper });
-  const getDndState = () => store.getState().dnd;
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -48,14 +47,18 @@ describe('drag hook', () => {
     fireEvent.mouseDown(button);
 
     // Then
-    expect(listeners.onInit).toBeCalledWith(expect.objectContaining({ button: 0 }));
-    expect(getDndState()).toMatchObject({
-      draggingItemType: TEST_DRAGGING_TYPE,
-      initX: 0,
-      initY: 0,
-      x: null,
-      y: null,
-    });
+    expect(listeners.onInit).toBeCalledWith(
+      expect.objectContaining({
+        button: 0,
+      }),
+      expect.objectContaining({
+        draggingItemType: TEST_DRAGGING_TYPE,
+        initX: 0,
+        initY: 0,
+        x: null,
+        y: null,
+      })
+    );
   });
 
   it('should fire onDragStart when move more than equal 3px from the staring point', () => {
@@ -72,14 +75,16 @@ describe('drag hook', () => {
     fireEvent.mouseMove(document, targetCoords);
 
     // Then
-    expect(listeners.onDragStart).toBeCalledWith(expect.objectContaining(targetCoords));
-    expect(getDndState()).toMatchObject({
-      draggingItemType: TEST_DRAGGING_TYPE,
-      initX: 0,
-      initY: 0,
-      x: targetCoords.clientX,
-      y: targetCoords.clientY,
-    });
+    expect(listeners.onDragStart).toBeCalledWith(
+      expect.objectContaining(targetCoords),
+      expect.objectContaining({
+        draggingItemType: TEST_DRAGGING_TYPE,
+        initX: 0,
+        initY: 0,
+        x: targetCoords.clientX,
+        y: targetCoords.clientY,
+      })
+    );
   });
 
   it('should not fire onDragStart when move less than 3px from the staring point', () => {
@@ -95,14 +100,7 @@ describe('drag hook', () => {
     });
 
     // Then
-    expect(listeners.onDragStart).not.toHaveBeenCalled();
-    expect(getDndState()).toMatchObject({
-      draggingItemType: TEST_DRAGGING_TYPE,
-      initX: 0,
-      initY: 0,
-      x: null,
-      y: null,
-    });
+    expect(listeners.onDragStart).not.toBeCalled();
   });
 
   it('fires onDrag when mousemove after onDragStart', () => {
@@ -123,14 +121,16 @@ describe('drag hook', () => {
     });
 
     // Then
-    expect(listeners.onDrag).toHaveBeenCalledWith(expect.objectContaining(targetCoords));
-    expect(getDndState()).toMatchObject({
-      draggingItemType: TEST_DRAGGING_TYPE,
-      initX: 0,
-      initY: 0,
-      x: targetCoords.clientX,
-      y: targetCoords.clientY,
-    });
+    expect(listeners.onDrag).toBeCalledWith(
+      expect.objectContaining(targetCoords),
+      expect.objectContaining({
+        draggingItemType: TEST_DRAGGING_TYPE,
+        initX: 0,
+        initY: 0,
+        x: targetCoords.clientX,
+        y: targetCoords.clientY,
+      })
+    );
   });
 
   it('fires onMouseUp right after dragging is started', () => {
@@ -142,14 +142,7 @@ describe('drag hook', () => {
     userEvent.click(button);
 
     // Then
-    expect(listeners.onMouseUp).toHaveBeenCalled();
-    expect(getDndState()).toMatchObject({
-      draggingItemType: null,
-      initX: null,
-      initY: null,
-      x: null,
-      y: null,
-    });
+    expect(listeners.onMouseUp).toBeCalled();
   });
 
   it('fires onPressESCKey when press ESC key', () => {
@@ -162,13 +155,6 @@ describe('drag hook', () => {
     fireEvent.keyDown(document, { key: 'Escape' });
 
     // Then
-    expect(listeners.onPressESCKey).toHaveBeenCalled();
-    expect(getDndState()).toMatchObject({
-      draggingItemType: null,
-      initX: null,
-      initY: null,
-      x: null,
-      y: null,
-    });
+    expect(listeners.onPressESCKey).toBeCalled();
   });
 });
