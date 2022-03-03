@@ -7,9 +7,10 @@ import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
 import { cls, toPercent, toPx } from '@src/helpers/css';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
-import { DragListeners, useDrag } from '@src/hooks/common/drag';
+import { useDrag } from '@src/hooks/common/drag';
+import { useTransientUpdate } from '@src/hooks/common/transientUpdate';
 import EventUIModel from '@src/model/eventUIModel';
-import { optionsSelector } from '@src/selectors';
+import { dndSelector, optionsSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import { passConditionalProp } from '@src/utils/preact';
 import { isNil } from '@src/utils/type';
@@ -164,29 +165,31 @@ export function HorizontalEvent({
 
   const eventContainerRef = useRef<HTMLDivElement>(null);
 
-  const handleDrag: DragListeners['onDrag'] = (_, { draggingEventUIModel }) => {
+  const clearIsDraggingTarget = () => setIsDraggingTarget(false);
+
+  useTransientUpdate(dndSelector, ({ draggingEventUIModel, draggingState }) => {
     if (
+      draggingState === DraggingState.DRAGGING &&
       draggingEventUIModel?.cid() === uiModel.cid() &&
       isNil(resizingWidth) &&
       isNil(movingLeft)
     ) {
       setIsDraggingTarget(true);
+    } else {
+      setIsDraggingTarget(false);
     }
-  };
-  const clearIsDraggingTarget = () => setIsDraggingTarget(false);
+  });
 
   const onResizeStart = useDrag(DRAGGING_TYPE_CREATORS.resizeEvent('dayGrid', `${uiModel.cid()}`), {
     onInit: () => {
       setDraggingEventUIModel(uiModel);
     },
-    onDragStart: handleDrag,
     onMouseUp: clearIsDraggingTarget,
   });
   const onMoveStart = useDrag(DRAGGING_TYPE_CREATORS.moveEvent('dayGrid', `${uiModel.cid()}`), {
     onInit: () => {
       setDraggingEventUIModel(uiModel);
     },
-    onDragStart: handleDrag,
     onMouseUp: (e, { draggingState }) => {
       clearIsDraggingTarget();
 
