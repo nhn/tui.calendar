@@ -32,15 +32,14 @@ export function ResizingEventShadow({
     gridPositionFinder,
     cellWidthMap,
     renderedUIModels,
+    rowIndex,
   });
 
-  const shadowProp = resizingEventShadowProps?.[rowIndex];
-
-  if (isNil(shadowProp) || shadowProp.length === 0) {
+  if (isNil(resizingEventShadowProps)) {
     return null;
   }
 
-  const [uiModel, resizingWidth] = shadowProp;
+  const [uiModel, resizingWidth] = resizingEventShadowProps;
 
   return (
     <div className={cls('weekday-events')}>
