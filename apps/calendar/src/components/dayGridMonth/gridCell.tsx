@@ -12,7 +12,6 @@ import {
 } from '@src/constants/style';
 import { useDispatch } from '@src/contexts/calendarStore';
 import { useLayoutContainer } from '@src/contexts/layoutContainer';
-import { useTheme } from '@src/contexts/theme';
 import { cls, toPercent } from '@src/helpers/css';
 import { getExceedCount } from '@src/helpers/grid';
 import { useDOMNode } from '@src/hooks/common/domNode';
@@ -107,20 +106,6 @@ function getSeeMorePopupPosition(
   return isOverHeight ? { left, bottom: 0 } : { left, top };
 }
 
-function getDateColor(dayIndex: Day, commonTheme: CommonTheme) {
-  const { holiday, saturday, today } = commonTheme;
-
-  if (dayIndex === Day.SUN) {
-    return holiday.color;
-  }
-
-  if (dayIndex === Day.SAT) {
-    return saturday.color;
-  }
-
-  return today.color;
-}
-
 function getSeeMorePopupRect({
   layoutContainer,
   grid,
@@ -181,9 +166,6 @@ function usePopupPosition(
 export function GridCell({ date, dayIndex, events = [], style, parentContainer, height }: Props) {
   const layoutContainer = useLayoutContainer();
   const { showSeeMorePopup } = useDispatch('popup');
-  const theme = useTheme();
-
-  const { common: commonTheme } = theme;
 
   const { popupPosition, containerRefCallback } = usePopupPosition(
     events.length,
@@ -204,15 +186,13 @@ export function GridCell({ date, dayIndex, events = [], style, parentContainer, 
   const exceedCount = getExceedCount(events, height, MONTH_EVENT_HEIGHT);
 
   return (
-    <div
-      className={cls('daygrid-cell')}
-      style={{
-        ...style,
-        color: getDateColor(dayIndex, commonTheme),
-      }}
-      ref={containerRefCallback}
-    >
-      <CellHeader exceedCount={exceedCount} date={date} onClickExceedCount={onOpenSeeMorePopup} />
+    <div className={cls('daygrid-cell')} style={style} ref={containerRefCallback}>
+      <CellHeader
+        exceedCount={exceedCount}
+        date={date}
+        onClickExceedCount={onOpenSeeMorePopup}
+        dayIndex={dayIndex}
+      />
     </div>
   );
 }

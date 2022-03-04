@@ -2,9 +2,10 @@ import { h } from 'preact';
 
 import { MoreEventsButton } from '@src/components/dayGridMonth/moreEventsButton';
 import { Template } from '@src/components/template';
+import { useTheme } from '@src/contexts/theme';
 import { cls } from '@src/helpers/css';
 import TZDate from '@src/time/date';
-import { toFormat } from '@src/time/datetime';
+import { Day, toFormat } from '@src/time/datetime';
 
 enum CellBarType {
   header = 'header',
@@ -16,6 +17,21 @@ interface Props {
   exceedCount?: number;
   date: TZDate;
   onClickExceedCount: () => void;
+  dayIndex: Day;
+}
+
+function getDateColor(dayIndex: Day, commonTheme: CommonTheme) {
+  const { holiday, saturday, today } = commonTheme;
+
+  if (dayIndex === Day.SUN) {
+    return holiday.color;
+  }
+
+  if (dayIndex === Day.SAT) {
+    return saturday.color;
+  }
+
+  return today.color;
 }
 
 export function CellHeader({
@@ -23,7 +39,11 @@ export function CellHeader({
   exceedCount = 0,
   date,
   onClickExceedCount,
+  dayIndex,
 }: Props) {
+  const theme = useTheme();
+  const { common: commonTheme } = theme;
+
   const ymd = toFormat(date, 'YYYYMMDD');
   const todayYmd = toFormat(new TZDate(), 'YYYYMMDD');
   const model = {
@@ -38,7 +58,10 @@ export function CellHeader({
 
   return (
     <div className={cls(`grid-cell-${type}`)}>
-      <span className={cls('grid-cell-date')}>
+      <span
+        className={cls('grid-cell-date')}
+        style={{ color: getDateColor(dayIndex, commonTheme) }}
+      >
         <Template template="monthGridHeader" model={model} />
       </span>
       {exceedCount ? (
