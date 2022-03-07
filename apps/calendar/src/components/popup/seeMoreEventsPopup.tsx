@@ -27,7 +27,8 @@ const classNames = {
 };
 
 export function SeeMoreEventsPopup() {
-  const { date, events = [], popupPosition } = useStore(seeMorePopupParamSelector);
+  const popupParams = useStore(seeMorePopupParamSelector);
+  const { date, events = [], popupPosition } = popupParams ?? {};
   const {
     month: { moreView, moreViewTitle },
   } = useTheme();

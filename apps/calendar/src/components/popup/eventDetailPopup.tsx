@@ -61,7 +61,8 @@ function calculatePopupArrowPosition(eventRect: Rect, layoutRect: Rect, popupRec
 }
 
 export function EventDetailPopup() {
-  const { event, eventRect } = useStore(eventDetailPopupParamSelector);
+  const popupParams = useStore(eventDetailPopupParamSelector);
+  const { event, eventRect } = popupParams ?? {};
   const { showFormPopup } = useDispatch('popup');
 
   const layoutContainer = useLayoutContainer();
