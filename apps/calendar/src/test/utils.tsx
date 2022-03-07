@@ -25,7 +25,7 @@ function render(
       eventBus: EventBus<any>;
       store: InternalStoreAPI<CalendarStore>;
       theme: Theme;
-    }>
+    }> = {}
 ) {
   const Wrapper = ({ children }: PropsWithChildren) => (
     <CalendarContainer theme={theme} eventBus={eventBus} store={store}>
@@ -48,7 +48,7 @@ function renderHook<P, R>(
       eventBus: EventBus<any>;
       store: InternalStoreAPI<CalendarStore>;
       theme: Theme;
-    }>
+    }> = {}
 ) {
   const Wrapper = ({ children }: PropsWithChildren) => (
     <CalendarContainer theme={theme} eventBus={eventBus} store={store}>
