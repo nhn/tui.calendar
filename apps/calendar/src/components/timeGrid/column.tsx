@@ -15,6 +15,8 @@ import { first, last } from '@src/utils/array';
 
 import { GridPositionFinder, TimeGridData } from '@t/grid';
 
+import { ResizingGuideByColumn } from './resizingGuideByColumn';
+
 const classNames = {
   column: cls('column'),
   backgrounds: cls('background-events'),
@@ -115,6 +117,12 @@ export const Column = memo(function Column({
     >
       <BackgroundEvents events={uiModelsByColumn} startTime={startTime} endTime={endTime} />
       <GridSelectionByColumn columnIndex={columnIndex} timeGridRows={timeGridRows} />
+      <ResizingGuideByColumn
+        gridPositionFinder={gridPositionFinder}
+        totalUIModels={totalUIModels}
+        columnIndex={columnIndex}
+        timeGridData={timeGridData}
+      />
       <VerticalEvents eventUIModels={uiModelsByColumn} />
     </div>
   );

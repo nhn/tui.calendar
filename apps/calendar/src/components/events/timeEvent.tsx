@@ -23,7 +23,7 @@ const classNames = {
 
 interface Props {
   uiModel: EventUIModel;
-  isDraggingTarget?: boolean;
+  isResizingGuide?: boolean;
   nextStartTime?: TZDate | null;
 }
 
@@ -91,7 +91,7 @@ function getStyles(uiModel: EventUIModel, isDraggingTarget: boolean, hasNextStar
   };
 }
 
-export function TimeEvent({ uiModel, nextStartTime }: Props) {
+export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: Props) {
   const [isDraggingTarget, setIsDraggingTarget] = useState<boolean>(false);
   const { setDraggingEventUIModel } = useDispatch('dnd');
 
@@ -108,7 +108,8 @@ export function TimeEvent({ uiModel, nextStartTime }: Props) {
     if (
       draggingState === DraggingState.DRAGGING &&
       draggingEventUIModel?.cid() === uiModel.cid() &&
-      isNil(nextStartTime)
+      isNil(nextStartTime) &&
+      !isResizingGuide
     ) {
       setIsDraggingTarget(true);
     } else {

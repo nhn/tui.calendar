@@ -57,7 +57,7 @@ describe.skip('ResizingGuideByColumn', () => {
             }
           }}
         >
-          <ResizingGuideByColumn gridPositionFinder={gridPositionFinder} />
+          {/* <ResizingGuideByColumn gridPositionFinder={gridPositionFinder} /> */}
         </div>
       );
     };
