@@ -4,6 +4,7 @@ import { MoreEventsButton } from '@src/components/dayGridMonth/moreEventsButton'
 import { Template } from '@src/components/template';
 import { useTheme } from '@src/contexts/theme';
 import { cls } from '@src/helpers/css';
+import Theme from '@src/theme';
 import TZDate from '@src/time/date';
 import { Day, toFormat } from '@src/time/datetime';
 
@@ -17,21 +18,26 @@ interface Props {
   exceedCount?: number;
   date: TZDate;
   onClickExceedCount: () => void;
-  dayIndex: Day;
 }
 
-function getDateColor(dayIndex: Day, commonTheme: CommonTheme) {
-  const { holiday, saturday, today } = commonTheme;
+function getDateColor(date: TZDate, theme: Theme) {
+  const dayIndex = date.getDay();
+  const thisMonth = new TZDate().getMonth();
+  const isSameMonth = thisMonth === date.getMonth();
+
+  const { common, month } = theme;
+  const { holiday, saturday, today } = common;
+  const { dayExceptThisMonth, holidayExceptThisMonth } = month;
 
   if (dayIndex === Day.SUN) {
-    return holiday.color;
+    return isSameMonth ? holiday.color : holidayExceptThisMonth.color;
   }
 
-  if (dayIndex === Day.SAT) {
-    return saturday.color;
+  if (isSameMonth) {
+    return dayIndex === Day.SAT ? saturday.color : today.color;
   }
 
-  return today.color;
+  return dayExceptThisMonth.color;
 }
 
 export function CellHeader({
@@ -39,10 +45,8 @@ export function CellHeader({
   exceedCount = 0,
   date,
   onClickExceedCount,
-  dayIndex,
 }: Props) {
   const theme = useTheme();
-  const { common: commonTheme } = theme;
 
   const ymd = toFormat(date, 'YYYYMMDD');
   const todayYmd = toFormat(new TZDate(), 'YYYYMMDD');
@@ -55,13 +59,11 @@ export function CellHeader({
     month: date.getMonth(),
     ymd,
   };
+  const gridCellDateStyle = { color: getDateColor(date, theme) };
 
   return (
     <div className={cls(`grid-cell-${type}`)}>
-      <span
-        className={cls('grid-cell-date')}
-        style={{ color: getDateColor(dayIndex, commonTheme) }}
-      >
+      <span className={cls('grid-cell-date')} style={gridCellDateStyle}>
         <Template template="monthGridHeader" model={model} />
       </span>
       {exceedCount ? (

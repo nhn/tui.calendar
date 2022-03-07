@@ -17,7 +17,6 @@ import { getExceedCount } from '@src/helpers/grid';
 import { useDOMNode } from '@src/hooks/common/domNode';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
-import { Day } from '@src/time/datetime';
 import { getPosition, getRelativePosition, getSize } from '@src/utils/dom';
 import { ratio } from '@src/utils/math';
 
@@ -25,7 +24,6 @@ import { PopupPosition } from '@t/store';
 
 interface Props {
   date: TZDate;
-  dayIndex: Day;
   style?: {
     width?: CSSValue;
     left?: CSSValue;
@@ -163,7 +161,7 @@ function usePopupPosition(
   return { popupPosition, containerRefCallback };
 }
 
-export function GridCell({ date, dayIndex, events = [], style, parentContainer, height }: Props) {
+export function GridCell({ date, events = [], style, parentContainer, height }: Props) {
   const layoutContainer = useLayoutContainer();
   const { showSeeMorePopup } = useDispatch('popup');
 
@@ -187,12 +185,7 @@ export function GridCell({ date, dayIndex, events = [], style, parentContainer, 
 
   return (
     <div className={cls('daygrid-cell')} style={style} ref={containerRefCallback}>
-      <CellHeader
-        exceedCount={exceedCount}
-        date={date}
-        onClickExceedCount={onOpenSeeMorePopup}
-        dayIndex={dayIndex}
-      />
+      <CellHeader exceedCount={exceedCount} date={date} onClickExceedCount={onOpenSeeMorePopup} />
     </div>
   );
 }
