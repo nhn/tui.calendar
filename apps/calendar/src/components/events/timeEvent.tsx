@@ -129,6 +129,20 @@ export function TimeEvent({ uiModel, nextStartTime }: Props) {
     startEventMove(e);
   };
 
+  const startEventResize = useDrag(
+    DRAGGING_TYPE_CREATORS.resizeEvent('timeGrid', `${uiModel.cid()}`),
+    {
+      onInit: () => {
+        setDraggingEventUIModel(uiModel);
+      },
+      onMouseUp: clearIsDraggingTarget,
+    }
+  );
+  const handleEventResizeStart = (e: MouseEvent) => {
+    e.stopPropagation();
+    startEventResize(e);
+  };
+
   return (
     <div
       data-testid={`time-event-${model.title}-${uiModel.cid()}`}
@@ -157,7 +171,9 @@ export function TimeEvent({ uiModel, nextStartTime }: Props) {
           <Template template="comingDuration" model={model} />
         </div>
       ) : null}
-      {!croppedEnd && !isReadOnly ? <div className={classNames.resizeHandleX} /> : null}
+      {!croppedEnd && !isReadOnly ? (
+        <div className={classNames.resizeHandleX} onMouseDown={handleEventResizeStart} />
+      ) : null}
     </div>
   );
 }
