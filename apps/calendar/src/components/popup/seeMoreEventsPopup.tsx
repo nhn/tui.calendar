@@ -9,6 +9,8 @@ import {
   MONTH_EVENT_HEIGHT,
   MONTH_MORE_VIEW_HEADER_HEIGHT,
   MONTH_MORE_VIEW_HEADER_MARGIN_BOTTOM,
+  MONTH_MORE_VIEW_HEADER_PADDING,
+  MONTH_MORE_VIEW_HEADER_PADDING_TOP,
 } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
@@ -53,6 +55,7 @@ export function SeeMoreEventsPopup() {
   const style = {
     height: MONTH_MORE_VIEW_HEADER_HEIGHT,
     marginBottom: MONTH_MORE_VIEW_HEADER_MARGIN_BOTTOM,
+    padding: MONTH_MORE_VIEW_HEADER_PADDING,
     backgroundColor: moreViewTitle.backgroundColor,
   };
 
@@ -60,6 +63,14 @@ export function SeeMoreEventsPopup() {
     ymd: toFormat(date, 'YYYY-MM-DD'),
     day: date.getDay(),
     date: date.getDate(),
+  };
+
+  const moreViewListStyle = {
+    height: `calc(100% - ${
+      MONTH_MORE_VIEW_HEADER_HEIGHT +
+      MONTH_MORE_VIEW_HEADER_MARGIN_BOTTOM +
+      MONTH_MORE_VIEW_HEADER_PADDING_TOP
+    }px)`,
   };
 
   return createPortal(
@@ -74,14 +85,7 @@ export function SeeMoreEventsPopup() {
           <Template template="monthMoreTitleDate" model={moreTitle} />
           <ClosePopupButton />
         </div>
-        <div
-          className={classNames.list}
-          style={{
-            height: `calc(100% - ${
-              MONTH_MORE_VIEW_HEADER_HEIGHT + MONTH_MORE_VIEW_HEADER_MARGIN_BOTTOM
-            }px)`,
-          }}
-        >
+        <div className={classNames.list} style={moreViewListStyle}>
           {events.map((uiModel) => (
             <HorizontalEvent
               key={`see-more-event-item-${uiModel.cid()}`}
