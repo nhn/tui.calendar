@@ -93,7 +93,8 @@ export function ResizingGuideByColumn({
     };
   }, [resizingStartUIModel, timeGridData, totalUIModels]);
 
-  const canCalculateGuideUIModel = isPresent(baseResizingInfo) && isPresent(currentGridPos);
+  const canCalculateGuideUIModel =
+    isPresent(baseResizingInfo) && isPresent(resizingStartUIModel) && isPresent(currentGridPos);
 
   useEffect(() => {
     // Calculate the first column of the dragging event
@@ -110,6 +111,30 @@ export function ResizingGuideByColumn({
       setGuideUIModel(clonedUIModel);
     }
   }, [baseResizingInfo, canCalculateGuideUIModel, columnIndex, currentGridPos, timeGridData.rows]);
+
+  useEffect(() => {
+    // Calculate the column between first and last column of the dragging event
+    if (
+      canCalculateGuideUIModel &&
+      baseResizingInfo.eventStartDateColumnIndex < columnIndex &&
+      columnIndex < currentGridPos.columnIndex
+    ) {
+      const clonedUIModel = resizingStartUIModel.clone();
+      clonedUIModel.setUIProps({
+        top: 0,
+        left: 0,
+        width: 100,
+        height: 100,
+      });
+      setGuideUIModel(clonedUIModel);
+    }
+  }, [
+    baseResizingInfo,
+    canCalculateGuideUIModel,
+    columnIndex,
+    currentGridPos,
+    resizingStartUIModel,
+  ]);
 
   // WHen dragging ends
   useEffect(() => {
