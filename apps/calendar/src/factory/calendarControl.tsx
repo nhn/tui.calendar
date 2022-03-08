@@ -560,13 +560,12 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
 
   /**
    * Get current view name('day', 'week', 'month')
-   * @returns {string} view name
-   * @todo implement this
+   * @returns {ViewType} current view name
    */
-  getViewName() {
-    // console.log('getViewName');
+  getViewName(): ViewType {
+    const { currentView } = this.getStoreState('view');
 
-    return null;
+    return currentView;
   }
 
   /**
