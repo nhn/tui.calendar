@@ -36,3 +36,11 @@
   font-weight: normal;
   text-align: left;
 }
+
+.dayname-date {
+  font-size: 26px;
+}
+
+.dayname-name {
+  font-size: 12px;
+}
