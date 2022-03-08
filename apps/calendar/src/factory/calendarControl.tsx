@@ -15,7 +15,7 @@ import { isNumber, isString } from '@src/utils/type';
 
 import { ExternalEventTypes } from '@t/eventBus';
 import { DateType, EventModelData } from '@t/events';
-import { CalendarColor, CalendarInfo, CustomTimezone, Options } from '@t/options';
+import { CalendarColor, CalendarInfo, CustomTimezone, Options, ViewType } from '@t/options';
 import { CalendarState, CalendarStore, Dispatchers, InternalStoreAPI } from '@t/store';
 
 export default abstract class CalendarControl implements EventBus<ExternalEventTypes> {
@@ -422,48 +422,21 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
 
   /**
    * Change current view with view name('day', 'week', 'month')
-   * @param {string} newViewName - The New view name to render
-   * @param {boolean} [force=false] - Force render despite of current view and new view are equal
-   * @todo implement this
+   * @param {ViewType} viewName - The new view name to change
    * @example
-   * // daily view
-   * calendar.changeView('day', true);
+   * // change to daily view
+   * calendar.changeView('day');
    *
-   * // weekly view
-   * calendar.changeView('week', true);
+   * // change to weekly view
+   * calendar.changeView('week');
    *
-   * // monthly view(default 6 weeks view)
-   * calendar.setOptions({month: {visibleWeeksCount: 6}}, true); // or null
-   * calendar.changeView('month', true);
-   *
-   * // 2 weeks monthly view
-   * calendar.setOptions({month: {visibleWeeksCount: 2}}, true);
-   * calendar.changeView('month', true);
-   *
-   * // 3 weeks monthly view
-   * calendar.setOptions({month: {visibleWeeksCount: 3}}, true);
-   * calendar.changeView('month', true);
-   *
-   * // narrow weekend
-   * calendar.setOptions({month: {narrowWeekend: true}}, true);
-   * calendar.setOptions({week: {narrowWeekend: true}}, true);
-   * calendar.changeView(calendar.getViewName(), true);
-   *
-   * // change start day of week(from monday)
-   * calendar.setOptions({week: {startDayOfWeek: 1}}, true);
-   * calendar.setOptions({month: {startDayOfWeek: 1}}, true);
-   * calendar.changeView(calendar.getViewName(), true);
-   *
-   * // work week
-   * calendar.setOptions({week: {workweek: true}}, true);
-   * calendar.setOptions({month: {workweek: true}}, true);
-   * calendar.changeView(calendar.getViewName(), true);
+   * // change to monthly view
+   * calendar.changeView('month');
    */
-  changeView(newViewName: string, force = false) {
-    // console.log('changeView', newViewName, force);
+  changeView(viewName: ViewType) {
+    const { changeView } = this.getStoreDispatchers('view');
 
-    this.move();
-    this.render();
+    changeView(viewName);
   }
 
   /**
