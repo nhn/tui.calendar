@@ -3,6 +3,7 @@ import { memo } from 'preact/compat';
 
 import { Template } from '@src/components/template';
 import { addTimeGridPrefix } from '@src/components/timeGrid';
+import { useTheme } from '@src/contexts/theme';
 import { cls, toPercent } from '@src/helpers/css';
 import TZDate from '@src/time/date';
 
@@ -23,8 +24,16 @@ interface Props {
 
 // @TODO: replace MultipleTimezones component
 export const TimeColumn = memo(function TimeColumn({ timeGridRows, columnWidth }: Props) {
+  const {
+    week: {
+      timeGridLeft: { borderRight, backgroundColor },
+    },
+  } = useTheme();
+
+  const style = { width: columnWidth, borderRight, backgroundColor };
+
   return (
-    <div className={cls(classNames.times)} style={{ width: columnWidth }}>
+    <div className={cls(classNames.times)} style={style}>
       {timeGridRows.map((row, index) => {
         if (index % 2 === 1) {
           return null;

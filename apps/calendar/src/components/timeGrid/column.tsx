@@ -5,6 +5,7 @@ import { useMemo } from 'preact/hooks';
 import { BackgroundEvent } from '@src/components/events/backgroundEvent';
 import { TimeEvent } from '@src/components/events/timeEvent';
 import { GridSelectionByColumn } from '@src/components/timeGrid/gridSelectionByColumn';
+import { useTheme } from '@src/contexts/theme';
 import { setRenderInfoOfUIModels } from '@src/controller/column';
 import { getTopHeightByTime } from '@src/controller/times';
 import { cls, toPercent } from '@src/helpers/css';
@@ -92,6 +93,7 @@ interface Props {
   columnWidth: string;
   columnIndex: number;
   events: EventUIModel[];
+  isLastColumn: boolean;
   backgroundColor?: string;
   readOnly?: boolean;
 }
@@ -103,7 +105,14 @@ export const Column = memo(function Column({
   events,
   timeGridRows,
   backgroundColor,
+  isLastColumn,
 }: Props) {
+  const {
+    week: {
+      timeGrid: { borderRight },
+    },
+  } = useTheme();
+
   const [startTime, endTime] = useMemo(() => {
     const { startTime: startTimeStr } = first(timeGridRows);
     const { endTime: endTimeStr } = last(timeGridRows);
@@ -117,6 +126,7 @@ export const Column = memo(function Column({
   const style = {
     width: columnWidth,
     backgroundColor,
+    borderRight: isLastColumn ? 'none' : borderRight,
   };
 
   return (

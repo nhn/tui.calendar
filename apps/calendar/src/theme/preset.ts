@@ -54,14 +54,15 @@ const theme: ThemeKeyValue = {
   'week.weekend.backgroundColor': 'inherit',
 
   // week timegrid 'timegrid'
-  'week.timegridLeft.backgroundColor': 'inherit',
-  'week.timegridLeft.borderRight': '1px solid #e5e5e5',
+  'week.timeGridLeft.backgroundColor': 'inherit',
+  'week.timeGridLeft.borderRight': '1px solid #e5e5e5',
+
   'week.timegridLeftAdditionalTimezone.backgroundColor': 'white',
 
   'week.timegridHalfHour.borderBottom': 'none',
   'week.timegridHorizontalLine.borderBottom': '1px solid #e5e5e5',
 
-  'week.timegrid.borderRight': '1px solid #e5e5e5',
+  'week.timeGrid.borderRight': '1px solid #e5e5e5',
 
   'week.currentTime.color': '#515ce6',
 

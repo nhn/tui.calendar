@@ -112,6 +112,7 @@ export function TimeGrid({
   }, [currentTime, forceUpdate, intervalId, timerId]);
 
   const { columns, rows } = timeGridData;
+  const lastColumnIndex = columns.length - 1;
 
   const eventsByColumns = useMemo(
     () =>
@@ -167,6 +168,7 @@ export function TimeGrid({
               columnWidth={toPercent(column.width)}
               columnIndex={index}
               events={eventsByColumns[index]}
+              isLastColumn={index === lastColumnIndex}
             />
           ))}
           {/* @TODO: Should be reimplement `CurrentTimeIndicator` component */}
