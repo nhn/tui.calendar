@@ -41,6 +41,7 @@ export const GridCells = memo(function GridCells({
     narrowWeekend,
     TOTAL_WIDTH
   );
+  const lastCellIndex = weekDates.length - 1;
 
   return (
     <Fragment>
@@ -51,6 +52,7 @@ export const GridCells = memo(function GridCells({
         const uiModelsInCell = uiModels.filter(isInGrid(cell));
         const exceedCount = getExceedCount(uiModelsInCell, height, EVENT_HEIGHT + eventTopMargin);
         const isClickedIndex = index === clickedIndex;
+        const isLastCell = index === lastCellIndex;
 
         return (
           <GridCell
@@ -63,6 +65,7 @@ export const GridCells = memo(function GridCells({
             onClickExceedCount={onClickExceedCount}
             isClickedIndex={isClickedIndex}
             onClickCollapseButton={onClickCollapseButton}
+            isLastCell={isLastCell}
           />
         );
       })}

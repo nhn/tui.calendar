@@ -1,7 +1,15 @@
 .panel-title {
+  display: table;
   float: left;
   height: 100%;
   padding-right: 5px;
+}
+
+.panel-title .left-content {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: right;
+  font-size: 11px;
 }
 
 .panel-grid-wrapper {

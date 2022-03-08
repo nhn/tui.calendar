@@ -24,9 +24,21 @@ type DayNameTheme = {
   backgroundColor: string;
 };
 
+type DayGridTheme = {
+  borderRight: string;
+  backgroundColor: string;
+};
+
+type DayGridLeftTheme = {
+  borderRight: string;
+  backgroundColor: string;
+};
+
 type WeekTheme = {
   dayname: DayNameTheme;
   dayGridSchedule: ScheduleTheme;
+  dayGrid: DayGridTheme;
+  dayGridLeft: DayGridLeftTheme;
   currentTime: { color: string };
   pastTime: { color: string };
   futureTime: { color: string };
