@@ -25,9 +25,10 @@ function getDateColor(date: TZDate, theme: Theme) {
   const thisMonth = new TZDate().getMonth();
   const isSameMonth = thisMonth === date.getMonth();
 
-  const { common, month } = theme;
-  const { holiday, saturday, today } = common;
-  const { dayExceptThisMonth, holidayExceptThisMonth } = month;
+  const {
+    common: { holiday, saturday, today },
+    month: { dayExceptThisMonth, holidayExceptThisMonth },
+  } = theme;
 
   if (dayIndex === Day.SUN) {
     return isSameMonth ? holiday.color : holidayExceptThisMonth.color;

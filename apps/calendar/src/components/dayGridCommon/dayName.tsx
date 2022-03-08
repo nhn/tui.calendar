@@ -30,9 +30,8 @@ function isWeekDayName(
 
 export function DayName({ dayname, dayIndex, style, templateType, type }: Props) {
   const eventBus = useEventBus();
-  const theme = useTheme();
+  const { common: commonTheme } = useTheme();
 
-  const { common: commonTheme } = theme;
   const dayNameStyle = { color: isSunday(dayIndex) ? commonTheme.holiday.color : null };
 
   const handleClick = () => {
