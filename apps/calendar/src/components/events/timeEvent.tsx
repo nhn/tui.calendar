@@ -144,6 +144,8 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
     startEventResize(e);
   };
 
+  const shouldShowResizeHandle = !croppedEnd && !isReadOnly && !isDraggingTarget;
+
   return (
     <div
       data-testid={`time-event-${model.title}-${uiModel.cid()}`}
@@ -172,7 +174,7 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
           <Template template="comingDuration" model={model} />
         </div>
       ) : null}
-      {!croppedEnd && !isReadOnly ? (
+      {shouldShowResizeHandle ? (
         <div className={classNames.resizeHandleX} onMouseDown={handleEventResizeStart} />
       ) : null}
     </div>
