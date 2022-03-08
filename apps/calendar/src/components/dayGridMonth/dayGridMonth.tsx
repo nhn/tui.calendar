@@ -6,7 +6,7 @@ import { GridRow } from '@src/components/dayGridMonth/gridRow';
 import { GridSelectionByRow } from '@src/components/dayGridMonth/gridSelectionByRow';
 import { MonthEvents } from '@src/components/dayGridMonth/monthEvents';
 import { MovingEventShadow } from '@src/components/dayGridMonth/movingEventShadow';
-import { ResizingEventShadow } from '@src/components/dayGridMonth/resizingEventShadow';
+import { ResizingGuideByRow } from '@src/components/dayGridMonth/resizingGuideByRow';
 import {
   MONTH_CELL_BAR_HEIGHT,
   MONTH_CELL_PADDING_TOP,
@@ -121,7 +121,7 @@ export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidth
                 narrowWeekend={narrowWeekend}
               />
             </div>
-            <ResizingEventShadow
+            <ResizingGuideByRow
               dateMatrix={dateMatrix}
               gridPositionFinder={gridPositionFinder}
               rowIndex={rowIndex}

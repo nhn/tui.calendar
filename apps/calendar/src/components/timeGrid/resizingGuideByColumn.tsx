@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 
 import { TimeEvent } from '@src/components/events/timeEvent';
-import { useStore } from '@src/contexts/calendarStore';
+import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useCurrentPointerPositionInGrid } from '@src/hooks/event/currentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/draggingEvent';
 import EventUIModel from '@src/model/eventUIModel';
@@ -28,6 +28,7 @@ export function ResizingGuideByColumn({
   timeGridData: TimeGridData;
 }) {
   const isNotDragging = useStore(isNotDraggingSelector);
+  const { updateEvent } = useDispatch('calendar');
   const { draggingEvent: resizingStartUIModel, clearDraggingEvent } = useDraggingEvent(
     'timeGrid',
     'resize'
@@ -96,21 +97,44 @@ export function ResizingGuideByColumn({
   const canCalculateGuideUIModel =
     isPresent(baseResizingInfo) && isPresent(resizingStartUIModel) && isPresent(currentGridPos);
 
+  const minimumHeight = useMemo(
+    () =>
+      baseResizingInfo ? timeGridData.rows[baseResizingInfo.eventStartDateRowIndex].height : 0,
+    [baseResizingInfo, timeGridData.rows]
+  );
+
   useEffect(() => {
     // Calculate the first column of the dragging event
     if (canCalculateGuideUIModel && columnIndex === baseResizingInfo.eventStartDateColumnIndex) {
-      const { eventStartDateRowIndex, resizeTargetUIModelColumns } = baseResizingInfo;
+      const { eventStartDateRowIndex, eventStartDateColumnIndex, resizeTargetUIModelColumns } =
+        baseResizingInfo;
       const clonedUIModel = (resizeTargetUIModelColumns[columnIndex][0] as EventUIModel).clone();
 
-      const height = Math.max(
-        timeGridData.rows[eventStartDateRowIndex].height,
-        timeGridData.rows[currentGridPos.rowIndex].top -
-          timeGridData.rows[eventStartDateRowIndex].top
-      );
+      let height: number;
+      if (eventStartDateColumnIndex === currentGridPos.columnIndex) {
+        height = Math.max(
+          minimumHeight,
+          timeGridData.rows[currentGridPos.rowIndex].top -
+            timeGridData.rows[eventStartDateRowIndex].top +
+            minimumHeight
+        );
+      } else if (eventStartDateColumnIndex > currentGridPos.columnIndex) {
+        height = minimumHeight;
+      } else {
+        height = 100 - timeGridData.rows[eventStartDateRowIndex].top;
+      }
+
       clonedUIModel.setUIProps({ height });
       setGuideUIModel(clonedUIModel);
     }
-  }, [baseResizingInfo, canCalculateGuideUIModel, columnIndex, currentGridPos, timeGridData.rows]);
+  }, [
+    baseResizingInfo,
+    canCalculateGuideUIModel,
+    columnIndex,
+    currentGridPos,
+    timeGridData.rows,
+    minimumHeight,
+  ]);
 
   useEffect(() => {
     // Calculate the column between first and last column of the dragging event
@@ -136,12 +160,83 @@ export function ResizingGuideByColumn({
     resizingStartUIModel,
   ]);
 
-  // WHen dragging ends
   useEffect(() => {
-    if (isNotDragging && isPresent(guideUIModel)) {
+    // Calculate the last column of the dragging event
+    if (
+      canCalculateGuideUIModel &&
+      baseResizingInfo.eventStartDateColumnIndex < currentGridPos.columnIndex &&
+      columnIndex === currentGridPos.columnIndex
+    ) {
+      const clonedUIModel = resizingStartUIModel.clone();
+      clonedUIModel.setUIProps({
+        top: 0,
+        left: 0,
+        width: 100,
+        height: timeGridData.rows[currentGridPos.rowIndex].top + minimumHeight,
+      });
+      setGuideUIModel(clonedUIModel);
+    }
+  }, [
+    baseResizingInfo,
+    canCalculateGuideUIModel,
+    columnIndex,
+    currentGridPos,
+    resizingStartUIModel,
+    timeGridData.rows,
+    minimumHeight,
+  ]);
+
+  // Reset
+  useEffect(() => {
+    if (
+      canCalculateGuideUIModel &&
+      columnIndex > baseResizingInfo.eventStartDateColumnIndex &&
+      columnIndex > currentGridPos.columnIndex
+    ) {
+      setGuideUIModel(null);
+    }
+  }, [baseResizingInfo, canCalculateGuideUIModel, columnIndex, currentGridPos]);
+
+  const isDraggingEnd =
+    isNotDragging &&
+    isPresent(baseResizingInfo) &&
+    isPresent(currentGridPos) &&
+    isPresent(resizingStartUIModel);
+
+  // When dragging ends
+  useEffect(() => {
+    if (isDraggingEnd) {
+      const shouldUpdateEvent =
+        columnIndex === currentGridPos.columnIndex &&
+        ((baseResizingInfo.eventStartDateColumnIndex === currentGridPos.columnIndex &&
+          baseResizingInfo.eventStartDateRowIndex < currentGridPos.rowIndex) ||
+          baseResizingInfo.eventStartDateColumnIndex < currentGridPos.columnIndex);
+
+      if (shouldUpdateEvent) {
+        const targetEndDate = setTimeStrToDate(
+          timeGridData.columns[currentGridPos.columnIndex].date,
+          timeGridData.rows[currentGridPos.rowIndex].endTime
+        );
+        updateEvent({
+          event: resizingStartUIModel.model,
+          eventData: {
+            end: targetEndDate,
+          },
+        });
+      }
+
       clearStates();
     }
-  }, [clearStates, guideUIModel, isNotDragging]);
+  }, [
+    baseResizingInfo,
+    clearStates,
+    columnIndex,
+    currentGridPos,
+    isDraggingEnd,
+    resizingStartUIModel,
+    timeGridData,
+    updateEvent,
+  ]);
 
   if (isNil(guideUIModel)) {
     return null;
