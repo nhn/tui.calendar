@@ -1,13 +1,13 @@
-import { useDayGridRowTitleTheme } from '@src/hooks/dayGridWeek/dayGridRowTitleTheme';
+import { useDayGridRowTitleStyle } from '@src/hooks/dayGridWeek/dayGridRowTitleStyle';
 import { renderHook } from '@src/test/utils';
 import Theme from '@src/theme';
 
-describe('useDayGridRowTitleTheme', () => {
+describe('useDayGridRowTitleStyle', () => {
   let theme: Theme;
   const timesWidth = 120;
   const timezonesCount = 3;
   const setup = (newTheme: Theme) => {
-    const { result } = renderHook(() => useDayGridRowTitleTheme(timesWidth, timezonesCount), {
+    const { result } = renderHook(() => useDayGridRowTitleStyle(timesWidth, timezonesCount), {
       theme: newTheme,
     });
 

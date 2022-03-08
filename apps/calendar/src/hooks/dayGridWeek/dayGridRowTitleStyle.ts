@@ -1,6 +1,6 @@
 import { useTheme } from '@src/contexts/theme';
 
-export function useDayGridRowTitleTheme(timesWidth: number, timezonesCount: number) {
+export function useDayGridRowTitleStyle(timesWidth: number, timezonesCount: number) {
   const {
     week: { dayGridLeft },
   } = useTheme();
