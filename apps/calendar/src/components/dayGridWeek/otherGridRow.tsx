@@ -1,4 +1,5 @@
 import { Fragment, h } from 'preact';
+import { useMemo } from 'preact/hooks';
 
 import { GridCells } from '@src/components/dayGridWeek/gridCells';
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
@@ -38,23 +39,27 @@ export function OtherGridRow({
 }: Props) {
   const style = useDayGridRowTitleStyle(timesWidth, timezonesCount);
 
-  const maxTop = Math.max(0, ...events.map(({ top }) => top));
+  const maxTop = useMemo(() => Math.max(0, ...events.map(({ top }) => top)), [events]);
   const { narrowWeekend = false } = options;
   const rowTitleTemplate: GridRowTitleTemplate = `${category}Title`;
 
   const { clickedIndex, isClickedCount, onClickExceedCount, onClickCollapseButton } =
     useGridRowHeightController(maxTop, category);
 
-  const horizontalEvents = events
-    .filter(isWithinHeight(height, EVENT_HEIGHT + WEEK_EVENT_MARGIN_TOP))
-    .map((uiModel) => (
-      <HorizontalEvent
-        key={`${category}-DayEvent-${uiModel.cid()}`}
-        uiModel={uiModel}
-        eventHeight={EVENT_HEIGHT}
-        headerHeight={0}
-      />
-    ));
+  const horizontalEvents = useMemo(
+    () =>
+      events
+        .filter(isWithinHeight(height, EVENT_HEIGHT + WEEK_EVENT_MARGIN_TOP))
+        .map((uiModel) => (
+          <HorizontalEvent
+            key={`${category}-DayEvent-${uiModel.cid()}`}
+            uiModel={uiModel}
+            eventHeight={EVENT_HEIGHT}
+            headerHeight={0}
+          />
+        )),
+    [category, events, height]
+  );
 
   return (
     <Fragment>
