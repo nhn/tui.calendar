@@ -519,6 +519,10 @@ export function isWeekend(day: Day): boolean {
   return day === Day.SUN || day === Day.SAT;
 }
 
+export function isSunday(day: Day): boolean {
+  return day === Day.SUN;
+}
+
 /**
  * Whether date is between supplied dates with date value?
  * @param {TZDate} d - target date

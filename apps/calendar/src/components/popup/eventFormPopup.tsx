@@ -91,6 +91,7 @@ function getChanges(event: EventModel, eventModelData: EventModelData) {
 export function EventFormPopup() {
   const { calendars } = useStore(calendarSelector);
   const { hideAllPopup } = useDispatch('popup');
+  const popupParams = useStore(eventFormPopupParamSelector);
   const {
     title,
     location,
@@ -103,9 +104,8 @@ export function EventFormPopup() {
     close,
     isCreationPopup,
     event,
-  } = useStore(eventFormPopupParamSelector);
+  } = popupParams ?? {};
   const eventBus = useEventBus();
-
   const formPopupSlot = useFloatingLayer('formPopupSlot');
   const [formState, formStateDispatch] = useFormState({
     title,
@@ -125,29 +125,6 @@ export function EventFormPopup() {
   );
 
   const layoutContainer = useLayoutContainer();
-
-  const onSubmit = (e: FormEvent) => {
-    e.preventDefault();
-
-    const formData = new FormData(e.target as HTMLFormElement);
-    const eventData: EventModelData = { ...formState };
-
-    formData.forEach((data, key) => {
-      eventData[key as keyof EventModelData] = isBooleanKey(key) ? data === 'true' : data;
-    });
-
-    eventData.start = new TZDate(datePickerRef.current?.getStartDate());
-    eventData.end = new TZDate(datePickerRef.current?.getEndDate());
-
-    if (isCreationPopup) {
-      eventBus.fire('beforeCreateEvent', eventData);
-    } else if (event) {
-      const changes = getChanges(event, eventData);
-
-      eventBus.fire('beforeUpdateEvent', { event, changes });
-    }
-    hideAllPopup();
-  };
 
   const popupArrowClassName = useMemo(() => {
     const top = arrowDirection === FormPopupArrowDirection.top;
@@ -178,6 +155,29 @@ export function EventFormPopup() {
   if (isNil(start) || isNil(end) || isNil(formPopupSlot)) {
     return null;
   }
+
+  const onSubmit = (e: FormEvent) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.target as HTMLFormElement);
+    const eventData: EventModelData = { ...formState };
+
+    formData.forEach((data, key) => {
+      eventData[key as keyof EventModelData] = isBooleanKey(key) ? data === 'true' : data;
+    });
+
+    eventData.start = new TZDate(datePickerRef.current?.getStartDate());
+    eventData.end = new TZDate(datePickerRef.current?.getEndDate());
+
+    if (isCreationPopup) {
+      eventBus.fire('beforeCreateEvent', eventData);
+    } else if (event) {
+      const changes = getChanges(event, eventData);
+
+      eventBus.fire('beforeUpdateEvent', { event, changes });
+    }
+    hideAllPopup();
+  };
 
   return createPortal(
     <div role="dialog" className={classNames.popupContainer} ref={popupContainerRef} style={style}>

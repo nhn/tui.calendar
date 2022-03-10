@@ -43,7 +43,7 @@
 .grid-cell-more-events {
   float: right;
   height: 27px;
-  line-height: 2.45;
+  line-height: 27px;
   padding: 0 5px;
   text-align: center;
   font-size: 11px;
@@ -61,13 +61,13 @@
   width: 100%;
   font-size: 12px;
 }
+
 .weekday {
   height: 100%;
 }
 
 .weekday .daygrid-grid-selection {
   position: absolute;
-  right: 10px;
   background-color: rgba(81, 92, 230, 0.05);
   border: 1px solid #515ce6;
 }

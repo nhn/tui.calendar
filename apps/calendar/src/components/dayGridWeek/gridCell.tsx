@@ -1,8 +1,10 @@
 import { h } from 'preact';
 
+import { useTheme } from '@src/contexts/theme';
 import { cls } from '@src/helpers/css';
 
 type Props = {
+  isLastCell: boolean;
   width: string;
   left: string;
 } & ExceedCountProps &
@@ -20,10 +22,6 @@ interface CollapseButtonProps {
   isClickedIndex: boolean;
   onClickCollapseButton: () => void;
 }
-
-const DEFAULT_GRID_STYLE = {
-  borderLeft: '1px solid #ddd',
-};
 
 function ExceedCount({ index, exceedCount, isClicked, onClickExceedCount }: ExceedCountProps) {
   const clickExceedCount = () => onClickExceedCount(index);
@@ -55,9 +53,22 @@ export function GridCell({
   onClickExceedCount,
   isClickedIndex,
   onClickCollapseButton,
+  isLastCell,
 }: Props) {
+  const {
+    week: {
+      dayGrid: { borderRight, backgroundColor },
+    },
+  } = useTheme();
+  const style = {
+    width,
+    left,
+    borderRight: isLastCell ? 'none' : borderRight,
+    backgroundColor,
+  };
+
   return (
-    <div className={cls('panel-grid')} style={{ ...DEFAULT_GRID_STYLE, width, left }}>
+    <div className={cls('panel-grid')} style={style}>
       <ExceedCount
         index={index}
         exceedCount={exceedCount}

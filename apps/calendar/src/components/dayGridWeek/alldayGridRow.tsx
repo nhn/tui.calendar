@@ -12,6 +12,7 @@ import { cls } from '@src/helpers/css';
 import { createGridPositionFinder, EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
 import { alldayGridRowSelectionHelper } from '@src/helpers/gridSelection';
 import { useDOMNode } from '@src/hooks/common/domNode';
+import { useDayGridRowTitleStyle } from '@src/hooks/dayGridWeek/dayGridRowTitleStyle';
 import { useGridRowHeightController } from '@src/hooks/dayGridWeek/gridRowHeightController';
 import { useGridSelection } from '@src/hooks/gridSelection/gridSelection';
 import EventUIModel from '@src/model/eventUIModel';
@@ -45,10 +46,9 @@ export function AlldayGridRow({
   timezonesCount = 1,
 }: Props) {
   const [panelContainer, setPanelContainerRef] = useDOMNode<HTMLDivElement>();
+  const style = useDayGridRowTitleStyle(timesWidth, timezonesCount);
 
   const { narrowWeekend = false } = options;
-
-  const columnWidth = timesWidth * timezonesCount;
 
   const maxTop = useMemo(() => Math.max(0, ...events.map(({ top }) => top)), [events]);
   const gridPositionFinder = useMemo(
@@ -89,7 +89,7 @@ export function AlldayGridRow({
 
   return (
     <Fragment>
-      <div className={cls('panel-title')} style={{ width: columnWidth }}>
+      <div className={cls('panel-title')} style={style}>
         <Template template={rowTitleTemplate} model="allday" />
       </div>
       <div className={cls('allday-panel')} ref={setPanelContainerRef} onMouseDown={onMouseDown}>

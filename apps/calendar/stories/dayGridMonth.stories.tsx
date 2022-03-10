@@ -21,12 +21,7 @@ export const Cell = () => {
   return (
     <ProviderWrapper>
       <Layout>
-        <GridCell
-          date={date}
-          dayIndex={date.getDay()}
-          style={{ width: 100, height: 100 }}
-          height={100}
-        />
+        <GridCell date={date} style={{ width: 100, height: 100 }} height={100} />
       </Layout>
     </ProviderWrapper>
   );

@@ -34,13 +34,12 @@ export function GridHeader({
   rowStyleInfo,
   type = 'month',
 }: Props) {
-  const { borderLeft, backgroundColor } = theme;
+  const { backgroundColor } = theme;
 
   return (
     <div
       className={cls('daynames', type)}
       style={{
-        borderLeft,
         backgroundColor,
         marginLeft,
       }}
