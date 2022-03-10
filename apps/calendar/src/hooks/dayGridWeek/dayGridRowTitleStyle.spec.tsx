@@ -20,9 +20,9 @@ describe('useDayGridRowTitleStyle', () => {
 
   it('should return default style', () => {
     // Given
-    const result = setup(theme);
 
     // When
+    const result = setup(theme);
 
     // Then
     expect(result.current).toEqual({
@@ -35,9 +35,9 @@ describe('useDayGridRowTitleStyle', () => {
     // Given
     const borderRight = '1px solid red';
     theme.setStyle('week.dayGridLeft.borderRight', borderRight);
-    const result = setup(theme);
 
     // When
+    const result = setup(theme);
 
     // Then
     expect(result.current).toEqual({
@@ -51,9 +51,9 @@ describe('useDayGridRowTitleStyle', () => {
     // Given
     const backgroundColor = '#e5e5e5';
     theme.setStyle('week.dayGridLeft.backgroundColor', backgroundColor);
-    const result = setup(theme);
 
     // When
+    const result = setup(theme);
 
     // Then
     expect(result.current).toEqual({
