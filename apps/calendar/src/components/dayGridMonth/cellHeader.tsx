@@ -22,6 +22,7 @@ interface Props {
 
 function getDateColor(date: TZDate, theme: Theme) {
   const dayIndex = date.getDay();
+  // @TODO: calculate based on today(need to calculate date when prev & next used)
   const thisMonth = new TZDate().getMonth();
   const isSameMonth = thisMonth === date.getMonth();
 
