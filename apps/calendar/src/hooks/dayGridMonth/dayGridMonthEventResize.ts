@@ -94,33 +94,33 @@ export function useDayGridMonthEventResize({
 
   const canCalculateProps = isPresent(baseResizingInfo) && isPresent(currentGridPos);
 
+  // Calculate the first row of the dragging event
   useEffect(() => {
-    // @TODO: should handle the case when the position is upper bound of the event starting date
-    // Calculate the first row of the dragging event
     if (canCalculateProps && rowIndex === baseResizingInfo.eventStartDateRowIndex) {
       const { eventStartDateRowIndex, eventStartDateColumnIndex } = baseResizingInfo;
       const clonedUIModel = (
         baseResizingInfo.resizeTargetUIModelRows[eventStartDateRowIndex][0] as EventUIModel
       ).clone();
+
+      let height: string;
       if (eventStartDateRowIndex === currentGridPos.rowIndex) {
-        setGuideProps([
-          clonedUIModel,
+        height =
           cellWidthMap[eventStartDateColumnIndex][
             Math.max(eventStartDateColumnIndex, currentGridPos.columnIndex)
-          ],
-        ]);
+          ];
+      } else if (eventStartDateRowIndex > currentGridPos.rowIndex) {
+        height = cellWidthMap[eventStartDateColumnIndex][eventStartDateColumnIndex];
       } else {
+        height = cellWidthMap[eventStartDateColumnIndex][dateMatrix[rowIndex].length - 1];
         clonedUIModel.setUIProps({ exceedRight: true });
-        setGuideProps([
-          clonedUIModel,
-          cellWidthMap[eventStartDateColumnIndex][dateMatrix[rowIndex].length - 1],
-        ]);
       }
+
+      setGuideProps([clonedUIModel, height]);
     }
   }, [canCalculateProps, cellWidthMap, currentGridPos, dateMatrix, baseResizingInfo, rowIndex]);
 
+  // Calculate middle rows of the dragging event
   useEffect(() => {
-    // Calculate middle rows of the dragging event
     if (
       canCalculateProps &&
       baseResizingInfo.eventStartDateRowIndex < rowIndex &&
@@ -132,8 +132,8 @@ export function useDayGridMonthEventResize({
     }
   }, [canCalculateProps, currentGridPos, baseResizingInfo, rowIndex]);
 
+  // Calculate the last row of the dragging event
   useEffect(() => {
-    // Calculate the last row of the dragging event
     if (
       canCalculateProps &&
       baseResizingInfo.eventStartDateRowIndex < currentGridPos.rowIndex &&
@@ -146,10 +146,12 @@ export function useDayGridMonthEventResize({
     }
   }, [canCalculateProps, cellWidthMap, currentGridPos, baseResizingInfo, rowIndex]);
 
+  // Reset props on out of bound
   useEffect(() => {
     if (
       canCalculateProps &&
-      (rowIndex < baseResizingInfo.eventStartDateRowIndex || rowIndex > currentGridPos.rowIndex)
+      rowIndex > baseResizingInfo.eventStartDateRowIndex &&
+      rowIndex > currentGridPos.rowIndex
     ) {
       setGuideProps(null);
     }

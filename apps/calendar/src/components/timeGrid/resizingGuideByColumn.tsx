@@ -103,8 +103,8 @@ export function ResizingGuideByColumn({
     [baseResizingInfo, timeGridData.rows]
   );
 
+  // Calculate the first column of the dragging event
   useEffect(() => {
-    // Calculate the first column of the dragging event
     if (canCalculateGuideUIModel && columnIndex === baseResizingInfo.eventStartDateColumnIndex) {
       const { eventStartDateRowIndex, eventStartDateColumnIndex, resizeTargetUIModelColumns } =
         baseResizingInfo;
@@ -136,8 +136,8 @@ export function ResizingGuideByColumn({
     minimumHeight,
   ]);
 
+  // Calculate the column between first and last column of the dragging event
   useEffect(() => {
-    // Calculate the column between first and last column of the dragging event
     if (
       canCalculateGuideUIModel &&
       baseResizingInfo.eventStartDateColumnIndex < columnIndex &&
@@ -160,8 +160,8 @@ export function ResizingGuideByColumn({
     resizingStartUIModel,
   ]);
 
+  // Calculate the last column of the dragging event
   useEffect(() => {
-    // Calculate the last column of the dragging event
     if (
       canCalculateGuideUIModel &&
       baseResizingInfo.eventStartDateColumnIndex < currentGridPos.columnIndex &&
