@@ -136,15 +136,15 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
       render('', this.container);
     }
 
+    this.store.clearListeners();
+    this.eventBus.off();
+    removeAttributeHooks();
+
     for (const key in this) {
       if (this.hasOwnProperty(key)) {
         delete this[key];
       }
     }
-
-    this.store.clearListeners();
-    this.eventBus.off();
-    removeAttributeHooks();
   }
 
   /**

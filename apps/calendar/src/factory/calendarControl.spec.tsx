@@ -150,4 +150,20 @@ describe('clear', () => {
     // Then
     expect(screen.queryByText('There is no events')).toBeInTheDocument();
   });
+
+  describe('destroy', () => {
+    it('should remove all calendar properties', () => {
+      // Given
+      const properties = Object.keys(mockCalendar) as (keyof MockCalendar)[];
+
+      // When
+      mockCalendar.destroy();
+
+      // Then
+      expect(container.innerHTML).toMatchInlineSnapshot(`""`);
+      properties.forEach((property) => {
+        expect(mockCalendar[property]).toBeUndefined();
+      });
+    });
+  });
 });
