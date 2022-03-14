@@ -1,9 +1,8 @@
 import { h } from 'preact';
 
-import { screen } from '@testing-library/preact';
-
 import { useStore } from '@src/contexts/calendarStore';
 import CalendarControl from '@src/factory/calendarControl';
+import { act, screen } from '@src/test/utils';
 
 describe('calendarControl', () => {
   function MockComponent() {
@@ -83,26 +82,24 @@ describe('calendarControl', () => {
 
     it('should render 1 event', () => {
       // Given
-      const eventElement = screen.getByText('event');
 
       // When
 
       // Then
-      expect(eventElement).not.toBeNull();
+      expect(screen.getByText('event')).toBeInTheDocument();
     });
 
     it('should clear events', () => {
       // Given
 
       // When
-      mockCalendar.clear();
-      mockCalendar.render();
-      const eventElement = screen.queryByText('event');
-      const noEventElement = screen.queryByText('There is no events');
+      act(() => {
+        mockCalendar.clear();
+      });
 
       // Then
-      expect(eventElement).toBeNull();
-      expect(noEventElement).not.toBeNull();
+      expect(screen.queryByText('event')).not.toBeInTheDocument();
+      expect(screen.queryByText('There is no events')).toBeInTheDocument();
     });
   });
 });
