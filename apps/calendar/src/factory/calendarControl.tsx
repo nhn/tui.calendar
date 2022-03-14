@@ -304,14 +304,13 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
 
   /**
    * Delete all events and clear view.
-   * @todo implement this
    * @example
    * calendar.clear();
-   * calendar.createEvents(events, true);
-   * calendar.render();
    */
   clear() {
-    this.getStoreDispatchers('calendar').clearEvents();
+    const { clearEvents } = this.getStoreDispatchers('calendar');
+
+    clearEvents();
   }
 
   /**
