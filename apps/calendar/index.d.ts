@@ -275,7 +275,7 @@ export default class Calendar {
 
   public next(): void;
 
-  public openCreationPopup(eventData: EventModelData): void;
+  public openFormPopup(eventData: EventModelData): void;
 
   public prev(): void;
 

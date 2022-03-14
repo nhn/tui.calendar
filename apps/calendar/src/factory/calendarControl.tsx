@@ -5,6 +5,7 @@ import { DateInterface, LocalDate } from '@toast-ui/date';
 
 import { CalendarContainer } from '@src/calendarContainer';
 import { initCalendarStore } from '@src/contexts/calendarStore';
+import EventModel from '@src/model/eventModel';
 import Theme from '@src/theme';
 import { ThemeKeyValue } from '@src/theme/themeProps';
 import TZDate from '@src/time/date';
@@ -577,12 +578,26 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * Open event creation popup
-   * @param {EventModelData} event - The preset {@link EventModelData} data
-   * @todo implement this
+   * Open event form popup
+   * @param {EventModelData} eventModelData - The preset {@link EventModelData} data
    */
-  openCreationPopup(event: EventModelData) {
-    // console.log('openCreationPopup', event);
+  openFormPopup(eventModelData: EventModelData) {
+    const { showFormPopup } = this.getStoreDispatchers().popup;
+
+    const event = EventModel.create(eventModelData);
+    const { title, location, start, end, isAllday, isPrivate, state: eventState } = event;
+
+    showFormPopup({
+      isCreationPopup: true,
+      event,
+      title,
+      location,
+      start,
+      end,
+      isAllday,
+      isPrivate,
+      eventState,
+    });
   }
 
   fire<EventName extends keyof ExternalEventTypes>(

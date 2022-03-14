@@ -1,5 +1,6 @@
 import { h } from 'preact';
 
+import { Layout } from '@src/components/layout';
 import { useStore } from '@src/contexts/calendarStore';
 import CalendarControl from '@src/factory/calendarControl';
 import { act, screen } from '@src/test/utils';
@@ -150,20 +151,73 @@ describe('clear', () => {
     // Then
     expect(screen.queryByText('There is no events')).toBeInTheDocument();
   });
+});
 
-  describe('destroy', () => {
-    it('should remove all calendar properties', () => {
-      // Given
-      const properties = Object.keys(mockCalendar) as (keyof MockCalendar)[];
+describe('destroy', () => {
+  let container: HTMLDivElement;
 
-      // When
-      mockCalendar.destroy();
-
-      // Then
-      expect(container.innerHTML).toMatchInlineSnapshot(`""`);
-      properties.forEach((property) => {
-        expect(mockCalendar[property]).toBeUndefined();
-      });
+  beforeEach(() => {
+    container = document.createElement('div');
+    document.body.appendChild(container);
+    mockCalendar = new MockCalendar(container);
+    act(() => {
+      mockCalendar.render();
     });
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('should remove all calendar properties', () => {
+    // Given
+    const properties = Object.keys(mockCalendar) as (keyof MockCalendar)[];
+
+    // When
+    act(() => {
+      mockCalendar.destroy();
+    });
+
+    // Then
+    expect(container.innerHTML).toMatchInlineSnapshot(`""`);
+    properties.forEach((property) => {
+      expect(mockCalendar[property]).toBeUndefined();
+    });
+  });
+});
+
+describe('openFormPopup', () => {
+  class MockPopupCalendar extends CalendarControl {
+    protected getComponent() {
+      return <Layout>mock</Layout>; // popup component is rendered in Layout component
+    }
+  }
+
+  let mockPopupCalendar: MockPopupCalendar;
+
+  beforeEach(() => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+    mockPopupCalendar = new MockPopupCalendar(container);
+    act(() => {
+      mockPopupCalendar.render();
+    });
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('should open form popup', () => {
+    // Given
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+
+    // When
+    act(() => {
+      mockPopupCalendar.openFormPopup({ title: 'my event' });
+    });
+
+    // Then
+    expect(screen.queryByRole('dialog')).toBeInTheDocument();
   });
 });
