@@ -4,68 +4,93 @@ import { useStore } from '@src/contexts/calendarStore';
 import CalendarControl from '@src/factory/calendarControl';
 import { act, screen } from '@src/test/utils';
 
-describe('calendarControl', () => {
-  function MockComponent() {
-    const events = useStore((state) => state.calendar.events.toArray());
+function cleanup() {
+  document.body.innerHTML = '';
+}
 
-    return events.length > 0 ? (
-      <div>
-        {events.map((event) => (
-          <div key={event.id}>event</div>
-        ))}
-      </div>
-    ) : (
-      <div>There is no events</div>
-    );
+function MockComponent() {
+  const events = useStore((state) => state.calendar.events.toArray());
+
+  return events.length > 0 ? (
+    <div>
+      {events.map((event) => (
+        <div key={event.id}>event</div>
+      ))}
+    </div>
+  ) : (
+    <div>There is no events</div>
+  );
+}
+
+class MockCalendar extends CalendarControl {
+  protected getComponent() {
+    return <MockComponent />;
   }
+}
+let mockCalendar: MockCalendar;
 
-  class MockCalendar extends CalendarControl {
-    protected getComponent() {
-      return <MockComponent />;
-    }
-  }
-  let mockCalendar: MockCalendar;
-  const container = document.createElement('div');
-  document.body.appendChild(container);
-
+describe('changeView/getViewName', () => {
   beforeEach(() => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
     mockCalendar = new MockCalendar(container);
-    mockCalendar.render();
-  });
-
-  describe('changeView/getViewName', () => {
-    it('should return current view name', () => {
-      // Given
-
-      // When
-
-      // Then
-      expect(mockCalendar.getViewName()).toBe('month'); // Initial view is 'month'
-    });
-
-    it('should change current view to week', () => {
-      // Given
-
-      // When
-      mockCalendar.changeView('week');
-
-      // Then
-      expect(mockCalendar.getViewName()).toBe('week');
-    });
-
-    it('should change current view to day', () => {
-      // Given
-
-      // When
-      mockCalendar.changeView('day');
-
-      // Then
-      expect(mockCalendar.getViewName()).toBe('day');
+    act(() => {
+      mockCalendar.render();
     });
   });
 
-  describe('clear', () => {
-    beforeEach(() => {
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('should return current view name', () => {
+    // Given
+
+    // When
+
+    // Then
+    expect(mockCalendar.getViewName()).toBe('month'); // Initial view is 'month'
+  });
+
+  it('should change current view to week', () => {
+    // Given
+
+    // When
+    mockCalendar.changeView('week');
+
+    // Then
+    expect(mockCalendar.getViewName()).toBe('week');
+  });
+
+  it('should change current view to day', () => {
+    // Given
+
+    // When
+    mockCalendar.changeView('day');
+
+    // Then
+    expect(mockCalendar.getViewName()).toBe('day');
+  });
+});
+
+// @TODO: Add more test cases for multiple events
+describe('createEvents', () => {
+  beforeEach(() => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+    mockCalendar = new MockCalendar(container);
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('should render 1 event', () => {
+    // Given
+    act(() => {
+      mockCalendar.render();
+    });
+    act(() => {
       mockCalendar.createEvents([
         {
           id: '1',
@@ -77,29 +102,52 @@ describe('calendarControl', () => {
           end: '2018-01-19T02:30:00+09:00',
         },
       ]);
+    });
+
+    // When
+
+    // Then
+    expect(screen.queryByText('event')).toBeInTheDocument();
+  });
+});
+
+describe('clear', () => {
+  beforeEach(() => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+    mockCalendar = new MockCalendar(container);
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('should clear events', () => {
+    // Given
+    act(() => {
       mockCalendar.render();
     });
+    act(() => {
+      mockCalendar.createEvents([
+        {
+          id: '1',
+          calendarId: '1',
+          title: 'my event',
+          category: 'time',
+          dueDateClass: '',
+          start: '2018-01-18T22:30:00+09:00',
+          end: '2018-01-19T02:30:00+09:00',
+        },
+      ]);
+    });
+    expect(screen.queryByText('event')).toBeInTheDocument();
 
-    it('should render 1 event', () => {
-      // Given
-
-      // When
-
-      // Then
-      expect(screen.getByText('event')).toBeInTheDocument();
+    // When
+    act(() => {
+      mockCalendar.clear();
     });
 
-    it('should clear events', () => {
-      // Given
-
-      // When
-      act(() => {
-        mockCalendar.clear();
-      });
-
-      // Then
-      expect(screen.queryByText('event')).not.toBeInTheDocument();
-      expect(screen.queryByText('There is no events')).toBeInTheDocument();
-    });
+    // Then
+    expect(screen.queryByText('There is no events')).toBeInTheDocument();
   });
 });
