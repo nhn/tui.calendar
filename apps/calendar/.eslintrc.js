@@ -69,6 +69,7 @@ module.exports = {
     ],
     'simple-import-sort/exports': 'warn',
     complexity: ['error', { max: 8 }],
+    'no-warning-comments': 0,
   },
   overrides: [
     {
