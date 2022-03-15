@@ -1,22 +1,27 @@
 import produce from 'immer';
 
+import TZDate from '@src/time/date';
+
 import { ViewType } from '@t/options';
 import { CalendarStore, SetState } from '@t/store';
 
 export type ViewSlice = {
   view: {
     currentView: ViewType;
+    renderDate: TZDate;
   };
 };
 
 export type ViewDispatchers = {
   changeView: (view: ViewType) => void;
+  setRenderDate: (date: TZDate) => void;
 };
 
 export function createViewSlice(initialView: ViewType = 'month'): ViewSlice {
   return {
     view: {
       currentView: initialView,
+      renderDate: new TZDate(),
     },
   };
 }
@@ -27,6 +32,12 @@ export function createViewDispatchers(set: SetState<CalendarStore>): ViewDispatc
       set(
         produce((state) => {
           state.view.currentView = nextView;
+        })
+      ),
+    setRenderDate: (date: TZDate) =>
+      set(
+        produce((state) => {
+          state.view.renderDate = date;
         })
       ),
   };
