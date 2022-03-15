@@ -5,11 +5,12 @@ import { DateInterface, LocalDate } from '@toast-ui/date';
 
 import { CalendarContainer } from '@src/calendarContainer';
 import { initCalendarStore } from '@src/contexts/calendarStore';
+import { getWeekDates } from '@src/helpers/grid';
 import EventModel from '@src/model/eventModel';
 import Theme from '@src/theme';
 import { ThemeKeyValue } from '@src/theme/themeProps';
 import TZDate from '@src/time/date';
-import { toStartOfDay } from '@src/time/datetime';
+import { arr2dCalendar, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { EventBus, EventBusImpl } from '@src/utils/eventBus';
 import { addAttributeHooks, removeAttributeHooks } from '@src/utils/sanitizer';
 import { isNumber, isString } from '@src/utils/type';
@@ -143,14 +144,65 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   /**
    * Move the calendar amount of offset value
    * @param {number} offset - The offset value.
-   * @todo implement this
-   * @example
-   * // move previous week when "week" view.
-   * // move previous month when "month" view.
-   * calendar.move(-1);
    */
   private move(offset = 0) {
-    // console.log('move', offset);
+    const { currentView, renderDate } = this.getStoreState().view;
+    const { options } = this.getStoreState();
+    const { setRenderDate } = this.getStoreDispatchers().view;
+
+    const newRenderDate = new TZDate(renderDate);
+    let startDate: TZDate = new TZDate();
+    let endDate: TZDate = new TZDate();
+
+    if (currentView === 'month') {
+      let dateMatrix: TZDate[][];
+      const {
+        startDayOfWeek = 0,
+        visibleWeeksCount = 0,
+        workweek = false,
+        isAlways6Week,
+      } = options.month;
+
+      if (visibleWeeksCount) {
+        const datetimeOptions = {
+          startDayOfWeek,
+          isAlways6Week: false,
+          visibleWeeksCount,
+          workweek,
+        };
+
+        newRenderDate.addDate(offset * 7 * datetimeOptions.visibleWeeksCount);
+        dateMatrix = arr2dCalendar(renderDate, datetimeOptions);
+      } else {
+        const datetimeOptions = {
+          startDayOfWeek,
+          isAlways6Week,
+          workweek,
+        };
+
+        newRenderDate.setMonth(renderDate.getMonth() + offset);
+        dateMatrix = arr2dCalendar(renderDate, datetimeOptions);
+      }
+
+      [[startDate]] = dateMatrix;
+      endDate = dateMatrix[dateMatrix.length - 1][dateMatrix[dateMatrix.length - 1].length - 1];
+    } else if (currentView === 'week') {
+      newRenderDate.addDate(offset * 7);
+      const weekDates = getWeekDates(newRenderDate, options.week);
+
+      [startDate] = weekDates;
+      endDate = weekDates[weekDates.length - 1];
+    } else if (currentView === 'day') {
+      newRenderDate.addDate(offset);
+      startDate = toStartOfDay(newRenderDate);
+      endDate = toEndOfDay(newRenderDate);
+    }
+
+    setRenderDate(newRenderDate);
+    this.renderRange = {
+      start: startDate,
+      end: endDate,
+    };
   }
 
   /**********
@@ -321,15 +373,16 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * Move to today.
-   * @todo implement this
+   * Move to today
    * @example
    * function onClickTodayBtn() {
-   *     calendar.today();
+   *   calendar.today();
    * }
    */
   today() {
-    // console.log('today');
+    const { setRenderDate } = this.getStoreDispatchers().view;
+
+    setRenderDate(new TZDate());
   }
 
   /**
@@ -354,33 +407,31 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   /**
    * Move the calendar forward a day, a week, a month, 2 weeks, 3 weeks.
    * @example
-   * function moveToNextOrPrevRange(val) {
-      if (val === -1) {
-          calendar.prev();
-      } else if (val === 1) {
-          calendar.next();
-      }
-  }
-  */
+   * function moveToNextOrPrevRange(offset) {
+   *   if (offset === -1) {
+   *     calendar.prev();
+   *   } else if (val === 1) {
+   *     calendar.next();
+   *   }
+   * }
+   */
   next() {
     this.move(1);
-    this.render();
   }
 
   /**
    * Move the calendar backward a day, a week, a month, 2 weeks, 3 weeks.
    * @example
-   * function moveToNextOrPrevRange(val) {
-      if (val === -1) {
-          calendar.prev();
-      } else if (val === 1) {
-          calendar.next();
-      }
-  }
-  */
+   * function moveToNextOrPrevRange(offset) {
+   *   if (offset === -1) {
+   *     calendar.prev();
+   *   } else if (val === 1) {
+   *     calendar.next();
+   *   }
+   * }
+   */
   prev() {
     this.move(-1);
-    this.render();
   }
 
   /**

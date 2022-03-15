@@ -3,9 +3,10 @@ import { h } from 'preact';
 import { Layout } from '@src/components/layout';
 import { useStore } from '@src/contexts/calendarStore';
 import CalendarControl from '@src/factory/calendarControl';
+import { getWeekDates } from '@src/helpers/grid';
 import { act, screen } from '@src/test/utils';
 import TZDate from '@src/time/date';
-import { addDate, isSameDate } from '@src/time/datetime';
+import { addDate, isSameDate, subtractDate } from '@src/time/datetime';
 
 function cleanup() {
   document.body.innerHTML = '';
@@ -299,5 +300,317 @@ describe('setDate/getDate', () => {
 
     // Then
     expect(mockCalendar.getDate()).toEqual(expected);
+  });
+});
+
+describe('prev/next/today', () => {
+  let container: HTMLDivElement;
+
+  beforeEach(() => {
+    container = document.createElement('div');
+    document.body.appendChild(container);
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  describe('month view', () => {
+    function MockMonthView() {
+      const { renderDate } = useStore((state) => state.view);
+      const month = renderDate.getMonth();
+
+      return <div>month: {month}</div>;
+    }
+    class MockCalendarMonth extends CalendarControl {
+      protected getComponent() {
+        return <MockMonthView />;
+      }
+    }
+
+    let mockCalendarMonth: MockCalendarMonth;
+    const MONTHS_IN_YEAR = 12;
+
+    beforeEach(() => {
+      mockCalendarMonth = new MockCalendarMonth(container);
+      act(() => {
+        mockCalendarMonth.render();
+      });
+    });
+
+    it('should render this month by default', () => {
+      // Given
+      const today = new TZDate();
+      const thisMonth = today.getMonth();
+
+      // When
+
+      // Then
+      expect(screen.queryByText(`month: ${thisMonth}`)).toBeInTheDocument();
+    });
+
+    it('should render next month when next is called', () => {
+      // Given
+      const today = new TZDate();
+      const thisMonth = today.getMonth();
+      const nextMonth = (thisMonth + 1) % MONTHS_IN_YEAR; // 0 ~ 11
+      expect(screen.queryByText(`month: ${thisMonth}`)).toBeInTheDocument();
+
+      // When
+      act(() => {
+        mockCalendarMonth.next();
+      });
+
+      // Then
+      expect(screen.queryByText(`month: ${thisMonth}`)).not.toBeInTheDocument();
+      expect(screen.queryByText(`month: ${nextMonth}`)).toBeInTheDocument();
+    });
+
+    it('should render prev month when prev is called', () => {
+      // Given
+      const today = new TZDate();
+      const thisMonth = today.getMonth();
+      const prevMonth = (thisMonth - 1 + MONTHS_IN_YEAR) % MONTHS_IN_YEAR; // 0 ~ 11
+      expect(screen.queryByText(`month: ${thisMonth}`)).toBeInTheDocument();
+
+      // When
+      act(() => {
+        mockCalendarMonth.prev();
+      });
+
+      // Then
+      expect(screen.queryByText(`month: ${thisMonth}`)).not.toBeInTheDocument();
+      expect(screen.queryByText(`month: ${prevMonth}`)).toBeInTheDocument();
+    });
+
+    it(`should render today's month when today is called`, () => {
+      // Given
+      const today = new TZDate();
+      const thisMonth = today.getMonth();
+      act(() => {
+        mockCalendarMonth.next();
+      });
+      expect(screen.queryByText(`month: ${thisMonth}`)).not.toBeInTheDocument();
+
+      // When
+      act(() => {
+        mockCalendarMonth.today();
+      });
+
+      // Then
+      expect(screen.queryByText(`month: ${thisMonth}`)).toBeInTheDocument();
+    });
+  });
+
+  describe('week view', () => {
+    const defaultWeekOptions = { startDayOfWeek: 0, workweek: false };
+    function MockWeekView() {
+      const { renderDate } = useStore((state) => state.view);
+      const weekDates = getWeekDates(renderDate, defaultWeekOptions);
+
+      return (
+        <div>
+          {weekDates.map((weekDate) => (
+            <div key={weekDate.getDate()}>date: {weekDate.getDate()}</div>
+          ))}
+        </div>
+      );
+    }
+    class MockCalendarWeek extends CalendarControl {
+      protected getComponent() {
+        return <MockWeekView />;
+      }
+    }
+
+    let mockCalendarWeek: MockCalendarWeek;
+
+    beforeEach(() => {
+      mockCalendarWeek = new MockCalendarWeek(container);
+      act(() => {
+        mockCalendarWeek.changeView('week');
+        mockCalendarWeek.render();
+      });
+    });
+
+    it('should render this week by default', () => {
+      // Given
+      const today = new TZDate();
+      const weekDates = getWeekDates(today, defaultWeekOptions);
+      const dates = weekDates.map((weekDate) => weekDate.getDate());
+
+      // When
+
+      // Then
+      dates.forEach((date) => {
+        expect(screen.queryByText(`date: ${date}`)).toBeInTheDocument();
+      });
+    });
+
+    it('should render next week when next is called', () => {
+      // Given
+      const today = new TZDate();
+      const thisWeekDates = getWeekDates(today, defaultWeekOptions);
+      const nextWeekDates = getWeekDates(addDate(today, 7), defaultWeekOptions);
+
+      const thisDates = thisWeekDates.map((weekDate) => weekDate.getDate());
+      const nextDates = nextWeekDates.map((weekDate) => weekDate.getDate());
+
+      thisDates.forEach((date) => {
+        expect(screen.queryByText(`date: ${date}`)).toBeInTheDocument();
+      });
+
+      // When
+      act(() => {
+        mockCalendarWeek.next();
+      });
+
+      // Then
+      thisDates.forEach((date) => {
+        expect(screen.queryByText(`date: ${date}`)).not.toBeInTheDocument();
+      });
+      nextDates.forEach((date) => {
+        expect(screen.queryByText(`date: ${date}`)).toBeInTheDocument();
+      });
+    });
+
+    it('should render prev week when prev is called', () => {
+      // Given
+      const today = new TZDate();
+      const thisWeekDates = getWeekDates(today, defaultWeekOptions);
+      const prevWeekDates = getWeekDates(subtractDate(today, 7), defaultWeekOptions);
+
+      const thisDates = thisWeekDates.map((weekDate) => weekDate.getDate());
+      const prevDates = prevWeekDates.map((weekDate) => weekDate.getDate());
+
+      thisDates.forEach((date) => {
+        expect(screen.queryByText(`date: ${date}`)).toBeInTheDocument();
+      });
+
+      // When
+      act(() => {
+        mockCalendarWeek.prev();
+      });
+
+      // Then
+      thisDates.forEach((date) => {
+        expect(screen.queryByText(`date: ${date}`)).not.toBeInTheDocument();
+      });
+      prevDates.forEach((date) => {
+        expect(screen.queryByText(`date: ${date}`)).toBeInTheDocument();
+      });
+    });
+
+    it('should render this week when today is called', () => {
+      // Given
+      const today = new TZDate();
+      const thisWeekDates = getWeekDates(today, defaultWeekOptions);
+      const thisDates = thisWeekDates.map((weekDate) => weekDate.getDate());
+
+      act(() => {
+        mockCalendarWeek.next();
+      });
+      thisDates.forEach((date) => {
+        expect(screen.queryByText(`date: ${date}`)).not.toBeInTheDocument();
+      });
+
+      // When
+      act(() => {
+        mockCalendarWeek.today();
+      });
+
+      // Then
+      thisDates.forEach((date) => {
+        expect(screen.queryByText(`date: ${date}`)).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe('day view', () => {
+    function MockDayView() {
+      const { renderDate } = useStore((state) => state.view);
+
+      return (
+        <div>
+          <div>date: {renderDate.getDate()}</div>
+        </div>
+      );
+    }
+    class MockCalendarDay extends CalendarControl {
+      protected getComponent() {
+        return <MockDayView />;
+      }
+    }
+
+    let mockCalendarDay: MockCalendarDay;
+
+    beforeEach(() => {
+      mockCalendarDay = new MockCalendarDay(container);
+      act(() => {
+        mockCalendarDay.changeView('day');
+        mockCalendarDay.render();
+      });
+    });
+
+    it('should render today by default', () => {
+      // Given
+      const today = new TZDate();
+
+      // When
+
+      // Then
+      expect(screen.queryByText(`date: ${today.getDate()}`)).toBeInTheDocument();
+    });
+
+    it('should render tomorrow when next is called', () => {
+      // Given
+      const today = new TZDate();
+      const tomorrow = addDate(today, 1);
+
+      expect(screen.queryByText(`date: ${today.getDate()}`)).toBeInTheDocument();
+
+      // When
+      act(() => {
+        mockCalendarDay.next();
+      });
+
+      // Then
+      expect(screen.queryByText(`date: ${today.getDate()}`)).not.toBeInTheDocument();
+      expect(screen.queryByText(`date: ${tomorrow.getDate()}`)).toBeInTheDocument();
+    });
+
+    it('should render yesterday when prev is called', () => {
+      // Given
+      const today = new TZDate();
+      const yesterday = subtractDate(today, 1);
+
+      expect(screen.queryByText(`date: ${today.getDate()}`)).toBeInTheDocument();
+
+      // When
+      act(() => {
+        mockCalendarDay.prev();
+      });
+
+      // Then
+      expect(screen.queryByText(`date: ${today.getDate()}`)).not.toBeInTheDocument();
+      expect(screen.queryByText(`date: ${yesterday.getDate()}`)).toBeInTheDocument();
+    });
+
+    it('should render today when today is called', () => {
+      // Given
+      const today = new TZDate();
+
+      act(() => {
+        mockCalendarDay.next();
+      });
+      expect(screen.queryByText(`date: ${today.getDate()}`)).not.toBeInTheDocument();
+
+      // When
+      act(() => {
+        mockCalendarDay.today();
+      });
+
+      // Then
+      expect(screen.queryByText(`date: ${today.getDate()}`)).toBeInTheDocument();
+    });
   });
 });
