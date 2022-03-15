@@ -16,7 +16,7 @@ import { createTimeGridData, getDayGridEvents } from '@src/helpers/grid';
 import { getDisplayPanel } from '@src/helpers/view';
 import { calendarSelector, optionsSelector, weekViewLayoutSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
-import { getRowStyleInfo } from '@src/time/datetime';
+import { getRowStyleInfo, toStartOfDay } from '@src/time/datetime';
 
 import { WeekOptions } from '@t/options';
 import { AlldayEventCategory } from '@t/panel';
@@ -43,7 +43,7 @@ export function Day() {
   const weekOptions = options.week as Required<WeekOptions>;
   const { narrowWeekend, startDayOfWeek, workweek, hourStart, hourEnd } = weekOptions;
   // @TODO: calculate based on today(need to calculate date when prev & next used)
-  const weekDates = useMemo(() => [new TZDate()], []);
+  const weekDates = useMemo(() => [toStartOfDay(new TZDate())], []);
   const dayNames = getDayNames(weekDates);
   const { rowStyleInfo, cellWidthMap } = getRowStyleInfo(
     weekDates.length,
