@@ -4,6 +4,8 @@ import { Layout } from '@src/components/layout';
 import { useStore } from '@src/contexts/calendarStore';
 import CalendarControl from '@src/factory/calendarControl';
 import { act, screen } from '@src/test/utils';
+import TZDate from '@src/time/date';
+import { addDate, isSameDate } from '@src/time/datetime';
 
 function cleanup() {
   document.body.innerHTML = '';
@@ -219,5 +221,83 @@ describe('openFormPopup', () => {
 
     // Then
     expect(screen.queryByRole('dialog')).toBeInTheDocument();
+  });
+});
+
+describe('setDate/getDate', () => {
+  beforeEach(() => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+    mockCalendar = new MockCalendar(container);
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('should get current renderDate', () => {
+    // Given
+    const today = new TZDate();
+
+    // When
+
+    // Then
+    expect(isSameDate(mockCalendar.getDate(), today)).toBe(true);
+  });
+
+  it('should set renderDate when param is TZDate', () => {
+    // Given
+    const today = new TZDate();
+    const targetDate = addDate(today, 1);
+
+    // When
+    act(() => {
+      mockCalendar.setDate(targetDate);
+    });
+
+    // Then
+    expect(mockCalendar.getDate()).toEqual(targetDate);
+  });
+
+  it('should set renderDate when param is string', () => {
+    // Given
+    const targetDate = '2022-03-15';
+    const expected = new TZDate(targetDate);
+
+    // When
+    act(() => {
+      mockCalendar.setDate(targetDate);
+    });
+
+    // Then
+    expect(mockCalendar.getDate()).toEqual(expected);
+  });
+
+  it('should set renderDate when param is number', () => {
+    // Given
+    const targetDate = 1647314395599; // 2022-03-15
+    const expected = new TZDate(targetDate);
+
+    // When
+    act(() => {
+      mockCalendar.setDate(targetDate);
+    });
+
+    // Then
+    expect(mockCalendar.getDate()).toEqual(expected);
+  });
+
+  it('should set renderDate when param is Date', () => {
+    // Given
+    const targetDate = new Date('2022-03-15');
+    const expected = new TZDate(targetDate);
+
+    // When
+    act(() => {
+      mockCalendar.setDate(targetDate);
+    });
+
+    // Then
+    expect(mockCalendar.getDate()).toEqual(expected);
   });
 });

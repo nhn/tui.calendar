@@ -23,13 +23,6 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   protected container: Element | null;
 
   /**
-   * Current rendered date
-   * @type {TZDate}
-   * @private
-   */
-  protected renderDate: TZDate;
-
-  /**
    * start and end date of weekly, monthly
    * @type {object}
    * @private
@@ -53,7 +46,6 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
 
     this.container = isString(container) ? document.querySelector(container) : container;
 
-    this.renderDate = toStartOfDay();
     this.renderRange = {
       start: toStartOfDay(),
       end: toStartOfDay(),
@@ -277,7 +269,6 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    *     calendar.render();
    * });
    */
-
   render() {
     if (this.container) {
       render(
@@ -344,17 +335,20 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   /**
    * Move to specific date
    * @param {DateType} date - The date to move
-   * @todo implement this
    * @example
-   * calendar.on('clickDayname', function(event) {
-   *     if (calendar.getViewName() === 'week') {
-   *         calendar.setDate(new Date(event.date));
-   *         calendar.changeView('day', true);
-   *     }
+   * calendar.on('clickDayname', (event) => {
+   *   if (calendar.getViewName() === 'week') {
+   *     const dateToMove = new Date(event.date);
+   *
+   *     calendar.setDate(dateToMove);
+   *     calendar.changeView('day');
+   *   }
    * });
    */
   setDate(date: DateType) {
-    this.renderDate = new TZDate(date);
+    const { setRenderDate } = this.getStoreDispatchers('view');
+
+    setRenderDate(new TZDate(date));
   }
 
   /**
@@ -525,15 +519,23 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * Current rendered date
-   * @returns {Date}
+   * Get current rendered date
+   * @returns {TZDate}
    */
-  getDate(): Date {
-    return this.renderDate.toDate();
+  getDate(): TZDate {
+    const { renderDate } = this.getStoreState().view;
+
+    return renderDate;
   }
 
+  /**
+   * Get custom date of current rendered date
+   * @returns {DateInterface}
+   */
   getDateInterface(): DateInterface {
-    return this.renderDate.toCustomDate();
+    const { renderDate } = this.getStoreState().view;
+
+    return renderDate.toCustomDate();
   }
 
   /**
