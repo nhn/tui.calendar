@@ -6,12 +6,12 @@ import { DateInterface, LocalDate } from '@toast-ui/date';
 
 import { CalendarContainer } from '@src/calendarContainer';
 import { initCalendarStore } from '@src/contexts/calendarStore';
-import { getWeekDates } from '@src/helpers/grid';
+import { createDateMatrixOfMonth, getWeekDates } from '@src/helpers/grid';
 import EventModel from '@src/model/eventModel';
 import Theme from '@src/theme';
 import { ThemeKeyValue } from '@src/theme/themeProps';
 import TZDate from '@src/time/date';
-import { arr2dCalendar, toEndOfDay, toStartOfDay } from '@src/time/datetime';
+import { toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { last } from '@src/utils/array';
 import { EventBus, EventBusImpl } from '@src/utils/eventBus';
 import { addAttributeHooks, removeAttributeHooks } from '@src/utils/sanitizer';
@@ -166,24 +166,20 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
       } = options.month;
 
       if (visibleWeeksCount > 0) {
-        const datetimeOptions = {
+        newRenderDate.addDate(offset * 7 * visibleWeeksCount);
+        dateMatrix = createDateMatrixOfMonth(newRenderDate, {
           startDayOfWeek,
           isAlways6Week: false,
           visibleWeeksCount,
           workweek,
-        };
-
-        newRenderDate.addDate(offset * 7 * visibleWeeksCount);
-        dateMatrix = arr2dCalendar(newRenderDate, datetimeOptions);
+        });
       } else {
-        const datetimeOptions = {
+        newRenderDate.setMonth(renderDate.getMonth() + offset);
+        dateMatrix = createDateMatrixOfMonth(newRenderDate, {
           startDayOfWeek,
           isAlways6Week,
           workweek,
-        };
-
-        newRenderDate.setMonth(renderDate.getMonth() + offset);
-        dateMatrix = arr2dCalendar(newRenderDate, datetimeOptions);
+        });
       }
 
       [[startDate]] = dateMatrix;
