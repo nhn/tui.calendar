@@ -410,7 +410,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    * function moveToNextOrPrevRange(offset) {
    *   if (offset === -1) {
    *     calendar.prev();
-   *   } else if (val === 1) {
+   *   } else if (offset === 1) {
    *     calendar.next();
    *   }
    * }
@@ -425,7 +425,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    * function moveToNextOrPrevRange(offset) {
    *   if (offset === -1) {
    *     calendar.prev();
-   *   } else if (val === 1) {
+   *   } else if (offset === 1) {
    *     calendar.next();
    *   }
    * }
