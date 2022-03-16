@@ -47,7 +47,6 @@ export const GridRow = memo(function GridRow({
           <GridCell
             key={`daygrid-cell-${dayIndex}`}
             date={date}
-            dayIndex={dayIndex}
             style={{
               backgroundColor: 'transparent',
               width: toPercent(width),

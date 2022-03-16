@@ -1,6 +1,5 @@
 .column {
   position: relative;
-  border-left: 1px solid #e5e5e5;
 }
 
 .column .gridline-half {

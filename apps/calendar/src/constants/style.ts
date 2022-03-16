@@ -17,6 +17,8 @@ export const MONTH_MORE_VIEW_PADDING = 5;
 export const MONTH_MORE_VIEW_MIN_WIDTH = 280;
 export const MONTH_MORE_VIEW_HEADER_HEIGHT = 44;
 export const MONTH_MORE_VIEW_HEADER_MARGIN_BOTTOM = 12;
+export const MONTH_MORE_VIEW_HEADER_PADDING_TOP = 12;
+export const MONTH_MORE_VIEW_HEADER_PADDING = '12px 17px 0';
 
 // week dayname
 export const WEEK_DAYNAME_HEIGHT = 42;

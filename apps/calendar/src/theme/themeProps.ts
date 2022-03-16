@@ -117,23 +117,25 @@ export const defaultProps = {
   'week.panelResizer.border': '1px solid #e5e5e5',
 
   // week daygrid 'daygrid'
-  'week.daygrid.borderRight': '1px solid #e5e5e5',
-  'week.daygrid.backgroundColor': 'inherit',
+  'week.dayGrid.borderRight': '1px solid #e5e5e5',
+  'week.dayGrid.backgroundColor': 'inherit',
 
-  'week.daygridLeft.backgroundColor': 'inherit',
+  'week.dayGridLeft.borderRight': '1px solid #e5e5e5',
+  'week.dayGridLeft.backgroundColor': 'inherit',
 
   'week.today.backgroundColor': 'rgba(81, 92, 230, 0.05)',
   'week.weekend.backgroundColor': 'inherit',
 
   // week timegrid 'timegrid'
-  'week.timegridLeft.backgroundColor': 'inherit',
-  'week.timegridLeft.borderRight': '1px solid #e5e5e5',
+  'week.timeGridLeft.backgroundColor': 'inherit',
+  'week.timeGridLeft.borderRight': '1px solid #e5e5e5',
+
   'week.timegridLeftAdditionalTimezone.backgroundColor': 'white',
 
   'week.timegridHalfHour.borderBottom': 'none',
   'week.timegridHorizontalLine.borderBottom': '1px solid #e5e5e5',
 
-  'week.timegrid.borderRight': '1px solid #e5e5e5',
+  'week.timeGrid.borderRight': '1px solid #e5e5e5',
 
   'week.currentTime.color': '#515ce6',
 
