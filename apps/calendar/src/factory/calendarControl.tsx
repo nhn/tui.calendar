@@ -12,6 +12,7 @@ import Theme from '@src/theme';
 import { ThemeKeyValue } from '@src/theme/themeProps';
 import TZDate from '@src/time/date';
 import { arr2dCalendar, toEndOfDay, toStartOfDay } from '@src/time/datetime';
+import { last } from '@src/utils/array';
 import { EventBus, EventBusImpl } from '@src/utils/eventBus';
 import { addAttributeHooks, removeAttributeHooks } from '@src/utils/sanitizer';
 import { isNumber, isString } from '@src/utils/type';
@@ -186,13 +187,13 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
       }
 
       [[startDate]] = dateMatrix;
-      endDate = dateMatrix[dateMatrix.length - 1][dateMatrix[dateMatrix.length - 1].length - 1];
+      endDate = last(last(dateMatrix));
     } else if (currentView === 'week') {
       newRenderDate.addDate(offset * 7);
       const weekDates = getWeekDates(newRenderDate, options.week);
 
       [startDate] = weekDates;
-      endDate = weekDates[weekDates.length - 1];
+      endDate = last(weekDates);
     } else if (currentView === 'day') {
       newRenderDate.addDate(offset);
       startDate = toStartOfDay(newRenderDate);
