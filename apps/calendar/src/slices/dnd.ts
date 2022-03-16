@@ -48,7 +48,7 @@ export function createDndDispatchers(set: SetState<CalendarStore>): DndDispatche
   return {
     initDrag: (initState) => {
       set(
-        produce((state) => {
+        produce((state: CalendarState) => {
           state.dnd = {
             ...state.dnd,
             ...initState,
@@ -59,7 +59,7 @@ export function createDndDispatchers(set: SetState<CalendarStore>): DndDispatche
     },
     setDraggingState: (newState) => {
       set(
-        produce((state) => {
+        produce((state: CalendarState) => {
           state.dnd = {
             ...state.dnd,
             ...newState,
@@ -70,7 +70,7 @@ export function createDndDispatchers(set: SetState<CalendarStore>): DndDispatche
     },
     reset: () => {
       set(
-        produce((state) => {
+        produce((state: CalendarState) => {
           state.dnd = createDndSlice().dnd;
         })
       );
