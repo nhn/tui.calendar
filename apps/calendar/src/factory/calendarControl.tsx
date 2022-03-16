@@ -1,4 +1,5 @@
 import { ComponentChild, h, render } from 'preact';
+import { unmountComponentAtNode } from 'preact/compat';
 import renderToString from 'preact-render-to-string';
 
 import { DateInterface, LocalDate } from '@toast-ui/date';
@@ -127,7 +128,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    */
   destroy() {
     if (this.container) {
-      render('', this.container);
+      unmountComponentAtNode(this.container);
     }
 
     this.store.clearListeners();
