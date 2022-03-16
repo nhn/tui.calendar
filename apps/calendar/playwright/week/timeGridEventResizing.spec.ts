@@ -14,8 +14,12 @@ const TARGET_EVENTS = {
     columnIndex: 3,
   },
   LONG: {
-    title: 'long time event', // 10:00 ~ 6:00, 1st ~ 2nd rows
-    columnIndex: 1,
+    title: 'long time event', // 10:00 ~ 6:00, 6 ~ 7th rows
+    columnIndex: 5,
+  },
+  TWO_VIEWS: {
+    title: 'two-view event', // 10:00 ~ 6:00, previous view ~ 1st row
+    columnIndex: 0,
   },
 };
 

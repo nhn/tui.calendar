@@ -73,9 +73,10 @@ export function ResizingGuideByColumn({
     const startTZDate = (
       resizeTargetUIModelColumns[eventStartDateColumnIndex][0] as EventUIModel
     ).getStarts();
-    const eventStartDateRowIndex = rows.findIndex(
+    let eventStartDateRowIndex = rows.findIndex(
       findRowIndexOf(startTZDate, eventStartDateColumnIndex)
-    );
+    ); // when it is -1, the event starts before the current view.
+    eventStartDateRowIndex = eventStartDateRowIndex >= 0 ? eventStartDateRowIndex : 0;
     const eventEndDateColumnIndex = findLastIndex(
       resizeTargetUIModelColumns,
       (row) => row.length > 0
@@ -83,7 +84,8 @@ export function ResizingGuideByColumn({
     const endTZDate = (
       resizeTargetUIModelColumns[eventEndDateColumnIndex][0] as EventUIModel
     ).getEnds();
-    const eventEndDateRowIndex = rows.findIndex(findRowIndexOf(endTZDate, eventEndDateColumnIndex));
+    let eventEndDateRowIndex = rows.findIndex(findRowIndexOf(endTZDate, eventEndDateColumnIndex)); // when it is -1, the event ends after the current view.
+    eventEndDateRowIndex = eventEndDateRowIndex >= 0 ? eventEndDateRowIndex : rows.length - 1;
 
     return {
       eventStartDateColumnIndex,
@@ -98,8 +100,7 @@ export function ResizingGuideByColumn({
     isPresent(baseResizingInfo) && isPresent(resizingStartUIModel) && isPresent(currentGridPos);
 
   const minimumHeight = useMemo(
-    () =>
-      baseResizingInfo ? timeGridData.rows[baseResizingInfo.eventStartDateRowIndex].height : 0,
+    () => (baseResizingInfo ? timeGridData.rows[0].height : 0),
     [baseResizingInfo, timeGridData.rows]
   );
 
