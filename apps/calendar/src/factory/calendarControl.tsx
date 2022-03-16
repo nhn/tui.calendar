@@ -347,7 +347,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * Delete all events and clear view.
+   * Delete all events and clear view
    * @example
    * calendar.clear();
    */
