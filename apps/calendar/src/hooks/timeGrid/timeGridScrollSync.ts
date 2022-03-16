@@ -6,7 +6,7 @@ import { isPresent } from '@src/utils/type';
 import { DraggingTypes } from '@t/drag';
 
 function isTimeGridDraggingType(draggingItemType: DraggingTypes | null) {
-  return /(^event\/timeGrid)|(^gridSelection\/timeGrid)/.test(draggingItemType ?? '');
+  return /^(event|gridSelection)\/timeGrid/.test(draggingItemType ?? '');
 }
 
 export function useTimeGridScrollSync(scrollArea: HTMLDivElement | null, rowCount: number) {
