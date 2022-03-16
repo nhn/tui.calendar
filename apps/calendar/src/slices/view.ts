@@ -3,7 +3,7 @@ import produce from 'immer';
 import TZDate from '@src/time/date';
 
 import { ViewType } from '@t/options';
-import { CalendarStore, SetState } from '@t/store';
+import { CalendarState, CalendarStore, SetState } from '@t/store';
 
 export type ViewSlice = {
   view: {
@@ -30,13 +30,13 @@ export function createViewDispatchers(set: SetState<CalendarStore>): ViewDispatc
   return {
     changeView: (nextView: ViewType) =>
       set(
-        produce((state) => {
+        produce((state: CalendarState) => {
           state.view.currentView = nextView;
         })
       ),
     setRenderDate: (date: TZDate) =>
       set(
-        produce((state) => {
+        produce((state: CalendarState) => {
           state.view.renderDate = date;
         })
       ),
