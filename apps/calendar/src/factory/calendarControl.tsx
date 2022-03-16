@@ -172,7 +172,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
         };
 
         newRenderDate.addDate(offset * 7 * visibleWeeksCount);
-        dateMatrix = arr2dCalendar(renderDate, datetimeOptions);
+        dateMatrix = arr2dCalendar(newRenderDate, datetimeOptions);
       } else {
         const datetimeOptions = {
           startDayOfWeek,
@@ -181,7 +181,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
         };
 
         newRenderDate.setMonth(renderDate.getMonth() + offset);
-        dateMatrix = arr2dCalendar(renderDate, datetimeOptions);
+        dateMatrix = arr2dCalendar(newRenderDate, datetimeOptions);
       }
 
       [[startDate]] = dateMatrix;
