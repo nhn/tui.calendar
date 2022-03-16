@@ -171,7 +171,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
           workweek,
         };
 
-        newRenderDate.addDate(offset * 7 * datetimeOptions.visibleWeeksCount);
+        newRenderDate.addDate(offset * 7 * visibleWeeksCount);
         dateMatrix = arr2dCalendar(renderDate, datetimeOptions);
       } else {
         const datetimeOptions = {
