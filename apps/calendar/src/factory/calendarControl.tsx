@@ -159,17 +159,15 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
     offset: number;
     monthOptions: CalendarMonthOptions;
   }) {
-    let dateMatrix: TZDate[][];
     const newRenderDate = new TZDate(renderDate);
     const { visibleWeeksCount } = monthOptions;
 
     if (visibleWeeksCount > 0) {
       newRenderDate.addDate(offset * 7 * visibleWeeksCount);
-      dateMatrix = createDateMatrixOfMonth(newRenderDate, monthOptions);
     } else {
       newRenderDate.setMonth(renderDate.getMonth() + offset);
-      dateMatrix = createDateMatrixOfMonth(newRenderDate, monthOptions);
     }
+    const dateMatrix = createDateMatrixOfMonth(newRenderDate, monthOptions);
 
     const [[start]] = dateMatrix;
     const end = last(last(dateMatrix));
