@@ -19,16 +19,15 @@ import { isNumber, isString } from '@src/utils/type';
 
 import { ExternalEventTypes } from '@t/eventBus';
 import { DateType, EventModelData } from '@t/events';
+import { CalendarColor, CalendarInfo, CustomTimezone, Options, ViewType } from '@t/options';
 import {
-  CalendarColor,
-  CalendarInfo,
-  CustomTimezone,
-  MonthOptions,
-  Options,
-  ViewType,
-  WeekOptions,
-} from '@t/options';
-import { CalendarState, CalendarStore, Dispatchers, InternalStoreAPI } from '@t/store';
+  CalendarMonthOptions,
+  CalendarState,
+  CalendarStore,
+  CalendarWeekOptions,
+  Dispatchers,
+  InternalStoreAPI,
+} from '@t/store';
 
 export default abstract class CalendarControl implements EventBus<ExternalEventTypes> {
   protected container: Element | null;
@@ -158,32 +157,18 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }: {
     renderDate: TZDate;
     offset: number;
-    monthOptions: MonthOptions;
+    monthOptions: CalendarMonthOptions;
   }) {
     let dateMatrix: TZDate[][];
     const newRenderDate = new TZDate(renderDate);
-    const {
-      startDayOfWeek = 0,
-      visibleWeeksCount = 0,
-      workweek = false,
-      isAlways6Week,
-    } = monthOptions;
+    const { visibleWeeksCount } = monthOptions;
 
     if (visibleWeeksCount > 0) {
       newRenderDate.addDate(offset * 7 * visibleWeeksCount);
-      dateMatrix = createDateMatrixOfMonth(newRenderDate, {
-        startDayOfWeek,
-        isAlways6Week: false,
-        visibleWeeksCount,
-        workweek,
-      });
+      dateMatrix = createDateMatrixOfMonth(newRenderDate, monthOptions);
     } else {
       newRenderDate.setMonth(renderDate.getMonth() + offset);
-      dateMatrix = createDateMatrixOfMonth(newRenderDate, {
-        startDayOfWeek,
-        isAlways6Week,
-        workweek,
-      });
+      dateMatrix = createDateMatrixOfMonth(newRenderDate, monthOptions);
     }
 
     const [[start]] = dateMatrix;
@@ -202,7 +187,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }: {
     renderDate: TZDate;
     offset: number;
-    weekOptions: WeekOptions;
+    weekOptions: CalendarWeekOptions;
   }) {
     const newRenderDate = new TZDate(renderDate);
     newRenderDate.addDate(offset * 7);
@@ -245,13 +230,13 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
       calculatedRenderDate = this.calculateMonthRenderDate({
         renderDate,
         offset,
-        monthOptions: options.month,
+        monthOptions: options.month as CalendarMonthOptions,
       });
     } else if (currentView === 'week') {
       calculatedRenderDate = this.calculateWeekRenderDate({
         renderDate,
         offset,
-        weekOptions: options.week,
+        weekOptions: options.week as CalendarWeekOptions,
       });
     } else if (currentView === 'day') {
       calculatedRenderDate = this.calculateDayRenderDate({ renderDate, offset });
