@@ -2,6 +2,7 @@ import produce from 'immer';
 
 import EventUIModel from '@src/model/eventUIModel';
 
+import { DraggingTypes } from '@t/drag';
 import { CalendarState, CalendarStore, SetState } from '@t/store';
 
 export enum DraggingState {
@@ -12,7 +13,7 @@ export enum DraggingState {
 
 export interface DndSlice {
   dnd: {
-    draggingItemType: string | null;
+    draggingItemType: DraggingTypes | null;
     draggingState: DraggingState;
     initX: number | null;
     initY: number | null;

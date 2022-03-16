@@ -3,11 +3,17 @@ import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import { isPresent } from '@src/utils/type';
 
+import { DraggingTypes } from '@t/drag';
+
+function isTimeGridDraggingType(draggingItemType: DraggingTypes | null) {
+  return /(^event\/timeGrid)|(^gridSelection\/timeGrid)/.test(draggingItemType ?? '');
+}
+
 export function useTimeGridScrollSync(scrollArea: HTMLDivElement | null, rowCount: number) {
   useTransientUpdate(dndSelector, ({ y, draggingItemType, draggingState }) => {
     if (
       isPresent(scrollArea) &&
-      draggingItemType?.startsWith('event/timeGrid') &&
+      isTimeGridDraggingType(draggingItemType) &&
       draggingState === DraggingState.DRAGGING &&
       isPresent(y)
     ) {
