@@ -70,29 +70,28 @@ export function useDayGridMonthEventResize({
         ) as FilteredUIModelRow
     );
 
-    const firstUIModelRowIndex = resizeTargetUIModelRows.findIndex((row) => row.length > 0);
-    const lastUIModelRowIndex = findLastIndex(resizeTargetUIModelRows, (row) => row.length > 0);
-    const firstUIModelPos = getRowPosOfUIModel(
-      resizeTargetUIModelRows[firstUIModelRowIndex][0] as EventUIModel,
-      dateMatrix[firstUIModelRowIndex]
+    const eventStartDateRowIndex = resizeTargetUIModelRows.findIndex((row) => row.length > 0);
+    const eventEndDateRowIndex = findLastIndex(resizeTargetUIModelRows, (row) => row.length > 0);
+    const eventStartUIModelPos = getRowPosOfUIModel(
+      resizeTargetUIModelRows[eventStartDateRowIndex][0] as EventUIModel,
+      dateMatrix[eventStartDateRowIndex]
     );
-    const lastUIModelPos = getRowPosOfUIModel(
-      resizeTargetUIModelRows[lastUIModelRowIndex][0] as EventUIModel,
-      dateMatrix[lastUIModelRowIndex]
+    const eventEndUIModelPos = getRowPosOfUIModel(
+      resizeTargetUIModelRows[eventEndDateRowIndex][0] as EventUIModel,
+      dateMatrix[eventEndDateRowIndex]
     );
 
     return {
-      eventStartDateColumnIndex: firstUIModelPos.startColumnIndex,
-      eventStartDateRowIndex: firstUIModelRowIndex,
-      lastUIModelStartColumnIndex: lastUIModelPos.startColumnIndex,
-      lastUIModelEndColumnIndex: lastUIModelPos.endColumnIndex,
-      lastUIModelRowIndex,
-      lastUIModel: resizingStartUIModel,
+      eventStartDateColumnIndex: eventStartUIModelPos.startColumnIndex,
+      eventStartDateRowIndex,
+      eventEndDateColumnIndex: eventEndUIModelPos.endColumnIndex,
+      eventEndDateRowIndex,
       resizeTargetUIModelRows,
     };
   }, [dateMatrix, renderedUIModels, resizingStartUIModel]);
 
-  const canCalculateProps = isPresent(baseResizingInfo) && isPresent(currentGridPos);
+  const canCalculateProps =
+    isPresent(baseResizingInfo) && isPresent(resizingStartUIModel) && isPresent(currentGridPos);
 
   // Calculate the first row of the dragging event
   useEffect(() => {
@@ -117,7 +116,7 @@ export function useDayGridMonthEventResize({
 
       setGuideProps([clonedUIModel, height]);
     }
-  }, [canCalculateProps, cellWidthMap, currentGridPos, dateMatrix, baseResizingInfo, rowIndex]);
+  }, [baseResizingInfo, canCalculateProps, cellWidthMap, currentGridPos, dateMatrix, rowIndex]);
 
   // Calculate middle rows of the dragging event
   useEffect(() => {
@@ -126,11 +125,11 @@ export function useDayGridMonthEventResize({
       baseResizingInfo.eventStartDateRowIndex < rowIndex &&
       rowIndex < currentGridPos.rowIndex
     ) {
-      const clonedUIModel = baseResizingInfo.lastUIModel.clone();
+      const clonedUIModel = resizingStartUIModel.clone();
       clonedUIModel.setUIProps({ left: 0, exceedLeft: true, exceedRight: true });
       setGuideProps([clonedUIModel, '100%']);
     }
-  }, [canCalculateProps, currentGridPos, baseResizingInfo, rowIndex]);
+  }, [baseResizingInfo, canCalculateProps, currentGridPos, resizingStartUIModel, rowIndex]);
 
   // Calculate the last row of the dragging event
   useEffect(() => {
@@ -139,12 +138,18 @@ export function useDayGridMonthEventResize({
       baseResizingInfo.eventStartDateRowIndex < currentGridPos.rowIndex &&
       rowIndex === currentGridPos.rowIndex
     ) {
-      const { lastUIModel } = baseResizingInfo;
-      const clonedUIModel = lastUIModel.clone();
+      const clonedUIModel = resizingStartUIModel.clone();
       clonedUIModel.setUIProps({ left: 0, exceedLeft: true });
       setGuideProps([clonedUIModel, cellWidthMap[0][currentGridPos.columnIndex]]);
     }
-  }, [canCalculateProps, cellWidthMap, currentGridPos, baseResizingInfo, rowIndex]);
+  }, [
+    baseResizingInfo,
+    canCalculateProps,
+    cellWidthMap,
+    currentGridPos,
+    resizingStartUIModel,
+    rowIndex,
+  ]);
 
   // Reset props on out of bound
   useEffect(() => {
@@ -160,12 +165,17 @@ export function useDayGridMonthEventResize({
   useKeydownEvent(KEY.ESCAPE, clearStates);
 
   useEffect(() => {
-    const isDraggingEnd = isNotDragging && isPresent(baseResizingInfo) && isPresent(currentGridPos);
+    const isDraggingEnd =
+      isNotDragging &&
+      isPresent(baseResizingInfo) &&
+      isPresent(currentGridPos) &&
+      isPresent(resizingStartUIModel);
+
     if (isDraggingEnd) {
       /**
        * Is current grid position is the same or later comparing to the position of the start date?
        */
-      const { eventStartDateColumnIndex, eventStartDateRowIndex, lastUIModel } = baseResizingInfo;
+      const { eventStartDateColumnIndex, eventStartDateRowIndex } = baseResizingInfo;
       const shouldUpdate =
         (currentGridPos.rowIndex === eventStartDateRowIndex &&
           currentGridPos.columnIndex >= eventStartDateColumnIndex) ||
@@ -174,7 +184,7 @@ export function useDayGridMonthEventResize({
       if (shouldUpdate) {
         const targetEndDate = dateMatrix[currentGridPos.rowIndex][currentGridPos.columnIndex];
         updateEvent({
-          event: lastUIModel.model,
+          event: resizingStartUIModel.model,
           eventData: {
             end: targetEndDate,
           },
@@ -183,7 +193,15 @@ export function useDayGridMonthEventResize({
 
       clearStates();
     }
-  }, [clearStates, currentGridPos, dateMatrix, isNotDragging, baseResizingInfo, updateEvent]);
+  }, [
+    baseResizingInfo,
+    clearStates,
+    currentGridPos,
+    dateMatrix,
+    isNotDragging,
+    resizingStartUIModel,
+    updateEvent,
+  ]);
 
   return guideProps;
 }
