@@ -19,7 +19,15 @@ import { isNumber, isString } from '@src/utils/type';
 
 import { ExternalEventTypes } from '@t/eventBus';
 import { DateType, EventModelData } from '@t/events';
-import { CalendarColor, CalendarInfo, CustomTimezone, Options, ViewType } from '@t/options';
+import {
+  CalendarColor,
+  CalendarInfo,
+  CustomTimezone,
+  MonthOptions,
+  Options,
+  ViewType,
+  WeekOptions,
+} from '@t/options';
 import { CalendarState, CalendarStore, Dispatchers, InternalStoreAPI } from '@t/store';
 
 export default abstract class CalendarControl implements EventBus<ExternalEventTypes> {
@@ -143,64 +151,114 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
     }
   }
 
-  /**
-   * Move the calendar amount of offset value
-   * @param {number} offset - The offset value.
-   */
+  private calculateMonthRenderDate({
+    renderDate,
+    offset,
+    monthOptions,
+  }: {
+    renderDate: TZDate;
+    offset: number;
+    monthOptions: MonthOptions;
+  }) {
+    let dateMatrix: TZDate[][];
+    const newRenderDate = new TZDate(renderDate);
+    const {
+      startDayOfWeek = 0,
+      visibleWeeksCount = 0,
+      workweek = false,
+      isAlways6Week,
+    } = monthOptions;
+
+    if (visibleWeeksCount > 0) {
+      newRenderDate.addDate(offset * 7 * visibleWeeksCount);
+      dateMatrix = createDateMatrixOfMonth(newRenderDate, {
+        startDayOfWeek,
+        isAlways6Week: false,
+        visibleWeeksCount,
+        workweek,
+      });
+    } else {
+      newRenderDate.setMonth(renderDate.getMonth() + offset);
+      dateMatrix = createDateMatrixOfMonth(newRenderDate, {
+        startDayOfWeek,
+        isAlways6Week,
+        workweek,
+      });
+    }
+
+    const [[start]] = dateMatrix;
+    const end = last(last(dateMatrix));
+
+    return {
+      renderDate: newRenderDate,
+      renderRange: { start, end },
+    };
+  }
+
+  private calculateWeekRenderDate({
+    renderDate,
+    offset,
+    weekOptions,
+  }: {
+    renderDate: TZDate;
+    offset: number;
+    weekOptions: WeekOptions;
+  }) {
+    const newRenderDate = new TZDate(renderDate);
+    newRenderDate.addDate(offset * 7);
+    const weekDates = getWeekDates(newRenderDate, weekOptions);
+
+    const [start] = weekDates;
+    const end = last(weekDates);
+
+    return {
+      renderDate: newRenderDate,
+      renderRange: { start, end },
+    };
+  }
+
+  private calculateDayRenderDate({ renderDate, offset }: { renderDate: TZDate; offset: number }) {
+    const newRenderDate = new TZDate(renderDate);
+    newRenderDate.addDate(offset);
+
+    const start = toStartOfDay(newRenderDate);
+    const end = toEndOfDay(newRenderDate);
+
+    return {
+      renderDate: newRenderDate,
+      renderRange: { start, end },
+    };
+  }
+
   private move(offset = 0) {
     const { currentView, renderDate } = this.getStoreState().view;
     const { options } = this.getStoreState();
     const { setRenderDate } = this.getStoreDispatchers().view;
 
     const newRenderDate = new TZDate(renderDate);
-    let startDate: TZDate = new TZDate();
-    let endDate: TZDate = new TZDate();
+    let calculatedRenderDate = {
+      renderDate: newRenderDate,
+      renderRange: { start: new TZDate(newRenderDate), end: new TZDate(newRenderDate) },
+    };
 
     if (currentView === 'month') {
-      let dateMatrix: TZDate[][];
-      const {
-        startDayOfWeek = 0,
-        visibleWeeksCount = 0,
-        workweek = false,
-        isAlways6Week,
-      } = options.month;
-
-      if (visibleWeeksCount > 0) {
-        newRenderDate.addDate(offset * 7 * visibleWeeksCount);
-        dateMatrix = createDateMatrixOfMonth(newRenderDate, {
-          startDayOfWeek,
-          isAlways6Week: false,
-          visibleWeeksCount,
-          workweek,
-        });
-      } else {
-        newRenderDate.setMonth(renderDate.getMonth() + offset);
-        dateMatrix = createDateMatrixOfMonth(newRenderDate, {
-          startDayOfWeek,
-          isAlways6Week,
-          workweek,
-        });
-      }
-
-      [[startDate]] = dateMatrix;
-      endDate = last(last(dateMatrix));
+      calculatedRenderDate = this.calculateMonthRenderDate({
+        renderDate,
+        offset,
+        monthOptions: options.month,
+      });
     } else if (currentView === 'week') {
-      newRenderDate.addDate(offset * 7);
-      const weekDates = getWeekDates(newRenderDate, options.week);
-
-      [startDate] = weekDates;
-      endDate = last(weekDates);
+      calculatedRenderDate = this.calculateWeekRenderDate({
+        renderDate,
+        offset,
+        weekOptions: options.week,
+      });
     } else if (currentView === 'day') {
-      newRenderDate.addDate(offset);
-      startDate = toStartOfDay(newRenderDate);
-      endDate = toEndOfDay(newRenderDate);
+      calculatedRenderDate = this.calculateDayRenderDate({ renderDate, offset });
     }
 
-    setRenderDate(newRenderDate);
-    this.renderRange = {
-      start: startDate,
-      end: endDate,
-    };
+    setRenderDate(calculatedRenderDate.renderDate);
+    this.renderRange = calculatedRenderDate.renderRange;
   }
 
   /**********
