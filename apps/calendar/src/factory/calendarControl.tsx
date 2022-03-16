@@ -164,7 +164,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
         isAlways6Week,
       } = options.month;
 
-      if (visibleWeeksCount) {
+      if (visibleWeeksCount > 0) {
         const datetimeOptions = {
           startDayOfWeek,
           isAlways6Week: false,
