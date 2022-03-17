@@ -226,7 +226,7 @@ describe('openFormPopup', () => {
   });
 });
 
-describe('setDate/getDate', () => {
+describe('getDate/setDate', () => {
   beforeEach(() => {
     const container = document.createElement('div');
     document.body.appendChild(container);
@@ -686,5 +686,73 @@ describe('setTheme', () => {
     ).toBeInTheDocument();
     expect(screen.queryByText(`currentTime: ${currentTimeColor}`)).toBeInTheDocument();
     expect(screen.queryByText(`moreView: ${moreViewBoxShadow}`)).toBeInTheDocument();
+  });
+});
+
+describe('getOptions/setOptions', () => {
+  function MockOptionsView() {
+    const options = useStore((state) => state.options);
+    const { defaultView, useCreationPopup } = options;
+
+    return (
+      <div>
+        <div>defaultView: {defaultView}</div>
+        <div>useCreationPopup: {String(useCreationPopup)}</div>
+      </div>
+    );
+  }
+  class MockCalendarOptions extends CalendarControl {
+    protected getComponent() {
+      return <MockOptionsView />;
+    }
+  }
+
+  let container: HTMLDivElement;
+  let mockCalendarOptions: MockCalendarOptions;
+
+  beforeEach(() => {
+    container = document.createElement('div');
+    document.body.appendChild(container);
+    mockCalendarOptions = new MockCalendarOptions(container);
+    act(() => {
+      mockCalendarOptions.render();
+    });
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('should get options', () => {
+    // Given
+    const defaultView = 'week';
+    const useCreationPopup = false;
+
+    // When
+    const options = mockCalendarOptions.getOptions();
+
+    // Then
+    expect(options.defaultView).toBe(defaultView);
+    expect(options.useCreationPopup).toBe(useCreationPopup);
+  });
+
+  it('should change options', () => {
+    // Given
+    const defaultView = 'month';
+    const useCreationPopup = true;
+
+    expect(screen.queryByText(`defaultView: ${defaultView}`)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(`useCreationPopup: ${String(useCreationPopup)}`)
+    ).not.toBeInTheDocument();
+
+    // When
+    act(() => {
+      mockCalendarOptions.setOptions({ defaultView, useCreationPopup });
+    });
+
+    // Then
+    expect(screen.queryByText(`defaultView: ${defaultView}`)).toBeInTheDocument();
+    expect(screen.queryByText(`useCreationPopup: ${String(useCreationPopup)}`)).toBeInTheDocument();
   });
 });

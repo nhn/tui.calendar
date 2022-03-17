@@ -91,7 +91,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
 
   private initOptions(options: Options = {}): Options {
     const {
-      defaultView = 'month',
+      defaultView = 'week',
       taskView = true,
       eventView = true,
       template = {},
@@ -590,21 +590,23 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * Set options of calendar
-   * @param {Options} options - set {@link Options}
-   * @param {boolean} [silent=false] - no auto render after creation when set true
-   * @todo implement this
-   */
-  setOptions(options: Options, silent = false) {
-    // console.log('setOptions', options, silent);
-  }
-
-  /**
-   * Get current {@link Options}.
+   * Get current {@link Options}
    * @returns {Options} options
    */
   getOptions() {
-    return this.store.getState().options;
+    const { options } = this.getStoreState();
+
+    return options;
+  }
+
+  /**
+   * Set options of calendar
+   * @param {Options} options - set {@link Options}
+   */
+  setOptions(options: Options) {
+    const { setOptions } = this.getStoreDispatchers().options;
+
+    setOptions(options);
   }
 
   /**
