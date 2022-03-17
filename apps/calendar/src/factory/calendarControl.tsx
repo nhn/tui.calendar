@@ -572,20 +572,19 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
- * Set a theme. If some keys are not defined in the preset, will be return.
- * @param {object} theme - multiple styles map
- * @returns {Array.<string>} keys - error keys not predefined.
- * @todo implement this
- * @example
- * cal.setTheme({
-    'month.dayname.height': '31px',
-    'common.dayname.color': '#333',
-    'month.dayname.borderBottom': '1px solid #e5e5e5' // Not valid key  will be return.
- * });
- */
+   * Set a theme. If some keys are not defined in the preset, will be return
+   * @param {ThemeKeyValue} theme - theme object
+   * @returns {string[]} invalid keys - not defined keys in theme
+   * @example
+   * calendar.setTheme({
+   *   'common.gridSelection.backgroundColor': '#333',
+   *   'week.currentTime.color': '#00FF00',
+   *   'month.dayname.borderBottom': '1px solid #e5e5e5' // Invalid key. So, It will be returned
+   * });
+   */
   setTheme(theme: ThemeKeyValue) {
     const result = this.theme.setStyles(theme);
-    this.render();
+    this.render(); // @TODO: It should be removed when theme is implemented as a store
 
     return result;
   }

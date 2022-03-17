@@ -2,6 +2,7 @@ import { h } from 'preact';
 
 import { Layout } from '@src/components/layout';
 import { useStore } from '@src/contexts/calendarStore';
+import { useTheme } from '@src/contexts/theme';
 import CalendarControl from '@src/factory/calendarControl';
 import { getWeekDates } from '@src/helpers/grid';
 import { act, screen } from '@src/test/utils';
@@ -612,5 +613,78 @@ describe('prev/next/today', () => {
       // Then
       expect(screen.queryByText(`date: ${today.getDate()}`)).toBeInTheDocument();
     });
+  });
+});
+
+describe('setTheme', () => {
+  function MockThemeView() {
+    const { common, week, month } = useTheme();
+    const {
+      gridSelection: { backgroundColor },
+    } = common;
+    const {
+      currentTime: { color },
+    } = week;
+    const {
+      moreView: { boxShadow },
+    } = month;
+
+    return (
+      <div>
+        <div>gridSelection: {backgroundColor}</div>
+        <div>currentTime: {color}</div>
+        <div>moreView: {boxShadow}</div>
+      </div>
+    );
+  }
+  class MockCalendarTheme extends CalendarControl {
+    protected getComponent() {
+      return <MockThemeView />;
+    }
+  }
+
+  let container: HTMLDivElement;
+  let mockCalendarTheme: MockCalendarTheme;
+
+  beforeEach(() => {
+    container = document.createElement('div');
+    document.body.appendChild(container);
+    mockCalendarTheme = new MockCalendarTheme(container);
+    act(() => {
+      mockCalendarTheme.render();
+    });
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('should change theme value', () => {
+    // Given
+    const gridSelectionBackgroundColor = '#ff0000';
+    const currentTimeColor = '#00ff00';
+    const moreViewBoxShadow = '0 0 10px #0000ff';
+
+    expect(
+      screen.queryByText(`gridSelection: ${gridSelectionBackgroundColor}`)
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText(`currentTime: ${currentTimeColor}`)).not.toBeInTheDocument();
+    expect(screen.queryByText(`moreView: ${moreViewBoxShadow}`)).not.toBeInTheDocument();
+
+    // When
+    act(() => {
+      mockCalendarTheme.setTheme({
+        'common.gridSelection.backgroundColor': gridSelectionBackgroundColor,
+        'week.currentTime.color': currentTimeColor,
+        'month.moreView.boxShadow': moreViewBoxShadow,
+      });
+    });
+
+    // Then
+    expect(
+      screen.queryByText(`gridSelection: ${gridSelectionBackgroundColor}`)
+    ).toBeInTheDocument();
+    expect(screen.queryByText(`currentTime: ${currentTimeColor}`)).toBeInTheDocument();
+    expect(screen.queryByText(`moreView: ${moreViewBoxShadow}`)).toBeInTheDocument();
   });
 });
