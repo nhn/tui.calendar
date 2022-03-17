@@ -524,38 +524,6 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * @deprecated
-   * Toggle task view('Milestone', 'Task') panel
-   * @param {boolean} enabled - use task view
-   * @todo implement this
-   * @example
-   * // There is no milestone, task, so hide those view panel
-   * calendar.toggleTaskView(false);
-   *
-   * // There are some milestone, task, so show those view panel.
-   * calendar.toggleTaskView(true);
-   */
-  toggleTaskView(enabled: boolean) {
-    // console.log('toggleTaskView', enabled);
-  }
-
-  /**
-   * @deprecated
-   * Toggle event view('Allday', TimeGrid') panel
-   * @param {boolean} enabled - use task view
-   * @todo remove this
-   * @example
-   * // hide those view panel to show only 'Milestone', 'Task'
-   * calendar.toggleEventView(false);
-   *
-   * // show those view panel.
-   * calendar.toggleEventView(true);
-   */
-  toggleEventView(enabled: boolean) {
-    // console.log('toggleEventView', enabled);
-  }
-
-  /**
    * Get a event element by event id and calendar id.
    * @param {string} eventId - ID of event
    * @param {string} calendarId - calendarId of event
