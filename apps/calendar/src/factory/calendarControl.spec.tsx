@@ -9,6 +9,8 @@ import { act, screen } from '@src/test/utils';
 import TZDate from '@src/time/date';
 import { addDate, isSameDate, subtractDate } from '@src/time/datetime';
 
+import { CalendarInfo } from '@t/options';
+
 function cleanup() {
   document.body.innerHTML = '';
 }
@@ -754,5 +756,69 @@ describe('getOptions/setOptions', () => {
     // Then
     expect(screen.queryByText(`defaultView: ${defaultView}`)).toBeInTheDocument();
     expect(screen.queryByText(`useCreationPopup: ${String(useCreationPopup)}`)).toBeInTheDocument();
+  });
+});
+
+describe('setCalendars', () => {
+  function MockCalendarsView() {
+    const { calendars } = useStore((state) => state.calendar);
+
+    return (
+      <div>
+        {calendars.map((calendar) => (
+          <div key={calendar.id}>
+            {calendar.id} {calendar.name}
+          </div>
+        ))}
+      </div>
+    );
+  }
+  class MockCalendarCalendars extends CalendarControl {
+    protected getComponent() {
+      return <MockCalendarsView />;
+    }
+  }
+
+  let container: HTMLDivElement;
+  let mockCalendarCalendars: MockCalendarCalendars;
+
+  beforeEach(() => {
+    container = document.createElement('div');
+    document.body.appendChild(container);
+    mockCalendarCalendars = new MockCalendarCalendars(container);
+    act(() => {
+      mockCalendarCalendars.render();
+    });
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('should change calendar list', () => {
+    // Given
+    const calendars: CalendarInfo[] = [
+      {
+        id: '1',
+        name: 'calendar1',
+      },
+      {
+        id: '2',
+        name: 'calendar2',
+      },
+    ];
+    calendars.forEach((calendar) => {
+      expect(screen.queryByText(`${calendar.id} ${calendar.name}`)).not.toBeInTheDocument();
+    });
+
+    // When
+    act(() => {
+      mockCalendarCalendars.setCalendars(calendars);
+    });
+
+    // Then
+    calendars.forEach((calendar) => {
+      expect(screen.queryByText(`${calendar.id} ${calendar.name}`)).toBeInTheDocument();
+    });
   });
 });

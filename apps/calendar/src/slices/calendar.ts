@@ -22,6 +22,7 @@ export type CalendarDispatchers = {
   updateEvent: (params: UpdateEventParams) => void;
   deleteEvent: (event: EventModel) => void;
   clearEvents: () => void;
+  setCalendars: (calendars: CalendarInfo[]) => void;
 };
 
 export function createCalendarSlice(calendars: CalendarInfo[] = []): CalendarSlice {
@@ -58,6 +59,12 @@ export function createCalendarDispatchers(set: SetState<CalendarStore>): Calenda
       set(
         produce((state: CalendarState) => {
           clearEvents(state.calendar);
+        })
+      ),
+    setCalendars: (calendars) =>
+      set(
+        produce((state: CalendarState) => {
+          state.calendar.calendars = calendars;
         })
       ),
   };

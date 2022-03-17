@@ -631,11 +631,12 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
 
   /**
    * Set calendar list
-   * @param {Array.<Object>} calendars - calendar list
-   * @todo implement this
+   * @param {CalendarInfo[]} calendars - calendar list
    */
   setCalendars(calendars: CalendarInfo[]) {
-    // console.log('setCalendars', calendars);
+    const { setCalendars } = this.getStoreDispatchers().calendar;
+
+    setCalendars(calendars);
   }
 
   /**
