@@ -14,9 +14,13 @@ import { cls } from '@src/helpers/css';
 import { getDayNames } from '@src/helpers/dayName';
 import { createTimeGridData, getDayGridEvents } from '@src/helpers/grid';
 import { getDisplayPanel } from '@src/helpers/view';
-import { calendarSelector, optionsSelector, weekViewLayoutSelector } from '@src/selectors';
-import TZDate from '@src/time/date';
-import { getRowStyleInfo, toStartOfDay } from '@src/time/datetime';
+import {
+  calendarSelector,
+  optionsSelector,
+  viewSelector,
+  weekViewLayoutSelector,
+} from '@src/selectors';
+import { getRowStyleInfo } from '@src/time/datetime';
 
 import { WeekOptions } from '@t/options';
 import { AlldayEventCategory } from '@t/panel';
@@ -25,25 +29,26 @@ function useDayViewState() {
   const calendar = useStore(calendarSelector);
   const options = useStore(optionsSelector);
   const { dayGridRows: gridRowLayout } = useStore(weekViewLayoutSelector);
+  const { renderDate } = useStore(viewSelector);
 
   return useMemo(
     () => ({
       calendarData: calendar,
       options,
       gridRowLayout,
+      renderDate,
     }),
-    [calendar, options, gridRowLayout]
+    [calendar, options, gridRowLayout, renderDate]
   );
 }
 
 export function Day() {
-  const { calendarData, options, gridRowLayout } = useDayViewState();
+  const { calendarData, options, gridRowLayout, renderDate } = useDayViewState();
 
   const { eventView, taskView } = options;
   const weekOptions = options.week as Required<WeekOptions>;
   const { narrowWeekend, startDayOfWeek, workweek, hourStart, hourEnd } = weekOptions;
-  // @TODO: calculate based on today(need to calculate date when prev & next used)
-  const weekDates = useMemo(() => [toStartOfDay(new TZDate())], []);
+  const weekDates = useMemo(() => [renderDate], [renderDate]);
   const dayNames = getDayNames(weekDates);
   const { rowStyleInfo, cellWidthMap } = getRowStyleInfo(
     weekDates.length,
