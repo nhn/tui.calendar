@@ -1,15 +1,18 @@
 import { ComponentChild, h, render } from 'preact';
+import { unmountComponentAtNode } from 'preact/compat';
 import renderToString from 'preact-render-to-string';
 
 import { DateInterface, LocalDate } from '@toast-ui/date';
 
 import { CalendarContainer } from '@src/calendarContainer';
 import { initCalendarStore } from '@src/contexts/calendarStore';
+import { createDateMatrixOfMonth, getWeekDates } from '@src/helpers/grid';
 import EventModel from '@src/model/eventModel';
 import Theme from '@src/theme';
 import { ThemeKeyValue } from '@src/theme/themeProps';
 import TZDate from '@src/time/date';
-import { toStartOfDay } from '@src/time/datetime';
+import { toEndOfDay, toStartOfDay } from '@src/time/datetime';
+import { last } from '@src/utils/array';
 import { EventBus, EventBusImpl } from '@src/utils/eventBus';
 import { addAttributeHooks, removeAttributeHooks } from '@src/utils/sanitizer';
 import { isNumber, isString } from '@src/utils/type';
@@ -17,17 +20,17 @@ import { isNumber, isString } from '@src/utils/type';
 import { ExternalEventTypes } from '@t/eventBus';
 import { DateType, EventModelData } from '@t/events';
 import { CalendarColor, CalendarInfo, CustomTimezone, Options, ViewType } from '@t/options';
-import { CalendarState, CalendarStore, Dispatchers, InternalStoreAPI } from '@t/store';
+import {
+  CalendarMonthOptions,
+  CalendarState,
+  CalendarStore,
+  CalendarWeekOptions,
+  Dispatchers,
+  InternalStoreAPI,
+} from '@t/store';
 
 export default abstract class CalendarControl implements EventBus<ExternalEventTypes> {
   protected container: Element | null;
-
-  /**
-   * Current rendered date
-   * @type {TZDate}
-   * @private
-   */
-  protected renderDate: TZDate;
 
   /**
    * start and end date of weekly, monthly
@@ -53,7 +56,6 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
 
     this.container = isString(container) ? document.querySelector(container) : container;
 
-    this.renderDate = toStartOfDay();
     this.renderRange = {
       start: toStartOfDay(),
       end: toStartOfDay(),
@@ -134,7 +136,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    */
   destroy() {
     if (this.container) {
-      render('', this.container);
+      unmountComponentAtNode(this.container);
     }
 
     this.store.clearListeners();
@@ -148,17 +150,98 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
     }
   }
 
-  /**
-   * Move the calendar amount of offset value
-   * @param {number} offset - The offset value.
-   * @todo implement this
-   * @example
-   * // move previous week when "week" view.
-   * // move previous month when "month" view.
-   * calendar.move(-1);
-   */
+  private calculateMonthRenderDate({
+    renderDate,
+    offset,
+    monthOptions,
+  }: {
+    renderDate: TZDate;
+    offset: number;
+    monthOptions: CalendarMonthOptions;
+  }) {
+    const newRenderDate = new TZDate(renderDate);
+    const { visibleWeeksCount } = monthOptions;
+
+    if (visibleWeeksCount > 0) {
+      newRenderDate.addDate(offset * 7 * visibleWeeksCount);
+    } else {
+      newRenderDate.setMonth(renderDate.getMonth() + offset);
+    }
+    const dateMatrix = createDateMatrixOfMonth(newRenderDate, monthOptions);
+
+    const [[start]] = dateMatrix;
+    const end = last(last(dateMatrix));
+
+    return {
+      renderDate: newRenderDate,
+      renderRange: { start, end },
+    };
+  }
+
+  private calculateWeekRenderDate({
+    renderDate,
+    offset,
+    weekOptions,
+  }: {
+    renderDate: TZDate;
+    offset: number;
+    weekOptions: CalendarWeekOptions;
+  }) {
+    const newRenderDate = new TZDate(renderDate);
+    newRenderDate.addDate(offset * 7);
+    const weekDates = getWeekDates(newRenderDate, weekOptions);
+
+    const [start] = weekDates;
+    const end = last(weekDates);
+
+    return {
+      renderDate: newRenderDate,
+      renderRange: { start, end },
+    };
+  }
+
+  private calculateDayRenderDate({ renderDate, offset }: { renderDate: TZDate; offset: number }) {
+    const newRenderDate = new TZDate(renderDate);
+    newRenderDate.addDate(offset);
+
+    const start = toStartOfDay(newRenderDate);
+    const end = toEndOfDay(newRenderDate);
+
+    return {
+      renderDate: newRenderDate,
+      renderRange: { start, end },
+    };
+  }
+
   private move(offset = 0) {
-    // console.log('move', offset);
+    const { currentView, renderDate } = this.getStoreState().view;
+    const { options } = this.getStoreState();
+    const { setRenderDate } = this.getStoreDispatchers().view;
+
+    const newRenderDate = new TZDate(renderDate);
+    let calculatedRenderDate = {
+      renderDate: newRenderDate,
+      renderRange: { start: new TZDate(newRenderDate), end: new TZDate(newRenderDate) },
+    };
+
+    if (currentView === 'month') {
+      calculatedRenderDate = this.calculateMonthRenderDate({
+        renderDate,
+        offset,
+        monthOptions: options.month as CalendarMonthOptions,
+      });
+    } else if (currentView === 'week') {
+      calculatedRenderDate = this.calculateWeekRenderDate({
+        renderDate,
+        offset,
+        weekOptions: options.week as CalendarWeekOptions,
+      });
+    } else if (currentView === 'day') {
+      calculatedRenderDate = this.calculateDayRenderDate({ renderDate, offset });
+    }
+
+    setRenderDate(calculatedRenderDate.renderDate);
+    this.renderRange = calculatedRenderDate.renderRange;
   }
 
   /**********
@@ -277,7 +360,6 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    *     calendar.render();
    * });
    */
-
   render() {
     if (this.container) {
       render(
@@ -304,7 +386,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * Delete all events and clear view.
+   * Delete all events and clear view
    * @example
    * calendar.clear();
    */
@@ -330,63 +412,65 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * Move to today.
-   * @todo implement this
+   * Move to today
    * @example
    * function onClickTodayBtn() {
-   *     calendar.today();
+   *   calendar.today();
    * }
    */
   today() {
-    // console.log('today');
+    const { setRenderDate } = this.getStoreDispatchers().view;
+
+    setRenderDate(new TZDate());
   }
 
   /**
    * Move to specific date
    * @param {DateType} date - The date to move
-   * @todo implement this
    * @example
-   * calendar.on('clickDayname', function(event) {
-   *     if (calendar.getViewName() === 'week') {
-   *         calendar.setDate(new Date(event.date));
-   *         calendar.changeView('day', true);
-   *     }
+   * calendar.on('clickDayname', (event) => {
+   *   if (calendar.getViewName() === 'week') {
+   *     const dateToMove = new Date(event.date);
+   *
+   *     calendar.setDate(dateToMove);
+   *     calendar.changeView('day');
+   *   }
    * });
    */
   setDate(date: DateType) {
-    this.renderDate = new TZDate(date);
+    const { setRenderDate } = this.getStoreDispatchers('view');
+
+    setRenderDate(new TZDate(date));
   }
 
   /**
    * Move the calendar forward a day, a week, a month, 2 weeks, 3 weeks.
    * @example
-   * function moveToNextOrPrevRange(val) {
-      if (val === -1) {
-          calendar.prev();
-      } else if (val === 1) {
-          calendar.next();
-      }
-  }
-  */
+   * function moveToNextOrPrevRange(offset) {
+   *   if (offset === -1) {
+   *     calendar.prev();
+   *   } else if (offset === 1) {
+   *     calendar.next();
+   *   }
+   * }
+   */
   next() {
     this.move(1);
-    this.render();
   }
 
   /**
    * Move the calendar backward a day, a week, a month, 2 weeks, 3 weeks.
    * @example
-   * function moveToNextOrPrevRange(val) {
-      if (val === -1) {
-          calendar.prev();
-      } else if (val === 1) {
-          calendar.next();
-      }
-  }
-  */
+   * function moveToNextOrPrevRange(offset) {
+   *   if (offset === -1) {
+   *     calendar.prev();
+   *   } else if (offset === 1) {
+   *     calendar.next();
+   *   }
+   * }
+   */
   prev() {
     this.move(-1);
-    this.render();
   }
 
   /**
@@ -525,15 +609,23 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * Current rendered date
-   * @returns {Date}
+   * Get current rendered date
+   * @returns {TZDate}
    */
-  getDate(): Date {
-    return this.renderDate.toDate();
+  getDate(): TZDate {
+    const { renderDate } = this.getStoreState().view;
+
+    return renderDate;
   }
 
+  /**
+   * Get custom date of current rendered date
+   * @returns {DateInterface}
+   */
   getDateInterface(): DateInterface {
-    return this.renderDate.toCustomDate();
+    const { renderDate } = this.getStoreState().view;
+
+    return renderDate.toCustomDate();
   }
 
   /**

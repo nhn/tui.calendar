@@ -9,7 +9,7 @@ import { useTheme } from '@src/contexts/theme';
 import { cls } from '@src/helpers/css';
 import { capitalizeDayName } from '@src/helpers/dayName';
 import { createDateMatrixOfMonth } from '@src/helpers/grid';
-import { optionsSelector } from '@src/selectors';
+import { optionsSelector, viewSelector } from '@src/selectors';
 import { getRowStyleInfo, isWeekend } from '@src/time/datetime';
 
 import { MonthOptions } from '@t/options';
@@ -35,6 +35,7 @@ function getDayNames(options: CalendarStore['options']) {
 
 export function Month() {
   const options = useStore(optionsSelector);
+  const { renderDate } = useStore(viewSelector);
   const theme = useTheme();
 
   const dayNames = getDayNames(options);
@@ -42,9 +43,8 @@ export function Month() {
   const { narrowWeekend, startDayOfWeek, workweek } = monthOptions;
 
   const dateMatrix = useMemo(
-    // @TODO: 현재 렌더링된 MonthDate기준으로 계산(prev, next 사용 시 날짜 계산 필요)
-    () => createDateMatrixOfMonth(new Date(), monthOptions),
-    [monthOptions]
+    () => createDateMatrixOfMonth(renderDate, monthOptions),
+    [monthOptions, renderDate]
   );
   const { rowStyleInfo, cellWidthMap } = useMemo(
     () => getRowStyleInfo(dayNames.length, narrowWeekend, startDayOfWeek, workweek),
