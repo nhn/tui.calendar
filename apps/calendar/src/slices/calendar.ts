@@ -8,9 +8,10 @@ import {
   updateEvent,
 } from '@src/controller/base';
 import EventModel from '@src/model/eventModel';
+import Collection from '@src/utils/collection';
 
 import { CalendarData, EventModelData } from '@t/events';
-import { CalendarInfo } from '@t/options';
+import { CalendarColor, CalendarInfo } from '@t/options';
 import { CalendarState, CalendarStore, SetState } from '@t/store';
 
 export type CalendarSlice = { calendar: CalendarData };
@@ -23,6 +24,7 @@ export type CalendarDispatchers = {
   deleteEvent: (event: EventModel) => void;
   clearEvents: () => void;
   setCalendars: (calendars: CalendarInfo[]) => void;
+  setCalendarColor: (calendarId: string, colorOptions: CalendarColor) => void;
 };
 
 export function createCalendarSlice(calendars: CalendarInfo[] = []): CalendarSlice {
@@ -65,6 +67,38 @@ export function createCalendarDispatchers(set: SetState<CalendarStore>): Calenda
       set(
         produce((state: CalendarState) => {
           state.calendar.calendars = calendars;
+        })
+      ),
+    setCalendarColor: (calendarId, colorOptions) =>
+      set(
+        produce((state: CalendarState) => {
+          const calendars = state.calendar.calendars.map((calendar) => {
+            if (calendar.id === calendarId) {
+              return {
+                ...calendar,
+                ...colorOptions,
+              };
+            }
+
+            return calendar;
+          });
+          const collection = new Collection<EventModel>((event) => event.cid());
+          const events = state.calendar.events.toArray().map((event) => {
+            if (event.calendarId === calendarId) {
+              event.color = colorOptions.color ?? event.color;
+              event.bgColor = colorOptions.bgColor ?? event.bgColor;
+              event.borderColor = colorOptions.borderColor ?? event.borderColor;
+              event.dragBgColor = colorOptions.dragBgColor ?? event.dragBgColor;
+            }
+
+            return event;
+          });
+          if (events) {
+            collection.add(...events);
+          }
+
+          state.calendar.calendars = calendars;
+          state.calendar.events = collection;
         })
       ),
   };

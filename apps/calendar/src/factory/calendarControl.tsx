@@ -476,32 +476,31 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   /**
    * Change calendar's event color with options
    * @param {string} calendarId - The calendar ID
-   * @param {CalendarColor} options - The {@link CalendarColor} object
-   * @param {boolean} [silent=false] - No auto render after creation when set true
-   * @todo implement this
+   * @param {CalendarColor} colorOptions - The {@link CalendarColor} object
    * @example
    * calendar.setCalendarColor('1', {
    *     color: '#e8e8e8',
    *     bgColor: '#585858',
-   *     borderColor: '#a1b56c'
+   *     borderColor: '#a1b56c',
+   *     dragBgColor: '#585858',
    * });
    * calendar.setCalendarColor('2', {
    *     color: '#282828',
    *     bgColor: '#dc9656',
-   *     borderColor: '#a1b56c'
+   *     borderColor: '#a1b56c',
+   *     dragBgColor: '#dc9656',
    * });
    * calendar.setCalendarColor('3', {
    *     color: '#a16946',
    *     bgColor: '#ab4642',
-   *     borderColor: '#a1b56c'
+   *     borderColor: '#a1b56c',
+   *     dragBgColor: '#ab4642',
    * });
    */
-  setCalendarColor(calendarId: string, options: CalendarColor, silent = false) {
-    // console.log('setCalendarColor', calendarId, options, silent);
+  setCalendarColor(calendarId: string, colorOptions: CalendarColor) {
+    const { setCalendarColor } = this.getStoreDispatchers().calendar;
 
-    if (!silent) {
-      this.render();
-    }
+    setCalendarColor(calendarId, colorOptions);
   }
 
   /**
