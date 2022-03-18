@@ -8,18 +8,35 @@ test.beforeEach(async ({ page }) => {
   await page.goto(WEEK_VIEW_PAGE_URL);
 });
 
-const TARGET_EVENTS = {
+function getHourDifference(minuend: FormattedTimeString, subtrahend: FormattedTimeString) {
+  return Number(minuend.split(':')[0]) - Number(subtrahend.split(':')[0]);
+}
+
+interface EventInfo {
+  title: string;
+  startTime: FormattedTimeString;
+  endTime: FormattedTimeString;
+  endDateColumnIndex: number;
+}
+
+const TARGET_EVENTS: { [key: string]: EventInfo } = {
   SHORT: {
     title: 'short time event', // 04:00 ~ 06:00, 4th row
-    columnIndex: 3,
+    startTime: '04:00',
+    endTime: '06:00',
+    endDateColumnIndex: 3,
   },
   LONG: {
     title: 'long time event', // 10:00 ~ 6:00, 6 ~ 7th rows
-    columnIndex: 5,
+    startTime: '10:00',
+    endTime: '06:00',
+    endDateColumnIndex: 6,
   },
   TWO_VIEWS: {
     title: 'two-view event', // 10:00 ~ 6:00, previous view ~ 1st row
-    columnIndex: 0,
+    startTime: '10:00',
+    endTime: '06:00',
+    endDateColumnIndex: 0,
   },
 };
 
@@ -57,7 +74,7 @@ async function setup({
   page,
   targetEventTitle = TARGET_EVENTS.SHORT.title,
   targetEndTime,
-  targetColumnIndex = TARGET_EVENTS.SHORT.columnIndex,
+  targetColumnIndex = TARGET_EVENTS.SHORT.endDateColumnIndex,
 }: {
   page: Page;
   targetEventTitle: string;
@@ -89,50 +106,60 @@ async function setup({
 
   const eventBoundingBoxAfterResize = await getBoundingBox(eventLocator);
 
-  return { eventBoundingBoxBeforeResize, eventBoundingBoxAfterResize, targetRowBoundingBox };
+  return {
+    eventLocator,
+    eventBoundingBoxBeforeResize,
+    eventBoundingBoxAfterResize,
+    targetRowBoundingBox,
+  };
 }
 
-Object.values(TARGET_EVENTS).forEach(({ title: eventTitle, columnIndex }) => {
-  test.describe(`Resize a ${eventTitle} in the time grid`, () => {
-    cases.forEach(
-      ({ title, targetEndTime, targetColumnIndex, matcherToCompare: compareAssertion }) => {
-        test(`${title}`, async ({ page }) => {
-          const {
-            eventBoundingBoxBeforeResize,
-            eventBoundingBoxAfterResize,
-            targetRowBoundingBox,
-          } = await setup({
-            page,
-            targetEventTitle: eventTitle,
-            targetEndTime,
-            targetColumnIndex: targetColumnIndex || columnIndex,
+Object.values(TARGET_EVENTS).forEach(
+  ({ title: eventTitle, startTime, endTime, endDateColumnIndex }) => {
+    test.describe(`Resize a ${eventTitle} in the time grid`, () => {
+      cases.forEach(
+        ({ title, targetEndTime, targetColumnIndex, matcherToCompare: compareAssertion }) => {
+          test(`${title}`, async ({ page }) => {
+            const {
+              eventLocator,
+              eventBoundingBoxBeforeResize,
+              eventBoundingBoxAfterResize,
+              targetRowBoundingBox,
+            } = await setup({
+              page,
+              targetEventTitle: eventTitle,
+              targetEndTime,
+              targetColumnIndex: targetColumnIndex || endDateColumnIndex,
+            });
+
+            // Then
+            expect(eventBoundingBoxAfterResize.height)[compareAssertion](
+              eventBoundingBoxBeforeResize.height
+            );
+
+            expect(eventLocator).toContainText(startTime);
+
+            const rowCount = getHourDifference(targetEndTime, endTime) * 2 + 1;
+            expect(
+              eventBoundingBoxAfterResize.height - eventBoundingBoxBeforeResize.height
+            ).toBeCloseTo(targetRowBoundingBox.height * rowCount, -1);
           });
+        }
+      );
 
-          // Then
-          expect(eventBoundingBoxAfterResize.height)[compareAssertion](
-            eventBoundingBoxBeforeResize.height
-          );
-
-          expect(eventBoundingBoxAfterResize.y + eventBoundingBoxAfterResize.height).toBeCloseTo(
-            targetRowBoundingBox.y + targetRowBoundingBox.height,
-            -1
-          );
-        });
-      }
-    );
-
-    test(`then it should have a minimum height(=1 row) even if the event is resized to before the start time`, async ({
-      page,
-    }) => {
-      const { eventBoundingBoxAfterResize, targetRowBoundingBox } = await setup({
+      test(`then it should have a minimum height(=1 row) even if the event is resized to before the start time`, async ({
         page,
-        targetEventTitle: eventTitle,
-        targetEndTime: '00:00',
-        targetColumnIndex: columnIndex,
-      });
+      }) => {
+        const { eventBoundingBoxAfterResize, targetRowBoundingBox } = await setup({
+          page,
+          targetEventTitle: eventTitle,
+          targetEndTime: '00:00',
+          targetColumnIndex: endDateColumnIndex,
+        });
 
-      // Then
-      expect(eventBoundingBoxAfterResize.height).toBeCloseTo(targetRowBoundingBox.height, -1);
+        // Then
+        expect(eventBoundingBoxAfterResize.height).toBeCloseTo(targetRowBoundingBox.height, -1);
+      });
     });
-  });
-});
+  }
+);
