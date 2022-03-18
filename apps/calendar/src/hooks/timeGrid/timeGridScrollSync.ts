@@ -21,13 +21,14 @@ export function useTimeGridScrollSync(scrollArea: HTMLDivElement | null, rowCoun
       // Set minimum scroll boundary to the height of one row.
       const scrollBoundary = Math.floor(scrollHeight / rowCount);
       const layoutHeight = offsetTop + offsetHeight;
-      // arbitrary value to move scroll (px).
-      const SCROLL_OFFSET = 10;
 
+      let scrollDiff: number;
       if (y < offsetTop + scrollBoundary) {
-        scrollArea.scrollBy(0, -SCROLL_OFFSET);
+        scrollDiff = y - (offsetTop + scrollBoundary);
+        scrollArea.scrollTop = Math.max(0, scrollArea.scrollTop + scrollDiff);
       } else if (y > layoutHeight - scrollBoundary) {
-        scrollArea.scrollBy(0, SCROLL_OFFSET);
+        scrollDiff = y - (layoutHeight - scrollBoundary);
+        scrollArea.scrollTop = Math.min(offsetHeight, scrollArea.scrollTop + scrollDiff);
       }
     }
   });
