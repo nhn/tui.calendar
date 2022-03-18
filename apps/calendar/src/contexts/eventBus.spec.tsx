@@ -1,7 +1,6 @@
 import { h } from 'preact';
 import { useLayoutEffect } from 'preact/hooks';
 
-import { expect } from '@playwright/test';
 import { fireEvent, render, screen } from '@testing-library/preact';
 
 import { EventBusProvider, useEventBus } from '@src/contexts/eventBus';

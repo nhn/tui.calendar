@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, Page, test } from '@playwright/test';
 
 import type { FormattedTimeString } from '../../types/time/datetime';
 import { WEEK_VIEW_PAGE_URL } from '../configs';
@@ -58,6 +58,11 @@ async function setup({
   targetEventTitle = TARGET_EVENTS.SHORT.title,
   targetEndTime,
   targetColumnIndex = TARGET_EVENTS.SHORT.columnIndex,
+}: {
+  page: Page;
+  targetEventTitle: string;
+  targetEndTime: FormattedTimeString;
+  targetColumnIndex: number;
 }) {
   // Given
   const targetEventSelector = `[data-testid*="time-event-${targetEventTitle}"]`;
@@ -123,6 +128,7 @@ Object.values(TARGET_EVENTS).forEach(({ title: eventTitle, columnIndex }) => {
         page,
         targetEventTitle: eventTitle,
         targetEndTime: '00:00',
+        targetColumnIndex: columnIndex,
       });
 
       // Then
