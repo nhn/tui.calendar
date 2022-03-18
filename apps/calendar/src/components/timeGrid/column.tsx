@@ -25,29 +25,29 @@ const classNames = {
 };
 
 function BackgroundEvents({
-  events,
+  eventUIModels,
   startTime,
   endTime,
 }: {
-  events: EventUIModel[];
+  eventUIModels: EventUIModel[];
   startTime: TZDate;
   endTime: TZDate;
 }) {
-  const backgroundEvents = events.filter(isBackgroundEvent);
+  const backgroundEvents = eventUIModels.filter(isBackgroundEvent);
 
   return (
     <div className={classNames.backgrounds}>
-      {backgroundEvents.map((event, index) => {
+      {backgroundEvents.map((eventUIModel, index) => {
         const { top, height } = getTopHeightByTime(
-          event.model.start,
-          event.model.end,
+          eventUIModel.model.start,
+          eventUIModel.model.end,
           startTime,
           endTime
         );
 
         return (
           <BackgroundEvent
-            uiModel={event}
+            uiModel={eventUIModel}
             top={toPercent(top)}
             height={toPercent(height)}
             key={`backgroundEvent-${index}`}
@@ -124,7 +124,7 @@ export const Column = memo(function Column({
       style={style}
       data-testid={`timegrid-column-${columnDate.getDay()}`}
     >
-      <BackgroundEvents events={uiModelsByColumn} startTime={startTime} endTime={endTime} />
+      <BackgroundEvents eventUIModels={uiModelsByColumn} startTime={startTime} endTime={endTime} />
       <GridSelectionByColumn columnIndex={columnIndex} timeGridRows={timeGridRows} />
       <ResizingGuideByColumn
         gridPositionFinder={gridPositionFinder}
