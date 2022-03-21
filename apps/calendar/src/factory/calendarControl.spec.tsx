@@ -56,17 +56,17 @@ describe('changeView/getViewName', () => {
     // When
 
     // Then
-    expect(mockCalendar.getViewName()).toBe('month'); // Initial view is 'month'
+    expect(mockCalendar.getViewName()).toBe('week'); // Initial view is 'week'
   });
 
   it('should change current view to week', () => {
     // Given
 
     // When
-    mockCalendar.changeView('week');
+    mockCalendar.changeView('month');
 
     // Then
-    expect(mockCalendar.getViewName()).toBe('week');
+    expect(mockCalendar.getViewName()).toBe('month');
   });
 
   it('should change current view to day', () => {
@@ -337,6 +337,7 @@ describe('prev/next/today', () => {
     beforeEach(() => {
       mockCalendarMonth = new MockCalendarMonth(container);
       act(() => {
+        mockCalendarMonth.changeView('month');
         mockCalendarMonth.render();
       });
     });
@@ -430,7 +431,6 @@ describe('prev/next/today', () => {
     beforeEach(() => {
       mockCalendarWeek = new MockCalendarWeek(container);
       act(() => {
-        mockCalendarWeek.changeView('week');
         mockCalendarWeek.render();
       });
     });
@@ -911,7 +911,6 @@ describe('setCalendarColor', () => {
     const notChangedBgColor = '#000';
     const notChangedBorderColor = '#000';
     const notChangedDragBgColor = '#000';
-    screen.debug();
     expect(
       screen.queryByText(
         `${calendarIdToDoNotChange}-${notChangedColor}-${notChangedBgColor}-${notChangedBorderColor}-${notChangedDragBgColor}`
