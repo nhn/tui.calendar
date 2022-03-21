@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
 
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useTransientUpdate } from '@src/hooks/common/transientUpdate';
@@ -29,9 +29,22 @@ export function useTimeGridEventMove({
   const startDateTimeRef = useRef<TZDate | null>(null);
   const initGridPositionRef = useRef<GridPosition | null>(null);
 
+  const clearState = useCallback(() => {
+    clearCurrentGridPos();
+    clearDraggingEvent();
+    setGridDiff(null);
+    startDateTimeRef.current = null;
+    initGridPositionRef.current = null;
+  }, [clearCurrentGridPos, clearDraggingEvent]);
+
   // Setting up initial grid position
   useTransientUpdate(dndSelector, ({ initX, initY }) => {
-    if (isPresent(initX) && isPresent(initY) && isPresent(draggingEvent)) {
+    if (
+      isPresent(initX) &&
+      isPresent(initY) &&
+      isPresent(draggingEvent) &&
+      isNil(initGridPositionRef.current)
+    ) {
       initGridPositionRef.current = gridPositionFinder({
         clientX: initX,
         clientY: initY,
@@ -70,9 +83,11 @@ export function useTimeGridEventMove({
     }
 
     const clonedEvent = draggingEvent.clone();
-    clonedEvent.top = clonedEvent.top + gridDiff.rowIndex * rowHeight;
-    clonedEvent.left = timeGridData.columns[currentGridPos.columnIndex].left;
-    clonedEvent.width = timeGridData.columns[currentGridPos.columnIndex].width;
+    clonedEvent.setUIProps({
+      top: clonedEvent.top + gridDiff.rowIndex * rowHeight,
+      left: timeGridData.columns[currentGridPos.columnIndex].left,
+      width: timeGridData.columns[currentGridPos.columnIndex].width,
+    });
 
     return clonedEvent;
   }, [canCalculate, currentGridPos, draggingEvent, gridDiff, rowHeight, timeGridData]);
@@ -93,16 +108,14 @@ export function useTimeGridEventMove({
         });
       }
 
-      clearDraggingEvent();
-      clearCurrentGridPos();
+      clearState();
     }
   }, [
     canCalculate,
-    clearCurrentGridPos,
-    clearDraggingEvent,
+    clearState,
     draggingEvent,
-    isNotDragging,
     gridDiff,
+    isNotDragging,
     nextStartTime,
     updateEvent,
   ]);

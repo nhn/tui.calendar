@@ -14,6 +14,8 @@ import { cls } from '@src/helpers/css';
 import { getDayNames } from '@src/helpers/dayName';
 import { createTimeGridData, getDayGridEvents } from '@src/helpers/grid';
 import { getDisplayPanel } from '@src/helpers/view';
+import { useDOMNode } from '@src/hooks/common/domNode';
+import { useTimeGridScrollSync } from '@src/hooks/timeGrid/useTimeGridScrollSync';
 import {
   calendarSelector,
   optionsSelector,
@@ -44,6 +46,7 @@ function useDayViewState() {
 
 export function Day() {
   const { calendarData, options, gridRowLayout, renderDate } = useDayViewState();
+  const [timePanel, setTimePanelRef] = useDOMNode<HTMLDivElement>();
 
   const { eventView, taskView } = options;
   const weekOptions = options.week as Required<WeekOptions>;
@@ -100,6 +103,8 @@ export function Day() {
       );
     });
 
+  useTimeGridScrollSync(timePanel, timeGridData.rows.length);
+
   return (
     <Layout className={cls('day-view')} autoAdjustPanels={true}>
       <Panel name="day-view-daynames" initialHeight={WEEK_DAYNAME_HEIGHT + WEEK_DAYNAME_BORDER}>
@@ -112,7 +117,7 @@ export function Day() {
         />
       </Panel>
       {gridRows}
-      <Panel name="time" autoSize={1}>
+      <Panel name="time" autoSize={1} ref={setTimePanelRef}>
         <TimeGrid events={dayGridEvents.time} timeGridData={timeGridData} />
       </Panel>
     </Layout>

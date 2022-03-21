@@ -91,7 +91,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
 
   private initOptions(options: Options = {}): Options {
     const {
-      defaultView = 'month',
+      defaultView = 'week',
       taskView = true,
       eventView = true,
       template = {},
@@ -476,32 +476,31 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   /**
    * Change calendar's event color with options
    * @param {string} calendarId - The calendar ID
-   * @param {CalendarColor} options - The {@link CalendarColor} object
-   * @param {boolean} [silent=false] - No auto render after creation when set true
-   * @todo implement this
+   * @param {CalendarColor} colorOptions - The {@link CalendarColor} object
    * @example
    * calendar.setCalendarColor('1', {
    *     color: '#e8e8e8',
    *     bgColor: '#585858',
-   *     borderColor: '#a1b56c'
+   *     borderColor: '#a1b56c',
+   *     dragBgColor: '#585858',
    * });
    * calendar.setCalendarColor('2', {
    *     color: '#282828',
    *     bgColor: '#dc9656',
-   *     borderColor: '#a1b56c'
+   *     borderColor: '#a1b56c',
+   *     dragBgColor: '#dc9656',
    * });
    * calendar.setCalendarColor('3', {
    *     color: '#a16946',
    *     bgColor: '#ab4642',
-   *     borderColor: '#a1b56c'
+   *     borderColor: '#a1b56c',
+   *     dragBgColor: '#ab4642',
    * });
    */
-  setCalendarColor(calendarId: string, options: CalendarColor, silent = false) {
-    // console.log('setCalendarColor', calendarId, options, silent);
+  setCalendarColor(calendarId: string, colorOptions: CalendarColor) {
+    const { setCalendarColor } = this.getStoreDispatchers().calendar;
 
-    if (!silent) {
-      this.render();
-    }
+    setCalendarColor(calendarId, colorOptions);
   }
 
   /**
@@ -524,38 +523,6 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * @deprecated
-   * Toggle task view('Milestone', 'Task') panel
-   * @param {boolean} enabled - use task view
-   * @todo implement this
-   * @example
-   * // There is no milestone, task, so hide those view panel
-   * calendar.toggleTaskView(false);
-   *
-   * // There are some milestone, task, so show those view panel.
-   * calendar.toggleTaskView(true);
-   */
-  toggleTaskView(enabled: boolean) {
-    // console.log('toggleTaskView', enabled);
-  }
-
-  /**
-   * @deprecated
-   * Toggle event view('Allday', TimeGrid') panel
-   * @param {boolean} enabled - use task view
-   * @todo remove this
-   * @example
-   * // hide those view panel to show only 'Milestone', 'Task'
-   * calendar.toggleEventView(false);
-   *
-   * // show those view panel.
-   * calendar.toggleEventView(true);
-   */
-  toggleEventView(enabled: boolean) {
-    // console.log('toggleEventView', enabled);
-  }
-
-  /**
    * Get a event element by event id and calendar id.
    * @param {string} eventId - ID of event
    * @param {string} calendarId - calendarId of event
@@ -572,40 +539,41 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
- * Set a theme. If some keys are not defined in the preset, will be return.
- * @param {object} theme - multiple styles map
- * @returns {Array.<string>} keys - error keys not predefined.
- * @todo implement this
- * @example
- * cal.setTheme({
-    'month.dayname.height': '31px',
-    'common.dayname.color': '#333',
-    'month.dayname.borderBottom': '1px solid #e5e5e5' // Not valid key  will be return.
- * });
- */
+   * Set a theme. If some keys are not defined in the preset, will be return
+   * @param {ThemeKeyValue} theme - theme object
+   * @returns {string[]} invalid keys - not defined keys in theme
+   * @example
+   * calendar.setTheme({
+   *   'common.gridSelection.backgroundColor': '#333',
+   *   'week.currentTime.color': '#00FF00',
+   *   'month.dayname.borderBottom': '1px solid #e5e5e5' // Invalid key. So, It will be returned
+   * });
+   */
   setTheme(theme: ThemeKeyValue) {
     const result = this.theme.setStyles(theme);
-    this.render();
+    this.render(); // @TODO: It should be removed when theme is implemented as a store
 
     return result;
   }
 
   /**
-   * Set options of calendar
-   * @param {Options} options - set {@link Options}
-   * @param {boolean} [silent=false] - no auto render after creation when set true
-   * @todo implement this
-   */
-  setOptions(options: Options, silent = false) {
-    // console.log('setOptions', options, silent);
-  }
-
-  /**
-   * Get current {@link Options}.
+   * Get current {@link Options}
    * @returns {Options} options
    */
   getOptions() {
-    return this.store.getState().options;
+    const { options } = this.getStoreState();
+
+    return options;
+  }
+
+  /**
+   * Set options of calendar
+   * @param {Options} options - set {@link Options}
+   */
+  setOptions(options: Options) {
+    const { setOptions } = this.getStoreDispatchers().options;
+
+    setOptions(options);
   }
 
   /**
@@ -662,11 +630,12 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
 
   /**
    * Set calendar list
-   * @param {Array.<Object>} calendars - calendar list
-   * @todo implement this
+   * @param {CalendarInfo[]} calendars - calendar list
    */
   setCalendars(calendars: CalendarInfo[]) {
-    // console.log('setCalendars', calendars);
+    const { setCalendars } = this.getStoreDispatchers().calendar;
+
+    setCalendars(calendars);
   }
 
   /**

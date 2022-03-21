@@ -1,4 +1,5 @@
 import { Fragment, h } from 'preact';
+import { forwardRef } from 'preact/compat';
 import { useCallback, useLayoutEffect } from 'preact/hooks';
 
 import { PanelResizer } from '@src/components/panelResizer';
@@ -70,23 +71,26 @@ function getPanelStyle({
   return { ...style, minHeight, maxHeight, minWidth, maxWidth };
 }
 
-export function Panel({
-  name,
-  initialWidth = DEFAULT_PANEL_HEIGHT,
-  initialHeight = DEFAULT_PANEL_HEIGHT,
-  overflowX,
-  overflowY,
-  maxExpandableWidth,
-  maxExpandableHeight,
-  minHeight,
-  maxHeight,
-  minWidth,
-  maxWidth,
-  resizerWidth = DEFAULT_RESIZER_LENGTH,
-  resizerHeight = DEFAULT_RESIZER_LENGTH,
-  resizable,
-  children,
-}: PropsWithChildren<Props>) {
+export const Panel = forwardRef<HTMLDivElement, PropsWithChildren<Props>>(function Panel(
+  {
+    name,
+    initialWidth = DEFAULT_PANEL_HEIGHT,
+    initialHeight = DEFAULT_PANEL_HEIGHT,
+    overflowX,
+    overflowY,
+    maxExpandableWidth,
+    maxExpandableHeight,
+    minHeight,
+    maxHeight,
+    minWidth,
+    maxWidth,
+    resizerWidth = DEFAULT_RESIZER_LENGTH,
+    resizerHeight = DEFAULT_RESIZER_LENGTH,
+    resizable,
+    children,
+  },
+  ref
+) {
   const { updateDayGridRowHeight } = useDispatch('weekViewLayout');
   const { height: dayGridRowHeight } = useStore(
     useCallback((state) => state.weekViewLayout.dayGridRows[name] ?? {}, [name])
@@ -112,7 +116,7 @@ export function Panel({
 
   return (
     <Fragment>
-      <div className={cls('panel', name)} style={styles}>
+      <div className={cls('panel', name)} style={styles} ref={ref}>
         {children}
       </div>
       {resizable && (
@@ -124,4 +128,4 @@ export function Panel({
       )}
     </Fragment>
   );
-}
+});

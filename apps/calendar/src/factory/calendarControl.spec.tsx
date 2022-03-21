@@ -2,11 +2,14 @@ import { h } from 'preact';
 
 import { Layout } from '@src/components/layout';
 import { useStore } from '@src/contexts/calendarStore';
+import { useTheme } from '@src/contexts/theme';
 import CalendarControl from '@src/factory/calendarControl';
 import { getWeekDates } from '@src/helpers/grid';
 import { act, screen } from '@src/test/utils';
 import TZDate from '@src/time/date';
 import { addDate, isSameDate, subtractDate } from '@src/time/datetime';
+
+import { CalendarInfo } from '@t/options';
 
 function cleanup() {
   document.body.innerHTML = '';
@@ -53,17 +56,17 @@ describe('changeView/getViewName', () => {
     // When
 
     // Then
-    expect(mockCalendar.getViewName()).toBe('month'); // Initial view is 'month'
+    expect(mockCalendar.getViewName()).toBe('week'); // Initial view is 'week'
   });
 
   it('should change current view to week', () => {
     // Given
 
     // When
-    mockCalendar.changeView('week');
+    mockCalendar.changeView('month');
 
     // Then
-    expect(mockCalendar.getViewName()).toBe('week');
+    expect(mockCalendar.getViewName()).toBe('month');
   });
 
   it('should change current view to day', () => {
@@ -225,7 +228,7 @@ describe('openFormPopup', () => {
   });
 });
 
-describe('setDate/getDate', () => {
+describe('getDate/setDate', () => {
   beforeEach(() => {
     const container = document.createElement('div');
     document.body.appendChild(container);
@@ -334,6 +337,7 @@ describe('prev/next/today', () => {
     beforeEach(() => {
       mockCalendarMonth = new MockCalendarMonth(container);
       act(() => {
+        mockCalendarMonth.changeView('month');
         mockCalendarMonth.render();
       });
     });
@@ -427,7 +431,6 @@ describe('prev/next/today', () => {
     beforeEach(() => {
       mockCalendarWeek = new MockCalendarWeek(container);
       act(() => {
-        mockCalendarWeek.changeView('week');
         mockCalendarWeek.render();
       });
     });
@@ -612,5 +615,323 @@ describe('prev/next/today', () => {
       // Then
       expect(screen.queryByText(`date: ${today.getDate()}`)).toBeInTheDocument();
     });
+  });
+});
+
+describe('setTheme', () => {
+  function MockThemeView() {
+    const { common, week, month } = useTheme();
+    const {
+      gridSelection: { backgroundColor },
+    } = common;
+    const {
+      currentTime: { color },
+    } = week;
+    const {
+      moreView: { boxShadow },
+    } = month;
+
+    return (
+      <div>
+        <div>gridSelection: {backgroundColor}</div>
+        <div>currentTime: {color}</div>
+        <div>moreView: {boxShadow}</div>
+      </div>
+    );
+  }
+  class MockCalendarTheme extends CalendarControl {
+    protected getComponent() {
+      return <MockThemeView />;
+    }
+  }
+
+  let container: HTMLDivElement;
+  let mockCalendarTheme: MockCalendarTheme;
+
+  beforeEach(() => {
+    container = document.createElement('div');
+    document.body.appendChild(container);
+    mockCalendarTheme = new MockCalendarTheme(container);
+    act(() => {
+      mockCalendarTheme.render();
+    });
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('should change theme value', () => {
+    // Given
+    const gridSelectionBackgroundColor = '#ff0000';
+    const currentTimeColor = '#00ff00';
+    const moreViewBoxShadow = '0 0 10px #0000ff';
+
+    expect(
+      screen.queryByText(`gridSelection: ${gridSelectionBackgroundColor}`)
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText(`currentTime: ${currentTimeColor}`)).not.toBeInTheDocument();
+    expect(screen.queryByText(`moreView: ${moreViewBoxShadow}`)).not.toBeInTheDocument();
+
+    // When
+    act(() => {
+      mockCalendarTheme.setTheme({
+        'common.gridSelection.backgroundColor': gridSelectionBackgroundColor,
+        'week.currentTime.color': currentTimeColor,
+        'month.moreView.boxShadow': moreViewBoxShadow,
+      });
+    });
+
+    // Then
+    expect(
+      screen.queryByText(`gridSelection: ${gridSelectionBackgroundColor}`)
+    ).toBeInTheDocument();
+    expect(screen.queryByText(`currentTime: ${currentTimeColor}`)).toBeInTheDocument();
+    expect(screen.queryByText(`moreView: ${moreViewBoxShadow}`)).toBeInTheDocument();
+  });
+});
+
+describe('getOptions/setOptions', () => {
+  function MockOptionsView() {
+    const options = useStore((state) => state.options);
+    const { defaultView, useCreationPopup } = options;
+
+    return (
+      <div>
+        <div>defaultView: {defaultView}</div>
+        <div>useCreationPopup: {String(useCreationPopup)}</div>
+      </div>
+    );
+  }
+  class MockCalendarOptions extends CalendarControl {
+    protected getComponent() {
+      return <MockOptionsView />;
+    }
+  }
+
+  let container: HTMLDivElement;
+  let mockCalendarOptions: MockCalendarOptions;
+
+  beforeEach(() => {
+    container = document.createElement('div');
+    document.body.appendChild(container);
+    mockCalendarOptions = new MockCalendarOptions(container);
+    act(() => {
+      mockCalendarOptions.render();
+    });
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('should get options', () => {
+    // Given
+    const defaultView = 'week';
+    const useCreationPopup = false;
+
+    // When
+    const options = mockCalendarOptions.getOptions();
+
+    // Then
+    expect(options.defaultView).toBe(defaultView);
+    expect(options.useCreationPopup).toBe(useCreationPopup);
+  });
+
+  it('should change options', () => {
+    // Given
+    const defaultView = 'month';
+    const useCreationPopup = true;
+
+    expect(screen.queryByText(`defaultView: ${defaultView}`)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(`useCreationPopup: ${String(useCreationPopup)}`)
+    ).not.toBeInTheDocument();
+
+    // When
+    act(() => {
+      mockCalendarOptions.setOptions({ defaultView, useCreationPopup });
+    });
+
+    // Then
+    expect(screen.queryByText(`defaultView: ${defaultView}`)).toBeInTheDocument();
+    expect(screen.queryByText(`useCreationPopup: ${String(useCreationPopup)}`)).toBeInTheDocument();
+  });
+});
+
+describe('setCalendars', () => {
+  function MockCalendarsView() {
+    const { calendars } = useStore((state) => state.calendar);
+
+    return (
+      <div>
+        {calendars.map((calendar) => (
+          <div key={calendar.id}>
+            {calendar.id} {calendar.name}
+          </div>
+        ))}
+      </div>
+    );
+  }
+  class MockCalendarCalendars extends CalendarControl {
+    protected getComponent() {
+      return <MockCalendarsView />;
+    }
+  }
+
+  let container: HTMLDivElement;
+  let mockCalendarCalendars: MockCalendarCalendars;
+
+  beforeEach(() => {
+    container = document.createElement('div');
+    document.body.appendChild(container);
+    mockCalendarCalendars = new MockCalendarCalendars(container);
+    act(() => {
+      mockCalendarCalendars.render();
+    });
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('should change calendar list', () => {
+    // Given
+    const calendars: CalendarInfo[] = [
+      {
+        id: '1',
+        name: 'calendar1',
+      },
+      {
+        id: '2',
+        name: 'calendar2',
+      },
+    ];
+    calendars.forEach((calendar) => {
+      expect(screen.queryByText(`${calendar.id} ${calendar.name}`)).not.toBeInTheDocument();
+    });
+
+    // When
+    act(() => {
+      mockCalendarCalendars.setCalendars(calendars);
+    });
+
+    // Then
+    calendars.forEach((calendar) => {
+      expect(screen.queryByText(`${calendar.id} ${calendar.name}`)).toBeInTheDocument();
+    });
+  });
+});
+
+describe('setCalendarColor', () => {
+  function MockCalendarColorView() {
+    const { calendars } = useStore((state) => state.calendar);
+
+    return (
+      <div>
+        {calendars.map(({ id, color, bgColor, borderColor, dragBgColor }) => (
+          <div key={id}>
+            {id}-{color}-{bgColor}-{borderColor}-{dragBgColor}
+          </div>
+        ))}
+      </div>
+    );
+  }
+  class MockCalendarColor extends CalendarControl {
+    protected getComponent() {
+      return <MockCalendarColorView />;
+    }
+  }
+
+  let container: HTMLDivElement;
+  let mockCalendarColor: MockCalendarColor;
+  const calendarIdToChange = '1';
+  const calendarIdToDoNotChange = '2';
+  const color = '#ff0';
+  const bgColor = '#ff0';
+  const borderColor = '#ff0';
+  const dragBgColor = '#ff0';
+
+  beforeEach(() => {
+    container = document.createElement('div');
+    document.body.appendChild(container);
+    mockCalendarColor = new MockCalendarColor(container);
+    act(() => {
+      mockCalendarColor.setCalendars([
+        {
+          id: '1',
+          name: 'calendar1',
+          color: '#fff',
+          bgColor: '#fff',
+          borderColor: '#fff',
+          dragBgColor: '#fff',
+        },
+        {
+          id: '2',
+          name: 'calendar2',
+          color: '#000',
+          bgColor: '#000',
+          borderColor: '#000',
+          dragBgColor: '#000',
+        },
+      ]);
+      mockCalendarColor.render();
+    });
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('should change the calendar color that matches the calendar id', () => {
+    // Given
+    expect(
+      screen.queryByText(`${calendarIdToChange}-${color}-${bgColor}-${borderColor}-${dragBgColor}`)
+    ).not.toBeInTheDocument();
+
+    // When
+    act(() => {
+      mockCalendarColor.setCalendarColor(calendarIdToChange, {
+        color,
+        bgColor,
+        borderColor,
+        dragBgColor,
+      });
+    });
+
+    // Then
+    expect(
+      screen.queryByText(`${calendarIdToChange}-${color}-${bgColor}-${borderColor}-${dragBgColor}`)
+    ).toBeInTheDocument();
+  });
+
+  it(`should not change the calendar color that doesn't matches the calendar id`, () => {
+    // Given
+    const notChangedColor = '#000';
+    const notChangedBgColor = '#000';
+    const notChangedBorderColor = '#000';
+    const notChangedDragBgColor = '#000';
+    expect(
+      screen.queryByText(
+        `${calendarIdToDoNotChange}-${notChangedColor}-${notChangedBgColor}-${notChangedBorderColor}-${notChangedDragBgColor}`
+      )
+    ).toBeInTheDocument();
+
+    // When
+    act(() => {
+      mockCalendarColor.setCalendarColor(calendarIdToChange, {
+        color,
+        bgColor,
+        borderColor,
+        dragBgColor,
+      });
+    });
+
+    // Then
+    expect(
+      screen.queryByText(
+        `${calendarIdToDoNotChange}-${notChangedColor}-${notChangedBgColor}-${notChangedBorderColor}-${notChangedDragBgColor}`
+      )
+    ).toBeInTheDocument();
   });
 });

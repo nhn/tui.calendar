@@ -20,14 +20,14 @@ type Props = Pick<ComponentProps<typeof DayGridMonth>, 'dateMatrix' | 'cellWidth
   rowIndex: number;
 };
 
-export function ResizingEventShadow({
+export function ResizingGuideByRow({
   dateMatrix,
   cellWidthMap,
   gridPositionFinder,
   renderedUIModels,
   rowIndex,
 }: Props) {
-  const resizingEventShadowProps = useDayGridMonthEventResize({
+  const resizingGuideProps = useDayGridMonthEventResize({
     dateMatrix,
     gridPositionFinder,
     cellWidthMap,
@@ -35,11 +35,11 @@ export function ResizingEventShadow({
     rowIndex,
   });
 
-  if (isNil(resizingEventShadowProps)) {
+  if (isNil(resizingGuideProps)) {
     return null;
   }
 
-  const [uiModel, resizingWidth] = resizingEventShadowProps;
+  const [uiModel, resizingWidth] = resizingGuideProps;
 
   return (
     <div className={cls('weekday-events')}>

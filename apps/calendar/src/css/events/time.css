@@ -14,9 +14,9 @@
   right: 0;
   bottom: 1px;
   left: 0;
-  height: 5px;
+  height: 15px;
   text-align: center;
   color: #fff;
   cursor: row-resize;
-  background: url("../image/handler-x.png") no-repeat center center;
+  background: url("../image/handler-x.png") no-repeat center bottom;
 }

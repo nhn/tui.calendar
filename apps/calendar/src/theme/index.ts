@@ -1,5 +1,6 @@
 import preset from '@src/theme/preset';
 import { defaultProps, ThemeKeyValue, ThemePropKeys } from '@src/theme/themeProps';
+import { mergeObject } from '@src/utils/object';
 import { isUndefined } from '@src/utils/type';
 
 function setThemeObject(object: Record<string, any>, path: string, value: any) {
@@ -31,12 +32,8 @@ export default class Theme {
 
   common!: CommonTheme;
 
-  /**
-   *
-   * @param customTheme custom theme
-   */
-  constructor(customTheme?: ThemeKeyValue) {
-    this.setStyles(customTheme || preset);
+  constructor(customTheme: ThemeKeyValue = {}) {
+    this.setStyles(mergeObject(customTheme, preset));
   }
 
   /**
