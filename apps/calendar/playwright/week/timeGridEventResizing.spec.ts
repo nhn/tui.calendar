@@ -137,7 +137,7 @@ Object.values(TARGET_EVENTS).forEach(
               eventBoundingBoxBeforeResize.height
             );
 
-            expect(eventLocator).toContainText(startTime);
+            await expect(eventLocator).toContainText(startTime);
 
             const rowCount = getHourDifference(targetEndTime, endTime) * 2 + 1;
             expect(
