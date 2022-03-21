@@ -10,7 +10,7 @@ import {
 import EventModel from '@src/model/eventModel';
 
 import { CalendarData, EventModelData } from '@t/events';
-import { CalendarInfo } from '@t/options';
+import { CalendarColor, CalendarInfo } from '@t/options';
 import { CalendarState, CalendarStore, SetState } from '@t/store';
 
 export type CalendarSlice = { calendar: CalendarData };
@@ -22,6 +22,8 @@ export type CalendarDispatchers = {
   updateEvent: (params: UpdateEventParams) => void;
   deleteEvent: (event: EventModel) => void;
   clearEvents: () => void;
+  setCalendars: (calendars: CalendarInfo[]) => void;
+  setCalendarColor: (calendarId: string, colorOptions: CalendarColor) => void;
 };
 
 export function createCalendarSlice(calendars: CalendarInfo[] = []): CalendarSlice {
@@ -58,6 +60,41 @@ export function createCalendarDispatchers(set: SetState<CalendarStore>): Calenda
       set(
         produce((state: CalendarState) => {
           clearEvents(state.calendar);
+        })
+      ),
+    setCalendars: (calendars) =>
+      set(
+        produce((state: CalendarState) => {
+          state.calendar.calendars = calendars;
+        })
+      ),
+    setCalendarColor: (calendarId, colorOptions) =>
+      set(
+        produce((state: CalendarState) => {
+          const calendars = state.calendar.calendars.map((calendar) => {
+            if (calendar.id === calendarId) {
+              return {
+                ...calendar,
+                ...colorOptions,
+              };
+            }
+
+            return calendar;
+          });
+          const events = state.calendar.events.toArray().map((event) => {
+            if (event.calendarId === calendarId) {
+              event.color = colorOptions.color ?? event.color;
+              event.bgColor = colorOptions.bgColor ?? event.bgColor;
+              event.borderColor = colorOptions.borderColor ?? event.borderColor;
+              event.dragBgColor = colorOptions.dragBgColor ?? event.dragBgColor;
+            }
+
+            return event;
+          });
+          const collection = createEventCollection<EventModel>(...events);
+
+          state.calendar.calendars = calendars;
+          state.calendar.events = collection;
         })
       ),
   };
