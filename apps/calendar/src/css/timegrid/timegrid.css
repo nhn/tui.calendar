@@ -48,6 +48,7 @@
 
 .timegrid .timegrid-current-time-line .timegrid-current-time-line-left {
   position: absolute;
+  border-top: 1px dashed;
 }
 
 .timegrid .timegrid-current-time-line .timegrid-current-time-line-marker {
@@ -60,11 +61,13 @@
 
 .timegrid .timegrid-current-time-line .timegrid-current-time-line-today {
   position: absolute;
+  border-top: 1px solid;
 }
 
 .timegrid .timegrid-current-time-line .timegrid-current-time-line-right {
   position: absolute;
   right: 0;
+  border-top: none;
 }
 
 .timegrid-sticky {

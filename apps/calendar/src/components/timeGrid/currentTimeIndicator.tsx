@@ -1,6 +1,7 @@
 import { h } from 'preact';
 
 import { addTimeGridPrefix } from '@src/components/timeGrid';
+import { useTheme } from '@src/contexts/theme';
 import { cls, toPercent } from '@src/helpers/css';
 
 const classNames = {
@@ -19,6 +20,10 @@ interface Props {
 }
 
 export function CurrentTimeIndicator({ top, columnWidth, columnCount, columnIndex }: Props) {
+  const {
+    week: { currentTime },
+  } = useTheme();
+
   const leftLine = {
     left: toPercent(columnWidth * columnIndex),
     width: toPercent(columnWidth * columnIndex),
@@ -27,11 +32,7 @@ export function CurrentTimeIndicator({ top, columnWidth, columnCount, columnInde
     left: toPercent(columnWidth * (columnIndex + 1)),
     width: toPercent(columnWidth * (columnCount - columnIndex + 1)),
   };
-
-  const currentTimeLeftBorderTop = '1px dashed #515ce6';
-  const currentTimeBulletBackgroundColor = '#515ce6';
-  const currentTimeTodayBorderTop = '1px solid #515ce6';
-  const currentTimeRightBorderTop = 'none';
+  const currentTimeColor = currentTime.color;
 
   return (
     <div
@@ -41,25 +42,24 @@ export function CurrentTimeIndicator({ top, columnWidth, columnCount, columnInde
     >
       <div
         className={classNames.left}
-        style={{ width: leftLine.width, borderTop: currentTimeLeftBorderTop }}
+        style={{ width: leftLine.width, borderColor: currentTimeColor }}
       />
       <div
         className={classNames.marker}
-        style={{ left: leftLine.left, backgroundColor: currentTimeBulletBackgroundColor }}
+        style={{ left: leftLine.left, backgroundColor: currentTimeColor }}
       />
       <div
         className={classNames.today}
         style={{
           left: leftLine.left,
           width: toPercent(columnWidth),
-          borderTop: currentTimeTodayBorderTop,
+          borderColor: currentTimeColor,
         }}
       />
       <div
         className={classNames.right}
         style={{
           left: rightLine.left,
-          borderTop: currentTimeRightBorderTop,
         }}
       />
     </div>
