@@ -350,14 +350,11 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   /**
    * Render the calendar.
    * @example
-   * var silent = true;
-   * calendar.clear();
-   * calendar.createEvents(events, silent);
    * calendar.render();
    * @example
    * // Render a calendar when resizing a window.
-   * window.addEventListener('resize', function() {
-   *     calendar.render();
+   * window.addEventListener('resize', () => {
+   *   calendar.render();
    * });
    */
   render() {
