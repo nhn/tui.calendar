@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { useLayoutEffect, useMemo, useState } from 'preact/hooks';
 
 import { addTimeGridPrefix, className as timegridClassName } from '@src/components/timeGrid';
 import { Column } from '@src/components/timeGrid/column';
@@ -13,6 +13,7 @@ import { cls, toPercent, toPx } from '@src/helpers/css';
 import { createGridPositionFinder } from '@src/helpers/grid';
 import { timeGridSelectionHelper } from '@src/helpers/gridSelection';
 import { useDOMNode } from '@src/hooks/common/domNode';
+import { useIsMounted } from '@src/hooks/common/useIsMounted';
 import { useGridSelection } from '@src/hooks/gridSelection/gridSelection';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
@@ -46,8 +47,8 @@ export function TimeGrid({
   timeGridData,
   events,
 }: Props) {
+  const isMounted = useIsMounted();
   const [timeIndicatorTop, setTimeIndicatorTop] = useState<number | null>(null);
-  const isMountedRef = useRef(false);
 
   const { columns, rows } = timeGridData;
   const lastColumnIndex = columns.length - 1;
@@ -90,7 +91,7 @@ export function TimeGrid({
   // Calculate initial setTimeIndicatorTop
   // eslint-disable-next-line consistent-return
   useLayoutEffect(() => {
-    if (!isMountedRef.current && currentDateIndexInColumns >= 0) {
+    if (isMounted() && currentDateIndexInColumns >= 0) {
       const now = new TZDate();
       const currentDate = timeGridData.columns[currentDateIndexInColumns].date;
       const startTime = setTimeStrToDate(currentDate, timeGridData.rows[0].startTime);
@@ -100,14 +101,8 @@ export function TimeGrid({
         const initialTimeIndicatorTop = getTopPercentByTime(now, startTime, endTime);
         setTimeIndicatorTop(initialTimeIndicatorTop);
       }
-
-      isMountedRef.current = true;
-
-      return () => {
-        isMountedRef.current = false;
-      };
     }
-  }, [currentDateIndexInColumns, timeGridData]);
+  }, [currentDateIndexInColumns, isMounted, timeGridData]);
 
   return (
     <div className={classNames.timegrid}>
