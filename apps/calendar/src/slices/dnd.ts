@@ -2,6 +2,7 @@ import produce from 'immer';
 
 import EventUIModel from '@src/model/eventUIModel';
 
+import { DraggingTypes } from '@t/drag';
 import { CalendarState, CalendarStore, SetState } from '@t/store';
 
 export enum DraggingState {
@@ -12,7 +13,7 @@ export enum DraggingState {
 
 export interface DndSlice {
   dnd: {
-    draggingItemType: string | null;
+    draggingItemType: DraggingTypes | null;
     draggingState: DraggingState;
     initX: number | null;
     initY: number | null;
@@ -47,7 +48,7 @@ export function createDndDispatchers(set: SetState<CalendarStore>): DndDispatche
   return {
     initDrag: (initState) => {
       set(
-        produce((state) => {
+        produce((state: CalendarState) => {
           state.dnd = {
             ...state.dnd,
             ...initState,
@@ -58,7 +59,7 @@ export function createDndDispatchers(set: SetState<CalendarStore>): DndDispatche
     },
     setDraggingState: (newState) => {
       set(
-        produce((state) => {
+        produce((state: CalendarState) => {
           state.dnd = {
             ...state.dnd,
             ...newState,
@@ -69,7 +70,7 @@ export function createDndDispatchers(set: SetState<CalendarStore>): DndDispatche
     },
     reset: () => {
       set(
-        produce((state) => {
+        produce((state: CalendarState) => {
           state.dnd = createDndSlice().dnd;
         })
       );

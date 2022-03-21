@@ -7,6 +7,7 @@ import { CalendarStore, SetState } from '@t/store';
 
 export type WeekGridRows = 'milestone' | 'task' | 'allday' | string;
 
+// @TODO: Change name to layout & merge slice into layout
 export type WeekViewLayoutSlice = {
   lastPanelType: string | null;
   layout: number;

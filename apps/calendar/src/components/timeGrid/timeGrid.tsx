@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { useEffect, useMemo, useState } from 'preact/hooks';
 
 import { addTimeGridPrefix, className as timegridClassName } from '@src/components/timeGrid';
 import { Column } from '@src/components/timeGrid/column';
@@ -62,11 +62,9 @@ export function TimeGrid({
   timeGridData,
   events,
 }: Props) {
-  const [stickyContainer, setStickyContainer] = useState<HTMLElement | null>(null);
   const [columnLeft, setColumnLeft] = useState(0);
   const [intervalId, setIntervalId] = useState<TimerID>(null);
   const [timerId, setTimerId] = useState<TimerID>(null);
-  const stickyContainerRef = useRef<HTMLDivElement>(null);
   const forceUpdate = useForceUpdate();
 
   const onChangeCollapsed = (collapsed: boolean) =>
@@ -106,10 +104,6 @@ export function TimeGrid({
 
     if (showCurrentTime) {
       addTimeoutOnExactMinutes();
-    }
-
-    if (stickyContainerRef.current) {
-      setStickyContainer(stickyContainerRef.current);
     }
 
     return () => {
@@ -198,7 +192,6 @@ export function TimeGrid({
           ) : null}
         </div>
       </div>
-      <div ref={stickyContainerRef} />
     </div>
   );
 }
