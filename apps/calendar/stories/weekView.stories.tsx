@@ -28,6 +28,7 @@ function createWeekEvents() {
   const tuesday = addDate(sunday, 2);
   const wednesday = addDate(sunday, 3);
   const thursday = addDate(sunday, 4);
+  const friday = addDate(sunday, 5);
   const saturday = addDate(sunday, 6);
   const events: EventModelData[] = [
     {
@@ -60,11 +61,11 @@ function createWeekEvents() {
     {
       id: '4',
       calendarId: 'cal1',
-      title: 'long time event',
+      title: 'two-view event',
       category: 'time',
       isAllday: false,
-      start: setTimeStrToDate(sunday, '10:00'),
-      end: setTimeStrToDate(addDate(sunday, 1), '06:00'),
+      start: setTimeStrToDate(addDate(sunday, -1), '10:00'),
+      end: setTimeStrToDate(sunday, '06:00'),
     },
     {
       id: '5',
@@ -74,6 +75,15 @@ function createWeekEvents() {
       isAllday: false,
       start: setTimeStrToDate(wednesday, '04:00'),
       end: setTimeStrToDate(wednesday, '06:00'),
+    },
+    {
+      id: '6',
+      calendarId: 'cal1',
+      title: 'long time event',
+      category: 'time',
+      isAllday: false,
+      start: setTimeStrToDate(friday, '10:00'),
+      end: setTimeStrToDate(saturday, '06:00'),
     },
   ];
 

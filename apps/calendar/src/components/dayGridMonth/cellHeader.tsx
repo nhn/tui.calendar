@@ -2,8 +2,10 @@ import { h } from 'preact';
 
 import { MoreEventsButton } from '@src/components/dayGridMonth/moreEventsButton';
 import { Template } from '@src/components/template';
+import { useStore } from '@src/contexts/calendarStore';
 import { useTheme } from '@src/contexts/theme';
 import { cls } from '@src/helpers/css';
+import { viewSelector } from '@src/selectors';
 import Theme from '@src/theme';
 import TZDate from '@src/time/date';
 import { Day, toFormat } from '@src/time/datetime';
@@ -20,10 +22,17 @@ interface Props {
   onClickExceedCount: () => void;
 }
 
-function getDateColor(date: TZDate, theme: Theme) {
+function getDateColor({
+  date,
+  theme,
+  renderDate,
+}: {
+  date: TZDate;
+  theme: Theme;
+  renderDate: TZDate;
+}) {
   const dayIndex = date.getDay();
-  // @TODO: calculate based on today(need to calculate date when prev & next used)
-  const thisMonth = new TZDate().getMonth();
+  const thisMonth = renderDate.getMonth();
   const isSameMonth = thisMonth === date.getMonth();
 
   const {
@@ -48,6 +57,7 @@ export function CellHeader({
   date,
   onClickExceedCount,
 }: Props) {
+  const { renderDate } = useStore(viewSelector);
   const theme = useTheme();
 
   const ymd = toFormat(date, 'YYYYMMDD');
@@ -56,12 +66,12 @@ export function CellHeader({
     date: toFormat(date, 'YYYY-MM-DD'),
     day: date.getDay(),
     hiddenEventCount: exceedCount,
-    isOtherMonth: true, // @TODO: 현재 렌더링된 월간뷰와 셀 날짜의 월을 비교
+    isOtherMonth: date.getMonth() !== renderDate.getMonth(),
     isToday: ymd === todayYmd,
     month: date.getMonth(),
     ymd,
   };
-  const gridCellDateStyle = { color: getDateColor(date, theme) };
+  const gridCellDateStyle = { color: getDateColor({ date, theme, renderDate }) };
 
   return (
     <div className={cls(`grid-cell-${type}`)}>

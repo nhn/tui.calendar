@@ -1,3 +1,5 @@
+// @FIXME
+
 import { ComponentProps, h } from 'preact';
 
 import { StoryFn } from '@storybook/preact';
@@ -38,8 +40,8 @@ const Template: StoryFn<ComponentProps<typeof Column>> = (args) => (
 export const Default = Template.bind({});
 Default.args = {
   columnDate: new TZDate(),
-  timeGridRows: getTimeGridData().rows,
-  events: [],
+  timeGridData: getTimeGridData(),
+  totalUIModels: [],
   columnWidth: '20%',
 };
 
@@ -72,16 +74,16 @@ const getBackgroundEvents = () => {
 export const WithBackgroundEvents = Template.bind({});
 WithBackgroundEvents.args = {
   columnDate: new TZDate(),
-  timeGridRows: getTimeGridData().rows,
-  events: getBackgroundEvents(),
+  timeGridData: getTimeGridData(),
+  totalUIModels: [getBackgroundEvents()],
   columnWidth: '20%',
 };
 
 export const HasBackgroundColor = Template.bind({});
 HasBackgroundColor.args = {
   columnDate: new TZDate(),
-  timeGridRows: getTimeGridData().rows,
-  events: [],
+  timeGridData: getTimeGridData(),
+  totalUIModels: [],
   columnWidth: '20%',
   backgroundColor: 'rgba(81, 92, 230, 0.05)',
 };

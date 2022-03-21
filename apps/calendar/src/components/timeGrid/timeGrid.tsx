@@ -7,7 +7,7 @@ import { CurrentTimeIndicator } from '@src/components/timeGrid/currentTimeIndica
 import { GridLines } from '@src/components/timeGrid/gridLines';
 import { MovingEventShadow } from '@src/components/timeGrid/movingEventShadow';
 import { TimeColumn } from '@src/components/timeGrid/timeColumn';
-import { isBetween } from '@src/controller/column';
+import { isBetween, setRenderInfoOfUIModels } from '@src/controller/column';
 import { getTopPercentByTime } from '@src/controller/times';
 import { cls, toPercent, toPx } from '@src/helpers/css';
 import { createGridPositionFinder } from '@src/helpers/grid';
@@ -16,7 +16,14 @@ import { useDOMNode } from '@src/hooks/common/domNode';
 import { useGridSelection } from '@src/hooks/gridSelection/gridSelection';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
-import { isSameDate, SIXTY_SECONDS, toEndOfDay, toStartOfDay } from '@src/time/datetime';
+import {
+  isSameDate,
+  setTimeStrToDate,
+  SIXTY_SECONDS,
+  toEndOfDay,
+  toStartOfDay,
+} from '@src/time/datetime';
+import { first, last } from '@src/utils/array';
 
 import { TimeGridData } from '@t/grid';
 import { TimezoneConfig } from '@t/options';
@@ -108,15 +115,23 @@ export function TimeGrid({
   const { columns, rows } = timeGridData;
   const lastColumnIndex = columns.length - 1;
 
-  const eventsByColumns = useMemo(
+  const totalUIModels = useMemo(
     () =>
-      columns.map(({ date }) =>
-        events
-          .filter(isBetween(toStartOfDay(date), toEndOfDay(date)))
-          // NOTE: prevent shared reference between columns
-          .map((uiModel) => uiModel.clone())
-      ),
-    [columns, events]
+      columns
+        .map(({ date }) =>
+          events
+            .filter(isBetween(toStartOfDay(date), toEndOfDay(date)))
+            // NOTE: prevent shared reference between columns
+            .map((uiModel) => uiModel.clone())
+        )
+        .map((uiModelsByColumn, columnIndex) =>
+          setRenderInfoOfUIModels(
+            uiModelsByColumn,
+            setTimeStrToDate(columns[columnIndex].date, first(rows).startTime),
+            setTimeStrToDate(columns[columnIndex].date, last(rows).endTime)
+          )
+        ),
+    [columns, rows, events]
   );
 
   const now = new TZDate();
@@ -157,11 +172,12 @@ export function TimeGrid({
           {columns.map((column, index) => (
             <Column
               key={column.date.toString()}
-              timeGridRows={rows}
+              timeGridData={timeGridData}
               columnDate={column.date}
               columnWidth={toPercent(column.width)}
               columnIndex={index}
-              events={eventsByColumns[index]}
+              totalUIModels={totalUIModels}
+              gridPositionFinder={gridPositionFinder}
               isLastColumn={index === lastColumnIndex}
             />
           ))}
