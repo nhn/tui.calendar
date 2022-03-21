@@ -1,9 +1,11 @@
 import { h } from 'preact';
+import { useEffect } from 'preact/hooks';
 
 import { Layout } from '@src/components/layout';
-import { useStore } from '@src/contexts/calendarStore';
+import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useTheme } from '@src/contexts/theme';
 import CalendarControl from '@src/factory/calendarControl';
+import Month from '@src/factory/month';
 import { getWeekDates } from '@src/helpers/grid';
 import { act, screen } from '@src/test/utils';
 import TZDate from '@src/time/date';
@@ -933,5 +935,51 @@ describe('setCalendarColor', () => {
         `${calendarIdToDoNotChange}-${notChangedColor}-${notChangedBgColor}-${notChangedBorderColor}-${notChangedDragBgColor}`
       )
     ).toBeInTheDocument();
+  });
+});
+
+describe('hideMoreView', () => {
+  function MockMonthMoreViewPopup() {
+    const { showSeeMorePopup } = useDispatch('popup');
+
+    useEffect(() => {
+      showSeeMorePopup({ date: new TZDate(), events: [], popupPosition: { top: 0, left: 0 } });
+    }, [showSeeMorePopup]);
+
+    return <Layout>mock</Layout>; // popup component is rendered in Layout component;
+  }
+  class MockCalendarMonthMoreViewPopup extends Month {
+    protected getComponent() {
+      return <MockMonthMoreViewPopup />;
+    }
+  }
+
+  let container: HTMLDivElement;
+  let mockMonthView: MockCalendarMonthMoreViewPopup;
+
+  beforeEach(() => {
+    container = document.createElement('div');
+    document.body.appendChild(container);
+    mockMonthView = new MockCalendarMonthMoreViewPopup(container);
+    act(() => {
+      mockMonthView.render();
+    });
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('should hide see more popup', () => {
+    // Given
+    expect(screen.queryByRole('dialog')).toBeInTheDocument();
+
+    // When
+    act(() => {
+      mockMonthView.hideMoreView();
+    });
+
+    // Then
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 });
