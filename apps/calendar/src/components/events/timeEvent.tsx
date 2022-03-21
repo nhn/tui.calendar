@@ -23,7 +23,7 @@ const classNames = {
 
 interface Props {
   uiModel: EventUIModel;
-  isDraggingTarget?: boolean;
+  isResizingGuide?: boolean;
   nextStartTime?: TZDate | null;
 }
 
@@ -91,7 +91,7 @@ function getStyles(uiModel: EventUIModel, isDraggingTarget: boolean, hasNextStar
   };
 }
 
-export function TimeEvent({ uiModel, nextStartTime }: Props) {
+export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: Props) {
   const [isDraggingTarget, setIsDraggingTarget] = useState<boolean>(false);
   const { setDraggingEventUIModel } = useDispatch('dnd');
 
@@ -108,7 +108,8 @@ export function TimeEvent({ uiModel, nextStartTime }: Props) {
     if (
       draggingState === DraggingState.DRAGGING &&
       draggingEventUIModel?.cid() === uiModel.cid() &&
-      isNil(nextStartTime)
+      isNil(nextStartTime) &&
+      !isResizingGuide
     ) {
       setIsDraggingTarget(true);
     } else {
@@ -128,6 +129,22 @@ export function TimeEvent({ uiModel, nextStartTime }: Props) {
     e.stopPropagation();
     startEventMove(e);
   };
+
+  const startEventResize = useDrag(
+    DRAGGING_TYPE_CREATORS.resizeEvent('timeGrid', `${uiModel.cid()}`),
+    {
+      onInit: () => {
+        setDraggingEventUIModel(uiModel);
+      },
+      onMouseUp: clearIsDraggingTarget,
+    }
+  );
+  const handleEventResizeStart = (e: MouseEvent) => {
+    e.stopPropagation();
+    startEventResize(e);
+  };
+
+  const shouldShowResizeHandle = !croppedEnd && !isReadOnly && !isDraggingTarget;
 
   return (
     <div
@@ -157,7 +174,9 @@ export function TimeEvent({ uiModel, nextStartTime }: Props) {
           <Template template="comingDuration" model={model} />
         </div>
       ) : null}
-      {!croppedEnd && !isReadOnly ? <div className={classNames.resizeHandleX} /> : null}
+      {shouldShowResizeHandle ? (
+        <div className={classNames.resizeHandleX} onMouseDown={handleEventResizeStart} />
+      ) : null}
     </div>
   );
 }
