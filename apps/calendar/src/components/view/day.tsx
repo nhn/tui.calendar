@@ -15,7 +15,7 @@ import { getDayNames } from '@src/helpers/dayName';
 import { createTimeGridData, getDayGridEvents } from '@src/helpers/grid';
 import { getDisplayPanel } from '@src/helpers/view';
 import { useDOMNode } from '@src/hooks/common/domNode';
-import { useTimeGridScrollSync } from '@src/hooks/timeGrid/timeGridScrollSync';
+import { useTimeGridScrollSync } from '@src/hooks/timeGrid/useTimeGridScrollSync';
 import { calendarSelector, optionsSelector, weekViewLayoutSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
 import { getRowStyleInfo } from '@src/time/datetime';
