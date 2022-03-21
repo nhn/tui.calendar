@@ -530,7 +530,13 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    * console.log(element);
    */
   getElement(eventId: string, calendarId: string) {
-    // console.log('getElement', eventId, calendarId);
+    const event = this.getEvent(eventId, calendarId);
+
+    if (event && this.container) {
+      return this.container.querySelector(
+        `[data-event-id="${eventId}"][data-calendar-id="${calendarId}"]`
+      );
+    }
 
     return null;
   }

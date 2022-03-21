@@ -97,7 +97,7 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
 
   const { model, goingDurationHeight, modelDurationHeight, comingDurationHeight, croppedEnd } =
     uiModel;
-  const { isReadOnly } = model;
+  const { isReadOnly, id, calendarId } = model;
   const { containerStyle, goingDurationStyle, modelDurationStyle, comingDurationStyle } = getStyles(
     uiModel,
     isDraggingTarget,
@@ -149,6 +149,8 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
   return (
     <div
       data-testid={`time-event-${model.title}-${uiModel.cid()}`}
+      data-calendar-id={calendarId}
+      data-event-id={id}
       className={classNames.time}
       style={containerStyle}
       onMouseDown={passConditionalProp(isNil(nextStartTime), handleEventMoveStart)}

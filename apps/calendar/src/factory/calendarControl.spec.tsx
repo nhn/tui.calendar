@@ -1,12 +1,15 @@
 import { h } from 'preact';
 import { useEffect } from 'preact/hooks';
 
+import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import { Layout } from '@src/components/layout';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useTheme } from '@src/contexts/theme';
 import CalendarControl from '@src/factory/calendarControl';
 import Month from '@src/factory/month';
 import { getWeekDates } from '@src/helpers/grid';
+import EventModel from '@src/model/eventModel';
+import EventUIModel from '@src/model/eventUIModel';
 import { act, screen } from '@src/test/utils';
 import TZDate from '@src/time/date';
 import { addDate, isSameDate, subtractDate } from '@src/time/datetime';
@@ -954,11 +957,10 @@ describe('hideMoreView', () => {
     }
   }
 
-  let container: HTMLDivElement;
   let mockMonthView: MockCalendarMonthMoreViewPopup;
 
   beforeEach(() => {
-    container = document.createElement('div');
+    const container = document.createElement('div');
     document.body.appendChild(container);
     mockMonthView = new MockCalendarMonthMoreViewPopup(container);
     act(() => {
@@ -981,5 +983,49 @@ describe('hideMoreView', () => {
 
     // Then
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+});
+
+describe('getElement', () => {
+  const eventModel = new EventModel();
+  eventModel.calendarId = 'mockCalendarId';
+  eventModel.id = 'mockEventId';
+  const mockEventUIModel = new EventUIModel(eventModel);
+  class MockCalenderEvent extends CalendarControl {
+    protected getComponent() {
+      return (
+        <div>
+          <HorizontalEvent eventHeight={20} headerHeight={0} uiModel={mockEventUIModel} />
+          mock event
+        </div>
+      );
+    }
+  }
+
+  let mockCalenderEvent: MockCalenderEvent;
+
+  beforeEach(() => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+    mockCalenderEvent = new MockCalenderEvent(container);
+    act(() => {
+      mockCalenderEvent.createEvents([eventModel]);
+      mockCalenderEvent.render();
+    });
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('should find event element', () => {
+    // Given
+    const eventElement = screen.getByText('mock event').firstChild;
+
+    // When
+    const expectedEventElement = mockCalenderEvent.getElement('mockEventId', 'mockCalendarId');
+
+    // Then
+    expect(eventElement).toEqual(expectedEventElement);
   });
 });

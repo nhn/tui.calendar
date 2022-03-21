@@ -218,7 +218,7 @@ export function HorizontalEvent({
     onMoveStart(e);
   };
 
-  const { isReadOnly } = uiModel.model;
+  const { isReadOnly, id, calendarId } = uiModel.model;
   const shouldHideResizeHandler = flat || isDraggingTarget || uiModel.exceedRight || isReadOnly;
   const isDraggableEvent = isNil(resizingWidth) && isNil(movingLeft);
 
@@ -227,6 +227,8 @@ export function HorizontalEvent({
       className={dayEventBlockClassName}
       style={containerStyle}
       data-testid={passConditionalProp(isDraggableEvent, getTestId(uiModel))}
+      data-calendar-id={calendarId}
+      data-event-id={id}
       ref={eventContainerRef}
     >
       <div
