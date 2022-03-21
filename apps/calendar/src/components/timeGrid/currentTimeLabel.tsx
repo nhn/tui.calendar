@@ -1,11 +1,10 @@
 import { h } from 'preact';
-import { useEffect, useRef, useState } from 'preact/hooks';
 
 import { Template } from '@src/components/template';
 import { addTimeGridPrefix, timeFormats } from '@src/components/timeGrid';
+import { useTheme } from '@src/contexts/theme';
 import { cls, toPercent } from '@src/helpers/css';
 import TZDate from '@src/time/date';
-import { getSize } from '@src/utils/dom';
 
 import { TimeUnit } from '@t/events';
 
@@ -16,31 +15,13 @@ const classNames = {
 interface Props {
   unit: TimeUnit;
   top: number;
-  time?: TZDate;
-  dateDifference?: number;
+  time: TZDate;
 }
 
-export function CurrentTimeLabel({ unit, dateDifference = 0, top, time = new TZDate() }: Props) {
-  const defaultTop = toPercent(top);
-  const [topValue, setTop] = useState(defaultTop);
-  const ref = useRef<HTMLDivElement>(null);
-  const signRef = useRef<HTMLDivElement>(null);
-
-  const adjustTopForCentering = () => {
-    if (ref.current) {
-      const { height } = getSize(ref.current);
-      let half = Math.ceil(height / 2);
-
-      if (signRef.current) {
-        const { height: signHeight } = getSize(signRef.current);
-        half += signHeight;
-      }
-
-      setTop(`calc(${defaultTop} - ${half}px)`);
-    }
-  };
-
-  useEffect(adjustTopForCentering, [defaultTop]);
+export function CurrentTimeLabel({ unit, top, time }: Props) {
+  const {
+    week: { currentTime },
+  } = useTheme();
 
   const model = {
     unit,
@@ -49,11 +30,11 @@ export function CurrentTimeLabel({ unit, dateDifference = 0, top, time = new TZD
   };
 
   return (
-    <div className={cls(classNames.currentTime)} style={{ top: topValue }}>
-      {dateDifference ? <div ref={signRef}>{`[${dateDifference}]`}</div> : null}
-      <div ref={ref}>
-        <Template template="timegridCurrentTime" model={model} />
-      </div>
+    <div
+      className={cls(classNames.currentTime)}
+      style={{ top: toPercent(top), color: currentTime.color }}
+    >
+      <Template template="timegridCurrentTime" model={model} as="span" />
     </div>
   );
 }

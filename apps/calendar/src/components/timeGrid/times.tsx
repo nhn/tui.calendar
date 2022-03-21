@@ -147,14 +147,7 @@ export function Times({
           </div>
         );
       })}
-      {showCurrentTime ? (
-        <CurrentTimeLabel
-          unit={unit}
-          time={currentTime}
-          top={top}
-          dateDifference={dateDifference}
-        />
-      ) : null}
+      {showCurrentTime ? <CurrentTimeLabel unit={unit} time={currentTime} top={top} /> : null}
     </div>
   );
 }

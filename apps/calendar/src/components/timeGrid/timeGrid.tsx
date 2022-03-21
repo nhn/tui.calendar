@@ -23,7 +23,6 @@ import {
   MS_PER_MINUTES,
   setTimeStrToDate,
   toEndOfDay,
-  toFormat,
   toStartOfDay,
 } from '@src/time/datetime';
 import { first, last } from '@src/utils/array';
@@ -45,20 +44,12 @@ interface Props {
   timezones?: TimezoneConfig[];
 }
 
-function calculateLeft(timesWidth: number, timezones: Array<any>) {
-  return timesWidth * timezones.length;
-}
-
-export function TimeGrid({
-  currentTime = new TZDate(),
-  timesWidth = 120,
-  timezones = [{}],
-  timeGridData,
-  events,
-}: Props) {
+export function TimeGrid({ timesWidth = 120, timeGridData, events }: Props) {
   const isMounted = useIsMounted();
-  const [timeIndicatorTop, setTimeIndicatorTop] = useState<number | null>(null);
-  const [timeIndicatorText, setTimeIndicatorText] = useState<string | null>(null);
+  const [currentTimeIndicatorState, setCurrentTimeIndicatorState] = useState<{
+    top: number;
+    now: TZDate;
+  } | null>(null);
 
   const { columns, rows } = timeGridData;
   const lastColumnIndex = columns.length - 1;
@@ -82,7 +73,7 @@ export function TimeGrid({
     [columns, rows, events]
   );
 
-  const currentTimeIndicatorData = useMemo(() => {
+  const currentDateData = useMemo(() => {
     const currentDateIndexInColumns = columns.findIndex((column) =>
       isSameDate(column.date, new TZDate())
     );
@@ -125,33 +116,41 @@ export function TimeGrid({
   });
 
   const updateTimeGridIndicator = useCallback(() => {
-    if (isPresent(currentTimeIndicatorData)) {
-      const { startTime, endTime } = currentTimeIndicatorData;
+    if (isPresent(currentDateData)) {
+      const { startTime, endTime } = currentDateData;
       const now = new TZDate();
 
       if (startTime <= now && now <= endTime) {
-        const initialTimeIndicatorTop = getTopPercentByTime(now, startTime, endTime);
-        const indicatorText = toFormat(now, 'HH:mm');
-        setTimeIndicatorTop(initialTimeIndicatorTop);
-        setTimeIndicatorText(indicatorText);
+        setCurrentTimeIndicatorState({
+          top: getTopPercentByTime(now, startTime, endTime),
+          now,
+        });
       }
     }
-  }, [currentTimeIndicatorData]);
+  }, [currentDateData]);
 
   // Calculate initial setTimeIndicatorTop
   useLayoutEffect(() => {
-    if (isMounted() && (currentTimeIndicatorData?.currentDateIndex ?? -1) >= 0) {
-      updateTimeGridIndicator();
+    if (isMounted()) {
+      if ((currentDateData?.currentDateIndex ?? -1) >= 0) {
+        updateTimeGridIndicator();
+      } else {
+        setCurrentTimeIndicatorState(null);
+      }
     }
-  }, [currentTimeIndicatorData, isMounted, updateTimeGridIndicator]);
+  }, [currentDateData, isMounted, updateTimeGridIndicator]);
 
   // Set interval to update timeIndicatorTop
-  useInterval(updateTimeGridIndicator, isPresent(currentTimeIndicatorData) ? MS_PER_MINUTES : null);
+  useInterval(updateTimeGridIndicator, isPresent(currentDateData) ? MS_PER_MINUTES : null);
 
   return (
     <div className={classNames.timegrid}>
       <div className={classNames.scrollArea}>
-        <TimeColumn timeGridRows={rows} columnWidth={timesWidth} />
+        <TimeColumn
+          timeGridRows={rows}
+          columnWidth={timesWidth}
+          currentTimeIndicatorState={currentTimeIndicatorState}
+        />
         <div
           className={cls('columns')}
           style={{ left: toPx(timesWidth) }}
@@ -172,12 +171,12 @@ export function TimeGrid({
               isLastColumn={index === lastColumnIndex}
             />
           ))}
-          {isPresent(currentTimeIndicatorData) && timeIndicatorTop ? (
+          {isPresent(currentDateData) && isPresent(currentTimeIndicatorState) ? (
             <CurrentTimeIndicator
-              top={timeIndicatorTop}
+              top={currentTimeIndicatorState.top}
               columnWidth={columns[0].width}
               columnCount={columns.length}
-              columnIndex={currentTimeIndicatorData.currentDateIndex}
+              columnIndex={currentDateData.currentDateIndex}
             />
           ) : null}
         </div>

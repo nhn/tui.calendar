@@ -31,7 +31,6 @@
   transform: translateY(-50%);
   position: absolute;
   right: 0;
-  top: 50%;
 }
 
 .timegrid-times .timegrid-time-hidden {
@@ -44,4 +43,5 @@
   right: 5px;
   font-size: 11px;
   font-weight: normal;
+  transform: translateY(-50%);
 }
