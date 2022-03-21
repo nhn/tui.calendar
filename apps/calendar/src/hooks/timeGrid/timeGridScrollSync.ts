@@ -22,12 +22,11 @@ export function useTimeGridScrollSync(scrollArea: HTMLDivElement | null, rowCoun
       const scrollBoundary = Math.floor(scrollHeight / rowCount);
       const layoutHeight = offsetTop + offsetHeight;
 
-      let scrollDiff: number;
       if (y < offsetTop + scrollBoundary) {
-        scrollDiff = y - (offsetTop + scrollBoundary);
+        const scrollDiff = y - (offsetTop + scrollBoundary);
         scrollArea.scrollTop = Math.max(0, scrollArea.scrollTop + scrollDiff);
       } else if (y > layoutHeight - scrollBoundary) {
-        scrollDiff = y - (layoutHeight - scrollBoundary);
+        const scrollDiff = y - (layoutHeight - scrollBoundary);
         scrollArea.scrollTop = Math.min(offsetHeight, scrollArea.scrollTop + scrollDiff);
       }
     }
