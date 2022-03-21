@@ -8,7 +8,6 @@ import {
   updateEvent,
 } from '@src/controller/base';
 import EventModel from '@src/model/eventModel';
-import Collection from '@src/utils/collection';
 
 import { CalendarData, EventModelData } from '@t/events';
 import { CalendarColor, CalendarInfo } from '@t/options';
@@ -82,7 +81,6 @@ export function createCalendarDispatchers(set: SetState<CalendarStore>): Calenda
 
             return calendar;
           });
-          const collection = new Collection<EventModel>((event) => event.cid());
           const events = state.calendar.events.toArray().map((event) => {
             if (event.calendarId === calendarId) {
               event.color = colorOptions.color ?? event.color;
@@ -93,9 +91,7 @@ export function createCalendarDispatchers(set: SetState<CalendarStore>): Calenda
 
             return event;
           });
-          if (events) {
-            collection.add(...events);
-          }
+          const collection = createEventCollection<EventModel>(...events);
 
           state.calendar.calendars = calendars;
           state.calendar.events = collection;
