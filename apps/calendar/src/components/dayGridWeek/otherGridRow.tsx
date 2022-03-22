@@ -6,6 +6,7 @@ import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import { Template } from '@src/components/template';
 import { DEFAULT_PANEL_HEIGHT, WEEK_EVENT_MARGIN_TOP } from '@src/constants/style';
 import { cls } from '@src/helpers/css';
+import { isVisibleEvent } from '@src/helpers/events';
 import { EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
 import { useDayGridRowTitleStyle } from '@src/hooks/dayGridWeek/dayGridRowTitleStyle';
 import { useGridRowHeightController } from '@src/hooks/dayGridWeek/gridRowHeightController';
@@ -49,6 +50,7 @@ export function OtherGridRow({
   const horizontalEvents = useMemo(
     () =>
       events
+        .filter((uiModel) => isVisibleEvent(uiModel.model))
         .filter(isWithinHeight(height, EVENT_HEIGHT + WEEK_EVENT_MARGIN_TOP))
         .map((uiModel) => (
           <HorizontalEvent

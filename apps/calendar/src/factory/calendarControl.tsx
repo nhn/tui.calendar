@@ -338,13 +338,14 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
 
   /**
    * Toggle events' visibility by calendar ID
-   * @param {string} calendarId - The calendar id value
-   * @param {boolean} toHide - Set true to hide events
-   * @param {boolean} [renderImmediately=true] - set true then render after change visible property each models
-   * @todo implement this
+   * @param {string|string[]} calendarId - The calendar id or ids to toggle
+   * @param {boolean} toHide - If set to true, hide the events. If set to false, show the events.
    */
-  toggleEvents(calendarId: string, toHide: boolean, renderImmediately = true) {
-    // console.log('toggleEvents', calendarId, toHide, renderImmediately);
+  toggleEvents(calendarId: string, toHide: boolean) {
+    const { toggleEvents } = this.getStoreDispatchers('calendar');
+    const calendarIds = Array.isArray(calendarId) ? calendarId : [calendarId];
+
+    toggleEvents(calendarIds, toHide);
   }
 
   /**

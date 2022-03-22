@@ -300,11 +300,7 @@ export default class Calendar {
 
   public today(): void;
 
-  public toggleEvents(calendarId: string, toHide: boolean, render?: boolean): void;
-
-  public toggleEventView(enabled: boolean): void;
-
-  public toggleTaskView(enabled: boolean): void;
+  public toggleEvents(calendarId: string, toHide: boolean): void;
 
   public updateEvent(eventId: string, calendarId: string, changes: EventModelData): void;
 

@@ -53,3 +53,7 @@ export function collidesWith({
 export function isSameEvent(event: EventModel, eventId: string, calendarId: string) {
   return event.id === eventId && event.calendarId === calendarId;
 }
+
+export function isVisibleEvent(event: EventModel) {
+  return event.isVisible;
+}

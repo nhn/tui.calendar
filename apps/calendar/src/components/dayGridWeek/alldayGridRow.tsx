@@ -9,6 +9,7 @@ import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import { Template } from '@src/components/template';
 import { DEFAULT_PANEL_HEIGHT, WEEK_EVENT_MARGIN_TOP } from '@src/constants/style';
 import { cls } from '@src/helpers/css';
+import { isVisibleEvent } from '@src/helpers/events';
 import { createGridPositionFinder, EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
 import { alldayGridRowSelectionHelper } from '@src/helpers/gridSelection';
 import { useDOMNode } from '@src/hooks/common/domNode';
@@ -67,6 +68,7 @@ export function AlldayGridRow({
   const horizontalEvents = useMemo(
     () =>
       events
+        .filter((uiModel) => isVisibleEvent(uiModel.model))
         .filter(isWithinHeight(height, EVENT_HEIGHT + WEEK_EVENT_MARGIN_TOP))
         .map((uiModel) => (
           <HorizontalEvent

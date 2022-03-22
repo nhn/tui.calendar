@@ -2,6 +2,7 @@ import { h } from 'preact';
 import { memo } from 'preact/compat';
 
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
+import { isVisibleEvent } from '@src/helpers/events';
 import { EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
 import EventUIModel from '@src/model/eventUIModel';
 
@@ -26,6 +27,7 @@ export const MonthEvents = memo(function MonthEvents({
   eventTopMargin,
 }: Props) {
   const dayEvents = events
+    .filter((uiModel) => isVisibleEvent(uiModel.model))
     .filter(isWithinHeight(height - headerHeight, eventHeight + eventTopMargin))
     .map((uiModel) => (
       <HorizontalEvent
