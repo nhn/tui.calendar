@@ -232,12 +232,6 @@ function flattenMatrix3d(matrices: DayGridEventMatrix): EventUIModel[] {
   return matrices.flatMap((matrix) => matrix.flatMap((models) => getModels(models)));
 }
 
-export function setTopForDayGridEvents(models: EventUIModel[]) {
-  models.forEach((model) => {
-    model.top += 1;
-  });
-}
-
 // @TODO: check & remove unused parameters
 const getTimeGridEventModels = (
   eventMatrix: TimeGridEventMatrix,

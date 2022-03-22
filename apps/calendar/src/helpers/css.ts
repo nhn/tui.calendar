@@ -1,20 +1,6 @@
 import { isString } from '@src/utils/type';
 
 export const CSS_PREFIX = 'toastui-calendar-';
-const weekdayGetViewID = new RegExp(`^${CSS_PREFIX}weekday[\\s]tui-view-(\\d+)`);
-const timeGetViewID = new RegExp(`^${CSS_PREFIX}time-date[\\s]tui-view-(\\d+)`);
-const viewMatchMap = {
-  allday: weekdayGetViewID,
-  daygrid: weekdayGetViewID,
-  time: timeGetViewID,
-};
-
-export function matchViewIDRegExp(
-  viewType: 'allday' | 'daygrid' | 'time',
-  cssClass: string
-): RegExpMatchArray | null {
-  return cssClass.match(viewMatchMap[viewType]);
-}
 
 interface ClassNameDictionary {
   [id: string]: boolean | undefined | null;

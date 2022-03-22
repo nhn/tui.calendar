@@ -70,6 +70,7 @@ function calculateTimeGridSelectionByCurrentIndex(
 
   return resultGridSelection;
 }
+
 export const timeGridSelectionHelper: GridSelectionHelper<
   typeof calculateTimeGridSelectionByCurrentIndex
 > = {
@@ -131,6 +132,7 @@ function calculateDayGridMonthSelectionByCurrentIndex(
 
   return { startCellIndex, endCellIndex };
 }
+
 export const dayGridMonthSelectionHelper: GridSelectionHelper<
   typeof calculateDayGridMonthSelectionByCurrentIndex
 > = {
@@ -160,6 +162,7 @@ function calculateAlldayGridRowSelectionByCurrentIndex(gridSelection: GridSelect
       }
     : null;
 }
+
 export const alldayGridRowSelectionHelper: GridSelectionHelper<
   typeof calculateAlldayGridRowSelectionByCurrentIndex
 > = {
