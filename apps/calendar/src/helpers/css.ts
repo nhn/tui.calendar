@@ -16,8 +16,6 @@ export function matchViewIDRegExp(
   return cssClass.match(viewMatchMap[viewType]);
 }
 
-const addPrefix = (str: string) => `${CSS_PREFIX}${str}`;
-
 interface ClassNameDictionary {
   [id: string]: boolean | undefined | null;
 }
@@ -43,15 +41,11 @@ export function cls(...args: ClassNameValue[]): string {
     }
   });
 
-  return result.map(addPrefix).join(' ');
+  return result.map((str: string) => `${CSS_PREFIX}${str}`).join(' ');
 }
 
 export function toPercent(value: number) {
   return `${value}%`;
-}
-
-export function toPx(value: number) {
-  return `${value}px`;
 }
 
 export function convertPxToNum(pxString: string) {

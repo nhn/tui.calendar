@@ -9,7 +9,7 @@ import { MovingEventShadow } from '@src/components/timeGrid/movingEventShadow';
 import { TimeColumn } from '@src/components/timeGrid/timeColumn';
 import { isBetween, setRenderInfoOfUIModels } from '@src/controller/column';
 import { getTopPercentByTime } from '@src/controller/times';
-import { cls, toPercent, toPx } from '@src/helpers/css';
+import { cls, toPercent } from '@src/helpers/css';
 import { createGridPositionFinder } from '@src/helpers/grid';
 import { timeGridSelectionHelper } from '@src/helpers/gridSelection';
 import { useDOMNode } from '@src/hooks/common/domNode';
@@ -163,7 +163,7 @@ export function TimeGrid({
         <TimeColumn timeGridRows={rows} columnWidth={timesWidth} />
         <div
           className={cls('columns')}
-          style={{ left: toPx(timesWidth) }}
+          style={{ left: timesWidth }}
           ref={setColumnsContainer}
           onMouseDown={onMouseDown}
         >
