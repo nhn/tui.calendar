@@ -61,6 +61,7 @@ export const TimeColumn = memo(function TimeColumn({
     <div
       className={cls(classNames.times)}
       style={{ width: columnWidth, borderRight, backgroundColor }}
+      data-testid="timegrid-time-column"
     >
       {rowsByHour.map((row, index) => {
         const isFirst = index === 0;

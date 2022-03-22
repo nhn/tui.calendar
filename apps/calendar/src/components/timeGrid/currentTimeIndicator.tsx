@@ -38,7 +38,7 @@ export function CurrentTimeIndicator({ top, columnWidth, columnCount, columnInde
     <div
       className={classNames.line}
       style={{ top: toPercent(top) }}
-      data-testid="timegrid-current-time-line"
+      data-testid="timegrid-current-time-indicator"
     >
       <div
         className={classNames.left}
