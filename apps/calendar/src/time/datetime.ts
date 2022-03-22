@@ -5,7 +5,6 @@ import TZDate from '@src/time/date';
 import { fill } from '@src/utils/array';
 
 import { TimeUnit } from '@t/events';
-import { MonthOptions } from '@t/options';
 import { CellStyle, FormattedTimeString, RawDate } from '@t/time/datetime';
 
 export enum Day {
@@ -539,22 +538,6 @@ export function isBetweenWithDate(d: TZDate, d1: TZDate, d2: TZDate): boolean {
   return n1 <= n && n <= n2;
 }
 
-export function toStartOfMinutes(date: TZDate): TZDate {
-  const startDate = new TZDate(date);
-
-  startDate.setMinutes(0, 0, 0);
-
-  return startDate;
-}
-
-export function toEndOfMinutes(date: TZDate): TZDate {
-  const startDate = new TZDate(date);
-
-  startDate.setMinutes(59, 59, 999);
-
-  return startDate;
-}
-
 /**
  * Get start date of specific month
  * @param {TZDate} date - date to get start date
@@ -590,77 +573,6 @@ export function toEndOfMonth(date: TZDate): TZDate {
 
 export function toEndOfYear(d: TZDate): TZDate {
   return new TZDate(d.getFullYear(), 11, 31, 23, 59, 59, 999);
-}
-
-/**
- * Return 2-dimensional array month calendar
- *
- * dates that different month with given date are negative values
- * @param {TZDate} month - date want to calculate month calendar
- * @param {object} options - options
- * @param {number} [options.startDayOfWeek=0] - start day of week
- * @param {boolean} options.isAlways6Week - whether the number of weeks are always 6
- * @param {number} options.visibleWeeksCount visible weeks count
- * @param {boolean} options.workweek - only show work week
- * @returns {Array.<TZDate[]>} calendar 2d array
- */
-export function arr2dCalendar(
-  month: TZDate,
-  options: {
-    startDayOfWeek: number;
-    visibleWeeksCount?: number;
-    workweek?: boolean;
-    isAlways6Week?: boolean;
-  }
-): Array<TZDate[]> {
-  const calendar: Array<TZDate[]> = [];
-  const { startDayOfWeek, visibleWeeksCount, workweek, isAlways6Week = true } = options;
-  let start;
-  let end;
-  let totalDate;
-  let week;
-
-  if (visibleWeeksCount) {
-    start = new TZDate(month);
-    end = new TZDate(month);
-    end.addDate(7 * (visibleWeeksCount - 1));
-  } else {
-    start = toStartOfMonth(month);
-    end = toEndOfMonth(month);
-  }
-
-  // create day number array by startDayOfWeek number
-  // 4 -> [4, 5, 6, 0, 1, 2, 3]
-  // 2 -> [2, 3, 4, 5, 6, 0, 1]
-  const weekArr = range(startDayOfWeek, 7).concat(range(7)).slice(0, 7);
-  const startIndex = weekArr.indexOf(start.getDay());
-  const endIndex = weekArr.indexOf(end.getDay());
-  // free dates after last date of this month
-  const afterDates = 7 - (endIndex + 1);
-
-  if (visibleWeeksCount) {
-    totalDate = 7 * visibleWeeksCount;
-  } else {
-    totalDate = isAlways6Week ? 7 * 6 : startIndex + end.getDate() + afterDates;
-  }
-  const cursor = toStartOfDay(start).addDate(-startIndex);
-  // iteratee all dates to render
-  range(totalDate).forEach((day: number) => {
-    if (!(day % 7)) {
-      // group each date by week
-      week = calendar[day / 7] = [];
-    }
-
-    const date = toStartOfDay(cursor);
-    if (!workweek || !isWeekend(date.getDay())) {
-      week.push(date);
-    }
-
-    // add date
-    cursor.setDate(cursor.getDate() + 1);
-  });
-
-  return calendar;
 }
 
 /**
@@ -793,24 +705,6 @@ export function getDateDifference(d1: TZDate, d2: TZDate) {
   const _d2 = new TZDate(d2.getFullYear(), d2.getMonth(), d2.getDate()).getTime();
 
   return Math.round((_d1 - _d2) / MS_PER_DAY);
-}
-
-export function getMonthCalendar(renderMonthDate: Date | TZDate, options: MonthOptions) {
-  const date = new TZDate(renderMonthDate);
-  const {
-    startDayOfWeek = 0,
-    visibleWeeksCount = 0,
-    workweek = false,
-    isAlways6Week = true,
-  } = options;
-  const weekCount = Math.min(visibleWeeksCount, 6);
-
-  return arr2dCalendar(date, {
-    startDayOfWeek,
-    workweek,
-    isAlways6Week: visibleWeeksCount ? false : isAlways6Week,
-    visibleWeeksCount: visibleWeeksCount ? weekCount : 0,
-  });
 }
 
 export function getStartAndEndDateFromCalendar(calendar: TZDate[][]) {

@@ -228,7 +228,7 @@ const getDayGridEventModels = (
 
 const getModels = (models: EventUIModel[]) => models.filter((model) => !!model);
 
-export function flattenMatrix3d(matrices: DayGridEventMatrix): EventUIModel[] {
+function flattenMatrix3d(matrices: DayGridEventMatrix): EventUIModel[] {
   return matrices.flatMap((matrix) => matrix.flatMap((models) => getModels(models)));
 }
 

@@ -1,9 +1,9 @@
 import Chance from 'chance';
 import moment from 'moment-timezone';
 
+import { createDateMatrixOfMonth } from '@src/helpers/grid';
 import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
-import { getMonthCalendar } from '@src/time/datetime';
 
 import { calendars } from '@stories/util/mockCalendars';
 
@@ -135,7 +135,7 @@ export function createRandomEvents(
 }
 
 export function createRandomEventModelsForMonth(length = defaultEventCount.month) {
-  const calendar = getMonthCalendar(new Date(), {});
+  const calendar = createDateMatrixOfMonth(new Date(), {});
   const data = createRandomEvents(
     'month',
     calendar[0][0],
