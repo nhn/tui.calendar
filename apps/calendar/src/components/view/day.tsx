@@ -52,10 +52,10 @@ export function Day() {
   const { eventView, taskView } = options;
   const weekOptions = options.week as Required<WeekOptions>;
   const { narrowWeekend, startDayOfWeek, workweek, hourStart, hourEnd } = weekOptions;
-  const weekDates = useMemo(() => [renderDate], [renderDate]);
-  const dayNames = getDayNames(weekDates);
+  const days = useMemo(() => [renderDate], [renderDate]);
+  const dayNames = getDayNames(days);
   const { rowStyleInfo, cellWidthMap } = getRowStyleInfo(
-    weekDates.length,
+    days.length,
     narrowWeekend,
     startDayOfWeek,
     workweek
@@ -67,18 +67,18 @@ export function Day() {
     }),
     [calendar]
   );
-  const dayGridEvents = getDayGridEvents(weekDates, calendarData, {
+  const dayGridEvents = getDayGridEvents(days, calendarData, {
     narrowWeekend,
     hourStart,
     hourEnd,
   });
   const timeGridData = useMemo(
     () =>
-      createTimeGridData(weekDates, {
+      createTimeGridData(days, {
         hourStart: weekOptions.hourStart,
         hourEnd: weekOptions.hourEnd,
       }),
-    [weekDates, weekOptions.hourEnd, weekOptions.hourStart]
+    [days, weekOptions.hourEnd, weekOptions.hourStart]
   );
   const displayPanel = getDisplayPanel(taskView, eventView);
   const gridRows = displayPanel
@@ -93,7 +93,7 @@ export function Day() {
               events={dayGridEvents[rowType]}
               rowStyleInfo={rowStyleInfo}
               gridColWidthMap={cellWidthMap}
-              weekDates={weekDates}
+              weekDates={days}
               height={gridRowLayout[rowType].height}
               options={weekOptions}
             />
@@ -101,7 +101,7 @@ export function Day() {
             <OtherGridRow
               category={rowType}
               events={dayGridEvents[rowType]}
-              weekDates={weekDates}
+              weekDates={days}
               height={gridRowLayout[rowType].height}
               options={options.week}
               gridColWidthMap={cellWidthMap}
