@@ -49,7 +49,7 @@ describe('collidesWith', () => {
     expect(hasCollision).toBe(true);
   });
 
-  it("should collide, if the times don' collision", () => {
+  it('should not have a collision when there is no overlap between two times', () => {
     const hasCollision = collidesWith({
       start: Number(new TZDate(2021, 4, 16, 9)),
       end: Number(new TZDate(2021, 4, 16, 10)),

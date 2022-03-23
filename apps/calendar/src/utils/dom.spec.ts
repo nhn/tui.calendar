@@ -27,7 +27,7 @@ describe('domEvent', () => {
   el.style.height = '100px';
   el.style.width = '70px';
 
-  it('getMousePosition', () => {
+  it('getRelativePosition', () => {
     el.getBoundingClientRect = jest.fn(
       () =>
         ({
