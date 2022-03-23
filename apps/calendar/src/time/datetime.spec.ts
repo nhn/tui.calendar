@@ -2,14 +2,6 @@ import TZDate from '@src/time/date';
 import * as dt from '@src/time/datetime';
 
 describe('datetime', () => {
-  describe('millisecondsTo()', () => {
-    it('convert millisecond value to other types.', () => {
-      expect(dt.millisecondsTo('hour', 86400000)).toBe(24);
-      expect(dt.millisecondsTo('minute', 1800000)).toBe(30);
-      expect(dt.millisecondsTo('second', 10000)).toBe(10);
-    });
-  });
-
   describe('millisecondsFrom()', () => {
     it('convert value to milliseconds', () => {
       expect(dt.millisecondsFrom('hour', 24)).toBe(86400000);
@@ -66,20 +58,6 @@ describe('datetime', () => {
     expect(dt.toEndOfDay(d)).toEqual(new TZDate('2015-05-21T23:59:59.999'));
   });
 
-  it('toRaw() return date object from Date.', () => {
-    const d = new TZDate('2015/05/01 13:20:05');
-
-    expect(dt.toRaw(d)).toEqual({
-      y: 2015,
-      M: 4,
-      d: 1,
-      h: 13,
-      m: 20,
-      s: 5,
-      ms: 0,
-    });
-  });
-
   describe('clone()', () => {
     it('clone Date object', () => {
       const d1 = new TZDate();
@@ -113,16 +91,6 @@ describe('datetime', () => {
       d2.setMinutes(d2.getMinutes() + 30);
 
       expect(dt.compare(d1, d2)).toBe(-1);
-    });
-  });
-
-  describe('isValid()', () => {
-    it('return true when supplied parameter is valid dates.', () => {
-      const valid = new TZDate();
-      const notValid = new TZDate('qweqd');
-
-      expect(dt.isValid(valid)).toBe(true);
-      expect(dt.isValid(notValid)).toBe(false);
     });
   });
 
@@ -232,45 +200,5 @@ describe('datetime', () => {
     const startOfYear = new TZDate('2020-01-01T00:00:00');
 
     expect(dt.toStartOfYear(date)).toEqual(startOfYear);
-  });
-
-  it('toEndOfYear', () => {
-    const date = new TZDate('2020-03-24T09:30:00');
-    const endOfYear = new TZDate('2020-12-31T23:59:59.999');
-
-    expect(dt.toEndOfYear(date)).toEqual(endOfYear);
-  });
-
-  it('getStartAndEndDateFromCalendar', () => {
-    const data = [
-      [new TZDate(2021, 4, 10), new TZDate(2021, 4, 11), new TZDate(2021, 4, 12)],
-      [new TZDate(2021, 4, 17), new TZDate(2021, 4, 18), new TZDate(2021, 4, 19)],
-      [new TZDate(2021, 4, 24), new TZDate(2021, 4, 25), new TZDate(2021, 4, 26)],
-    ];
-
-    expect(dt.getStartAndEndDateFromCalendar(data)).toEqual({
-      start: new TZDate(2021, 4, 10),
-      end: new TZDate(2021, 4, 26),
-    });
-  });
-
-  it('convertStartDayToLastDay', () => {
-    expect(dt.convertStartDayToLastDay(new TZDate(2021, 4, 10))).toEqual(
-      new TZDate(2021, 4, 9, 23, 59, 59)
-    );
-    expect(dt.convertStartDayToLastDay(new TZDate(2021, 4, 10, 13, 50))).toEqual(
-      new TZDate(2021, 4, 10, 13, 50)
-    );
-  });
-
-  it('withinRangeDate', () => {
-    const dates = [
-      new TZDate(2021, 4, 10),
-      new TZDate(2021, 4, 11),
-      new TZDate(2021, 4, 13),
-      new TZDate(2021, 4, 14),
-    ];
-    expect(dt.withinRangeDate(new TZDate(2021, 4, 9), new TZDate(2021, 4, 15), dates)).toBe(true);
-    expect(dt.withinRangeDate(new TZDate(2021, 4, 9), new TZDate(2021, 4, 11), dates)).toBe(false);
   });
 });
