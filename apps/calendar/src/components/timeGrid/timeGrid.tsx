@@ -74,9 +74,8 @@ export function TimeGrid({ timesWidth = 120, timeGridData, events }: Props) {
   );
 
   const currentDateData = useMemo(() => {
-    const currentDateIndexInColumns = columns.findIndex((column) =>
-      isSameDate(column.date, new TZDate())
-    );
+    const now = new TZDate();
+    const currentDateIndexInColumns = columns.findIndex((column) => isSameDate(column.date, now));
     if (currentDateIndexInColumns < 0) {
       return null;
     }
