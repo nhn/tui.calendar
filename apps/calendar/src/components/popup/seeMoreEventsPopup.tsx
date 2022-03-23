@@ -17,7 +17,6 @@ import { useEventBus } from '@src/contexts/eventBus';
 import { useFloatingLayer } from '@src/contexts/floatingLayer';
 import { useTheme } from '@src/contexts/theme';
 import { cls } from '@src/helpers/css';
-import { isVisibleEvent } from '@src/helpers/events';
 import { seeMorePopupParamSelector } from '@src/selectors/popup';
 import { toFormat } from '@src/time/datetime';
 import { isNil } from '@src/utils/type';
@@ -74,8 +73,6 @@ export function SeeMoreEventsPopup() {
     }px)`,
   };
 
-  const filteredEvents = events.filter((uiModel) => isVisibleEvent(uiModel.model));
-
   return createPortal(
     <div
       role="dialog"
@@ -89,7 +86,7 @@ export function SeeMoreEventsPopup() {
           <ClosePopupButton />
         </div>
         <div className={classNames.list} style={moreViewListStyle}>
-          {filteredEvents.map((uiModel) => (
+          {events.map((uiModel) => (
             <HorizontalEvent
               key={`see-more-event-item-${uiModel.cid()}`}
               uiModel={uiModel}

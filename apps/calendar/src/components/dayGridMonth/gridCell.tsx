@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useCallback, useEffect, useState } from 'preact/hooks';
+import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 
 import { CellHeader } from '@src/components/dayGridMonth/cellHeader';
 import {
@@ -13,6 +13,7 @@ import {
 import { useDispatch } from '@src/contexts/calendarStore';
 import { useLayoutContainer } from '@src/contexts/layoutContainer';
 import { cls, toPercent } from '@src/helpers/css';
+import { isVisibleEvent } from '@src/helpers/events';
 import { getExceedCount } from '@src/helpers/grid';
 import { useDOMNode } from '@src/hooks/common/domNode';
 import EventUIModel from '@src/model/eventUIModel';
@@ -165,8 +166,12 @@ export function GridCell({ date, events = [], style, parentContainer, height }: 
   const layoutContainer = useLayoutContainer();
   const { showSeeMorePopup } = useDispatch('popup');
 
+  const filteredEvents = useMemo(
+    () => events.filter((uiModel) => isVisibleEvent(uiModel.model)),
+    [events]
+  );
   const { popupPosition, containerRefCallback } = usePopupPosition(
-    events.length,
+    filteredEvents.length,
     parentContainer,
     layoutContainer
   );
@@ -176,12 +181,12 @@ export function GridCell({ date, events = [], style, parentContainer, height }: 
       showSeeMorePopup({
         date,
         popupPosition,
-        events,
+        events: filteredEvents,
       });
     }
-  }, [date, events, popupPosition, showSeeMorePopup]);
+  }, [date, filteredEvents, popupPosition, showSeeMorePopup]);
 
-  const exceedCount = getExceedCount(events, height, MONTH_EVENT_HEIGHT);
+  const exceedCount = getExceedCount(filteredEvents, height, MONTH_EVENT_HEIGHT);
 
   return (
     <div className={cls('daygrid-cell')} style={style} ref={containerRefCallback}>
