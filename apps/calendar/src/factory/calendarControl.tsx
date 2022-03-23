@@ -521,13 +521,13 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * Get a event element by event id and calendar id.
+   * Get the DOM element of the event by event id and calendar id
    * @param {string} eventId - ID of event
    * @param {string} calendarId - calendarId of event
    * @returns {HTMLElement} event element if found or null
-   * @todo implement this
    * @example
-   * var element = calendar.getElement(eventId, calendarId);
+   * const element = calendar.getElement(eventId, calendarId);
+   *
    * console.log(element);
    */
   getElement(eventId: string, calendarId: string) {

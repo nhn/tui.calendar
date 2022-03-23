@@ -950,7 +950,7 @@ describe('hideMoreView', () => {
       showSeeMorePopup({ date: new TZDate(), events: [], popupPosition: { top: 0, left: 0 } });
     }, [showSeeMorePopup]);
 
-    return <Layout>mock</Layout>; // popup component is rendered in Layout component;
+    return <Layout>mock</Layout>; // popup component is rendered in Layout component
   }
   class MockCalendarMonthMoreViewPopup extends Month {
     protected getComponent() {
