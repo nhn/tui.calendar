@@ -62,6 +62,10 @@
   font-size: 12px;
 }
 
+.weekday-event {
+  cursor: pointer;
+}
+
 .weekday {
   height: 100%;
 }
