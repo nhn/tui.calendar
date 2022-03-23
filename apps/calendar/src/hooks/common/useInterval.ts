@@ -1,7 +1,5 @@
 import { useEffect, useRef } from 'preact/hooks';
 
-import { isPresent } from '@src/utils/type';
-
 export function useInterval(callback: () => void, delay: number | null) {
   const savedCallback = useRef<() => void>(callback);
 
@@ -14,9 +12,10 @@ export function useInterval(callback: () => void, delay: number | null) {
   // eslint-disable-next-line consistent-return
   useEffect(() => {
     const tick = () => savedCallback.current();
+    const intervalDelay = delay ?? -1;
 
-    if (isPresent(delay)) {
-      const id = setInterval(tick, delay);
+    if (intervalDelay > 0) {
+      const id = setInterval(tick, intervalDelay);
       return () => clearInterval(id);
     }
   }, [delay]);
