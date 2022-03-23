@@ -23,7 +23,7 @@ afterAll(() => {
   jest.useRealTimers();
 });
 
-test('it should init hook', () => {
+it('should init hook', () => {
   // Given
   const delay = 1000;
 
@@ -35,7 +35,7 @@ test('it should init hook', () => {
   expect(setInterval).toHaveBeenCalledWith(expect.any(Function), delay);
 });
 
-test('it should not init hook if delay is null', () => {
+it('should not init hook if delay is null', () => {
   // Given
   const delay = null;
 
@@ -47,7 +47,7 @@ test('it should not init hook if delay is null', () => {
   expect(setInterval).not.toHaveBeenCalled();
 });
 
-test('it should repeatedly call provided callback with a delay', () => {
+it('should repeatedly call provided callback with a delay', () => {
   // Given
   const delay = 1000;
   renderHook(() => useInterval(callback, delay));
@@ -65,7 +65,7 @@ test('it should repeatedly call provided callback with a delay', () => {
   expect(callback).toHaveBeenCalledTimes(2);
 });
 
-test('it should update interval if delay changes', () => {
+it('should update interval if delay changes', () => {
   // Given
   let delay = 1000;
   const { rerender } = renderHook(() => useInterval(callback, delay));
@@ -87,7 +87,7 @@ test('it should update interval if delay changes', () => {
   expect(callback).toHaveBeenCalledTimes(2);
 });
 
-test('it should stop calling callback if delay is changed to null', () => {
+it('should stop calling callback if delay is changed to null', () => {
   // Given
   let delay: number | null = 1000;
   const { rerender } = renderHook(() => useInterval(callback, delay));
@@ -105,7 +105,7 @@ test('it should stop calling callback if delay is changed to null', () => {
   expect(callback).toHaveBeenCalledTimes(1);
 });
 
-test('it should stop calling provided callback when unmounted', () => {
+it('should stop calling provided callback when unmounted', () => {
   // Given
   const delay = 1000;
   const { unmount } = renderHook(() => useInterval(callback, delay));

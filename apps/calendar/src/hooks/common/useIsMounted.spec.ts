@@ -3,7 +3,7 @@ import { act, cleanup, renderHook } from '@src/test/utils';
 
 afterEach(cleanup);
 
-test('it returns true when the hook is mounted', () => {
+it('returns true when the hook is mounted', () => {
   // When
   const { result } = renderHook(() => useIsMounted());
 
@@ -11,7 +11,7 @@ test('it returns true when the hook is mounted', () => {
   expect(result.current?.()).toBe(true);
 });
 
-test('it returns false when the hook is unmounted', () => {
+it('returns false when the hook is unmounted', () => {
   // Given
   const { result, unmount } = renderHook(() => useIsMounted());
   expect(result.current?.()).toBe(true);
