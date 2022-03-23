@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useEffect, useMemo, useState } from 'preact/hooks';
+import { useCallback, useLayoutEffect, useMemo, useState } from 'preact/hooks';
 
 import { addTimeGridPrefix, className as timegridClassName } from '@src/components/timeGrid';
 import { Column } from '@src/components/timeGrid/column';
@@ -13,22 +13,23 @@ import { cls, toPercent, toPx } from '@src/helpers/css';
 import { createGridPositionFinder } from '@src/helpers/grid';
 import { timeGridSelectionHelper } from '@src/helpers/gridSelection';
 import { useDOMNode } from '@src/hooks/common/domNode';
+import { useInterval } from '@src/hooks/common/useInterval';
+import { useIsMounted } from '@src/hooks/common/useIsMounted';
 import { useGridSelection } from '@src/hooks/gridSelection/gridSelection';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import {
   isSameDate,
+  MS_PER_MINUTES,
   setTimeStrToDate,
-  SIXTY_SECONDS,
   toEndOfDay,
   toStartOfDay,
 } from '@src/time/datetime';
 import { first, last } from '@src/utils/array';
+import { isPresent } from '@src/utils/type';
 
 import { TimeGridData } from '@t/grid';
 import { TimezoneConfig } from '@t/options';
-
-const REFRESH_INTERVAL = 1000 * SIXTY_SECONDS;
 
 const classNames = {
   timegrid: cls(timegridClassName),
@@ -43,74 +44,12 @@ interface Props {
   timezones?: TimezoneConfig[];
 }
 
-type TimerID = number | null;
-
-function calculateLeft(timesWidth: number, timezones: Array<any>) {
-  return timesWidth * timezones.length;
-}
-
-function useForceUpdate() {
-  const [, setForceUpdate] = useState(0);
-
-  return () => setForceUpdate((prev) => prev + 1);
-}
-
-export function TimeGrid({
-  currentTime = new TZDate(),
-  timesWidth = 120,
-  timezones = [{}],
-  timeGridData,
-  events,
-}: Props) {
-  const [columnLeft, setColumnLeft] = useState(0);
-  const [intervalId, setIntervalId] = useState<TimerID>(null);
-  const [timerId, setTimerId] = useState<TimerID>(null);
-  const forceUpdate = useForceUpdate();
-
-  const onChangeCollapsed = (collapsed: boolean) =>
-    setColumnLeft(collapsed ? timesWidth : calculateLeft(timesWidth, timezones));
-
-  useEffect(() => {
-    const now = new TZDate();
-    const showCurrentTime = isSameDate(currentTime, now);
-    const clearTimer = () => {
-      if (timerId) {
-        clearTimeout(timerId);
-        setTimerId(0);
-      }
-    };
-    const clearIntervalTimer = () => {
-      if (intervalId) {
-        clearInterval(intervalId);
-        setIntervalId(0);
-      }
-    };
-    const onTick = () => {
-      clearTimer();
-
-      if (!intervalId) {
-        const id = window.setInterval(onTick, REFRESH_INTERVAL);
-        setIntervalId(id);
-      }
-
-      forceUpdate();
-    };
-    const addTimeoutOnExactMinutes = () => {
-      if (!timerId) {
-        const timeout = (SIXTY_SECONDS - new TZDate().getSeconds()) * 1000;
-        setTimerId(window.setTimeout(onTick, timeout));
-      }
-    };
-
-    if (showCurrentTime) {
-      addTimeoutOnExactMinutes();
-    }
-
-    return () => {
-      clearTimer();
-      clearIntervalTimer();
-    };
-  }, [currentTime, forceUpdate, intervalId, timerId]);
+export function TimeGrid({ timesWidth = 120, timeGridData, events }: Props) {
+  const isMounted = useIsMounted();
+  const [currentTimeIndicatorState, setCurrentTimeIndicatorState] = useState<{
+    top: number;
+    now: TZDate;
+  } | null>(null);
 
   const { columns, rows } = timeGridData;
   const lastColumnIndex = columns.length - 1;
@@ -134,9 +73,27 @@ export function TimeGrid({
     [columns, rows, events]
   );
 
-  const now = new TZDate();
-  const currentTimeLineTop = getTopPercentByTime(now, toStartOfDay(now), toEndOfDay(now));
-  const currentDateIndexInColumns = columns.findIndex((column) => isSameDate(column.date, now));
+  const currentDateData = useMemo(() => {
+    const now = new TZDate();
+    const currentDateIndexInColumns = columns.findIndex((column) => isSameDate(column.date, now));
+    if (currentDateIndexInColumns < 0) {
+      return null;
+    }
+    const startTime = setTimeStrToDate(
+      columns[currentDateIndexInColumns].date,
+      timeGridData.rows[0].startTime
+    );
+    const endTime = setTimeStrToDate(
+      columns[currentDateIndexInColumns].date,
+      last(timeGridData.rows).endTime
+    );
+
+    return {
+      startTime,
+      endTime,
+      currentDateIndex: currentDateIndexInColumns,
+    };
+  }, [columns, timeGridData]);
 
   const [columnsContainer, setColumnsContainer] = useDOMNode();
   const gridPositionFinder = useMemo(
@@ -157,10 +114,42 @@ export function TimeGrid({
     dateCollection: timeGridData,
   });
 
+  const updateTimeGridIndicator = useCallback(() => {
+    if (isPresent(currentDateData)) {
+      const { startTime, endTime } = currentDateData;
+      const now = new TZDate();
+
+      if (startTime <= now && now <= endTime) {
+        setCurrentTimeIndicatorState({
+          top: getTopPercentByTime(now, startTime, endTime),
+          now,
+        });
+      }
+    }
+  }, [currentDateData]);
+
+  // Calculate initial setTimeIndicatorTop
+  useLayoutEffect(() => {
+    if (isMounted()) {
+      if ((currentDateData?.currentDateIndex ?? -1) >= 0) {
+        updateTimeGridIndicator();
+      } else {
+        setCurrentTimeIndicatorState(null);
+      }
+    }
+  }, [currentDateData, isMounted, updateTimeGridIndicator]);
+
+  // Set interval to update timeIndicatorTop
+  useInterval(updateTimeGridIndicator, isPresent(currentDateData) ? MS_PER_MINUTES : null);
+
   return (
     <div className={classNames.timegrid}>
       <div className={classNames.scrollArea}>
-        <TimeColumn timeGridRows={rows} columnWidth={timesWidth} />
+        <TimeColumn
+          timeGridRows={rows}
+          columnWidth={timesWidth}
+          currentTimeIndicatorState={currentTimeIndicatorState}
+        />
         <div
           className={cls('columns')}
           style={{ left: toPx(timesWidth) }}
@@ -181,13 +170,12 @@ export function TimeGrid({
               isLastColumn={index === lastColumnIndex}
             />
           ))}
-          {/* @TODO: Should be reimplement `CurrentTimeIndicator` component */}
-          {currentDateIndexInColumns > 0 ? (
+          {isPresent(currentDateData) && isPresent(currentTimeIndicatorState) ? (
             <CurrentTimeIndicator
-              top={currentTimeLineTop}
+              top={currentTimeIndicatorState.top}
               columnWidth={columns[0].width}
               columnCount={columns.length}
-              columnIndex={currentDateIndexInColumns}
+              columnIndex={currentDateData.currentDateIndex}
             />
           ) : null}
         </div>

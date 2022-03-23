@@ -1,11 +1,15 @@
 import { h } from 'preact';
 import { memo } from 'preact/compat';
+import { useMemo } from 'preact/hooks';
 
 import { Template } from '@src/components/template';
 import { addTimeGridPrefix } from '@src/components/timeGrid';
+import { CurrentTimeLabel } from '@src/components/timeGrid/currentTimeLabel';
 import { useTheme } from '@src/contexts/theme';
 import { cls, toPercent } from '@src/helpers/css';
 import TZDate from '@src/time/date';
+import { setTimeStrToDate } from '@src/time/datetime';
+import { isNil, isPresent } from '@src/utils/type';
 
 import { TimeGridRow } from '@t/grid';
 
@@ -15,48 +19,74 @@ const classNames = {
   timeLabel: addTimeGridPrefix('time-label'),
   first: addTimeGridPrefix('time-first'),
   last: addTimeGridPrefix('time-last'),
+  hidden: addTimeGridPrefix('time-hidden'),
 };
 
 interface Props {
   timeGridRows: TimeGridRow[];
   columnWidth: number;
+  currentTimeIndicatorState: { top: number; now: TZDate } | null;
 }
 
-// @TODO: replace MultipleTimezones component
-export const TimeColumn = memo(function TimeColumn({ timeGridRows, columnWidth }: Props) {
+// TODO: replace MultipleTimezones component
+export const TimeColumn = memo(function TimeColumn({
+  timeGridRows,
+  columnWidth,
+  currentTimeIndicatorState,
+}: Props) {
+  const shouldHideRow = (row: TimeGridRow) => {
+    if (isNil(currentTimeIndicatorState)) {
+      return false;
+    }
+
+    const indicatorTop = currentTimeIndicatorState.top;
+    const rowTop = row.top;
+    const rowHeight = row.height;
+
+    return rowTop - rowHeight <= indicatorTop && indicatorTop <= rowTop + rowHeight;
+  };
+
   const {
     week: {
       timeGridLeft: { borderRight, backgroundColor },
     },
   } = useTheme();
 
-  const style = { width: columnWidth, borderRight, backgroundColor };
+  const rowsByHour = useMemo(
+    () => timeGridRows.filter((_, index) => index % 2 === 0 || index === timeGridRows.length - 1),
+    [timeGridRows]
+  );
 
   return (
-    <div className={cls(classNames.times)} style={style}>
-      {timeGridRows.map((row, index) => {
-        if (index % 2 === 1) {
-          return null;
-        }
-
+    <div
+      className={cls(classNames.times)}
+      style={{ width: columnWidth, borderRight, backgroundColor }}
+      data-testid="timegrid-time-column"
+    >
+      {rowsByHour.map((row, index) => {
         const isFirst = index === 0;
-        const isLast = index === timeGridRows.length - 1;
+        const isLast = index === rowsByHour.length - 1;
         const className = cls(classNames.time, {
           [classNames.first]: isFirst,
           [classNames.last]: isLast,
+          [classNames.hidden]: shouldHideRow(row),
         });
-        const top = toPercent(!isFirst && !isLast ? timeGridRows[index - 2].top : row.top);
-        const height = toPercent(!isFirst && !isLast ? row.height * 4 : row.height * 2);
-        const date = new TZDate();
-        const startHourAndMinutes = row.startTime.split(':').map(Number) as [number, number];
-        date.setHours(...startHourAndMinutes);
+        const top = toPercent(row.top);
+        const date = setTimeStrToDate(new TZDate(), isLast ? row.endTime : row.startTime);
 
         return (
-          <div key={`slot-${row.startTime}`} className={className} style={{ top, height }}>
+          <div key={`slot-${row.startTime}`} className={className} style={{ top }}>
             <Template template="timegridDisplayPrimaryTime" model={{ time: date }} as="span" />
           </div>
         );
       })}
+      {isPresent(currentTimeIndicatorState) && (
+        <CurrentTimeLabel
+          unit="hour"
+          top={currentTimeIndicatorState.top}
+          time={currentTimeIndicatorState.now}
+        />
+      )}
     </div>
   );
 });
