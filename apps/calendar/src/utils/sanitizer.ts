@@ -43,8 +43,6 @@ export function removeAttributeHooks() {
 
 /**
  * Prevent XSS attack by sanitizing input string values via DOMPurify
- * @param {string} str target string value
- * @returns {string} sanitized string
  */
 export function sanitize(str: string) {
   return DOMPurify.sanitize(str);

@@ -25,9 +25,6 @@ type NestedPartial<Obj> = {
  * Other non-basic objects are not supported.
  *
  * Since it mutates the target object, avoid using it outside immer `produce` function.
- *
- * @param target
- * @param source
  */
 export function mergeObject<Target, Source extends NestedPartial<Target>>(
   target: Target,
