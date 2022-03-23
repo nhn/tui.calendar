@@ -5,6 +5,7 @@ import { ResizeIcon } from '@src/components/events/resizeIcon';
 import { Template } from '@src/components/template';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
+import { useLayoutContainer } from '@src/contexts/layoutContainer';
 import { cls, toPercent, toPx } from '@src/helpers/css';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/drag';
@@ -138,6 +139,13 @@ function getTestId({ model }: EventUIModel) {
   return `${calendarId}${id}${model.title}`;
 }
 
+const classNames = {
+  eventBody: cls('weekday-event'),
+  eventTitle: cls('weekday-event-title'),
+  moveEvent: cls('dragging--move-event'),
+  resizeEvent: cls('dragging--resize-horizontal-event'),
+};
+
 export function HorizontalEvent({
   flat = false,
   uiModel,
@@ -146,6 +154,7 @@ export function HorizontalEvent({
   resizingWidth = null,
   movingLeft = null,
 }: Props) {
+  const layoutContainer = useLayoutContainer();
   const [isDraggingTarget, setIsDraggingTarget] = useState<boolean>(false);
 
   const { dayEventBlockClassName, containerStyle, eventItemStyle, resizeIconStyle } = getStyles({
@@ -184,13 +193,23 @@ export function HorizontalEvent({
     onInit: () => {
       setDraggingEventUIModel(uiModel);
     },
-    onMouseUp: clearIsDraggingTarget,
+    onDragStart: () => {
+      layoutContainer?.classList.add(classNames.resizeEvent);
+    },
+    onMouseUp: () => {
+      layoutContainer?.classList.remove(classNames.resizeEvent);
+      clearIsDraggingTarget();
+    },
   });
   const onMoveStart = useDrag(DRAGGING_TYPE_CREATORS.moveEvent('dayGrid', `${uiModel.cid()}`), {
     onInit: () => {
       setDraggingEventUIModel(uiModel);
     },
+    onDragStart: () => {
+      layoutContainer?.classList.add(classNames.moveEvent);
+    },
     onMouseUp: (e, { draggingState }) => {
+      layoutContainer?.classList.remove(classNames.moveEvent);
       clearIsDraggingTarget();
 
       const isNotDragging = draggingState <= DraggingState.INIT;
@@ -230,11 +249,11 @@ export function HorizontalEvent({
       ref={eventContainerRef}
     >
       <div
-        className={cls('weekday-event')}
+        className={classNames.eventBody}
         style={eventItemStyle}
         onMouseDown={passConditionalProp(isDraggableEvent, handleMoveStart)}
       >
-        <span className={cls('weekday-event-title')}>
+        <span className={classNames.eventTitle}>
           <Template template="time" model={uiModel.model} />
         </span>
         {shouldHideResizeHandler ? null : (

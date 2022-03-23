@@ -3,6 +3,7 @@ import { useState } from 'preact/hooks';
 
 import { Template } from '@src/components/template';
 import { useDispatch } from '@src/contexts/calendarStore';
+import { useLayoutContainer } from '@src/contexts/layoutContainer';
 import { cls, toPercent } from '@src/helpers/css';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/drag';
@@ -19,6 +20,8 @@ const classNames = {
   content: cls('event-time-content'),
   travelTime: cls('travel-time'),
   resizeHandleX: cls('resize-handler-x'),
+  moveEvent: cls('dragging--move-event'),
+  resizeEvent: cls('dragging--resize-vertical-event'),
 };
 
 interface Props {
@@ -92,8 +95,10 @@ function getStyles(uiModel: EventUIModel, isDraggingTarget: boolean, hasNextStar
 }
 
 export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: Props) {
-  const [isDraggingTarget, setIsDraggingTarget] = useState<boolean>(false);
+  const layoutContainer = useLayoutContainer();
   const { setDraggingEventUIModel } = useDispatch('dnd');
+
+  const [isDraggingTarget, setIsDraggingTarget] = useState<boolean>(false);
 
   const { model, goingDurationHeight, modelDurationHeight, comingDurationHeight, croppedEnd } =
     uiModel;
@@ -123,7 +128,13 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
     onInit: () => {
       setDraggingEventUIModel(uiModel);
     },
-    onMouseUp: clearIsDraggingTarget,
+    onDragStart: () => {
+      layoutContainer?.classList.add(classNames.moveEvent);
+    },
+    onMouseUp: () => {
+      layoutContainer?.classList.remove(classNames.moveEvent);
+      clearIsDraggingTarget();
+    },
   });
   const handleEventMoveStart = (e: MouseEvent) => {
     e.stopPropagation();
@@ -136,7 +147,13 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
       onInit: () => {
         setDraggingEventUIModel(uiModel);
       },
-      onMouseUp: clearIsDraggingTarget,
+      onDragStart: () => {
+        layoutContainer?.classList.add(classNames.resizeEvent);
+      },
+      onMouseUp: () => {
+        layoutContainer?.classList.remove(classNames.resizeEvent);
+        clearIsDraggingTarget();
+      },
     }
   );
   const handleEventResizeStart = (e: MouseEvent) => {
