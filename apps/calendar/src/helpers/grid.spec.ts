@@ -40,22 +40,28 @@ function createResultMatrix({
 }
 
 describe('getWidth', () => {
-  it('should return sum of width', () => {
-    const widthList = [1, 2, 3, 4, 5];
-    const { length } = widthList;
+  const widthList = [1, 2, 3, 4, 5];
 
-    for (let start = 0; start < length; start += 1) {
-      for (let end = start; end < length; end += 1) {
-        const result = getWidth(widthList, start, end);
-        let sum = 0;
+  it.each([
+    [0, 0, 1],
+    [0, 1, 3],
+    [0, 2, 6],
+    [0, 3, 10],
+    [0, 4, 15],
+    [1, 1, 2],
+    [1, 2, 5],
+    [1, 3, 9],
+    [1, 4, 14],
+    [2, 2, 3],
+    [2, 3, 7],
+    [2, 4, 12],
+    [3, 3, 4],
+    [3, 4, 9],
+    [4, 4, 5],
+  ])('should return sum of width from %i to %i', (start, end, expected) => {
+    const result = getWidth(widthList, start, end);
 
-        for (let i = start; i <= end; i += 1) {
-          sum += widthList[i];
-        }
-
-        expect(result).toBe(sum);
-      }
-    }
+    expect(result).toBe(expected);
   });
 });
 
