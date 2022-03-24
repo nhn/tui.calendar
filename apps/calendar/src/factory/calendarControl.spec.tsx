@@ -1029,7 +1029,7 @@ describe('getElement', () => {
   });
 });
 
-describe('toggleEvents', () => {
+describe('setCalendarVisibility', () => {
   const eventModel1 = EventModel.create({
     calendarId: 'mockCalendarId1',
     id: 'mockEventId1',
@@ -1092,7 +1092,7 @@ describe('toggleEvents', () => {
 
     // When
     act(() => {
-      mockCalenderEvent.toggleEvents('mockCalendarId1', true);
+      mockCalenderEvent.setCalendarVisibility('mockCalendarId1', true);
     });
 
     // Then
@@ -1103,14 +1103,14 @@ describe('toggleEvents', () => {
   it('should toggle events', () => {
     // Given
     act(() => {
-      mockCalenderEvent.toggleEvents('mockCalendarId1', true);
+      mockCalenderEvent.setCalendarVisibility('mockCalendarId1', true);
     });
     expect(screen.queryByText('mockEvent1')).not.toBeInTheDocument();
     expect(screen.queryByText('mockEvent2')).toBeInTheDocument();
 
     // When
     act(() => {
-      mockCalenderEvent.toggleEvents('mockCalendarId1', false);
+      mockCalenderEvent.setCalendarVisibility('mockCalendarId1', false);
     });
 
     // Then
