@@ -69,21 +69,21 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
 
   protected abstract getComponent(): ComponentChild;
 
-  private getStoreState(): CalendarState;
+  protected getStoreState(): CalendarState;
 
-  private getStoreState<Group extends keyof CalendarState>(group: Group): CalendarState[Group];
+  protected getStoreState<Group extends keyof CalendarState>(group: Group): CalendarState[Group];
 
-  private getStoreState<Group extends keyof CalendarState>(group?: Group) {
+  protected getStoreState<Group extends keyof CalendarState>(group?: Group) {
     const state = this.store.getState();
 
     return group ? state[group] : state;
   }
 
-  private getStoreDispatchers(): Dispatchers;
+  protected getStoreDispatchers(): Dispatchers;
 
-  private getStoreDispatchers<Group extends keyof Dispatchers>(group: Group): Dispatchers[Group];
+  protected getStoreDispatchers<Group extends keyof Dispatchers>(group: Group): Dispatchers[Group];
 
-  private getStoreDispatchers<Group extends keyof Dispatchers>(group?: Group) {
+  protected getStoreDispatchers<Group extends keyof Dispatchers>(group?: Group) {
     const dispatchers = this.store.getState().dispatch;
 
     return group ? dispatchers[group] : dispatchers;
@@ -337,27 +337,25 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    **********/
 
   /**
-   * Toggle events' visibility by calendar ID
-   * @param {string} calendarId - The calendar id value
-   * @param {boolean} toHide - Set true to hide events
-   * @param {boolean} [renderImmediately=true] - set true then render after change visible property each models
-   * @todo implement this
+   * Set events' visibility by calendar ID
+   * @param {string|string[]} calendarId - The calendar id or ids to change visibility
+   * @param {boolean} visibility - If set to true, show the events. If set to false, hide the events.
    */
-  toggleEvents(calendarId: string, toHide: boolean, renderImmediately = true) {
-    // console.log('toggleEvents', calendarId, toHide, renderImmediately);
+  setCalendarVisibility(calendarId: string | string[], visibility: boolean) {
+    const { setCalendarVisibility } = this.getStoreDispatchers('calendar');
+    const calendarIds = Array.isArray(calendarId) ? calendarId : [calendarId];
+
+    setCalendarVisibility(calendarIds, visibility);
   }
 
   /**
    * Render the calendar.
    * @example
-   * var silent = true;
-   * calendar.clear();
-   * calendar.createEvents(events, silent);
    * calendar.render();
    * @example
    * // Render a calendar when resizing a window.
-   * window.addEventListener('resize', function() {
-   *     calendar.render();
+   * window.addEventListener('resize', () => {
+   *   calendar.render();
    * });
    */
   render() {
@@ -523,17 +521,23 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * Get a event element by event id and calendar id.
+   * Get the DOM element of the event by event id and calendar id
    * @param {string} eventId - ID of event
    * @param {string} calendarId - calendarId of event
    * @returns {HTMLElement} event element if found or null
-   * @todo implement this
    * @example
-   * var element = calendar.getElement(eventId, calendarId);
+   * const element = calendar.getElement(eventId, calendarId);
+   *
    * console.log(element);
    */
   getElement(eventId: string, calendarId: string) {
-    // console.log('getElement', eventId, calendarId);
+    const event = this.getEvent(eventId, calendarId);
+
+    if (event && this.container) {
+      return this.container.querySelector(
+        `[data-event-id="${eventId}"][data-calendar-id="${calendarId}"]`
+      );
+    }
 
     return null;
   }

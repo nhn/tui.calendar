@@ -1,16 +1,26 @@
 import range from 'tui-code-snippet/array/range';
 
+import { createEventCollection } from '@src/controller/base';
 import {
   createDateMatrixOfMonth,
   createGridPositionFinder,
   createTimeGridData,
   getColumnsData,
+  getExceedCount,
+  getGridWidthAndLeftPercentValues,
+  getRenderedEventUIModels,
   getWeekDates,
+  getWidth,
+  isWithinHeight,
 } from '@src/helpers/grid';
+import EventModel from '@src/model/eventModel';
+import EventUIModel from '@src/model/eventUIModel';
+import { createDate } from '@src/test/helpers';
 import TZDate from '@src/time/date';
 import { addDate, Day, isWeekend, WEEK_DAYS } from '@src/time/datetime';
 import { noop } from '@src/utils/noop';
 
+import { CalendarData } from '@t/events';
 import { GridPosition, GridPositionFinder, TimeGridRow } from '@t/grid';
 
 function createResultMatrix({
@@ -28,6 +38,224 @@ function createResultMatrix({
     range(rangeStart, rangeEnd + 1).map((num) => addDate(startFrom, num + rowCount * WEEK_DAYS))
   );
 }
+
+describe('getWidth', () => {
+  const widthList = [1, 2, 3, 4, 5];
+
+  it.each([
+    [0, 0, 1],
+    [0, 1, 3],
+    [0, 2, 6],
+    [0, 3, 10],
+    [0, 4, 15],
+    [1, 1, 2],
+    [1, 2, 5],
+    [1, 3, 9],
+    [1, 4, 14],
+    [2, 2, 3],
+    [2, 3, 7],
+    [2, 4, 12],
+    [3, 3, 4],
+    [3, 4, 9],
+    [4, 4, 5],
+  ])('should return sum of width from %i to %i', (start, end, expected) => {
+    const result = getWidth(widthList, start, end);
+
+    expect(result).toBe(expected);
+  });
+});
+
+describe('getGridWidthAndLeftPercentValues', () => {
+  const totalWidth = 100;
+  let narrowWeekend: boolean;
+  let row: TZDate[];
+
+  describe('narrowWeekend is true', () => {
+    beforeAll(() => {
+      narrowWeekend = true;
+    });
+
+    it('should return single PanelEventInfo', () => {
+      row = [createDate(2021, 4, 16)];
+
+      const { widthList, leftList } = getGridWidthAndLeftPercentValues(
+        row,
+        narrowWeekend,
+        totalWidth
+      );
+
+      expect(widthList).toHaveLength(1);
+      expect(widthList).toEqual([100]);
+      expect(leftList).toHaveLength(1);
+      expect(leftList).toEqual([0]);
+    });
+
+    it('should return PanelEventInfo list (only weekday)', () => {
+      // Mon, Tue, Wed, Thu, Fri
+      row = [12, 13, 14, 15, 16].map((d) => createDate(2021, 4, d));
+
+      const { widthList, leftList } = getGridWidthAndLeftPercentValues(
+        row,
+        narrowWeekend,
+        totalWidth
+      );
+
+      expect(widthList).toHaveLength(5);
+      expect(widthList).toEqual([20, 20, 20, 20, 20]);
+      expect(leftList).toHaveLength(5);
+      expect(leftList).toEqual([0, 20, 40, 60, 80]);
+    });
+
+    it('should return PanelEventInfo list (only weekend)', () => {
+      // Sat, Sun
+      row = [17, 18].map((d) => createDate(2021, 4, d));
+
+      const { widthList, leftList } = getGridWidthAndLeftPercentValues(
+        row,
+        narrowWeekend,
+        totalWidth
+      );
+
+      expect(widthList).toHaveLength(2);
+      expect(widthList).toEqual([50, 50]);
+      expect(leftList).toHaveLength(2);
+      expect(leftList).toEqual([0, 50]);
+    });
+
+    it('should return PanelEventInfo list', () => {
+      // Thu, Fri, Sat
+      row = [15, 16, 17].map((d) => createDate(2021, 4, d));
+
+      const { widthList, leftList } = getGridWidthAndLeftPercentValues(
+        row,
+        narrowWeekend,
+        totalWidth
+      );
+
+      expect(widthList).toHaveLength(3);
+      expect(widthList).toEqual([40, 40, 20]);
+      expect(leftList).toHaveLength(3);
+      expect(leftList).toEqual([0, 40, 80]);
+    });
+  });
+
+  describe('narrowWeekend is false', () => {
+    beforeAll(() => {
+      narrowWeekend = false;
+    });
+
+    it('should return single grid width and left percent value', () => {
+      row = [createDate(2021, 4, 16)];
+
+      const { widthList, leftList } = getGridWidthAndLeftPercentValues(
+        row,
+        narrowWeekend,
+        totalWidth
+      );
+
+      expect(widthList).toHaveLength(1);
+      expect(widthList).toEqual([100]);
+      expect(leftList).toHaveLength(1);
+      expect(leftList).toEqual([0]);
+    });
+
+    it('should return list for grid width and left percent values (only weekday)', () => {
+      // Mon, Tue, Wed, Thu, Fri
+      row = [12, 13, 14, 15, 16].map((d) => createDate(2021, 4, d));
+
+      const { widthList, leftList } = getGridWidthAndLeftPercentValues(
+        row,
+        narrowWeekend,
+        totalWidth
+      );
+
+      expect(widthList).toHaveLength(5);
+      expect(widthList).toEqual([20, 20, 20, 20, 20]);
+      expect(leftList).toHaveLength(5);
+      expect(leftList).toEqual([0, 20, 40, 60, 80]);
+    });
+
+    it('should return list for grid width and left percent values (only weekend)', () => {
+      // Sat, Sun
+      row = [17, 18].map((d) => createDate(2021, 4, d));
+
+      const { widthList, leftList } = getGridWidthAndLeftPercentValues(
+        row,
+        narrowWeekend,
+        totalWidth
+      );
+
+      expect(widthList).toHaveLength(2);
+      expect(widthList).toEqual([50, 50]);
+      expect(leftList).toHaveLength(2);
+      expect(leftList).toEqual([0, 50]);
+    });
+
+    it('should return list for grid width and left percent values', () => {
+      // Thu, Fri, Sat, Sun
+      row = [15, 16, 17, 18].map((d) => createDate(2021, 4, d));
+
+      const { widthList, leftList } = getGridWidthAndLeftPercentValues(
+        row,
+        narrowWeekend,
+        totalWidth
+      );
+
+      expect(widthList).toHaveLength(4);
+      expect(widthList).toEqual([25, 25, 25, 25]);
+      expect(leftList).toHaveLength(4);
+      expect(leftList).toEqual([0, 25, 50, 75]);
+    });
+  });
+});
+
+describe('getRenderedEventUIModels', () => {
+  it('should get rendered event ui models', () => {
+    const narrowWeekend = false;
+    const row: TZDate[] = [
+      new TZDate(2021, 5, 2),
+      new TZDate(2021, 5, 3),
+      new TZDate(2021, 5, 4),
+      new TZDate(2021, 5, 5),
+    ];
+    const calendarData: CalendarData = {
+      calendars: [],
+      events: createEventCollection(),
+      idsOfDay: {},
+    };
+
+    expect(getRenderedEventUIModels(row, calendarData, narrowWeekend)).toEqual({
+      uiModels: [],
+      gridDateEventModelMap: {},
+    });
+  });
+});
+
+describe('isWithinHeight', () => {
+  it('should return a callback function that checks whether do not exceed height of container', () => {
+    expect(isWithinHeight(100, 20)({ top: 1 } as EventUIModel)).toBe(true);
+    expect(isWithinHeight(100, 20)({ top: 6 } as EventUIModel)).toBe(false);
+  });
+});
+
+describe('getExceedCount', () => {
+  const data = [
+    { start: createDate(2021, 4, 30), end: createDate(2021, 5, 2) }, // Fri ~ Sun
+    { start: createDate(2021, 5, 2), end: createDate(2021, 5, 4) }, // Sun ~ Tue
+    { start: createDate(2021, 5, 4), end: createDate(2021, 5, 6) }, // Tue ~ Thu
+  ];
+
+  it('should calculate the number of events that exceed height of container', () => {
+    const uiModels = data.map((e) => {
+      const event = EventModel.create(e);
+      event.isAllday = true;
+
+      return EventUIModel.create(event);
+    });
+
+    expect(getExceedCount(uiModels, 200, 30)).toBe(0);
+  });
+});
 
 describe('createDateMatrixOfMonth', () => {
   it('should create matrix of dates of given month with empty option', () => {

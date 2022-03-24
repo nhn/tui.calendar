@@ -24,6 +24,7 @@ export type CalendarDispatchers = {
   clearEvents: () => void;
   setCalendars: (calendars: CalendarInfo[]) => void;
   setCalendarColor: (calendarId: string, colorOptions: CalendarColor) => void;
+  setCalendarVisibility: (calendarIds: string[], visibility: boolean) => void;
 };
 
 export function createCalendarSlice(calendars: CalendarInfo[] = []): CalendarSlice {
@@ -95,6 +96,22 @@ export function createCalendarDispatchers(set: SetState<CalendarStore>): Calenda
 
           state.calendar.calendars = calendars;
           state.calendar.events = collection;
+        })
+      ),
+    setCalendarVisibility: (calendarIds, visibility) =>
+      set(
+        produce((state: CalendarState) => {
+          const events = state.calendar.events.toArray();
+
+          state.calendar.events = createEventCollection<EventModel>(
+            ...events.map((event) => {
+              if (calendarIds.includes(event.calendarId)) {
+                event.isVisible = visibility;
+              }
+
+              return event;
+            })
+          );
         })
       ),
   };

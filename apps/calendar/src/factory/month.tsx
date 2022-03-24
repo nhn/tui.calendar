@@ -18,9 +18,10 @@ export default class Month extends CalendarControl {
 
   /**
    * Hide the more view
-   * @todo implement this
    */
   hideMoreView() {
-    console.log('hideMoreView');
+    const { hideSeeMorePopup } = this.getStoreDispatchers().popup;
+
+    hideSeeMorePopup();
   }
 }

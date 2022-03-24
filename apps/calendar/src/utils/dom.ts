@@ -1,17 +1,8 @@
-import getMousePosition from 'tui-code-snippet/domEvent/getMousePosition';
-import getTarget from 'tui-code-snippet/domEvent/getTarget';
-
 import { noop } from '@src/utils/noop';
 import { isString } from '@src/utils/type';
 
 const CSS_AUTO_REGEX = /^auto$|^$|%/;
 
-/**
- * Get specific CSS style value from HTML element.
- * @param {HTMLElement} el target element
- * @param {string} style css attribute name
- * @returns {(string|null)} css style value
- */
 function getStyle(el: HTMLElement, style: keyof CSSStyleDeclaration) {
   let value = el.style[style];
 
@@ -25,25 +16,20 @@ function getStyle(el: HTMLElement, style: keyof CSSStyleDeclaration) {
 
 // eslint-disable-next-line complexity
 export function getPosition(el: HTMLElement) {
-  let x = 0;
-  let y = 0;
-  let bound;
-
   if (
     (CSS_AUTO_REGEX.test(el.style.left || '') || CSS_AUTO_REGEX.test(el.style.top || '')) &&
     'getBoundingClientRect' in el
   ) {
     // When the element's left or top is 'auto'
-    bound = el.getBoundingClientRect();
+    const { left, top } = el.getBoundingClientRect();
 
-    x = bound.left;
-    y = bound.top;
-  } else {
-    x = parseFloat(el.style.left || String(0));
-    y = parseFloat(el.style.top || String(0));
+    return { x: left, y: top };
   }
 
-  return { x, y };
+  return {
+    x: parseFloat(el.style.left || String(0)),
+    y: parseFloat(el.style.top || String(0)),
+  };
 }
 
 type SizeValue = 'auto' | string | null;
@@ -60,45 +46,19 @@ export function getSize(el: HTMLElement): { width: number; height: number } {
   const w = getStyle(el, 'width') as SizeValue;
   const h = getStyle(el, 'height') as SizeValue;
 
-  let width = 0;
-  let height = 0;
-  let bound;
-
   if ((invalidateSizeValue(w) || invalidateSizeValue(h)) && el.getBoundingClientRect) {
-    bound = el.getBoundingClientRect();
-    width = bound.width || el.offsetWidth;
-    height = bound.height || el.offsetHeight;
-  } else {
-    width = parseFloat(w ?? '0');
-    height = parseFloat(h ?? '0');
+    const { width, height } = el.getBoundingClientRect();
+
+    return {
+      width: width || el.offsetWidth,
+      height: height || el.offsetHeight,
+    };
   }
 
-  return { width, height };
-}
-
-export function getElementRect(el: HTMLElement) {
   return {
-    ...getPosition(el),
-    ...getSize(el),
+    width: parseFloat(w ?? '0'),
+    height: parseFloat(h ?? '0'),
   };
-}
-
-export function getOffsetParent(e: MouseEvent): HTMLElement {
-  const { offsetParent } = getTarget(e);
-
-  return offsetParent as HTMLElement;
-}
-
-export function getOffsetParentPos(e: MouseEvent) {
-  const offsetParent = getOffsetParent(e);
-
-  return getMousePosition(e, offsetParent);
-}
-
-export function getOffsetParentRect(e: MouseEvent) {
-  const offsetParent = getOffsetParent(e);
-
-  return getElementRect(offsetParent);
 }
 
 export function isOverlapped(el1: Element, el2: Element) {
