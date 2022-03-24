@@ -12,6 +12,7 @@ import { WEEK_DAYNAME_BORDER, WEEK_DAYNAME_HEIGHT } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
 import { getDayNames } from '@src/helpers/dayName';
+import { getVisibleEventCollection } from '@src/helpers/events';
 import { createTimeGridData, getDayGridEvents, getWeekDates } from '@src/helpers/grid';
 import { getDisplayPanel } from '@src/helpers/view';
 import { useDOMNode } from '@src/hooks/common/domNode';
@@ -59,14 +60,21 @@ export function Week() {
     startDayOfWeek,
     workweek
   );
+  const calendarData = useMemo(
+    () => ({
+      ...calendar,
+      events: getVisibleEventCollection(calendar.events),
+    }),
+    [calendar]
+  );
   const eventByPanel = useMemo(
     () =>
-      getDayGridEvents(weekDates, calendar, {
+      getDayGridEvents(weekDates, calendarData, {
         narrowWeekend,
         hourStart,
         hourEnd,
       }),
-    [calendar, hourEnd, hourStart, narrowWeekend, weekDates]
+    [calendarData, hourEnd, hourStart, narrowWeekend, weekDates]
   );
   const timeGridData = useMemo(
     () =>

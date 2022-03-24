@@ -1,10 +1,16 @@
 import { h } from 'preact';
+import { useEffect } from 'preact/hooks';
 
+import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import { Layout } from '@src/components/layout';
-import { useStore } from '@src/contexts/calendarStore';
+import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useTheme } from '@src/contexts/theme';
 import CalendarControl from '@src/factory/calendarControl';
+import Month from '@src/factory/month';
+import { isVisibleEvent } from '@src/helpers/events';
 import { getWeekDates } from '@src/helpers/grid';
+import EventModel from '@src/model/eventModel';
+import EventUIModel from '@src/model/eventUIModel';
 import { act, screen } from '@src/test/utils';
 import TZDate from '@src/time/date';
 import { addDate, isSameDate, subtractDate } from '@src/time/datetime';
@@ -933,5 +939,182 @@ describe('setCalendarColor', () => {
         `${calendarIdToDoNotChange}-${notChangedColor}-${notChangedBgColor}-${notChangedBorderColor}-${notChangedDragBgColor}`
       )
     ).toBeInTheDocument();
+  });
+});
+
+describe('hideMoreView', () => {
+  function MockMonthMoreViewPopup() {
+    const { showSeeMorePopup } = useDispatch('popup');
+
+    useEffect(() => {
+      showSeeMorePopup({ date: new TZDate(), events: [], popupPosition: { top: 0, left: 0 } });
+    }, [showSeeMorePopup]);
+
+    return <Layout>mock</Layout>; // popup component is rendered in Layout component
+  }
+  class MockCalendarMonthMoreViewPopup extends Month {
+    protected getComponent() {
+      return <MockMonthMoreViewPopup />;
+    }
+  }
+
+  let mockMonthView: MockCalendarMonthMoreViewPopup;
+
+  beforeEach(() => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+    mockMonthView = new MockCalendarMonthMoreViewPopup(container);
+    act(() => {
+      mockMonthView.render();
+    });
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('should hide see more popup', () => {
+    // Given
+    expect(screen.queryByRole('dialog')).toBeInTheDocument();
+
+    // When
+    act(() => {
+      mockMonthView.hideMoreView();
+    });
+
+    // Then
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+});
+
+describe('getElement', () => {
+  const eventModel = EventModel.create({ calendarId: 'mockCalendarId', id: 'mockEventId' });
+  const mockEventUIModel = new EventUIModel(eventModel);
+  class MockCalenderEvent extends CalendarControl {
+    protected getComponent() {
+      return (
+        <div>
+          <HorizontalEvent eventHeight={20} headerHeight={0} uiModel={mockEventUIModel} />
+          mock event
+        </div>
+      );
+    }
+  }
+
+  let mockCalenderEvent: MockCalenderEvent;
+
+  beforeEach(() => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+    mockCalenderEvent = new MockCalenderEvent(container);
+    act(() => {
+      mockCalenderEvent.createEvents([eventModel]);
+      mockCalenderEvent.render();
+    });
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('should find event element', () => {
+    // Given
+    const eventElement = screen.getByText('mock event').firstChild;
+
+    // When
+    const expectedEventElement = mockCalenderEvent.getElement('mockEventId', 'mockCalendarId');
+
+    // Then
+    expect(eventElement).toEqual(expectedEventElement);
+  });
+});
+
+describe('setCalendarVisibility', () => {
+  const eventModel1 = EventModel.create({
+    calendarId: 'mockCalendarId1',
+    id: 'mockEventId1',
+    title: 'mockEvent1',
+    category: 'allday',
+    start: new TZDate(2022, 3, 22),
+    end: new TZDate(2022, 3, 24),
+  });
+  const eventModel2 = EventModel.create({
+    calendarId: 'mockCalendarId2',
+    id: 'mockEventId2',
+    title: 'mockEvent2',
+    category: 'allday',
+    start: new TZDate(2022, 3, 23),
+    end: new TZDate(2022, 3, 25),
+  });
+  function MockHorizontalEvents() {
+    const events = useStore((state) => state.calendar.events.toArray());
+    const filteredEvents = events.filter((event) => isVisibleEvent(event));
+
+    return (
+      <div>
+        {filteredEvents.map((event) => (
+          <HorizontalEvent
+            key={event.id}
+            eventHeight={20}
+            headerHeight={0}
+            uiModel={EventUIModel.create(event)}
+          />
+        ))}
+      </div>
+    );
+  }
+  class MockCalenderEvent extends CalendarControl {
+    protected getComponent() {
+      return <MockHorizontalEvents />;
+    }
+  }
+
+  let mockCalenderEvent: MockCalenderEvent;
+
+  beforeEach(() => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+    mockCalenderEvent = new MockCalenderEvent(container);
+    act(() => {
+      mockCalenderEvent.createEvents([eventModel1, eventModel2]);
+      mockCalenderEvent.render();
+    });
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  it('should hide events', () => {
+    // Given
+    expect(screen.queryByText('mockEvent1')).toBeInTheDocument();
+    expect(screen.queryByText('mockEvent2')).toBeInTheDocument();
+
+    // When
+    act(() => {
+      mockCalenderEvent.setCalendarVisibility('mockCalendarId1', true);
+    });
+
+    // Then
+    expect(screen.queryByText('mockEvent1')).not.toBeInTheDocument();
+    expect(screen.queryByText('mockEvent2')).toBeInTheDocument();
+  });
+
+  it('should toggle events', () => {
+    // Given
+    act(() => {
+      mockCalenderEvent.setCalendarVisibility('mockCalendarId1', true);
+    });
+    expect(screen.queryByText('mockEvent1')).not.toBeInTheDocument();
+    expect(screen.queryByText('mockEvent2')).toBeInTheDocument();
+
+    // When
+    act(() => {
+      mockCalenderEvent.setCalendarVisibility('mockCalendarId1', false);
+    });
+
+    // Then
+    expect(screen.queryByText('mockEvent1')).toBeInTheDocument();
+    expect(screen.queryByText('mockEvent2')).toBeInTheDocument();
   });
 });

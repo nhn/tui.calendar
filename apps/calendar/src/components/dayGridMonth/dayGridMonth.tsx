@@ -15,6 +15,7 @@ import {
 } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
 import { cls, toPercent } from '@src/helpers/css';
+import { getVisibleEventCollection } from '@src/helpers/events';
 import { createGridPositionFinder, getRenderedEventUIModels } from '@src/helpers/grid';
 import { dayGridMonthSelectionHelper } from '@src/helpers/gridSelection';
 import { useDOMNode } from '@src/hooks/common/domNode';
@@ -50,7 +51,7 @@ function useGridHeight() {
 
 export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidthMap = [] }: Props) {
   const [gridContainer, setGridContainerRef] = useDOMNode<HTMLDivElement>();
-  const calendarData = useStore(calendarSelector);
+  const calendar = useStore(calendarSelector);
   const { ref, height } = useGridHeight();
 
   const { visibleWeeksCount, narrowWeekend } = options;
@@ -67,6 +68,13 @@ export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidth
     [dateMatrix, gridContainer]
   );
 
+  const calendarData = useMemo(
+    () => ({
+      ...calendar,
+      events: getVisibleEventCollection(calendar.events),
+    }),
+    [calendar]
+  );
   const renderedEventUIModels = useMemo(
     () => dateMatrix.map((week) => getRenderedEventUIModels(week, calendarData, narrowWeekend)),
     [calendarData, dateMatrix, narrowWeekend]

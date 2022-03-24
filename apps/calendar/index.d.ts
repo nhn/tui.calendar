@@ -1,5 +1,6 @@
-import { TuiDateConstructor } from '@toast-ui/date';
+import { DateInterface, TuiDateConstructor } from '@toast-ui/date';
 
+export type ViewType = 'month' | 'week' | 'day';
 export type DateType = string | Date | TZDate;
 export type EventHandlerType = IEvents[keyof IEvents];
 export type CustomEventType = keyof IEvents;
@@ -247,13 +248,13 @@ export interface IOptions {
 export default class Calendar {
   constructor(container: Element | string, options?: IOptions);
 
-  public changeView(newViewName: string, force?: boolean): void;
+  public changeView(viewName: ViewType): void;
 
-  public clear(immediately?: boolean): void;
+  public clear(): void;
 
-  public createEvents(events: EventModelData[], silent?: boolean): void;
+  public createEvents(events: EventModelData[]): void;
 
-  public deleteEvent(eventId: string, calendarId: string, silent?: boolean): void;
+  public deleteEvent(eventId: string, calendarId: string): void;
 
   public destroy(): void;
 
@@ -263,50 +264,45 @@ export default class Calendar {
 
   public getDateRangeStart(): TZDate;
 
+  public getDateInterface(): DateInterface;
+
   public getElement(eventId: string, calendarId: string): Element;
 
   public getOptions(): IOptions;
 
   public getEvent(eventId: string, calendarId: string): EventModelData;
 
-  public getViewName(): string;
+  public getViewName(): ViewType;
 
   public hideMoreView(): void;
 
   public next(): void;
 
-  public openFormPopup(eventData: EventModelData): void;
+  public openFormPopup(eventModelData: EventModelData): void;
 
   public prev(): void;
 
-  public render(immediately?: boolean): void;
+  public render(): Calendar;
+
+  public renderToString(): string;
 
   public scrollToNow(): void;
 
-  public setCalendarColor(calendarId: string, options: ICalendarColor, silent?: boolean): void;
+  public setCalendarColor(calendarId: string, colorOptions: ICalendarColor): void;
 
   public setCalendars(calendars: ICalendarInfo[]): void;
 
-  public setDate(date: Date | string): void;
+  public setDate(date: DateType): void;
 
-  public setOptions(options: IOptions, silent?: boolean): void;
+  public setOptions(options: IOptions): void;
 
   public setTheme(theme: ITheme): string[];
 
   public today(): void;
 
-  public toggleEvents(calendarId: string, toHide: boolean, render?: boolean): void;
+  public setCalendarVisibility(calendarId: string | string[], visibility: boolean): void;
 
-  public toggleEventView(enabled: boolean): void;
-
-  public toggleTaskView(enabled: boolean): void;
-
-  public updateEvent(
-    eventId: string,
-    calendarId: string,
-    eventData: EventModelData,
-    silent?: boolean
-  ): void;
+  public updateEvent(eventId: string, calendarId: string, changes: EventModelData): void;
 
   public off(
     eventName?: string | object | EventHandlerType,
