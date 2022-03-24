@@ -1,4 +1,4 @@
-import { cls, CSS_PREFIX, matchViewIDRegExp } from '@src/helpers/css';
+import { cls, CSS_PREFIX } from '@src/helpers/css';
 
 describe('cssHelper', () => {
   describe('cls', () => {
@@ -27,14 +27,6 @@ describe('cssHelper', () => {
       expect(cls(strClassName, classNameMap)).toBe(
         `${CSS_PREFIX}${strClassName} ${CSS_PREFIX}a ${CSS_PREFIX}c`
       );
-    });
-  });
-
-  describe('matchViewIDRegExp', () => {
-    it('should match css selector with view id', () => {
-      expect(matchViewIDRegExp('allday', `${CSS_PREFIX}weekday tui-view-67`)).not.toBeNull();
-      expect(matchViewIDRegExp('daygrid', `${CSS_PREFIX}weekday tui-view-327`)).not.toBeNull();
-      expect(matchViewIDRegExp('time', `${CSS_PREFIX}time-date tui-view-1`)).not.toBeNull();
     });
   });
 });

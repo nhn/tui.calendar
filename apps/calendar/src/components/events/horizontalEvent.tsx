@@ -5,7 +5,7 @@ import { ResizeIcon } from '@src/components/events/resizeIcon';
 import { Template } from '@src/components/template';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
-import { cls, toPercent, toPx } from '@src/helpers/css';
+import { cls, toPercent } from '@src/helpers/css';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/drag';
 import { useTransientUpdate } from '@src/hooks/common/transientUpdate';
@@ -63,7 +63,7 @@ function getEventItemStyle({
     borderRadius: exceedLeft ? 0 : 2,
     overflow: 'hidden',
     height: eventHeight,
-    lineHeight: toPx(eventHeight),
+    lineHeight: eventHeight,
     opacity: isDraggingTarget ? 0.5 : 1,
   };
   const margin = getMargin(flat);
@@ -105,7 +105,7 @@ function getStyles({
     : {
         width: resizingWidth || toPercent(width),
         left: toPercent(movingLeft ?? left),
-        top: toPx((top - 1) * (eventHeight + margin.vertical) + headerHeight),
+        top: (top - 1) * (eventHeight + margin.vertical) + headerHeight,
         position: 'absolute',
       };
 
@@ -119,9 +119,7 @@ function getStyles({
     isDraggingTarget,
   });
 
-  const resizeIconStyle = {
-    lineHeight: toPx(18),
-  };
+  const resizeIconStyle = { lineHeight: 18 };
 
   const dayEventBlockClassName = `${cls('weekday-event-block')} ${getExceedClassName(
     exceedLeft,

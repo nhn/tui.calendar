@@ -2,10 +2,9 @@ import { GridSelectionType } from '@src/slices/gridSelection';
 
 import { DraggingTypes, EventDraggingArea } from '@t/drag';
 
-export const DRAGGING_TYPE_CONSTANTS: { [K in DraggingTypes]: DraggingTypes } = {
-  'gridSelection/dayGridMonth': 'gridSelection/dayGridMonth',
-  'gridSelection/dayGridWeek': 'gridSelection/dayGridWeek',
-  'gridSelection/timeGrid': 'gridSelection/timeGrid',
+export const DRAGGING_TYPE_CONSTANTS: {
+  [K in Extract<DraggingTypes, 'panelResizer'>]: DraggingTypes;
+} = {
   panelResizer: 'panelResizer',
 };
 
