@@ -19,7 +19,7 @@ import { createGridPositionFinder, getRenderedEventUIModels } from '@src/helpers
 import { dayGridMonthSelectionHelper } from '@src/helpers/gridSelection';
 import { useDOMNode } from '@src/hooks/common/domNode';
 import { useGridSelection } from '@src/hooks/gridSelection/gridSelection';
-import { calendarSelector } from '@src/selectors';
+import { visibleCalendarSelector } from '@src/selectors/calendar';
 import TZDate from '@src/time/date';
 import { getSize } from '@src/utils/dom';
 
@@ -50,7 +50,7 @@ function useGridHeight() {
 
 export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidthMap = [] }: Props) {
   const [gridContainer, setGridContainerRef] = useDOMNode<HTMLDivElement>();
-  const calendarData = useStore(calendarSelector);
+  const calendarData = useStore(visibleCalendarSelector);
   const { ref, height } = useGridHeight();
 
   const { visibleWeeksCount, narrowWeekend } = options;

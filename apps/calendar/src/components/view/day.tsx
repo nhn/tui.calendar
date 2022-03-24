@@ -16,19 +16,15 @@ import { createTimeGridData, getDayGridEvents } from '@src/helpers/grid';
 import { getDisplayPanel } from '@src/helpers/view';
 import { useDOMNode } from '@src/hooks/common/domNode';
 import { useTimeGridScrollSync } from '@src/hooks/timeGrid/useTimeGridScrollSync';
-import {
-  calendarSelector,
-  optionsSelector,
-  viewSelector,
-  weekViewLayoutSelector,
-} from '@src/selectors';
+import { optionsSelector, viewSelector, weekViewLayoutSelector } from '@src/selectors';
+import { visibleCalendarSelector } from '@src/selectors/calendar';
 import { getRowStyleInfo } from '@src/time/datetime';
 
 import { WeekOptions } from '@t/options';
 import { AlldayEventCategory } from '@t/panel';
 
 function useDayViewState() {
-  const calendar = useStore(calendarSelector);
+  const calendar = useStore(visibleCalendarSelector);
   const options = useStore(optionsSelector);
   const { dayGridRows: gridRowLayout } = useStore(weekViewLayoutSelector);
   const { renderDate } = useStore(viewSelector);

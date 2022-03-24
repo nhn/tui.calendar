@@ -8,7 +8,6 @@ import { GridSelectionByColumn } from '@src/components/timeGrid/gridSelectionByC
 import { useTheme } from '@src/contexts/theme';
 import { getTopHeightByTime } from '@src/controller/times';
 import { cls, toPercent } from '@src/helpers/css';
-import { isVisibleEvent } from '@src/helpers/events';
 import { isBackgroundEvent } from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
@@ -62,11 +61,10 @@ function BackgroundEvents({
 function VerticalEvents({ eventUIModels }: { eventUIModels: EventUIModel[] }) {
   // @TODO: use dynamic value
   const style = { marginRight: 8 };
-  const filteredUIModels = eventUIModels.filter((uiModel) => isVisibleEvent(uiModel.model));
 
   return (
     <div className={classNames.events} style={style}>
-      {filteredUIModels.map((eventUIModel) => (
+      {eventUIModels.map((eventUIModel) => (
         <TimeEvent key={`${eventUIModel.valueOf()}-${eventUIModel.cid()}`} uiModel={eventUIModel} />
       ))}
     </div>
