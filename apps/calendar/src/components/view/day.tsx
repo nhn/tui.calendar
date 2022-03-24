@@ -12,26 +12,31 @@ import { WEEK_DAYNAME_BORDER, WEEK_DAYNAME_HEIGHT } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
 import { getDayNames } from '@src/helpers/dayName';
+import { getVisibleEventCollection } from '@src/helpers/events';
 import { createTimeGridData, getDayGridEvents } from '@src/helpers/grid';
 import { getDisplayPanel } from '@src/helpers/view';
 import { useDOMNode } from '@src/hooks/common/domNode';
 import { useTimeGridScrollSync } from '@src/hooks/timeGrid/useTimeGridScrollSync';
-import { optionsSelector, viewSelector, weekViewLayoutSelector } from '@src/selectors';
-import { visibleCalendarSelector } from '@src/selectors/calendar';
+import {
+  calendarSelector,
+  optionsSelector,
+  viewSelector,
+  weekViewLayoutSelector,
+} from '@src/selectors';
 import { getRowStyleInfo } from '@src/time/datetime';
 
 import { WeekOptions } from '@t/options';
 import { AlldayEventCategory } from '@t/panel';
 
 function useDayViewState() {
-  const calendar = useStore(visibleCalendarSelector);
+  const calendar = useStore(calendarSelector);
   const options = useStore(optionsSelector);
   const { dayGridRows: gridRowLayout } = useStore(weekViewLayoutSelector);
   const { renderDate } = useStore(viewSelector);
 
   return useMemo(
     () => ({
-      calendarData: calendar,
+      calendar,
       options,
       gridRowLayout,
       renderDate,
@@ -41,7 +46,7 @@ function useDayViewState() {
 }
 
 export function Day() {
-  const { calendarData, options, gridRowLayout, renderDate } = useDayViewState();
+  const { calendar, options, gridRowLayout, renderDate } = useDayViewState();
   const [timePanel, setTimePanelRef] = useDOMNode<HTMLDivElement>();
 
   const { eventView, taskView } = options;
@@ -54,6 +59,13 @@ export function Day() {
     narrowWeekend,
     startDayOfWeek,
     workweek
+  );
+  const calendarData = useMemo(
+    () => ({
+      ...calendar,
+      events: getVisibleEventCollection(calendar.events),
+    }),
+    [calendar]
   );
   const dayGridEvents = getDayGridEvents(weekDates, calendarData, {
     narrowWeekend,
