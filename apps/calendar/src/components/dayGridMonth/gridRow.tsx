@@ -4,7 +4,7 @@ import { memo } from 'preact/compat';
 import { GridCell } from '@src/components/dayGridMonth/gridCell';
 import { useTheme } from '@src/contexts/theme';
 import { cls, toPercent } from '@src/helpers/css';
-import { useDOMNode } from '@src/hooks/common/domNode';
+import { useDOMNode } from '@src/hooks/common/useDOMNode';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { toFormat, toStartOfDay } from '@src/time/datetime';

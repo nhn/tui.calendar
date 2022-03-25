@@ -11,10 +11,10 @@ import { DEFAULT_PANEL_HEIGHT, WEEK_EVENT_MARGIN_TOP } from '@src/constants/styl
 import { cls } from '@src/helpers/css';
 import { createGridPositionFinder, EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
 import { alldayGridRowSelectionHelper } from '@src/helpers/gridSelection';
-import { useDOMNode } from '@src/hooks/common/domNode';
-import { useDayGridRowTitleStyle } from '@src/hooks/dayGridWeek/dayGridRowTitleStyle';
-import { useGridRowHeightController } from '@src/hooks/dayGridWeek/gridRowHeightController';
-import { useGridSelection } from '@src/hooks/gridSelection/gridSelection';
+import { useDOMNode } from '@src/hooks/common/useDOMNode';
+import { useDayGridRowTitleStyle } from '@src/hooks/dayGridWeek/useDayGridRowTitleStyle';
+import { useGridRowHeightController } from '@src/hooks/dayGridWeek/useGridRowHeightController';
+import { useGridSelection } from '@src/hooks/gridSelection/useGridSelection';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 

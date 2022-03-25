@@ -3,7 +3,7 @@ import { h } from 'preact';
 import { CalendarDropdownMenu } from '@src/components/popup/calendarDropdownMenu';
 import { PopupSection } from '@src/components/popup/popupSection';
 import { cls } from '@src/helpers/css';
-import { useDropdownState } from '@src/hooks/common/dropdownState';
+import { useDropdownState } from '@src/hooks/common/useDropdownState';
 import { FormStateActionType, FormStateDispatcher } from '@src/hooks/popup/formState';
 
 import { CalendarInfo } from '@t/options';

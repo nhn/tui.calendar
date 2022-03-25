@@ -4,7 +4,7 @@ import type { DayGridMonth } from '@src/components/dayGridMonth/dayGridMonth';
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import { MONTH_CELL_BAR_HEIGHT, MONTH_CELL_PADDING_TOP } from '@src/constants/style';
 import { EVENT_HEIGHT } from '@src/helpers/grid';
-import { useDayGridMonthEventMove } from '@src/hooks/dayGridMonth/dayGridMonthEventMove';
+import { useDayGridMonthEventMove } from '@src/hooks/dayGridMonth/useDayGridMonthEventMove';
 import { isNil } from '@src/utils/type';
 
 import { GridPositionFinder } from '@t/grid';

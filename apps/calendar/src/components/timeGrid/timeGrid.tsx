@@ -12,10 +12,10 @@ import { getTopPercentByTime } from '@src/controller/times';
 import { cls, toPercent } from '@src/helpers/css';
 import { createGridPositionFinder } from '@src/helpers/grid';
 import { timeGridSelectionHelper } from '@src/helpers/gridSelection';
-import { useDOMNode } from '@src/hooks/common/domNode';
+import { useDOMNode } from '@src/hooks/common/useDOMNode';
 import { useInterval } from '@src/hooks/common/useInterval';
 import { useIsMounted } from '@src/hooks/common/useIsMounted';
-import { useGridSelection } from '@src/hooks/gridSelection/gridSelection';
+import { useGridSelection } from '@src/hooks/gridSelection/useGridSelection';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import {

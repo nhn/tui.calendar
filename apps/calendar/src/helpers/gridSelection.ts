@@ -1,4 +1,4 @@
-import type { useGridSelection } from '@src/hooks/gridSelection/gridSelection';
+import type { useGridSelection } from '@src/hooks/gridSelection/useGridSelection';
 import TZDate from '@src/time/date';
 import { setTimeStrToDate } from '@src/time/datetime';
 import { isBetween, isBetween as isBetweenValue } from '@src/utils/math';

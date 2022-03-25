@@ -3,7 +3,7 @@ import { ComponentProps, h } from 'preact';
 import type { AlldayGridRow } from '@src/components/dayGridWeek/alldayGridRow';
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import { EVENT_HEIGHT } from '@src/helpers/grid';
-import { useAlldayGridRowEventMove } from '@src/hooks/dayGridWeek/alldayGridRowEventMove';
+import { useAlldayGridRowEventMove } from '@src/hooks/dayGridWeek/useAlldayGridRowEventMove';
 import { isNil } from '@src/utils/type';
 
 import { GridPositionFinder } from '@t/grid';

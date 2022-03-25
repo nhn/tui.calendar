@@ -9,7 +9,7 @@ import {
 } from '@src/constants/style';
 import { cls } from '@src/helpers/css';
 import { getRenderedEventUIModels } from '@src/helpers/grid';
-import { useDayGridMonthEventResize } from '@src/hooks/dayGridMonth/dayGridMonthEventResize';
+import { useDayGridMonthEventResize } from '@src/hooks/dayGridMonth/useDayGridMonthEventResize';
 import { isNil } from '@src/utils/type';
 
 import { GridPositionFinder } from '@t/grid';

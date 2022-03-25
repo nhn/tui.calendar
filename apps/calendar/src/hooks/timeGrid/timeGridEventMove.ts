@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
 
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
-import { useTransientUpdate } from '@src/hooks/common/transientUpdate';
-import { useCurrentPointerPositionInGrid } from '@src/hooks/event/currentPointerPositionInGrid';
-import { useDraggingEvent } from '@src/hooks/event/draggingEvent';
+import { useTransientUpdate } from '@src/hooks/common/useTransientUpdate';
+import { useCurrentPointerPositionInGrid } from '@src/hooks/event/useCurrentPointerPositionInGrid';
+import { useDraggingEvent } from '@src/hooks/event/useDraggingEvent';
 import { dndSelector } from '@src/selectors';
 import { isNotDraggingSelector } from '@src/selectors/dnd';
 import type TZDate from '@src/time/date';
