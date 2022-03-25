@@ -6,7 +6,7 @@ import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { createGridPositionFinder, createTimeGridData, getWeekDates } from '@src/helpers/grid';
 import { useDrag } from '@src/hooks/common/useDrag';
-import { useTimeGridEventMove } from '@src/hooks/timeGrid/timeGridEventMove';
+import { useTimeGridEventMove } from '@src/hooks/timeGrid/useTimeGridEventMove';
 import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import { createDate } from '@src/test/helpers';

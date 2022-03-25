@@ -2,7 +2,7 @@ import { h } from 'preact';
 
 import { PopupSection } from '@src/components/popup/popupSection';
 import { cls } from '@src/helpers/css';
-import { FormStateActionType, FormStateDispatcher } from '@src/hooks/popup/formState';
+import { FormStateActionType, FormStateDispatcher } from '@src/hooks/popup/useFormState';
 
 interface Props {
   title: string;
