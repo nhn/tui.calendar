@@ -1,12 +1,12 @@
 import { h } from 'preact';
 import { useRef, useState } from 'preact/hooks';
 
-import { ResizeIcon } from '@src/components/events/resizeIcon';
+import { HorizontalEventResizeIcon } from '@src/components/events/horizontalEventResizeIcon';
 import { Template } from '@src/components/template';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
 import { useLayoutContainer } from '@src/contexts/layoutContainer';
-import { cls, toPercent } from '@src/helpers/css';
+import { cls, toPercent, toPx } from '@src/helpers/css';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/drag';
 import { useTransientUpdate } from '@src/hooks/common/transientUpdate';
@@ -64,7 +64,7 @@ function getEventItemStyle({
     borderRadius: exceedLeft ? 0 : 2,
     overflow: 'hidden',
     height: eventHeight,
-    lineHeight: eventHeight,
+    lineHeight: toPx(eventHeight),
     opacity: isDraggingTarget ? 0.5 : 1,
   };
   const margin = getMargin(flat);
@@ -120,14 +120,12 @@ function getStyles({
     isDraggingTarget,
   });
 
-  const resizeIconStyle = { lineHeight: 18 };
-
   const dayEventBlockClassName = `${cls('weekday-event-block')} ${getExceedClassName(
     exceedLeft,
     exceedRight
   )}`;
 
-  return { dayEventBlockClassName, containerStyle, eventItemStyle, resizeIconStyle };
+  return { dayEventBlockClassName, containerStyle, eventItemStyle };
 }
 
 function getTestId({ model }: EventUIModel) {
@@ -155,7 +153,7 @@ export function HorizontalEvent({
   const layoutContainer = useLayoutContainer();
   const [isDraggingTarget, setIsDraggingTarget] = useState<boolean>(false);
 
-  const { dayEventBlockClassName, containerStyle, eventItemStyle, resizeIconStyle } = getStyles({
+  const { dayEventBlockClassName, containerStyle, eventItemStyle } = getStyles({
     uiModel,
     eventHeight,
     headerHeight,
@@ -257,8 +255,7 @@ export function HorizontalEvent({
           <Template template="time" model={uiModel.model} />
         </span>
         {shouldHideResizeHandler ? null : (
-          <ResizeIcon
-            style={resizeIconStyle}
+          <HorizontalEventResizeIcon
             onMouseDown={passConditionalProp(isDraggableEvent, handleResizeStart)}
           />
         )}
