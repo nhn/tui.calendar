@@ -5,7 +5,7 @@ module.exports = {
   core: {
     builder: 'webpack5',
   },
-  stories: ['../**/*.stories.@(ts|tsx)'],
+  stories: ['../**/*.stories.@(ts|tsx|mdx)'],
   addons: [
     {
       name: '@storybook/addon-postcss',
@@ -15,6 +15,7 @@ module.exports = {
         },
       },
     },
+    '@storybook/addon-docs',
   ],
   webpackFinal: async (config) => {
     config.module.rules = custom.module.rules;
