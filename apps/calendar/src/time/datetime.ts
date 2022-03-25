@@ -110,7 +110,7 @@ const tokenFunc = {
 
 export const MS_PER_DAY = 86400000;
 export const MS_PER_HOUR = 3600000;
-const MS_PER_MINUTES = 60000;
+export const MS_PER_MINUTES = 60000;
 
 /**
  * The number of milliseconds 20 minutes for event min duration

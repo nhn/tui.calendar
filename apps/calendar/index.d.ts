@@ -300,7 +300,7 @@ export default class Calendar {
 
   public today(): void;
 
-  public setCalendarVisibility(calendarId: string | string[], visibility: boolean): void;
+  public setCalendarVisibility(calendarId: string | string[], isVisible: boolean): void;
 
   public updateEvent(eventId: string, calendarId: string, changes: EventModelData): void;
 

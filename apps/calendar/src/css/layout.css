@@ -8,6 +8,18 @@
   box-sizing: border-box;
 }
 
+.layout.dragging--move-event * {
+  cursor: move;
+}
+
+.layout.dragging--resize-horizontal-event * {
+  cursor: col-resize;
+}
+
+.layout.dragging--resize-vertical-event * {
+  cursor: row-resize;
+}
+
 .layout .panel-resizer {
   user-select: none;
 }
@@ -20,13 +32,8 @@
   position: absolute;
 }
 
-.layout .dragging {
-  position: absolute;
-}
-
 .layout.horizontal .panel,
-.layout.horizontal .panel-resizer,
-.layout.horizontal .draggable {
+.layout.horizontal .panel-resizer {
   display: inline-block;
   vertical-align: middle;
 }

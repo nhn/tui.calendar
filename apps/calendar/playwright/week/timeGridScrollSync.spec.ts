@@ -172,7 +172,7 @@ test.describe('Scroll syncing in time grid when moving event', () => {
       force: true,
     });
     await page.mouse.down();
-    await page.mouse.move(middleXOfEvent, containerBoundingBox.y);
+    await page.mouse.move(middleXOfEvent, containerBoundingBox.y - 10);
     await page.mouse.up();
 
     // Then

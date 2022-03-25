@@ -1,11 +1,12 @@
 import { h } from 'preact';
 import { useRef, useState } from 'preact/hooks';
 
-import { ResizeIcon } from '@src/components/events/resizeIcon';
+import { HorizontalEventResizeIcon } from '@src/components/events/horizontalEventResizeIcon';
 import { Template } from '@src/components/template';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
-import { cls, toPercent } from '@src/helpers/css';
+import { useLayoutContainer } from '@src/contexts/layoutContainer';
+import { cls, toPercent, toPx } from '@src/helpers/css';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/drag';
 import { useTransientUpdate } from '@src/hooks/common/transientUpdate';
@@ -63,7 +64,7 @@ function getEventItemStyle({
     borderRadius: exceedLeft ? 0 : 2,
     overflow: 'hidden',
     height: eventHeight,
-    lineHeight: eventHeight,
+    lineHeight: toPx(eventHeight),
     opacity: isDraggingTarget ? 0.5 : 1,
   };
   const margin = getMargin(flat);
@@ -119,14 +120,12 @@ function getStyles({
     isDraggingTarget,
   });
 
-  const resizeIconStyle = { lineHeight: 18 };
-
   const dayEventBlockClassName = `${cls('weekday-event-block')} ${getExceedClassName(
     exceedLeft,
     exceedRight
   )}`;
 
-  return { dayEventBlockClassName, containerStyle, eventItemStyle, resizeIconStyle };
+  return { dayEventBlockClassName, containerStyle, eventItemStyle };
 }
 
 function getTestId({ model }: EventUIModel) {
@@ -136,6 +135,13 @@ function getTestId({ model }: EventUIModel) {
   return `${calendarId}${id}${model.title}`;
 }
 
+const classNames = {
+  eventBody: cls('weekday-event'),
+  eventTitle: cls('weekday-event-title'),
+  moveEvent: cls('dragging--move-event'),
+  resizeEvent: cls('dragging--resize-horizontal-event'),
+};
+
 export function HorizontalEvent({
   flat = false,
   uiModel,
@@ -144,9 +150,10 @@ export function HorizontalEvent({
   resizingWidth = null,
   movingLeft = null,
 }: Props) {
+  const layoutContainer = useLayoutContainer();
   const [isDraggingTarget, setIsDraggingTarget] = useState<boolean>(false);
 
-  const { dayEventBlockClassName, containerStyle, eventItemStyle, resizeIconStyle } = getStyles({
+  const { dayEventBlockClassName, containerStyle, eventItemStyle } = getStyles({
     uiModel,
     eventHeight,
     headerHeight,
@@ -182,13 +189,23 @@ export function HorizontalEvent({
     onInit: () => {
       setDraggingEventUIModel(uiModel);
     },
-    onMouseUp: clearIsDraggingTarget,
+    onDragStart: () => {
+      layoutContainer?.classList.add(classNames.resizeEvent);
+    },
+    onMouseUp: () => {
+      layoutContainer?.classList.remove(classNames.resizeEvent);
+      clearIsDraggingTarget();
+    },
   });
   const onMoveStart = useDrag(DRAGGING_TYPE_CREATORS.moveEvent('dayGrid', `${uiModel.cid()}`), {
     onInit: () => {
       setDraggingEventUIModel(uiModel);
     },
+    onDragStart: () => {
+      layoutContainer?.classList.add(classNames.moveEvent);
+    },
     onMouseUp: (e, { draggingState }) => {
+      layoutContainer?.classList.remove(classNames.moveEvent);
       clearIsDraggingTarget();
 
       const isNotDragging = draggingState <= DraggingState.INIT;
@@ -230,16 +247,15 @@ export function HorizontalEvent({
       ref={eventContainerRef}
     >
       <div
-        className={cls('weekday-event')}
+        className={classNames.eventBody}
         style={eventItemStyle}
         onMouseDown={passConditionalProp(isDraggableEvent, handleMoveStart)}
       >
-        <span className={cls('weekday-event-title')}>
+        <span className={classNames.eventTitle}>
           <Template template="time" model={uiModel.model} />
         </span>
         {shouldHideResizeHandler ? null : (
-          <ResizeIcon
-            style={resizeIconStyle}
+          <HorizontalEventResizeIcon
             onMouseDown={passConditionalProp(isDraggableEvent, handleResizeStart)}
           />
         )}
