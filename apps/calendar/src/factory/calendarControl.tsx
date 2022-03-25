@@ -339,13 +339,13 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   /**
    * Set events' visibility by calendar ID
    * @param {string|string[]} calendarId - The calendar id or ids to change visibility
-   * @param {boolean} visibility - If set to true, show the events. If set to false, hide the events.
+   * @param {boolean} isVisible - If set to true, show the events. If set to false, hide the events.
    */
-  setCalendarVisibility(calendarId: string | string[], visibility: boolean) {
+  setCalendarVisibility(calendarId: string | string[], isVisible: boolean) {
     const { setCalendarVisibility } = this.getStoreDispatchers('calendar');
     const calendarIds = Array.isArray(calendarId) ? calendarId : [calendarId];
 
-    setCalendarVisibility(calendarIds, visibility);
+    setCalendarVisibility(calendarIds, isVisible);
   }
 
   /**

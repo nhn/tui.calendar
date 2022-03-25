@@ -1092,7 +1092,7 @@ describe('setCalendarVisibility', () => {
 
     // When
     act(() => {
-      mockCalenderEvent.setCalendarVisibility('mockCalendarId1', true);
+      mockCalenderEvent.setCalendarVisibility('mockCalendarId1', false);
     });
 
     // Then
@@ -1103,14 +1103,14 @@ describe('setCalendarVisibility', () => {
   it('should toggle events', () => {
     // Given
     act(() => {
-      mockCalenderEvent.setCalendarVisibility('mockCalendarId1', true);
+      mockCalenderEvent.setCalendarVisibility('mockCalendarId1', false);
     });
     expect(screen.queryByText('mockEvent1')).not.toBeInTheDocument();
     expect(screen.queryByText('mockEvent2')).toBeInTheDocument();
 
     // When
     act(() => {
-      mockCalenderEvent.setCalendarVisibility('mockCalendarId1', false);
+      mockCalenderEvent.setCalendarVisibility('mockCalendarId1', true);
     });
 
     // Then
