@@ -3,8 +3,8 @@ import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 
 import { TimeEvent } from '@src/components/events/timeEvent';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
-import { useCurrentPointerPositionInGrid } from '@src/hooks/event/currentPointerPositionInGrid';
-import { useDraggingEvent } from '@src/hooks/event/draggingEvent';
+import { useCurrentPointerPositionInGrid } from '@src/hooks/event/useCurrentPointerPositionInGrid';
+import { useDraggingEvent } from '@src/hooks/event/useDraggingEvent';
 import EventUIModel from '@src/model/eventUIModel';
 import { isNotDraggingSelector } from '@src/selectors/dnd';
 import TZDate from '@src/time/date';

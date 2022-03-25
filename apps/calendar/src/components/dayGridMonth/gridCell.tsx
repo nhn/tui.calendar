@@ -14,7 +14,7 @@ import { useDispatch } from '@src/contexts/calendarStore';
 import { useLayoutContainer } from '@src/contexts/layoutContainer';
 import { cls, toPercent } from '@src/helpers/css';
 import { getExceedCount } from '@src/helpers/grid';
-import { useDOMNode } from '@src/hooks/common/domNode';
+import { useDOMNode } from '@src/hooks/common/useDOMNode';
 import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { getPosition, getRelativePosition, getSize } from '@src/utils/dom';

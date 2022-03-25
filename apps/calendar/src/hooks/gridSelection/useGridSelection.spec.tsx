@@ -8,7 +8,7 @@ import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
 import { EventBusProvider } from '@src/contexts/eventBus';
 import { createGridPositionFinder, createTimeGridData, getWeekDates } from '@src/helpers/grid';
 import { timeGridSelectionHelper } from '@src/helpers/gridSelection';
-import { useGridSelection } from '@src/hooks/gridSelection/gridSelection';
+import { useGridSelection } from '@src/hooks/gridSelection/useGridSelection';
 import { GridSelectionType } from '@src/slices/gridSelection';
 import { dragAndDrop } from '@src/test/utils';
 import TZDate from '@src/time/date';

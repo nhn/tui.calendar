@@ -3,8 +3,8 @@ import { h } from 'preact';
 import { PopupSection } from '@src/components/popup/popupSection';
 import { StateDropdownMenu } from '@src/components/popup/stateDropdownMenu';
 import { cls } from '@src/helpers/css';
-import { useDropdownState } from '@src/hooks/common/dropdownState';
-import { FormStateActionType, FormStateDispatcher } from '@src/hooks/popup/formState';
+import { useDropdownState } from '@src/hooks/common/useDropdownState';
+import { FormStateActionType, FormStateDispatcher } from '@src/hooks/popup/useFormState';
 
 import { EventState } from '@t/events';
 

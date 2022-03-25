@@ -7,7 +7,7 @@ import {
   SEE_MORE_POPUP_SLOT_CLASS_NAME,
 } from '@src/constants/popup';
 import { cls } from '@src/helpers/css';
-import { useDOMNode } from '@src/hooks/common/domNode';
+import { useDOMNode } from '@src/hooks/common/useDOMNode';
 import { isUndefined } from '@src/utils/type';
 
 import { PropsWithChildren } from '@t/components/common';

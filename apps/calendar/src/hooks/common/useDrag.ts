@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import { KEY } from '@src/constants/keyboard';
 import { MINIMUM_DRAG_MOUSE_DISTANCE } from '@src/constants/mouse';
 import { useDispatch, useInternalStore } from '@src/contexts/calendarStore';
-import { useTransientUpdate } from '@src/hooks/common/transientUpdate';
+import { useTransientUpdate } from '@src/hooks/common/useTransientUpdate';
 import { dndSelector } from '@src/selectors';
 import { DndSlice, DraggingState } from '@src/slices/dnd';
 import { isKeyPressed } from '@src/utils/keyboard';

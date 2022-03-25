@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 
 import { MINIMUM_DRAG_MOUSE_DISTANCE } from '@src/constants/mouse';
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
-import { DragListeners, useDrag } from '@src/hooks/common/drag';
+import { DragListeners, useDrag } from '@src/hooks/common/useDrag';
 import { dragAndDrop } from '@src/test/utils';
 
 import { PropsWithChildren } from '@t/components/common';

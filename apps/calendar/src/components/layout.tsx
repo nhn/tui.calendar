@@ -8,7 +8,7 @@ import { SeeMoreEventsPopup } from '@src/components/popup/seeMoreEventsPopup';
 import { useDispatch } from '@src/contexts/calendarStore';
 import { LayoutContainerProvider } from '@src/contexts/layoutContainer';
 import { cls, toPercent } from '@src/helpers/css';
-import { useDOMNode } from '@src/hooks/common/domNode';
+import { useDOMNode } from '@src/hooks/common/useDOMNode';
 import { noop } from '@src/utils/noop';
 import { isNil, isNumber, isString } from '@src/utils/type';
 

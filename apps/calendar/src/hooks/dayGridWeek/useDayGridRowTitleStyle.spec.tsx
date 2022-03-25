@@ -1,4 +1,4 @@
-import { useDayGridRowTitleStyle } from '@src/hooks/dayGridWeek/dayGridRowTitleStyle';
+import { useDayGridRowTitleStyle } from '@src/hooks/dayGridWeek/useDayGridRowTitleStyle';
 import { renderHook } from '@src/test/utils';
 import Theme from '@src/theme';
 

@@ -7,7 +7,7 @@ import DatePicker, { DateRangePicker } from 'tui-date-picker';
 import { PopupSection } from '@src/components/popup/popupSection';
 import { useStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
-import { FormStateActionType, FormStateDispatcher } from '@src/hooks/popup/formState';
+import { FormStateActionType, FormStateDispatcher } from '@src/hooks/popup/useFormState';
 import { optionsSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
 

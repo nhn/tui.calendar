@@ -1,4 +1,4 @@
-import { useTransientUpdate } from '@src/hooks/common/transientUpdate';
+import { useTransientUpdate } from '@src/hooks/common/useTransientUpdate';
 import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import { isPresent } from '@src/utils/type';

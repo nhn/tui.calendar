@@ -1,6 +1,6 @@
 import { useState } from 'preact/hooks';
 
-import { useTransientUpdate } from '@src/hooks/common/transientUpdate';
+import { useTransientUpdate } from '@src/hooks/common/useTransientUpdate';
 import EventUIModel from '@src/model/eventUIModel';
 import { dndSelector } from '@src/selectors';
 import { last } from '@src/utils/array';

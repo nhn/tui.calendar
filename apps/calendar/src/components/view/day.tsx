@@ -15,7 +15,7 @@ import { getDayNames } from '@src/helpers/dayName';
 import { getVisibleEventCollection } from '@src/helpers/events';
 import { createTimeGridData, getDayGridEvents } from '@src/helpers/grid';
 import { getDisplayPanel } from '@src/helpers/view';
-import { useDOMNode } from '@src/hooks/common/domNode';
+import { useDOMNode } from '@src/hooks/common/useDOMNode';
 import { useTimeGridScrollSync } from '@src/hooks/timeGrid/useTimeGridScrollSync';
 import {
   calendarSelector,
