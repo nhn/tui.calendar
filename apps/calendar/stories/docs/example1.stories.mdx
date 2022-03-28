@@ -1,0 +1,22 @@
+import { Meta, Canvas } from '@storybook/addon-docs';
+import { Example1 } from './example1.stories';
+
+<Meta title="Initialize Calendar Instance" />
+
+# Creating calendar instance
+
+Here's a simple example of how to create a calendar instance.
+
+<Canvas withSource="none">
+  <Example1 />
+</Canvas>
+
+```html
+<div class="container"></div>
+
+<script>
+  const cal = new Calendar(document.querySelector('.container'));
+</script>
+```
+
+
