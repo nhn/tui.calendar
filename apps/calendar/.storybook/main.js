@@ -1,5 +1,4 @@
 const path = require('path');
-const customBabelConfig = require('../../../babel.config.json');
 
 module.exports = {
   core: {
@@ -7,10 +6,20 @@ module.exports = {
   },
   stories: ['../**/*.stories.@(ts|tsx|mdx)'],
   addons: ['@storybook/addon-docs'],
-  babel: async (config) => ({
-    ...config,
-    ...customBabelConfig,
-  }),
+  babel: async (config) => {
+    // Replace storybook babel preset & plugins with custom ones
+    config.presets.splice(config.presets.length - 1, 1, [
+      require.resolve('@babel/preset-typescript'),
+      { jsxPragma: 'h', jsxPragmaFrag: 'Fragment' },
+    ]);
+    config.plugins.splice(config.plugins.length - 1, 1, [
+      require.resolve('@babel/plugin-transform-react-jsx'),
+      { pragma: 'h', pragmaFrag: 'Fragment' },
+      'preset',
+    ]);
+
+    return config;
+  },
   webpackFinal: async (config) => {
     config.module.rules = config.module.rules
       .filter((rule) => !(rule?.test?.test('.css') ?? false))
@@ -42,7 +51,8 @@ module.exports = {
             },
             require.resolve('postcss-loader'),
           ],
-        }]);
+        },
+      ]);
 
     Object.assign(config.resolve.alias, {
       'core-js/modules': path.resolve(__dirname, '../../../node_modules/core-js/modules'),
