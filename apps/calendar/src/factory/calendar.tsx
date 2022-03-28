@@ -20,6 +20,8 @@ export default class Calendar extends CalendarControl {
     if (!isValidViewType(defaultView)) {
       throw new Error(`Invalid view type: ${defaultView}`);
     }
+
+    this.render();
   }
 
   protected getComponent() {
