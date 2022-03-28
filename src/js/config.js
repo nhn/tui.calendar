@@ -1,6 +1,5 @@
 /**
  * @fileoverview Global configuration object module. This @echo syntax will change preprocess context. See gulpfile.js
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 'use strict';
 

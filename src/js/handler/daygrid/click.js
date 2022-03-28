@@ -1,6 +1,5 @@
 /**
  * @fileoverview Click handle module for daygrid schedules
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 'use strict';
 

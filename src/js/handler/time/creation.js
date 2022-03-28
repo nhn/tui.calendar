@@ -1,6 +1,5 @@
 /**
  * @fileoverview Handling creation events from drag handler and time grid view
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 'use strict';
 

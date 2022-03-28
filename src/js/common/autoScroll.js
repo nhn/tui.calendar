@@ -1,6 +1,5 @@
 /**
  * @fileoverview Add autoscroll feature to elements that prevented text selection.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 'use strict';
 

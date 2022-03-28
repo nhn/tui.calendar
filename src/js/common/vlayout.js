@@ -1,6 +1,5 @@
 /**
  * @fileoverview Layout module that supplied split height, resize height features.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 'use strict';
 

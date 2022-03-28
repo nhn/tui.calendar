@@ -1,7 +1,6 @@
 /* eslint complexity: 0 */
 /**
  * @fileoverview Model of schedule.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 'use strict';
 

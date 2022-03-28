@@ -1,6 +1,5 @@
 /**
  * @fileoverview Layout view. wrap all view containers at outside.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 'use strict';
 

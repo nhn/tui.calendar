@@ -1,6 +1,5 @@
 /**
  * @fileoverview Sanitizer module in order to prevent XSS attacks.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 'use strict';
 

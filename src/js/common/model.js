@@ -1,6 +1,5 @@
 /**
  * @fileoverview Mixin module for models.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 'use strict';
 
