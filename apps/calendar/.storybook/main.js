@@ -4,7 +4,7 @@ module.exports = {
   core: {
     builder: 'webpack5',
   },
-  stories: ['../**/*.stories.@(ts|tsx|mdx)'],
+  stories: process.env.NODE_ENV === 'production' ? ['../**/docs/*.stories.@(ts|tsx|mdx)'] : ['../**/*.stories.@(ts|tsx|mdx)'],
   addons: ['@storybook/addon-docs'],
   babel: async (config) => {
     // Replace storybook babel preset & plugins with custom ones
