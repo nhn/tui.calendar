@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'preact/hooks';
 
 import Calendar from '@src/factory/calendar';
 
-import { Options } from '@t/options';
+import type { Options } from '@t/options';
 
 export function generateCalendarExample(
   options: Options & { containerHeight?: number },
