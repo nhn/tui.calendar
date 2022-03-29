@@ -78,6 +78,7 @@
     "build:vue": "lerna run --scope @toast-ui/vue-calendar build",
     "build:date": "lerna run --scope @toast-ui/date build",
     "build:calendar-storybook": "lerna run --scope @toast-ui/calendar storybook:build",
+    "build:calendar-storybook:docs": "lerna run --scope @toast-ui/calendar storybook:build:docs",
     "serve:storybook": "http-server ./apps/calendar/storybook-static",
     "install:date": "cd libs/date && npm install",
     "setup:date": "npm run install:date && npm run build:date",
