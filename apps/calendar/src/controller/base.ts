@@ -5,8 +5,8 @@ import TZDate from '@src/time/date';
 import { makeDateRange, MS_PER_DAY, toEndOfDay, toFormat, toStartOfDay } from '@src/time/datetime';
 import Collection from '@src/utils/collection';
 
-import { CalendarData, EventModelData, IDS_OF_DAY } from '@t/events';
-import { CalendarInfo } from '@t/options';
+import type { CalendarData, EventModelData, IDS_OF_DAY } from '@t/events';
+import type { CalendarInfo } from '@t/options';
 
 /**
  * Make a event collection

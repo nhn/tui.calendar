@@ -4,8 +4,8 @@ import { toPercent } from '@src/helpers/css';
 import TZDate from '@src/time/date';
 import { fill } from '@src/utils/array';
 
-import { TimeUnit } from '@t/events';
-import { CellStyle, FormattedTimeString } from '@t/time/datetime';
+import type { TimeUnit } from '@t/events';
+import type { CellStyle, FormattedTimeString } from '@t/time/datetime';
 
 export enum Day {
   SUN,
