@@ -1,6 +1,7 @@
 import { INVALID_FORMAT_PARAMETER } from '@src/constants/error';
 import TZDate from '@src/time/date';
 import {
+  addMonth,
   clone,
   compare,
   isSameDate,
@@ -11,6 +12,7 @@ import {
   MS_PER_DAY,
   MS_PER_HOUR,
   parse,
+  subtractMonth,
   toEndOfDay,
   toEndOfMonth,
   toFormat,
@@ -294,5 +296,79 @@ describe('toStartOfYear', () => {
 
     // Then
     expect(result).toEqual(startOfYear);
+  });
+});
+
+describe('addMonth/subtractMonth', () => {
+  it('should return the date on which the month was added to the given date', () => {
+    // Given
+    const date = new TZDate('2022-03-15T09:30:00');
+    const expected = new TZDate('2022-04-15T09:30:00');
+
+    // When
+    const result = addMonth(date, 1);
+
+    // Then
+    expect(result).toEqual(expected);
+  });
+
+  it('should return the date on which the month was added to the given date even if the month is a month without a calculated day', () => {
+    // Given
+    const date = new TZDate('2022-01-29T09:30:00');
+    const expected = new TZDate('2022-02-28T09:30:00');
+
+    // When
+    const result = addMonth(date, 1);
+
+    // Then
+    expect(result).toEqual(expected);
+  });
+
+  it('should return the date on which the month was added to the given date even if the month is in the leaf year', () => {
+    // Given
+    const date = new TZDate('2020-01-29T09:30:00');
+    const expected = new TZDate('2020-02-29T09:30:00'); // 2020 year is a leap year
+
+    // When
+    const result = addMonth(date, 1);
+
+    // Then
+    expect(result).toEqual(expected);
+  });
+
+  it('should return the date on which the month was subtracted to the given date', () => {
+    // Given
+    const date = new TZDate('2022-04-15T09:30:00');
+    const expected = new TZDate('2022-03-15T09:30:00');
+
+    // When
+    const result = subtractMonth(date, 1);
+
+    // Then
+    expect(result).toEqual(expected);
+  });
+
+  it('should return the date on which the month was subtracted to the given date even if the month is a month without a calculated day', () => {
+    // Given
+    const date = new TZDate('2022-03-29T09:30:00');
+    const expected = new TZDate('2022-02-28T09:30:00');
+
+    // When
+    const result = subtractMonth(date, 1);
+
+    // Then
+    expect(result).toEqual(expected);
+  });
+
+  it('should return the date on which the month was subtracted to the given date even if the month is in the leaf year', () => {
+    // Given
+    const date = new TZDate('2020-03-31T09:30:00');
+    const expected = new TZDate('2020-02-29T09:30:00'); // 2020 year is a leap year
+
+    // When
+    const result = subtractMonth(date, 1);
+
+    // Then
+    expect(result).toEqual(expected);
   });
 });

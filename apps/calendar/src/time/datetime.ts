@@ -453,9 +453,46 @@ export function subtractDate(d: TZDate, steps: number) {
   return date;
 }
 
-export function addMonth(d: TZDate, step: number) {
+function isLeafYear(date: TZDate) {
+  const year = date.getFullYear();
+
+  return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+}
+
+export function addMonth(d: TZDate, step = 1) {
   const date = clone(d);
-  date.setMonth(d.getMonth() + step);
+
+  const thisMonth = date.getMonth();
+  const thisDay = date.getDate();
+  let targetDaysOfMonth;
+
+  if (thisMonth + step === 1) {
+    targetDaysOfMonth = isLeafYear(date) ? 29 : 28;
+  } else {
+    date.setMonth(thisMonth + step + 1, 0);
+    targetDaysOfMonth = date.getDate();
+  }
+
+  date.setMonth(thisMonth + step, Math.min(thisDay, targetDaysOfMonth));
+
+  return date;
+}
+
+export function subtractMonth(d: TZDate, step = 1) {
+  const date = clone(d);
+
+  const thisMonth = date.getMonth();
+  const thisDay = date.getDate();
+  let targetDaysOfMonth;
+
+  if (thisMonth - step === 1) {
+    targetDaysOfMonth = isLeafYear(date) ? 29 : 28;
+  } else {
+    date.setMonth(thisMonth, 0);
+    targetDaysOfMonth = date.getDate();
+  }
+
+  date.setMonth(thisMonth - step, Math.min(thisDay, targetDaysOfMonth));
 
   return date;
 }
