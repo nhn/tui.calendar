@@ -1,204 +1,298 @@
+import { INVALID_FORMAT_PARAMETER } from '@src/constants/error';
 import TZDate from '@src/time/date';
-import * as dt from '@src/time/datetime';
+import {
+  clone,
+  compare,
+  isSameDate,
+  isSameMonth,
+  leadingZero,
+  makeDateRange,
+  millisecondsFrom,
+  MS_PER_DAY,
+  MS_PER_HOUR,
+  parse,
+  toEndOfDay,
+  toEndOfMonth,
+  toFormat,
+  toStartOfDay,
+  toStartOfMonth,
+  toStartOfYear,
+} from '@src/time/datetime';
 
-describe('datetime', () => {
-  describe('millisecondsFrom()', () => {
-    it('convert value to milliseconds', () => {
-      expect(dt.millisecondsFrom('hour', 24)).toBe(86400000);
-    });
+describe('millisecondsFrom', () => {
+  it('should convert value to milliseconds', () => {
+    // Given
+
+    // When
+    const result = millisecondsFrom('hour', 24);
+
+    // Then
+    expect(result).toBe(MS_PER_DAY);
+  });
+});
+
+describe('makeDateRange', () => {
+  it('should make date array by supplied dates', () => {
+    // Given
+    const start = new TZDate('2015/05/01');
+    const end = new TZDate('2015/05/03');
+
+    // When
+    const result = makeDateRange(start, end, MS_PER_DAY);
+
+    // Then
+    expect(result).toEqual([
+      new TZDate('2015/05/01'),
+      new TZDate('2015/05/02'),
+      new TZDate('2015/05/03'),
+    ]);
   });
 
-  describe('range()', () => {
-    it('makes date array by supplied dates.', () => {
-      const start = new TZDate('2015/05/01');
-      const end = new TZDate('2015/05/03');
-      const step = dt.MS_PER_DAY;
+  it('should have given steps', () => {
+    const start = new TZDate('2015/05/01 09:30:00');
+    const end = new TZDate('2015/05/01 18:30:00');
 
-      const expected = [
-        new TZDate('2015/05/01'),
-        new TZDate('2015/05/02'),
-        new TZDate('2015/05/03'),
-      ];
+    expect(makeDateRange(start, end, MS_PER_HOUR)).toEqual([
+      new TZDate('2015/05/01 09:30:00'),
+      new TZDate('2015/05/01 10:30:00'),
+      new TZDate('2015/05/01 11:30:00'),
+      new TZDate('2015/05/01 12:30:00'),
+      new TZDate('2015/05/01 13:30:00'),
+      new TZDate('2015/05/01 14:30:00'),
+      new TZDate('2015/05/01 15:30:00'),
+      new TZDate('2015/05/01 16:30:00'),
+      new TZDate('2015/05/01 17:30:00'),
+      new TZDate('2015/05/01 18:30:00'),
+    ]);
+  });
+});
 
-      expect(dt.makeDateRange(start, end, step)).toEqual(expected);
-    });
+describe('toStartOfDay', () => {
+  it('should return 00:00:00 of supplied date', () => {
+    // Given
+    const date = new TZDate('2015/05/21 18:30:00');
+    const expected = new TZDate('2015/05/21 00:00:00');
 
-    it('step test', () => {
-      const start = new TZDate('2015/05/01 09:30:00');
-      const end = new TZDate('2015/05/01 18:30:00');
+    // When
+    const result = toStartOfDay(date);
 
-      const expected = [
-        new TZDate('2015/05/01 09:30:00'),
-        new TZDate('2015/05/01 10:30:00'),
-        new TZDate('2015/05/01 11:30:00'),
-        new TZDate('2015/05/01 12:30:00'),
-        new TZDate('2015/05/01 13:30:00'),
-        new TZDate('2015/05/01 14:30:00'),
-        new TZDate('2015/05/01 15:30:00'),
-        new TZDate('2015/05/01 16:30:00'),
-        new TZDate('2015/05/01 17:30:00'),
-        new TZDate('2015/05/01 18:30:00'),
-      ];
+    // Then
+    expect(result).toEqual(expected);
+  });
+});
 
-      expect(dt.makeDateRange(start, end, dt.MS_PER_HOUR)).toEqual(expected);
-    });
+describe('toEndOfDay', () => {
+  it('should return 23:59:59.999 of supplied date', () => {
+    // Given
+    const date = new TZDate('2015/05/21 18:30:00');
+    const expected = new TZDate('2015-05-21T23:59:59.999');
+
+    // When
+    const result = toEndOfDay(date);
+
+    // Then
+    expect(result).toEqual(expected);
+  });
+});
+
+describe('clone', () => {
+  it('should clone TZDate object', () => {
+    // Given
+    const date = new TZDate();
+
+    // When
+    const clonedDate = clone(date);
+
+    // Then
+    expect(date).toEqual(clonedDate);
+  });
+});
+
+describe('compare', () => {
+  it('should return 0 when two parameters are equals', () => {
+    // Given
+    const d1 = new TZDate();
+    const d2 = new TZDate(d1.getTime());
+
+    // When
+    const result = compare(d1, d2);
+
+    // Then
+    expect(result).toBe(0);
   });
 
-  it('start() return 00:00:00 supplied date.', () => {
-    const d = new TZDate('2015/05/21 18:30:00');
+  it('should return 1 when the first parameter is later than second parameter', () => {
+    // Given
+    const date1 = new TZDate();
+    date1.setMinutes(date1.getMinutes() + 30);
+    const date2 = new TZDate();
 
-    expect(dt.toStartOfDay(d)).toEqual(new TZDate('2015/05/21'));
-    expect(d).toEqual(new TZDate('2015/05/21 18:30:00'));
+    // When
+    const result = compare(date1, date2);
+
+    // Then
+    expect(result).toBe(1);
   });
 
-  it('end() return 23:59:59.999 supplied date.', () => {
-    const d = new TZDate('2015/05/21 18:30:00');
+  it('should return -1 when the first parameter is early than second parameter', () => {
+    // Given
+    const date1 = new TZDate();
+    const date2 = new TZDate();
+    date2.setMinutes(date2.getMinutes() + 30);
 
-    // if you want use milliseconds, use format 'YYYY-MM-DDTHH:mm:ss.sssZ' based on http://www.ecma-international.org/ecma-262/5.1/#sec-15.9.1.15
-    expect(dt.toEndOfDay(d)).toEqual(new TZDate('2015-05-21T23:59:59.999'));
+    // When
+    const result = compare(date1, date2);
+
+    expect(result).toBe(-1);
+  });
+});
+
+describe('leadingZero', () => {
+  it('should pad zero to supplied number and length', () => {
+    // Given
+
+    // When
+
+    // Then
+    expect(leadingZero(2, 2)).toBe('02');
+    expect(leadingZero(2, 3)).toBe('002');
+    expect(leadingZero(2300, 5)).toBe('02300');
   });
 
-  describe('clone()', () => {
-    it('clone Date object', () => {
-      const d1 = new TZDate();
-      const cloned = dt.clone(d1);
+  it('should just convert to string and return if number length is longer than the given length', () => {
+    // Given
 
-      expect(d1.getTime()).toBe(cloned.getTime());
-    });
+    // When
+
+    // Then
+    expect(leadingZero(3000, 2)).toBe('3000');
+  });
+});
+
+describe('parse', () => {
+  it('should parse date string for safe usage', () => {
+    // Given
+    const dateStr1 = '2015-06-01 12:20:00';
+    const dateStr2 = '2015/06/01 10:00:00';
+    const dateStr3 = '20150601';
+
+    // When
+
+    // Then
+    expect(parse(dateStr1)).toEqual(new TZDate(2015, 5, 1, 12, 20, 0));
+    expect(parse(dateStr2)).toEqual(new TZDate(2015, 5, 1, 10, 0, 0));
+    expect(parse(dateStr3)).toEqual(new TZDate(2015, 5, 1, 0, 0, 0));
   });
 
-  describe('compare()', () => {
-    it('return -1 when first supplied date latest then second.', () => {
-      const d1 = new TZDate();
-      const d2 = new TZDate();
+  it('should return false when supplied date string is not valid', () => {
+    // Given
+    const validDateStr = '2015-05-01 00:00:00';
+    const invalidDateStr1 = '2015-5-1 3:00:00';
+    const invalidDateStr2 = '2015-06-21T22:00:00Z'; // ISO date format.
 
-      d2.setMinutes(d2.getMinutes() + 30);
+    // When
 
-      expect(dt.compare(d2, d1)).toBe(1);
-    });
-
-    it('return 0 when two date are equals.', () => {
-      const d1 = new TZDate();
-      const d2 = new TZDate(d1.getTime());
-
-      expect(dt.compare(d1, d2)).toBe(0);
-    });
-
-    it('return 1 when second date latest then first.', () => {
-      const d1 = new TZDate();
-      const d2 = new TZDate();
-
-      d2.setMinutes(d2.getMinutes() + 30);
-
-      expect(dt.compare(d1, d2)).toBe(-1);
-    });
+    // Then
+    expect(() => parse(validDateStr)).not.toThrow();
+    expect(() => parse(invalidDateStr1)).toThrowError(INVALID_FORMAT_PARAMETER);
+    expect(() => parse(invalidDateStr2)).toThrowError(INVALID_FORMAT_PARAMETER);
   });
 
-  describe('leadingZero()', () => {
-    it('pad zero to supplied number and length.', () => {
-      let num = 2;
+  it('should adjust month value with fix options', () => {
+    // Given
+    const dateStr = '2015-05-01';
+    const expected = new TZDate(2015, 6, 1, 0, 0, 0);
 
-      expect(dt.leadingZero(num, 2)).toBe('02');
-      expect(dt.leadingZero(num, 3)).toBe('002');
+    // When
+    const result = parse(dateStr, 1);
 
-      num = 2300;
-
-      expect(dt.leadingZero(num, 5)).toBe('02300');
-    });
-
-    it('if number string length longer then length, then just convert string and return it.', () => {
-      const num = 3000;
-
-      expect(dt.leadingZero(num, 2)).toBe('3000');
-    });
+    // Then
+    expect(result).toEqual(expected);
   });
+});
 
-  describe('parse()', () => {
-    it('parse date string for safe usage.', () => {
-      const str1 = '2015-06-01 12:20:00';
-      const str2 = '2015/06/01 10:00:00';
-      const str3 = '20150601';
+describe('toFormat', () => {
+  it('should return formatted date string as basis of supplied string', () => {
+    // Given
+    const date = new TZDate('1988-09-25T15:30:00');
 
-      expect(dt.parse(str2)).toEqual(new TZDate(2015, 5, 1, 10, 0, 0));
-      expect(dt.parse(str1)).toEqual(new TZDate(2015, 5, 1, 12, 20, 0));
-      expect(dt.parse(str3)).toEqual(new TZDate(2015, 5, 1, 0, 0, 0));
-    });
+    // When
 
-    it('return false when supplied date string is not valid.', () => {
-      const valid = '2015-05-01 00:00:00';
-      const notValid = '2015-5-1 3:00:00';
-      const notValid2 = '2015-06-21T22:00:00Z'; // ISO date format.
-      const message = 'parameter is not valid format';
-
-      expect(dt.parse.bind(null, valid)).not.toThrow();
-      expect(dt.parse.bind(null, notValid)).toThrowError(message);
-      expect(dt.parse.bind(null, notValid2)).toThrowError(message);
-    });
-
-    it('can adjust month value fixing options.', () => {
-      const str = '2015-05-01';
-
-      expect(dt.parse(str, +1)).toEqual(new TZDate(2015, 6, 1, 0, 0, 0));
-    });
+    // Then
+    expect(toFormat(date, 'YYYY')).toBe('1988');
+    expect(toFormat(date, 'MM')).toBe('09');
+    expect(toFormat(date, 'DD')).toBe('25');
+    expect(toFormat(date, 'YYYYMMDD')).toBe('19880925');
+    expect(toFormat(date, 'HH:mm')).toBe('15:30');
   });
+});
 
-  describe('toFormat()', () => {
-    it('return formatted date string as basis of supplied string.', () => {
-      const birth = new TZDate('1988-09-25T15:30:00');
+describe('isSameMonth', () => {
+  it('should return whether the 2 dates are the same month', () => {
+    // Given
+    const date1 = new TZDate('2015-06-12T09:30:00');
+    const date2 = new TZDate('2015-06-13T09:30:00');
+    const date3 = new TZDate('2015-07-12T09:30:00');
 
-      expect(dt.toFormat(birth, '')).toBe('');
-      expect(dt.toFormat(birth, 'YYYY')).toBe('1988');
-      expect(dt.toFormat(birth, 'MM')).toBe('09');
-      expect(dt.toFormat(birth, 'DD')).toBe('25');
-      expect(dt.toFormat(birth, 'YYYYMMDD')).toBe('19880925');
-      expect(dt.toFormat(birth, 'HH:mm')).toBe(
-        `${dt.leadingZero(birth.getHours(), 2)}:${dt.leadingZero(birth.getMinutes(), 2)}`
-      );
-    });
+    // When
+
+    // Then
+    expect(isSameMonth(date1, date2)).toBe(true);
+    expect(isSameMonth(date1, date3)).toBe(false);
   });
+});
 
-  it('isSameMonth', () => {
-    const d1 = new TZDate('2015-06-12T09:30:00');
-    const d2 = new TZDate('2015-06-13T09:30:00');
-    const d3 = new TZDate('2015-07-12T09:30:00');
+describe('isSameDate', () => {
+  it('should return whether the 2 dates are the same date', () => {
+    // Given
+    const date1 = new TZDate('2015-06-12T09:30:00');
+    const date2 = new TZDate('2015-06-13T09:30:00');
+    const date3 = new TZDate('2015-07-12T09:30:00');
 
-    expect(dt.isSameMonth(d1, d2)).toBe(true);
-    expect(dt.isSameMonth(d1, d3)).toBe(false);
+    // When
+
+    // Then
+    expect(isSameDate(date1, date2)).toBe(false);
+    expect(isSameDate(date1, date3)).toBe(false);
   });
+});
 
-  it('isSameDate', () => {
-    const d1 = new TZDate('2015-06-12T09:30:00');
-    const d2 = new TZDate('2015-06-13T09:30:00');
-    const d3 = new TZDate('2015-07-12T09:30:00');
+describe('toStartOfMonth', () => {
+  it('should change the given date to the start date of month', () => {
+    // Given
+    const date = new TZDate('2015-11-24T09:30:00');
 
-    expect(dt.isSameDate(d1, d2)).toBe(false);
-    expect(dt.isSameDate(d1, d3)).toBe(false);
+    // When
+    const result = toStartOfMonth(date);
+
+    // Then
+    expect(result).toEqual(new TZDate('2015-11-01T00:00:00'));
   });
+});
 
-  it('toStartOfMonth', () => {
-    let month = new TZDate('2015-11-24T09:30:00');
+describe('toEndOfMonth', () => {
+  it('should change the given date to the end date of month', () => {
+    // Given
+    const month = new TZDate('2015-11-24T09:30:00');
 
-    expect(dt.toStartOfMonth(month)).toEqual(new TZDate('2015-11-01T00:00:00'));
+    // When
+    const result = toEndOfMonth(month);
 
-    month = new TZDate('2015-06-24T00:00:00');
-
-    expect(dt.toStartOfMonth(month)).toEqual(new TZDate('2015-06-01T00:00:00'));
+    // Then
+    expect(result).toEqual(new TZDate('2015-11-30T23:59:59.999'));
   });
+});
 
-  it('toEndOfMonth', () => {
-    let month = new TZDate('2015-11-24T09:30:00');
-
-    expect(dt.toEndOfMonth(month)).toEqual(new TZDate('2015-11-30T23:59:59.999'));
-
-    month = new TZDate('2015-07-15T00:00:00');
-
-    expect(dt.toEndOfMonth(month)).toEqual(new TZDate('2015-07-31T23:59:59.999'));
-  });
-
-  it('toStartOfYear', () => {
+describe('toStartOfYear', () => {
+  it('should change the given date to the start date of year', () => {
+    // Given
     const date = new TZDate('2020-03-24T09:30:00');
     const startOfYear = new TZDate('2020-01-01T00:00:00');
 
-    expect(dt.toStartOfYear(date)).toEqual(startOfYear);
+    // When
+    const result = toStartOfYear(date);
+
+    // Then
+    expect(result).toEqual(startOfYear);
   });
 });

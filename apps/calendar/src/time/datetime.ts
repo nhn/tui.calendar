@@ -1,5 +1,6 @@
 import range from 'tui-code-snippet/array/range';
 
+import { INVALID_FORMAT_PARAMETER } from '@src/constants/error';
 import { toPercent } from '@src/helpers/css';
 import TZDate from '@src/time/date';
 import { fill } from '@src/utils/array';
@@ -273,7 +274,7 @@ export function parse(str: string, fixMonth = -1): TZDate {
   let hms;
 
   if (!matches) {
-    throw new Error('parameter is not valid format');
+    throw new Error(INVALID_FORMAT_PARAMETER);
   }
 
   if (str.length > 8) {
@@ -305,7 +306,8 @@ export function parse(str: string, fixMonth = -1): TZDate {
 }
 
 /**
- * Return 23:59:59 supplied date
+ * Return 23:59:59 supplied date.
+ * If you want to use milliseconds, use format 'YYYY-MM-DDTHH:mm:ss.sssZ' based on http://www.ecma-international.org/ecma-262/5.1/#sec-15.9.1.15
  */
 export function toEndOfDay(date?: number | TZDate): TZDate {
   const d = date ? new TZDate(date) : new TZDate();
