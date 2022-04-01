@@ -1,5 +1,6 @@
 import type { Locator, Page } from '@playwright/test';
 
+import type TZDate from '../src/time/date';
 import type { FormattedTimeString } from '../types/time/datetime';
 import type { BoundingBox } from './types';
 
@@ -43,4 +44,11 @@ export async function getBoundingBox(locator: Locator): Promise<BoundingBox> {
 
 export function getTimeGridLineLocator(start: FormattedTimeString): string {
   return `[data-testid*="gridline-${start}"]`;
+}
+
+export function getTimeStrFromDate(d: TZDate) {
+  const hour = d.getHours();
+  const minute = d.getMinutes();
+
+  return `${hour < 10 ? `0${hour}` : hour}:${minute < 10 ? `0${minute}` : minute}`;
 }
