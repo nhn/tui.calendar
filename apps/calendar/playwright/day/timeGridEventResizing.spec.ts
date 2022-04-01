@@ -101,7 +101,6 @@ mockDayViewEvents
         });
       });
 
-      // FIXME @dotaitch
       test(`then it should have a minimum height(=1 row) even if the event is resized to before the start time`, async ({
         page,
       }) => {

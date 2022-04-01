@@ -18,10 +18,13 @@ export type ViewDispatchers = {
 };
 
 export function createViewSlice(initialView: ViewType = 'month'): ViewSlice {
+  const renderDate = new TZDate();
+  renderDate.setHours(0, 0, 0, 0);
+
   return {
     view: {
       currentView: initialView,
-      renderDate: new TZDate(),
+      renderDate,
     },
   };
 }
