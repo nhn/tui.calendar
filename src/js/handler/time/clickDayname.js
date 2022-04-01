@@ -1,6 +1,5 @@
 /**
  * @fileoverview Dayname click event hander module
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 'use strict';
 

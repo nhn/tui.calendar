@@ -1,6 +1,5 @@
 /**
  * @fileoverview Move handler for DayGrid view.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 'use strict';
 

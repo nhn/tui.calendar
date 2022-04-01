@@ -10,12 +10,12 @@
   },
   "footer": [
     {
-      "title": "NHN",
+      "title": "NHN Cloud",
       "linkUrl": "https://github.com/nhn"
     },
     {
       "title": "FE Development Lab",
-      "linkUrl": "https://github.com/nhn/fe.javascript"
+      "linkUrl": "https://ui.toast.com"
     }
   ],
   "main": {

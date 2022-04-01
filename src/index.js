@@ -1,6 +1,5 @@
 /**
  * @fileoverview The entry file of fullcalendar
- * @author NHN FE Development Lab
  */
 
 'use strict';

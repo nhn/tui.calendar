@@ -1,6 +1,5 @@
 /**
  * @fileoverview Core methods for schedule block placing
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 'use strict';
 

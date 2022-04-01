@@ -1,6 +1,5 @@
 /**
  * @fileoverview Creation guide module for month view
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 'use strict';
 

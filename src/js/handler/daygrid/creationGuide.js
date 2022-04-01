@@ -1,6 +1,5 @@
 /**
  * @fileoverview Guide element for DayGrid.Creation
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 'use strict';
 

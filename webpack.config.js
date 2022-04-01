@@ -13,7 +13,6 @@ var FILENAME = pkg.name + (isProduction ? '.min' : '');
 var BANNER = [
     'TOAST UI Calendar',
     '@version ' + pkg.version + ' | ' + new Date().toDateString(),
-    '@author ' + pkg.author,
     '@license ' + pkg.license
 ].join('\n');
 var context = JSON.stringify({

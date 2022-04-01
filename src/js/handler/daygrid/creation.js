@@ -1,6 +1,5 @@
 /**
  * @fileoverview Handler module for WeekdayInWeek view's creation actions.
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 'use strict';
 

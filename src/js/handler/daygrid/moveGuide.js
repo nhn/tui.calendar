@@ -1,6 +1,5 @@
 /**
  * @fileoverview Effect module for DayGrid.Move
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 'use strict';
 

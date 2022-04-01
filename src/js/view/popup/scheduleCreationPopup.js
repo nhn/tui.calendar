@@ -1,6 +1,5 @@
 /**
  * @fileoverview Floating layer for writing new schedules
- * @author NHN FE Development Lab <dl_javascript@nhn.com>
  */
 'use strict';
 
