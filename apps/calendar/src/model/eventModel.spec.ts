@@ -5,8 +5,6 @@ import TZDate from '@src/time/date';
 
 import { EventModelData } from '@t/events';
 
-jest.mock('../utils/stamp');
-
 describe('model/event basic', () => {
   let event: EventModel;
 
@@ -64,14 +62,14 @@ describe('model/event basic', () => {
       event.end = new TZDate('2015/05/02');
       event2.end = new TZDate('2015/05/02');
 
-      expect(event).toEqual(event2);
+      expect(event.equals(event2)).toBe(true);
     });
 
     it('return false when title is not equals.', () => {
       event.title = 'meeting';
       event2.title = 'working';
 
-      expect(event).not.toEqual(event2);
+      expect(event.equals(event2)).toBe(false);
     });
 
     it('return false when two event has different all day flags.', () => {
@@ -80,7 +78,7 @@ describe('model/event basic', () => {
       event.isAllday = true;
       event2.isAllday = false;
 
-      expect(event).not.toEqual(event2);
+      expect(event.equals(event2)).toBe(false);
     });
 
     it('return false when two event has different start or end.', () => {
@@ -91,14 +89,14 @@ describe('model/event basic', () => {
       event.start = new TZDate('2015/05/01');
       event2.start = new TZDate('2015/04/01');
 
-      expect(event).not.toEqual(event2);
+      expect(event.equals(event2)).toBe(false);
 
       event2.start = new TZDate('2015/05/01');
 
       event.end = new TZDate('2015/06/01');
       event2.end = new TZDate('2015/07/01');
 
-      expect(event).not.toEqual(event2);
+      expect(event.equals(event2)).toBe(false);
     });
   });
 
