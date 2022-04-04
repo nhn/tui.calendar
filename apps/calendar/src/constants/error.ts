@@ -1,1 +1,1 @@
-export const INVALID_FORMAT_PARAMETER = 'parameter is invalid format';
+export const INVALID_FORMAT_PARAMETER = 'Parameter format is invalid';
