@@ -18,7 +18,7 @@ runs:
     - name: Setup timezone
       uses: szenius/set-timezone@v1.0
       with:
-        timezoneMacos: 'Asia/Seoul'
+        timezoneLinux: 'Asia/Seoul'
     - name: Compute root dependencies cache key
       id: root_lockfile_hash
       run: echo "::set-output name=hash::${{ hashFiles('package-lock.json') }}"
