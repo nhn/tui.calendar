@@ -35,9 +35,11 @@ runs:
         then
           echo "Cache hit - skipping root dependency installation"
         else
-          npm ci
+          npm install
         fi
       shell: bash
     - name: Bootstrap repo
-      run: npx lerna bootstrap
+      # since we don't keep `package-lock.json` files in each projects
+      # we should let lerna know to use `npm install` command otherwise it will fail.
+      run: npx lerna bootstrap --no-ci
       shell: bash
