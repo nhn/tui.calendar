@@ -8,6 +8,8 @@ import { Options } from '@t/options';
 export default class Week extends CalendarControl {
   constructor(container: Element, options: Options = {}) {
     super(container, options);
+
+    this.render();
   }
 
   protected getComponent() {
