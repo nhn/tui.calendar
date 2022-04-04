@@ -11,7 +11,7 @@ import EventModel from '@src/model/eventModel';
 import Theme from '@src/theme';
 import { ThemeKeyValue } from '@src/theme/themeProps';
 import TZDate from '@src/time/date';
-import { addDate, addMonth, subtractMonth, toEndOfDay, toStartOfDay } from '@src/time/datetime';
+import { addDate, addMonths, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { last } from '@src/utils/array';
 import { EventBus, EventBusImpl } from '@src/utils/eventBus';
 import { addAttributeHooks, removeAttributeHooks } from '@src/utils/sanitizer';
@@ -164,10 +164,8 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
 
     if (visibleWeeksCount > 0) {
       newRenderDate = addDate(newRenderDate, offset * 7 * visibleWeeksCount);
-    } else if (offset > 0) {
-      newRenderDate = addMonth(newRenderDate, offset);
     } else {
-      newRenderDate = subtractMonth(newRenderDate, -offset);
+      newRenderDate = addMonths(newRenderDate, offset);
     }
     const dateMatrix = createDateMatrixOfMonth(newRenderDate, monthOptions);
 

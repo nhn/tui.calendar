@@ -453,46 +453,26 @@ export function subtractDate(d: TZDate, steps: number) {
   return date;
 }
 
-function isLeafYear(date: TZDate) {
-  const year = date.getFullYear();
-
-  return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
-}
-
-export function addMonth(d: TZDate, step = 1) {
+/**
+ * Inspired by `date-fns`
+ *
+ * See more: https://github.com/date-fns/date-fns/blob/master/src/addMonths/index.ts
+ */
+export function addMonths(d: TZDate, step = 1) {
   const date = clone(d);
 
-  const thisMonth = date.getMonth();
-  const thisDay = date.getDate();
-  let targetDaysOfMonth;
+  if (step !== 0) {
+    const dayOfMonth = date.getDate();
+    const endOfDesiredMonth = new TZDate(date.getTime());
+    endOfDesiredMonth.setMonth(date.getMonth() + step + 1, 0);
+    const daysInMonth = endOfDesiredMonth.getDate();
 
-  if (thisMonth + step === 1) {
-    targetDaysOfMonth = isLeafYear(date) ? 29 : 28;
-  } else {
-    date.setMonth(thisMonth + step + 1, 0);
-    targetDaysOfMonth = date.getDate();
+    if (dayOfMonth >= daysInMonth) {
+      return endOfDesiredMonth;
+    }
+
+    date.setFullYear(endOfDesiredMonth.getFullYear(), endOfDesiredMonth.getMonth(), dayOfMonth);
   }
-
-  date.setMonth(thisMonth + step, Math.min(thisDay, targetDaysOfMonth));
-
-  return date;
-}
-
-export function subtractMonth(d: TZDate, step = 1) {
-  const date = clone(d);
-
-  const thisMonth = date.getMonth();
-  const thisDay = date.getDate();
-  let targetDaysOfMonth;
-
-  if (thisMonth - step === 1) {
-    targetDaysOfMonth = isLeafYear(date) ? 29 : 28;
-  } else {
-    date.setMonth(thisMonth, 0);
-    targetDaysOfMonth = date.getDate();
-  }
-
-  date.setMonth(thisMonth - step, Math.min(thisDay, targetDaysOfMonth));
 
   return date;
 }
