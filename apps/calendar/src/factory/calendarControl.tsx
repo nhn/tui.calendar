@@ -219,7 +219,6 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
     const { setRenderDate } = this.getStoreDispatchers().view;
 
     const newRenderDate = new TZDate(renderDate);
-    newRenderDate.setHours(0, 0, 0, 0);
 
     let calculatedRenderDate = {
       renderDate: newRenderDate,
@@ -420,10 +419,8 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    */
   today() {
     const { setRenderDate } = this.getStoreDispatchers().view;
-    const newRenderDate = new TZDate();
-    newRenderDate.setHours(0, 0, 0, 0);
 
-    setRenderDate(newRenderDate);
+    setRenderDate(new TZDate());
   }
 
   /**
@@ -441,10 +438,8 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    */
   setDate(date: DateType) {
     const { setRenderDate } = this.getStoreDispatchers('view');
-    const newRenderDate = new TZDate(date);
-    newRenderDate.setHours(0, 0, 0, 0);
 
-    setRenderDate(newRenderDate);
+    setRenderDate(new TZDate(date));
   }
 
   /**
