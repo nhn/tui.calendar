@@ -8,7 +8,7 @@ import TZDate from '@src/time/date';
 import {
   addDate,
   addMinutes,
-  addMonth,
+  addMonths,
   addYear,
   toFormat,
   toStartOfMonth,
@@ -130,7 +130,7 @@ datesInAMonth.story = {
 export const monthsInAnYear = () => {
   const startOfYear = toStartOfYear(new TZDate());
   const times = range(0, 13).map((month) => {
-    const d = addMonth(startOfYear, month);
+    const d = addMonths(startOfYear, month);
     const display = toFormat(d, 'MM.DD');
 
     return {
