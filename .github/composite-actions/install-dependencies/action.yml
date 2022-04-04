@@ -13,7 +13,7 @@ runs:
         node-version: '16'
         registry-url: https://registry.npmjs.org/
     - name: Update npm to latest version
-      run: npm install -g npm
+      run: npm install -g npm@latest
       shell: bash
     - name: Setup timezone
       uses: szenius/set-timezone@v1.0
@@ -35,9 +35,9 @@ runs:
         then
           echo "Cache hit - skipping root dependency installation"
         else
-          npm install
+          npm ci
         fi
       shell: bash
-    - name: Build @toast-ui/date
-      run: npm run build:date
+    - name: Bootstrap repo
+      run: npx lerna bootstrap
       shell: bash
