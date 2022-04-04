@@ -24,8 +24,7 @@ describe('Calendar', () => {
       calendar.setDate(now);
 
       expect(calendar.getDateInterface() instanceof UTCDate).toBe(true);
-      expect(now.getTime()).toBe(calendar.getDate().getTime());
-      expect(calendar.getDateInterface().getHours()).toBe(now.getUTCHours());
+      expect(now).toBeSameDate(calendar.getDate());
     });
 
     it('use LocalDate as a default', () => {
@@ -34,7 +33,7 @@ describe('Calendar', () => {
       calendar.setDate(now);
 
       expect(calendar.getDateInterface() instanceof LocalDate).toBe(true);
-      expect(now.getTime()).toBe(calendar.getDate().getTime());
+      expect(now).toBeSameDate(calendar.getDate());
     });
 
     it('can set custom timezone offset and name by MomentDate', () => {
@@ -47,7 +46,7 @@ describe('Calendar', () => {
       calendar.setDate(now);
 
       expect(calendar.getDateInterface() instanceof MomentDate).toBe(true);
-      expect(now.getTime()).toBe(calendar.getDate().getTime());
+      expect(now).toBeSameDate(calendar.getDate());
     });
 
     it('can set custom timezone offset UTC+0 by MomentDate', () => {
@@ -60,8 +59,7 @@ describe('Calendar', () => {
       });
       calendar.setDate(now);
 
-      expect(now.getTime()).toBe(calendar.getDate().getTime());
-      expect(calendar.getDateInterface().getHours()).toBe(now.getUTCHours());
+      expect(now).toBeSameDate(calendar.getDate());
     });
 
     it('can set custom timezone name "America/Los_Angeles" by MomentDate', () => {
@@ -76,14 +74,14 @@ describe('Calendar', () => {
       let now = new Date('2020-06-01T00:00:00');
       calendar.setDate(now);
 
-      expect(now.getTime()).toBe(calendar.getDate().getTime());
+      expect(now).toBeSameDate(calendar.getDate());
       expect(calendar.getDateInterface().getTimezoneOffset()).toBe(420);
 
       // PST
       now = new Date('2020-12-01T00:00:00');
       calendar.setDate(now);
 
-      expect(now.getTime()).toBe(calendar.getDate().getTime());
+      expect(now).toBeSameDate(calendar.getDate());
       expect(calendar.getDateInterface().getTimezoneOffset()).toBe(480);
     });
   });

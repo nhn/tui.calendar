@@ -252,13 +252,12 @@ describe('getDate/setDate', () => {
     // When
 
     // Then
-    expect(isSameDate(mockCalendar.getDate(), today)).toBe(true);
+    expect(mockCalendar.getDate()).toBeSameDate(today);
   });
 
   it('should set renderDate when param is TZDate', () => {
     // Given
-    const today = new TZDate();
-    const targetDate = addDate(today, 1);
+    const targetDate = addDate(new TZDate(), 1);
 
     // When
     act(() => {
@@ -266,7 +265,7 @@ describe('getDate/setDate', () => {
     });
 
     // Then
-    expect(mockCalendar.getDate()).toEqual(targetDate);
+    expect(mockCalendar.getDate()).toBeSameDate(targetDate);
   });
 
   it('should set renderDate when param is string', () => {
@@ -280,7 +279,7 @@ describe('getDate/setDate', () => {
     });
 
     // Then
-    expect(mockCalendar.getDate()).toEqual(expected);
+    expect(mockCalendar.getDate()).toBeSameDate(expected);
   });
 
   it('should set renderDate when param is number', () => {
@@ -294,7 +293,7 @@ describe('getDate/setDate', () => {
     });
 
     // Then
-    expect(mockCalendar.getDate()).toEqual(expected);
+    expect(mockCalendar.getDate()).toBeSameDate(expected);
   });
 
   it('should set renderDate when param is Date', () => {
@@ -308,7 +307,7 @@ describe('getDate/setDate', () => {
     });
 
     // Then
-    expect(mockCalendar.getDate()).toEqual(expected);
+    expect(mockCalendar.getDate()).toBeSameDate(expected);
   });
 });
 

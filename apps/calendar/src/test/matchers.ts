@@ -1,5 +1,7 @@
 import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
+import TZDate from '@src/time/date';
+import { isSameDate } from '@src/time/datetime';
 
 // eslint-disable-next-line no-undefined
 const undef = undefined;
@@ -117,5 +119,11 @@ expect.extend({
     result.pass = isEqual;
 
     return result;
+  },
+  toBeSameDate(actual: number | string | TZDate | Date, expected: number | string | TZDate | Date) {
+    return {
+      pass: isSameDate(new TZDate(actual), new TZDate(expected)),
+      message: () => `${expected} is not the same date as ${actual}.`,
+    };
   },
 });
