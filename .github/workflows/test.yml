@@ -5,7 +5,7 @@ on:
 jobs:
   install-dependencies:
     name: Install dependencies
-    runs-on: macos-11
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout next branch
         uses: actions/checkout@v2
@@ -18,7 +18,7 @@ jobs:
   test-jest:
     name: Test jest
     needs: [install-dependencies]
-    runs-on: macos-11
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout next branch
         uses: actions/checkout@v2
@@ -32,7 +32,7 @@ jobs:
   test-playwright:
     name: Test playwright
     needs: [install-dependencies]
-    runs-on: macos-11
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout next branch
         uses: actions/checkout@v2
@@ -41,7 +41,7 @@ jobs:
         uses: ./.github/composite-actions/install-dependencies
       - name: Install playwright dependencies
         run: |
-          npx playwright install
+          npx playwright install --with-deps
       - name: Build storybook
         run: |
           npx lerna run --scope @toast-ui/calendar storybook:build
