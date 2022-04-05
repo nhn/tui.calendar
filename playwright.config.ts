@@ -2,6 +2,7 @@ import { PlaywrightTestConfig, devices } from '@playwright/test';
 
 const config: PlaywrightTestConfig = {
   testDir: 'apps/calendar/playwright',
+  testMatch: '*.e2e.ts',
   timeout: 30000,
   forbidOnly: !!process.env.CI,
   workers: process.env.CI ? 2 : undefined,

@@ -73,7 +73,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['*.spec.ts', '*.spec.tsx'],
+      files: ['*.spec.ts', '*.spec.tsx', '*.e2e.ts'],
       rules: {
         'max-nested-callbacks': ['error', { max: 5 }],
         'jest/expect-expect': [
