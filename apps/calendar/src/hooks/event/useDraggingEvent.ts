@@ -3,8 +3,9 @@ import { useState } from 'preact/hooks';
 import { useTransientUpdate } from '@src/hooks/common/useTransientUpdate';
 import EventUIModel from '@src/model/eventUIModel';
 import { dndSelector } from '@src/selectors';
+import { DraggingState } from '@src/slices/dnd';
 import { last } from '@src/utils/array';
-import { isNil } from '@src/utils/type';
+import { isNil, isPresent } from '@src/utils/type';
 
 import { EventDragging, EventDraggingArea, EventDraggingBehavior } from '@t/drag';
 
@@ -25,20 +26,30 @@ const getTargetEventId = (
 };
 
 export function useDraggingEvent(area: EventDraggingArea, behavior: EventDraggingBehavior) {
+  const [isDraggingEnd, setIsDraggingEnd] = useState(false);
   const [draggingEvent, setDraggingEvent] = useState<EventUIModel | null>(null);
 
-  useTransientUpdate(dndSelector, ({ draggingItemType, draggingEventUIModel }) => {
+  useTransientUpdate(dndSelector, ({ draggingItemType, draggingEventUIModel, draggingState }) => {
     const targetEventId = getTargetEventId(draggingItemType, area, behavior);
     const hasMatchingTargetEvent = Number(targetEventId) === draggingEventUIModel?.cid();
+    const isIdle = draggingState === DraggingState.IDLE;
 
     if (isNil(draggingEvent) && hasMatchingTargetEvent) {
       setDraggingEvent(draggingEventUIModel);
     }
+
+    if (isPresent(draggingEvent) && isIdle) {
+      setIsDraggingEnd(true);
+    }
   });
 
-  const clearDraggingEvent = () => setDraggingEvent(null);
+  const clearDraggingEvent = () => {
+    setDraggingEvent(null);
+    setIsDraggingEnd(false);
+  };
 
   return {
+    isDraggingEnd,
     draggingEvent,
     clearDraggingEvent,
   };

@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
 
-import { useDispatch, useStore } from '@src/contexts/calendarStore';
+import { useDispatch } from '@src/contexts/calendarStore';
 import { useTransientUpdate } from '@src/hooks/common/useTransientUpdate';
 import { useCurrentPointerPositionInGrid } from '@src/hooks/event/useCurrentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/useDraggingEvent';
 import { dndSelector } from '@src/selectors';
-import { isNotDraggingSelector } from '@src/selectors/dnd';
 import type TZDate from '@src/time/date';
 import { addMilliseconds, MS_PER_DAY, MS_PER_THIRTY_MINUTES } from '@src/time/datetime';
 import { isNil, isPresent } from '@src/utils/type';
@@ -19,9 +18,8 @@ export function useTimeGridEventMove({
   gridPositionFinder: GridPositionFinder;
   timeGridData: TimeGridData;
 }) {
-  const isNotDragging = useStore(isNotDraggingSelector);
   const { updateEvent } = useDispatch('calendar');
-  const { draggingEvent, clearDraggingEvent } = useDraggingEvent('timeGrid', 'move');
+  const { isDraggingEnd, draggingEvent, clearDraggingEvent } = useDraggingEvent('timeGrid', 'move');
 
   const [currentGridPos, clearCurrentGridPos] = useCurrentPointerPositionInGrid(gridPositionFinder);
 
@@ -90,9 +88,9 @@ export function useTimeGridEventMove({
     return clonedEvent;
   }, [currentGridPos, draggingEvent, gridDiff, rowHeight, timeGridData.columns]);
 
-  const isDraggingEnd = isNotDragging && isPresent(draggingEvent);
   const shouldUpdate =
     isDraggingEnd &&
+    isPresent(draggingEvent) &&
     isPresent(currentGridPos) &&
     isPresent(gridDiff) &&
     isPresent(nextStartTime) &&

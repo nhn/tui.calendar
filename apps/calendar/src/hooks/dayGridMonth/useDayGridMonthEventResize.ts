@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 
-import { useDispatch, useStore } from '@src/contexts/calendarStore';
+import { useDispatch } from '@src/contexts/calendarStore';
 import { getGridDateIndex, getRenderedEventUIModels } from '@src/helpers/grid';
 import { useCurrentPointerPositionInGrid } from '@src/hooks/event/useCurrentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/useDraggingEvent';
 import type EventUIModel from '@src/model/eventUIModel';
-import { isNotDraggingSelector } from '@src/selectors/dnd';
 import type TZDate from '@src/time/date';
 import { findLastIndex } from '@src/utils/array';
 import { isNil, isPresent } from '@src/utils/type';
@@ -39,12 +38,12 @@ export function useDayGridMonthEventResize({
   cellWidthMap,
   rowIndex,
 }: EventResizeHookParams) {
-  const isNotDragging = useStore(isNotDraggingSelector);
   const { updateEvent } = useDispatch('calendar');
-  const { draggingEvent: resizingStartUIModel, clearDraggingEvent } = useDraggingEvent(
-    'dayGrid',
-    'resize'
-  );
+  const {
+    isDraggingEnd,
+    draggingEvent: resizingStartUIModel,
+    clearDraggingEvent,
+  } = useDraggingEvent('dayGrid', 'resize');
   const [currentGridPos, clearCurrentGridPos] = useCurrentPointerPositionInGrid(gridPositionFinder);
   const [guideProps, setGuideProps] = useState<[EventUIModel, string] | null>(null); // Shadow -> Guide
 
@@ -161,13 +160,13 @@ export function useDayGridMonthEventResize({
   }, [canCalculateProps, currentGridPos, baseResizingInfo, rowIndex]);
 
   useEffect(() => {
-    const isDraggingEnd =
-      isNotDragging &&
+    const isResizingEnd =
+      isDraggingEnd &&
       isPresent(baseResizingInfo) &&
       isPresent(currentGridPos) &&
       isPresent(resizingStartUIModel);
 
-    if (isDraggingEnd) {
+    if (isResizingEnd) {
       /**
        * Is current grid position is the same or later comparing to the position of the start date?
        */
@@ -194,7 +193,7 @@ export function useDayGridMonthEventResize({
     clearStates,
     currentGridPos,
     dateMatrix,
-    isNotDragging,
+    isDraggingEnd,
     resizingStartUIModel,
     updateEvent,
   ]);

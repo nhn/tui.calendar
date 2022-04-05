@@ -1,9 +1,8 @@
 import { useEffect, useMemo } from 'preact/hooks';
 
-import { useDispatch, useStore } from '@src/contexts/calendarStore';
+import { useDispatch } from '@src/contexts/calendarStore';
 import { useCurrentPointerPositionInGrid } from '@src/hooks/event/useCurrentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/useDraggingEvent';
-import { isNotDraggingSelector } from '@src/selectors/dnd';
 import TZDate from '@src/time/date';
 import { isNil, isPresent } from '@src/utils/type';
 
@@ -16,8 +15,11 @@ interface Params {
 }
 
 export function useAlldayGridRowEventMove({ rowStyleInfo, gridPositionFinder }: Params) {
-  const isNotDragging = useStore(isNotDraggingSelector);
-  const { draggingEvent: movingEvent, clearDraggingEvent } = useDraggingEvent('dayGrid', 'move');
+  const {
+    isDraggingEnd,
+    draggingEvent: movingEvent,
+    clearDraggingEvent,
+  } = useDraggingEvent('dayGrid', 'move');
   const { updateEvent } = useDispatch('calendar');
 
   const [currentGridPos, clearCurrentGridPos] = useCurrentPointerPositionInGrid(gridPositionFinder);
@@ -32,9 +34,12 @@ export function useAlldayGridRowEventMove({ rowStyleInfo, gridPositionFinder }: 
   const currentMovingLeft = isNil(columnIndex) ? null : rowStyleInfo[columnIndex].left;
 
   useEffect(() => {
-    const isDraggingEnd = isNotDragging && isPresent(movingEvent) && isPresent(columnIndex);
     const shouldUpdate =
-      isDraggingEnd && isPresent(currentMovingLeft) && isPresent(targetEventStartGridX);
+      isDraggingEnd &&
+      isPresent(movingEvent) &&
+      isPresent(columnIndex) &&
+      isPresent(currentMovingLeft) &&
+      isPresent(targetEventStartGridX);
 
     if (isDraggingEnd) {
       if (shouldUpdate) {
@@ -63,8 +68,8 @@ export function useAlldayGridRowEventMove({ rowStyleInfo, gridPositionFinder }: 
     targetEventStartGridX,
     updateEvent,
     clearDraggingEvent,
-    isNotDragging,
     clearCurrentGridPos,
+    isDraggingEnd,
   ]);
 
   return useMemo(

@@ -208,8 +208,8 @@ export function HorizontalEvent({
       layoutContainer?.classList.remove(classNames.moveEvent);
       clearIsDraggingTarget();
 
-      const isNotDragging = draggingState <= DraggingState.INIT;
-      if (isNotDragging && useDetailPopup && eventContainerRef.current) {
+      const isClick = draggingState <= DraggingState.INIT;
+      if (isClick && useDetailPopup && eventContainerRef.current) {
         showDetailPopup(
           {
             event: uiModel.model,

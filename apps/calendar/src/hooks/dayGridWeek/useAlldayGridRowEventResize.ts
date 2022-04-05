@@ -1,12 +1,11 @@
 import { useEffect, useMemo } from 'preact/hooks';
 
-import { useDispatch, useStore } from '@src/contexts/calendarStore';
+import { useDispatch } from '@src/contexts/calendarStore';
 import { getGridDateIndex } from '@src/helpers/grid';
 import { useCurrentPointerPositionInGrid } from '@src/hooks/event/useCurrentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/useDraggingEvent';
-import EventUIModel from '@src/model/eventUIModel';
-import { isNotDraggingSelector } from '@src/selectors/dnd';
-import TZDate from '@src/time/date';
+import type EventUIModel from '@src/model/eventUIModel';
+import type TZDate from '@src/time/date';
 import { isPresent } from '@src/utils/type';
 
 import { GridPositionFinder } from '@t/grid';
@@ -29,13 +28,13 @@ export function useAlldayGridRowEventResize({
   gridColWidthMap,
   gridPositionFinder,
 }: Params) {
-  const isNotDragging = useStore(isNotDraggingSelector);
   const { updateEvent } = useDispatch('calendar');
 
-  const { draggingEvent: resizingEvent, clearDraggingEvent } = useDraggingEvent(
-    'dayGrid',
-    'resize'
-  );
+  const {
+    isDraggingEnd,
+    draggingEvent: resizingEvent,
+    clearDraggingEvent,
+  } = useDraggingEvent('dayGrid', 'resize');
 
   const [currentGridPos, clearCurrentGridPos] = useCurrentPointerPositionInGrid(gridPositionFinder);
   const { columnIndex } = currentGridPos ?? {};
@@ -57,11 +56,13 @@ export function useAlldayGridRowEventResize({
   }, [columnIndex, gridColWidthMap, targetEventGridIndices.start]);
 
   useEffect(() => {
-    const isDraggingEnd = isNotDragging && isPresent(resizingEvent) && isPresent(columnIndex);
-
     if (isDraggingEnd) {
       const shouldUpdateEvent =
-        targetEventGridIndices.start <= columnIndex && targetEventGridIndices.end !== columnIndex;
+        isDraggingEnd &&
+        isPresent(resizingEvent) &&
+        isPresent(columnIndex) &&
+        targetEventGridIndices.start <= columnIndex &&
+        targetEventGridIndices.end !== columnIndex;
 
       if (shouldUpdateEvent) {
         const targetDate = weekDates[columnIndex];
@@ -83,7 +84,7 @@ export function useAlldayGridRowEventResize({
     clearDraggingEvent,
     targetEventGridIndices,
     clearCurrentGridPos,
-    isNotDragging,
+    isDraggingEnd,
   ]);
 
   return useMemo(

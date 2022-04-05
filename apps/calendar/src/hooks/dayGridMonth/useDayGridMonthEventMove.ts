@@ -2,10 +2,9 @@ import type { ComponentProps } from 'preact';
 import { useEffect, useMemo } from 'preact/hooks';
 
 import type { MovingEventShadow } from '@src/components/dayGridMonth/movingEventShadow';
-import { useDispatch, useStore } from '@src/contexts/calendarStore';
+import { useDispatch } from '@src/contexts/calendarStore';
 import { useCurrentPointerPositionInGrid } from '@src/hooks/event/useCurrentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/useDraggingEvent';
-import { isNotDraggingSelector } from '@src/selectors/dnd';
 import TZDate from '@src/time/date';
 import { getDateDifference, MS_PER_DAY } from '@src/time/datetime';
 import { isPresent } from '@src/utils/type';
@@ -16,8 +15,11 @@ export function useDayGridMonthEventMove({
   gridPositionFinder,
   rowIndex,
 }: ComponentProps<typeof MovingEventShadow>) {
-  const isNotDragging = useStore(isNotDraggingSelector);
-  const { draggingEvent: movingEvent, clearDraggingEvent } = useDraggingEvent('dayGrid', 'move');
+  const {
+    isDraggingEnd,
+    draggingEvent: movingEvent,
+    clearDraggingEvent,
+  } = useDraggingEvent('dayGrid', 'move');
   const { updateEvent } = useDispatch('calendar');
 
   const [currentGridPos, clearCurrentGridPos] = useCurrentPointerPositionInGrid(gridPositionFinder);
@@ -35,13 +37,13 @@ export function useDayGridMonthEventMove({
   }, [movingEvent, currentGridPos?.rowIndex, currentGridPos?.columnIndex, rowIndex, rowInfo]);
 
   useEffect(() => {
-    const isDraggingEnd = isNotDragging && isPresent(movingEvent);
-    const shouldUpdate = isDraggingEnd && isPresent(currentGridPos);
+    const shouldUpdate =
+      isDraggingEnd && isPresent(movingEventUIModel) && isPresent(currentGridPos);
 
     if (isDraggingEnd) {
       if (shouldUpdate) {
-        const preStartDate = movingEvent.model.getStarts();
-        const eventDuration = movingEvent.duration();
+        const preStartDate = movingEventUIModel.model.getStarts();
+        const eventDuration = movingEventUIModel.duration();
         const currentDate = dateMatrix[currentGridPos.rowIndex][currentGridPos.columnIndex];
 
         const timeOffsetPerDay = getDateDifference(currentDate, preStartDate) * MS_PER_DAY;
@@ -50,7 +52,7 @@ export function useDayGridMonthEventMove({
         const newEndDate = new TZDate(newStartDate.getTime() + eventDuration);
 
         updateEvent({
-          event: movingEvent.model,
+          event: movingEventUIModel.model,
           eventData: {
             start: newStartDate,
             end: newEndDate,
@@ -62,13 +64,13 @@ export function useDayGridMonthEventMove({
       clearCurrentGridPos();
     }
   }, [
-    dateMatrix,
+    clearCurrentGridPos,
     clearDraggingEvent,
     currentGridPos,
-    isNotDragging,
-    movingEvent,
+    dateMatrix,
+    isDraggingEnd,
+    movingEventUIModel,
     updateEvent,
-    clearCurrentGridPos,
   ]);
 
   return movingEventUIModel;
