@@ -63,10 +63,8 @@ export function useTimeGridEventMove({
     }
   }, [currentGridPos]);
 
-  const canCalculate = isPresent(draggingEvent) && isPresent(currentGridPos) && isPresent(gridDiff);
-
   const nextStartTime = useMemo(() => {
-    if (!canCalculate || isNil(startDateTimeRef.current)) {
+    if (isNil(gridDiff) || isNil(startDateTimeRef.current)) {
       return null;
     }
 
@@ -74,11 +72,11 @@ export function useTimeGridEventMove({
       startDateTimeRef.current,
       gridDiff.rowIndex * MS_PER_THIRTY_MINUTES + gridDiff.columnIndex * MS_PER_DAY
     );
-  }, [canCalculate, gridDiff]);
+  }, [gridDiff]);
 
   const rowHeight = timeGridData.rows[0].height;
   const movingEvent = useMemo(() => {
-    if (!canCalculate) {
+    if (isNil(draggingEvent) || isNil(gridDiff) || isNil(currentGridPos)) {
       return null;
     }
 
@@ -90,12 +88,17 @@ export function useTimeGridEventMove({
     });
 
     return clonedEvent;
-  }, [canCalculate, currentGridPos, draggingEvent, gridDiff, rowHeight, timeGridData]);
+  }, [currentGridPos, draggingEvent, gridDiff, rowHeight, timeGridData.columns]);
 
+  const isDraggingEnd = isNotDragging && isPresent(draggingEvent);
+  const shouldUpdate =
+    isDraggingEnd &&
+    isPresent(currentGridPos) &&
+    isPresent(gridDiff) &&
+    isPresent(nextStartTime) &&
+    (gridDiff.rowIndex !== 0 || gridDiff.columnIndex !== 0);
   useEffect(() => {
-    if (isNotDragging && canCalculate && isPresent(nextStartTime)) {
-      const shouldUpdate = gridDiff.rowIndex !== 0 || gridDiff.columnIndex !== 0;
-
+    if (isDraggingEnd) {
       if (shouldUpdate) {
         const duration = draggingEvent.duration();
         const nextEndTime = addMilliseconds(nextStartTime, duration);
@@ -110,15 +113,7 @@ export function useTimeGridEventMove({
 
       clearState();
     }
-  }, [
-    canCalculate,
-    clearState,
-    draggingEvent,
-    gridDiff,
-    isNotDragging,
-    nextStartTime,
-    updateEvent,
-  ]);
+  }, [clearState, draggingEvent, isDraggingEnd, nextStartTime, shouldUpdate, updateEvent]);
 
   return {
     movingEvent,
