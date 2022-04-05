@@ -1,14 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 
-import { KEY } from '@src/constants/keyboard';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { getGridDateIndex, getRenderedEventUIModels } from '@src/helpers/grid';
-import { useKeydownEvent } from '@src/hooks/common/useKeydownEvent';
 import { useCurrentPointerPositionInGrid } from '@src/hooks/event/useCurrentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/useDraggingEvent';
-import EventUIModel from '@src/model/eventUIModel';
+import type EventUIModel from '@src/model/eventUIModel';
 import { isNotDraggingSelector } from '@src/selectors/dnd';
-import TZDate from '@src/time/date';
+import type TZDate from '@src/time/date';
 import { findLastIndex } from '@src/utils/array';
 import { isNil, isPresent } from '@src/utils/type';
 
@@ -161,8 +159,6 @@ export function useDayGridMonthEventResize({
       setGuideProps(null);
     }
   }, [canCalculateProps, currentGridPos, baseResizingInfo, rowIndex]);
-
-  useKeydownEvent(KEY.ESCAPE, clearStates);
 
   useEffect(() => {
     const isDraggingEnd =
