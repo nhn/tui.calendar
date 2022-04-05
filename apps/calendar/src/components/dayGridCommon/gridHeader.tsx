@@ -12,7 +12,7 @@ type TemplateDayNames = (TemplateWeekDayName | TemplateMonthDayName)[];
 
 interface Props {
   dayNames: TemplateDayNames;
-  theme?: DayNameTheme;
+  theme?: MonthDayNameTheme;
   options?: CalendarMonthOptions | CalendarWeekOptions;
   marginLeft?: number;
   templateType: keyof Template;
