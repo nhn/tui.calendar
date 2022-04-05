@@ -32,30 +32,29 @@ export function useAlldayGridRowEventMove({ rowStyleInfo, gridPositionFinder }: 
   const currentMovingLeft = isNil(columnIndex) ? null : rowStyleInfo[columnIndex].left;
 
   useEffect(() => {
+    const isDraggingEnd = isNotDragging && isPresent(movingEvent) && isPresent(columnIndex);
     const shouldUpdate =
-      isNotDragging &&
-      isPresent(movingEvent) &&
-      isPresent(columnIndex) &&
-      isPresent(currentMovingLeft) &&
-      isPresent(targetEventStartGridX);
+      isDraggingEnd && isPresent(currentMovingLeft) && isPresent(targetEventStartGridX);
 
-    if (shouldUpdate) {
-      const dateOffset = columnIndex - targetEventStartGridX;
-      let newStartDate = new TZDate(movingEvent.getStarts());
-      let newEndDate = new TZDate(movingEvent.getEnds());
-      newStartDate = newStartDate.addDate(dateOffset);
-      newEndDate = newEndDate.addDate(dateOffset);
+    if (isDraggingEnd) {
+      if (shouldUpdate) {
+        const dateOffset = columnIndex - targetEventStartGridX;
+        let newStartDate = new TZDate(movingEvent.getStarts());
+        let newEndDate = new TZDate(movingEvent.getEnds());
+        newStartDate = newStartDate.addDate(dateOffset);
+        newEndDate = newEndDate.addDate(dateOffset);
 
-      updateEvent({
-        event: movingEvent.model,
-        eventData: {
-          start: newStartDate,
-          end: newEndDate,
-        },
-      });
+        updateEvent({
+          event: movingEvent.model,
+          eventData: {
+            start: newStartDate,
+            end: newEndDate,
+          },
+        });
+      }
 
-      clearCurrentGridPos();
       clearDraggingEvent();
+      clearCurrentGridPos();
     }
   }, [
     columnIndex,
