@@ -84,6 +84,7 @@ type ThemeState = {
 };
 
 type ThemeDispatchers = {
+  setTheme: (theme: DeepPartial<ThemeState>) => void;
   setCommonTheme: (commonTheme: DeepPartial<CommonTheme>) => void;
   setWeekTheme: (weekTheme: DeepPartial<WeekTheme>) => void;
   setMonthTheme: (monthTheme: DeepPartial<MonthTheme>) => void;

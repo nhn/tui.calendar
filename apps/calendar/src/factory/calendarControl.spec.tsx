@@ -690,9 +690,15 @@ describe('setTheme', () => {
     // When
     act(() => {
       mockCalendarTheme.setTheme({
-        'common.gridSelection.backgroundColor': gridSelectionBackgroundColor,
-        'week.currentTime.color': currentTimeColor,
-        'month.moreView.boxShadow': moreViewBoxShadow,
+        common: {
+          gridSelection: { backgroundColor: gridSelectionBackgroundColor },
+        },
+        week: {
+          currentTime: { color: currentTimeColor },
+        },
+        month: {
+          moreView: { boxShadow: moreViewBoxShadow },
+        },
       });
     });
 

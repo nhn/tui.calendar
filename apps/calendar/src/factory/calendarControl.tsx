@@ -3,13 +3,13 @@ import { unmountComponentAtNode } from 'preact/compat';
 import renderToString from 'preact-render-to-string';
 
 import { DateInterface, LocalDate } from '@toast-ui/date';
+import { DeepPartial } from 'ts-essentials';
 
 import { CalendarContainer } from '@src/calendarContainer';
 import { initCalendarStore } from '@src/contexts/calendarStore';
 import { initThemeStore } from '@src/contexts/themeStore';
 import { createDateMatrixOfMonth, getWeekDates } from '@src/helpers/grid';
 import EventModel from '@src/model/eventModel';
-import { ThemeKeyValue } from '@src/theme/themeProps';
 import TZDate from '@src/time/date';
 import { addDate, addMonths, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { last } from '@src/utils/array';
@@ -28,7 +28,7 @@ import {
   Dispatchers,
   InternalStoreAPI,
 } from '@t/store';
-import { ThemeStore } from '@t/theme';
+import { ThemeState, ThemeStore } from '@t/theme';
 
 export default abstract class CalendarControl implements EventBus<ExternalEventTypes> {
   protected container: Element | null;
@@ -545,8 +545,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
 
   /**
    * Set a theme. If some keys are not defined in the preset, will be return
-   * @param {ThemeKeyValue} theme - theme object
-   * @returns {string[]} invalid keys - not defined keys in theme
+   * @param {DeepPartial<ThemeState>} theme - theme object
    * @example
    * calendar.setTheme({
    *   'common.gridSelection.backgroundColor': '#333',
@@ -554,11 +553,10 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    *   'month.dayname.borderBottom': '1px solid #e5e5e5' // Invalid key. So, It will be returned
    * });
    */
-  setTheme(theme: ThemeKeyValue) {
-    // const result = this.theme.setStyles(theme);
-    // this.render(); // @TODO: It should be removed when theme is implemented as a store
+  setTheme(theme: DeepPartial<ThemeState>) {
+    const { setTheme } = this.theme.getState().dispatch;
 
-    return [];
+    setTheme(theme);
   }
 
   /**
