@@ -1,12 +1,13 @@
 import { h } from 'preact';
+import { useMemo } from 'preact/hooks';
 
 import { MoreEventsButton } from '@src/components/dayGridMonth/moreEventsButton';
 import { Template } from '@src/components/template';
 import { useStore } from '@src/contexts/calendarStore';
-import { useTheme } from '@src/contexts/theme';
+import { useTheme } from '@src/contexts/themeStore';
 import { cls } from '@src/helpers/css';
 import { viewSelector } from '@src/selectors';
-import Theme from '@src/theme';
+import { commonThemeSelector, monthThemeSelector } from '@src/selectors/theme';
 import TZDate from '@src/time/date';
 import { Day, toFormat } from '@src/time/datetime';
 
@@ -28,7 +29,7 @@ function getDateColor({
   renderDate,
 }: {
   date: TZDate;
-  theme: Theme;
+  theme: { common: CommonTheme; month: MonthTheme };
   renderDate: TZDate;
 }) {
   const dayIndex = date.getDay();
@@ -51,6 +52,13 @@ function getDateColor({
   return dayExceptThisMonth.color;
 }
 
+function useCellHeaderTheme() {
+  const common = useTheme(commonThemeSelector);
+  const month = useTheme(monthThemeSelector);
+
+  return useMemo(() => ({ common, month }), [common, month]);
+}
+
 export function CellHeader({
   type = CellBarType.header,
   exceedCount = 0,
@@ -58,7 +66,7 @@ export function CellHeader({
   onClickExceedCount,
 }: Props) {
   const { renderDate } = useStore(viewSelector);
-  const theme = useTheme();
+  const theme = useCellHeaderTheme();
 
   const ymd = toFormat(date, 'YYYYMMDD');
   const todayYmd = toFormat(new TZDate(), 'YYYYMMDD');

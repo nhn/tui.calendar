@@ -6,9 +6,9 @@ import { DateInterface, LocalDate } from '@toast-ui/date';
 
 import { CalendarContainer } from '@src/calendarContainer';
 import { initCalendarStore } from '@src/contexts/calendarStore';
+import { initThemeStore } from '@src/contexts/themeStore';
 import { createDateMatrixOfMonth, getWeekDates } from '@src/helpers/grid';
 import EventModel from '@src/model/eventModel';
-import Theme from '@src/theme';
 import { ThemeKeyValue } from '@src/theme/themeProps';
 import TZDate from '@src/time/date';
 import { addDate, addMonths, toEndOfDay, toStartOfDay } from '@src/time/datetime';
@@ -44,7 +44,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
 
   protected eventBus: EventBus<ExternalEventTypes>;
 
-  protected theme: Theme;
+  protected theme: InternalStoreAPI<ThemeStore>;
 
   protected store: InternalStoreAPI<CalendarStore>;
 
@@ -61,7 +61,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
       end: toStartOfDay(),
     };
 
-    this.theme = new Theme(options.theme);
+    this.theme = initThemeStore();
     this.eventBus = new EventBusImpl<ExternalEventTypes>();
     this.store = initCalendarStore(this.initOptions(options));
     addAttributeHooks();
@@ -554,10 +554,10 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    * });
    */
   setTheme(theme: ThemeKeyValue) {
-    const result = this.theme.setStyles(theme);
-    this.render(); // @TODO: It should be removed when theme is implemented as a store
+    // const result = this.theme.setStyles(theme);
+    // this.render(); // @TODO: It should be removed when theme is implemented as a store
 
-    return result;
+    return [];
   }
 
   /**

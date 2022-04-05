@@ -5,11 +5,12 @@ import { useMemo } from 'preact/hooks';
 import { BackgroundEvent } from '@src/components/events/backgroundEvent';
 import { TimeEvent } from '@src/components/events/timeEvent';
 import { GridSelectionByColumn } from '@src/components/timeGrid/gridSelectionByColumn';
-import { useTheme } from '@src/contexts/theme';
+import { useTheme } from '@src/contexts/themeStore';
 import { getTopHeightByTime } from '@src/controller/times';
 import { cls, toPercent } from '@src/helpers/css';
 import { isBackgroundEvent } from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
+import { weekThemeSelector } from '@src/selectors/theme';
 import TZDate from '@src/time/date';
 import { setTimeStrToDate } from '@src/time/datetime';
 import { first, last } from '@src/utils/array';
@@ -95,10 +96,8 @@ export const Column = memo(function Column({
 }: Props) {
   const { rows: timeGridRows } = timeGridData;
   const {
-    week: {
-      timeGrid: { borderRight },
-    },
-  } = useTheme();
+    timeGrid: { borderRight },
+  } = useTheme(weekThemeSelector);
 
   const [startTime, endTime] = useMemo(() => {
     const { startTime: startTimeStr } = first(timeGridRows);

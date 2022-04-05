@@ -5,11 +5,12 @@ import { GridHeader } from '@src/components/dayGridCommon/gridHeader';
 import { DayGridMonth } from '@src/components/dayGridMonth/dayGridMonth';
 import { Layout } from '@src/components/layout';
 import { useStore } from '@src/contexts/calendarStore';
-import { useTheme } from '@src/contexts/theme';
+import { useTheme } from '@src/contexts/themeStore';
 import { cls } from '@src/helpers/css';
 import { capitalizeDayName } from '@src/helpers/dayName';
 import { createDateMatrixOfMonth } from '@src/helpers/grid';
 import { optionsSelector, viewSelector } from '@src/selectors';
+import { monthThemeSelector } from '@src/selectors/theme';
 import { getRowStyleInfo, isWeekend } from '@src/time/datetime';
 
 import { MonthOptions } from '@t/options';
@@ -36,7 +37,7 @@ function getDayNames(options: CalendarStore['options']) {
 export function Month() {
   const options = useStore(optionsSelector);
   const { renderDate } = useStore(viewSelector);
-  const theme = useTheme();
+  const { dayname: daynameTheme } = useTheme(monthThemeSelector);
 
   const dayNames = getDayNames(options);
   const monthOptions = options.month as Required<MonthOptions>;
@@ -60,7 +61,7 @@ export function Month() {
       <GridHeader
         templateType="monthDayname"
         dayNames={dayNames}
-        theme={theme.month.dayname}
+        theme={daynameTheme}
         options={monthOptions}
         rowStyleInfo={rowStyleInfo}
         type="month"

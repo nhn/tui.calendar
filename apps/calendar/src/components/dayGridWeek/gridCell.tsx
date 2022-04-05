@@ -1,7 +1,8 @@
 import { h } from 'preact';
 
-import { useTheme } from '@src/contexts/theme';
+import { useTheme } from '@src/contexts/themeStore';
 import { cls } from '@src/helpers/css';
+import { weekThemeSelector } from '@src/selectors/theme';
 
 type Props = {
   isLastCell: boolean;
@@ -56,10 +57,8 @@ export function GridCell({
   isLastCell,
 }: Props) {
   const {
-    week: {
-      dayGrid: { borderRight, backgroundColor },
-    },
-  } = useTheme();
+    dayGrid: { borderRight, backgroundColor },
+  } = useTheme(weekThemeSelector);
   const style = {
     width,
     left,

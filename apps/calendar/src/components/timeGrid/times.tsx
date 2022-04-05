@@ -8,9 +8,10 @@ import removeClass from 'tui-code-snippet/domUtil/removeClass';
 import { Template } from '@src/components/template';
 import { addTimeGridPrefix } from '@src/components/timeGrid';
 import { CurrentTimeLabel } from '@src/components/timeGrid/currentTimeLabel';
-import { useTheme } from '@src/contexts/theme';
+import { useTheme } from '@src/contexts/themeStore';
 import { getTopPercentByTime } from '@src/controller/times';
 import { cls } from '@src/helpers/css';
+import { weekThemeSelector } from '@src/selectors/theme';
 import { TemplateName } from '@src/template/default';
 import TZDate from '@src/time/date';
 import { isSameDate, isSameMonth, isSameYear, toFormat } from '@src/time/datetime';
@@ -105,8 +106,8 @@ export function Times({
   end = times.length - 1,
   timeTemplate,
 }: Props) {
-  const { week } = useTheme();
-  const pastTimeColor = week.pastTime.color;
+  const theme = useTheme(weekThemeSelector);
+  const pastTimeColor = theme.pastTime.color;
   const filteredTimes = times.slice(start, end + 1);
   const timesLength = filteredTimes.length - 1;
   const top = getTopPercentByTime(currentTime, first(filteredTimes).date, last(filteredTimes).date);

@@ -1,12 +1,16 @@
+import { initThemeStore } from '@src/contexts/themeStore';
 import { useDayGridRowTitleStyle } from '@src/hooks/dayGridWeek/useDayGridRowTitleStyle';
 import { renderHook } from '@src/test/utils';
-import Theme from '@src/theme';
+import { createWeekTheme } from '@src/theme/week';
+
+import { InternalStoreAPI } from '@t/store';
 
 describe('useDayGridRowTitleStyle', () => {
-  let theme: Theme;
+  let theme: InternalStoreAPI<ThemeStore>;
   const timesWidth = 120;
   const timezonesCount = 3;
-  const setup = (newTheme: Theme) => {
+  const { dayGridLeft } = createWeekTheme().week;
+  const setup = (newTheme: typeof theme) => {
     const { result } = renderHook(() => useDayGridRowTitleStyle(timesWidth, timezonesCount), {
       theme: newTheme,
     });
@@ -15,7 +19,7 @@ describe('useDayGridRowTitleStyle', () => {
   };
 
   beforeEach(() => {
-    theme = new Theme();
+    theme = initThemeStore();
   });
 
   it('should return default style', () => {
@@ -26,7 +30,7 @@ describe('useDayGridRowTitleStyle', () => {
 
     // Then
     expect(result.current).toEqual({
-      ...theme.week.dayGridLeft,
+      ...dayGridLeft,
       width: timesWidth * timezonesCount,
     });
   });
@@ -34,14 +38,14 @@ describe('useDayGridRowTitleStyle', () => {
   it('should return style with custom borderRight', () => {
     // Given
     const borderRight = '1px solid red';
-    theme.setStyle('week.dayGridLeft.borderRight', borderRight);
+    // theme.setStyle('week.dayGridLeft.borderRight', borderRight);
 
     // When
     const result = setup(theme);
 
     // Then
     expect(result.current).toEqual({
-      ...theme.week.dayGridLeft,
+      ...dayGridLeft,
       width: timesWidth * timezonesCount,
       borderRight,
     });
@@ -50,14 +54,14 @@ describe('useDayGridRowTitleStyle', () => {
   it('should return style with custom backgroundColor', () => {
     // Given
     const backgroundColor = '#e5e5e5';
-    theme.setStyle('week.dayGridLeft.backgroundColor', backgroundColor);
+    // theme.setStyle('week.dayGridLeft.backgroundColor', backgroundColor);
 
     // When
     const result = setup(theme);
 
     // Then
     expect(result.current).toEqual({
-      ...theme.week.dayGridLeft,
+      ...dayGridLeft,
       width: timesWidth * timezonesCount,
       backgroundColor,
     });

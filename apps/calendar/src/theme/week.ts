@@ -1,4 +1,4 @@
-export function createWeekTheme(): { week: ThemeState['week'] } {
+export function createWeekTheme(): { week: Required<ThemeState>['week'] } {
   return {
     week: {
       dayname: {

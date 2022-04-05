@@ -1,4 +1,4 @@
-export function createMonthTheme(): { month: ThemeState['month'] } {
+export function createMonthTheme(): { month: Required<ThemeState>['month'] } {
   return {
     month: {
       dayname: {
