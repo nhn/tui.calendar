@@ -12,8 +12,8 @@ const config: PlaywrightTestConfig = {
       height: 900,
     },
     launchOptions: {
-      slowMo: 200,
-    }
+      slowMo: 300,
+    },
   },
   webServer: {
     command: process.env.CI
@@ -23,6 +23,23 @@ const config: PlaywrightTestConfig = {
     timeout: 120 * 1000,
     reuseExistingServer: !process.env.CI,
   },
+  projects: [
+    {
+      name: 'Chromium',
+      use: { ...devices['Desktop Chrome'] },
+    },
+  ].concat(
+    process.env.CI
+      ? [
+          // NOTE: We can add firefox when the scolling issue is fixed.
+          // similar issue: https://github.com/microsoft/playwright/issues/11600
+          {
+            name: 'Safari',
+            use: { ...devices['Desktop Safari'] },
+          },
+        ]
+      : ([] as any)
+  ),
 };
 
 export default config;

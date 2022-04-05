@@ -84,9 +84,8 @@
     "setup:date": "npm run install:date && npm run build:date",
     "test": "jest --detectOpenHandles --forceExit",
     "test:watch": "jest --watch",
-    "test:playwright": "playwright test --browser=chromium",
-    "test:playwright:ci": "playwright test --browser=all",
-    "test:playwright:inspect": "playwright test --browser=chromium --debug",
+    "test:playwright": "playwright test",
+    "test:playwright:inspect": "playwright test --debug",
     "test:playwright:watch": "chokidar apps/calendar/playwright/**/*.spec.ts -c 'npm run test:playwright'",
     "prepare": "husky install && ts-patch install -s"
   },
