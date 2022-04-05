@@ -47,4 +47,4 @@ jobs:
           npx lerna run --scope @toast-ui/calendar storybook:build
       - name: Run E2E test
         run: |
-          npm run test:playwright:ci
+          npm run test:playwright
