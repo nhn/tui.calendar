@@ -1,3 +1,5 @@
+import { ThemeState } from '@t/theme';
+
 export function createMonthTheme(): { month: Required<ThemeState>['month'] } {
   return {
     month: {

@@ -1,3 +1,5 @@
+import { ThemeState } from '@t/theme';
+
 export function createCommonTheme(): { common: Required<ThemeState['common']> } {
   return {
     common: {

@@ -1,27 +1,30 @@
 import produce from 'immer';
 
+import { mergeObject } from '@src/utils/object';
+
 import { SetState } from '@t/store';
+import { ThemeDispatchers, ThemeStore } from '@t/theme';
 
 export function createThemeDispatch(set: SetState<ThemeStore>): ThemeDispatchers {
   return {
-    setCommonTheme: (commonTheme: CommonTheme) => {
+    setCommonTheme: (commonTheme) => {
       set(
         produce((state) => {
-          state.common = commonTheme;
+          state.common = mergeObject(state.common, commonTheme);
         })
       );
     },
-    setWeekTheme: (weekTheme: WeekTheme) => {
+    setWeekTheme: (weekTheme) => {
       set(
         produce((state) => {
-          state.week = weekTheme;
+          state.week = mergeObject(state.week, weekTheme);
         })
       );
     },
-    setMonthTheme: (monthTheme: MonthTheme) => {
+    setMonthTheme: (monthTheme) => {
       set(
         produce((state) => {
-          state.month = monthTheme;
+          state.month = mergeObject(state.month, monthTheme);
         })
       );
     },

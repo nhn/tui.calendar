@@ -1,3 +1,5 @@
+import { DeepPartial } from 'ts-essentials';
+
 type CommonTheme = {
   backgroundColor: string;
   border: string;
@@ -82,9 +84,9 @@ type ThemeState = {
 };
 
 type ThemeDispatchers = {
-  setCommonTheme: (commonTheme: CommonTheme) => void;
-  setWeekTheme: (weekTheme: WeekTheme) => void;
-  setMonthTheme: (monthTheme: MonthTheme) => void;
+  setCommonTheme: (commonTheme: DeepPartial<CommonTheme>) => void;
+  setWeekTheme: (weekTheme: DeepPartial<WeekTheme>) => void;
+  setMonthTheme: (monthTheme: DeepPartial<MonthTheme>) => void;
 };
 
 type ThemeStore = ThemeState & {

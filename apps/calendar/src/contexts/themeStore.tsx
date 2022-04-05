@@ -8,6 +8,7 @@ import { createMonthTheme } from '@src/theme/month';
 import { createWeekTheme } from '@src/theme/week';
 
 import { SetState } from '@t/store';
+import { ThemeDispatchers, ThemeStore } from '@t/theme';
 
 const themeStoreCreator = () => (set: SetState<ThemeStore>) => {
   return {

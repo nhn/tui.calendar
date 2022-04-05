@@ -12,6 +12,7 @@ import { EventBus, EventBusImpl } from '@src/utils/eventBus';
 
 import { PropsWithChildren } from '@t/components/common';
 import { CalendarStore, InternalStoreAPI } from '@t/store';
+import { ThemeStore } from '@t/theme';
 
 function render(
   component: Parameters<typeof ptlRender>[0],

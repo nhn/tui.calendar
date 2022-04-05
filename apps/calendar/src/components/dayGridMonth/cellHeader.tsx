@@ -11,6 +11,8 @@ import { commonThemeSelector, monthThemeSelector } from '@src/selectors/theme';
 import TZDate from '@src/time/date';
 import { Day, toFormat } from '@src/time/datetime';
 
+import { CommonTheme, MonthTheme } from '@t/theme';
+
 enum CellBarType {
   header = 'header',
   footer = 'footer',

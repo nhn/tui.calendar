@@ -6,6 +6,7 @@ import { cls, toPercent } from '@src/helpers/css';
 import { CalendarViewType } from '@t/components/common';
 import { CalendarMonthOptions, CalendarWeekOptions } from '@t/store';
 import { Template, TemplateMonthDayName, TemplateWeekDayName } from '@t/template';
+import { MonthDayNameTheme } from '@t/theme';
 import { CellStyle } from '@t/time/datetime';
 
 type TemplateDayNames = (TemplateWeekDayName | TemplateMonthDayName)[];

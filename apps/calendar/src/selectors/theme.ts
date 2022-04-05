@@ -1,3 +1,5 @@
+import { ThemeState, ThemeStore } from '@t/theme';
+
 export function topLevelStateSelector<Group extends Exclude<keyof ThemeStore, 'dispatch'>>(
   group: Group
 ): (state: ThemeState) => Required<ThemeState>[Group] {

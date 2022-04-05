@@ -9,6 +9,7 @@ import { EventBus } from '@src/utils/eventBus';
 import { PropsWithChildren } from '@t/components/common';
 import { ExternalEventTypes } from '@t/eventBus';
 import { CalendarStore, InternalStoreAPI } from '@t/store';
+import { ThemeStore } from '@t/theme';
 
 interface Props {
   theme: InternalStoreAPI<ThemeStore>;

@@ -28,6 +28,7 @@ import {
   Dispatchers,
   InternalStoreAPI,
 } from '@t/store';
+import { ThemeStore } from '@t/theme';
 
 export default abstract class CalendarControl implements EventBus<ExternalEventTypes> {
   protected container: Element | null;

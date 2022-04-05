@@ -1,3 +1,5 @@
+import { ThemeState } from '@t/theme';
+
 export function createWeekTheme(): { week: Required<ThemeState>['week'] } {
   return {
     week: {
