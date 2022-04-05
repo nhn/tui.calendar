@@ -6,7 +6,7 @@ import {
 } from '@src/slices/view';
 import { createStore } from '@src/store/internal';
 import TZDate from '@src/time/date';
-import { addDate, isSameDate } from '@src/time/datetime';
+import { addDate } from '@src/time/datetime';
 
 import { InternalStoreAPI, StoreCreator } from '@t/store';
 
@@ -58,7 +58,7 @@ describe('View Slice', () => {
     // When
 
     // Then
-    expect(isSameDate(renderDate, today)).toBe(true);
+    expect(renderDate).toBeSameDate(today);
   });
 
   it('should be able to set renderDate', () => {
@@ -71,6 +71,6 @@ describe('View Slice', () => {
     setRenderDate(newRenderDate);
 
     // Then
-    expect(getState().view.renderDate).toEqual(newRenderDate);
+    expect(getState().view.renderDate).toBeSameDate(newRenderDate);
   });
 });

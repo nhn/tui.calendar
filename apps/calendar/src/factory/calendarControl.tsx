@@ -219,6 +219,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
     const { setRenderDate } = this.getStoreDispatchers().view;
 
     const newRenderDate = new TZDate(renderDate);
+
     let calculatedRenderDate = {
       renderDate: newRenderDate,
       renderRange: { start: new TZDate(newRenderDate), end: new TZDate(newRenderDate) },

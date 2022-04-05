@@ -1,6 +1,7 @@
 import produce from 'immer';
 
 import TZDate from '@src/time/date';
+import { toStartOfDay } from '@src/time/datetime';
 
 import { ViewType } from '@t/options';
 import { CalendarState, CalendarStore, SetState } from '@t/store';
@@ -18,10 +19,13 @@ export type ViewDispatchers = {
 };
 
 export function createViewSlice(initialView: ViewType = 'month'): ViewSlice {
+  const renderDate = new TZDate();
+  renderDate.setHours(0, 0, 0, 0);
+
   return {
     view: {
       currentView: initialView,
-      renderDate: new TZDate(),
+      renderDate,
     },
   };
 }
@@ -37,7 +41,7 @@ export function createViewDispatchers(set: SetState<CalendarStore>): ViewDispatc
     setRenderDate: (date: TZDate) =>
       set(
         produce((state: CalendarState) => {
-          state.view.renderDate = date;
+          state.view.renderDate = toStartOfDay(date);
         })
       ),
   };

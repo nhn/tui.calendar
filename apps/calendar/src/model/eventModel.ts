@@ -5,7 +5,7 @@ import { compare, MS_PER_DAY, parse, toEndOfDay, toStartOfDay } from '@src/time/
 import { stamp } from '@src/utils/stamp';
 import { isString } from '@src/utils/type';
 
-import { DateType, EventCategory, EventModelData, EventState } from '@t/events';
+import type { DateType, EventCategory, EventModelData, EventState } from '@t/events';
 
 export default class EventModel {
   /**

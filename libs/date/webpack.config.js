@@ -22,6 +22,7 @@ module.exports = (env, args) => {
       libraryExport: 'default',
       path: path.join(__dirname, 'dist'),
       filename: 'toastui-date' + (minify ? '.min' : '') + '.js',
+      globalObject: 'this',
     },
     module: {
       rules: [
