@@ -675,7 +675,7 @@ describe('setTheme', () => {
     cleanup();
   });
 
-  it('should change theme value', () => {
+  it('should change theme and rerender components', () => {
     // Given
     const gridSelectionBackgroundColor = '#ff0000';
     const currentTimeColor = '#00ff00';

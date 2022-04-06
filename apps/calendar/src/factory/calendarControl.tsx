@@ -544,13 +544,25 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * Set a theme. If some keys are not defined in the preset, will be return
+   * Set a theme
    * @param {DeepPartial<ThemeState>} theme - theme object
    * @example
    * calendar.setTheme({
-   *   'common.gridSelection.backgroundColor': '#333',
-   *   'week.currentTime.color': '#00FF00',
-   *   'month.dayname.borderBottom': '1px solid #e5e5e5' // Invalid key. So, It will be returned
+   *   common: {
+   *     gridSelection: {
+   *       backgroundColor: '#333',
+   *     },
+   *   },
+   *   week: {
+   *     currentTime: {
+   *       color: '#00FF00',
+   *     },
+   *   },
+   *   month: {
+   *     dayname: {
+   *       borderLeft: '1px solid #e5e5e5',
+   *     },
+   *   },
    * });
    */
   setTheme(theme: DeepPartial<ThemeState>) {
