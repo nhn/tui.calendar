@@ -186,10 +186,8 @@ export function HorizontalEvent({
   });
 
   const onResizeStart = useDrag(DRAGGING_TYPE_CREATORS.resizeEvent('dayGrid', `${uiModel.cid()}`), {
-    onInit: () => {
-      setDraggingEventUIModel(uiModel);
-    },
     onDragStart: () => {
+      setDraggingEventUIModel(uiModel);
       layoutContainer?.classList.add(classNames.resizeEvent);
     },
     onMouseUp: () => {
@@ -198,10 +196,8 @@ export function HorizontalEvent({
     },
   });
   const onMoveStart = useDrag(DRAGGING_TYPE_CREATORS.moveEvent('dayGrid', `${uiModel.cid()}`), {
-    onInit: () => {
-      setDraggingEventUIModel(uiModel);
-    },
     onDragStart: () => {
+      setDraggingEventUIModel(uiModel);
       layoutContainer?.classList.add(classNames.moveEvent);
     },
     onMouseUp: (e, { draggingState }) => {

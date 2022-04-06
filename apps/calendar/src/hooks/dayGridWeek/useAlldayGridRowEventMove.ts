@@ -1,6 +1,7 @@
-import { useEffect, useMemo } from 'preact/hooks';
+import { useMemo } from 'preact/hooks';
 
 import { useDispatch } from '@src/contexts/calendarStore';
+import { useWhen } from '@src/hooks/common/useWhen';
 import { useCurrentPointerPositionInGrid } from '@src/hooks/event/useCurrentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/useDraggingEvent';
 import TZDate from '@src/time/date';
@@ -33,44 +34,32 @@ export function useAlldayGridRowEventMove({ rowStyleInfo, gridPositionFinder }: 
 
   const currentMovingLeft = isNil(columnIndex) ? null : rowStyleInfo[columnIndex].left;
 
-  useEffect(() => {
+  useWhen(() => {
     const shouldUpdate =
-      isDraggingEnd &&
       isPresent(movingEvent) &&
       isPresent(columnIndex) &&
       isPresent(currentMovingLeft) &&
       isPresent(targetEventStartGridX);
 
-    if (isDraggingEnd) {
-      if (shouldUpdate) {
-        const dateOffset = columnIndex - targetEventStartGridX;
-        let newStartDate = new TZDate(movingEvent.getStarts());
-        let newEndDate = new TZDate(movingEvent.getEnds());
-        newStartDate = newStartDate.addDate(dateOffset);
-        newEndDate = newEndDate.addDate(dateOffset);
+    if (shouldUpdate) {
+      const dateOffset = columnIndex - targetEventStartGridX;
+      let newStartDate = new TZDate(movingEvent.getStarts());
+      let newEndDate = new TZDate(movingEvent.getEnds());
+      newStartDate = newStartDate.addDate(dateOffset);
+      newEndDate = newEndDate.addDate(dateOffset);
 
-        updateEvent({
-          event: movingEvent.model,
-          eventData: {
-            start: newStartDate,
-            end: newEndDate,
-          },
-        });
-      }
-
-      clearDraggingEvent();
-      clearCurrentGridPos();
+      updateEvent({
+        event: movingEvent.model,
+        eventData: {
+          start: newStartDate,
+          end: newEndDate,
+        },
+      });
     }
-  }, [
-    columnIndex,
-    currentMovingLeft,
-    movingEvent,
-    targetEventStartGridX,
-    updateEvent,
-    clearDraggingEvent,
-    clearCurrentGridPos,
-    isDraggingEnd,
-  ]);
+
+    clearDraggingEvent();
+    clearCurrentGridPos();
+  }, isDraggingEnd);
 
   return useMemo(
     () => ({

@@ -1,8 +1,9 @@
 import type { ComponentProps } from 'preact';
-import { useEffect, useMemo } from 'preact/hooks';
+import { useMemo } from 'preact/hooks';
 
 import type { MovingEventShadow } from '@src/components/dayGridMonth/movingEventShadow';
 import { useDispatch } from '@src/contexts/calendarStore';
+import { useWhen } from '@src/hooks/common/useWhen';
 import { useCurrentPointerPositionInGrid } from '@src/hooks/event/useCurrentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/useDraggingEvent';
 import TZDate from '@src/time/date';
@@ -36,42 +37,30 @@ export function useDayGridMonthEventMove({
     return shadowEventUIModel;
   }, [movingEvent, currentGridPos?.rowIndex, currentGridPos?.columnIndex, rowIndex, rowInfo]);
 
-  useEffect(() => {
-    const shouldUpdate =
-      isDraggingEnd && isPresent(movingEventUIModel) && isPresent(currentGridPos);
+  useWhen(() => {
+    const shouldUpdate = isPresent(movingEventUIModel) && isPresent(currentGridPos);
+    if (shouldUpdate) {
+      const preStartDate = movingEventUIModel.model.getStarts();
+      const eventDuration = movingEventUIModel.duration();
+      const currentDate = dateMatrix[currentGridPos.rowIndex][currentGridPos.columnIndex];
 
-    if (isDraggingEnd) {
-      if (shouldUpdate) {
-        const preStartDate = movingEventUIModel.model.getStarts();
-        const eventDuration = movingEventUIModel.duration();
-        const currentDate = dateMatrix[currentGridPos.rowIndex][currentGridPos.columnIndex];
+      const timeOffsetPerDay = getDateDifference(currentDate, preStartDate) * MS_PER_DAY;
 
-        const timeOffsetPerDay = getDateDifference(currentDate, preStartDate) * MS_PER_DAY;
+      const newStartDate = new TZDate(preStartDate.getTime() + timeOffsetPerDay);
+      const newEndDate = new TZDate(newStartDate.getTime() + eventDuration);
 
-        const newStartDate = new TZDate(preStartDate.getTime() + timeOffsetPerDay);
-        const newEndDate = new TZDate(newStartDate.getTime() + eventDuration);
-
-        updateEvent({
-          event: movingEventUIModel.model,
-          eventData: {
-            start: newStartDate,
-            end: newEndDate,
-          },
-        });
-      }
-
-      clearDraggingEvent();
-      clearCurrentGridPos();
+      updateEvent({
+        event: movingEventUIModel.model,
+        eventData: {
+          start: newStartDate,
+          end: newEndDate,
+        },
+      });
     }
-  }, [
-    clearCurrentGridPos,
-    clearDraggingEvent,
-    currentGridPos,
-    dateMatrix,
-    isDraggingEnd,
-    movingEventUIModel,
-    updateEvent,
-  ]);
+
+    clearDraggingEvent();
+    clearCurrentGridPos();
+  }, isDraggingEnd);
 
   return movingEventUIModel;
 }

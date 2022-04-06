@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 
 import { useDispatch } from '@src/contexts/calendarStore';
 import { getGridDateIndex, getRenderedEventUIModels } from '@src/helpers/grid';
+import { useWhen } from '@src/hooks/common/useWhen';
 import { useCurrentPointerPositionInGrid } from '@src/hooks/event/useCurrentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/useDraggingEvent';
 import type EventUIModel from '@src/model/eventUIModel';
@@ -159,12 +160,9 @@ export function useDayGridMonthEventResize({
     }
   }, [canCalculateProps, currentGridPos, baseResizingInfo, rowIndex]);
 
-  useEffect(() => {
+  useWhen(() => {
     const isResizingEnd =
-      isDraggingEnd &&
-      isPresent(baseResizingInfo) &&
-      isPresent(currentGridPos) &&
-      isPresent(resizingStartUIModel);
+      isPresent(baseResizingInfo) && isPresent(currentGridPos) && isPresent(resizingStartUIModel);
 
     if (isResizingEnd) {
       /**
@@ -188,15 +186,7 @@ export function useDayGridMonthEventResize({
 
       clearStates();
     }
-  }, [
-    baseResizingInfo,
-    clearStates,
-    currentGridPos,
-    dateMatrix,
-    isDraggingEnd,
-    resizingStartUIModel,
-    updateEvent,
-  ]);
+  }, isDraggingEnd);
 
   return guideProps;
 }

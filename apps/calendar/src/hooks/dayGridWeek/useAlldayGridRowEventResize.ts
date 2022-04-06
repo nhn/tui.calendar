@@ -1,7 +1,8 @@
-import { useEffect, useMemo } from 'preact/hooks';
+import { useMemo } from 'preact/hooks';
 
 import { useDispatch } from '@src/contexts/calendarStore';
 import { getGridDateIndex } from '@src/helpers/grid';
+import { useWhen } from '@src/hooks/common/useWhen';
 import { useCurrentPointerPositionInGrid } from '@src/hooks/event/useCurrentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/useDraggingEvent';
 import type EventUIModel from '@src/model/eventUIModel';
@@ -55,37 +56,26 @@ export function useAlldayGridRowEventResize({
     return null;
   }, [columnIndex, gridColWidthMap, targetEventGridIndices.start]);
 
-  useEffect(() => {
-    if (isDraggingEnd) {
-      const shouldUpdateEvent =
-        isDraggingEnd &&
-        isPresent(resizingEvent) &&
-        isPresent(columnIndex) &&
-        targetEventGridIndices.start <= columnIndex &&
-        targetEventGridIndices.end !== columnIndex;
+  useWhen(() => {
+    const shouldUpdateEvent =
+      isDraggingEnd &&
+      isPresent(resizingEvent) &&
+      isPresent(columnIndex) &&
+      targetEventGridIndices.start <= columnIndex &&
+      targetEventGridIndices.end !== columnIndex;
 
-      if (shouldUpdateEvent) {
-        const targetDate = weekDates[columnIndex];
+    if (shouldUpdateEvent) {
+      const targetDate = weekDates[columnIndex];
 
-        updateEvent({
-          event: resizingEvent.model,
-          eventData: { end: targetDate },
-        });
-      }
-
-      clearCurrentGridPos();
-      clearDraggingEvent();
+      updateEvent({
+        event: resizingEvent.model,
+        eventData: { end: targetDate },
+      });
     }
-  }, [
-    weekDates,
-    columnIndex,
-    resizingEvent,
-    updateEvent,
-    clearDraggingEvent,
-    targetEventGridIndices,
-    clearCurrentGridPos,
-    isDraggingEnd,
-  ]);
+
+    clearCurrentGridPos();
+    clearDraggingEvent();
+  }, isDraggingEnd);
 
   return useMemo(
     () => ({
