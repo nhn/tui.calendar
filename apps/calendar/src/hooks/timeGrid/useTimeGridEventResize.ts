@@ -166,27 +166,28 @@ export function useTimeGridEventResize({
 
   useWhen(() => {
     const shouldUpdate =
-      isPresent(baseResizingInfo) && isPresent(currentGridPos) && isPresent(resizingStartUIModel);
+      isPresent(baseResizingInfo) &&
+      isPresent(currentGridPos) &&
+      isPresent(resizingStartUIModel) &&
+      baseResizingInfo.eventEndDateColumnIndex === columnIndex;
 
     if (shouldUpdate) {
       const { eventEndDateColumnIndex, eventStartDateRowIndex, eventStartDateColumnIndex } =
         baseResizingInfo;
-      if (columnIndex === eventEndDateColumnIndex) {
-        const targetEndDate = setTimeStrToDate(
-          timeGridData.columns[columnIndex].date,
-          timeGridData.rows[
-            eventStartDateColumnIndex === eventEndDateColumnIndex
-              ? Math.max(currentGridPos.rowIndex, eventStartDateRowIndex)
-              : currentGridPos.rowIndex
-          ].endTime
-        );
-        updateEvent({
-          event: resizingStartUIModel.model,
-          eventData: {
-            end: targetEndDate,
-          },
-        });
-      }
+      const targetEndDate = setTimeStrToDate(
+        timeGridData.columns[columnIndex].date,
+        timeGridData.rows[
+          eventStartDateColumnIndex === eventEndDateColumnIndex
+            ? Math.max(currentGridPos.rowIndex, eventStartDateRowIndex)
+            : currentGridPos.rowIndex
+        ].endTime
+      );
+      updateEvent({
+        event: resizingStartUIModel.model,
+        eventData: {
+          end: targetEndDate,
+        },
+      });
     }
 
     clearStates();
