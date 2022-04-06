@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 
 import type { ResizingGuideByColumn } from '@src/components/timeGrid/resizingGuideByColumn';
 import { useDispatch } from '@src/contexts/calendarStore';
+import { useWhen } from '@src/hooks/common/useWhen';
 import type EventUIModel from '@src/model/eventUIModel';
 import type TZDate from '@src/time/date';
 import { setTimeStrToDate } from '@src/time/datetime';
@@ -163,49 +164,33 @@ export function useTimeGridEventResize({
     minimumHeight,
   ]);
 
-  // When dragging ends
-  useEffect(() => {
-    if (isDraggingEnd) {
-      const shouldUpdate =
-        isDraggingEnd &&
-        isPresent(baseResizingInfo) &&
-        isPresent(currentGridPos) &&
-        isPresent(resizingStartUIModel);
+  useWhen(() => {
+    const shouldUpdate =
+      isPresent(baseResizingInfo) && isPresent(currentGridPos) && isPresent(resizingStartUIModel);
 
-      if (shouldUpdate) {
-        const { eventEndDateColumnIndex, eventStartDateRowIndex, eventStartDateColumnIndex } =
-          baseResizingInfo;
-        if (columnIndex === eventEndDateColumnIndex) {
-          const targetEndDate = setTimeStrToDate(
-            timeGridData.columns[columnIndex].date,
-            timeGridData.rows[
-              eventStartDateColumnIndex === eventEndDateColumnIndex
-                ? Math.max(currentGridPos.rowIndex, eventStartDateRowIndex)
-                : currentGridPos.rowIndex
-            ].endTime
-          );
-          updateEvent({
-            event: resizingStartUIModel.model,
-            eventData: {
-              end: targetEndDate,
-            },
-          });
-        }
+    if (shouldUpdate) {
+      const { eventEndDateColumnIndex, eventStartDateRowIndex, eventStartDateColumnIndex } =
+        baseResizingInfo;
+      if (columnIndex === eventEndDateColumnIndex) {
+        const targetEndDate = setTimeStrToDate(
+          timeGridData.columns[columnIndex].date,
+          timeGridData.rows[
+            eventStartDateColumnIndex === eventEndDateColumnIndex
+              ? Math.max(currentGridPos.rowIndex, eventStartDateRowIndex)
+              : currentGridPos.rowIndex
+          ].endTime
+        );
+        updateEvent({
+          event: resizingStartUIModel.model,
+          eventData: {
+            end: targetEndDate,
+          },
+        });
       }
-
-      clearStates();
     }
-  }, [
-    baseResizingInfo,
-    clearStates,
-    columnIndex,
-    currentGridPos,
-    isDraggingEnd,
-    resizingStartUIModel,
-    timeGridData.columns,
-    timeGridData.rows,
-    updateEvent,
-  ]);
+
+    clearStates();
+  }, isDraggingEnd);
 
   return guideUIModel;
 }
