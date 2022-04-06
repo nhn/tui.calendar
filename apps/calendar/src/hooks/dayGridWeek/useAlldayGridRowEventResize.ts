@@ -58,7 +58,6 @@ export function useAlldayGridRowEventResize({
 
   useWhen(() => {
     const shouldUpdateEvent =
-      isDraggingEnd &&
       isPresent(resizingEvent) &&
       isPresent(columnIndex) &&
       targetEventGridIndices.start <= columnIndex &&

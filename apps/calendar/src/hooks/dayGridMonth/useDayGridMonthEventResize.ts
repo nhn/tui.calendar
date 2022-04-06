@@ -161,10 +161,7 @@ export function useDayGridMonthEventResize({
   }, [canCalculateProps, currentGridPos, baseResizingInfo, rowIndex]);
 
   useWhen(() => {
-    const isResizingEnd =
-      isPresent(baseResizingInfo) && isPresent(currentGridPos) && isPresent(resizingStartUIModel);
-
-    if (isResizingEnd) {
+    if (canCalculateProps) {
       /**
        * Is current grid position is the same or later comparing to the position of the start date?
        */
@@ -183,9 +180,9 @@ export function useDayGridMonthEventResize({
           },
         });
       }
-
-      clearStates();
     }
+
+    clearStates();
   }, isDraggingEnd);
 
   return guideProps;
