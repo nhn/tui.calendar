@@ -1,7 +1,7 @@
 import { h } from 'preact';
 
 import { initThemeStore, useTheme } from '@src/contexts/themeStore';
-import { commonThemeSelector, weekThemeSelector } from '@src/selectors/theme';
+import { commonThemeSelector, monthThemeSelector, weekThemeSelector } from '@src/selectors/theme';
 import { act, render, screen } from '@src/test/utils';
 
 describe('setCommonTheme', () => {
@@ -157,5 +157,91 @@ describe('setWeekTheme', () => {
     // Then
     expect(screen.getByText(`pastTimeColor: ${beforePastTimeColor}`)).toBeInTheDocument();
     expect(screen.getByText(`currentTimeColor: ${beforeCurrentTimeColor}`)).toBeInTheDocument();
+  });
+});
+
+describe('setMonthTheme', () => {
+  const theme = initThemeStore();
+  const { setMonthTheme } = theme.getState().dispatch;
+  let beforeDayExceptThisMonthColor: string;
+  let beforeHolidayExceptThisMonthColor: string;
+
+  function MonthThemeComponent() {
+    const {
+      dayExceptThisMonth: { color: dayExceptThisMonthColor },
+      holidayExceptThisMonth: { color: holidayExceptThisMonthColor },
+    } = useTheme(monthThemeSelector);
+
+    return (
+      <div>
+        <div>dayExceptThisMonthColor: {dayExceptThisMonthColor}</div>
+        <div>holidayExceptThisMonthColor: {holidayExceptThisMonthColor}</div>
+      </div>
+    );
+  }
+
+  beforeEach(() => {
+    beforeDayExceptThisMonthColor = theme.getState().month?.dayExceptThisMonth.color ?? '';
+    beforeHolidayExceptThisMonthColor = theme.getState().month?.holidayExceptThisMonth.color ?? '';
+    render(<MonthThemeComponent />, { theme });
+  });
+
+  it('should set theme and other properties should not be changed', () => {
+    // Given
+    const color = 'black';
+
+    // When
+    act(() => {
+      setMonthTheme({
+        dayExceptThisMonth: {
+          color,
+        },
+      });
+    });
+
+    // Then
+    expect(theme.getState().month?.dayExceptThisMonth.color).toBe(color);
+    expect(theme.getState().month?.holidayExceptThisMonth.color).toBe(
+      beforeHolidayExceptThisMonthColor
+    );
+  });
+
+  it('should rerender component that use useTheme when theme is changed', () => {
+    // Given
+    const color = 'black';
+
+    // When
+    act(() => {
+      setMonthTheme({
+        dayExceptThisMonth: {
+          color,
+        },
+      });
+    });
+
+    // Then
+    expect(screen.getByText(`dayExceptThisMonthColor: ${color}`)).toBeInTheDocument();
+  });
+
+  it('should not change theme when unused theme is changed', () => {
+    // Given
+    const backgroundColor = 'black';
+
+    // When
+    act(() => {
+      setMonthTheme({
+        weekend: {
+          backgroundColor,
+        },
+      });
+    });
+
+    // Then
+    expect(
+      screen.getByText(`dayExceptThisMonthColor: ${beforeDayExceptThisMonthColor}`)
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(`holidayExceptThisMonthColor: ${beforeHolidayExceptThisMonthColor}`)
+    ).toBeInTheDocument();
   });
 });
