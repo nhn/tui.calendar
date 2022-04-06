@@ -125,14 +125,14 @@ export const Column = memo(function Column({
       data-testid={`timegrid-column-${columnDate.getDay()}`}
     >
       <BackgroundEvents eventUIModels={uiModelsByColumn} startTime={startTime} endTime={endTime} />
-      <GridSelectionByColumn columnIndex={columnIndex} timeGridRows={timeGridRows} />
+      <VerticalEvents eventUIModels={uiModelsByColumn} />
       <ResizingGuideByColumn
         gridPositionFinder={gridPositionFinder}
         totalUIModels={totalUIModels}
         columnIndex={columnIndex}
         timeGridData={timeGridData}
       />
-      <VerticalEvents eventUIModels={uiModelsByColumn} />
+      <GridSelectionByColumn columnIndex={columnIndex} timeGridRows={timeGridRows} />
     </div>
   );
 });
