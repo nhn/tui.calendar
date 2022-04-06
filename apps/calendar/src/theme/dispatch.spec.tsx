@@ -245,3 +245,98 @@ describe('setMonthTheme', () => {
     ).toBeInTheDocument();
   });
 });
+
+describe('setTheme', () => {
+  const theme = initThemeStore();
+  const { setTheme } = theme.getState().dispatch;
+  let beforeCommonBorder: string;
+  let beforeWeekTodayColor: string;
+  let beforeMonthDayExceptThisMonthColor: string;
+
+  function ThemeComponent() {
+    const { common, week, month } = useTheme((themeState) => themeState);
+    const commonBorder = common?.border ?? '';
+    const weekTodayColor = week?.today.color ?? '';
+    const monthDayExceptThisMonthColor = month?.dayExceptThisMonth.color ?? '';
+
+    return (
+      <div>
+        <div>commonBorder: {commonBorder}</div>
+        <div>weekTodayColor: {weekTodayColor}</div>
+        <div>monthDayExceptThisMonthColor: {monthDayExceptThisMonthColor}</div>
+      </div>
+    );
+  }
+
+  beforeEach(() => {
+    beforeCommonBorder = theme.getState().common?.border ?? '';
+    beforeWeekTodayColor = theme.getState().week?.today.color ?? '';
+    beforeMonthDayExceptThisMonthColor = theme.getState().month?.dayExceptThisMonth.color ?? '';
+    render(<ThemeComponent />, { theme });
+  });
+
+  it('should set theme and other properties should not be changed', () => {
+    // Given
+    const color = 'black';
+
+    // When
+    act(() => {
+      setTheme({
+        week: {
+          today: {
+            color,
+          },
+        },
+      });
+    });
+
+    // Then
+    expect(theme.getState().common?.border).toBe(beforeCommonBorder);
+    expect(theme.getState().week?.today.color).toBe(color);
+    expect(theme.getState().month?.dayExceptThisMonth.color).toBe(
+      beforeMonthDayExceptThisMonthColor
+    );
+  });
+
+  it('should rerender component that use useTheme when theme is changed', () => {
+    // Given
+    const color = 'black';
+
+    // When
+    act(() => {
+      setTheme({
+        week: {
+          today: {
+            color,
+          },
+        },
+      });
+    });
+
+    // Then
+    expect(screen.getByText(`weekTodayColor: ${color}`)).toBeInTheDocument();
+  });
+
+  it('should not change theme when unused theme is changed', () => {
+    // Given
+    const backgroundColor = 'black';
+
+    // When
+    act(() => {
+      setTheme({
+        month: {
+          weekend: {
+            backgroundColor,
+          },
+        },
+      });
+    });
+
+    // Then
+    expect(screen.getByText(`commonBorder: ${beforeCommonBorder}`)).toBeInTheDocument();
+    expect(screen.getByText(`weekTodayColor: ${beforeWeekTodayColor}`)).toBeInTheDocument();
+    expect(
+      screen.getByText(`monthDayExceptThisMonthColor: ${beforeMonthDayExceptThisMonthColor}`)
+    ).toBeInTheDocument();
+  });
+});
