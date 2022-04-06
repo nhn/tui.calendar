@@ -43,10 +43,10 @@ export function useAlldayGridRowEventMove({ rowStyleInfo, gridPositionFinder }: 
 
     if (shouldUpdate) {
       const dateOffset = columnIndex - targetEventStartGridX;
-      let newStartDate = new TZDate(movingEvent.getStarts());
-      let newEndDate = new TZDate(movingEvent.getEnds());
-      newStartDate = newStartDate.addDate(dateOffset);
-      newEndDate = newEndDate.addDate(dateOffset);
+      const newStartDate = new TZDate(movingEvent.getStarts());
+      const newEndDate = new TZDate(movingEvent.getEnds());
+      newStartDate.addDate(dateOffset);
+      newEndDate.addDate(dateOffset);
 
       updateEvent({
         event: movingEvent.model,
