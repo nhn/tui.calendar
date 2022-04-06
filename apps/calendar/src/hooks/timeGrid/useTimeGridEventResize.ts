@@ -4,6 +4,8 @@ import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import type { ResizingGuideByColumn } from '@src/components/timeGrid/resizingGuideByColumn';
 import { useDispatch } from '@src/contexts/calendarStore';
 import { useWhen } from '@src/hooks/common/useWhen';
+import { useCurrentPointerPositionInGrid } from '@src/hooks/event/useCurrentPointerPositionInGrid';
+import { useDraggingEvent } from '@src/hooks/event/useDraggingEvent';
 import type EventUIModel from '@src/model/eventUIModel';
 import type TZDate from '@src/time/date';
 import { setTimeStrToDate } from '@src/time/datetime';
@@ -11,9 +13,6 @@ import { findLastIndex } from '@src/utils/array';
 import { isNil, isPresent } from '@src/utils/type';
 
 import type { TimeGridRow } from '@t/grid';
-
-import { useCurrentPointerPositionInGrid } from '../event/useCurrentPointerPositionInGrid';
-import { useDraggingEvent } from '../event/useDraggingEvent';
 
 type FilteredUIModelRow = [] | [EventUIModel];
 
