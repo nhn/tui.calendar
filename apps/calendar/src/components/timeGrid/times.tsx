@@ -106,8 +106,8 @@ export function Times({
   end = times.length - 1,
   timeTemplate,
 }: Props) {
-  const theme = useTheme(weekThemeSelector);
-  const pastTimeColor = theme.pastTime.color;
+  const weekTheme = useTheme(weekThemeSelector);
+  const pastTimeColor = weekTheme.pastTime.color;
   const filteredTimes = times.slice(start, end + 1);
   const timesLength = filteredTimes.length - 1;
   const top = getTopPercentByTime(currentTime, first(filteredTimes).date, last(filteredTimes).date);
