@@ -1,46 +1,47 @@
-import { useEffect, useMemo } from 'preact/hooks';
+import type { ComponentProps } from 'preact';
+import { useMemo } from 'preact/hooks';
 
-import { useDispatch, useStore } from '@src/contexts/calendarStore';
+import type { MovingEventShadow } from '@src/components/dayGridMonth/movingEventShadow';
+import { useDispatch } from '@src/contexts/calendarStore';
+import { useWhen } from '@src/hooks/common/useWhen';
 import { useCurrentPointerPositionInGrid } from '@src/hooks/event/useCurrentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/useDraggingEvent';
-import { isNotDraggingSelector } from '@src/selectors/dnd';
 import TZDate from '@src/time/date';
 import { getDateDifference, MS_PER_DAY } from '@src/time/datetime';
 import { isPresent } from '@src/utils/type';
 
-import { GridPositionFinder } from '@t/grid';
-import { CellStyle } from '@t/time/datetime';
-
-interface Params {
-  dateMatrix: TZDate[][];
-  rowInfo: CellStyle[];
-  gridPositionFinder: GridPositionFinder;
-}
-
-export function useDayGridMonthEventMove({ dateMatrix, rowInfo, gridPositionFinder }: Params) {
-  const isNotDragging = useStore(isNotDraggingSelector);
-  const { draggingEvent: movingEvent, clearDraggingEvent } = useDraggingEvent('dayGrid', 'move');
+export function useDayGridMonthEventMove({
+  dateMatrix,
+  rowInfo,
+  gridPositionFinder,
+  rowIndex,
+}: ComponentProps<typeof MovingEventShadow>) {
+  const {
+    isDraggingEnd,
+    draggingEvent: movingEvent,
+    clearDraggingEvent,
+  } = useDraggingEvent('dayGrid', 'move');
   const { updateEvent } = useDispatch('calendar');
 
   const [currentGridPos, clearCurrentGridPos] = useCurrentPointerPositionInGrid(gridPositionFinder);
 
-  const shadowEvent = useMemo(() => {
+  const movingEventUIModel = useMemo(() => {
     let shadowEventUIModel = null;
-    if (movingEvent) {
+
+    if (movingEvent && currentGridPos?.rowIndex === rowIndex) {
       shadowEventUIModel = movingEvent;
       shadowEventUIModel.left = rowInfo[currentGridPos?.columnIndex ?? 0].left;
       shadowEventUIModel.width = rowInfo[currentGridPos?.columnIndex ?? 0].width;
     }
 
     return shadowEventUIModel;
-  }, [currentGridPos?.columnIndex, rowInfo, movingEvent]);
+  }, [movingEvent, currentGridPos?.rowIndex, currentGridPos?.columnIndex, rowIndex, rowInfo]);
 
-  useEffect(() => {
-    const shouldUpdate = isNotDragging && isPresent(movingEvent) && isPresent(currentGridPos);
-
+  useWhen(() => {
+    const shouldUpdate = isPresent(movingEventUIModel) && isPresent(currentGridPos);
     if (shouldUpdate) {
-      const preStartDate = movingEvent.model.getStarts();
-      const eventDuration = movingEvent.duration();
+      const preStartDate = movingEventUIModel.model.getStarts();
+      const eventDuration = movingEventUIModel.duration();
       const currentDate = dateMatrix[currentGridPos.rowIndex][currentGridPos.columnIndex];
 
       const timeOffsetPerDay = getDateDifference(currentDate, preStartDate) * MS_PER_DAY;
@@ -49,28 +50,17 @@ export function useDayGridMonthEventMove({ dateMatrix, rowInfo, gridPositionFind
       const newEndDate = new TZDate(newStartDate.getTime() + eventDuration);
 
       updateEvent({
-        event: movingEvent.model,
+        event: movingEventUIModel.model,
         eventData: {
           start: newStartDate,
           end: newEndDate,
         },
       });
-
-      clearDraggingEvent();
-      clearCurrentGridPos();
     }
-  }, [
-    dateMatrix,
-    clearDraggingEvent,
-    currentGridPos,
-    isNotDragging,
-    movingEvent,
-    updateEvent,
-    clearCurrentGridPos,
-  ]);
 
-  return {
-    movingEvent: shadowEvent,
-    currentGridPos,
-  };
+    clearDraggingEvent();
+    clearCurrentGridPos();
+  }, isDraggingEnd);
+
+  return movingEventUIModel;
 }

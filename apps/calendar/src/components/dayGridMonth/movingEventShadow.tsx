@@ -15,13 +15,14 @@ type Props = Pick<ComponentProps<typeof DayGridMonth>, 'dateMatrix' | 'rowInfo'>
 };
 
 export function MovingEventShadow({ dateMatrix, gridPositionFinder, rowInfo, rowIndex }: Props) {
-  const { movingEvent, currentGridPos } = useDayGridMonthEventMove({
+  const movingEvent = useDayGridMonthEventMove({
     dateMatrix,
     rowInfo,
     gridPositionFinder,
+    rowIndex,
   });
 
-  if (currentGridPos?.rowIndex !== rowIndex || isNil(movingEvent)) {
+  if (isNil(movingEvent)) {
     return null;
   }
 

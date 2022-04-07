@@ -204,8 +204,9 @@ describe('useTimeGridEventMove', () => {
     },
   ];
 
-  cases.forEach(({ name, targetPosition, expected }) => {
-    it(`should change top & left value of moving event while dragging ${name}`, () => {
+  it.each(cases)(
+    'should change top & left value of moving event while dragging $name',
+    ({ targetPosition, expected }) => {
       // Given
       const result = setup();
       const event = screen.getByText('Event 1');
@@ -234,6 +235,6 @@ describe('useTimeGridEventMove', () => {
         expect(leftDiff).toBeCloseTo(expected.leftDiff, 1);
         expect(toFormat(result.current.nextStartTime, 'HH:mm')).toBe(expected.timeLabel);
       }
-    });
-  });
+    }
+  );
 });
