@@ -7,21 +7,25 @@ import { createThemeDispatch } from '@src/theme/dispatch';
 import { createMonthTheme } from '@src/theme/month';
 import { createWeekTheme } from '@src/theme/week';
 
+import { Options } from '@t/options';
 import { SetState } from '@t/store';
 import { ThemeDispatchers, ThemeStore } from '@t/theme';
 
-const themeStoreCreator = () => (set: SetState<ThemeStore>) => {
-  return {
-    ...createCommonTheme(),
-    ...createWeekTheme(),
-    ...createMonthTheme(),
-    dispatch: {
-      ...createThemeDispatch(set),
-    },
+const themeStoreCreator =
+  (themeOptions: Options['theme'] = {}) =>
+  (set: SetState<ThemeStore>) => {
+    return {
+      ...createCommonTheme(themeOptions?.common),
+      ...createWeekTheme(themeOptions?.week),
+      ...createMonthTheme(themeOptions?.month),
+      dispatch: {
+        ...createThemeDispatch(set),
+      },
+    };
   };
-};
 
-export const initThemeStore = () => createStore<ThemeStore>(themeStoreCreator());
+export const initThemeStore = (themeOptions: Options['theme'] = {}) =>
+  createStore<ThemeStore>(themeStoreCreator(themeOptions));
 
 const {
   StoreProvider: ThemeProvider,

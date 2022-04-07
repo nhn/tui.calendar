@@ -1,26 +1,14 @@
-import { ThemeState } from '@t/theme';
+import { DeepPartial } from 'ts-essentials';
 
-export function createCommonTheme(): { common: Required<ThemeState['common']> } {
+import { DEFAULT_COMMON_THEME } from '@src/constants/theme';
+import { mergeObject } from '@src/utils/object';
+
+import { CommonTheme, ThemeState } from '@t/theme';
+
+export function createCommonTheme(commonTheme: DeepPartial<CommonTheme> = {}): {
+  common: Required<ThemeState['common']>;
+} {
   return {
-    common: {
-      border: '1px solid #e5e5e5',
-      backgroundColor: 'white',
-      holiday: {
-        color: '#ff4040',
-      },
-      saturday: {
-        color: '#333',
-      },
-      dayname: {
-        color: '#333',
-      },
-      today: {
-        color: '#333',
-      },
-      gridSelection: {
-        backgroundColor: 'rgba(81, 92, 230, 0.05)',
-        border: '1px solid #515ce6',
-      },
-    },
+    common: mergeObject(DEFAULT_COMMON_THEME, commonTheme),
   };
 }

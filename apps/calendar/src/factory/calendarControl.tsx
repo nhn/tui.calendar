@@ -62,9 +62,11 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
       end: toStartOfDay(),
     };
 
-    this.theme = initThemeStore();
+    const initOptions = this.initOptions(options);
+
+    this.theme = initThemeStore(initOptions.theme);
     this.eventBus = new EventBusImpl<ExternalEventTypes>();
-    this.store = initCalendarStore(this.initOptions(options));
+    this.store = initCalendarStore(initOptions);
     addAttributeHooks();
   }
 

@@ -1,29 +1,14 @@
-import { ThemeState } from '@t/theme';
+import { DeepPartial } from 'ts-essentials';
 
-export function createMonthTheme(): { month: Required<ThemeState>['month'] } {
+import { DEFAULT_MONTH_THEME } from '@src/constants/theme';
+import { mergeObject } from '@src/utils/object';
+
+import { MonthTheme, ThemeState } from '@t/theme';
+
+export function createMonthTheme(monthTheme: DeepPartial<MonthTheme> = {}): {
+  month: Required<ThemeState>['month'];
+} {
   return {
-    month: {
-      dayname: {
-        borderLeft: 'none',
-        backgroundColor: 'inherit',
-      },
-      holidayExceptThisMonth: {
-        color: 'rgba(255, 64, 64, 0.4)',
-      },
-      dayExceptThisMonth: {
-        color: 'rgba(51, 51, 51, 0.4)',
-      },
-      weekend: {
-        backgroundColor: 'inherit',
-      },
-      moreView: {
-        border: '1px solid #d5d5d5',
-        boxShadow: '0 2px 6px 0 rgba(0, 0, 0, 0.1)',
-        backgroundColor: 'white',
-      },
-      moreViewTitle: {
-        backgroundColor: 'inherit',
-      },
-    },
+    month: mergeObject(DEFAULT_MONTH_THEME, monthTheme),
   };
 }
