@@ -23,15 +23,14 @@ describe('setCommonTheme', () => {
 
     return (
       <div>
-        <div>backgroundColor: {backgroundColor}</div>
-        <div>border: {border}</div>
+        <div style={{ backgroundColor, border }}>common theme</div>
       </div>
     );
   }
 
   beforeEach(() => {
-    beforeBackgroundColor = theme.getState().common?.backgroundColor ?? '';
-    beforeGridSelectionBorder = theme.getState().common?.gridSelection.border ?? '';
+    beforeBackgroundColor = theme.getState().common.backgroundColor ?? '';
+    beforeGridSelectionBorder = theme.getState().common.gridSelection.border ?? '';
     render(<CommonThemeComponent />, { theme });
   });
 
@@ -47,8 +46,8 @@ describe('setCommonTheme', () => {
     });
 
     // Then
-    expect(theme.getState().common?.backgroundColor).toBe(backgroundColor);
-    expect(theme.getState().common?.gridSelection.border).toBe(beforeGridSelectionBorder);
+    expect(theme.getState().common.backgroundColor).toBe(backgroundColor);
+    expect(theme.getState().common.gridSelection.border).toBe(beforeGridSelectionBorder);
   });
 
   it('should rerender component that use useTheme when theme is changed', () => {
@@ -63,7 +62,10 @@ describe('setCommonTheme', () => {
     });
 
     // Then
-    expect(screen.getByText(`backgroundColor: ${backgroundColor}`)).toBeInTheDocument();
+    expect(screen.getByText('common theme')).toHaveStyle({
+      backgroundColor,
+      border: beforeGridSelectionBorder,
+    });
   });
 
   it('should not change theme when unused theme is changed', () => {
@@ -80,8 +82,10 @@ describe('setCommonTheme', () => {
     });
 
     // Then
-    expect(screen.getByText(`backgroundColor: ${beforeBackgroundColor}`)).toBeInTheDocument();
-    expect(screen.getByText(`border: ${beforeGridSelectionBorder}`)).toBeInTheDocument();
+    expect(screen.getByText('common theme')).toHaveStyle({
+      backgroundColor: beforeBackgroundColor,
+      border: beforeGridSelectionBorder,
+    });
   });
 });
 
@@ -99,15 +103,14 @@ describe('setWeekTheme', () => {
 
     return (
       <div>
-        <div>pastTimeColor: {pastTimeColor}</div>
-        <div>currentTimeColor: {currentTimeColor}</div>
+        <div style={{ backgroundColor: pastTimeColor, color: currentTimeColor }}>week theme</div>
       </div>
     );
   }
 
   beforeEach(() => {
-    beforePastTimeColor = theme.getState().week?.pastTime.color ?? '';
-    beforeCurrentTimeColor = theme.getState().week?.currentTime.color ?? '';
+    beforePastTimeColor = theme.getState().week.pastTime.color ?? '';
+    beforeCurrentTimeColor = theme.getState().week.currentTime.color ?? '';
     render(<WeekThemeComponent />, { theme });
   });
 
@@ -125,8 +128,8 @@ describe('setWeekTheme', () => {
     });
 
     // Then
-    expect(theme.getState().week?.pastTime.color).toBe(color);
-    expect(theme.getState().week?.currentTime.color).toBe(beforeCurrentTimeColor);
+    expect(theme.getState().week.pastTime.color).toBe(color);
+    expect(theme.getState().week.currentTime.color).toBe(beforeCurrentTimeColor);
   });
 
   it('should rerender component that use useTheme when theme is changed', () => {
@@ -143,7 +146,10 @@ describe('setWeekTheme', () => {
     });
 
     // Then
-    expect(screen.getByText(`pastTimeColor: ${color}`)).toBeInTheDocument();
+    expect(screen.getByText('week theme')).toHaveStyle({
+      backgroundColor: color,
+      color: beforeCurrentTimeColor,
+    });
   });
 
   it('should not change theme when unused theme is changed', () => {
@@ -160,8 +166,10 @@ describe('setWeekTheme', () => {
     });
 
     // Then
-    expect(screen.getByText(`pastTimeColor: ${beforePastTimeColor}`)).toBeInTheDocument();
-    expect(screen.getByText(`currentTimeColor: ${beforeCurrentTimeColor}`)).toBeInTheDocument();
+    expect(screen.getByText('week theme')).toHaveStyle({
+      backgroundColor: beforePastTimeColor,
+      color: beforeCurrentTimeColor,
+    });
   });
 });
 
@@ -179,15 +187,18 @@ describe('setMonthTheme', () => {
 
     return (
       <div>
-        <div>dayExceptThisMonthColor: {dayExceptThisMonthColor}</div>
-        <div>holidayExceptThisMonthColor: {holidayExceptThisMonthColor}</div>
+        <div
+          style={{ backgroundColor: dayExceptThisMonthColor, color: holidayExceptThisMonthColor }}
+        >
+          month theme
+        </div>
       </div>
     );
   }
 
   beforeEach(() => {
-    beforeDayExceptThisMonthColor = theme.getState().month?.dayExceptThisMonth.color ?? '';
-    beforeHolidayExceptThisMonthColor = theme.getState().month?.holidayExceptThisMonth.color ?? '';
+    beforeDayExceptThisMonthColor = theme.getState().month.dayExceptThisMonth.color ?? '';
+    beforeHolidayExceptThisMonthColor = theme.getState().month.holidayExceptThisMonth.color ?? '';
     render(<MonthThemeComponent />, { theme });
   });
 
@@ -205,8 +216,8 @@ describe('setMonthTheme', () => {
     });
 
     // Then
-    expect(theme.getState().month?.dayExceptThisMonth.color).toBe(color);
-    expect(theme.getState().month?.holidayExceptThisMonth.color).toBe(
+    expect(theme.getState().month.dayExceptThisMonth.color).toBe(color);
+    expect(theme.getState().month.holidayExceptThisMonth.color).toBe(
       beforeHolidayExceptThisMonthColor
     );
   });
@@ -225,7 +236,10 @@ describe('setMonthTheme', () => {
     });
 
     // Then
-    expect(screen.getByText(`dayExceptThisMonthColor: ${color}`)).toBeInTheDocument();
+    expect(screen.getByText('month theme')).toHaveStyle({
+      backgroundColor: color,
+      color: beforeHolidayExceptThisMonthColor,
+    });
   });
 
   it('should not change theme when unused theme is changed', () => {
@@ -242,12 +256,10 @@ describe('setMonthTheme', () => {
     });
 
     // Then
-    expect(
-      screen.getByText(`dayExceptThisMonthColor: ${beforeDayExceptThisMonthColor}`)
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(`holidayExceptThisMonthColor: ${beforeHolidayExceptThisMonthColor}`)
-    ).toBeInTheDocument();
+    expect(screen.getByText('month theme')).toHaveStyle({
+      backgroundColor: beforeDayExceptThisMonthColor,
+      color: beforeHolidayExceptThisMonthColor,
+    });
   });
 });
 
@@ -260,23 +272,29 @@ describe('setTheme', () => {
 
   function ThemeComponent() {
     const { common, week, month } = useAllTheme();
-    const commonBorder = common?.border ?? '';
-    const weekTodayColor = week?.today.color ?? '';
-    const monthDayExceptThisMonthColor = month?.dayExceptThisMonth.color ?? '';
+    const commonBorder = common.border ?? '';
+    const weekTodayColor = week.today.color ?? '';
+    const monthDayExceptThisMonthColor = month.dayExceptThisMonth.color ?? '';
 
     return (
       <div>
-        <div>commonBorder: {commonBorder}</div>
-        <div>weekTodayColor: {weekTodayColor}</div>
-        <div>monthDayExceptThisMonthColor: {monthDayExceptThisMonthColor}</div>
+        <div
+          style={{
+            border: commonBorder,
+            backgroundColor: weekTodayColor,
+            color: monthDayExceptThisMonthColor,
+          }}
+        >
+          all theme
+        </div>
       </div>
     );
   }
 
   beforeEach(() => {
-    beforeCommonBorder = theme.getState().common?.border ?? '';
-    beforeWeekTodayColor = theme.getState().week?.today.color ?? '';
-    beforeMonthDayExceptThisMonthColor = theme.getState().month?.dayExceptThisMonth.color ?? '';
+    beforeCommonBorder = theme.getState().common.border ?? '';
+    beforeWeekTodayColor = theme.getState().week.today.color ?? '';
+    beforeMonthDayExceptThisMonthColor = theme.getState().month.dayExceptThisMonth.color ?? '';
     render(<ThemeComponent />, { theme });
   });
 
@@ -296,9 +314,9 @@ describe('setTheme', () => {
     });
 
     // Then
-    expect(theme.getState().common?.border).toBe(beforeCommonBorder);
-    expect(theme.getState().week?.today.color).toBe(color);
-    expect(theme.getState().month?.dayExceptThisMonth.color).toBe(
+    expect(theme.getState().common.border).toBe(beforeCommonBorder);
+    expect(theme.getState().week.today.color).toBe(color);
+    expect(theme.getState().month.dayExceptThisMonth.color).toBe(
       beforeMonthDayExceptThisMonthColor
     );
   });
@@ -319,7 +337,11 @@ describe('setTheme', () => {
     });
 
     // Then
-    expect(screen.getByText(`weekTodayColor: ${color}`)).toBeInTheDocument();
+    expect(screen.getByText('all theme')).toHaveStyle({
+      border: beforeCommonBorder,
+      backgroundColor: color,
+      color: beforeMonthDayExceptThisMonthColor,
+    });
   });
 
   it('should not change theme when unused theme is changed', () => {
@@ -338,10 +360,10 @@ describe('setTheme', () => {
     });
 
     // Then
-    expect(screen.getByText(`commonBorder: ${beforeCommonBorder}`)).toBeInTheDocument();
-    expect(screen.getByText(`weekTodayColor: ${beforeWeekTodayColor}`)).toBeInTheDocument();
-    expect(
-      screen.getByText(`monthDayExceptThisMonthColor: ${beforeMonthDayExceptThisMonthColor}`)
-    ).toBeInTheDocument();
+    expect(screen.getByText('all theme')).toHaveStyle({
+      border: beforeCommonBorder,
+      backgroundColor: beforeWeekTodayColor,
+      color: beforeMonthDayExceptThisMonthColor,
+    });
   });
 });
