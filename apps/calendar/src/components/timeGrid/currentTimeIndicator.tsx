@@ -21,7 +21,7 @@ interface Props {
 }
 
 export function CurrentTimeIndicator({ top, columnWidth, columnCount, columnIndex }: Props) {
-  const color = useTheme(useCallback((theme) => theme.week.currentTime.color, []));
+  const currentTimeColor = useTheme(useCallback((theme) => theme.week.currentTime.color, []));
 
   const leftLine = {
     left: toPercent(columnWidth * columnIndex),
@@ -38,14 +38,20 @@ export function CurrentTimeIndicator({ top, columnWidth, columnCount, columnInde
       style={{ top: toPercent(top) }}
       data-testid="timegrid-current-time-indicator"
     >
-      <div className={classNames.left} style={{ width: leftLine.width, borderColor: color }} />
-      <div className={classNames.marker} style={{ left: leftLine.left, backgroundColor: color }} />
+      <div
+        className={classNames.left}
+        style={{ width: leftLine.width, borderColor: currentTimeColor }}
+      />
+      <div
+        className={classNames.marker}
+        style={{ left: leftLine.left, backgroundColor: currentTimeColor }}
+      />
       <div
         className={classNames.today}
         style={{
           left: leftLine.left,
           width: toPercent(columnWidth),
-          borderColor: color,
+          borderColor: currentTimeColor,
         }}
       />
       <div
