@@ -1,16 +1,20 @@
+import { DeepPartial } from 'ts-essentials';
+
+import { DEFAULT_WEEK_THEME } from '@src/constants/theme';
 import { initThemeStore } from '@src/contexts/themeStore';
 import { useDayGridRowTitleStyle } from '@src/hooks/dayGridWeek/useDayGridRowTitleStyle';
 import { act, renderHook } from '@src/test/utils';
-import { createWeekTheme } from '@src/theme/week';
+
+import { InternalStoreAPI } from '@t/store';
+import { ThemeStore, WeekTheme } from '@t/theme';
 
 describe('useDayGridRowTitleStyle', () => {
   const timesWidth = 120;
   const timezonesCount = 3;
   const width = timesWidth * timezonesCount;
-  const defaultWeekTheme = createWeekTheme().week;
-  const { dayGridLeft } = defaultWeekTheme;
-  const theme = initThemeStore();
-  const { setWeekTheme } = theme.getState().dispatch;
+  const { dayGridLeft } = DEFAULT_WEEK_THEME;
+  let theme: InternalStoreAPI<ThemeStore>;
+  let setWeekThemeDispatcher: (weekTheme: DeepPartial<WeekTheme>) => void;
   const setup = () => {
     const { result } = renderHook(() => useDayGridRowTitleStyle(timesWidth, timezonesCount), {
       theme,
@@ -20,9 +24,8 @@ describe('useDayGridRowTitleStyle', () => {
   };
 
   beforeEach(() => {
-    act(() => {
-      setWeekTheme(defaultWeekTheme);
-    });
+    theme = initThemeStore();
+    setWeekThemeDispatcher = theme.getState().dispatch.setWeekTheme;
   });
 
   it('should return default style', () => {
@@ -45,7 +48,7 @@ describe('useDayGridRowTitleStyle', () => {
     // When
     const borderRight = '1px solid red';
     act(() => {
-      setWeekTheme({
+      setWeekThemeDispatcher({
         dayGridLeft: {
           borderRight,
         },
@@ -67,7 +70,7 @@ describe('useDayGridRowTitleStyle', () => {
     // When
     const backgroundColor = '#e5e5e5';
     act(() => {
-      setWeekTheme({
+      setWeekThemeDispatcher({
         dayGridLeft: {
           backgroundColor,
         },
