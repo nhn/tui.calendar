@@ -1,5 +1,6 @@
 import { useCallback } from 'preact/hooks';
 
+import { commonThemeSelector, monthThemeSelector, weekThemeSelector } from '@src/selectors/theme';
 import { createStoreContext } from '@src/store';
 import { createStore } from '@src/store/internal';
 import { createCommonTheme } from '@src/theme/common';
@@ -9,7 +10,14 @@ import { createWeekTheme } from '@src/theme/week';
 
 import { Options } from '@t/options';
 import { SetState } from '@t/store';
-import { ThemeDispatchers, ThemeStore } from '@t/theme';
+import {
+  CommonTheme,
+  MonthTheme,
+  ThemeDispatchers,
+  ThemeState,
+  ThemeStore,
+  WeekTheme,
+} from '@t/theme';
 
 const themeStoreCreator =
   (themeOptions: Options['theme'] = {}) =>
@@ -36,4 +44,29 @@ export { ThemeProvider, useInternalThemeStore, useTheme };
 
 export function useThemeDispatch(): ThemeDispatchers {
   return useTheme(useCallback((state) => state.dispatch, []));
+}
+
+export function useCommonTheme(): CommonTheme {
+  return useTheme(commonThemeSelector);
+}
+
+export function useWeekTheme(): WeekTheme {
+  return useTheme(weekThemeSelector);
+}
+
+export function useMonthTheme(): MonthTheme {
+  return useTheme(monthThemeSelector);
+}
+
+export function useAllTheme(): ThemeState {
+  return useTheme(
+    useCallback(
+      ({ common, week, month }) => ({
+        common,
+        week,
+        month,
+      }),
+      []
+    )
+  );
 }

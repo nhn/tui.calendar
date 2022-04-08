@@ -78,9 +78,9 @@ type MonthTheme = {
 };
 
 type ThemeState = {
-  common?: CommonTheme;
-  week?: WeekTheme;
-  month?: MonthTheme;
+  common: CommonTheme;
+  week: WeekTheme;
+  month: MonthTheme;
 };
 
 type ThemeDispatchers = {

@@ -1,9 +1,9 @@
 import { h } from 'preact';
+import { useCallback } from 'preact/hooks';
 
 import { addTimeGridPrefix } from '@src/components/timeGrid';
 import { useTheme } from '@src/contexts/themeStore';
 import { cls, toPercent } from '@src/helpers/css';
-import { weekThemeSelector } from '@src/selectors/theme';
 
 const classNames = {
   line: cls(addTimeGridPrefix('current-time-line')),
@@ -21,7 +21,7 @@ interface Props {
 }
 
 export function CurrentTimeIndicator({ top, columnWidth, columnCount, columnIndex }: Props) {
-  const { currentTime } = useTheme(weekThemeSelector);
+  const color = useTheme(useCallback((theme) => theme.week.currentTime.color, []));
 
   const leftLine = {
     left: toPercent(columnWidth * columnIndex),
@@ -31,7 +31,6 @@ export function CurrentTimeIndicator({ top, columnWidth, columnCount, columnInde
     left: toPercent(columnWidth * (columnIndex + 1)),
     width: toPercent(columnWidth * (columnCount - columnIndex + 1)),
   };
-  const currentTimeColor = currentTime.color;
 
   return (
     <div
@@ -39,20 +38,14 @@ export function CurrentTimeIndicator({ top, columnWidth, columnCount, columnInde
       style={{ top: toPercent(top) }}
       data-testid="timegrid-current-time-indicator"
     >
-      <div
-        className={classNames.left}
-        style={{ width: leftLine.width, borderColor: currentTimeColor }}
-      />
-      <div
-        className={classNames.marker}
-        style={{ left: leftLine.left, backgroundColor: currentTimeColor }}
-      />
+      <div className={classNames.left} style={{ width: leftLine.width, borderColor: color }} />
+      <div className={classNames.marker} style={{ left: leftLine.left, backgroundColor: color }} />
       <div
         className={classNames.today}
         style={{
           left: leftLine.left,
           width: toPercent(columnWidth),
-          borderColor: currentTimeColor,
+          borderColor: color,
         }}
       />
       <div

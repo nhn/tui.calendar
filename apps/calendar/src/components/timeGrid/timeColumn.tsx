@@ -1,13 +1,12 @@
 import { h } from 'preact';
 import { memo } from 'preact/compat';
-import { useMemo } from 'preact/hooks';
+import { useCallback, useMemo } from 'preact/hooks';
 
 import { Template } from '@src/components/template';
 import { addTimeGridPrefix } from '@src/components/timeGrid';
 import { CurrentTimeLabel } from '@src/components/timeGrid/currentTimeLabel';
 import { useTheme } from '@src/contexts/themeStore';
 import { cls, toPercent } from '@src/helpers/css';
-import { weekThemeSelector } from '@src/selectors/theme';
 import TZDate from '@src/time/date';
 import { setTimeStrToDate } from '@src/time/datetime';
 import { isNil, isPresent } from '@src/utils/type';
@@ -47,9 +46,9 @@ export const TimeColumn = memo(function TimeColumn({
     return rowTop - rowHeight <= indicatorTop && indicatorTop <= rowTop + rowHeight;
   };
 
-  const {
-    timeGridLeft: { borderRight, backgroundColor },
-  } = useTheme(weekThemeSelector);
+  const { borderRight, backgroundColor } = useTheme(
+    useCallback((theme) => theme.week.timeGridLeft, [])
+  );
 
   const rowsByHour = useMemo(
     () => timeGridRows.filter((_, index) => index % 2 === 0 || index === timeGridRows.length - 1),

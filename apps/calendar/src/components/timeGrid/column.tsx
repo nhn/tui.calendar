@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { memo } from 'preact/compat';
-import { useMemo } from 'preact/hooks';
+import { useCallback, useMemo } from 'preact/hooks';
 
 import { BackgroundEvent } from '@src/components/events/backgroundEvent';
 import { TimeEvent } from '@src/components/events/timeEvent';
@@ -10,7 +10,6 @@ import { getTopHeightByTime } from '@src/controller/times';
 import { cls, toPercent } from '@src/helpers/css';
 import { isBackgroundEvent } from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
-import { weekThemeSelector } from '@src/selectors/theme';
 import TZDate from '@src/time/date';
 import { setTimeStrToDate } from '@src/time/datetime';
 import { first, last } from '@src/utils/array';
@@ -95,9 +94,7 @@ export const Column = memo(function Column({
   isLastColumn,
 }: Props) {
   const { rows: timeGridRows } = timeGridData;
-  const {
-    timeGrid: { borderRight },
-  } = useTheme(weekThemeSelector);
+  const borderRight = useTheme(useCallback((theme) => theme.week.timeGrid.borderRight, []));
 
   const [startTime, endTime] = useMemo(() => {
     const { startTime: startTimeStr } = first(timeGridRows);

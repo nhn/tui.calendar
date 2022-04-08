@@ -1,8 +1,9 @@
+import { useCallback } from 'preact/hooks';
+
 import { useTheme } from '@src/contexts/themeStore';
-import { weekThemeSelector } from '@src/selectors/theme';
 
 export function useDayGridRowTitleStyle(timesWidth: number, timezonesCount: number) {
-  const { dayGridLeft } = useTheme(weekThemeSelector);
+  const dayGridLeft = useTheme(useCallback((theme) => theme.week.dayGridLeft, []));
   const columnWidth = timesWidth * timezonesCount;
 
   return { ...dayGridLeft, width: columnWidth };

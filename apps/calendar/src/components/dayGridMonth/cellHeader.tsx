@@ -4,10 +4,9 @@ import { useMemo } from 'preact/hooks';
 import { MoreEventsButton } from '@src/components/dayGridMonth/moreEventsButton';
 import { Template } from '@src/components/template';
 import { useStore } from '@src/contexts/calendarStore';
-import { useTheme } from '@src/contexts/themeStore';
+import { useCommonTheme, useMonthTheme } from '@src/contexts/themeStore';
 import { cls } from '@src/helpers/css';
 import { viewSelector } from '@src/selectors';
-import { commonThemeSelector, monthThemeSelector } from '@src/selectors/theme';
 import TZDate from '@src/time/date';
 import { Day, toFormat } from '@src/time/datetime';
 
@@ -55,8 +54,8 @@ function getDateColor({
 }
 
 function useCellHeaderTheme() {
-  const common = useTheme(commonThemeSelector);
-  const month = useTheme(monthThemeSelector);
+  const common = useCommonTheme();
+  const month = useMonthTheme();
 
   return useMemo(() => ({ common, month }), [common, month]);
 }

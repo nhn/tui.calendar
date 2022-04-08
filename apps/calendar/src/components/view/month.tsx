@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useMemo } from 'preact/hooks';
+import { useCallback, useMemo } from 'preact/hooks';
 
 import { GridHeader } from '@src/components/dayGridCommon/gridHeader';
 import { DayGridMonth } from '@src/components/dayGridMonth/dayGridMonth';
@@ -10,7 +10,6 @@ import { cls } from '@src/helpers/css';
 import { capitalizeDayName } from '@src/helpers/dayName';
 import { createDateMatrixOfMonth } from '@src/helpers/grid';
 import { optionsSelector, viewSelector } from '@src/selectors';
-import { monthThemeSelector } from '@src/selectors/theme';
 import { getRowStyleInfo, isWeekend } from '@src/time/datetime';
 
 import { MonthOptions } from '@t/options';
@@ -37,7 +36,7 @@ function getDayNames(options: CalendarStore['options']) {
 export function Month() {
   const options = useStore(optionsSelector);
   const { renderDate } = useStore(viewSelector);
-  const { dayname: daynameTheme } = useTheme(monthThemeSelector);
+  const daynameTheme = useTheme(useCallback((theme) => theme.month.dayname, []));
 
   const dayNames = getDayNames(options);
   const monthOptions = options.month as Required<MonthOptions>;

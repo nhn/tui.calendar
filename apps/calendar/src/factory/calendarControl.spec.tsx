@@ -4,14 +4,13 @@ import { useEffect } from 'preact/hooks';
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import { Layout } from '@src/components/layout';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
-import { useTheme } from '@src/contexts/themeStore';
+import { useAllTheme } from '@src/contexts/themeStore';
 import CalendarControl from '@src/factory/calendarControl';
 import Month from '@src/factory/month';
 import { isVisibleEvent } from '@src/helpers/events';
 import { getWeekDates } from '@src/helpers/grid';
 import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
-import { commonThemeSelector, monthThemeSelector, weekThemeSelector } from '@src/selectors/theme';
 import { act, screen } from '@src/test/utils';
 import TZDate from '@src/time/date';
 import { addDate, isSameDate, subtractDate } from '@src/time/datetime';
@@ -626,13 +625,6 @@ describe('prev/next/today', () => {
 });
 
 describe('setTheme', () => {
-  function useAllTheme() {
-    const common = useTheme(commonThemeSelector);
-    const week = useTheme(weekThemeSelector);
-    const month = useTheme(monthThemeSelector);
-
-    return { common, week, month };
-  }
   function MockThemeView() {
     const { common, week, month } = useAllTheme();
     const {

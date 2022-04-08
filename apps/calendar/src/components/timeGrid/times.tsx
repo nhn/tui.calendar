@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useEffect, useRef } from 'preact/hooks';
+import { useCallback, useEffect, useRef } from 'preact/hooks';
 
 import range from 'tui-code-snippet/array/range';
 import addClass from 'tui-code-snippet/domUtil/addClass';
@@ -11,7 +11,6 @@ import { CurrentTimeLabel } from '@src/components/timeGrid/currentTimeLabel';
 import { useTheme } from '@src/contexts/themeStore';
 import { getTopPercentByTime } from '@src/controller/times';
 import { cls } from '@src/helpers/css';
-import { weekThemeSelector } from '@src/selectors/theme';
 import { TemplateName } from '@src/template/default';
 import TZDate from '@src/time/date';
 import { isSameDate, isSameMonth, isSameYear, toFormat } from '@src/time/datetime';
@@ -106,8 +105,7 @@ export function Times({
   end = times.length - 1,
   timeTemplate,
 }: Props) {
-  const weekTheme = useTheme(weekThemeSelector);
-  const pastTimeColor = weekTheme.pastTime.color;
+  const pastTimeColor = useTheme(useCallback((theme) => theme.week.pastTime.color, []));
   const filteredTimes = times.slice(start, end + 1);
   const timesLength = filteredTimes.length - 1;
   const top = getTopPercentByTime(currentTime, first(filteredTimes).date, last(filteredTimes).date);

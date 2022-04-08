@@ -1,12 +1,12 @@
 import { h } from 'preact';
 import { memo } from 'preact/compat';
+import { useCallback } from 'preact/hooks';
 
 import { GridCell } from '@src/components/dayGridMonth/gridCell';
 import { useTheme } from '@src/contexts/themeStore';
 import { cls, toPercent } from '@src/helpers/css';
 import { useDOMNode } from '@src/hooks/common/useDOMNode';
 import EventUIModel from '@src/model/eventUIModel';
-import { commonThemeSelector } from '@src/selectors/theme';
 import TZDate from '@src/time/date';
 import { toFormat, toStartOfDay } from '@src/time/datetime';
 
@@ -28,14 +28,14 @@ export const GridRow = memo(function GridRow({
   height = 0,
 }: Props) {
   const [container, containerRefCallback] = useDOMNode<HTMLDivElement>();
-  const common = useTheme(commonThemeSelector);
+  const border = useTheme(useCallback((theme) => theme.common.border, []));
 
   return (
     <div
       className={cls('weekday-grid')}
       style={{
         height: cssHeight ?? height,
-        borderTop: common.border,
+        borderTop: border,
       }}
       ref={containerRefCallback}
     >

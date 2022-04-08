@@ -15,10 +15,9 @@ import {
 import { useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
 import { useFloatingLayer } from '@src/contexts/floatingLayer';
-import { useTheme } from '@src/contexts/themeStore';
+import { useMonthTheme } from '@src/contexts/themeStore';
 import { cls } from '@src/helpers/css';
 import { seeMorePopupParamSelector } from '@src/selectors/popup';
-import { monthThemeSelector } from '@src/selectors/theme';
 import { toFormat } from '@src/time/datetime';
 import { isNil } from '@src/utils/type';
 
@@ -32,7 +31,7 @@ const classNames = {
 export function SeeMoreEventsPopup() {
   const popupParams = useStore(seeMorePopupParamSelector);
   const { date, events = [], popupPosition } = popupParams ?? {};
-  const { moreView, moreViewTitle } = useTheme(monthThemeSelector);
+  const { moreView, moreViewTitle } = useMonthTheme();
   const seeMorePopupSlot = useFloatingLayer('seeMorePopupSlot');
   const eventBus = useEventBus();
   const moreEventsPopupContainerRef = useRef(null);

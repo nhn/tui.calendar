@@ -1,7 +1,12 @@
 import { h } from 'preact';
 
-import { initThemeStore, useTheme } from '@src/contexts/themeStore';
-import { commonThemeSelector, monthThemeSelector, weekThemeSelector } from '@src/selectors/theme';
+import {
+  initThemeStore,
+  useAllTheme,
+  useCommonTheme,
+  useMonthTheme,
+  useWeekTheme,
+} from '@src/contexts/themeStore';
 import { act, render, screen } from '@src/test/utils';
 
 describe('setCommonTheme', () => {
@@ -14,7 +19,7 @@ describe('setCommonTheme', () => {
     const {
       backgroundColor,
       gridSelection: { border },
-    } = useTheme(commonThemeSelector);
+    } = useCommonTheme();
 
     return (
       <div>
@@ -90,7 +95,7 @@ describe('setWeekTheme', () => {
     const {
       pastTime: { color: pastTimeColor },
       currentTime: { color: currentTimeColor },
-    } = useTheme(weekThemeSelector);
+    } = useWeekTheme();
 
     return (
       <div>
@@ -170,7 +175,7 @@ describe('setMonthTheme', () => {
     const {
       dayExceptThisMonth: { color: dayExceptThisMonthColor },
       holidayExceptThisMonth: { color: holidayExceptThisMonthColor },
-    } = useTheme(monthThemeSelector);
+    } = useMonthTheme();
 
     return (
       <div>
@@ -254,7 +259,7 @@ describe('setTheme', () => {
   let beforeMonthDayExceptThisMonthColor: string;
 
   function ThemeComponent() {
-    const { common, week, month } = useTheme((themeState) => themeState);
+    const { common, week, month } = useAllTheme();
     const commonBorder = common?.border ?? '';
     const weekTodayColor = week?.today.color ?? '';
     const monthDayExceptThisMonthColor = month?.dayExceptThisMonth.color ?? '';

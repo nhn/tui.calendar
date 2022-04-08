@@ -1,8 +1,8 @@
 import { h } from 'preact';
+import { useCallback } from 'preact/hooks';
 
 import { useTheme } from '@src/contexts/themeStore';
 import { cls } from '@src/helpers/css';
-import { weekThemeSelector } from '@src/selectors/theme';
 
 type Props = {
   isLastCell: boolean;
@@ -56,9 +56,7 @@ export function GridCell({
   onClickCollapseButton,
   isLastCell,
 }: Props) {
-  const {
-    dayGrid: { borderRight, backgroundColor },
-  } = useTheme(weekThemeSelector);
+  const { borderRight, backgroundColor } = useTheme(useCallback((theme) => theme.week.dayGrid, []));
   const style = {
     width,
     left,
