@@ -1,3 +1,5 @@
+import { DeepPartial } from 'ts-essentials';
+
 import TZDate from '@src/time/date';
 import { isObject } from '@src/utils/type';
 
@@ -11,10 +13,6 @@ export function pick<T extends object, K extends keyof T>(obj: T, ...propNames: 
   }, {} as Pick<T, K>);
 }
 
-type NestedPartial<Obj> = {
-  [K in keyof Obj]?: NestedPartial<Obj[K]>;
-};
-
 /**
  * Merge two objects together. And It has some pitfalls.
  *
@@ -26,25 +24,30 @@ type NestedPartial<Obj> = {
  *
  * Since it mutates the target object, avoid using it outside immer `produce` function.
  */
-export function mergeObject<Target, Source extends NestedPartial<Target>>(
+export function mergeObject<Target, Source extends DeepPartial<Target>>(
   target: Target,
-  source: Source
+  source: Source = {} as Source
 ) {
   if (!isObject(source)) {
     return target;
   }
 
   Object.keys(source).forEach((k) => {
-    const key = k as keyof Target;
+    const targetKey = k as keyof Target;
+    const sourceKey = k as keyof Source;
+
     if (
-      !Array.isArray(source[key]) &&
-      isObject(target[key]) &&
-      isObject(source[key]) &&
-      !(source[key] instanceof TZDate)
+      !Array.isArray(source[sourceKey]) &&
+      isObject(target[targetKey]) &&
+      isObject(source[sourceKey]) &&
+      !(source[sourceKey] instanceof TZDate)
     ) {
-      target[key] = mergeObject(target[key], source[key]);
+      target[targetKey] = mergeObject(
+        target[targetKey],
+        source[sourceKey] as DeepPartial<Target[keyof Target]>
+      );
     } else {
-      target[key] = source[key] as unknown as Target[keyof Target];
+      target[targetKey] = source[sourceKey] as unknown as Target[keyof Target];
     }
   });
 

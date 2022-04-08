@@ -1,6 +1,7 @@
 import { h } from 'preact';
+import { useCallback } from 'preact/hooks';
 
-import { useTheme } from '@src/contexts/theme';
+import { useTheme } from '@src/contexts/themeStore';
 import { cls } from '@src/helpers/css';
 
 type Props = {
@@ -55,11 +56,7 @@ export function GridCell({
   onClickCollapseButton,
   isLastCell,
 }: Props) {
-  const {
-    week: {
-      dayGrid: { borderRight, backgroundColor },
-    },
-  } = useTheme();
+  const { borderRight, backgroundColor } = useTheme(useCallback((theme) => theme.week.dayGrid, []));
   const style = {
     width,
     left,

@@ -4,7 +4,7 @@ import { useEffect } from 'preact/hooks';
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import { Layout } from '@src/components/layout';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
-import { useTheme } from '@src/contexts/theme';
+import { useAllTheme } from '@src/contexts/themeStore';
 import CalendarControl from '@src/factory/calendarControl';
 import Month from '@src/factory/month';
 import { isVisibleEvent } from '@src/helpers/events';
@@ -625,7 +625,7 @@ describe('prev/next/today', () => {
 
 describe('setTheme', () => {
   function MockThemeView() {
-    const { common, week, month } = useTheme();
+    const { common, week, month } = useAllTheme();
     const {
       gridSelection: { backgroundColor },
     } = common;
@@ -666,7 +666,7 @@ describe('setTheme', () => {
     cleanup();
   });
 
-  it('should change theme value', () => {
+  it('should change theme and rerender components', () => {
     // Given
     const gridSelectionBackgroundColor = '#ff0000';
     const currentTimeColor = '#00ff00';
@@ -681,9 +681,15 @@ describe('setTheme', () => {
     // When
     act(() => {
       mockCalendarTheme.setTheme({
-        'common.gridSelection.backgroundColor': gridSelectionBackgroundColor,
-        'week.currentTime.color': currentTimeColor,
-        'month.moreView.boxShadow': moreViewBoxShadow,
+        common: {
+          gridSelection: { backgroundColor: gridSelectionBackgroundColor },
+        },
+        week: {
+          currentTime: { color: currentTimeColor },
+        },
+        month: {
+          moreView: { boxShadow: moreViewBoxShadow },
+        },
       });
     });
 

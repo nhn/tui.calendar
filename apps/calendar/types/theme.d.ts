@@ -1,3 +1,5 @@
+import { DeepPartial } from 'ts-essentials';
+
 type CommonTheme = {
   backgroundColor: string;
   border: string;
@@ -11,15 +13,14 @@ type CommonTheme = {
   today: { color: string };
 };
 
-type ScheduleTheme = {
-  borderRadius: string;
-  height: string;
-  marginLeft: string;
-  marginRight: string;
-  marginTop: string;
+type WeekDayNameTheme = {
+  borderLeft: string;
+  borderTop: string;
+  borderBottom: string;
+  backgroundColor: string;
 };
 
-type DayNameTheme = {
+type MonthDayNameTheme = {
   borderLeft: string;
   backgroundColor: string;
 };
@@ -40,20 +41,30 @@ type TimeGridLeftTheme = {
 };
 
 type WeekTheme = {
-  dayname: DayNameTheme;
-  dayGridSchedule: ScheduleTheme;
+  dayname: WeekDayNameTheme;
   dayGrid: DayGridTheme;
   dayGridLeft: DayGridLeftTheme;
   timeGrid: { borderRight: string };
   timeGridLeft: TimeGridLeftTheme;
+  timeGridLeftAdditionalTimezone: { backgroundColor: string };
+  timeGridHalfHour: { borderBottom: string };
   currentTime: { color: string };
+  currentTimeLinePast: { border: string };
+  currentTimeLineBullet: { backgroundColor: string };
+  currentTimeLineToday: { border: string };
+  currentTimeLineFuture: { border: string };
   pastTime: { color: string };
   futureTime: { color: string };
+  weekend: { backgroundColor: string };
+  today: { color: string; backgroundColor: string };
+  pastDay: { color: string };
+  panelResizer: { border: string };
+  gridSelection: { color: string };
 };
 
 type MonthTheme = {
   dayExceptThisMonth: { color: string };
-  dayname: DayNameTheme;
+  dayname: MonthDayNameTheme;
   holidayExceptThisMonth: { color: string };
   moreView: {
     backgroundColor: string;
@@ -64,4 +75,21 @@ type MonthTheme = {
     backgroundColor: string;
   };
   weekend: { backgroundColor: string };
+};
+
+type ThemeState = {
+  common: CommonTheme;
+  week: WeekTheme;
+  month: MonthTheme;
+};
+
+type ThemeDispatchers = {
+  setTheme: (theme: DeepPartial<ThemeState>) => void;
+  setCommonTheme: (commonTheme: DeepPartial<CommonTheme>) => void;
+  setWeekTheme: (weekTheme: DeepPartial<WeekTheme>) => void;
+  setMonthTheme: (monthTheme: DeepPartial<MonthTheme>) => void;
+};
+
+type ThemeStore = ThemeState & {
+  dispatch: ThemeDispatchers;
 };

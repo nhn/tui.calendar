@@ -1,11 +1,11 @@
 import { h } from 'preact';
-import { useMemo } from 'preact/hooks';
+import { useCallback, useMemo } from 'preact/hooks';
 
 import { GridHeader } from '@src/components/dayGridCommon/gridHeader';
 import { DayGridMonth } from '@src/components/dayGridMonth/dayGridMonth';
 import { Layout } from '@src/components/layout';
 import { useStore } from '@src/contexts/calendarStore';
-import { useTheme } from '@src/contexts/theme';
+import { useTheme } from '@src/contexts/themeStore';
 import { cls } from '@src/helpers/css';
 import { capitalizeDayName } from '@src/helpers/dayName';
 import { createDateMatrixOfMonth } from '@src/helpers/grid';
@@ -36,7 +36,7 @@ function getDayNames(options: CalendarStore['options']) {
 export function Month() {
   const options = useStore(optionsSelector);
   const { renderDate } = useStore(viewSelector);
-  const theme = useTheme();
+  const daynameTheme = useTheme(useCallback((theme) => theme.month.dayname, []));
 
   const dayNames = getDayNames(options);
   const monthOptions = options.month as Required<MonthOptions>;
@@ -60,7 +60,7 @@ export function Month() {
       <GridHeader
         templateType="monthDayname"
         dayNames={dayNames}
-        theme={theme.month.dayname}
+        theme={daynameTheme}
         options={monthOptions}
         rowStyleInfo={rowStyleInfo}
         type="month"

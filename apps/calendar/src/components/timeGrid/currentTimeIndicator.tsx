@@ -1,7 +1,8 @@
 import { h } from 'preact';
+import { useCallback } from 'preact/hooks';
 
 import { addTimeGridPrefix } from '@src/components/timeGrid';
-import { useTheme } from '@src/contexts/theme';
+import { useTheme } from '@src/contexts/themeStore';
 import { cls, toPercent } from '@src/helpers/css';
 
 const classNames = {
@@ -20,9 +21,7 @@ interface Props {
 }
 
 export function CurrentTimeIndicator({ top, columnWidth, columnCount, columnIndex }: Props) {
-  const {
-    week: { currentTime },
-  } = useTheme();
+  const currentTimeColor = useTheme(useCallback((theme) => theme.week.currentTime.color, []));
 
   const leftLine = {
     left: toPercent(columnWidth * columnIndex),
@@ -32,7 +31,6 @@ export function CurrentTimeIndicator({ top, columnWidth, columnCount, columnInde
     left: toPercent(columnWidth * (columnIndex + 1)),
     width: toPercent(columnWidth * (columnCount - columnIndex + 1)),
   };
-  const currentTimeColor = currentTime.color;
 
   return (
     <div

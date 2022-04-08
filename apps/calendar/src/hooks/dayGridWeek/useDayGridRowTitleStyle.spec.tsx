@@ -1,64 +1,86 @@
+import { DeepPartial } from 'ts-essentials';
+
+import { DEFAULT_WEEK_THEME } from '@src/constants/theme';
+import { initThemeStore } from '@src/contexts/themeStore';
 import { useDayGridRowTitleStyle } from '@src/hooks/dayGridWeek/useDayGridRowTitleStyle';
-import { renderHook } from '@src/test/utils';
-import Theme from '@src/theme';
+import { act, renderHook } from '@src/test/utils';
+
+import { InternalStoreAPI } from '@t/store';
+import { ThemeStore, WeekTheme } from '@t/theme';
 
 describe('useDayGridRowTitleStyle', () => {
-  let theme: Theme;
   const timesWidth = 120;
   const timezonesCount = 3;
-  const setup = (newTheme: Theme) => {
+  const width = timesWidth * timezonesCount;
+  const { dayGridLeft } = DEFAULT_WEEK_THEME;
+  let theme: InternalStoreAPI<ThemeStore>;
+  let setWeekThemeDispatcher: (weekTheme: DeepPartial<WeekTheme>) => void;
+  const setup = () => {
     const { result } = renderHook(() => useDayGridRowTitleStyle(timesWidth, timezonesCount), {
-      theme: newTheme,
+      theme,
     });
 
     return result;
   };
 
   beforeEach(() => {
-    theme = new Theme();
+    theme = initThemeStore();
+    setWeekThemeDispatcher = theme.getState().dispatch.setWeekTheme;
   });
 
   it('should return default style', () => {
     // Given
+    const result = setup();
 
     // When
-    const result = setup(theme);
 
     // Then
     expect(result.current).toEqual({
-      ...theme.week.dayGridLeft,
-      width: timesWidth * timezonesCount,
+      ...dayGridLeft,
+      width,
     });
   });
 
   it('should return style with custom borderRight', () => {
     // Given
-    const borderRight = '1px solid red';
-    theme.setStyle('week.dayGridLeft.borderRight', borderRight);
+    const result = setup();
 
     // When
-    const result = setup(theme);
+    const borderRight = '1px solid red';
+    act(() => {
+      setWeekThemeDispatcher({
+        dayGridLeft: {
+          borderRight,
+        },
+      });
+    });
 
     // Then
     expect(result.current).toEqual({
-      ...theme.week.dayGridLeft,
-      width: timesWidth * timezonesCount,
+      ...dayGridLeft,
+      width,
       borderRight,
     });
   });
 
   it('should return style with custom backgroundColor', () => {
     // Given
-    const backgroundColor = '#e5e5e5';
-    theme.setStyle('week.dayGridLeft.backgroundColor', backgroundColor);
+    const result = setup();
 
     // When
-    const result = setup(theme);
+    const backgroundColor = '#e5e5e5';
+    act(() => {
+      setWeekThemeDispatcher({
+        dayGridLeft: {
+          backgroundColor,
+        },
+      });
+    });
 
     // Then
     expect(result.current).toEqual({
-      ...theme.week.dayGridLeft,
-      width: timesWidth * timezonesCount,
+      ...dayGridLeft,
+      width,
       backgroundColor,
     });
   });

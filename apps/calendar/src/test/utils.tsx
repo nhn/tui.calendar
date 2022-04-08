@@ -7,24 +7,25 @@ import { RenderHookOptions } from '@testing-library/preact-hooks/lib/renderHook'
 
 import { CalendarContainer } from '@src/calendarContainer';
 import { initCalendarStore } from '@src/contexts/calendarStore';
-import Theme from '@src/theme';
+import { initThemeStore } from '@src/contexts/themeStore';
 import { EventBus, EventBusImpl } from '@src/utils/eventBus';
 
 import { PropsWithChildren } from '@t/components/common';
 import { CalendarStore, InternalStoreAPI } from '@t/store';
+import { ThemeStore } from '@t/theme';
 
 function render(
   component: Parameters<typeof ptlRender>[0],
   {
     eventBus = new EventBusImpl<any>(),
     store = initCalendarStore(),
-    theme = new Theme(),
+    theme = initThemeStore(),
     ...options
   }: Parameters<typeof ptlRender>[1] &
     Partial<{
       eventBus: EventBus<any>;
       store: InternalStoreAPI<CalendarStore>;
-      theme: Theme;
+      theme: InternalStoreAPI<ThemeStore>;
     }> = {}
 ) {
   const Wrapper = ({ children }: PropsWithChildren) => (
@@ -41,13 +42,13 @@ function renderHook<P, R>(
   {
     eventBus = new EventBusImpl<any>(),
     store = initCalendarStore(),
-    theme = new Theme(),
+    theme = initThemeStore(),
     ...options
   }: RenderHookOptions<P> &
     Partial<{
       eventBus: EventBus<any>;
       store: InternalStoreAPI<CalendarStore>;
-      theme: Theme;
+      theme: InternalStoreAPI<ThemeStore>;
     }> = {}
 ) {
   const Wrapper = ({ children }: PropsWithChildren) => (

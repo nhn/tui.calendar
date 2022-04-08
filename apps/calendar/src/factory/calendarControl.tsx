@@ -3,13 +3,13 @@ import { unmountComponentAtNode } from 'preact/compat';
 import renderToString from 'preact-render-to-string';
 
 import { DateInterface, LocalDate } from '@toast-ui/date';
+import { DeepPartial } from 'ts-essentials';
 
 import { CalendarContainer } from '@src/calendarContainer';
 import { initCalendarStore } from '@src/contexts/calendarStore';
+import { initThemeStore } from '@src/contexts/themeStore';
 import { createDateMatrixOfMonth, getWeekDates } from '@src/helpers/grid';
 import EventModel from '@src/model/eventModel';
-import Theme from '@src/theme';
-import { ThemeKeyValue } from '@src/theme/themeProps';
 import TZDate from '@src/time/date';
 import { addDate, addMonths, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { last } from '@src/utils/array';
@@ -28,6 +28,7 @@ import {
   Dispatchers,
   InternalStoreAPI,
 } from '@t/store';
+import { ThemeState, ThemeStore } from '@t/theme';
 
 export default abstract class CalendarControl implements EventBus<ExternalEventTypes> {
   protected container: Element | null;
@@ -44,7 +45,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
 
   protected eventBus: EventBus<ExternalEventTypes>;
 
-  protected theme: Theme;
+  protected theme: InternalStoreAPI<ThemeStore>;
 
   protected store: InternalStoreAPI<CalendarStore>;
 
@@ -61,9 +62,11 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
       end: toStartOfDay(),
     };
 
-    this.theme = new Theme(options.theme);
+    const initOptions = this.initOptions(options);
+
+    this.theme = initThemeStore(initOptions.theme);
     this.eventBus = new EventBusImpl<ExternalEventTypes>();
-    this.store = initCalendarStore(this.initOptions(options));
+    this.store = initCalendarStore(initOptions);
     addAttributeHooks();
   }
 
@@ -544,21 +547,31 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * Set a theme. If some keys are not defined in the preset, will be return
-   * @param {ThemeKeyValue} theme - theme object
-   * @returns {string[]} invalid keys - not defined keys in theme
+   * Set a theme
+   * @param {DeepPartial<ThemeState>} theme - theme object
    * @example
    * calendar.setTheme({
-   *   'common.gridSelection.backgroundColor': '#333',
-   *   'week.currentTime.color': '#00FF00',
-   *   'month.dayname.borderBottom': '1px solid #e5e5e5' // Invalid key. So, It will be returned
+   *   common: {
+   *     gridSelection: {
+   *       backgroundColor: '#333',
+   *     },
+   *   },
+   *   week: {
+   *     currentTime: {
+   *       color: '#00FF00',
+   *     },
+   *   },
+   *   month: {
+   *     dayname: {
+   *       borderLeft: '1px solid #e5e5e5',
+   *     },
+   *   },
    * });
    */
-  setTheme(theme: ThemeKeyValue) {
-    const result = this.theme.setStyles(theme);
-    this.render(); // @TODO: It should be removed when theme is implemented as a store
+  setTheme(theme: DeepPartial<ThemeState>) {
+    const { setTheme } = this.theme.getState().dispatch;
 
-    return result;
+    setTheme(theme);
   }
 
   /**

@@ -1,11 +1,11 @@
 import { ComponentType } from 'preact';
 
 import { TuiDateConstructor } from '@toast-ui/date';
-
-import { ThemeKeyValue } from '@src/theme/themeProps';
+import { DeepPartial } from 'ts-essentials';
 
 import { EventModelData } from '@t/events';
 import { TemplateConfig } from '@t/template';
+import { ThemeState } from '@t/theme';
 
 export interface WeekOptions {
   startDayOfWeek?: number;
@@ -74,7 +74,7 @@ export interface Options {
   defaultView?: ViewType;
   taskView?: boolean | string[];
   eventView?: boolean | string[];
-  theme?: ThemeKeyValue;
+  theme?: DeepPartial<ThemeState>;
   template?: TemplateConfig;
   week?: WeekOptions;
   month?: MonthOptions;

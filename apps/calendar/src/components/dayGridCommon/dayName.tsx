@@ -1,8 +1,9 @@
 import { h } from 'preact';
+import { useCallback } from 'preact/hooks';
 
 import { Template } from '@src/components/template';
 import { useEventBus } from '@src/contexts/eventBus';
-import { useTheme } from '@src/contexts/theme';
+import { useTheme } from '@src/contexts/themeStore';
 import { cls } from '@src/helpers/css';
 import { getDayName } from '@src/helpers/dayName';
 import { Day, isSunday, isWeekend, toFormat } from '@src/time/datetime';
@@ -30,9 +31,9 @@ function isWeekDayName(
 
 export function DayName({ dayname, dayIndex, style, templateType, type }: Props) {
   const eventBus = useEventBus();
-  const { common: commonTheme } = useTheme();
+  const color = useTheme(useCallback((theme) => theme.common.holiday.color, []));
 
-  const dayNameStyle = { color: isSunday(dayIndex) ? commonTheme.holiday.color : null };
+  const dayNameStyle = { color: isSunday(dayIndex) ? color : null };
 
   const handleClick = () => {
     if (isWeekDayName(type, dayname)) {

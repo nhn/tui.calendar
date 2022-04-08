@@ -2,8 +2,8 @@ import { h, RenderableProps } from 'preact';
 
 import { CalendarContainer } from '@src/calendarContainer';
 import { initCalendarStore } from '@src/contexts/calendarStore';
+import { initThemeStore } from '@src/contexts/themeStore';
 import EventModel from '@src/model/eventModel';
-import Theme from '@src/theme';
 import { EventBusImpl } from '@src/utils/eventBus';
 
 import { Options } from '@t/options';
@@ -26,7 +26,7 @@ export function ProviderWrapper({
   options: optionsUserInput = {},
   events = [],
 }: RenderableProps<Props>) {
-  const theme = new Theme();
+  const theme = initThemeStore();
   const store = initCalendarStore(optionsUserInput);
   const eventBus = new EventBusImpl();
   const { dispatch } = store.getState();

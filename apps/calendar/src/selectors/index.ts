@@ -1,15 +1,22 @@
-import { CalendarState, CalendarStore } from '@t/store';
+import { CalendarState } from '@t/store';
+import { ThemeState } from '@t/theme';
 
-export function topLevelStateSelector<Group extends Exclude<keyof CalendarStore, 'dispatch'>>(
+export function topLevelStateSelector<State, Group extends keyof State>(
   group: Group
-): (state: CalendarState) => CalendarState[Group] {
-  return (state: CalendarState) => state[group];
+): (state: State) => State[Group] {
+  return (state: State) => state[group];
 }
 
-export const popupSelector = topLevelStateSelector('popup');
-export const calendarSelector = topLevelStateSelector('calendar');
-export const weekViewLayoutSelector = topLevelStateSelector('weekViewLayout');
-export const templateSelector = topLevelStateSelector('template');
-export const viewSelector = topLevelStateSelector('view');
-export const optionsSelector = topLevelStateSelector('options');
-export const dndSelector = topLevelStateSelector('dnd');
+export const popupSelector = topLevelStateSelector<CalendarState, 'popup'>('popup');
+export const calendarSelector = topLevelStateSelector<CalendarState, 'calendar'>('calendar');
+export const weekViewLayoutSelector = topLevelStateSelector<CalendarState, 'weekViewLayout'>(
+  'weekViewLayout'
+);
+export const templateSelector = topLevelStateSelector<CalendarState, 'template'>('template');
+export const viewSelector = topLevelStateSelector<CalendarState, 'view'>('view');
+export const optionsSelector = topLevelStateSelector<CalendarState, 'options'>('options');
+export const dndSelector = topLevelStateSelector<CalendarState, 'dnd'>('dnd');
+
+export const commonThemeSelector = topLevelStateSelector<ThemeState, 'common'>('common');
+export const weekThemeSelector = topLevelStateSelector<ThemeState, 'week'>('week');
+export const monthThemeSelector = topLevelStateSelector<ThemeState, 'month'>('month');
