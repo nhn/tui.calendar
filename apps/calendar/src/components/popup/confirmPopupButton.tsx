@@ -2,7 +2,7 @@ import { h } from 'preact';
 
 import { cls } from '@src/helpers/css';
 
-import { PropsWithChildren } from '@t/components/common';
+import type { PropsWithChildren } from '@t/components/common';
 
 const classNames = {
   confirmButton: cls('popup-button', 'popup-confirm'),

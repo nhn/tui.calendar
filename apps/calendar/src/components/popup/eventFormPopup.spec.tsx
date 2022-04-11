@@ -1,7 +1,8 @@
 import { h } from 'preact';
 import { useCallback, useEffect, useMemo } from 'preact/hooks';
 
-import { fireEvent, render, RenderResult, screen } from '@testing-library/preact';
+import type { RenderResult } from '@testing-library/preact';
+import { fireEvent, render, screen } from '@testing-library/preact';
 
 import { EventFormPopup } from '@src/components/popup/eventFormPopup';
 import { initCalendarStore, StoreProvider, useDispatch } from '@src/contexts/calendarStore';
@@ -11,8 +12,8 @@ import { cls } from '@src/helpers/css';
 import TZDate from '@src/time/date';
 import { EventBusImpl } from '@src/utils/eventBus';
 
-import { PropsWithChildren } from '@t/components/common';
-import { ExternalEventTypes } from '@t/eventBus';
+import type { PropsWithChildren } from '@t/components/common';
+import type { ExternalEventTypes } from '@t/eventBus';
 
 const selectors = {
   calendarSection: `.${cls('calendar-section')}`,

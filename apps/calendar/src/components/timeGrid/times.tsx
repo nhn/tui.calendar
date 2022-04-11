@@ -11,13 +11,13 @@ import { CurrentTimeLabel } from '@src/components/timeGrid/currentTimeLabel';
 import { useTheme } from '@src/contexts/themeStore';
 import { getTopPercentByTime } from '@src/controller/times';
 import { cls } from '@src/helpers/css';
-import { TemplateName } from '@src/template/default';
+import type { TemplateName } from '@src/template/default';
 import TZDate from '@src/time/date';
 import { isSameDate, isSameMonth, isSameYear, toFormat } from '@src/time/datetime';
 import { first, last } from '@src/utils/array';
 import { isOverlapped } from '@src/utils/dom';
 
-import { TimeUnit } from '@t/events';
+import type { TimeUnit } from '@t/events';
 
 const classNames = {
   times: addTimeGridPrefix('times'),
@@ -89,7 +89,6 @@ export function Times({
   showLast = false,
   showCurrentTime = false,
   currentTime = new TZDate(),
-  dateDifference,
   times = range(0, 25).map((hour) => {
     const date = new TZDate();
     date.setHours(hour, 0, 0, 0);

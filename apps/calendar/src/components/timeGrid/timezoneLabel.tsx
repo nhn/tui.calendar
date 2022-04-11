@@ -1,10 +1,11 @@
-import { h, VNode } from 'preact';
+import type { VNode } from 'preact';
+import { h } from 'preact';
 
 import { Template } from '@src/components/template';
 import { addTimeGridPrefix } from '@src/components/timeGrid';
 import { cls } from '@src/helpers/css';
 
-import { TimezoneConfig } from '@t/options';
+import type { TimezoneConfig } from '@t/options';
 
 interface Props {
   timezone: TimezoneConfig;

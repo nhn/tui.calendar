@@ -3,7 +3,7 @@ import { memo } from 'preact/compat';
 
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import { EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
-import EventUIModel from '@src/model/eventUIModel';
+import type EventUIModel from '@src/model/eventUIModel';
 
 interface Props {
   name: string;

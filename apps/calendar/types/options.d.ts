@@ -1,11 +1,11 @@
-import { ComponentType } from 'preact';
+import type { ComponentType } from 'preact';
 
-import { TuiDateConstructor } from '@toast-ui/date';
-import { DeepPartial } from 'ts-essentials';
+import type { TuiDateConstructor } from '@toast-ui/date';
+import type { DeepPartial } from 'ts-essentials';
 
-import { EventModelData } from '@t/events';
-import { TemplateConfig } from '@t/template';
-import { ThemeState } from '@t/theme';
+import type { EventModelData } from '@t/events';
+import type { TemplateConfig } from '@t/template';
+import type { ThemeState } from '@t/theme';
 
 export interface WeekOptions {
   startDayOfWeek?: number;

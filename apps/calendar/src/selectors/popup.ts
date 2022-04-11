@@ -1,6 +1,6 @@
 import { PopupType } from '@src/slices/popup';
 
-import { CalendarState, PopupParamMap } from '@t/store';
+import type { CalendarState, PopupParamMap } from '@t/store';
 
 export const eventFormPopupParamSelector = (state: CalendarState) => {
   return state.popup[PopupType.Form] as PopupParamMap[PopupType.Form];

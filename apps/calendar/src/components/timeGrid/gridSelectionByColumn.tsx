@@ -6,8 +6,8 @@ import { cls, toPercent } from '@src/helpers/css';
 import { timeGridSelectionHelper } from '@src/helpers/gridSelection';
 import { isNil } from '@src/utils/type';
 
-import { TimeGridRow } from '@t/grid';
-import { CalendarState } from '@t/store';
+import type { TimeGridRow } from '@t/grid';
+import type { CalendarState } from '@t/store';
 
 function GridSelection({ top, height, text }: { top: number; height: number; text: string }) {
   const style = {

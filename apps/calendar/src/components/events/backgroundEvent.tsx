@@ -1,7 +1,7 @@
 import { h } from 'preact';
 
 import { cls } from '@src/helpers/css';
-import EventUIModel from '@src/model/eventUIModel';
+import type EventUIModel from '@src/model/eventUIModel';
 
 const classNames = {
   background: cls('event-background'),

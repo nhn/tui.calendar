@@ -1,13 +1,13 @@
 import { useState } from 'preact/hooks';
 
 import { useTransientUpdate } from '@src/hooks/common/useTransientUpdate';
-import EventUIModel from '@src/model/eventUIModel';
+import type EventUIModel from '@src/model/eventUIModel';
 import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import { last } from '@src/utils/array';
 import { isNil, isPresent } from '@src/utils/type';
 
-import { EventDragging, EventDraggingArea, EventDraggingBehavior } from '@t/drag';
+import type { EventDragging, EventDraggingArea, EventDraggingBehavior } from '@t/drag';
 
 const getTargetEventId = (
   itemType: string | null,

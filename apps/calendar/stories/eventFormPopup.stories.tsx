@@ -1,6 +1,6 @@
 import { Fragment, h } from 'preact';
 
-import { Story } from '@storybook/preact';
+import type { Story } from '@storybook/preact';
 
 import { EventFormPopup } from '@src/components/popup/eventFormPopup';
 import { useDispatch } from '@src/contexts/calendarStore';
@@ -9,9 +9,9 @@ import TZDate from '@src/time/date';
 import { calendars as mockCalendars } from '@stories/util/mockCalendars';
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 
-import { PropsWithChildren } from '@t/components/common';
-import { CalendarInfo } from '@t/options';
-import { EventFormPopupParam } from '@t/store';
+import type { PropsWithChildren } from '@t/components/common';
+import type { CalendarInfo } from '@t/options';
+import type { EventFormPopupParam } from '@t/store';
 
 export default {
   component: EventFormPopup,

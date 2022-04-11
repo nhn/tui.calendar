@@ -1,6 +1,6 @@
 import { cls } from '@src/helpers/css';
 
-import { BooleanKeyOfEventModelData } from '@t/events';
+import type { BooleanKeyOfEventModelData } from '@t/events';
 
 export const SEE_MORE_POPUP_SLOT_CLASS_NAME = cls('see-more-popup-slot');
 export const EVENT_FORM_POPUP_SLOT_CLASS_NAME = cls('event-form-popup-slot');

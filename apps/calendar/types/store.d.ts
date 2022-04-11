@@ -1,14 +1,14 @@
-import EventModel from '@src/model/eventModel';
-import EventUIModel from '@src/model/eventUIModel';
-import { CalendarDispatchers, CalendarSlice } from '@src/slices/calendar';
-import { DndDispatchers, DndSlice } from '@src/slices/dnd';
+import type EventModel from '@src/model/eventModel';
+import type EventUIModel from '@src/model/eventUIModel';
+import type { CalendarDispatchers, CalendarSlice } from '@src/slices/calendar';
+import type { DndDispatchers, DndSlice } from '@src/slices/dnd';
 import type { GridSelectionDispatchers, GridSelectionSlice } from '@src/slices/gridSelection';
-import { WeekViewLayoutDispatchers, WeekViewLayoutSlice } from '@src/slices/layout';
-import { OptionsDispatchers, OptionsSlice } from '@src/slices/options';
-import { PopupDispatchers, PopupSlice } from '@src/slices/popup';
-import { TemplateSlice } from '@src/slices/template';
-import { ViewDispatchers, ViewSlice } from '@src/slices/view';
-import TZDate from '@src/time/date';
+import type { WeekViewLayoutDispatchers, WeekViewLayoutSlice } from '@src/slices/layout';
+import type { OptionsDispatchers, OptionsSlice } from '@src/slices/options';
+import type { PopupDispatchers, PopupSlice } from '@src/slices/popup';
+import type { TemplateSlice } from '@src/slices/template';
+import type { ViewDispatchers, ViewSlice } from '@src/slices/view';
+import type TZDate from '@src/time/date';
 
 import type { EventState } from '@t/events';
 import type { MonthOptions, WeekOptions } from '@t/options';

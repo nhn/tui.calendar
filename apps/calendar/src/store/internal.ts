@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import {
+import type {
   EqualityChecker,
   GetState,
   InternalStoreAPI,

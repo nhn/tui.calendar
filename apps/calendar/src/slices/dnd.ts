@@ -1,9 +1,9 @@
 import produce from 'immer';
 
-import EventUIModel from '@src/model/eventUIModel';
+import type EventUIModel from '@src/model/eventUIModel';
 
-import { DraggingTypes } from '@t/drag';
-import { CalendarState, CalendarStore, SetState } from '@t/store';
+import type { DraggingTypes } from '@t/drag';
+import type { CalendarState, CalendarStore, SetState } from '@t/store';
 
 export enum DraggingState {
   IDLE,

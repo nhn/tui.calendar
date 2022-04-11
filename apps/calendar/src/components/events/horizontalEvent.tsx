@@ -10,7 +10,7 @@ import { cls, toPercent, toPx } from '@src/helpers/css';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/useDrag';
 import { useTransientUpdate } from '@src/hooks/common/useTransientUpdate';
-import EventUIModel from '@src/model/eventUIModel';
+import type EventUIModel from '@src/model/eventUIModel';
 import { dndSelector, optionsSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import { passConditionalProp } from '@src/utils/preact';

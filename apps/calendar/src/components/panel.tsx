@@ -8,8 +8,8 @@ import { DEFAULT_PANEL_HEIGHT } from '@src/constants/style';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
 
-import { PropsWithChildren, StyleProp } from '@t/components/common';
-import { AlldayEventCategory } from '@t/panel';
+import type { PropsWithChildren, StyleProp } from '@t/components/common';
+import type { AlldayEventCategory } from '@t/panel';
 
 interface Props {
   name: string;

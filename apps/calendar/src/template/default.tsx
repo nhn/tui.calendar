@@ -2,14 +2,14 @@ import { h } from 'preact';
 
 import { cls } from '@src/helpers/css';
 import { capitalizeDayName, getDayName } from '@src/helpers/dayName';
-import EventModel from '@src/model/eventModel';
-import TZDate from '@src/time/date';
+import type EventModel from '@src/model/eventModel';
+import type TZDate from '@src/time/date';
 import { isSameDate, leadingZero, toFormat } from '@src/time/datetime';
 import { stripTags } from '@src/utils/dom';
 import { isUndefined } from '@src/utils/type';
 
-import { EventCategory } from '@t/events';
-import {
+import type { EventCategory } from '@t/events';
+import type {
   Template,
   TemplateCurrentTime,
   TemplateMonthDayName,

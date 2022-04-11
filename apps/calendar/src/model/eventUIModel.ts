@@ -1,5 +1,5 @@
 import { collidesWith } from '@src/helpers/events';
-import EventModel from '@src/model/eventModel';
+import type EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 import { pick } from '@src/utils/object';
 

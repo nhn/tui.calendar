@@ -9,8 +9,8 @@ import {
   limitRenderRange,
   positionUIModels,
 } from '@src/controller/core';
-import EventModel from '@src/model/eventModel';
-import EventUIModel from '@src/model/eventUIModel';
+import type EventModel from '@src/model/eventModel';
+import type EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import {
   makeDateRange,
@@ -22,9 +22,10 @@ import {
   toStartOfDay,
 } from '@src/time/datetime';
 import array from '@src/utils/array';
-import Collection, { Filter } from '@src/utils/collection';
+import type { Filter } from '@src/utils/collection';
+import Collection from '@src/utils/collection';
 
-import {
+import type {
   CalendarData,
   DayGridEventMatrix,
   EventGroupMap,
@@ -32,8 +33,8 @@ import {
   Matrix,
   Matrix3d,
 } from '@t/events';
-import { WeekOptions } from '@t/options';
-import { Panel } from '@t/panel';
+import type { WeekOptions } from '@t/options';
+import type { Panel } from '@t/panel';
 
 /**********
  * TIME GRID VIEW

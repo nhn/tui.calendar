@@ -1,4 +1,4 @@
-import { ComponentChildren, h } from 'preact';
+import type { ComponentChildren, h } from 'preact';
 
 type PropsWithChildren<Props = {}> = Props & { children?: ComponentChildren };
 

@@ -9,7 +9,7 @@ import type EventUIModel from '@src/model/eventUIModel';
 import type TZDate from '@src/time/date';
 import { isPresent } from '@src/utils/type';
 
-import { GridPositionFinder } from '@t/grid';
+import type { GridPositionFinder } from '@t/grid';
 
 function getEventColIndex(uiModel: EventUIModel, row: TZDate[]) {
   const start = getGridDateIndex(uiModel.getStarts(), row);

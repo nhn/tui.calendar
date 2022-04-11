@@ -6,10 +6,15 @@ import { useEventBus } from '@src/contexts/eventBus';
 import { useTheme } from '@src/contexts/themeStore';
 import { cls } from '@src/helpers/css';
 import { getDayName } from '@src/helpers/dayName';
-import { Day, isSunday, isWeekend, toFormat } from '@src/time/datetime';
+import type { Day } from '@src/time/datetime';
+import { isSunday, isWeekend, toFormat } from '@src/time/datetime';
 
-import { CalendarViewType } from '@t/components/common';
-import { Template as TemplateType, TemplateMonthDayName, TemplateWeekDayName } from '@t/template';
+import type { CalendarViewType } from '@t/components/common';
+import type {
+  Template as TemplateType,
+  TemplateMonthDayName,
+  TemplateWeekDayName,
+} from '@t/template';
 
 interface Props {
   dayname: TemplateWeekDayName | TemplateMonthDayName;

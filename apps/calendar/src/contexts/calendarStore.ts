@@ -16,8 +16,8 @@ import { devtools } from '@src/store/devtool';
 import { createStore } from '@src/store/internal';
 import { pick } from '@src/utils/object';
 
-import { Options } from '@t/options';
-import { CalendarStore, Dispatchers, SetState, StoreCreator } from '@t/store';
+import type { Options } from '@t/options';
+import type { CalendarStore, Dispatchers, SetState, StoreCreator } from '@t/store';
 
 // eslint-disable-next-line no-process-env
 const isDevelopmentMode = process.env.NODE_ENV === 'development';

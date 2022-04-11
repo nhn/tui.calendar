@@ -1,6 +1,6 @@
 import { DEFAULT_EVENT_PANEL, DEFAULT_TASK_PANEL } from '@src/constants/view';
 
-import { Options } from '@t/options';
+import type { Options } from '@t/options';
 
 export function getDisplayPanel(
   taskView: Required<Options>['taskView'],

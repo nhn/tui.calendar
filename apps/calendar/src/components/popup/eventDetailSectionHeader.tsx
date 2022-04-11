@@ -1,7 +1,7 @@
 import { h } from 'preact';
 
 import { cls } from '@src/helpers/css';
-import TZDate from '@src/time/date';
+import type TZDate from '@src/time/date';
 import { isSameDate, toFormat } from '@src/time/datetime';
 
 interface Props {

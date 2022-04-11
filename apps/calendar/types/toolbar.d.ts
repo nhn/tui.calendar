@@ -1,4 +1,4 @@
-import { ViewListMap } from '@t/options';
+import type { ViewListMap } from '@t/options';
 
 interface ToolbarProps {
   viewName: string;

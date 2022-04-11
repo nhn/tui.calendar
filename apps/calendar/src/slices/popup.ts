@@ -1,6 +1,6 @@
 import produce from 'immer';
 
-import { CalendarState, CalendarStore, PopupParamMap, SetState } from '@t/store';
+import type { CalendarState, CalendarStore, PopupParamMap, SetState } from '@t/store';
 
 export enum PopupType {
   SeeMore = 'seeMore',

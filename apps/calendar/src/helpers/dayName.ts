@@ -1,6 +1,6 @@
-import TZDate from '@src/time/date';
+import type TZDate from '@src/time/date';
 
-import { TemplateWeekDayName } from '@t/template';
+import type { TemplateWeekDayName } from '@t/template';
 
 export const getDayName = (dayIndex: number) => {
   return ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][dayIndex];

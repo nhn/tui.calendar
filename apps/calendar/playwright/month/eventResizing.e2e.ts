@@ -1,4 +1,5 @@
-import { expect, Locator, test } from '@playwright/test';
+import type { Locator } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 import { assertBoundingBoxIncluded } from '../assertions';
 import { MONTH_VIEW_PAGE_URL } from '../configs';

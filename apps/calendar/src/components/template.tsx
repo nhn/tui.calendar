@@ -3,7 +3,7 @@ import { createElement, h } from 'preact';
 import { useStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
 import { templateSelector } from '@src/selectors';
-import { TemplateName } from '@src/template/default';
+import type { TemplateName } from '@src/template/default';
 import { sanitize } from '@src/utils/sanitizer';
 import { isString } from '@src/utils/type';
 

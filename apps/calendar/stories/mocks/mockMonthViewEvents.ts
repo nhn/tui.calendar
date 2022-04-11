@@ -1,7 +1,7 @@
 import TZDate from '@src/time/date';
 import { addDate } from '@src/time/datetime';
 
-import { EventModelData } from '@t/events';
+import type { EventModelData } from '@t/events';
 
 const DAYS_OF_WEEK = 7;
 const today = new TZDate();

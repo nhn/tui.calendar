@@ -1,6 +1,6 @@
-import { DeepRequired } from 'ts-essentials';
+import type { DeepRequired } from 'ts-essentials';
 
-import { CommonTheme, MonthTheme, WeekTheme } from '@t/theme';
+import type { CommonTheme, MonthTheme, WeekTheme } from '@t/theme';
 
 export const DEFAULT_COMMON_THEME: DeepRequired<CommonTheme> = {
   border: '1px solid #e5e5e5',

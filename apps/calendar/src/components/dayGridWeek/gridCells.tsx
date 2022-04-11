@@ -10,8 +10,8 @@ import {
   isInGrid,
   TOTAL_WIDTH,
 } from '@src/helpers/grid';
-import EventUIModel from '@src/model/eventUIModel';
-import TZDate from '@src/time/date';
+import type EventUIModel from '@src/model/eventUIModel';
+import type TZDate from '@src/time/date';
 
 interface Props {
   uiModels: EventUIModel[];

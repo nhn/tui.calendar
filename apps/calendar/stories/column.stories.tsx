@@ -1,8 +1,9 @@
 // @FIXME
 
-import { ComponentProps, h } from 'preact';
+import type { ComponentProps } from 'preact';
+import { h } from 'preact';
 
-import { StoryFn } from '@storybook/preact';
+import type { StoryFn } from '@storybook/preact';
 
 import { Column } from '@src/components/timeGrid/column';
 import { cls } from '@src/helpers/css';
@@ -12,8 +13,8 @@ import { addHours, addMinutes, toStartOfDay } from '@src/time/datetime';
 
 import { createEventModels } from '@stories/helper/event';
 
-import { PropsWithChildren } from '@t/components/common';
-import { EventModelData } from '@t/events';
+import type { PropsWithChildren } from '@t/components/common';
+import type { EventModelData } from '@t/events';
 
 export default { title: 'Components/Column', component: Column };
 

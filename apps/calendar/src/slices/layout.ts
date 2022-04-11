@@ -3,7 +3,7 @@ import produce from 'immer';
 import { DEFAULT_RESIZER_LENGTH, DEFAULT_WEEK_PANEL_TYPES } from '@src/constants/layout';
 import { DEFAULT_PANEL_HEIGHT } from '@src/constants/style';
 
-import { CalendarStore, SetState } from '@t/store';
+import type { CalendarStore, SetState } from '@t/store';
 
 export type WeekGridRows = 'milestone' | 'task' | 'allday' | string;
 

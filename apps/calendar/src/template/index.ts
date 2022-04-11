@@ -1,12 +1,12 @@
 import { cls } from '@src/helpers/css';
-import EventUIModel from '@src/model/eventUIModel';
+import type EventUIModel from '@src/model/eventUIModel';
 import { templates } from '@src/template/default';
-import TZDate from '@src/time/date';
+import type TZDate from '@src/time/date';
 import { toFormat } from '@src/time/datetime';
 import { isNumber } from '@src/utils/type';
 
-import { GridUIModel } from '@t/grid';
-import { Template, TemplateConfig } from '@t/template';
+import type { GridUIModel } from '@t/grid';
+import type { Template, TemplateConfig } from '@t/template';
 
 export function registerTemplateConfig(templateConfig: TemplateConfig = {}): Template {
   return {

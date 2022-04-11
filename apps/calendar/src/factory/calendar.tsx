@@ -4,7 +4,7 @@ import { Main } from '@src/components/view/main';
 import { VIEW_TYPE } from '@src/constants/view';
 import CalendarControl from '@src/factory/calendarControl';
 
-import { Options, ViewType } from '@t/options';
+import type { Options, ViewType } from '@t/options';
 
 // @TODO: move this function to a separate file such as util
 function isValidViewType(viewType: string): viewType is ViewType {

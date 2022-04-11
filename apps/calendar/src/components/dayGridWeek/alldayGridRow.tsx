@@ -15,11 +15,11 @@ import { useDOMNode } from '@src/hooks/common/useDOMNode';
 import { useDayGridRowTitleStyle } from '@src/hooks/dayGridWeek/useDayGridRowTitleStyle';
 import { useGridRowHeightController } from '@src/hooks/dayGridWeek/useGridRowHeightController';
 import { useGridSelection } from '@src/hooks/gridSelection/useGridSelection';
-import EventUIModel from '@src/model/eventUIModel';
-import TZDate from '@src/time/date';
+import type EventUIModel from '@src/model/eventUIModel';
+import type TZDate from '@src/time/date';
 
-import { WeekOptions } from '@t/options';
-import { CellStyle } from '@t/time/datetime';
+import type { WeekOptions } from '@t/options';
+import type { CellStyle } from '@t/time/datetime';
 
 interface Props {
   events: EventUIModel[];

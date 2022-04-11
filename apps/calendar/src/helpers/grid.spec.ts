@@ -20,8 +20,8 @@ import TZDate from '@src/time/date';
 import { addDate, Day, isWeekend, WEEK_DAYS } from '@src/time/datetime';
 import { noop } from '@src/utils/noop';
 
-import { CalendarData } from '@t/events';
-import { GridPosition, GridPositionFinder, TimeGridRow } from '@t/grid';
+import type { CalendarData } from '@t/events';
+import type { GridPosition, GridPositionFinder, TimeGridRow } from '@t/grid';
 
 function createResultMatrix({
   startFrom,

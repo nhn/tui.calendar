@@ -6,8 +6,8 @@ import { cls } from '@src/helpers/css';
 import { DRAGGING_TYPE_CONSTANTS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/useDrag';
 
-import { StyleProp } from '@t/components/common';
-import { AlldayEventCategory } from '@t/panel';
+import type { StyleProp } from '@t/components/common';
+import type { AlldayEventCategory } from '@t/panel';
 
 const DEFAULT_BORDER = '1px solid #e5e5e5';
 const DEFAULT_STYLE: StyleProp = {

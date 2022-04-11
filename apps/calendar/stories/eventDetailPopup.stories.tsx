@@ -1,6 +1,6 @@
 import { Fragment, h } from 'preact';
 
-import { Story } from '@storybook/preact';
+import type { Story } from '@storybook/preact';
 
 import { EventDetailPopup } from '@src/components/popup/eventDetailPopup';
 import { EventFormPopup } from '@src/components/popup/eventFormPopup';
@@ -10,8 +10,8 @@ import TZDate from '@src/time/date';
 
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 
-import { PropsWithChildren } from '@t/components/common';
-import { EventDetailPopupParam } from '@t/store';
+import type { PropsWithChildren } from '@t/components/common';
+import type { EventDetailPopupParam } from '@t/store';
 
 export default {
   component: EventDetailPopup,

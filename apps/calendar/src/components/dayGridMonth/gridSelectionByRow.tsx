@@ -4,10 +4,10 @@ import { useCallback } from 'preact/hooks';
 import { GridSelection } from '@src/components/dayGridCommon/gridSelection';
 import { useStore } from '@src/contexts/calendarStore';
 import { dayGridMonthSelectionHelper } from '@src/helpers/gridSelection';
-import TZDate from '@src/time/date';
+import type TZDate from '@src/time/date';
 import { isNil } from '@src/utils/type';
 
-import { CalendarState } from '@t/store';
+import type { CalendarState } from '@t/store';
 
 interface Props {
   weekDates: TZDate[];

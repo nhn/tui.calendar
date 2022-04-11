@@ -4,9 +4,10 @@ import { useLayoutEffect } from 'preact/hooks';
 import { fireEvent, render, screen } from '@testing-library/preact';
 
 import { EventBusProvider, useEventBus } from '@src/contexts/eventBus';
-import { EventBus, EventBusImpl } from '@src/utils/eventBus';
+import type { EventBus } from '@src/utils/eventBus';
+import { EventBusImpl } from '@src/utils/eventBus';
 
-import { PropsWithChildren } from '@t/components/common';
+import type { PropsWithChildren } from '@t/components/common';
 
 describe('Event Bus Context', () => {
   let eventBus: EventBus<any>;

@@ -1,4 +1,5 @@
-import { FunctionComponent, h } from 'preact';
+import type { FunctionComponent } from 'preact';
+import { h } from 'preact';
 import { useMemo } from 'preact/hooks';
 
 import { Day } from '@src/components/view/day';
@@ -7,7 +8,7 @@ import { Week } from '@src/components/view/week';
 import { useStore } from '@src/contexts/calendarStore';
 import { viewSelector } from '@src/selectors';
 
-import { ViewType } from '@t/options';
+import type { ViewType } from '@t/options';
 
 const views: {
   [k in ViewType]: FunctionComponent;
