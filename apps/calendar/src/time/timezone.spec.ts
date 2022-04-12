@@ -3,7 +3,13 @@ import { advanceTo } from 'jest-date-mock';
 import moment from 'moment-timezone';
 import { register, TimeZone, unregister } from 'timezone-mock';
 
-import { date, getTimezoneFactory, setDateConstructor } from '@src/time/timezone';
+import TZDate from '@src/time/date';
+import {
+  calculateTimezoneOffset,
+  date,
+  getTimezoneFactory,
+  setDateConstructor,
+} from '@src/time/timezone';
 
 MomentDate.setMoment(moment);
 
@@ -157,5 +163,42 @@ describe('getTimezoneFactory()', () => {
     );
 
     finishMockingTimezone();
+  });
+});
+
+describe('calculateTimezoneOffset', () => {
+  beforeEach(() => {
+    register('UTC');
+  });
+
+  afterEach(() => {
+    unregister();
+  });
+
+  it('should calculate timezone offset of date which is applicable DST', () => {
+    // Given
+    const timezoneName = 'US/Pacific';
+    const tzDate = new TZDate('2022-04-12T00:00:00');
+
+    // When
+    const offset = calculateTimezoneOffset(tzDate, timezoneName);
+
+    // Then
+    // Pacific Daylight Time (PDT) is UTC -7.
+    expect(offset).toBe(420);
+  });
+
+  it('should calculate timezone offset of date which is not applicable DST', () => {
+    // Given
+    const timezoneName = 'US/Pacific';
+    // Pacific Daylight Time (PDS) is end on 2022/11/06 02:00 in Pacific Time.
+    // So add 7 hours to get UTC time.
+    const tzDate = new TZDate('2022-11-06T09:00:00');
+
+    // When
+    const offset = calculateTimezoneOffset(tzDate, timezoneName);
+
+    // Then
+    expect(offset).toBe(480);
   });
 });
