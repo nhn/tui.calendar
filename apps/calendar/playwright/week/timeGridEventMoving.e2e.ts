@@ -26,7 +26,7 @@ const [TWO_VIEW_EVENT, SHORT_TIME_EVENT, LONG_TIME_EVENT] = mockWeekViewEvents.f
  * 6     2
  * 5  4  3
  */
-const testCases: {
+const cases: {
   title: string;
   eventColumnIndex: number;
   directionInfo: {
@@ -127,7 +127,7 @@ const testCases: {
 
 const getTargetEventSelector = (title: string) => `[data-testid*="time-event-${title}"]`;
 
-testCases.forEach(({ title, eventColumnIndex, directionInfo }) => {
+cases.forEach(({ title, eventColumnIndex, directionInfo }) => {
   directionInfo.forEach(({ direction, startTimeAfterMoving, timeForDrop }) => {
     test(`Moving event: ${title} for ${direction}`, async ({ page }) => {
       // Given
