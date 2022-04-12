@@ -5,7 +5,7 @@ import { addMinutes } from '../../src/time/datetime';
 import { mockDayViewEvents } from '../../stories/mocks/mockDayViewEvents';
 import type { FormattedTimeString } from '../../types/time/datetime';
 import { DAY_VIEW_PAGE_URL } from '../configs';
-import { dragAndDrop, getBoundingBox, getTimeGridLineLocator, getTimeStrFromDate } from '../utils';
+import { dragAndDrop, getBoundingBox, getTimeGridLineSelector, getTimeStrFromDate } from '../utils';
 
 test.beforeEach(async ({ page }) => {
   await page.goto(DAY_VIEW_PAGE_URL);
@@ -44,7 +44,7 @@ async function setup({
 
   const resizeHandlerLocator = eventLocator.locator('[class*="resize-handler"]');
 
-  const targetRowLocator = page.locator(getTimeGridLineLocator(targetEndTime));
+  const targetRowLocator = page.locator(getTimeGridLineSelector(targetEndTime));
   const targetRowBoundingBox = await getBoundingBox(targetRowLocator);
 
   // When

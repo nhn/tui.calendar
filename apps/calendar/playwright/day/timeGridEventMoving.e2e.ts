@@ -4,7 +4,7 @@ import { addHours, setTimeStrToDate } from '../../src/time/datetime';
 import { mockDayViewEvents } from '../../stories/mocks/mockDayViewEvents';
 import type { FormattedTimeString } from '../../types/time/datetime';
 import { DAY_VIEW_PAGE_URL } from '../configs';
-import { dragAndDrop, getBoundingBox, getTimeGridLineLocator, getTimeStrFromDate } from '../utils';
+import { dragAndDrop, getBoundingBox, getTimeGridLineSelector, getTimeStrFromDate } from '../utils';
 
 test.beforeEach(async ({ page }) => {
   await page.goto(DAY_VIEW_PAGE_URL);
@@ -35,13 +35,13 @@ mockDayViewEvents
           const eventLocator = page.locator(targetEventSelector);
           const eventBoundingBoxBeforeMove = await getBoundingBox(eventLocator);
 
-          const dragStartRowLocator = page.locator(getTimeGridLineLocator(DRAG_START_TIME));
+          const dragStartRowLocator = page.locator(getTimeGridLineSelector(DRAG_START_TIME));
           const dragStartRowBoundingBox = await getBoundingBox(dragStartRowLocator);
 
           const targetTime = getTimeStrFromDate(
             addHours(setTimeStrToDate(end, DRAG_START_TIME), step)
           ) as FormattedTimeString;
-          const targetRowLocator = page.locator(getTimeGridLineLocator(targetTime));
+          const targetRowLocator = page.locator(getTimeGridLineSelector(targetTime));
 
           // When
           await dragAndDrop(eventLocator, targetRowLocator, {

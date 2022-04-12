@@ -8,7 +8,7 @@ import {
   dragAndDrop,
   getBoundingBox,
   getFilterForTimeGridEvent,
-  getTimeGridLineLocator,
+  getTimeGridLineSelector,
 } from '../utils';
 
 test.beforeEach(async ({ page }) => {
@@ -132,7 +132,7 @@ cases.forEach(({ title, eventColumnIndex, directionInfo }) => {
     test(`Moving event: ${title} for ${direction}`, async ({ page }) => {
       // Given
       const eventLocator = page.locator(getTargetEventSelector(title)).last();
-      const targetRowLocator = page.locator(getTimeGridLineLocator(timeForDrop));
+      const targetRowLocator = page.locator(getTimeGridLineSelector(timeForDrop));
       const targetColumnLocator = page.locator(`data-testid=timegrid-column-${eventColumnIndex}`);
 
       const targetColumnBoundingBox = await getBoundingBox(targetColumnLocator);

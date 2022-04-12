@@ -8,7 +8,7 @@ import {
   dragAndDrop,
   getBoundingBox,
   getFilterForTimeGridEvent,
-  getTimeGridLineLocator,
+  getTimeGridLineSelector,
 } from '../utils';
 
 test.beforeEach(async ({ page }) => {
@@ -96,7 +96,7 @@ async function setup({
   const targetEventSelector = `[data-testid*="time-event-${targetEventTitle}"]`;
   const eventLocator = page.locator(targetEventSelector).last();
   const resizeHandlerLocator = eventLocator.locator('[class*="resize-handler"]');
-  const targetRowLocator = page.locator(getTimeGridLineLocator(targetEndTime));
+  const targetRowLocator = page.locator(getTimeGridLineSelector(targetEndTime));
   const targetColumnLocator = page.locator(`data-testid=timegrid-column-${targetColumnIndex}`);
   const eventBoundingBoxBeforeResize = await getBoundingBox(eventLocator);
 
