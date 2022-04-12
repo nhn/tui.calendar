@@ -8,8 +8,8 @@ import type TZDate from '@src/time/date';
 import { addMilliseconds, MS_PER_DAY, MS_PER_THIRTY_MINUTES } from '@src/time/datetime';
 import { isNil, isPresent } from '@src/utils/type';
 
-import { GridPosition, GridPositionFinder, TimeGridData } from '@t/grid';
-import { CalendarState } from '@t/store';
+import type { GridPosition, GridPositionFinder, TimeGridData } from '@t/grid';
+import type { CalendarState } from '@t/store';
 
 const initXSelector = (state: CalendarState) => state.dnd.initX;
 const initYSelector = (state: CalendarState) => state.dnd.initY;

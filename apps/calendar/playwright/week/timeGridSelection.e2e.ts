@@ -1,4 +1,5 @@
-import { expect, Locator, test } from '@playwright/test';
+import type { Locator } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 import type { FormattedTimeString } from '../../types/time/datetime';
 import { WEEK_VIEW_PAGE_URL } from '../configs';

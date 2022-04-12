@@ -3,8 +3,8 @@ import produce from 'immer';
 import TZDate from '@src/time/date';
 import { toStartOfDay } from '@src/time/datetime';
 
-import { ViewType } from '@t/options';
-import { CalendarState, CalendarStore, SetState } from '@t/store';
+import type { ViewType } from '@t/options';
+import type { CalendarState, CalendarStore, SetState } from '@t/store';
 
 export type ViewSlice = {
   view: {

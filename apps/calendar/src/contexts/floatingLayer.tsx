@@ -10,7 +10,7 @@ import { cls } from '@src/helpers/css';
 import { useDOMNode } from '@src/hooks/common/useDOMNode';
 import { isUndefined } from '@src/utils/type';
 
-import { PropsWithChildren } from '@t/components/common';
+import type { PropsWithChildren } from '@t/components/common';
 
 interface FloatingLayers {
   container: HTMLDivElement | null;

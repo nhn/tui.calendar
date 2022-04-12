@@ -4,7 +4,7 @@ import { TimeEvent } from '@src/components/events/timeEvent';
 import { useTimeGridEventMove } from '@src/hooks/timeGrid/useTimeGridEventMove';
 import { isNil } from '@src/utils/type';
 
-import { GridPositionFinder, TimeGridData } from '@t/grid';
+import type { GridPositionFinder, TimeGridData } from '@t/grid';
 
 export function MovingEventShadow({
   gridPositionFinder,

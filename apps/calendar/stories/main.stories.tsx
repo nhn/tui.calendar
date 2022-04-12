@@ -1,6 +1,6 @@
 import { h } from 'preact';
 
-import { Story } from '@storybook/preact';
+import type { Story } from '@storybook/preact';
 
 import { Button } from '@src/components/ui/button';
 import { Main } from '@src/components/view/main';
@@ -10,7 +10,7 @@ import { cls } from '@src/helpers/css';
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { createRandomEventModelsForMonth } from '@stories/util/randomEvents';
 
-import { PropsWithChildren } from '@t/components/common';
+import type { PropsWithChildren } from '@t/components/common';
 
 export default { title: 'Views/Main', component: Main };
 

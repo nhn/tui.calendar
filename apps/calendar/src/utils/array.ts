@@ -1,4 +1,4 @@
-import EventModel from '@src/model/eventModel';
+import type EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import { compare } from '@src/time/datetime';
 

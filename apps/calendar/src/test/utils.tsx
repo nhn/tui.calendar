@@ -2,17 +2,18 @@ import { h } from 'preact';
 
 import { fireEvent, render as ptlRender } from '@testing-library/preact';
 import { renderHook as ptlRenderHook } from '@testing-library/preact-hooks';
-import { Callback } from '@testing-library/preact-hooks/lib/_types';
-import { RenderHookOptions } from '@testing-library/preact-hooks/lib/renderHook';
+import type { Callback } from '@testing-library/preact-hooks/lib/_types';
+import type { RenderHookOptions } from '@testing-library/preact-hooks/lib/renderHook';
 
 import { CalendarContainer } from '@src/calendarContainer';
 import { initCalendarStore } from '@src/contexts/calendarStore';
 import { initThemeStore } from '@src/contexts/themeStore';
-import { EventBus, EventBusImpl } from '@src/utils/eventBus';
+import type { EventBus } from '@src/utils/eventBus';
+import { EventBusImpl } from '@src/utils/eventBus';
 
-import { PropsWithChildren } from '@t/components/common';
-import { CalendarStore, InternalStoreAPI } from '@t/store';
-import { ThemeStore } from '@t/theme';
+import type { PropsWithChildren } from '@t/components/common';
+import type { CalendarStore, InternalStoreAPI } from '@t/store';
+import type { ThemeStore } from '@t/theme';
 
 function render(
   component: Parameters<typeof ptlRender>[0],

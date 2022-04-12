@@ -1,9 +1,9 @@
-import { DeepPartial } from 'ts-essentials';
+import type { DeepPartial } from 'ts-essentials';
 
 import { DEFAULT_COMMON_THEME } from '@src/constants/theme';
 import { mergeObject } from '@src/utils/object';
 
-import { CommonTheme, ThemeState } from '@t/theme';
+import type { CommonTheme, ThemeState } from '@t/theme';
 
 export function createCommonTheme(commonTheme: DeepPartial<CommonTheme> = {}): {
   common: Required<ThemeState['common']>;

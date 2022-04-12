@@ -1,4 +1,4 @@
-import { DeepPartial } from 'ts-essentials';
+import type { DeepPartial } from 'ts-essentials';
 
 import TZDate from '@src/time/date';
 import { isObject } from '@src/utils/type';

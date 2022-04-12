@@ -1,5 +1,5 @@
-import EventModel from '@src/model/eventModel';
-import EventUIModel from '@src/model/eventUIModel';
+import type EventModel from '@src/model/eventModel';
+import type EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { isSameDate } from '@src/time/datetime';
 

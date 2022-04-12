@@ -10,7 +10,7 @@ import { viewSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
 import { Day, toFormat } from '@src/time/datetime';
 
-import { CommonTheme, MonthTheme } from '@t/theme';
+import type { CommonTheme, MonthTheme } from '@t/theme';
 
 enum CellBarType {
   header = 'header',

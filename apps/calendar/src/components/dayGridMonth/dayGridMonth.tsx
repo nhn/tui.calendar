@@ -21,11 +21,11 @@ import { dayGridMonthSelectionHelper } from '@src/helpers/gridSelection';
 import { useDOMNode } from '@src/hooks/common/useDOMNode';
 import { useGridSelection } from '@src/hooks/gridSelection/useGridSelection';
 import { calendarSelector } from '@src/selectors';
-import TZDate from '@src/time/date';
+import type TZDate from '@src/time/date';
 import { getSize } from '@src/utils/dom';
 
-import { CalendarMonthOptions } from '@t/store';
-import { CellInfo } from '@t/time/datetime';
+import type { CalendarMonthOptions } from '@t/store';
+import type { CellInfo } from '@t/time/datetime';
 
 const TOTAL_PERCENT_HEIGHT = 100;
 

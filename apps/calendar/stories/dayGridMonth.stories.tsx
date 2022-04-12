@@ -11,7 +11,7 @@ import { getRowStyleInfo } from '@src/time/datetime';
 import { getWeekDates } from '@stories/util/mockCalendarDates';
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 
-import { CalendarMonthOptions } from '@t/store';
+import type { CalendarMonthOptions } from '@t/store';
 
 export default { title: 'Components/DayGridMonth', component: DayGridMonth };
 

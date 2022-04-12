@@ -1,6 +1,6 @@
 import { h } from 'preact';
 
-import { Story } from '@storybook/preact';
+import type { Story } from '@storybook/preact';
 
 import { Day } from '@src/components/view/day';
 import EventModel from '@src/model/eventModel';
@@ -11,7 +11,7 @@ import { mockDayViewEvents } from '@stories/mocks/mockDayViewEvents';
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { createRandomEventModelsForMonth, createRandomEvents } from '@stories/util/randomEvents';
 
-import { EventModelData } from '@t/events';
+import type { EventModelData } from '@t/events';
 
 export default { title: 'Views/DayView', component: Day };
 

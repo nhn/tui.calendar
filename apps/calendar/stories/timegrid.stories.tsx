@@ -1,6 +1,7 @@
-import { ComponentProps, h } from 'preact';
+import type { ComponentProps } from 'preact';
+import { h } from 'preact';
 
-import { StoryFn } from '@storybook/preact';
+import type { StoryFn } from '@storybook/preact';
 import range from 'tui-code-snippet/array/range';
 
 import { TimeGrid } from '@src/components/timeGrid/timeGrid';
@@ -14,7 +15,7 @@ import { createEventModels } from '@stories/helper/event';
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { createRandomEvents } from '@stories/util/randomEvents';
 
-import { EventModelData } from '@t/events';
+import type { EventModelData } from '@t/events';
 
 export default { title: 'Components/TimeGrid', component: TimeGrid };
 

@@ -1,6 +1,6 @@
 import { h } from 'preact';
 
-import { Story } from '@storybook/preact';
+import type { Story } from '@storybook/preact';
 
 import { OtherGridRow } from '@src/components/dayGridWeek/otherGridRow';
 import { Layout } from '@src/components/layout';
@@ -13,7 +13,7 @@ import { Day, getRowStyleInfo } from '@src/time/datetime';
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { createRandomEventModelsForMonth } from '@stories/util/randomEvents';
 
-import { CalendarData } from '@t/events';
+import type { CalendarData } from '@t/events';
 
 export default {
   title: 'Components/WeekGridRow',

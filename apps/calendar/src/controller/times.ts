@@ -1,8 +1,8 @@
-import TZDate from '@src/time/date';
+import type TZDate from '@src/time/date';
 import { clone } from '@src/time/datetime';
 import { limit, ratio } from '@src/utils/math';
 
-import { TimeUnit } from '@t/events';
+import type { TimeUnit } from '@t/events';
 
 /**
  * @param date

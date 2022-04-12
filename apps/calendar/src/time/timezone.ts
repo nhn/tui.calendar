@@ -1,4 +1,5 @@
-import { LocalDate, TuiDateConstructor, UTCDate } from '@toast-ui/date';
+import type { TuiDateConstructor } from '@toast-ui/date';
+import { LocalDate, UTCDate } from '@toast-ui/date';
 
 import { isNumber } from '@src/utils/type';
 

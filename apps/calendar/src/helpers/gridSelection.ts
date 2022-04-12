@@ -1,10 +1,10 @@
 import type { useGridSelection } from '@src/hooks/gridSelection/useGridSelection';
-import TZDate from '@src/time/date';
+import type TZDate from '@src/time/date';
 import { setTimeStrToDate } from '@src/time/datetime';
 import { isBetween, isBetween as isBetweenValue } from '@src/utils/math';
 import { isNil, isPresent } from '@src/utils/type';
 
-import { GridPosition, TimeGridData } from '@t/grid';
+import type { GridPosition, TimeGridData } from '@t/grid';
 
 type RequiredGridSelectionHookParams = Pick<
   Parameters<typeof useGridSelection>[0],

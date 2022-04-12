@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'preact/hooks';
 
-import { KEY } from '@src/constants/keyboard';
+import type { KEY } from '@src/constants/keyboard';
 import { isKeyPressed } from '@src/utils/keyboard';
 
 export function useKeydownEvent(targetKey: KEY, handler: (event: KeyboardEvent) => void): void {

@@ -1,4 +1,4 @@
-import { DateInterface } from '@toast-ui/date';
+import type { DateInterface } from '@toast-ui/date';
 
 import { date as newDate, getTimezoneFactory, setDateConstructor } from '@src/time/timezone';
 

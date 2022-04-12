@@ -3,7 +3,7 @@ import { advanceTo } from 'jest-date-mock';
 import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 
-import { EventModelData } from '@t/events';
+import type { EventModelData } from '@t/events';
 
 describe('model/event basic', () => {
   let event: EventModel;

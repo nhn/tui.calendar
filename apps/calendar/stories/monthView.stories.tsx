@@ -1,6 +1,6 @@
 import { h } from 'preact';
 
-import { Story } from '@storybook/preact';
+import type { Story } from '@storybook/preact';
 
 import { Month } from '@src/components/view/month';
 import EventModel from '@src/model/eventModel';
@@ -9,7 +9,7 @@ import { mockMonthViewEvents } from '@stories/mocks/mockMonthViewEvents';
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { createRandomEventModelsForMonth } from '@stories/util/randomEvents';
 
-import { EventModelData } from '@t/events';
+import type { EventModelData } from '@t/events';
 
 export default { title: 'Views/MonthView', component: Month };
 

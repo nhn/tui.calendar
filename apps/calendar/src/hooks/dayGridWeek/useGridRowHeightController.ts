@@ -3,9 +3,9 @@ import { useCallback, useState } from 'preact/hooks';
 import { DEFAULT_PANEL_HEIGHT } from '@src/constants/style';
 import { useDispatch } from '@src/contexts/calendarStore';
 import { EVENT_HEIGHT } from '@src/helpers/grid';
-import { WeekGridRows } from '@src/slices/layout';
+import type { WeekGridRows } from '@src/slices/layout';
 
-import { AlldayEventCategory } from '@t/panel';
+import type { AlldayEventCategory } from '@t/panel';
 
 export function useGridRowHeightController(maxTop: number, category: AlldayEventCategory) {
   const [clickedIndex, setClickedIndex] = useState(0);

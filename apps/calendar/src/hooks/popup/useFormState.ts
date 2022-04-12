@@ -1,6 +1,6 @@
 import { useReducer } from 'preact/hooks';
 
-import { EventModelData, EventState } from '@t/events';
+import type { EventModelData, EventState } from '@t/events';
 
 export enum FormStateActionType {
   setCalendarId = 'setCalendarId',

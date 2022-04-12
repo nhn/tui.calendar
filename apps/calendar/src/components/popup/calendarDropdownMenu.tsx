@@ -2,7 +2,7 @@ import { h } from 'preact';
 
 import { cls } from '@src/helpers/css';
 
-import { CalendarInfo } from '@t/options';
+import type { CalendarInfo } from '@t/options';
 
 interface Props {
   open?: boolean;

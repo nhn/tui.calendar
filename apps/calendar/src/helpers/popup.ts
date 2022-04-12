@@ -1,4 +1,4 @@
-import { Rect } from '@t/store';
+import type { Rect } from '@t/store';
 
 export function isTopOutOfLayout(top: number, layoutRect: Rect, popupRect: Rect): boolean {
   return top + popupRect.height > layoutRect.top + layoutRect.height;

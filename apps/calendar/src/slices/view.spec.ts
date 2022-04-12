@@ -1,14 +1,10 @@
-import {
-  createViewDispatchers,
-  createViewSlice,
-  ViewDispatchers,
-  ViewSlice,
-} from '@src/slices/view';
+import type { ViewDispatchers, ViewSlice } from '@src/slices/view';
+import { createViewDispatchers, createViewSlice } from '@src/slices/view';
 import { createStore } from '@src/store/internal';
 import TZDate from '@src/time/date';
 import { addDate } from '@src/time/datetime';
 
-import { InternalStoreAPI, StoreCreator } from '@t/store';
+import type { InternalStoreAPI, StoreCreator } from '@t/store';
 
 type ViewSliceStore = ViewSlice & ViewDispatchers;
 

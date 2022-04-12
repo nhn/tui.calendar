@@ -3,12 +3,12 @@ import moment from 'moment-timezone';
 
 import { createDateMatrixOfMonth } from '@src/helpers/grid';
 import EventModel from '@src/model/eventModel';
-import TZDate from '@src/time/date';
+import type TZDate from '@src/time/date';
 
 import { calendars } from '@stories/util/mockCalendars';
 
-import { EventCategory, EventModelData } from '@t/events';
-import { CalendarInfo, ViewType } from '@t/options';
+import type { EventCategory, EventModelData } from '@t/events';
+import type { CalendarInfo, ViewType } from '@t/options';
 
 const chance = new Chance();
 const EVENT_CATEGORY: EventCategory[] = ['milestone', 'task'];

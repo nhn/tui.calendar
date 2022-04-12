@@ -16,7 +16,7 @@ import { useDOMNode } from '@src/hooks/common/useDOMNode';
 import { useInterval } from '@src/hooks/common/useInterval';
 import { useIsMounted } from '@src/hooks/common/useIsMounted';
 import { useGridSelection } from '@src/hooks/gridSelection/useGridSelection';
-import EventUIModel from '@src/model/eventUIModel';
+import type EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import {
   isSameDate,
@@ -28,8 +28,8 @@ import {
 import { first, last } from '@src/utils/array';
 import { isPresent } from '@src/utils/type';
 
-import { TimeGridData } from '@t/grid';
-import { TimezoneConfig } from '@t/options';
+import type { TimeGridData } from '@t/grid';
+import type { TimezoneConfig } from '@t/options';
 
 const classNames = {
   timegrid: cls(timegridClassName),

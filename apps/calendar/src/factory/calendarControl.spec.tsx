@@ -13,9 +13,9 @@ import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import { act, screen } from '@src/test/utils';
 import TZDate from '@src/time/date';
-import { addDate, isSameDate, subtractDate } from '@src/time/datetime';
+import { addDate, subtractDate } from '@src/time/datetime';
 
-import { CalendarInfo } from '@t/options';
+import type { CalendarInfo } from '@t/options';
 
 function cleanup() {
   document.body.innerHTML = '';

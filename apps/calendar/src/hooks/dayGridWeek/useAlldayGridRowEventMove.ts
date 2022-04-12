@@ -7,8 +7,8 @@ import { useDraggingEvent } from '@src/hooks/event/useDraggingEvent';
 import TZDate from '@src/time/date';
 import { isNil, isPresent } from '@src/utils/type';
 
-import { GridPositionFinder } from '@t/grid';
-import { CellStyle } from '@t/time/datetime';
+import type { GridPositionFinder } from '@t/grid';
+import type { CellStyle } from '@t/time/datetime';
 
 interface Params {
   rowStyleInfo: CellStyle[];

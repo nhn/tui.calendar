@@ -5,9 +5,9 @@ import { getDayName } from '@src/helpers/dayName';
 import { Day } from '@src/time/datetime';
 import { mergeObject } from '@src/utils/object';
 
-import { EventModelData } from '@t/events';
-import { Options } from '@t/options';
-import {
+import type { EventModelData } from '@t/events';
+import type { Options } from '@t/options';
+import type {
   CalendarMonthOptions,
   CalendarState,
   CalendarStore,

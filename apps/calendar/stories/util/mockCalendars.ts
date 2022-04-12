@@ -1,4 +1,4 @@
-import { CalendarInfo } from '@t/options';
+import type { CalendarInfo } from '@t/options';
 
 export const calendars: CalendarInfo[] = [];
 

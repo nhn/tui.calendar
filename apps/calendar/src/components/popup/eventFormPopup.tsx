@@ -2,7 +2,7 @@ import { h } from 'preact';
 import { createPortal } from 'preact/compat';
 import { useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
 
-import { DateRangePicker } from 'tui-date-picker';
+import type { DateRangePicker } from 'tui-date-picker';
 
 import { CalendarSelector } from '@src/components/popup/calendarSelector';
 import { ClosePopupButton } from '@src/components/popup/closePopupButton';
@@ -24,16 +24,16 @@ import { useLayoutContainer } from '@src/contexts/layoutContainer';
 import { cls } from '@src/helpers/css';
 import { isLeftOutOfLayout, isTopOutOfLayout } from '@src/helpers/popup';
 import { useFormState } from '@src/hooks/popup/useFormState';
-import EventModel from '@src/model/eventModel';
+import type EventModel from '@src/model/eventModel';
 import { calendarSelector } from '@src/selectors';
 import { eventFormPopupParamSelector } from '@src/selectors/popup';
 import TZDate from '@src/time/date';
 import { compare } from '@src/time/datetime';
 import { isNil } from '@src/utils/type';
 
-import { FormEvent, StyleProp } from '@t/components/common';
-import { BooleanKeyOfEventModelData, EventModelData } from '@t/events';
-import { PopupArrowPointPosition, Rect } from '@t/store';
+import type { FormEvent, StyleProp } from '@t/components/common';
+import type { BooleanKeyOfEventModelData, EventModelData } from '@t/events';
+import type { PopupArrowPointPosition, Rect } from '@t/store';
 
 const classNames = {
   popupContainer: cls('popup-container'),

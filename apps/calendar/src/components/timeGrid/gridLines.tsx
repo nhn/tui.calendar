@@ -3,7 +3,7 @@ import { memo } from 'preact/compat';
 
 import { cls, toPercent } from '@src/helpers/css';
 
-import { TimeGridRow } from '@t/grid';
+import type { TimeGridRow } from '@t/grid';
 
 export const GridLines = memo(function GridLines({
   timeGridRows,

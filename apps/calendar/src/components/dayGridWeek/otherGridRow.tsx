@@ -9,11 +9,11 @@ import { cls } from '@src/helpers/css';
 import { EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
 import { useDayGridRowTitleStyle } from '@src/hooks/dayGridWeek/useDayGridRowTitleStyle';
 import { useGridRowHeightController } from '@src/hooks/dayGridWeek/useGridRowHeightController';
-import EventUIModel from '@src/model/eventUIModel';
-import TZDate from '@src/time/date';
+import type EventUIModel from '@src/model/eventUIModel';
+import type TZDate from '@src/time/date';
 
-import { WeekOptions } from '@t/options';
-import { AlldayEventCategory } from '@t/panel';
+import type { WeekOptions } from '@t/options';
+import type { AlldayEventCategory } from '@t/panel';
 
 type GridRowTitleTemplate = `${AlldayEventCategory}Title`;
 

@@ -1,6 +1,6 @@
-import { h } from 'preact';
+import type { h } from 'preact';
 
-import { PropsWithChildren } from '@t/components/common';
+import type { PropsWithChildren } from '@t/components/common';
 
 type Props = h.JSX.HTMLAttributes<HTMLButtonElement>;
 

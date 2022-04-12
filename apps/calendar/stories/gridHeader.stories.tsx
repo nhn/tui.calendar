@@ -1,13 +1,13 @@
 import { h } from 'preact';
 
-import { Story } from '@storybook/preact';
+import type { Story } from '@storybook/preact';
 
 import { GridHeader } from '@src/components/dayGridCommon/gridHeader';
 import { getRowStyleInfo } from '@src/time/datetime';
 
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 
-import { TemplateMonthDayName } from '@t/template';
+import type { TemplateMonthDayName } from '@t/template';
 
 export default { title: 'Components/GridHeader', component: GridHeader };
 

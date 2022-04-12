@@ -1,12 +1,13 @@
-import { h, RenderableProps } from 'preact';
+import type { RenderableProps } from 'preact';
+import { h } from 'preact';
 
 import { CalendarContainer } from '@src/calendarContainer';
 import { initCalendarStore } from '@src/contexts/calendarStore';
 import { initThemeStore } from '@src/contexts/themeStore';
-import EventModel from '@src/model/eventModel';
+import type EventModel from '@src/model/eventModel';
 import { EventBusImpl } from '@src/utils/eventBus';
 
-import { Options } from '@t/options';
+import type { Options } from '@t/options';
 
 const rootContainerStyle = {
   position: 'absolute',

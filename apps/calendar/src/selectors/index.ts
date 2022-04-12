@@ -1,5 +1,5 @@
-import { CalendarState } from '@t/store';
-import { ThemeState } from '@t/theme';
+import type { CalendarState } from '@t/store';
+import type { ThemeState } from '@t/theme';
 
 export function topLevelStateSelector<State, Group extends keyof State>(
   group: Group
