@@ -94,8 +94,8 @@ function _getAlldayMaxTopIndexAtYMD(
  * @param {Collection} uiModelColl - collection of ui ui model
  */
 function _adjustTimeTopIndex(idsOfDay: IDS_OF_DAY, uiModelColl: Collection<EventUIModel>) {
-  const vAlldayColl = uiModelColl.find(_isAllday);
-  const sortedTimeEvents = uiModelColl.find(_isNotAllday).sort(array.compare.event.asc);
+  const vAlldayColl = uiModelColl.filter(_isAllday);
+  const sortedTimeEvents = uiModelColl.filter(_isNotAllday).sort(array.compare.event.asc);
   const maxIndexInYMD: Record<string, number> = {};
 
   sortedTimeEvents.forEach((timeUIModel) => {
@@ -119,8 +119,8 @@ function _adjustTimeTopIndex(idsOfDay: IDS_OF_DAY, uiModelColl: Collection<Event
  * @param {Collection} uiModelColl - collection of ui ui model
  */
 function _stackTimeFromTop(idsOfDay: IDS_OF_DAY, uiModelColl: Collection<EventUIModel>) {
-  const uiModelAlldayColl = uiModelColl.find(_isAllday);
-  const sortedTimeEvents = uiModelColl.find(_isNotAllday).sort(array.compare.event.asc);
+  const uiModelAlldayColl = uiModelColl.filter(_isAllday);
+  const sortedTimeEvents = uiModelColl.filter(_isNotAllday).sort(array.compare.event.asc);
   const indiceInYMD: Record<string, number[]> = {};
 
   sortedTimeEvents.forEach((timeUIModel) => {
@@ -186,9 +186,9 @@ export function findByDateRange(
 ) {
   const { start, end, andFilters = [], alldayFirstMode = false } = condition;
   const { events, idsOfDay } = calendarData;
-  const filter = Collection.and(...[getEventInDateRangeFilter(start, end)].concat(andFilters));
+  const filterFn = Collection.and(...[getEventInDateRangeFilter(start, end)].concat(andFilters));
 
-  const coll = events.find(filter);
+  const coll = events.filter(filterFn);
   const uiModelColl = convertToUIModel(coll);
   _addMultiDatesInfo(uiModelColl);
   _adjustRenderRange(start, end, uiModelColl);

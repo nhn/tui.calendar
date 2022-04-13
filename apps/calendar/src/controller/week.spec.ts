@@ -359,9 +359,9 @@ describe('Base.Week', () => {
       expected['20150502'].add(events[1]);
       expected['20150502'].add(events[2]);
 
-      expect(result['20150501'].items).toEqual(expected['20150501'].items);
-      expect(result['20150502'].items).toEqual(expected['20150502'].items);
-      expect(result['20150503'].items).toEqual(expected['20150503'].items);
+      expect(result['20150501'].toArray()).toEqual(expected['20150501'].toArray());
+      expect(result['20150502'].toArray()).toEqual(expected['20150502'].toArray());
+      expect(result['20150503'].toArray()).toEqual(expected['20150503'].toArray());
     });
   });
 });

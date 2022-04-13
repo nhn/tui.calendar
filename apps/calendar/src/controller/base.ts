@@ -123,7 +123,7 @@ export function updateEvent(
   eventData: EventModelData
 ) {
   const { idsOfDay } = calendarData;
-  const event = calendarData.events.single((item) => isSameEvent(item, eventId, calendarId));
+  const event = calendarData.events.find((item) => isSameEvent(item, eventId, calendarId));
 
   if (!event) {
     return false;
@@ -179,8 +179,6 @@ export function findByDateRange(
   const { start, end } = condition;
   const { events, idsOfDay } = calendarData;
   const range = getDateRange(start, end);
-  const ownEvents = events.items;
-  const ownMatrix = idsOfDay;
   const result: Record<string, EventModel[]> = {};
   let ids;
   let ymd;
@@ -188,11 +186,11 @@ export function findByDateRange(
 
   range.forEach((date) => {
     ymd = toFormat(date, 'YYYYMMDD');
-    ids = ownMatrix[ymd];
+    ids = idsOfDay[ymd];
     uiModels = result[ymd] = [];
 
     if (ids && ids.length) {
-      uiModels.push(...ids.map((id) => ownEvents[id]));
+      uiModels.push(...ids.map((id) => events.get(id) as EventModel));
     }
   });
 

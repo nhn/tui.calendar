@@ -299,7 +299,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   getEvent(eventId: string, calendarId: string) {
     const { events } = this.getStoreState('calendar');
 
-    return events.single(
+    return events.find(
       ({ id, calendarId: eventCalendarId }) => id === eventId && eventCalendarId === calendarId
     );
   }
