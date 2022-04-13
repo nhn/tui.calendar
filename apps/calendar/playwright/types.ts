@@ -7,11 +7,11 @@ export type BoundingBox = {
 
 export enum Direction {
   Up = 0,
-  UpRight = 1,
+  UpperRight = 1,
   Right = 2,
-  RightDown = 3,
+  LowerRight = 3,
   Down = 4,
-  DownLeft = 5,
+  LowerLeft = 5,
   Left = 6,
-  LeftUp = 7,
+  UpperLeft = 7,
 }

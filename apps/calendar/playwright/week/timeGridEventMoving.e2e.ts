@@ -45,7 +45,7 @@ const cases: {
         timeForDrop: '00:00',
       },
       {
-        direction: Direction.RightDown,
+        direction: Direction.LowerRight,
         startTimeAfterMoving: '12:00',
         timeForDrop: '02:00',
       },
@@ -66,7 +66,7 @@ const cases: {
         timeForDrop: '02:00',
       },
       {
-        direction: Direction.UpRight,
+        direction: Direction.UpperRight,
         startTimeAfterMoving: '02:00',
         timeForDrop: '02:00',
       },
@@ -76,7 +76,7 @@ const cases: {
         timeForDrop: '04:00',
       },
       {
-        direction: Direction.RightDown,
+        direction: Direction.LowerRight,
         startTimeAfterMoving: '06:00',
         timeForDrop: '06:00',
       },
@@ -86,7 +86,7 @@ const cases: {
         timeForDrop: '06:00',
       },
       {
-        direction: Direction.DownLeft,
+        direction: Direction.LowerLeft,
         startTimeAfterMoving: '06:00',
         timeForDrop: '06:00',
       },
@@ -96,7 +96,7 @@ const cases: {
         timeForDrop: '04:00',
       },
       {
-        direction: Direction.LeftUp,
+        direction: Direction.UpperLeft,
         startTimeAfterMoving: '02:00',
         timeForDrop: '02:00',
       },
@@ -112,7 +112,7 @@ const cases: {
         timeForDrop: '02:00',
       },
       {
-        direction: Direction.DownLeft,
+        direction: Direction.LowerLeft,
         startTimeAfterMoving: '12:00',
         timeForDrop: '02:00',
       },
