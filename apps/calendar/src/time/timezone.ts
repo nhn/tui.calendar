@@ -1,6 +1,6 @@
 import { LocalDate, TuiDateConstructor, UTCDate } from '@toast-ui/date';
 
-import type TZDate from '@src/time/date';
+import TZDate from '@src/time/date';
 import { isFunction, isNumber, isPresent } from '@src/utils/type';
 
 let Constructor: TuiDateConstructor = LocalDate;
@@ -31,7 +31,52 @@ export function getTimezoneFactory(value: number | string) {
   };
 }
 
+export function calculateTimezoneOffset(targetDate: TZDate, timezoneName: string) {
+  if (!isIntlDateTimeFormatSupported()) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      'tui-calendar: Intl.DateTimeFormat is not fully supported. So It will return local timezone offset only.\nYou can use polyfill to fix this issue.'
+    );
+
+    return targetDate.getTimezoneOffset();
+  }
+
+  validateIANATimezoneName(timezoneName);
+
+  const token = tokenizeTZDate(targetDate, timezoneName);
+  const utcDate = tokenToUtcDate(token);
+
+  const offset = Math.round((utcDate.getTime() - targetDate.getTime()) / 60 / 1000);
+
+  return -offset;
+}
+
+// Reference: https://stackoverflow.com/a/30280636/16702531
+// If there's no timezoneName, it handles Native OS timezone.
+export function isUsingDST(targetDate: TZDate, timezoneName?: string) {
+  if (timezoneName) {
+    validateIANATimezoneName(timezoneName);
+  }
+
+  const jan = new TZDate(targetDate.getFullYear(), 0, 1);
+  const jul = new TZDate(targetDate.getFullYear(), 6, 1);
+
+  if (timezoneName) {
+    return (
+      Math.max(
+        calculateTimezoneOffset(jan, timezoneName),
+        calculateTimezoneOffset(jul, timezoneName)
+      ) !== calculateTimezoneOffset(targetDate, timezoneName)
+    );
+  }
+
+  return (
+    Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset()) !== targetDate.getTimezoneOffset()
+  );
+}
+
 const dtfCache = new Map<string, Intl.DateTimeFormat>();
+const timezoneNameValidationCache = new Map<string, boolean>();
 
 function isIntlDateTimeFormatSupported() {
   /**
@@ -39,6 +84,24 @@ function isIntlDateTimeFormatSupported() {
    * also, hourCycle options should be supported.
    */
   return isFunction(global?.Intl?.DateTimeFormat?.prototype?.formatToParts);
+}
+
+function validateIANATimezoneName(timezoneName: string) {
+  if (timezoneNameValidationCache.has(timezoneName)) {
+    return true;
+  }
+
+  try {
+    // Just try to create a dtf with the timezoneName.
+    // eslint-disable-next-line new-cap
+    Intl.DateTimeFormat('en-US', { timeZone: timezoneName });
+    timezoneNameValidationCache.set(timezoneName, true);
+
+    return true;
+  } catch {
+    // Usually it throws `RangeError` when the timezoneName is invalid.
+    throw new Error(`tui-calendar: Invalid IANA Timezone Name - ${timezoneName}`);
+  }
 }
 
 function getDateTimeFormat(timezoneName: string) {
@@ -79,7 +142,7 @@ function tokenizeTZDate(tzDate: TZDate, timezoneName: string): TokenizeResult {
   const dtf = getDateTimeFormat(timezoneName);
   const formatted = dtf.formatToParts(tzDate.toDate());
 
-  const token = formatted.reduce<TokenizeResult>((result, cur) => {
+  return formatted.reduce<TokenizeResult>((result, cur) => {
     const pos = typeToPos[cur.type as TokenizeTarget];
 
     if (isPresent(pos)) {
@@ -88,8 +151,6 @@ function tokenizeTZDate(tzDate: TZDate, timezoneName: string): TokenizeResult {
 
     return result;
   }, [] as unknown as TokenizeResult);
-
-  return token;
 }
 
 function tokenToUtcDate(token: TokenizeResult) {
@@ -98,21 +159,4 @@ function tokenToUtcDate(token: TokenizeResult) {
   const hour = _hour > 23 ? 0 : _hour;
 
   return new Date(Date.UTC(year, month, day, hour, minute, second));
-}
-
-export function calculateTimezoneOffset(targetDate: TZDate, timezoneName: string) {
-  if (!isIntlDateTimeFormatSupported()) {
-    console.warn(
-      'Intl.DateTimeFormat is not fully supported. So It will return local timezone offset only.\nYou can use polyfill to fix this issue.'
-    );
-
-    return targetDate.getTimezoneOffset();
-  }
-
-  const token = tokenizeTZDate(targetDate, timezoneName);
-  const utcDate = tokenToUtcDate(token);
-
-  const offset = Math.round((utcDate.getTime() - targetDate.getTime()) / 60 / 1000);
-
-  return -offset;
 }
