@@ -27,7 +27,7 @@ const cases: {
   directionInfo: {
     direction: Direction;
     startTimeAfterMoving: FormattedTimeString;
-    timeForDrop: FormattedTimeString;
+    timeToDrop: FormattedTimeString;
   }[];
 }[] = [
   {
@@ -37,17 +37,17 @@ const cases: {
       {
         direction: Direction.Right,
         startTimeAfterMoving: '10:00',
-        timeForDrop: '00:00',
+        timeToDrop: '00:00',
       },
       {
         direction: Direction.LowerRight,
         startTimeAfterMoving: '12:00',
-        timeForDrop: '02:00',
+        timeToDrop: '02:00',
       },
       {
         direction: Direction.Down,
         startTimeAfterMoving: '12:00',
-        timeForDrop: '02:00',
+        timeToDrop: '02:00',
       },
     ],
   },
@@ -58,42 +58,42 @@ const cases: {
       {
         direction: Direction.Up,
         startTimeAfterMoving: '02:00',
-        timeForDrop: '02:00',
+        timeToDrop: '02:00',
       },
       {
         direction: Direction.UpperRight,
         startTimeAfterMoving: '02:00',
-        timeForDrop: '02:00',
+        timeToDrop: '02:00',
       },
       {
         direction: Direction.Right,
         startTimeAfterMoving: '04:00',
-        timeForDrop: '04:00',
+        timeToDrop: '04:00',
       },
       {
         direction: Direction.LowerRight,
         startTimeAfterMoving: '06:00',
-        timeForDrop: '06:00',
+        timeToDrop: '06:00',
       },
       {
         direction: Direction.Down,
         startTimeAfterMoving: '06:00',
-        timeForDrop: '06:00',
+        timeToDrop: '06:00',
       },
       {
         direction: Direction.LowerLeft,
         startTimeAfterMoving: '06:00',
-        timeForDrop: '06:00',
+        timeToDrop: '06:00',
       },
       {
         direction: Direction.Left,
         startTimeAfterMoving: '04:00',
-        timeForDrop: '04:00',
+        timeToDrop: '04:00',
       },
       {
         direction: Direction.UpperLeft,
         startTimeAfterMoving: '02:00',
-        timeForDrop: '02:00',
+        timeToDrop: '02:00',
       },
     ],
   },
@@ -104,17 +104,17 @@ const cases: {
       {
         direction: Direction.Down,
         startTimeAfterMoving: '12:00',
-        timeForDrop: '02:00',
+        timeToDrop: '02:00',
       },
       {
         direction: Direction.LowerLeft,
         startTimeAfterMoving: '12:00',
-        timeForDrop: '02:00',
+        timeToDrop: '02:00',
       },
       {
         direction: Direction.Left,
         startTimeAfterMoving: '10:00',
-        timeForDrop: '00:00',
+        timeToDrop: '00:00',
       },
     ],
   },
@@ -123,11 +123,11 @@ const cases: {
 const getTargetEventSelector = (title: string) => `[data-testid*="time-event-${title}"]`;
 
 cases.forEach(({ title, eventColumnIndex, directionInfo }) => {
-  directionInfo.forEach(({ direction, startTimeAfterMoving, timeForDrop }) => {
+  directionInfo.forEach(({ direction, startTimeAfterMoving, timeToDrop }) => {
     test(`Moving event: ${title} for ${direction}`, async ({ page }) => {
       // Given
       const eventLocator = page.locator(getTargetEventSelector(title)).last();
-      const targetRowLocator = page.locator(getTimeGridLineSelector(timeForDrop));
+      const targetRowLocator = page.locator(getTimeGridLineSelector(timeToDrop));
       const targetColumnLocator = page.locator(`data-testid=timegrid-column-${eventColumnIndex}`);
 
       const targetColumnBoundingBox = await getBoundingBox(targetColumnLocator);
