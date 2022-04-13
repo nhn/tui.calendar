@@ -4,12 +4,7 @@ import { expect, test } from '@playwright/test';
 import { mockWeekViewEvents } from '../../stories/mocks/mockWeekViewEvents';
 import type { FormattedTimeString } from '../../types/time/datetime';
 import { WEEK_VIEW_PAGE_URL } from '../configs';
-import {
-  dragAndDrop,
-  getBoundingBox,
-  getFilterForTimeGridEvent,
-  getTimeGridLineSelector,
-} from '../utils';
+import { dragAndDrop, getBoundingBox, getTimeGridLineSelector } from '../utils';
 
 test.beforeEach(async ({ page }) => {
   await page.goto(WEEK_VIEW_PAGE_URL);
@@ -27,7 +22,7 @@ interface EventInfo {
 }
 
 const [TWO_VIEW_EVENT, SHORT_TIME_EVENT, LONG_TIME_EVENT] = mockWeekViewEvents.filter(
-  getFilterForTimeGridEvent()
+  ({ isAllday }) => !isAllday
 );
 
 const targetEvents: EventInfo[] = [

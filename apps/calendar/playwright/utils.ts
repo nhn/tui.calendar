@@ -1,7 +1,6 @@
 import type { Locator, Page } from '@playwright/test';
 
 import type TZDate from '../src/time/date';
-import type { EventModelData } from '../types/events';
 import type { FormattedTimeString } from '../types/time/datetime';
 import type { BoundingBox } from './types';
 
@@ -52,8 +51,4 @@ export function getTimeStrFromDate(d: TZDate) {
   const minute = d.getMinutes();
 
   return `${hour < 10 ? `0${hour}` : hour}:${minute < 10 ? `0${minute}` : minute}`;
-}
-
-export function getFilterForTimeGridEvent() {
-  return ({ isAllday }: EventModelData) => !isAllday;
 }
