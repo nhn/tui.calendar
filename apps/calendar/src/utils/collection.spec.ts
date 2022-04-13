@@ -25,7 +25,7 @@ describe('Collection', () => {
     it('get ID from item.', () => {
       const item = { _id: 7 };
 
-      expect(c.getItemID(item)).toBe('7');
+      expect(c.getItemID(item)).toBe(7);
     });
   });
 
@@ -111,7 +111,7 @@ describe('Collection', () => {
 
       expect(c.size).toBe(1);
       expect(c.get(4)).toBe(item3);
-      expect(c.get(2)).toBeUndefined();
+      expect(c.get(2)).toBeNull();
     });
   });
 
@@ -142,26 +142,6 @@ describe('Collection', () => {
     it('check item existance by id.', () => {
       expect(c.has(2)).toBe(true);
       expect(c.has(14)).toBe(false);
-    });
-
-    it('can use filter function instead of id.', () => {
-      let callCount = 0;
-
-      expect(
-        c.has((item: Item) => {
-          callCount += 1;
-
-          return item._id === 2;
-        })
-      ).toBe(true);
-
-      expect(callCount).toBe(2);
-
-      expect(
-        c.has((item: Item) => {
-          return item.name === '123';
-        })
-      ).toBe(false);
     });
   });
 
@@ -510,7 +490,7 @@ describe('Collection', () => {
     it('iterate own items.', () => {
       c.each(spy);
 
-      expect(spy.mock.calls[2]).toEqual(expect.arrayContaining([{ _id: 4, value: 2 }, '4']));
+      expect(spy.mock.calls[2]).toEqual(expect.arrayContaining([{ _id: 4, value: 2 }, 4]));
     });
 
     it('break loop when iteratee return false.', () => {

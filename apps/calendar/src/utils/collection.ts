@@ -9,24 +9,24 @@ export type Item = {
 export type Filter<ItemType> = (item: ItemType) => boolean;
 
 /**
- * Common collection.
+ * Generic collection base on ES6 Map.
  *
- * It need function for get model's unique id.
+ * It needs function for get model's unique id.
  *
- * if the function is not supplied then it use default function {@link Collection#getItemID}
+ * if the function is not supplied then it uses default function {@link Collection#getItemID}
  * @param {function} [getItemIDFn] function for get model's id.
  */
-export default class Collection<ItemType extends Item> extends Map<ItemID, ItemType> {
-  constructor(getItemIDFn?: (item: ItemType) => ItemID) {
-    super();
+export default class Collection<ItemType extends Item> {
+  internalMap: Map<ItemID, ItemType> = new Map();
 
+  constructor(getItemIDFn?: (item: ItemType) => ItemID) {
     if (isFunction(getItemIDFn)) {
       this.getItemID = getItemIDFn;
     }
   }
 
   /**
-   * Combind supplied function filters and condition.
+   * Combine supplied function filters and condition.
    * @param {...Filter} filterFns - function filters
    * @returns {function} combined filter
    */
@@ -77,7 +77,7 @@ export default class Collection<ItemType extends Item> extends Map<ItemID, ItemT
   }
 
   getFirstItem(): ItemType | null {
-    const iterator = this.values();
+    const iterator = this.internalMap.values();
 
     return iterator.next().value;
   }
@@ -88,7 +88,9 @@ export default class Collection<ItemType extends Item> extends Map<ItemID, ItemT
    */
   add(...items: ItemType[]): Collection<ItemType> {
     items.forEach((item) => {
-      this.set(this.getItemID(item), item);
+      const id = this.getItemID(item);
+
+      this.internalMap.set(id, item);
     });
 
     return this;
@@ -99,11 +101,20 @@ export default class Collection<ItemType extends Item> extends Map<ItemID, ItemT
    * @param {Array.<(Object|string|number)>} items model instances or unique ids to delete.
    */
   remove(...items: Array<ItemType | ItemID>) {
+    const removeResult: ItemType[] = [];
+
     items.forEach((item) => {
       const id: ItemID = isString(item) || isNumber(item) ? item : this.getItemID(item);
 
-      this['delete'](id);
+      if (!this.internalMap.has(id)) {
+        return;
+      }
+
+      removeResult.push(this.internalMap.get(id) as ItemType);
+      this.internalMap['delete'](id);
     });
+
+    return removeResult.length === 1 ? removeResult[0] : removeResult;
   }
 
   /**
@@ -114,7 +125,13 @@ export default class Collection<ItemType extends Item> extends Map<ItemID, ItemT
   has(item: ItemType | ItemID): boolean {
     const id: ItemID = isString(item) || isNumber(item) ? item : this.getItemID(item);
 
-    return this.has(id);
+    return this.internalMap.has(id);
+  }
+
+  get(item: ItemType | ItemID): ItemType | null {
+    const id: ItemID = isString(item) || isNumber(item) ? item : this.getItemID(item);
+
+    return this.internalMap.get(id) ?? null;
   }
 
   /**
@@ -123,7 +140,7 @@ export default class Collection<ItemType extends Item> extends Map<ItemID, ItemT
    * @param {function} callback the callback.
    */
   doWhenHas(id: ItemID, callback: (item: ItemType) => void) {
-    const item = this.get(id);
+    const item = this.internalMap.get(id);
 
     if (isNil(item)) {
       return;
@@ -137,7 +154,7 @@ export default class Collection<ItemType extends Item> extends Map<ItemID, ItemT
    * @param {function} filterFn filter function.
    * @returns {Collection} new collection with filtered models.
    * @example
-   * collection.find(function(item) {
+   * collection.filter(function(item) {
    *     return item.edited === true;
    * });
    *
@@ -149,9 +166,9 @@ export default class Collection<ItemType extends Item> extends Map<ItemID, ItemT
    *     return item.disabled === false;
    * }
    *
-   * collection.find(Collection.and(filter1, filter2));
+   * collection.filter(Collection.and(filter1, filter2));
    *
-   * collection.find(Collection.or(filter1, filter2));
+   * collection.filter(Collection.or(filter1, filter2));
    */
   filter(filterFn: Filter<ItemType>) {
     const result = new Collection<ItemType>();
@@ -160,7 +177,7 @@ export default class Collection<ItemType extends Item> extends Map<ItemID, ItemT
       result.getItemID = this.getItemID;
     }
 
-    this.forEach((item) => {
+    this.internalMap.forEach((item) => {
       if (filterFn(item) === true) {
         result.add(item);
       }
@@ -191,8 +208,12 @@ export default class Collection<ItemType extends Item> extends Map<ItemID, ItemT
   groupBy(groupByFn: string | number | ((item: ItemType) => string | number)) {
     const result: Record<string, Collection<ItemType>> = {};
 
-    this.forEach((item) => {
-      const key = isFunction(groupByFn) ? groupByFn(item) : item[groupByFn];
+    this.internalMap.forEach((item) => {
+      let key = isFunction(groupByFn) ? groupByFn(item) : item[groupByFn];
+
+      if (isFunction(key)) {
+        key = key.call(item);
+      }
 
       let collection = result[key];
       if (!collection) {
@@ -211,16 +232,16 @@ export default class Collection<ItemType extends Item> extends Map<ItemID, ItemT
    */
   find(findFn: Filter<ItemType>): ItemType | null {
     let result: ItemType | null = null;
+    const items = this.internalMap.values();
+    let next = items.next();
 
-    this.each((item) => {
-      if (findFn(item)) {
-        result = item;
-
-        return false; // returning false can stop this loop
+    while (next.done === false) {
+      if (findFn(next.value)) {
+        result = next.value;
+        break;
       }
-
-      return true;
-    });
+      next = items.next();
+    }
 
     return result;
   }
@@ -240,22 +261,21 @@ export default class Collection<ItemType extends Item> extends Map<ItemID, ItemT
    * when iteratee return false then break the loop.
    * @param {function} iteratee iteratee(item, index, items)
    */
-  each(
-    iteratee: (
-      item: ItemType,
-      key: keyof ItemType,
-      collection: Collection<ItemType>
-    ) => boolean | void
-  ) {
-    const iterator = this.entries();
-    for (let i = 0; i < this.size; i += 1) {
-      const [key, value] = iterator.next().value;
-      const result = iteratee(value, key, this);
+  each(iteratee: (item: ItemType, key: keyof ItemType) => boolean | void) {
+    const entries = this.internalMap.entries();
+    let next = entries.next();
 
-      if (result === false) {
+    while (next.done === false) {
+      const [key, value] = next.value;
+      if (iteratee(value, key) === false) {
         break;
       }
+      next = entries.next();
     }
+  }
+
+  clear() {
+    this.internalMap.clear();
   }
 
   /**
@@ -263,12 +283,10 @@ export default class Collection<ItemType extends Item> extends Map<ItemID, ItemT
    * @returns {array} new array.
    */
   toArray() {
-    const result: ItemType[] = [];
+    return Array.from(this.internalMap.values());
+  }
 
-    this.forEach((item) => {
-      result.push(item);
-    });
-
-    return result;
+  get size() {
+    return this.internalMap.size;
   }
 }
