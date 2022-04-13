@@ -1,11 +1,13 @@
 import type { Locator } from '@playwright/test';
 import { expect, test } from '@playwright/test';
 
+import { mockMonthViewEvents } from '../../stories/mocks/mockMonthViewEvents';
 import { assertBoundingBoxIncluded } from '../assertions';
 import { MONTH_VIEW_PAGE_URL } from '../configs';
 import { dragAndDrop, getBoundingBox } from '../utils';
 
 const CELL_SELECTOR = '.toastui-calendar-daygrid-cell';
+const [TARGET_EVENT1] = mockMonthViewEvents;
 
 test.beforeEach(async ({ page }) => {
   await page.goto(MONTH_VIEW_PAGE_URL);
@@ -26,9 +28,9 @@ test.describe('event resizing', () => {
    */
 
   // target event is rendered from #7 to #16
-  const RESIZE_TARGET_SELECTOR = 'data-testid=0-event1';
+  const RESIZE_TARGET_SELECTOR = `data-testid=${TARGET_EVENT1.calendarId}-${TARGET_EVENT1.id}-${TARGET_EVENT1.title}`;
 
-  function getResizeIconOfEvent(eventLocator: Locator) {
+  function getResizeIconLocatorOfEvent(eventLocator: Locator) {
     return eventLocator.last().locator('data-testid=horizontal-event-resize-icon');
   }
 
@@ -38,15 +40,20 @@ test.describe('event resizing', () => {
 
   test('resize event to the right in the same row', async ({ page }) => {
     // Given
-    const renderedEventsLocator = page.locator(RESIZE_TARGET_SELECTOR);
-    const resizeIconLocator = getResizeIconOfEvent(renderedEventsLocator);
+    const eventsLocator = page.locator(RESIZE_TARGET_SELECTOR);
+    const resizeIconLocator = getResizeIconLocatorOfEvent(eventsLocator);
     const targetCellLocator = page.locator(getTargetCellSelector(19));
+    const eventBoundingBoxBeforeResizing = await getBoundingBox(eventsLocator.last());
 
     // When
     await dragAndDrop(resizeIconLocator, targetCellLocator);
+    const eventBoundingBoxAfterResizing = await getBoundingBox(eventsLocator.last());
 
     // Then
-    expect(await renderedEventsLocator.count()).toBe(2);
+    expect(await eventsLocator.count()).toBe(2);
+    expect(eventBoundingBoxAfterResizing.width).toBeGreaterThan(
+      eventBoundingBoxBeforeResizing.width
+    );
 
     const targetCellBoundingBox = await getBoundingBox(targetCellLocator);
     const resizeIconBoundingBoxAfterResizing = await getBoundingBox(resizeIconLocator);
@@ -55,15 +62,18 @@ test.describe('event resizing', () => {
 
   test('resize event to the left in the same row', async ({ page }) => {
     // Given
-    const renderedEventsLocator = page.locator(RESIZE_TARGET_SELECTOR);
-    const resizeIconLocator = getResizeIconOfEvent(renderedEventsLocator);
+    const eventsLocator = page.locator(RESIZE_TARGET_SELECTOR);
+    const resizeIconLocator = getResizeIconLocatorOfEvent(eventsLocator);
     const targetCellLocator = page.locator(getTargetCellSelector(14));
+    const eventBoundingBoxBeforeResizing = await getBoundingBox(eventsLocator.last());
 
     // When
     await dragAndDrop(resizeIconLocator, targetCellLocator);
+    const eventBoundingBoxAfterResizing = await getBoundingBox(eventsLocator.last());
 
     // Then
-    expect(await renderedEventsLocator.count()).toBe(2);
+    expect(await eventsLocator.count()).toBe(2);
+    expect(eventBoundingBoxAfterResizing.width).toBeLessThan(eventBoundingBoxBeforeResizing.width);
 
     const targetCellBoundingBox = await getBoundingBox(targetCellLocator);
     const resizeIconBoundingBoxAfterResizing = await getBoundingBox(resizeIconLocator);
@@ -72,15 +82,15 @@ test.describe('event resizing', () => {
 
   test('resize event to the right in the next two rows', async ({ page }) => {
     // Given
-    const renderedEventsLocator = page.locator(RESIZE_TARGET_SELECTOR);
-    const resizeIconLocator = getResizeIconOfEvent(renderedEventsLocator);
+    const eventsLocator = page.locator(RESIZE_TARGET_SELECTOR);
+    const resizeIconLocator = getResizeIconLocatorOfEvent(eventsLocator);
     const targetCellLocator = page.locator(getTargetCellSelector(31));
 
     // When
     await dragAndDrop(resizeIconLocator, targetCellLocator);
 
     // Then
-    expect(await renderedEventsLocator.count()).toBe(4);
+    expect(await eventsLocator.count()).toBe(4);
 
     const resizeIconBoundingBoxAfterResizing = await getBoundingBox(resizeIconLocator);
     const targetCellBoundingBox = await getBoundingBox(targetCellLocator);
@@ -90,7 +100,7 @@ test.describe('event resizing', () => {
   test('resize event to the left in the next two rows', async ({ page }) => {
     // Given
     const eventsLocator = page.locator(RESIZE_TARGET_SELECTOR);
-    const resizeIconLocator = getResizeIconOfEvent(eventsLocator);
+    const resizeIconLocator = getResizeIconLocatorOfEvent(eventsLocator);
     const targetCellLocator = page.locator(getTargetCellSelector(28));
 
     // When
@@ -107,7 +117,7 @@ test.describe('event resizing', () => {
   test('shrink event - to the end of the first row of rendered events', async ({ page }) => {
     // Given
     const eventsLocator = page.locator(RESIZE_TARGET_SELECTOR);
-    const resizeIconLocator = getResizeIconOfEvent(eventsLocator);
+    const resizeIconLocator = getResizeIconLocatorOfEvent(eventsLocator);
     const targetCellLocator = page.locator(getTargetCellSelector(13));
 
     // When
@@ -124,7 +134,7 @@ test.describe('event resizing', () => {
   test('shrink event - to take place of just one cell', async ({ page }) => {
     // Given
     const eventsLocator = page.locator(RESIZE_TARGET_SELECTOR);
-    const resizeIconLocator = getResizeIconOfEvent(eventsLocator);
+    const resizeIconLocator = getResizeIconLocatorOfEvent(eventsLocator);
     const targetCellLocator = page.locator(getTargetCellSelector(7));
 
     // When
@@ -143,7 +153,7 @@ test.describe('event resizing', () => {
   }) => {
     // Given
     const eventsLocator = page.locator(RESIZE_TARGET_SELECTOR);
-    const resizeIconLocator = getResizeIconOfEvent(eventsLocator);
+    const resizeIconLocator = getResizeIconLocatorOfEvent(eventsLocator);
     const targetCellLocator = page.locator(getTargetCellSelector(0));
     const expectedCellLocator = page.locator(getTargetCellSelector(16));
 
