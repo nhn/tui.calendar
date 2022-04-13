@@ -39,6 +39,18 @@ const testCases: {
     directions: [Direction.Up, Direction.Right, Direction.Down, Direction.Left],
   },
 ];
+const rightDirectionTestCases = testCases.filter((testCase) =>
+  testCase.directions.includes(Direction.Right)
+);
+const leftDirectionTestCases = testCases.filter((testCase) =>
+  testCase.directions.includes(Direction.Left)
+);
+const lowerDirectionTestCases = testCases.filter((testCase) =>
+  testCase.directions.includes(Direction.Down)
+);
+const upperDirectionTestCases = testCases.filter((testCase) =>
+  testCase.directions.includes(Direction.Up)
+);
 
 const getCellSelector = (cellIndex: number) => `${CELL_SELECTOR} >> nth=${cellIndex}`;
 
@@ -74,97 +86,89 @@ test.describe('event moving', () => {
    * ]
    */
 
-  testCases
-    .filter((testCase) => testCase.directions.includes(Direction.Right))
-    .forEach(({ event, startCellIndex }) => {
-      const getRightCellIndex = (cellIndex: number) => cellIndex + 1;
+  rightDirectionTestCases.forEach(({ event, startCellIndex }) => {
+    const getRightCellIndex = (cellIndex: number) => cellIndex + 1;
 
-      test(`moving month event ${event.title} for direction right`, async ({ page }) => {
-        // Given
-        const rightCellIndex = getRightCellIndex(startCellIndex);
+    test(`moving month event ${event.title} for direction right`, async ({ page }) => {
+      // Given
+      const rightCellIndex = getRightCellIndex(startCellIndex);
 
-        // When
-        const { targetCellBoundingBox, boundingBoxBeforeMoving, boundingBoxAfterMoving } =
-          await setup(page, event, rightCellIndex);
+      // When
+      const { targetCellBoundingBox, boundingBoxBeforeMoving, boundingBoxAfterMoving } =
+        await setup(page, event, rightCellIndex);
 
-        // Then
-        expect(boundingBoxAfterMoving.x).toBeGreaterThan(boundingBoxBeforeMoving.x);
-        expect(boundingBoxAfterMoving.width).toBeLessThanOrEqual(boundingBoxBeforeMoving.width);
-        expect(boundingBoxAfterMoving.x).toBeCloseTo(targetCellBoundingBox.x, 1);
-        expect(boundingBoxAfterMoving.x).toBeLessThan(
-          targetCellBoundingBox.x + targetCellBoundingBox.width
-        );
-      });
+      // Then
+      expect(boundingBoxAfterMoving.x).toBeGreaterThan(boundingBoxBeforeMoving.x);
+      expect(boundingBoxAfterMoving.width).toBeLessThanOrEqual(boundingBoxBeforeMoving.width);
+      expect(boundingBoxAfterMoving.x).toBeCloseTo(targetCellBoundingBox.x, 1);
+      expect(boundingBoxAfterMoving.x).toBeLessThan(
+        targetCellBoundingBox.x + targetCellBoundingBox.width
+      );
     });
+  });
 
-  testCases
-    .filter((testCase) => testCase.directions.includes(Direction.Left))
-    .forEach(({ event, startCellIndex }) => {
-      const getLeftCellIndex = (cellIndex: number) => cellIndex - 1;
+  leftDirectionTestCases.forEach(({ event, startCellIndex }) => {
+    const getLeftCellIndex = (cellIndex: number) => cellIndex - 1;
 
-      test(`moving month event ${event.title} for direction left`, async ({ page }) => {
-        // Given
-        const leftCellIndex = getLeftCellIndex(startCellIndex);
+    test(`moving month event ${event.title} for direction left`, async ({ page }) => {
+      // Given
+      const leftCellIndex = getLeftCellIndex(startCellIndex);
 
-        // When
-        const { targetCellBoundingBox, boundingBoxBeforeMoving, boundingBoxAfterMoving } =
-          await setup(page, event, leftCellIndex);
+      // When
+      const { targetCellBoundingBox, boundingBoxBeforeMoving, boundingBoxAfterMoving } =
+        await setup(page, event, leftCellIndex);
 
-        // Then
-        expect(boundingBoxAfterMoving.x).toBeLessThan(boundingBoxBeforeMoving.x);
-        expect(boundingBoxAfterMoving.width).toBeGreaterThanOrEqual(boundingBoxBeforeMoving.width);
-        expect(boundingBoxAfterMoving.x).toBeCloseTo(targetCellBoundingBox.x, 1);
-        expect(boundingBoxAfterMoving.x).toBeLessThan(
-          targetCellBoundingBox.x + targetCellBoundingBox.width
-        );
-      });
+      // Then
+      expect(boundingBoxAfterMoving.x).toBeLessThan(boundingBoxBeforeMoving.x);
+      expect(boundingBoxAfterMoving.width).toBeGreaterThanOrEqual(boundingBoxBeforeMoving.width);
+      expect(boundingBoxAfterMoving.x).toBeCloseTo(targetCellBoundingBox.x, 1);
+      expect(boundingBoxAfterMoving.x).toBeLessThan(
+        targetCellBoundingBox.x + targetCellBoundingBox.width
+      );
     });
+  });
 
-  testCases
-    .filter((testCase) => testCase.directions.includes(Direction.Down))
-    .forEach(({ event, startCellIndex }) => {
-      const getDownCellIndex = (cellIndex: number) => cellIndex + 7;
+  lowerDirectionTestCases.forEach(({ event, startCellIndex }) => {
+    const getDownCellIndex = (cellIndex: number) => cellIndex + 7;
 
-      test(`moving month event ${event.title} for direction down`, async ({ page }) => {
-        // Given
-        const downCellIndex = getDownCellIndex(startCellIndex);
+    test(`moving month event ${event.title} for direction down`, async ({ page }) => {
+      // Given
+      const downCellIndex = getDownCellIndex(startCellIndex);
 
-        // When
-        const { targetCellBoundingBox, boundingBoxBeforeMoving, boundingBoxAfterMoving } =
-          await setup(page, event, downCellIndex);
+      // When
+      const { targetCellBoundingBox, boundingBoxBeforeMoving, boundingBoxAfterMoving } =
+        await setup(page, event, downCellIndex);
 
-        // Then
-        expect(boundingBoxAfterMoving.y).toBeGreaterThan(boundingBoxBeforeMoving.y);
-        expect(boundingBoxAfterMoving.width).toBeCloseTo(boundingBoxBeforeMoving.width);
-        expect(boundingBoxAfterMoving.y).toBeGreaterThan(targetCellBoundingBox.y);
-        expect(boundingBoxAfterMoving.y).toBeLessThan(
-          targetCellBoundingBox.y + targetCellBoundingBox.height
-        );
-      });
+      // Then
+      expect(boundingBoxAfterMoving.y).toBeGreaterThan(boundingBoxBeforeMoving.y);
+      expect(boundingBoxAfterMoving.width).toBeCloseTo(boundingBoxBeforeMoving.width);
+      expect(boundingBoxAfterMoving.y).toBeGreaterThan(targetCellBoundingBox.y);
+      expect(boundingBoxAfterMoving.y).toBeLessThan(
+        targetCellBoundingBox.y + targetCellBoundingBox.height
+      );
     });
+  });
 
-  testCases
-    .filter((testCase) => testCase.directions.includes(Direction.Up))
-    .forEach(({ event, startCellIndex }) => {
-      const getUpCellIndex = (cellIndex: number) => cellIndex - 7;
+  upperDirectionTestCases.forEach(({ event, startCellIndex }) => {
+    const getUpCellIndex = (cellIndex: number) => cellIndex - 7;
 
-      test(`moving month event ${event.title} for direction up`, async ({ page }) => {
-        // Given
-        const upCellIndex = getUpCellIndex(startCellIndex);
+    test(`moving month event ${event.title} for direction up`, async ({ page }) => {
+      // Given
+      const upCellIndex = getUpCellIndex(startCellIndex);
 
-        // When
-        const { targetCellBoundingBox, boundingBoxBeforeMoving, boundingBoxAfterMoving } =
-          await setup(page, event, upCellIndex);
+      // When
+      const { targetCellBoundingBox, boundingBoxBeforeMoving, boundingBoxAfterMoving } =
+        await setup(page, event, upCellIndex);
 
-        // Then
-        expect(boundingBoxAfterMoving.y).toBeLessThan(boundingBoxBeforeMoving.y);
-        expect(boundingBoxAfterMoving.width).toBeCloseTo(boundingBoxBeforeMoving.width);
-        expect(boundingBoxAfterMoving.y).toBeGreaterThan(targetCellBoundingBox.y);
-        expect(boundingBoxAfterMoving.y).toBeLessThan(
-          targetCellBoundingBox.y + targetCellBoundingBox.height
-        );
-      });
+      // Then
+      expect(boundingBoxAfterMoving.y).toBeLessThan(boundingBoxBeforeMoving.y);
+      expect(boundingBoxAfterMoving.width).toBeCloseTo(boundingBoxBeforeMoving.width);
+      expect(boundingBoxAfterMoving.y).toBeGreaterThan(targetCellBoundingBox.y);
+      expect(boundingBoxAfterMoving.y).toBeLessThan(
+        targetCellBoundingBox.y + targetCellBoundingBox.height
+      );
     });
+  });
 
   test('moving month grid event to end of week', async ({ page }) => {
     // Given
