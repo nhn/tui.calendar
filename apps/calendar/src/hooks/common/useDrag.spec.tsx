@@ -5,12 +5,13 @@ import userEvent from '@testing-library/user-event';
 
 import { MINIMUM_DRAG_MOUSE_DISTANCE } from '@src/constants/mouse';
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
-import { DragListeners, useDrag } from '@src/hooks/common/useDrag';
+import type { DragListeners } from '@src/hooks/common/useDrag';
+import { useDrag } from '@src/hooks/common/useDrag';
 import { dragAndDrop } from '@src/test/utils';
 
-import { PropsWithChildren } from '@t/components/common';
-import { DraggingTypes } from '@t/drag';
-import { CalendarStore, InternalStoreAPI } from '@t/store';
+import type { PropsWithChildren } from '@t/components/common';
+import type { DraggingTypes } from '@t/drag';
+import type { CalendarStore, InternalStoreAPI } from '@t/store';
 
 describe('drag hook', () => {
   const TEST_DRAGGING_TYPE = 'drag-test';

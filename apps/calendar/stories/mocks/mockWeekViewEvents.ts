@@ -1,7 +1,7 @@
 import TZDate from '@src/time/date';
 import { addDate, setTimeStrToDate } from '@src/time/datetime';
 
-import { EventModelData } from '@t/events';
+import type { EventModelData } from '@t/events';
 
 const today = new TZDate();
 const sunday = addDate(today, -today.getDay());

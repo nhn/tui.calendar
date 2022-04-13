@@ -5,7 +5,8 @@ import range from 'tui-code-snippet/array/range';
 
 import { addTimeGridPrefix } from '@src/components/timeGrid';
 import { CollapseButton } from '@src/components/timeGrid/collapseButton';
-import { TimeProps, Times } from '@src/components/timeGrid/times';
+import type { TimeProps } from '@src/components/timeGrid/times';
+import { Times } from '@src/components/timeGrid/times';
 import { TimezoneLabel } from '@src/components/timeGrid/timezoneLabel';
 import { cls } from '@src/helpers/css';
 import TZDate from '@src/time/date';
@@ -22,7 +23,7 @@ import {
 import { noop } from '@src/utils/noop';
 import { isNumber } from '@src/utils/type';
 
-import { TimezoneConfig } from '@t/options';
+import type { TimezoneConfig } from '@t/options';
 
 interface Props {
   currentTime: TZDate;

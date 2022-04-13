@@ -3,7 +3,7 @@
  * from: https://github.com/pmndrs/zustand/blob/833f57ed131e94f3ed48627d4cfbf09cb9c7df03/src/middleware/devtools.ts
  */
 /* eslint-disable complexity */
-import {
+import type {
   GetState,
   InternalStoreAPI,
   PartialStateCreator,

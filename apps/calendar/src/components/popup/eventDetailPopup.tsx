@@ -15,8 +15,8 @@ import { eventDetailPopupParamSelector } from '@src/selectors/popup';
 import TZDate from '@src/time/date';
 import { isNil } from '@src/utils/type';
 
-import { StyleProp } from '@t/components/common';
-import { Rect } from '@t/store';
+import type { StyleProp } from '@t/components/common';
+import type { Rect } from '@t/store';
 
 const classNames = {
   popupContainer: cls('popup-container'),

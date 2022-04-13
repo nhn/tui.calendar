@@ -7,12 +7,12 @@ import { useDrag } from '@src/hooks/common/useDrag';
 import { useTransientUpdate } from '@src/hooks/common/useTransientUpdate';
 import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
-import { GridSelectionType } from '@src/slices/gridSelection';
-import TZDate from '@src/time/date';
+import type { GridSelectionType } from '@src/slices/gridSelection';
+import type TZDate from '@src/time/date';
 import { isPresent } from '@src/utils/type';
 
-import { GridPosition, GridPositionFinder } from '@t/grid';
-import { CalendarState } from '@t/store';
+import type { GridPosition, GridPositionFinder } from '@t/grid';
+import type { CalendarState } from '@t/store';
 
 function sortDates(a: TZDate, b: TZDate) {
   const isIncreased = a < b;

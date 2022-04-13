@@ -2,7 +2,7 @@ import { h } from 'preact';
 
 import { cls, toPercent } from '@src/helpers/css';
 import { getLeftAndWidth } from '@src/helpers/grid';
-import TZDate from '@src/time/date';
+import type TZDate from '@src/time/date';
 
 interface Props {
   gridSelectionData: GridSelectionDataByRow;

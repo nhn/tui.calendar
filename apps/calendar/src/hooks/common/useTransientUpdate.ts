@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'preact/hooks';
 
 import { useInternalStore } from '@src/contexts/calendarStore';
 
-import { CalendarState } from '@t/store';
+import type { CalendarState } from '@t/store';
 
 type Slice<S> = S extends (state: CalendarState) => infer T ? T : never;
 

@@ -1,4 +1,4 @@
-import { DeepPartial } from 'ts-essentials';
+import type { DeepPartial } from 'ts-essentials';
 
 type CommonTheme = {
   backgroundColor: string;

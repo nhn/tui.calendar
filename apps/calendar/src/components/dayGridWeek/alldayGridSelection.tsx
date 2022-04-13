@@ -1,4 +1,5 @@
-import { ComponentProps, h } from 'preact';
+import type { ComponentProps } from 'preact';
+import { h } from 'preact';
 
 import { GridSelection } from '@src/components/dayGridCommon/gridSelection';
 import type { AlldayGridRow } from '@src/components/dayGridWeek/alldayGridRow';
@@ -6,7 +7,7 @@ import { useStore } from '@src/contexts/calendarStore';
 import { alldayGridRowSelectionHelper } from '@src/helpers/gridSelection';
 import { isNil } from '@src/utils/type';
 
-import { CalendarState } from '@t/store';
+import type { CalendarState } from '@t/store';
 
 function dayGridWeekSelectionSelector(state: CalendarState) {
   return alldayGridRowSelectionHelper.calculateSelection(state.gridSelection.dayGridWeek);

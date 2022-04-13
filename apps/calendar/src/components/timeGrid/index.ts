@@ -1,4 +1,4 @@
-import { TimeUnit } from '@t/events';
+import type { TimeUnit } from '@t/events';
 
 export const className = 'timegrid';
 export const addTimeGridPrefix = (selector: string) => `${className}-${selector}`;

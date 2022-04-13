@@ -9,7 +9,7 @@ import {
 import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 
-import { CalendarData, EventModelData } from '@t/events';
+import type { CalendarData, EventModelData } from '@t/events';
 
 describe('controller/base', () => {
   let calendarData: CalendarData;

@@ -2,8 +2,8 @@ import produce from 'immer';
 
 import { mergeObject } from '@src/utils/object';
 
-import { SetState } from '@t/store';
-import { ThemeDispatchers, ThemeState, ThemeStore } from '@t/theme';
+import type { SetState } from '@t/store';
+import type { ThemeDispatchers, ThemeState, ThemeStore } from '@t/theme';
 
 export function createThemeDispatch(set: SetState<ThemeStore>): ThemeDispatchers {
   return {

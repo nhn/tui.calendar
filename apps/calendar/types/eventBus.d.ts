@@ -1,6 +1,6 @@
-import EventModel from '@src/model/eventModel';
+import type EventModel from '@src/model/eventModel';
 
-import { EventModelData } from '@t/events';
+import type { EventModelData } from '@t/events';
 
 type AnyFunc = (...args: any[]) => any;
 

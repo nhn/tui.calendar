@@ -3,8 +3,8 @@ import { getCollisionGroup, getMatrices } from '@src/controller/core';
 import { getTopHeightByTime } from '@src/controller/times';
 import { getCollides } from '@src/controller/week';
 import { isTimeEvent } from '@src/model/eventModel';
-import EventUIModel from '@src/model/eventUIModel';
-import TZDate from '@src/time/date';
+import type EventUIModel from '@src/model/eventUIModel';
+import type TZDate from '@src/time/date';
 import { addMinutes, max, min } from '@src/time/datetime';
 import array from '@src/utils/array';
 

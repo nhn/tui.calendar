@@ -1,12 +1,12 @@
-import { DeepPartial } from 'ts-essentials';
+import type { DeepPartial } from 'ts-essentials';
 
 import { DEFAULT_WEEK_THEME } from '@src/constants/theme';
 import { initThemeStore } from '@src/contexts/themeStore';
 import { useDayGridRowTitleStyle } from '@src/hooks/dayGridWeek/useDayGridRowTitleStyle';
 import { act, renderHook } from '@src/test/utils';
 
-import { InternalStoreAPI } from '@t/store';
-import { ThemeStore, WeekTheme } from '@t/theme';
+import type { InternalStoreAPI } from '@t/store';
+import type { ThemeStore, WeekTheme } from '@t/theme';
 
 describe('useDayGridRowTitleStyle', () => {
   const timesWidth = 120;

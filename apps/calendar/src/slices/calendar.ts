@@ -7,11 +7,11 @@ import {
   deleteEvent,
   updateEvent,
 } from '@src/controller/base';
-import EventModel from '@src/model/eventModel';
+import type EventModel from '@src/model/eventModel';
 
-import { CalendarData, EventModelData } from '@t/events';
-import { CalendarColor, CalendarInfo } from '@t/options';
-import { CalendarState, CalendarStore, SetState } from '@t/store';
+import type { CalendarData, EventModelData } from '@t/events';
+import type { CalendarColor, CalendarInfo } from '@t/options';
+import type { CalendarState, CalendarStore, SetState } from '@t/store';
 
 export type CalendarSlice = { calendar: CalendarData };
 

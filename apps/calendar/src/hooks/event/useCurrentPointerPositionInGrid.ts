@@ -4,7 +4,7 @@ import { useTransientUpdate } from '@src/hooks/common/useTransientUpdate';
 import { dndSelector } from '@src/selectors';
 import { isPresent } from '@src/utils/type';
 
-import { GridPosition, GridPositionFinder } from '@t/grid';
+import type { GridPosition, GridPositionFinder } from '@t/grid';
 
 export function useCurrentPointerPositionInGrid(
   gridPositionFinder: GridPositionFinder

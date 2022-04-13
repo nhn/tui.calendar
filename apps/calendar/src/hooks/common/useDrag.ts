@@ -5,12 +5,13 @@ import { MINIMUM_DRAG_MOUSE_DISTANCE } from '@src/constants/mouse';
 import { useDispatch, useInternalStore } from '@src/contexts/calendarStore';
 import { useTransientUpdate } from '@src/hooks/common/useTransientUpdate';
 import { dndSelector } from '@src/selectors';
-import { DndSlice, DraggingState } from '@src/slices/dnd';
+import type { DndSlice } from '@src/slices/dnd';
+import { DraggingState } from '@src/slices/dnd';
 import { isKeyPressed } from '@src/utils/keyboard';
 import { noop } from '@src/utils/noop';
 import { isPresent } from '@src/utils/type';
 
-import { DraggingTypes } from '@t/drag';
+import type { DraggingTypes } from '@t/drag';
 
 type MouseListener = (e: MouseEvent, dndSlice: DndSlice['dnd']) => void;
 type KeyboardListener = (e: KeyboardEvent, dndSlice: DndSlice['dnd']) => void;

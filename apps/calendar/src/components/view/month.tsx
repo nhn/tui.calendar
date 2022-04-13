@@ -12,10 +12,10 @@ import { createDateMatrixOfMonth } from '@src/helpers/grid';
 import { optionsSelector, viewSelector } from '@src/selectors';
 import { getRowStyleInfo, isWeekend } from '@src/time/datetime';
 
-import { MonthOptions } from '@t/options';
-import { CalendarStore } from '@t/store';
-import { TemplateMonthDayName } from '@t/template';
-import { CellInfo } from '@t/time/datetime';
+import type { MonthOptions } from '@t/options';
+import type { CalendarStore } from '@t/store';
+import type { TemplateMonthDayName } from '@t/template';
+import type { CellInfo } from '@t/time/datetime';
 
 function getDayNames(options: CalendarStore['options']) {
   const { daynames, workweek } = options.month as Required<MonthOptions>;

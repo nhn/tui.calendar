@@ -1,4 +1,4 @@
-import { RefCallback } from 'preact';
+import type { RefCallback } from 'preact';
 import { useCallback, useState } from 'preact/hooks';
 
 export function useDOMNode<Node extends HTMLElement>(): [Node | null, RefCallback<Node>] {

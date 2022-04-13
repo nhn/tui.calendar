@@ -11,7 +11,7 @@ import TZDate from '@src/time/date';
 import array from '@src/utils/array';
 import Collection from '@src/utils/collection';
 
-import { CollisionGroup, EventModelData } from '@t/events';
+import type { CollisionGroup, EventModelData } from '@t/events';
 
 describe('Base.Core', () => {
   let mockData: EventModelData[];

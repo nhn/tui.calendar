@@ -1,7 +1,8 @@
-import { ComponentChildren, ComponentProps, h, toChildArray } from 'preact';
+import type { ComponentChildren, ComponentProps } from 'preact';
+import { h, toChildArray } from 'preact';
 import { useLayoutEffect, useMemo } from 'preact/hooks';
 
-import { Panel } from '@src/components/panel';
+import type { Panel } from '@src/components/panel';
 import { EventDetailPopup } from '@src/components/popup/eventDetailPopup';
 import { EventFormPopup } from '@src/components/popup/eventFormPopup';
 import { SeeMoreEventsPopup } from '@src/components/popup/seeMoreEventsPopup';
@@ -12,7 +13,7 @@ import { useDOMNode } from '@src/hooks/common/useDOMNode';
 import { noop } from '@src/utils/noop';
 import { isNil, isNumber, isString } from '@src/utils/type';
 
-import { PropsWithChildren, StyleProp } from '@t/components/common';
+import type { PropsWithChildren, StyleProp } from '@t/components/common';
 
 interface Props {
   height?: number;

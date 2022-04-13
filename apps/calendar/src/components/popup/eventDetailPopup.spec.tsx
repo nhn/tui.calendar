@@ -10,7 +10,7 @@ import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 import { EventBusImpl } from '@src/utils/eventBus';
 
-import { PropsWithChildren } from '@t/components/common';
+import type { PropsWithChildren } from '@t/components/common';
 
 describe('event detail popup', () => {
   const event = EventModel.create({

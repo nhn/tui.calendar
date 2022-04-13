@@ -9,12 +9,12 @@ import { useTheme } from '@src/contexts/themeStore';
 import { getTopHeightByTime } from '@src/controller/times';
 import { cls, toPercent } from '@src/helpers/css';
 import { isBackgroundEvent } from '@src/model/eventModel';
-import EventUIModel from '@src/model/eventUIModel';
-import TZDate from '@src/time/date';
+import type EventUIModel from '@src/model/eventUIModel';
+import type TZDate from '@src/time/date';
 import { setTimeStrToDate } from '@src/time/datetime';
 import { first, last } from '@src/utils/array';
 
-import { GridPositionFinder, TimeGridData } from '@t/grid';
+import type { GridPositionFinder, TimeGridData } from '@t/grid';
 
 import { ResizingGuideByColumn } from './resizingGuideByColumn';
 

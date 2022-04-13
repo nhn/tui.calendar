@@ -1,9 +1,11 @@
-import { ComponentChild, h, render } from 'preact';
+import type { ComponentChild } from 'preact';
+import { h, render } from 'preact';
 import { unmountComponentAtNode } from 'preact/compat';
 import renderToString from 'preact-render-to-string';
 
-import { DateInterface, LocalDate } from '@toast-ui/date';
-import { DeepPartial } from 'ts-essentials';
+import type { DateInterface } from '@toast-ui/date';
+import { LocalDate } from '@toast-ui/date';
+import type { DeepPartial } from 'ts-essentials';
 
 import { CalendarContainer } from '@src/calendarContainer';
 import { initCalendarStore } from '@src/contexts/calendarStore';
@@ -13,14 +15,15 @@ import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 import { addDate, addMonths, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { last } from '@src/utils/array';
-import { EventBus, EventBusImpl } from '@src/utils/eventBus';
+import type { EventBus } from '@src/utils/eventBus';
+import { EventBusImpl } from '@src/utils/eventBus';
 import { addAttributeHooks, removeAttributeHooks } from '@src/utils/sanitizer';
 import { isNumber, isString } from '@src/utils/type';
 
-import { ExternalEventTypes } from '@t/eventBus';
-import { DateType, EventModelData } from '@t/events';
-import { CalendarColor, CalendarInfo, CustomTimezone, Options, ViewType } from '@t/options';
-import {
+import type { ExternalEventTypes } from '@t/eventBus';
+import type { DateType, EventModelData } from '@t/events';
+import type { CalendarColor, CalendarInfo, CustomTimezone, Options, ViewType } from '@t/options';
+import type {
   CalendarMonthOptions,
   CalendarState,
   CalendarStore,
@@ -28,7 +31,7 @@ import {
   Dispatchers,
   InternalStoreAPI,
 } from '@t/store';
-import { ThemeState, ThemeStore } from '@t/theme';
+import type { ThemeState, ThemeStore } from '@t/theme';
 
 export default abstract class CalendarControl implements EventBus<ExternalEventTypes> {
   protected container: Element | null;

@@ -8,9 +8,9 @@ import { createThemeDispatch } from '@src/theme/dispatch';
 import { createMonthTheme } from '@src/theme/month';
 import { createWeekTheme } from '@src/theme/week';
 
-import { Options } from '@t/options';
-import { SetState } from '@t/store';
-import {
+import type { Options } from '@t/options';
+import type { SetState } from '@t/store';
+import type {
   CommonTheme,
   MonthTheme,
   ThemeDispatchers,

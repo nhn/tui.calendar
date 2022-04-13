@@ -1,7 +1,7 @@
 import { createEventCollection } from '@src/controller/base';
-import EventModel from '@src/model/eventModel';
+import type EventModel from '@src/model/eventModel';
 import { millisecondsFrom, MS_EVENT_MIN_DURATION } from '@src/time/datetime';
-import Collection from '@src/utils/collection';
+import type Collection from '@src/utils/collection';
 
 type CollisionParam = {
   start: number;

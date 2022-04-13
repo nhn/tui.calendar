@@ -1,4 +1,4 @@
-import { DateInterface, TuiDateConstructor } from '@toast-ui/date';
+import type { DateInterface, TuiDateConstructor } from '@toast-ui/date';
 
 export type ViewType = 'month' | 'week' | 'day';
 export type DateType = string | Date | TZDate;

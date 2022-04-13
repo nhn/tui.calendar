@@ -1,10 +1,10 @@
-import { VNode } from 'preact';
+import type { VNode } from 'preact';
 
 import type EventModel from '@src/model/eventModel';
 import type TZDate from '@src/time/date';
 
-import { EventCategory, TimeUnit } from '@t/events';
-import { TimezoneConfig } from '@t/options';
+import type { EventCategory, TimeUnit } from '@t/events';
+import type { TimezoneConfig } from '@t/options';
 
 export interface TemplateTimeGridHourLabel {
   hidden: boolean;

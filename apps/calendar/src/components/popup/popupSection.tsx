@@ -3,7 +3,7 @@ import { h } from 'preact';
 import { cls } from '@src/helpers/css';
 import { noop } from '@src/utils/noop';
 
-import { PropsWithChildren } from '@t/components/common';
+import type { PropsWithChildren } from '@t/components/common';
 
 interface Props {
   classNames?: string[];

@@ -5,7 +5,7 @@ import { GridSelection } from '@src/components/dayGridCommon/gridSelection';
 import { useStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
 import { dayGridMonthSelectionHelper } from '@src/helpers/gridSelection';
-import TZDate from '@src/time/date';
+import type TZDate from '@src/time/date';
 
 interface Props {
   rowIndex: number;

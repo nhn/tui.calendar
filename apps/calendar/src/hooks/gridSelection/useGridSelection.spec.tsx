@@ -9,16 +9,16 @@ import { EventBusProvider } from '@src/contexts/eventBus';
 import { createGridPositionFinder, createTimeGridData, getWeekDates } from '@src/helpers/grid';
 import { timeGridSelectionHelper } from '@src/helpers/gridSelection';
 import { useGridSelection } from '@src/hooks/gridSelection/useGridSelection';
-import { GridSelectionType } from '@src/slices/gridSelection';
+import type { GridSelectionType } from '@src/slices/gridSelection';
 import { dragAndDrop } from '@src/test/utils';
 import TZDate from '@src/time/date';
 import { EventBusImpl } from '@src/utils/eventBus';
 import { noop } from '@src/utils/noop';
 
-import { PropsWithChildren } from '@t/components/common';
-import { ExternalEventTypes } from '@t/eventBus';
-import { GridPosition } from '@t/grid';
-import { CalendarStore, InternalStoreAPI } from '@t/store';
+import type { PropsWithChildren } from '@t/components/common';
+import type { ExternalEventTypes } from '@t/eventBus';
+import type { GridPosition } from '@t/grid';
+import type { CalendarStore, InternalStoreAPI } from '@t/store';
 
 describe('useGridSelection', () => {
   let store: InternalStoreAPI<CalendarStore>;
@@ -193,7 +193,7 @@ describe('useGridSelection', () => {
     cases.forEach(({ initX, initY, expected }) => {
       it(`should return grid selection data when just click at (${initX}, ${initY})`, () => {
         // Given
-        const result = setup();
+        setup();
         const container = screen.getByTestId('container');
 
         // When

@@ -6,15 +6,16 @@ import {
   limitRenderRange,
   positionUIModels,
 } from '@src/controller/core';
-import EventModel from '@src/model/eventModel';
-import EventUIModel from '@src/model/eventUIModel';
-import TZDate from '@src/time/date';
+import type EventModel from '@src/model/eventModel';
+import type EventUIModel from '@src/model/eventUIModel';
+import type TZDate from '@src/time/date';
 import { isSameDate, toEndOfDay, toFormat, toStartOfDay } from '@src/time/datetime';
 import array from '@src/utils/array';
-import Collection, { Filter } from '@src/utils/collection';
+import type { Filter } from '@src/utils/collection';
+import Collection from '@src/utils/collection';
 import { isUndefined } from '@src/utils/type';
 
-import { CalendarData, IDS_OF_DAY } from '@t/events';
+import type { CalendarData, IDS_OF_DAY } from '@t/events';
 
 /**
  * Filter function for find allday event

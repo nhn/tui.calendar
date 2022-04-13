@@ -25,8 +25,8 @@ import {
 } from '@src/selectors';
 import { getRowStyleInfo } from '@src/time/datetime';
 
-import { WeekOptions } from '@t/options';
-import { AlldayEventCategory } from '@t/panel';
+import type { WeekOptions } from '@t/options';
+import type { AlldayEventCategory } from '@t/panel';
 
 function useWeekViewState() {
   const options = useStore(optionsSelector);

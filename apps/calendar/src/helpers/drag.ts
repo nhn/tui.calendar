@@ -1,6 +1,6 @@
-import { GridSelectionType } from '@src/slices/gridSelection';
+import type { GridSelectionType } from '@src/slices/gridSelection';
 
-import { DraggingTypes, EventDraggingArea } from '@t/drag';
+import type { DraggingTypes, EventDraggingArea } from '@t/drag';
 
 export const DRAGGING_TYPE_CONSTANTS: {
   [K in Extract<DraggingTypes, 'panelResizer'>]: DraggingTypes;

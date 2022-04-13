@@ -4,7 +4,7 @@ import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 import array from '@src/utils/array';
 
-import { CalendarData, EventModelData } from '@t/events';
+import type { CalendarData, EventModelData } from '@t/events';
 
 describe('Base.Month', () => {
   // eslint-disable-next-line no-undefined

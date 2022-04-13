@@ -1,4 +1,5 @@
-import { ComponentProps, h } from 'preact';
+import type { ComponentProps } from 'preact';
+import { h } from 'preact';
 
 import type { DayGridMonth } from '@src/components/dayGridMonth/dayGridMonth';
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
@@ -7,7 +8,7 @@ import { EVENT_HEIGHT } from '@src/helpers/grid';
 import { useDayGridMonthEventMove } from '@src/hooks/dayGridMonth/useDayGridMonthEventMove';
 import { isNil } from '@src/utils/type';
 
-import { GridPositionFinder } from '@t/grid';
+import type { GridPositionFinder } from '@t/grid';
 
 type Props = Pick<ComponentProps<typeof DayGridMonth>, 'dateMatrix' | 'rowInfo'> & {
   rowIndex: number;

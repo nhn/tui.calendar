@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 
 import { useDispatch } from '@src/contexts/calendarStore';
-import { getGridDateIndex, getRenderedEventUIModels } from '@src/helpers/grid';
+import type { getRenderedEventUIModels } from '@src/helpers/grid';
+import { getGridDateIndex } from '@src/helpers/grid';
 import { useWhen } from '@src/hooks/common/useWhen';
 import { useCurrentPointerPositionInGrid } from '@src/hooks/event/useCurrentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/useDraggingEvent';
@@ -10,7 +11,7 @@ import type TZDate from '@src/time/date';
 import { findLastIndex } from '@src/utils/array';
 import { isNil, isPresent } from '@src/utils/type';
 
-import { GridPositionFinder } from '@t/grid';
+import type { GridPositionFinder } from '@t/grid';
 
 function getRowPosOfUIModel(uiModel: EventUIModel, dateRow: TZDate[]) {
   const startColumnIndex = Math.max(getGridDateIndex(uiModel.getStarts(), dateRow), 0);

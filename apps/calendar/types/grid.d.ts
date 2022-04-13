@@ -1,6 +1,6 @@
 import type TZDate from '@src/time/date';
 
-import { FormattedTimeString } from './time/datetime';
+import type { FormattedTimeString } from './time/datetime';
 
 export interface GridUIModel {
   day: number;

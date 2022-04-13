@@ -3,7 +3,7 @@ import { dndSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import { isPresent } from '@src/utils/type';
 
-import { DraggingTypes } from '@t/drag';
+import type { DraggingTypes } from '@t/drag';
 
 function isTimeGridDraggingType(draggingItemType: DraggingTypes | null) {
   return /^(event|gridSelection)\/timeGrid/.test(draggingItemType ?? '');

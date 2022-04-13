@@ -3,8 +3,8 @@ import { useContext, useEffect, useLayoutEffect, useMemo, useReducer, useRef } f
 
 import { isNil, isUndefined } from '@src/utils/type';
 
-import { PropsWithChildren } from '@t/components/common';
-import { EqualityChecker, InternalStoreAPI, StateSelector, StateWithActions } from '@t/store';
+import type { PropsWithChildren } from '@t/components/common';
+import type { EqualityChecker, InternalStoreAPI, StateSelector, StateWithActions } from '@t/store';
 
 /**
  * Inspired by Zustand

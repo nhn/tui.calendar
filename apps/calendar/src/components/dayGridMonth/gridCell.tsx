@@ -15,12 +15,12 @@ import { useLayoutContainer } from '@src/contexts/layoutContainer';
 import { cls, toPercent } from '@src/helpers/css';
 import { getExceedCount } from '@src/helpers/grid';
 import { useDOMNode } from '@src/hooks/common/useDOMNode';
-import EventUIModel from '@src/model/eventUIModel';
-import TZDate from '@src/time/date';
+import type EventUIModel from '@src/model/eventUIModel';
+import type TZDate from '@src/time/date';
 import { getPosition, getRelativePosition, getSize } from '@src/utils/dom';
 import { ratio } from '@src/utils/math';
 
-import { PopupPosition } from '@t/store';
+import type { PopupPosition } from '@t/store';
 
 interface Props {
   date: TZDate;

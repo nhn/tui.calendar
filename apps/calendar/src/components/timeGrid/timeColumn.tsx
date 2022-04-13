@@ -11,7 +11,7 @@ import TZDate from '@src/time/date';
 import { setTimeStrToDate } from '@src/time/datetime';
 import { isNil, isPresent } from '@src/utils/type';
 
-import { TimeGridRow } from '@t/grid';
+import type { TimeGridRow } from '@t/grid';
 
 const classNames = {
   times: addTimeGridPrefix('times'),
