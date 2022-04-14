@@ -3,6 +3,7 @@ import { PlaywrightTestConfig, devices } from '@playwright/test';
 const config: PlaywrightTestConfig = {
   testDir: 'apps/calendar/playwright',
   testMatch: '*.e2e.ts',
+  fullyParallel: true,
   timeout: 30000,
   forbidOnly: !!process.env.CI,
   workers: process.env.CI ? 2 : undefined,
@@ -32,11 +33,13 @@ const config: PlaywrightTestConfig = {
   ].concat(
     process.env.CI
       ? [
-          // NOTE: We can add firefox when the scolling issue is fixed.
-          // similar issue: https://github.com/microsoft/playwright/issues/11600
           {
             name: 'Safari',
             use: { ...devices['Desktop Safari'] },
+          },
+          {
+            name: 'Firefox',
+            use: { ...devices['Desktop Firefox'] },
           },
         ]
       : ([] as any)

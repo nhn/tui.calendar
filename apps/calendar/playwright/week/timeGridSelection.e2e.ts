@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 
 import type { FormattedTimeString } from '../../types/time/datetime';
 import { WEEK_VIEW_PAGE_URL } from '../configs';
-import { dragAndDrop, getBoundingBox, getTimeGridLineLocator } from '../utils';
+import { dragAndDrop, getBoundingBox, getTimeGridLineSelector } from '../utils';
 
 test.beforeEach(async ({ page }) => {
   await page.goto(WEEK_VIEW_PAGE_URL);
@@ -65,7 +65,7 @@ test.describe('TimeGrid Selection in week', () => {
   test('should be able to select a range of time from bottom to top', async ({ page }) => {
     // Given
     const startGridLineLocator = page.locator(BASE_GRIDLINE_LOCATOR);
-    const targetGridLineLocator = page.locator(getTimeGridLineLocator('01:00'));
+    const targetGridLineLocator = page.locator(getTimeGridLineSelector('01:00'));
     const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
 
     const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
@@ -86,7 +86,7 @@ test.describe('TimeGrid Selection in week', () => {
   test('should be able to select a range of time to upper right', async ({ page }) => {
     // Given
     const startGridLineLocator = page.locator(BASE_GRIDLINE_LOCATOR);
-    const targetGridLineLocator = page.locator(getTimeGridLineLocator('01:00'));
+    const targetGridLineLocator = page.locator(getTimeGridLineSelector('01:00'));
     const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
 
     const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
@@ -136,7 +136,7 @@ test.describe('TimeGrid Selection in week', () => {
   test('should be able to select a range of time to lower right', async ({ page }) => {
     // Given
     const startGridLineLocator = page.locator(BASE_GRIDLINE_LOCATOR);
-    const targetGridLineLocator = page.locator(getTimeGridLineLocator('05:00'));
+    const targetGridLineLocator = page.locator(getTimeGridLineSelector('05:00'));
     const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
 
     const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
@@ -162,7 +162,7 @@ test.describe('TimeGrid Selection in week', () => {
   test('should be able to select a range of time from top to bottom', async ({ page }) => {
     // Given
     const startGridLineLocator = page.locator(BASE_GRIDLINE_LOCATOR);
-    const targetGridLineLocator = page.locator(getTimeGridLineLocator('05:00'));
+    const targetGridLineLocator = page.locator(getTimeGridLineSelector('05:00'));
     const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
 
     const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
@@ -183,7 +183,7 @@ test.describe('TimeGrid Selection in week', () => {
   test('should be able to select a range of time to lower left', async ({ page }) => {
     // Given
     const startGridLineLocator = page.locator(BASE_GRIDLINE_LOCATOR);
-    const targetGridLineLocator = page.locator(getTimeGridLineLocator('05:00'));
+    const targetGridLineLocator = page.locator(getTimeGridLineSelector('05:00'));
     const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
 
     const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
@@ -233,7 +233,7 @@ test.describe('TimeGrid Selection in week', () => {
   test('should be able to select a range of time to upper left', async ({ page }) => {
     // Given
     const startGridLineLocator = page.locator(BASE_GRIDLINE_LOCATOR);
-    const targetGridLineLocator = page.locator(getTimeGridLineLocator('01:00'));
+    const targetGridLineLocator = page.locator(getTimeGridLineSelector('01:00'));
     const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
 
     const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);

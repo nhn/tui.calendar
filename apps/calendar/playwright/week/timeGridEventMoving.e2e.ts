@@ -1,85 +1,153 @@
 import { expect, test } from '@playwright/test';
 
+import { mockWeekViewEvents } from '../../stories/mocks/mockWeekViewEvents';
 import type { FormattedTimeString } from '../../types/time/datetime';
 import { WEEK_VIEW_PAGE_URL } from '../configs';
-import { dragAndDrop, getBoundingBox, getTimeGridLineLocator } from '../utils';
+import { Direction } from '../types';
+import { dragAndDrop, getBoundingBox, getTimeGridLineSelector } from '../utils';
 
 test.beforeEach(async ({ page }) => {
   await page.goto(WEEK_VIEW_PAGE_URL);
 });
 
-const TARGET_EVENT_TITLE = 'short time event';
-// Target event is located in the fourth row of the time grid.
-// And it starts from 04:00.
-const targetEventSelector = `[data-testid*="time-event-${TARGET_EVENT_TITLE}"]`;
+const [TWO_VIEW_EVENT, SHORT_TIME_EVENT, LONG_TIME_EVENT] = mockWeekViewEvents.filter(
+  ({ isAllday }) => !isAllday
+);
 
-const cases: { name: string; targetStartTime: FormattedTimeString; targetColumnIndex: number }[] = [
+/**
+ * 8 Directions for testing
+ *
+ * 7  0  1
+ * 6     2
+ * 5  4  3
+ */
+const cases: {
+  title: string;
+  eventColumnIndex: number;
+  directionInfo: {
+    direction: Direction;
+    startTimeAfterMoving: FormattedTimeString;
+    timeToDrop: FormattedTimeString;
+  }[];
+}[] = [
   {
-    name: 'drag event to the top of the day',
-    targetStartTime: '02:00',
-    targetColumnIndex: 3,
+    title: TWO_VIEW_EVENT.title,
+    eventColumnIndex: 0,
+    directionInfo: [
+      {
+        direction: Direction.Right,
+        startTimeAfterMoving: '10:00',
+        timeToDrop: '00:00',
+      },
+      {
+        direction: Direction.LowerRight,
+        startTimeAfterMoving: '12:00',
+        timeToDrop: '02:00',
+      },
+      {
+        direction: Direction.Down,
+        startTimeAfterMoving: '12:00',
+        timeToDrop: '02:00',
+      },
+    ],
   },
   {
-    name: 'drag event to the upper right of the day',
-    targetStartTime: '02:00',
-    targetColumnIndex: 4,
+    title: SHORT_TIME_EVENT.title,
+    eventColumnIndex: 3,
+    directionInfo: [
+      {
+        direction: Direction.Up,
+        startTimeAfterMoving: '02:00',
+        timeToDrop: '02:00',
+      },
+      {
+        direction: Direction.UpperRight,
+        startTimeAfterMoving: '02:00',
+        timeToDrop: '02:00',
+      },
+      {
+        direction: Direction.Right,
+        startTimeAfterMoving: '04:00',
+        timeToDrop: '04:00',
+      },
+      {
+        direction: Direction.LowerRight,
+        startTimeAfterMoving: '06:00',
+        timeToDrop: '06:00',
+      },
+      {
+        direction: Direction.Down,
+        startTimeAfterMoving: '06:00',
+        timeToDrop: '06:00',
+      },
+      {
+        direction: Direction.LowerLeft,
+        startTimeAfterMoving: '06:00',
+        timeToDrop: '06:00',
+      },
+      {
+        direction: Direction.Left,
+        startTimeAfterMoving: '04:00',
+        timeToDrop: '04:00',
+      },
+      {
+        direction: Direction.UpperLeft,
+        startTimeAfterMoving: '02:00',
+        timeToDrop: '02:00',
+      },
+    ],
   },
   {
-    name: 'drag event to the right of the day',
-    targetStartTime: '04:00',
-    targetColumnIndex: 4,
-  },
-  {
-    name: 'drag event to the bottom right of the day',
-    targetStartTime: '06:00',
-    targetColumnIndex: 4,
-  },
-  {
-    name: 'drag event to the bottom of the day',
-    targetStartTime: '06:00',
-    targetColumnIndex: 3,
-  },
-  {
-    name: 'drag event to the lower left of the day',
-    targetStartTime: '06:00',
-    targetColumnIndex: 2,
-  },
-  {
-    name: 'drag event to the left of the day',
-    targetStartTime: '04:00',
-    targetColumnIndex: 2,
-  },
-  {
-    name: 'drag event to the upper left of the day',
-    targetStartTime: '02:00',
-    targetColumnIndex: 2,
+    title: LONG_TIME_EVENT.title,
+    eventColumnIndex: 6,
+    directionInfo: [
+      {
+        direction: Direction.Down,
+        startTimeAfterMoving: '12:00',
+        timeToDrop: '02:00',
+      },
+      {
+        direction: Direction.LowerLeft,
+        startTimeAfterMoving: '12:00',
+        timeToDrop: '02:00',
+      },
+      {
+        direction: Direction.Left,
+        startTimeAfterMoving: '10:00',
+        timeToDrop: '00:00',
+      },
+    ],
   },
 ];
 
-cases.forEach(({ name, targetStartTime, targetColumnIndex }) => {
-  test(`${name}`, async ({ page }) => {
-    // Given
-    const eventLocator = page.locator(targetEventSelector);
-    const targetRowLocator = page.locator(getTimeGridLineLocator(targetStartTime));
-    const targetColumnLocator = page.locator(`data-testid=timegrid-column-${targetColumnIndex}`);
+const getTargetEventSelector = (title: string) => `[data-testid*="time-event-${title}"]`;
 
-    const targetColumnBoundingBox = await getBoundingBox(targetColumnLocator);
+cases.forEach(({ title, eventColumnIndex, directionInfo }) => {
+  directionInfo.forEach(({ direction, startTimeAfterMoving, timeToDrop }) => {
+    test(`Moving event: ${title} for ${direction}`, async ({ page }) => {
+      // Given
+      const eventLocator = page.locator(getTargetEventSelector(title)).last();
+      const targetRowLocator = page.locator(getTimeGridLineSelector(timeToDrop));
+      const targetColumnLocator = page.locator(`data-testid=timegrid-column-${eventColumnIndex}`);
 
-    // When
-    await dragAndDrop(eventLocator, targetRowLocator, {
-      sourcePosition: {
-        x: 1,
-        y: 1,
-      },
-      targetPosition: {
-        y: 1,
-        x: targetColumnBoundingBox.x - 1,
-      },
+      const targetColumnBoundingBox = await getBoundingBox(targetColumnLocator);
+
+      // When
+      await dragAndDrop(eventLocator, targetRowLocator, {
+        sourcePosition: {
+          x: 1,
+          y: 1,
+        },
+        targetPosition: {
+          y: 1,
+          x: targetColumnBoundingBox.x - 1,
+        },
+      });
+
+      // Then
+      const eventBoundingBoxAfterMove = await getBoundingBox(eventLocator);
+      expect(eventBoundingBoxAfterMove.x).toBeCloseTo(targetColumnBoundingBox.x, -1);
+      await expect(eventLocator).toHaveText(new RegExp(startTimeAfterMoving));
     });
-
-    // Then
-    const eventBoundingBoxAfterMove = await getBoundingBox(eventLocator);
-    expect(eventBoundingBoxAfterMove.x).toBeCloseTo(targetColumnBoundingBox.x, -1);
-    await expect(eventLocator).toHaveText(new RegExp(targetStartTime));
   });
 });

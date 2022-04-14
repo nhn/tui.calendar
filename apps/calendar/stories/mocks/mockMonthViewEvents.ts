@@ -24,30 +24,34 @@ const thirdSaturday = addDate(thirdThursday, 2);
 
 export const mockMonthViewEvents: EventModelData[] = [
   {
+    id: '0',
+    calendarId: 'cal1',
     title: 'event1',
     start: firstSunday,
     end: secondTuesday,
-    id: '0',
   },
   {
+    id: '1',
+    calendarId: 'cal1',
     title: 'event2',
     start: secondTuesday,
     end: secondThursday,
-    id: '1',
   },
   {
+    id: '2',
+    calendarId: 'cal1',
     title: 'event3',
     start: thirdThursday,
     end: thirdSaturday,
-    id: '2',
   },
 ];
 
 for (let i = 0; i < 10; i += 1) {
   mockMonthViewEvents.push({
+    id: `${i}${i}`,
+    calendarId: 'cal2',
     title: `event2-${i}`,
     start: secondTuesday,
     end: secondThursday,
-    id: `${i}${i}`,
   });
 }

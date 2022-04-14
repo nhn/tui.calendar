@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 
 import type { FormattedTimeString } from '../../types/time/datetime';
 import { DAY_VIEW_PAGE_URL } from '../configs';
-import { dragAndDrop, getBoundingBox, getTimeGridLineLocator } from '../utils';
+import { dragAndDrop, getBoundingBox, getTimeGridLineSelector } from '../utils';
 
 test.beforeEach(async ({ page }) => {
   await page.goto(DAY_VIEW_PAGE_URL);
@@ -45,7 +45,7 @@ test.describe('TimeGrid Selection', () => {
 
   test('should be able to select a time slot with clicking', async ({ page }) => {
     // Given
-    const startGridLineLocator = page.locator(getTimeGridLineLocator(SELECT_START_TIME));
+    const startGridLineLocator = page.locator(getTimeGridLineSelector(SELECT_START_TIME));
     const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
     const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
 
@@ -62,8 +62,8 @@ test.describe('TimeGrid Selection', () => {
 
   test('should be able to select a range of time from top to bottom', async ({ page }) => {
     // Given
-    const startGridLineLocator = page.locator(getTimeGridLineLocator(SELECT_START_TIME));
-    const targetGridLineLocator = page.locator(getTimeGridLineLocator('05:00'));
+    const startGridLineLocator = page.locator(getTimeGridLineSelector(SELECT_START_TIME));
+    const targetGridLineLocator = page.locator(getTimeGridLineSelector('05:00'));
     const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
 
     const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
@@ -82,8 +82,8 @@ test.describe('TimeGrid Selection', () => {
 
   test('should be able to select a range of time from bottom to top', async ({ page }) => {
     // Given
-    const startGridLineLocator = page.locator(getTimeGridLineLocator(SELECT_START_TIME));
-    const targetGridLineLocator = page.locator(getTimeGridLineLocator('01:00'));
+    const startGridLineLocator = page.locator(getTimeGridLineSelector(SELECT_START_TIME));
+    const targetGridLineLocator = page.locator(getTimeGridLineSelector('01:00'));
     const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
 
     const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
