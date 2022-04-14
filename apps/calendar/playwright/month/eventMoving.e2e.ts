@@ -99,7 +99,6 @@ test.describe('event moving', () => {
 
       // Then
       expect(boundingBoxAfterMoving.x).toBeGreaterThan(boundingBoxBeforeMoving.x);
-      expect(boundingBoxAfterMoving.width).toBeLessThanOrEqual(boundingBoxBeforeMoving.width);
       expect(boundingBoxAfterMoving.x).toBeCloseTo(targetCellBoundingBox.x, 1);
       expect(boundingBoxAfterMoving.x).toBeLessThan(
         targetCellBoundingBox.x + targetCellBoundingBox.width
@@ -120,7 +119,6 @@ test.describe('event moving', () => {
 
       // Then
       expect(boundingBoxAfterMoving.x).toBeLessThan(boundingBoxBeforeMoving.x);
-      expect(boundingBoxAfterMoving.width).toBeGreaterThanOrEqual(boundingBoxBeforeMoving.width);
       expect(boundingBoxAfterMoving.x).toBeCloseTo(targetCellBoundingBox.x, 1);
       expect(boundingBoxAfterMoving.x).toBeLessThan(
         targetCellBoundingBox.x + targetCellBoundingBox.width
