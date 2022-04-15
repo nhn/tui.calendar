@@ -17,7 +17,7 @@ export type Filter<ItemType> = (item: ItemType) => boolean;
  * @param {function} [getItemIDFn] function for get model's id.
  */
 export default class Collection<ItemType extends Item> {
-  internalMap: Map<ItemID, ItemType> = new Map();
+  private internalMap: Map<ItemID, ItemType> = new Map();
 
   constructor(getItemIDFn?: (item: ItemType) => ItemID) {
     if (isFunction(getItemIDFn)) {
