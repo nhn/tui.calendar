@@ -100,7 +100,7 @@ export default class Collection<ItemType extends Item> {
    * remove models.
    * @param {Array.<(Object|string|number)>} items model instances or unique ids to delete.
    */
-  remove(...items: Array<ItemType | ItemID>) {
+  remove(...items: Array<ItemType | ItemID>): ItemType[] | ItemType {
     const removeResult: ItemType[] = [];
 
     items.forEach((item) => {
@@ -170,7 +170,7 @@ export default class Collection<ItemType extends Item> {
    *
    * collection.filter(Collection.or(filter1, filter2));
    */
-  filter(filterFn: Filter<ItemType>) {
+  filter(filterFn: Filter<ItemType>): Collection<ItemType> {
     const result = new Collection<ItemType>();
 
     if (this.hasOwnProperty('getItemID')) {
@@ -205,7 +205,9 @@ export default class Collection<ItemType extends Item> {
    *     return 'fail';
    * });
    */
-  groupBy(groupByFn: string | number | ((item: ItemType) => string | number)) {
+  groupBy(
+    groupByFn: string | number | ((item: ItemType) => string | number)
+  ): Record<string, Collection<ItemType>> {
     const result: Record<string, Collection<ItemType>> = {};
 
     this.internalMap.forEach((item) => {
@@ -251,7 +253,7 @@ export default class Collection<ItemType extends Item> {
    * @param {function} compareFn compareFunction
    * @returns {array} sorted array.
    */
-  sort(compareFn: (a: ItemType, b: ItemType) => number) {
+  sort(compareFn: (a: ItemType, b: ItemType) => number): ItemType[] {
     return this.toArray().sort(compareFn);
   }
 
@@ -274,6 +276,9 @@ export default class Collection<ItemType extends Item> {
     }
   }
 
+  /**
+   * remove all models in collection.
+   */
   clear() {
     this.internalMap.clear();
   }
@@ -282,11 +287,11 @@ export default class Collection<ItemType extends Item> {
    * return new array with collection items.
    * @returns {array} new array.
    */
-  toArray() {
+  toArray(): ItemType[] {
     return Array.from(this.internalMap.values());
   }
 
-  get size() {
+  get size(): number {
     return this.internalMap.size;
   }
 }
