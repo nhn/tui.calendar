@@ -362,7 +362,6 @@ export function findByDateRange(
   const filterFn = Collection.and(...[getEventInDateRangeFilter(start, end)].concat(andFilters));
   const uiModelColl = convertToUIModel(events.filter(filterFn));
 
-  // @TODO @dotaitch need to test
   const group: Record<string, Collection<EventUIModel>> = uiModelColl.groupBy(filterByCategory);
 
   return panels.reduce<EventGroupMap>(
