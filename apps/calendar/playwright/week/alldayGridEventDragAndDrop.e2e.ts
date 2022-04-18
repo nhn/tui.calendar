@@ -60,3 +60,65 @@ test('moving allday grid row event from left to right', async ({ page }) => {
   expect(boundingBoxAfterMoving.x).toBeGreaterThan(boundingBoxBeforeMoving.x);
   expect(boundingBoxAfterMoving.width).toBeCloseTo(boundingBoxBeforeMoving.width, 3);
 });
+
+test.describe('moving allday grid row event when moving by holding the middle or end', () => {
+  test('holding middle of event', async ({ page }) => {
+    // Given
+    const targetEventLocator = page.locator(TARGET_EVENT_SELECTOR);
+    const boundingBoxBeforeMoving = await getBoundingBox(targetEventLocator);
+    const fourthOfWeekCellLocator = page.locator(ALL_DAY_GRID_CELL_SELECTOR).nth(3);
+    const targetBoundingBox = await getBoundingBox(fourthOfWeekCellLocator);
+
+    // When
+    await dragAndDrop(page, targetEventLocator, fourthOfWeekCellLocator, {
+      sourcePosition: {
+        x: boundingBoxBeforeMoving.width / 2,
+        y: boundingBoxBeforeMoving.height / 2,
+      },
+      targetPosition: {
+        x: targetBoundingBox.width / 2,
+        y: targetBoundingBox.height / 2,
+      },
+    });
+
+    // Then
+    const boundingBoxAfterMoving = await getBoundingBox(targetEventLocator);
+    expect(boundingBoxAfterMoving.x).toBeCloseTo(
+      boundingBoxBeforeMoving.x + (boundingBoxBeforeMoving.width * 2) / 3,
+      1
+    );
+    expect(boundingBoxAfterMoving.x).toBeLessThan(
+      boundingBoxBeforeMoving.x + boundingBoxBeforeMoving.width
+    );
+  });
+
+  test('holding end of event', async ({ page }) => {
+    // Given
+    const targetEventLocator = page.locator(TARGET_EVENT_SELECTOR);
+    const boundingBoxBeforeMoving = await getBoundingBox(targetEventLocator);
+    const fourthOfWeekCellLocator = page.locator(ALL_DAY_GRID_CELL_SELECTOR).nth(3);
+    const targetBoundingBox = await getBoundingBox(fourthOfWeekCellLocator);
+
+    // When
+    await dragAndDrop(page, targetEventLocator, fourthOfWeekCellLocator, {
+      sourcePosition: {
+        x: (boundingBoxBeforeMoving.width * 5) / 6,
+        y: boundingBoxBeforeMoving.height / 2,
+      },
+      targetPosition: {
+        x: targetBoundingBox.width / 2,
+        y: targetBoundingBox.height / 2,
+      },
+    });
+
+    // Then
+    const boundingBoxAfterMoving = await getBoundingBox(targetEventLocator);
+    expect(boundingBoxAfterMoving.x).toBeCloseTo(
+      boundingBoxBeforeMoving.x + boundingBoxBeforeMoving.width / 3,
+      1
+    );
+    expect(boundingBoxAfterMoving.x).toBeLessThan(
+      boundingBoxBeforeMoving.x + boundingBoxBeforeMoving.width
+    );
+  });
+});
