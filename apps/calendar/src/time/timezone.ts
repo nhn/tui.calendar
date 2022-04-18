@@ -76,8 +76,8 @@ export function isUsingDST(targetDate: TZDate, timezoneName?: string) {
   );
 }
 
-const dtfCache = new Map<string, Intl.DateTimeFormat>();
-const timezoneNameValidationCache = new Map<string, boolean>();
+const dtfCache: Record<string, Intl.DateTimeFormat> = {};
+const timezoneNameValidationCache: Record<string, boolean> = {};
 
 function isIntlDateTimeFormatSupported() {
   /**
@@ -88,7 +88,7 @@ function isIntlDateTimeFormatSupported() {
 }
 
 function validateIANATimezoneName(timezoneName: string) {
-  if (timezoneNameValidationCache.has(timezoneName)) {
+  if (timezoneNameValidationCache[timezoneName]) {
     return true;
   }
 
@@ -96,7 +96,7 @@ function validateIANATimezoneName(timezoneName: string) {
     // Just try to create a dtf with the timezoneName.
     // eslint-disable-next-line new-cap
     Intl.DateTimeFormat('en-US', { timeZone: timezoneName });
-    timezoneNameValidationCache.set(timezoneName, true);
+    timezoneNameValidationCache[timezoneName] = true;
 
     return true;
   } catch {
@@ -106,8 +106,8 @@ function validateIANATimezoneName(timezoneName: string) {
 }
 
 function getDateTimeFormat(timezoneName: string) {
-  if (dtfCache.has(timezoneName)) {
-    return dtfCache.get(timezoneName) as Intl.DateTimeFormat;
+  if (dtfCache[timezoneName]) {
+    return dtfCache[timezoneName];
   }
   const dtf = new Intl.DateTimeFormat('en-US', {
     timeZone: timezoneName,
@@ -120,7 +120,7 @@ function getDateTimeFormat(timezoneName: string) {
     minute: 'numeric',
     second: 'numeric',
   });
-  dtfCache.set(timezoneName, dtf);
+  dtfCache[timezoneName] = dtf;
 
   return dtf;
 }
