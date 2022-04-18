@@ -55,10 +55,7 @@ describe('Collection', () => {
 
       const item = c.get(25);
       expect(item).toBeDefined();
-
-      if (item) {
-        expect(item.hello).toBe('world');
-      }
+      expect(item?.hello).toBe('world');
     });
 
     it('can use multiple arguments item.', () => {
