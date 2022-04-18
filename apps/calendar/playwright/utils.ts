@@ -26,7 +26,7 @@ export async function dragAndDrop(
 
   await page.mouse.move(sourceX, sourceY);
   await page.mouse.down();
-  await page.mouse.move(targetX, targetY, { steps: 20 });
+  await page.mouse.move(targetX, targetY, { steps: 4 });
   await page.mouse.up();
 }
 
