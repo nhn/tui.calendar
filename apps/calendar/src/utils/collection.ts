@@ -1,40 +1,41 @@
-import { isFunction, isNil, isNumber, isObject, isString } from '@src/utils/type';
+import { isFunction, isNil, isNumber, isString } from '@src/utils/type';
 
-export type Filter<T> = (item: T) => boolean;
+export type ItemID = string | number;
+export type Item = {
+  _id?: ItemID;
+  [k: string | number]: any;
+};
+
+export type Filter<ItemType> = (item: ItemType) => boolean;
 
 /**
- * Common collection.
+ * Generic collection base on ES6 Map.
  *
- * It need function for get model's unique id.
+ * It needs function for get model's unique id.
  *
- * if the function is not supplied then it use default function {@link Collection#getItemID}
+ * if the function is not supplied then it uses default function {@link Collection#getItemID}
  * @param {function} [getItemIDFn] function for get model's id.
  */
-export default class Collection<T extends Record<string | number, any>> {
-  items: Record<string | number, T> = {};
+export default class Collection<ItemType extends Item> {
+  private internalMap: Map<ItemID, ItemType> = new Map();
 
-  length = 0;
-
-  constructor(getItemIDFn?: (item: T) => string | number) {
+  constructor(getItemIDFn?: (item: ItemType) => ItemID) {
     if (isFunction(getItemIDFn)) {
-      /**
-       * @type {function}
-       */
       this.getItemID = getItemIDFn;
     }
   }
 
   /**
-   * Combind supplied function filters and condition.
-   * @param {...Filter} filters - function filters
+   * Combine supplied function filters and condition.
+   * @param {...Filter} filterFns - function filters
    * @returns {function} combined filter
    */
-  static and<ItemType>(...filters: Array<Filter<ItemType>>) {
-    const { length } = filters;
+  static and<ItemType>(...filterFns: Array<Filter<ItemType>>) {
+    const { length } = filterFns;
 
     return (item: ItemType) => {
       for (let i = 0; i < length; i += 1) {
-        if (!filters[i].call(null, item)) {
+        if (!filterFns[i].call(null, item)) {
           return false;
         }
       }
@@ -45,21 +46,21 @@ export default class Collection<T extends Record<string | number, any>> {
 
   /**
    * Combine multiple function filters with OR clause.
-   * @param {...function} filters - function filters
+   * @param {...function} filterFns - function filters
    * @returns {function} combined filter
    */
-  static or<ItemType>(...filters: Array<Filter<ItemType>>) {
-    const { length } = filters;
+  static or<ItemType>(...filterFns: Array<Filter<ItemType>>) {
+    const { length } = filterFns;
 
     if (!length) {
       return () => false;
     }
 
     return (item: ItemType) => {
-      let result = filters[0].call(null, item);
+      let result = filterFns[0].call(null, item);
 
       for (let i = 1; i < length; i += 1) {
-        result = result || filters[i].call(null, item);
+        result = result || filterFns[i].call(null, item);
       }
 
       return result;
@@ -69,107 +70,68 @@ export default class Collection<T extends Record<string | number, any>> {
   /**
    * get model's unique id.
    * @param {object} item model instance.
-   * @returns {string} model unique id.
+   * @returns {string | number} model unique id.
    */
-  getItemID(item: T): string | number {
-    return String(item._id);
+  getItemID(item: ItemType): ItemID {
+    return item?._id ?? '';
   }
 
-  get(id: string): T | undefined {
-    return this.items[id];
+  getFirstItem(): ItemType | null {
+    const iterator = this.internalMap.values();
+
+    return iterator.next().value;
   }
 
   /**
    * add models.
-   * @param {...*} items - models to add this collection.
+   * @param {Object[]} items - models to add this collection.
    */
-  add(...items: T[]) {
+  add(...items: ItemType[]): Collection<ItemType> {
     items.forEach((item) => {
       const id = this.getItemID(item);
-      const ownItems = this.items;
 
-      if (!ownItems[id]) {
-        this.length += 1;
-      }
-      ownItems[id] = item;
+      this.internalMap.set(id, item);
     });
+
+    return this;
   }
 
   /**
    * remove models.
-   * @param {Array<(object|string|number)>} items model instances or unique ids to delete.
-   * @returns {Array|Item} deleted model list.
+   * @param {Array.<(Object|string|number)>} items model instances or unique ids to delete.
    */
-  remove(...items: Array<T | string | number>) {
-    const ownItems = this.items;
+  remove(...items: Array<ItemType | ItemID>): ItemType[] | ItemType {
+    const removeResult: ItemType[] = [];
 
-    const removedList = items
-      .map((item) => {
-        let id: string | number;
+    items.forEach((item) => {
+      const id: ItemID = isString(item) || isNumber(item) ? item : this.getItemID(item);
 
-        if (!isString(item) && !isNumber(item)) {
-          id = this.getItemID(item);
-        } else {
-          id = item;
-        }
+      if (!this.internalMap.has(id)) {
+        return;
+      }
 
-        if (!ownItems[id]) {
-          return null;
-        }
+      removeResult.push(this.internalMap.get(id) as ItemType);
+      this.internalMap['delete'](id);
+    });
 
-        this.length -= 1;
-        const itemToRemove = ownItems[id];
-        delete ownItems[id];
-
-        return itemToRemove;
-      })
-      .filter((item: T | null) => item);
-
-    if (items.length === 1) {
-      return removedList[0];
-    }
-
-    return removedList;
-  }
-
-  /**
-   * remove all models in collection.
-   */
-  clear() {
-    this.items = {};
-    this.length = 0;
+    return removeResult.length === 1 ? removeResult[0] : removeResult;
   }
 
   /**
    * check collection has specific model.
-   * @param {(object|string|number|function)} id model instance or id or filter function to check
+   * @param {(object|string|number)} id model instance or id to check
    * @returns {boolean} is has model?
    */
-  has(id: T | string | number | Filter<T>) {
-    if (!this.length) {
-      return false;
-    }
+  has(item: ItemType | ItemID): boolean {
+    const id: ItemID = isString(item) || isNumber(item) ? item : this.getItemID(item);
 
-    let has = false;
+    return this.internalMap.has(id);
+  }
 
-    if (isFunction(id)) {
-      const filterFunc = id;
+  get(item: ItemType | ItemID): ItemType | null {
+    const id: ItemID = isString(item) || isNumber(item) ? item : this.getItemID(item);
 
-      this.each((item: T) => {
-        if (filterFunc(item) === true) {
-          has = true;
-
-          return false; // returning false can stop this loop
-        }
-
-        return true;
-      });
-    } else {
-      id = isObject(id) ? this.getItemID(id) : id;
-      has = !isNil(this.items[id]);
-    }
-
-    return has;
+    return this.internalMap.get(id) ?? null;
   }
 
   /**
@@ -177,10 +139,10 @@ export default class Collection<T extends Record<string | number, any>> {
    * @param {(string|number)} id model unique id.
    * @param {function} callback the callback.
    */
-  doWhenHas(id: string | number, callback?: (item: T) => void) {
-    const item = this.items[id];
+  doWhenHas(id: ItemID, callback: (item: ItemType) => void) {
+    const item = this.internalMap.get(id);
 
-    if (isNil(item) || !callback) {
+    if (isNil(item)) {
       return;
     }
 
@@ -189,10 +151,10 @@ export default class Collection<T extends Record<string | number, any>> {
 
   /**
    * Search model. and return new collection.
-   * @param {function} filter filter function.
+   * @param {function} filterFn filter function.
    * @returns {Collection} new collection with filtered models.
    * @example
-   * collection.find(function(item) {
+   * collection.filter(function(item) {
    *     return item.edited === true;
    * });
    *
@@ -204,19 +166,19 @@ export default class Collection<T extends Record<string | number, any>> {
    *     return item.disabled === false;
    * }
    *
-   * collection.find(Collection.and(filter1, filter2));
+   * collection.filter(Collection.and(filter1, filter2));
    *
-   * collection.find(Collection.or(filter1, filter2));
+   * collection.filter(Collection.or(filter1, filter2));
    */
-  find(filter: Filter<T>) {
-    const result = new Collection<T>();
+  filter(filterFn: Filter<ItemType>): Collection<ItemType> {
+    const result = new Collection<ItemType>();
 
     if (this.hasOwnProperty('getItemID')) {
       result.getItemID = this.getItemID;
     }
 
-    this.each((item) => {
-      if (filter(item) === true) {
+    this.internalMap.forEach((item) => {
+      if (filterFn(item) === true) {
         result.add(item);
       }
     });
@@ -228,12 +190,9 @@ export default class Collection<T extends Record<string | number, any>> {
    * Group element by specific key values.
    *
    * if key parameter is function then invoke it and use returned value.
-   * @param {(string|number|function|array)} key key property or getter function.
-   *  if string[] supplied, create each collection before grouping.
-   * @param {function} [groupFunc] - function that return each group's key
-   * @returns {object.<string, Collection>} grouped object
+   * @param {(string|number|function)} groupByFn key property or getter function.
+   * @returns {object.<string|number, Collection>} grouped object
    * @example
-   *
    * // pass `string`, `number`, `boolean` type value then group by property value.
    * collection.groupBy('gender');    // group by 'gender' property value.
    * collection.groupBy(50);          // group by '50' property value.
@@ -245,58 +204,23 @@ export default class Collection<T extends Record<string | number, any>> {
    *     }
    *     return 'fail';
    * });
-   *
-   * // pass `array` with first arguments then create each collection before grouping.
-   * collection.groupBy(['go', 'ruby', 'javascript']);
-   * // result: { 'go': empty Collection, 'ruby': empty Collection, 'javascript': empty Collection }
-   *
-   * // can pass `function` with `array` then group each elements.
-   * collection.groupBy(['go', 'ruby', 'javascript'], function(item) {
-   *     if (item.isFast) {
-   *         return 'go';
-   *     }
-   *
-   *     return item.name;
-   * });
    */
   groupBy(
-    key: string | number | Function | Array<string | number>,
-    groupFunc?: (item: T) => string
-  ) {
-    const result: Record<string, Collection<T>> = {};
-    const getItemIDFn = this.getItemID;
-    let collection;
-    let baseValue;
+    groupByFn: string | number | ((item: ItemType) => string | number)
+  ): Record<string, Collection<ItemType>> {
+    const result: Record<string, Collection<ItemType>> = {};
 
-    if (Array.isArray(key)) {
-      key.forEach((k) => {
-        result[String(k)] = new Collection<T>(getItemIDFn);
-      });
+    this.internalMap.forEach((item) => {
+      let key = isFunction(groupByFn) ? groupByFn(item) : item[groupByFn];
 
-      if (!groupFunc) {
-        return result;
-      }
-
-      key = groupFunc;
-    }
-
-    this.each((item) => {
       if (isFunction(key)) {
-        baseValue = key(item);
-      } else {
-        baseValue = item[key as string | number]; // possible to be array, check this logic again
-
-        if (isFunction(baseValue)) {
-          baseValue = baseValue.apply(item);
-        }
+        key = key.call(item);
       }
 
-      collection = result[baseValue];
-
+      let collection = result[key];
       if (!collection) {
-        collection = result[baseValue] = new Collection<T>(getItemIDFn);
+        collection = result[key] = new Collection<ItemType>(this.getItemID);
       }
-
       collection.add(item);
     });
 
@@ -304,47 +228,33 @@ export default class Collection<T extends Record<string | number, any>> {
   }
 
   /**
-   * Return single item in collection.
-   *
-   * Returned item is inserted in this collection firstly.
-   * @param {function} [filter] - function filter
+   * Return the first item in collection that satisfies the provided function.
+   * @param {function} [findFn] - function filter
    * @returns {object|null} item.
    */
-  single(filter?: Filter<T>): T | null {
-    const useFilter = isFunction(filter);
-    let result: T | null = null;
+  find(findFn: Filter<ItemType>): ItemType | null {
+    let result: ItemType | null = null;
+    const items = this.internalMap.values();
+    let next = items.next();
 
-    this.each(function (item) {
-      if (!useFilter) {
-        result = item;
-
-        return false; // returning false can stop this loop
+    while (next.done === false) {
+      if (findFn(next.value)) {
+        result = next.value;
+        break;
       }
-      if (filter && filter(item)) {
-        result = item;
-
-        return false; // returning false can stop this loop
-      }
-
-      return true;
-    });
+      next = items.next();
+    }
 
     return result;
   }
 
   /**
    * sort a basis of supplied compare function.
-   * @param {function} compareFunction compareFunction
+   * @param {function} compareFn compareFunction
    * @returns {array} sorted array.
    */
-  sort(compareFunction?: (a: T, b: T) => number) {
-    const arr = this.toArray();
-
-    if (isFunction(compareFunction)) {
-      return arr.sort(compareFunction);
-    }
-
-    return arr;
+  sort(compareFn: (a: ItemType, b: ItemType) => number): ItemType[] {
+    return this.toArray().sort(compareFn);
   }
 
   /**
@@ -353,27 +263,35 @@ export default class Collection<T extends Record<string | number, any>> {
    * when iteratee return false then break the loop.
    * @param {function} iteratee iteratee(item, index, items)
    */
-  each(iteratee: (item: T, key: keyof T, items: Record<string | number, T>) => boolean | void) {
-    for (const key in this.items) {
-      if (this.items.hasOwnProperty(key)) {
-        if (iteratee.call(this, this.items[key], key, this.items) === false) {
-          break;
-        }
+  each(iteratee: (item: ItemType, key: keyof ItemType) => boolean | void) {
+    const entries = this.internalMap.entries();
+    let next = entries.next();
+
+    while (next.done === false) {
+      const [key, value] = next.value;
+      if (iteratee(value, key) === false) {
+        break;
       }
+      next = entries.next();
     }
+  }
+
+  /**
+   * remove all models in collection.
+   */
+  clear() {
+    this.internalMap.clear();
   }
 
   /**
    * return new array with collection items.
    * @returns {array} new array.
    */
-  toArray() {
-    const array: T[] = [];
+  toArray(): ItemType[] {
+    return Array.from(this.internalMap.values());
+  }
 
-    this.each((item) => {
-      array.push(item);
-    });
-
-    return array;
+  get size(): number {
+    return this.internalMap.size;
   }
 }

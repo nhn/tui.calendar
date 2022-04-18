@@ -94,7 +94,7 @@ export function getMatrices<T extends EventModel | EventUIModel>(
     const matrix: Matrix<T> = [[]];
 
     group.forEach((eventID) => {
-      const event: T = collection.items[eventID];
+      const event = collection.get(eventID) as T;
       let col = 0;
       let found = false;
       let nextRow;

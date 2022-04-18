@@ -201,7 +201,9 @@ export function _makeGetUIModelFuncForTimeView(
   }
 
   return (uiModelColl: Collection<EventUIModel>) => {
-    return uiModelColl.find(_makeHourRangeFilter(hourStart, hourEnd)).sort(array.compare.event.asc);
+    return uiModelColl
+      .filter(_makeHourRangeFilter(hourStart, hourEnd))
+      .sort(array.compare.event.asc);
   };
 }
 
@@ -310,7 +312,7 @@ export function getUIModelForAlldayView(
   end: TZDate,
   uiModelColl: Collection<EventUIModel>
 ): DayGridEventMatrix {
-  if (!uiModelColl || !uiModelColl.length) {
+  if (!uiModelColl || !uiModelColl.size) {
     return [];
   }
 
@@ -355,16 +357,12 @@ export function findByDateRange(
 ) {
   const { start, end, panels, andFilters = [], options } = condition;
   const { events, idsOfDay } = calendarData;
-  const eventTypes = pluck(panels, 'name');
   const hourStart = options?.hourStart ?? 0;
   const hourEnd = options?.hourEnd ?? 24;
-  const filter = Collection.and(...[getEventInDateRangeFilter(start, end)].concat(andFilters));
-  const uiModelColl = convertToUIModel(events.find(filter));
+  const filterFn = Collection.and(...[getEventInDateRangeFilter(start, end)].concat(andFilters));
+  const uiModelColl = convertToUIModel(events.filter(filterFn));
 
-  const group: Record<string, Collection<EventUIModel>> = uiModelColl.groupBy(
-    eventTypes,
-    filterByCategory
-  );
+  const group: Record<string, Collection<EventUIModel>> = uiModelColl.groupBy(filterByCategory);
 
   return panels.reduce<EventGroupMap>(
     (acc, cur) => {

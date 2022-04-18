@@ -99,7 +99,7 @@ describe('controller/base', () => {
       const id2 = createEvent(calendarData, eventDataList[1]).cid();
       const id3 = createEvent(calendarData, eventDataList[3]).cid();
 
-      expect(calendarData.events.length).toBe(3);
+      expect(calendarData.events.size).toBe(3);
       expect(calendarData.idsOfDay).toEqual({
         '20150501': [id],
         '20150502': [id, id3],
@@ -177,7 +177,7 @@ describe('controller/base', () => {
         end: '2015/05/02',
       });
 
-      const event = calendarData.events.single();
+      const event = calendarData.events.getFirstItem();
 
       expect(event).not.toBeNull();
 
@@ -213,7 +213,7 @@ describe('controller/base', () => {
 
     it('delete an event by model.', () => {
       expect(deleteEvent(calendarData, event)).toEqual(event);
-      expect(calendarData.events.length).toBe(0);
+      expect(calendarData.events.size).toBe(0);
       expect(calendarData.idsOfDay).toEqual({
         '20150501': [],
       });
