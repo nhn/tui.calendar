@@ -9,11 +9,25 @@ export function getPrefixedClassName(className: string) {
 }
 
 export async function dragAndDrop(
+  page: Page,
   sourceLocator: Locator,
   targetLocator: Locator,
   options: Parameters<Locator['dragTo']>[1] = {}
 ) {
-  await sourceLocator.dragTo(targetLocator, { ...options, force: true });
+  const sourceBoundingBox = await getBoundingBox(sourceLocator);
+  const targetBoundingBox = await getBoundingBox(targetLocator);
+
+  const sourceX = sourceBoundingBox.x + (options?.sourcePosition?.x ?? sourceBoundingBox.width / 2);
+  const sourceY =
+    sourceBoundingBox.y + (options?.sourcePosition?.y ?? sourceBoundingBox.height / 2);
+  const targetX = targetBoundingBox.x + (options?.targetPosition?.x ?? targetBoundingBox.width / 2);
+  const targetY =
+    targetBoundingBox.y + (options?.targetPosition?.y ?? targetBoundingBox.height / 2);
+
+  await page.mouse.move(sourceX, sourceY);
+  await page.mouse.down();
+  await page.mouse.move(targetX, targetY, { steps: 20 });
+  await page.mouse.up();
 }
 
 export async function selectGridCells(
@@ -25,7 +39,7 @@ export async function selectGridCells(
   const startCellLocator = page.locator(className).nth(startCellIdx);
   const endCellLocator = page.locator(className).nth(endCellIdx);
 
-  await dragAndDrop(startCellLocator, endCellLocator);
+  await dragAndDrop(page, startCellLocator, endCellLocator);
 }
 
 export function selectMonthGridCells(page: Page, startCellIndex: number, endCellIndex: number) {

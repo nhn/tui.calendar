@@ -29,7 +29,7 @@ test('resizing allday grid row event from left to right', async ({ page }) => {
   const endOfWeekCellLocator = page.locator(ALL_DAY_GRID_CELL_SELECTOR).last();
 
   // When
-  await dragAndDrop(resizerLocator, endOfWeekCellLocator);
+  await dragAndDrop(page, resizerLocator, endOfWeekCellLocator);
 
   // Then
   const boundingBoxAfterResizing = await getBoundingBox(targetEventLocator);
@@ -41,23 +41,19 @@ test('moving allday grid row event from left to right', async ({ page }) => {
   const targetEventLocator = page.locator(TARGET_EVENT_SELECTOR);
   const boundingBoxBeforeMoving = await getBoundingBox(targetEventLocator);
   const fifthOfWeekCellLocator = page.locator(ALL_DAY_GRID_CELL_SELECTOR).nth(4);
-
   const targetBoundingBox = await getBoundingBox(fifthOfWeekCellLocator);
 
   // When
-  await page.mouse.move(
-    boundingBoxBeforeMoving.x + boundingBoxBeforeMoving.width / 2,
-    boundingBoxBeforeMoving.y + boundingBoxBeforeMoving.height / 2
-  );
-  await page.mouse.down();
-  await page.mouse.move(
-    targetBoundingBox.x + targetBoundingBox.width / 2,
-    targetBoundingBox.y + targetBoundingBox.height / 2,
-    {
-      steps: 20,
-    }
-  );
-  await page.mouse.up();
+  await dragAndDrop(page, targetEventLocator, fifthOfWeekCellLocator, {
+    sourcePosition: {
+      x: boundingBoxBeforeMoving.width / 2,
+      y: boundingBoxBeforeMoving.height / 2,
+    },
+    targetPosition: {
+      x: targetBoundingBox.width / 2,
+      y: targetBoundingBox.height / 2,
+    },
+  });
 
   // Then
   const boundingBoxAfterMoving = await getBoundingBox(targetEventLocator);

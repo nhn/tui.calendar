@@ -44,7 +44,7 @@ mockDayViewEvents
           const targetRowLocator = page.locator(getTimeGridLineSelector(targetTime));
 
           // When
-          await dragAndDrop(eventLocator, targetRowLocator, {
+          await dragAndDrop(page, eventLocator, targetRowLocator, {
             sourcePosition: {
               x: 1,
               y: dragStartRowBoundingBox.y - eventBoundingBoxBeforeMove.y + 1,
