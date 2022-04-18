@@ -22,34 +22,45 @@ const TARGET_EVENT_SELECTOR = `data-testid=${calendarId}-${id}-${title}`;
  * [ 0,  1,  2,  3,  4,  5,  6]
  */
 test('resizing allday grid row event from left to right', async ({ page }) => {
+  // Given
   const targetEventLocator = page.locator(TARGET_EVENT_SELECTOR);
   const boundingBoxBeforeResizing = await getBoundingBox(targetEventLocator);
-
   const resizerLocator = targetEventLocator.locator(getPrefixedClassName('handle-y'));
   const endOfWeekCellLocator = page.locator(ALL_DAY_GRID_CELL_SELECTOR).last();
 
+  // When
   await dragAndDrop(resizerLocator, endOfWeekCellLocator);
 
+  // Then
   const boundingBoxAfterResizing = await getBoundingBox(targetEventLocator);
-
   expect(boundingBoxBeforeResizing.width).toBeLessThan(boundingBoxAfterResizing.width);
 });
 
-test('moving allday grid row event', async ({ page }) => {
+test('moving allday grid row event from left to right', async ({ page }) => {
+  // Given
   const targetEventLocator = page.locator(TARGET_EVENT_SELECTOR);
   const boundingBoxBeforeMoving = await getBoundingBox(targetEventLocator);
+  const fifthOfWeekCellLocator = page.locator(ALL_DAY_GRID_CELL_SELECTOR).nth(4);
 
-  const secondOfWeekCellLocator = page.locator(ALL_DAY_GRID_CELL_SELECTOR).nth(1);
+  const targetBoundingBox = await getBoundingBox(fifthOfWeekCellLocator);
 
-  await dragAndDrop(targetEventLocator, secondOfWeekCellLocator, {
-    targetPosition: {
-      x: 10,
-      y: boundingBoxBeforeMoving.height + 10,
-    },
-  });
+  // When
+  await page.mouse.move(
+    boundingBoxBeforeMoving.x + boundingBoxBeforeMoving.width / 2,
+    boundingBoxBeforeMoving.y + boundingBoxBeforeMoving.height / 2
+  );
+  await page.mouse.down();
+  await page.mouse.move(
+    targetBoundingBox.x + targetBoundingBox.width / 2,
+    targetBoundingBox.y + targetBoundingBox.height / 2,
+    {
+      steps: 20,
+    }
+  );
+  await page.mouse.up();
 
+  // Then
   const boundingBoxAfterMoving = await getBoundingBox(targetEventLocator);
-
   expect(boundingBoxAfterMoving.x).toBeGreaterThan(boundingBoxBeforeMoving.x);
   expect(boundingBoxAfterMoving.width).toBeCloseTo(boundingBoxBeforeMoving.width, 3);
 });
