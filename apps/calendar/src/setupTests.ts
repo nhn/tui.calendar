@@ -1,10 +1,7 @@
 // reference: https://github.com/kkomelin/isomorphic-dompurify/issues/91#issuecomment-1012645198
 import '@testing-library/jest-dom';
 
-import { enableMapSet } from 'immer';
 import { TextDecoder, TextEncoder } from 'util';
-
-enableMapSet();
 
 global.TextEncoder = TextEncoder;
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
