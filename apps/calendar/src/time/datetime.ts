@@ -1,9 +1,9 @@
 import range from 'tui-code-snippet/array/range';
 
-import { INVALID_FORMAT_PARAMETER } from '@src/constants/error';
 import { toPercent } from '@src/helpers/css';
 import TZDate from '@src/time/date';
 import { fill } from '@src/utils/array';
+import { InvalidDateTimeFormatError } from '@src/utils/error';
 
 import type { TimeUnit } from '@t/events';
 import type { CellStyle, FormattedTimeString } from '@t/time/datetime';
@@ -274,7 +274,7 @@ export function parse(str: string, fixMonth = -1): TZDate {
   let hms;
 
   if (!matches) {
-    throw new Error(INVALID_FORMAT_PARAMETER);
+    throw new InvalidDateTimeFormatError(str);
   }
 
   if (str.length > 8) {

@@ -2,6 +2,8 @@ import type { TuiDateConstructor } from '@toast-ui/date';
 import { LocalDate, UTCDate } from '@toast-ui/date';
 
 import TZDate from '@src/time/date';
+import { InvalidTimezoneNameError } from '@src/utils/error';
+import { logger } from '@src/utils/logger';
 import { isFunction, isNumber, isPresent } from '@src/utils/type';
 
 let Constructor: TuiDateConstructor = LocalDate;
@@ -34,9 +36,8 @@ export function getTimezoneFactory(value: number | string) {
 
 export function calculateTimezoneOffset(targetDate: TZDate, timezoneName: string) {
   if (!isIntlDateTimeFormatSupported()) {
-    // eslint-disable-next-line no-console
-    console.warn(
-      'tui-calendar: Intl.DateTimeFormat is not fully supported. So It will return local timezone offset only.\nYou can use polyfill to fix this issue.'
+    logger.warn(
+      'Intl.DateTimeFormat is not fully supported. So It will return the local timezone offset only.\nYou can use a polyfill to fix this issue.'
     );
 
     return targetDate.getTimezoneOffset();
@@ -101,7 +102,7 @@ function validateIANATimezoneName(timezoneName: string) {
     return true;
   } catch {
     // Usually it throws `RangeError` when the timezoneName is invalid.
-    throw new Error(`tui-calendar: Invalid IANA Timezone Name - ${timezoneName}`);
+    throw new InvalidTimezoneNameError(timezoneName);
   }
 }
 
