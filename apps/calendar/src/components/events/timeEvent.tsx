@@ -1,15 +1,16 @@
 import { h } from 'preact';
-import { useState } from 'preact/hooks';
+import { useRef, useState } from 'preact/hooks';
 
 import { Template } from '@src/components/template';
-import { useDispatch } from '@src/contexts/calendarStore';
+import { useDispatch, useStore } from '@src/contexts/calendarStore';
+import { useEventBus } from '@src/contexts/eventBus';
 import { useLayoutContainer } from '@src/contexts/layoutContainer';
 import { cls, toPercent } from '@src/helpers/css';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/useDrag';
 import { useTransientUpdate } from '@src/hooks/common/useTransientUpdate';
 import type EventUIModel from '@src/model/eventUIModel';
-import { dndSelector } from '@src/selectors';
+import { dndSelector, optionsSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import type TZDate from '@src/time/date';
 import { passConditionalProp } from '@src/utils/preact';
@@ -95,8 +96,15 @@ function getStyles(uiModel: EventUIModel, isDraggingTarget: boolean, hasNextStar
 }
 
 export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: Props) {
+  const { useDetailPopup } = useStore(optionsSelector);
+
   const layoutContainer = useLayoutContainer();
+  const { showDetailPopup } = useDispatch('popup');
   const { setDraggingEventUIModel } = useDispatch('dnd');
+
+  const eventBus = useEventBus();
+
+  const eventContainerRef = useRef<HTMLDivElement>(null);
 
   const [isDraggingTarget, setIsDraggingTarget] = useState<boolean>(false);
 
@@ -124,22 +132,35 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
 
   const clearIsDraggingTarget = () => setIsDraggingTarget(false);
 
-  const startEventMove = useDrag(DRAGGING_TYPE_CREATORS.moveEvent('timeGrid', `${uiModel.cid()}`), {
+  const onMoveStart = useDrag(DRAGGING_TYPE_CREATORS.moveEvent('timeGrid', `${uiModel.cid()}`), {
     onDragStart: () => {
       setDraggingEventUIModel(uiModel);
       layoutContainer?.classList.add(classNames.moveEvent);
     },
-    onMouseUp: () => {
+    onMouseUp: (e, { draggingState }) => {
       layoutContainer?.classList.remove(classNames.moveEvent);
       clearIsDraggingTarget();
+
+      const isClick = draggingState <= DraggingState.INIT;
+      if (isClick && useDetailPopup && eventContainerRef.current) {
+        showDetailPopup(
+          {
+            event: uiModel.model,
+            eventRect: eventContainerRef.current.getBoundingClientRect(),
+          },
+          false
+        );
+      }
+
+      eventBus.fire('clickEvent', { event: uiModel.model, nativeEvent: e });
     },
   });
-  const handleEventMoveStart = (e: MouseEvent) => {
+  const handleMoveStart = (e: MouseEvent) => {
     e.stopPropagation();
-    startEventMove(e);
+    onMoveStart(e);
   };
 
-  const startEventResize = useDrag(
+  const onResizeStart = useDrag(
     DRAGGING_TYPE_CREATORS.resizeEvent('timeGrid', `${uiModel.cid()}`),
     {
       onDragStart: () => {
@@ -152,9 +173,9 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
       },
     }
   );
-  const handleEventResizeStart = (e: MouseEvent) => {
+  const handleResizeStart = (e: MouseEvent) => {
     e.stopPropagation();
-    startEventResize(e);
+    onResizeStart(e);
   };
 
   const shouldShowResizeHandle = !croppedEnd && !isReadOnly && !isDraggingTarget;
@@ -166,7 +187,8 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
       data-event-id={id}
       className={classNames.time}
       style={containerStyle}
-      onMouseDown={passConditionalProp(isNil(nextStartTime), handleEventMoveStart)}
+      onMouseDown={passConditionalProp(isNil(nextStartTime), handleMoveStart)}
+      ref={eventContainerRef}
     >
       {goingDurationHeight ? (
         <div className={classNames.travelTime} style={goingDurationStyle}>
@@ -190,7 +212,7 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
         </div>
       ) : null}
       {shouldShowResizeHandle ? (
-        <div className={classNames.resizeHandleX} onMouseDown={handleEventResizeStart} />
+        <div className={classNames.resizeHandleX} onMouseDown={handleResizeStart} />
       ) : null}
     </div>
   );
