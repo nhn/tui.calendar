@@ -3,20 +3,22 @@
   overflow: hidden;
   cursor: pointer;
 }
+
 .event-time .travel-time,
 .event-time .event-time-content {
   overflow: hidden;
   padding: 1px 0 0 3px;
   font-size: 12px;
 }
+
 .resize-handler-x {
   position: absolute;
   right: 0;
   bottom: 1px;
   left: 0;
-  height: 15px;
+  height: 8px;
   text-align: center;
   color: #fff;
   cursor: row-resize;
-  background: url("../image/handler-x.png") no-repeat center bottom;
+  background: url('../image/handler-x.png') no-repeat center bottom;
 }
