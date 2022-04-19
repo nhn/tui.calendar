@@ -1,4 +1,4 @@
-import { INVALID_FORMAT_PARAMETER } from '@src/constants/error';
+import { INVALID_DATETIME_FORMAT } from '@src/constants/error';
 import TZDate from '@src/time/date';
 import {
   addMonths,
@@ -195,8 +195,8 @@ describe('parse', () => {
 
     // Then
     expect(() => parse(validDateStr)).not.toThrow();
-    expect(() => parse(invalidDateStr1)).toThrowError(INVALID_FORMAT_PARAMETER);
-    expect(() => parse(invalidDateStr2)).toThrowError(INVALID_FORMAT_PARAMETER);
+    expect(() => parse(invalidDateStr1)).toThrowError(INVALID_DATETIME_FORMAT);
+    expect(() => parse(invalidDateStr2)).toThrowError(INVALID_DATETIME_FORMAT);
   });
 
   it('should adjust month value with fix options', () => {

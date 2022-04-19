@@ -1,10 +1,18 @@
+import { expect } from '@playwright/test';
 import { LocalDate, MomentDate, UTCDate } from '@toast-ui/date';
 import { advanceTo } from 'jest-date-mock';
 import moment from 'moment-timezone';
 import type { TimeZone } from 'timezone-mock';
 import { register, unregister } from 'timezone-mock';
 
-import { date, getTimezoneFactory, setDateConstructor } from '@src/time/timezone';
+import TZDate from '@src/time/date';
+import {
+  calculateTimezoneOffset,
+  date,
+  getTimezoneFactory,
+  isUsingDST,
+  setDateConstructor,
+} from '@src/time/timezone';
 
 MomentDate.setMoment(moment);
 
@@ -158,5 +166,103 @@ describe('getTimezoneFactory()', () => {
     );
 
     finishMockingTimezone();
+  });
+});
+
+describe('calculateTimezoneOffset', () => {
+  beforeEach(() => {
+    register('UTC');
+  });
+
+  afterEach(() => {
+    unregister();
+  });
+
+  it('should calculate timezone offset of date which is applicable DST', () => {
+    // Given
+    const timezoneName = 'US/Pacific';
+    const tzDate = new TZDate('2022-04-12T00:00:00');
+
+    // When
+    const offset = calculateTimezoneOffset(tzDate, timezoneName);
+
+    // Then
+    // Pacific Daylight Time (PDT) is UTC -7.
+    expect(offset).toBe(420);
+  });
+
+  it('should calculate timezone offset of date which is not applicable DST', () => {
+    // Given
+    const timezoneName = 'US/Pacific';
+    // Pacific Daylight Time (PDS) is end on 2022/11/06 02:00 in Pacific Time.
+    // So add 7 hours to get UTC time.
+    const tzDate = new TZDate('2022-11-06T09:00:00');
+
+    // When
+    const offset = calculateTimezoneOffset(tzDate, timezoneName);
+
+    // Then
+    expect(offset).toBe(480);
+  });
+
+  it('should throw if the timezone name is invalid', () => {
+    // Given
+    const invalidTimezoneName = 'Invalid/Timezone';
+    const tzDate = new TZDate('2022-04-12T00:00:00');
+
+    // When
+    const fn = () => calculateTimezoneOffset(tzDate, invalidTimezoneName);
+
+    // Then
+    expect(fn).toThrow();
+  });
+});
+
+describe('isUsingDST', () => {
+  afterEach(() => {
+    unregister();
+  });
+
+  it('should determine the OS timezone is using DST (UTC)', () => {
+    // Given
+    register('UTC');
+    const tzDate = new TZDate('2022-04-12T00:00:00');
+
+    // When
+    const result = isUsingDST(tzDate);
+
+    // Then
+    expect(result).toBe(false);
+  });
+
+  it('should determine the OS timezone is using DST', () => {
+    // Given
+    register('US/Pacific');
+    const tzDateInPDT = new TZDate('2022-04-12T00:00:00');
+    const tzDateInPST = new TZDate('2022-11-06T03:00:00');
+
+    // When
+    const result1 = isUsingDST(tzDateInPDT);
+    const result2 = isUsingDST(tzDateInPST);
+
+    // Then
+    expect(result1).toBe(true);
+    expect(result2).toBe(false);
+  });
+
+  it('should determine the given timezone is using DST', () => {
+    // Given
+    register('UTC');
+    const timezoneName = 'US/Pacific';
+    const tzDateInPDT = new TZDate('2022-04-12T00:00:00');
+    const tzDateInPST = new TZDate('2022-11-06T09:00:00'); // +6 hours because it is UTC
+
+    // When
+    const result1 = isUsingDST(tzDateInPDT, timezoneName);
+    const result2 = isUsingDST(tzDateInPST, timezoneName);
+
+    // Then
+    expect(result1).toBe(true);
+    expect(result2).toBe(false);
   });
 });
