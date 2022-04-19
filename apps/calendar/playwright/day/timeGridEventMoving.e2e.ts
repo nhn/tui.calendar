@@ -1,10 +1,17 @@
 import { expect, test } from '@playwright/test';
+import waitForExpect from 'wait-for-expect';
 
 import { addHours, setTimeStrToDate } from '../../src/time/datetime';
 import { mockDayViewEvents } from '../../stories/mocks/mockDayViewEvents';
 import type { FormattedTimeString } from '../../types/time/datetime';
 import { DAY_VIEW_PAGE_URL } from '../configs';
-import { dragAndDrop, getBoundingBox, getTimeGridLineSelector, getTimeStrFromDate } from '../utils';
+import {
+  dragAndDrop,
+  getBoundingBox,
+  getTimeGridLineSelector,
+  getTimeStrFromDate,
+  waitForSingleElement,
+} from '../utils';
 
 test.beforeEach(async ({ page }) => {
   await page.goto(DAY_VIEW_PAGE_URL);
@@ -54,6 +61,7 @@ mockDayViewEvents
               x: 1,
             },
           });
+          await waitForSingleElement(eventLocator);
 
           // Then
           const startTimeAfterMove = getTimeStrFromDate(addHours(start, step));

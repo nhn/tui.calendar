@@ -1,10 +1,16 @@
 import type { Page } from '@playwright/test';
 import { expect, test } from '@playwright/test';
+import waitForExpect from 'wait-for-expect';
 
 import { mockWeekViewEvents } from '../../stories/mocks/mockWeekViewEvents';
 import type { FormattedTimeString } from '../../types/time/datetime';
 import { WEEK_VIEW_PAGE_URL } from '../configs';
-import { dragAndDrop, getBoundingBox, getTimeGridLineSelector } from '../utils';
+import {
+  dragAndDrop,
+  getBoundingBox,
+  getTimeGridLineSelector,
+  waitForSingleElement,
+} from '../utils';
 
 test.beforeEach(async ({ page }) => {
   await page.goto(WEEK_VIEW_PAGE_URL);
@@ -109,6 +115,7 @@ async function setup({
       y: targetRowBoundingBox.height / 2,
     },
   });
+  await waitForSingleElement(eventLocator);
 
   const eventBoundingBoxAfterResize = await getBoundingBox(eventLocator);
 
@@ -141,16 +148,18 @@ targetEvents.forEach(({ title: eventTitle, startTime, endTime, endDateColumnInde
           });
 
           // Then
-          expect(eventBoundingBoxAfterResize.height)[compareAssertion](
-            eventBoundingBoxBeforeResize.height
-          );
+          await waitForExpect(async () => {
+            expect(eventBoundingBoxAfterResize.height)[compareAssertion](
+              eventBoundingBoxBeforeResize.height
+            );
 
-          await expect(eventLocator).toContainText(startTime);
+            await expect(eventLocator).toContainText(startTime);
 
-          const rowCount = getHourDifference(targetEndTime, endTime) * 2 + 1;
-          expect(
-            eventBoundingBoxAfterResize.height - eventBoundingBoxBeforeResize.height
-          ).toBeCloseTo(targetRowBoundingBox.height * rowCount, -1);
+            const rowCount = getHourDifference(targetEndTime, endTime) * 2 + 1;
+            expect(
+              eventBoundingBoxAfterResize.height - eventBoundingBoxBeforeResize.height
+            ).toBeCloseTo(targetRowBoundingBox.height * rowCount, -1);
+          });
         });
       }
     );

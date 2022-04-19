@@ -13,9 +13,6 @@ const config: PlaywrightTestConfig = {
       width: 1600,
       height: 900,
     },
-    launchOptions: {
-      slowMo: 300,
-    },
   },
   webServer: {
     command: process.env.CI

@@ -1,4 +1,5 @@
 import type { Locator, Page } from '@playwright/test';
+import waitForExpect from 'wait-for-expect';
 
 import type TZDate from '../src/time/date';
 import type { FormattedTimeString } from '../types/time/datetime';
@@ -65,4 +66,10 @@ export function getTimeStrFromDate(d: TZDate) {
   const minute = d.getMinutes();
 
   return `${hour < 10 ? `0${hour}` : hour}:${minute < 10 ? `0${minute}` : minute}`;
+}
+
+export function waitForSingleElement(locator: Locator) {
+  return waitForExpect(() =>
+    locator.count().then((count) => (count === 1 ? Promise.resolve() : Promise.reject()))
+  );
 }

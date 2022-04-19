@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import waitForExpect from 'wait-for-expect';
 
 import { mockWeekViewEvents } from '../../stories/mocks/mockWeekViewEvents';
 import { WEEK_VIEW_PAGE_URL } from '../configs';
@@ -32,8 +33,10 @@ test('resizing allday grid row event from left to right', async ({ page }) => {
   await dragAndDrop(page, resizerLocator, endOfWeekCellLocator);
 
   // Then
-  const boundingBoxAfterResizing = await getBoundingBox(targetEventLocator);
-  expect(boundingBoxBeforeResizing.width).toBeLessThan(boundingBoxAfterResizing.width);
+  await waitForExpect(async () => {
+    const boundingBoxAfterResizing = await getBoundingBox(targetEventLocator);
+    expect(boundingBoxBeforeResizing.width).toBeLessThan(boundingBoxAfterResizing.width);
+  });
 });
 
 test('moving allday grid row event from left to right', async ({ page }) => {
@@ -56,9 +59,11 @@ test('moving allday grid row event from left to right', async ({ page }) => {
   });
 
   // Then
-  const boundingBoxAfterMoving = await getBoundingBox(targetEventLocator);
-  expect(boundingBoxAfterMoving.x).toBeGreaterThan(boundingBoxBeforeMoving.x);
-  expect(boundingBoxAfterMoving.width).toBeCloseTo(boundingBoxBeforeMoving.width, 3);
+  await waitForExpect(async () => {
+    const boundingBoxAfterMoving = await getBoundingBox(targetEventLocator);
+    expect(boundingBoxAfterMoving.x).toBeGreaterThan(boundingBoxBeforeMoving.x);
+    expect(boundingBoxAfterMoving.width).toBeCloseTo(boundingBoxBeforeMoving.width, 3);
+  });
 });
 
 test.describe('moving allday grid row event when moving by holding the middle or end', () => {
@@ -82,14 +87,16 @@ test.describe('moving allday grid row event when moving by holding the middle or
     });
 
     // Then
-    const boundingBoxAfterMoving = await getBoundingBox(targetEventLocator);
-    expect(boundingBoxAfterMoving.x).toBeCloseTo(
-      boundingBoxBeforeMoving.x + (boundingBoxBeforeMoving.width * 2) / 3,
-      1
-    );
-    expect(boundingBoxAfterMoving.x).toBeLessThan(
-      boundingBoxBeforeMoving.x + boundingBoxBeforeMoving.width
-    );
+    await waitForExpect(async () => {
+      const boundingBoxAfterMoving = await getBoundingBox(targetEventLocator);
+      expect(boundingBoxAfterMoving.x).toBeCloseTo(
+        boundingBoxBeforeMoving.x + (boundingBoxBeforeMoving.width * 2) / 3,
+        1
+      );
+      expect(boundingBoxAfterMoving.x).toBeLessThan(
+        boundingBoxBeforeMoving.x + boundingBoxBeforeMoving.width
+      );
+    });
   });
 
   test('holding end of event', async ({ page }) => {
@@ -112,13 +119,15 @@ test.describe('moving allday grid row event when moving by holding the middle or
     });
 
     // Then
-    const boundingBoxAfterMoving = await getBoundingBox(targetEventLocator);
-    expect(boundingBoxAfterMoving.x).toBeCloseTo(
-      boundingBoxBeforeMoving.x + boundingBoxBeforeMoving.width / 3,
-      1
-    );
-    expect(boundingBoxAfterMoving.x).toBeLessThan(
-      boundingBoxBeforeMoving.x + boundingBoxBeforeMoving.width
-    );
+    await waitForExpect(async () => {
+      const boundingBoxAfterMoving = await getBoundingBox(targetEventLocator);
+      expect(boundingBoxAfterMoving.x).toBeCloseTo(
+        boundingBoxBeforeMoving.x + boundingBoxBeforeMoving.width / 3,
+        1
+      );
+      expect(boundingBoxAfterMoving.x).toBeLessThan(
+        boundingBoxBeforeMoving.x + boundingBoxBeforeMoving.width
+      );
+    });
   });
 });
