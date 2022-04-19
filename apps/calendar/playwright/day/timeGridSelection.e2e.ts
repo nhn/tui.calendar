@@ -70,7 +70,7 @@ test.describe('TimeGrid Selection', () => {
     const targetGridLineBoundingBox = await getBoundingBox(targetGridLineLocator);
 
     // When
-    await dragAndDrop(startGridLineLocator, targetGridLineLocator);
+    await dragAndDrop(page, startGridLineLocator, targetGridLineLocator);
 
     // Then
     await assertTimeGridSelection(timeGridSelectionLocator, {
@@ -90,7 +90,7 @@ test.describe('TimeGrid Selection', () => {
     const targetGridLineBoundingBox = await getBoundingBox(targetGridLineLocator);
 
     // When
-    await dragAndDrop(startGridLineLocator, targetGridLineLocator);
+    await dragAndDrop(page, startGridLineLocator, targetGridLineLocator);
 
     // Then
     await assertTimeGridSelection(timeGridSelectionLocator, {

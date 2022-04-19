@@ -62,7 +62,7 @@ async function setup(page: Page, event: EventModelData, targetCellIndex: number)
     .first();
 
   const boundingBoxBeforeMoving = await getBoundingBox(eventLocator);
-  await dragAndDrop(eventLocator, targetCellLocator);
+  await dragAndDrop(page, eventLocator, targetCellLocator);
   const boundingBoxAfterMoving = await getBoundingBox(eventLocator);
 
   return {
@@ -179,7 +179,7 @@ test.describe('event moving', () => {
     const secondOfWeekCellBoundingBox = await getBoundingBox(secondOfWeekCellLocator);
 
     // When
-    await dragAndDrop(eventLocator, endOfWeekCellLocator);
+    await dragAndDrop(page, eventLocator, endOfWeekCellLocator);
 
     // Then
     const targetEventsCount = await eventLocator.evaluateAll((events) => events.length);

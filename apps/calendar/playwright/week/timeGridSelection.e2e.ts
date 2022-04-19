@@ -72,7 +72,7 @@ test.describe('TimeGrid Selection in week', () => {
     const targetGridLineBoundingBox = await getBoundingBox(targetGridLineLocator);
 
     // When
-    await dragAndDrop(startGridLineLocator, targetGridLineLocator);
+    await dragAndDrop(page, startGridLineLocator, targetGridLineLocator);
 
     // Then
     await assertTimeGridSelection(timeGridSelectionLocator, {
@@ -93,7 +93,7 @@ test.describe('TimeGrid Selection in week', () => {
     const targetGridLineBoundingBox = await getBoundingBox(targetGridLineLocator);
 
     // When
-    await dragAndDrop(startGridLineLocator, targetGridLineLocator, {
+    await dragAndDrop(page, startGridLineLocator, targetGridLineLocator, {
       targetPosition: {
         x: targetGridLineBoundingBox.width,
         y: startGridLineBoundingBox.height,
@@ -117,7 +117,7 @@ test.describe('TimeGrid Selection in week', () => {
     const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
 
     // When
-    await dragAndDrop(startGridLineLocator, startGridLineLocator, {
+    await dragAndDrop(page, startGridLineLocator, startGridLineLocator, {
       targetPosition: {
         x: startGridLineBoundingBox.width,
         y: 1,
@@ -143,7 +143,7 @@ test.describe('TimeGrid Selection in week', () => {
     const targetGridLineBoundingBox = await getBoundingBox(targetGridLineLocator);
 
     // When
-    await dragAndDrop(startGridLineLocator, targetGridLineLocator, {
+    await dragAndDrop(page, startGridLineLocator, targetGridLineLocator, {
       targetPosition: {
         x: targetGridLineBoundingBox.width,
         y: targetGridLineBoundingBox.height,
@@ -169,7 +169,7 @@ test.describe('TimeGrid Selection in week', () => {
     const targetGridLineBoundingBox = await getBoundingBox(targetGridLineLocator);
 
     // When
-    await dragAndDrop(startGridLineLocator, targetGridLineLocator);
+    await dragAndDrop(page, startGridLineLocator, targetGridLineLocator);
 
     // Then
     await assertTimeGridSelection(timeGridSelectionLocator, {
@@ -190,7 +190,7 @@ test.describe('TimeGrid Selection in week', () => {
     const targetGridLineBoundingBox = await getBoundingBox(targetGridLineLocator);
 
     // When
-    await dragAndDrop(startGridLineLocator, targetGridLineLocator, {
+    await dragAndDrop(page, startGridLineLocator, targetGridLineLocator, {
       targetPosition: {
         x: 0,
         y: targetGridLineBoundingBox.height,
@@ -214,7 +214,7 @@ test.describe('TimeGrid Selection in week', () => {
     const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
 
     // When
-    await dragAndDrop(startGridLineLocator, startGridLineLocator, {
+    await dragAndDrop(page, startGridLineLocator, startGridLineLocator, {
       targetPosition: {
         x: 1,
         y: 1,
@@ -240,7 +240,7 @@ test.describe('TimeGrid Selection in week', () => {
     const targetGridLineBoundingBox = await getBoundingBox(targetGridLineLocator);
 
     // When
-    await dragAndDrop(startGridLineLocator, targetGridLineLocator, {
+    await dragAndDrop(page, startGridLineLocator, targetGridLineLocator, {
       targetPosition: {
         x: 1,
         y: 1,

@@ -1,4 +1,4 @@
-import { useMemo } from 'preact/hooks';
+import { useEffect, useMemo, useRef } from 'preact/hooks';
 
 import { useDispatch } from '@src/contexts/calendarStore';
 import { useWhen } from '@src/hooks/common/useWhen';
@@ -22,6 +22,7 @@ export function useAlldayGridRowEventMove({ rowStyleInfo, gridPositionFinder }: 
     clearDraggingEvent,
   } = useDraggingEvent('dayGrid', 'move');
   const { updateEvent } = useDispatch('calendar');
+  const startGridXRef = useRef<number | null>(null);
 
   const [currentGridPos, clearCurrentGridPos] = useCurrentPointerPositionInGrid(gridPositionFinder);
   const { columnIndex } = currentGridPos ?? {};
@@ -32,19 +33,35 @@ export function useAlldayGridRowEventMove({ rowStyleInfo, gridPositionFinder }: 
     [rowStyleInfo, movingEvent]
   );
 
-  const currentMovingLeft = isNil(columnIndex) ? null : rowStyleInfo[columnIndex].left;
+  const currentMovingLeft = useMemo(() => {
+    if (isNil(columnIndex) || isNil(startGridXRef.current) || isNil(targetEventStartGridX)) {
+      return null;
+    }
+
+    const newColumnIndex = targetEventStartGridX + columnIndex - startGridXRef.current;
+
+    return newColumnIndex < 0
+      ? -rowStyleInfo[-newColumnIndex].left
+      : rowStyleInfo[newColumnIndex].left;
+  }, [columnIndex, rowStyleInfo, targetEventStartGridX]);
+
+  useEffect(() => {
+    if (isNil(startGridXRef.current) && isPresent(columnIndex)) {
+      startGridXRef.current = columnIndex;
+    }
+  }, [columnIndex]);
 
   useWhen(() => {
     const shouldUpdate =
       isPresent(movingEvent) &&
       isPresent(columnIndex) &&
       isPresent(currentMovingLeft) &&
-      isPresent(targetEventStartGridX);
+      columnIndex !== startGridXRef.current;
 
-    if (shouldUpdate) {
-      const dateOffset = columnIndex - targetEventStartGridX;
-      const newStartDate = new TZDate(movingEvent.getStarts());
-      const newEndDate = new TZDate(movingEvent.getEnds());
+    if (shouldUpdate && isPresent(startGridXRef.current)) {
+      const dateOffset = columnIndex - startGridXRef.current;
+      const newStartDate = new TZDate(movingEvent.model.getStarts());
+      const newEndDate = new TZDate(movingEvent.model.getEnds());
       newStartDate.addDate(dateOffset);
       newEndDate.addDate(dateOffset);
 
@@ -59,6 +76,7 @@ export function useAlldayGridRowEventMove({ rowStyleInfo, gridPositionFinder }: 
 
     clearDraggingEvent();
     clearCurrentGridPos();
+    startGridXRef.current = null;
   }, isDraggingEnd);
 
   return useMemo(
