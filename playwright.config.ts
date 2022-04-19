@@ -1,26 +1,31 @@
 import { PlaywrightTestConfig, devices } from '@playwright/test';
 
+const isCI = !!process.env.CI;
+
 const config: PlaywrightTestConfig = {
   testDir: 'apps/calendar/playwright',
   testMatch: '*.e2e.ts',
-  fullyParallel: true,
+  fullyParallel: !isCI,
   timeout: 30000,
-  forbidOnly: !!process.env.CI,
-  workers: process.env.CI ? 2 : undefined,
+  forbidOnly: isCI,
+  workers: isCI ? 2 : undefined,
   use: {
-    trace: process.env.CI ? undefined : 'retain-on-failure',
+    trace: isCI ? undefined : 'retain-on-failure',
     viewport: {
       width: 1600,
       height: 900,
     },
+    launchOptions: {
+      slowMo: isCI ? 150 : undefined,
+    }
   },
   webServer: {
-    command: process.env.CI
+    command: isCI
       ? 'npm run serve:storybook'
       : 'lerna run --scope @toast-ui/calendar storybook',
-    port: process.env.CI ? 8080 : 6006,
+    port: isCI ? 8080 : 6006,
     timeout: 120 * 1000,
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: !isCI,
   },
   projects: [
     {
@@ -28,7 +33,7 @@ const config: PlaywrightTestConfig = {
       use: { ...devices['Desktop Chrome'] },
     },
   ].concat(
-    process.env.CI
+    isCI
       ? [
           {
             name: 'Safari',
