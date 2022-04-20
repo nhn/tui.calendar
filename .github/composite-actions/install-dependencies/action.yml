@@ -35,7 +35,7 @@ runs:
         then
           echo "Cache hit - skipping root dependency installation"
         else
-          npm install
+          PLAYWRIGHT_BROWSERS_PATH=0 npm install
         fi
       shell: bash
     - name: Bootstrap repo

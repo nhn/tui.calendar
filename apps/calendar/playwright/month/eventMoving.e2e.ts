@@ -1,11 +1,12 @@
 import type { Page } from '@playwright/test';
 import { expect, test } from '@playwright/test';
+import waitForExpect from 'wait-for-expect';
 
 import { mockMonthViewEvents } from '../../stories/mocks/mockMonthViewEvents';
 import type { EventModelData } from '../../types/events';
 import { MONTH_VIEW_PAGE_URL } from '../configs';
 import { Direction } from '../types';
-import { dragAndDrop, getBoundingBox } from '../utils';
+import { dragAndDrop, getBoundingBox, waitForSingleElement } from '../utils';
 
 const CELL_SELECTOR = '.toastui-calendar-daygrid-cell';
 
@@ -60,10 +61,16 @@ async function setup(page: Page, event: EventModelData, targetCellIndex: number)
   const eventLocator = page
     .locator(`data-testid=${event.calendarId}-${event.id}-${event.title}`)
     .first();
-
   const boundingBoxBeforeMoving = await getBoundingBox(eventLocator);
+
   await dragAndDrop(page, eventLocator, targetCellLocator);
-  const boundingBoxAfterMoving = await getBoundingBox(eventLocator);
+  await waitForSingleElement(eventLocator);
+
+  let boundingBoxAfterMoving = await getBoundingBox(eventLocator);
+  await waitForExpect(async () => {
+    boundingBoxAfterMoving = await getBoundingBox(eventLocator);
+    expect(boundingBoxAfterMoving).not.toEqual(boundingBoxBeforeMoving);
+  });
 
   return {
     targetCellBoundingBox,
@@ -182,25 +189,27 @@ test.describe('event moving', () => {
     await dragAndDrop(page, eventLocator, endOfWeekCellLocator);
 
     // Then
-    const targetEventsCount = await eventLocator.evaluateAll((events) => events.length);
-    const targetEventLength = await eventLocator.evaluateAll((events) =>
-      (events as HTMLElement[]).reduce(
-        (total, eventRow) => eventRow.getBoundingClientRect().width + total,
-        0
-      )
-    );
-    const firstEventLocator = eventLocator.first();
-    const lastEventLocator = eventLocator.last();
-    const firstEventBoundingBox = await getBoundingBox(firstEventLocator);
-    const lastEventBoundingBox = await getBoundingBox(lastEventLocator);
+    await waitForExpect(async () => {
+      const targetEventsCount = await eventLocator.evaluateAll((events) => events.length);
+      const targetEventLength = await eventLocator.evaluateAll((events) =>
+        (events as HTMLElement[]).reduce(
+          (total, eventRow) => eventRow.getBoundingClientRect().width + total,
+          0
+        )
+      );
+      const firstEventLocator = eventLocator.first();
+      const lastEventLocator = eventLocator.last();
+      const firstEventBoundingBox = await getBoundingBox(firstEventLocator);
+      const lastEventBoundingBox = await getBoundingBox(lastEventLocator);
 
-    expect(targetEventsCount).toBe(2);
-    expect(firstEventBoundingBox.x).toBeCloseTo(endOfWeekCellBoundingBox.x, 3);
-    expect(lastEventBoundingBox.x).toBeLessThan(
-      secondOfWeekCellBoundingBox.x + secondOfWeekCellBoundingBox.width
-    );
-    expect(firstEventBoundingBox.y).toBeLessThan(secondOfWeekCellBoundingBox.y);
-    expect(lastEventBoundingBox.y).toBeGreaterThan(secondOfWeekCellBoundingBox.y);
-    expect(targetEventLength).toBeCloseTo(endOfWeekCellBoundingBox.width * 3, 1);
+      expect(targetEventsCount).toBe(2);
+      expect(firstEventBoundingBox.x).toBeCloseTo(endOfWeekCellBoundingBox.x, 3);
+      expect(lastEventBoundingBox.x).toBeLessThan(
+        secondOfWeekCellBoundingBox.x + secondOfWeekCellBoundingBox.width
+      );
+      expect(firstEventBoundingBox.y).toBeLessThan(secondOfWeekCellBoundingBox.y);
+      expect(lastEventBoundingBox.y).toBeGreaterThan(secondOfWeekCellBoundingBox.y);
+      expect(targetEventLength).toBeCloseTo(endOfWeekCellBoundingBox.width * 3, 1);
+    });
   });
 });

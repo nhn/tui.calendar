@@ -1,5 +1,6 @@
 import type { Locator } from '@playwright/test';
 import { expect, test } from '@playwright/test';
+import waitForExpect from 'wait-for-expect';
 
 import { mockMonthViewEvents } from '../../stories/mocks/mockMonthViewEvents';
 import { assertBoundingBoxIncluded } from '../assertions';
@@ -47,17 +48,19 @@ test.describe('event resizing', () => {
 
     // When
     await dragAndDrop(page, resizeIconLocator, targetCellLocator);
-    const eventBoundingBoxAfterResizing = await getBoundingBox(eventsLocator.last());
 
     // Then
-    expect(await eventsLocator.count()).toBe(2);
-    expect(eventBoundingBoxAfterResizing.width).toBeGreaterThan(
-      eventBoundingBoxBeforeResizing.width
-    );
+    await waitForExpect(async () => {
+      const eventBoundingBoxAfterResizing = await getBoundingBox(eventsLocator.last());
+      expect(await eventsLocator.count()).toBe(2);
+      expect(eventBoundingBoxAfterResizing.width).toBeGreaterThan(
+        eventBoundingBoxBeforeResizing.width
+      );
 
-    const targetCellBoundingBox = await getBoundingBox(targetCellLocator);
-    const resizeIconBoundingBoxAfterResizing = await getBoundingBox(resizeIconLocator);
-    assertBoundingBoxIncluded(resizeIconBoundingBoxAfterResizing, targetCellBoundingBox);
+      const targetCellBoundingBox = await getBoundingBox(targetCellLocator);
+      const resizeIconBoundingBoxAfterResizing = await getBoundingBox(resizeIconLocator);
+      assertBoundingBoxIncluded(resizeIconBoundingBoxAfterResizing, targetCellBoundingBox);
+    });
   });
 
   test('resize event to the left in the same row', async ({ page }) => {
@@ -69,15 +72,19 @@ test.describe('event resizing', () => {
 
     // When
     await dragAndDrop(page, resizeIconLocator, targetCellLocator);
-    const eventBoundingBoxAfterResizing = await getBoundingBox(eventsLocator.last());
 
     // Then
-    expect(await eventsLocator.count()).toBe(2);
-    expect(eventBoundingBoxAfterResizing.width).toBeLessThan(eventBoundingBoxBeforeResizing.width);
+    await waitForExpect(async () => {
+      const eventBoundingBoxAfterResizing = await getBoundingBox(eventsLocator.last());
+      expect(await eventsLocator.count()).toBe(2);
+      expect(eventBoundingBoxAfterResizing.width).toBeLessThan(
+        eventBoundingBoxBeforeResizing.width
+      );
 
-    const targetCellBoundingBox = await getBoundingBox(targetCellLocator);
-    const resizeIconBoundingBoxAfterResizing = await getBoundingBox(resizeIconLocator);
-    assertBoundingBoxIncluded(resizeIconBoundingBoxAfterResizing, targetCellBoundingBox);
+      const targetCellBoundingBox = await getBoundingBox(targetCellLocator);
+      const resizeIconBoundingBoxAfterResizing = await getBoundingBox(resizeIconLocator);
+      assertBoundingBoxIncluded(resizeIconBoundingBoxAfterResizing, targetCellBoundingBox);
+    });
   });
 
   test('resize event to the right in the next two rows', async ({ page }) => {
@@ -90,11 +97,13 @@ test.describe('event resizing', () => {
     await dragAndDrop(page, resizeIconLocator, targetCellLocator);
 
     // Then
-    expect(await eventsLocator.count()).toBe(4);
+    await waitForExpect(async () => {
+      expect(await eventsLocator.count()).toBe(4);
 
-    const resizeIconBoundingBoxAfterResizing = await getBoundingBox(resizeIconLocator);
-    const targetCellBoundingBox = await getBoundingBox(targetCellLocator);
-    assertBoundingBoxIncluded(resizeIconBoundingBoxAfterResizing, targetCellBoundingBox);
+      const resizeIconBoundingBoxAfterResizing = await getBoundingBox(resizeIconLocator);
+      const targetCellBoundingBox = await getBoundingBox(targetCellLocator);
+      assertBoundingBoxIncluded(resizeIconBoundingBoxAfterResizing, targetCellBoundingBox);
+    });
   });
 
   test('resize event to the left in the next two rows', async ({ page }) => {
@@ -107,11 +116,13 @@ test.describe('event resizing', () => {
     await dragAndDrop(page, resizeIconLocator, targetCellLocator);
 
     // Then
-    expect(await eventsLocator.count()).toBe(4);
+    await waitForExpect(async () => {
+      expect(await eventsLocator.count()).toBe(4);
 
-    const resizeIconBoundingBoxAfterResizing = await getBoundingBox(resizeIconLocator);
-    const targetCellBoundingBox = await getBoundingBox(targetCellLocator);
-    assertBoundingBoxIncluded(resizeIconBoundingBoxAfterResizing, targetCellBoundingBox);
+      const resizeIconBoundingBoxAfterResizing = await getBoundingBox(resizeIconLocator);
+      const targetCellBoundingBox = await getBoundingBox(targetCellLocator);
+      assertBoundingBoxIncluded(resizeIconBoundingBoxAfterResizing, targetCellBoundingBox);
+    });
   });
 
   test('shrink event - to the end of the first row of rendered events', async ({ page }) => {
@@ -124,11 +135,13 @@ test.describe('event resizing', () => {
     await dragAndDrop(page, resizeIconLocator, targetCellLocator);
 
     // Then
-    expect(await eventsLocator.count()).toBe(1);
+    await waitForExpect(async () => {
+      expect(await eventsLocator.count()).toBe(1);
 
-    const resizeIconBoundingBoxAfterResizing = await getBoundingBox(resizeIconLocator);
-    const targetCellBoundingBox = await getBoundingBox(targetCellLocator);
-    assertBoundingBoxIncluded(resizeIconBoundingBoxAfterResizing, targetCellBoundingBox);
+      const resizeIconBoundingBoxAfterResizing = await getBoundingBox(resizeIconLocator);
+      const targetCellBoundingBox = await getBoundingBox(targetCellLocator);
+      assertBoundingBoxIncluded(resizeIconBoundingBoxAfterResizing, targetCellBoundingBox);
+    });
   });
 
   test('shrink event - to take place of just one cell', async ({ page }) => {
@@ -141,11 +154,13 @@ test.describe('event resizing', () => {
     await dragAndDrop(page, resizeIconLocator, targetCellLocator);
 
     // Then
-    expect(await eventsLocator.count()).toBe(1);
+    await waitForExpect(async () => {
+      expect(await eventsLocator.count()).toBe(1);
 
-    const resizeIconBoundingBoxAfterResizing = await getBoundingBox(resizeIconLocator);
-    const targetCellBoundingBox = await getBoundingBox(targetCellLocator);
-    assertBoundingBoxIncluded(resizeIconBoundingBoxAfterResizing, targetCellBoundingBox);
+      const resizeIconBoundingBoxAfterResizing = await getBoundingBox(resizeIconLocator);
+      const targetCellBoundingBox = await getBoundingBox(targetCellLocator);
+      assertBoundingBoxIncluded(resizeIconBoundingBoxAfterResizing, targetCellBoundingBox);
+    });
   });
 
   test('prevent resizing when dragging to above the first row of the event or left of the first cell of the event', async ({
@@ -161,10 +176,12 @@ test.describe('event resizing', () => {
     await dragAndDrop(page, resizeIconLocator, targetCellLocator);
 
     // Then
-    expect(await eventsLocator.count()).toBe(2);
+    await waitForExpect(async () => {
+      expect(await eventsLocator.count()).toBe(2);
 
-    const resizeIconBoundingBoxAfterResizing = await getBoundingBox(resizeIconLocator);
-    const expectedCellBoundingBox = await getBoundingBox(expectedCellLocator);
-    assertBoundingBoxIncluded(resizeIconBoundingBoxAfterResizing, expectedCellBoundingBox);
+      const resizeIconBoundingBoxAfterResizing = await getBoundingBox(resizeIconLocator);
+      const expectedCellBoundingBox = await getBoundingBox(expectedCellLocator);
+      assertBoundingBoxIncluded(resizeIconBoundingBoxAfterResizing, expectedCellBoundingBox);
+    });
   });
 });
