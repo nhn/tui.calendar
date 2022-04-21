@@ -10,6 +10,7 @@ import { createWeekViewLayoutDispatchers, createWeekViewLayoutSlice } from '@src
 import { createOptionsDispatchers, createOptionsSlice } from '@src/slices/options';
 import { createPopupDispatchers, createPopupSlice } from '@src/slices/popup';
 import { createTemplateSlice } from '@src/slices/template';
+import { createTimezoneDispatchers, createTimezoneSlice } from '@src/slices/timezone';
 import { createViewDispatchers, createViewSlice } from '@src/slices/view';
 import { createStoreContext } from '@src/store';
 import { devtools } from '@src/store/devtool';
@@ -31,6 +32,7 @@ const storeCreator = (options: Options) => (set: SetState<CalendarStore>) => {
     ...createViewSlice(options.defaultView),
     ...createDndSlice(),
     ...createGridSelectionSlice(),
+    ...createTimezoneSlice(options.timezone),
     dispatch: {
       options: createOptionsDispatchers(set),
       popup: createPopupDispatchers(set),
@@ -39,6 +41,7 @@ const storeCreator = (options: Options) => (set: SetState<CalendarStore>) => {
       view: createViewDispatchers(set),
       dnd: createDndDispatchers(set),
       gridSelection: createGridSelectionDispatchers(set),
+      timezone: createTimezoneDispatchers(set),
     },
   };
 };

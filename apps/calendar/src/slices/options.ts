@@ -27,13 +27,6 @@ function initializeWeekOptions(weekOptions: Options['week'] = {}): CalendarWeekO
     workweek: false,
     showTimezoneCollapseButton: false,
     timezonesCollapsed: false,
-    timezones: [
-      {
-        timezoneOffset: 540,
-        displayLabel: 'GMT+09:00',
-        tooltip: 'Seoul',
-      },
-    ],
     hourStart: 0,
     hourEnd: 24,
     ...weekOptions,

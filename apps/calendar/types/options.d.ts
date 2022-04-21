@@ -14,7 +14,6 @@ export interface WeekOptions {
   workweek?: boolean;
   showTimezoneCollapseButton?: boolean;
   timezonesCollapsed?: boolean;
-  timezones?: TimezoneConfig[];
   hourStart?: number;
   hourEnd?: number;
 }
@@ -42,14 +41,7 @@ export interface MonthOptions {
   eventFilter?: (event: Required<EventModelData>) => boolean;
 }
 
-export interface CustomTimezone {
-  dateConstructor?: TuiDateConstructor; // YourCustomDate or LocalDate, UTCDate, MomentDate from @toast-ui/date;
-  offset?: number; // If using YourCustomDate or MomentDate
-  name?: string; // If using YourCustomDate or MomentDate
-}
-
 export interface TimezoneConfig {
-  timezoneOffset?: number;
   timezoneName?: string;
   displayLabel?: string;
   tooltip?: string;
@@ -85,7 +77,10 @@ export interface Options {
   disableClick?: boolean;
   isReadOnly?: boolean;
   usageStatistics?: boolean;
-  timezone?: CustomTimezone;
+  timezone?: {
+    zones?: TimezoneConfig[];
+    customOffsetCalculator?: (primaryTimezoneName: string, timestamp: number) => number;
+  };
 }
 
 interface ViewInfoUserInput {
