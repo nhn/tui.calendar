@@ -405,6 +405,7 @@ describe('useGridSelection', () => {
 
     it('should open event form popup after clicking when the `useCreationPopup` option is enabled', () => {
       // Given
+      jest.useFakeTimers(); // Test for debounced click handler.
       const showFormPopupAction = store.getState().dispatch.popup.showFormPopup;
       setup({
         useCreationPopup: true,
@@ -416,6 +417,7 @@ describe('useGridSelection', () => {
 
       // When
       userEvent.click(container, { clientX: 35, clientY: 240 });
+      jest.advanceTimersByTime(1000);
 
       // Then
       expect(showFormPopupAction).toHaveBeenCalledWith(
@@ -469,10 +471,12 @@ describe('useGridSelection', () => {
 
     it('should fire `selectDateTime` custom event after clicking', () => {
       // Given
+      jest.useFakeTimers(); // Test for debounced click handler.
       const container = screen.getByTestId('container');
 
       // When
       userEvent.click(container, { clientX: 35, clientY: 240 });
+      jest.advanceTimersByTime(1000);
 
       // Then
       expect(mockHandler).toHaveBeenCalledWith(

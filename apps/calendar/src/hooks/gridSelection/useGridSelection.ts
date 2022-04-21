@@ -74,29 +74,37 @@ export function useGridSelection<DateCollection>({
 
   let isDragEvent = false;
   const [handleClickWithDebounce, handleDblClickPreventingClick] = useClickPrevention({
-    onClick: (e: MouseEvent) => onMouseUp(e),
-    onDblClick: noop,
+    onClick: (e: MouseEvent) => {
+      if (enableClick) {
+        onMouseUp(e);
+      }
+    },
+    onDblClick: (e: MouseEvent) => {
+      if (enableDblClick) {
+        onMouseUp(e);
+      }
+    },
     delay: 250, // heuristic value
   });
 
   const onMouseUpWithClick = (e: MouseEvent) => {
     const isClick = e.detail <= 1;
 
-    if ((!enableClick && !enableDblClick) || (!enableClick && isClick)) {
-      return false;
+    if (!enableClick && (!enableDblClick || isClick)) {
+      return;
     }
 
-    if (!enableDblClick && enableClick) {
+    if (enableClick) {
       if (isClick) {
         handleClickWithDebounce(e);
       } else {
-        handleDblClickPreventingClick();
+        handleDblClickPreventingClick(e);
       }
 
-      return false;
+      return;
     }
 
-    return true;
+    onMouseUp(e);
   };
 
   const onMouseUp = (e: MouseEvent) => {
@@ -173,15 +181,11 @@ export function useGridSelection<DateCollection>({
     onMouseUp: (e) => {
       e.stopPropagation();
 
-      if (!isDragEvent) {
-        const cancelGridSelection = !onMouseUpWithClick(e);
-
-        if (cancelGridSelection) {
-          return;
-        }
+      if (isDragEvent) {
+        onMouseUp(e);
+      } else {
+        onMouseUpWithClick(e);
       }
-
-      onMouseUp(e);
 
       isDragEvent = false;
     },
