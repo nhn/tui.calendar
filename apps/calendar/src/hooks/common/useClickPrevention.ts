@@ -24,14 +24,14 @@ export function useClickPrevention({
   // Cancels the current scheduled work before the "unmount"
   useEffect(() => cancelScheduledWork, []);
 
-  const handleClick = () => {
+  const handleClick = (...arg: any) => {
     cancelScheduledWork();
-    requestTimeout(onClick, delay, registerCancel);
+    requestTimeout(onClick.bind(null, ...arg), delay, registerCancel);
   };
 
-  const handleDblClick = () => {
+  const handleDblClick = (...arg: any) => {
     cancelScheduledWork();
-    onDblClick();
+    onDblClick(...arg);
   };
 
   return [handleClick, handleDblClick];

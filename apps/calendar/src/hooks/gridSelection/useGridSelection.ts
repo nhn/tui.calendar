@@ -3,12 +3,14 @@ import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
+import { useClickPrevention } from '@src/hooks/common/useClickPrevention';
 import { useDrag } from '@src/hooks/common/useDrag';
 import { useTransientUpdate } from '@src/hooks/common/useTransientUpdate';
-import { dndSelector } from '@src/selectors';
+import { dndSelector, optionsSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import type { GridSelectionType } from '@src/slices/gridSelection';
 import type TZDate from '@src/time/date';
+import { noop } from '@src/utils/noop';
 import { isPresent } from '@src/utils/type';
 
 import type { GridPosition, GridPositionFinder } from '@t/grid';
@@ -18,10 +20,6 @@ function sortDates(a: TZDate, b: TZDate) {
   const isIncreased = a < b;
 
   return isIncreased ? [a, b] : [b, a];
-}
-
-function useCreationPopupOptionSelector(state: CalendarState) {
-  return state.options.useCreationPopup;
 }
 
 export function useGridSelection<DateCollection>({
@@ -40,7 +38,8 @@ export function useGridSelection<DateCollection>({
   dateCollection: DateCollection;
   gridPositionFinder: GridPositionFinder;
 }) {
-  const useCreationPopup = useStore(useCreationPopupOptionSelector);
+  const { useCreationPopup, gridSelection: gridSelectionOptions } = useStore(optionsSelector);
+  const { enableDblClick, enableClick } = gridSelectionOptions;
 
   const { setGridSelection, addGridSelection } = useDispatch('gridSelection');
   const { hideAllPopup, showFormPopup } = useDispatch('popup');
@@ -72,14 +71,76 @@ export function useGridSelection<DateCollection>({
       setGridSelection(type, selectionSorter(initGridPos, gridPosition));
     }
   };
-  const initGridSelection = (e: MouseEvent) => {
-    const gridPosition = gridPositionFinder(e);
 
-    if (isPresent(gridPosition)) {
-      setInitGridPosition(gridPosition);
-      setGridSelectionByPosition(e, gridPosition);
+  let isDragEvent = false;
+  const [handleClickWithDebounce, handleDblClickPreventingClick] = useClickPrevention({
+    onClick: (e: MouseEvent) => onMouseUp(e),
+    onDblClick: noop,
+    delay: 250, // heuristic value
+  });
+
+  const onMouseUpWithClick = (e: MouseEvent) => {
+    const isClick = e.detail <= 1;
+
+    if ((!enableClick && !enableDblClick) || (!enableClick && isClick)) {
+      return false;
+    }
+
+    if (!enableDblClick && enableClick) {
+      if (isClick) {
+        handleClickWithDebounce(e);
+      } else {
+        handleDblClickPreventingClick();
+      }
+
+      return false;
+    }
+
+    return true;
+  };
+
+  const onMouseUp = (e: MouseEvent) => {
+    // The grid selection is created on mouseup in case of the click event.
+    if (!isDragEvent && isPresent(initGridPosition)) {
+      setGridSelectionByPosition(e, initGridPosition);
+    }
+
+    if (isPresent(gridSelectionRef.current)) {
+      const [startDate, endDate] = sortDates(
+        ...dateGetter(dateCollection, gridSelectionRef.current)
+      );
+
+      if (!useCreationPopup) {
+        addGridSelection(type, gridSelectionRef.current);
+      }
+
+      if (useCreationPopup && isPresent(initMousePosition)) {
+        const popupArrowPointPosition = {
+          top: (e.clientY + initMousePosition.y) / 2,
+          left: (e.clientX + initMousePosition.x) / 2,
+        };
+
+        showFormPopup({
+          isCreationPopup: true,
+          title: '',
+          location: '',
+          start: startDate,
+          end: endDate,
+          isAllday: type !== 'timeGrid',
+          isPrivate: false,
+          popupArrowPointPosition,
+        });
+      }
+
+      eventBus.fire('selectDateTime', {
+        start: startDate.toDate(),
+        end: endDate.toDate(),
+        isAllday: type !== 'timeGrid',
+        nativeEvent: e,
+      });
     }
   };
+
   const onMouseDown = useDrag(currentGridSelectionType, {
     onInit: (e) => {
       if (useCreationPopup) {
@@ -90,10 +151,17 @@ export function useGridSelection<DateCollection>({
         hideAllPopup();
       }
 
-      initGridSelection(e);
+      const gridPosition = gridPositionFinder(e);
+
+      if (isPresent(gridPosition)) {
+        setInitGridPosition(gridPosition);
+      }
     },
     onDragStart: (e) => {
-      if (isSelectingGridRef.current && isPresent(initGridPosition)) {
+      isDragEvent = true;
+
+      // The grid selection is created on mousemove in case of the drag event.
+      if (isPresent(initGridPosition)) {
         setGridSelectionByPosition(e, initGridPosition);
       }
     },
@@ -105,40 +173,17 @@ export function useGridSelection<DateCollection>({
     onMouseUp: (e) => {
       e.stopPropagation();
 
-      if (isPresent(gridSelectionRef.current)) {
-        const [startDate, endDate] = sortDates(
-          ...dateGetter(dateCollection, gridSelectionRef.current)
-        );
+      if (!isDragEvent) {
+        const cancelGridSelection = !onMouseUpWithClick(e);
 
-        if (!useCreationPopup) {
-          addGridSelection(type, gridSelectionRef.current);
+        if (cancelGridSelection) {
+          return;
         }
-
-        if (useCreationPopup && isPresent(initMousePosition)) {
-          const popupArrowPointPosition = {
-            top: (e.clientY + initMousePosition.y) / 2,
-            left: (e.clientX + initMousePosition.x) / 2,
-          };
-
-          showFormPopup({
-            isCreationPopup: true,
-            title: '',
-            location: '',
-            start: startDate,
-            end: endDate,
-            isAllday: type !== 'timeGrid',
-            isPrivate: false,
-            popupArrowPointPosition,
-          });
-        }
-
-        eventBus.fire('selectDateTime', {
-          start: startDate.toDate(),
-          end: endDate.toDate(),
-          isAllday: type !== 'timeGrid',
-          nativeEvent: e,
-        });
       }
+
+      onMouseUp(e);
+
+      isDragEvent = false;
     },
   });
 
