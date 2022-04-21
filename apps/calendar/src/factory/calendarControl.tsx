@@ -106,8 +106,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
       calendars = [],
       useCreationPopup = false,
       useDetailPopup = false,
-      disableDblClick = false,
-      disableClick = false,
+      gridSelection = true,
       isReadOnly = false,
     } = options;
 
@@ -121,8 +120,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
       calendars,
       useCreationPopup,
       useDetailPopup,
-      disableDblClick,
-      disableClick,
+      gridSelection,
       isReadOnly,
     };
   }

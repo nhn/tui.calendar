@@ -42,6 +42,11 @@ export interface MonthOptions {
   eventFilter?: (event: Required<EventModelData>) => boolean;
 }
 
+export interface GridSelectionOptions {
+  enableDblClick?: boolean;
+  enableClick?: boolean;
+}
+
 export interface CustomTimezone {
   dateConstructor?: TuiDateConstructor; // YourCustomDate or LocalDate, UTCDate, MomentDate from @toast-ui/date;
   offset?: number; // If using YourCustomDate or MomentDate
@@ -81,8 +86,7 @@ export interface Options {
   calendars?: CalendarInfo[];
   useCreationPopup?: boolean;
   useDetailPopup?: boolean;
-  disableDblClick?: boolean;
-  disableClick?: boolean;
+  gridSelection?: boolean | GridSelectionOptions;
   isReadOnly?: boolean;
   usageStatistics?: boolean;
   timezone?: CustomTimezone;
