@@ -51,6 +51,7 @@ test.describe('TimeGrid Selection', () => {
 
     // When
     await startGridLineLocator.click({ force: true, delay: 1 });
+    await timeGridSelectionLocator.waitFor(); // Test for debounced click handler.
 
     // Then
     await assertTimeGridSelection(timeGridSelectionLocator, {
