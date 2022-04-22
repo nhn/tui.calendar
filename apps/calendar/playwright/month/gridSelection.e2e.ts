@@ -9,6 +9,8 @@ test.beforeEach(async ({ page }) => {
   await page.goto(MONTH_VIEW_PAGE_URL);
 });
 
+const MONTH_GRID_SELECTOR = '.toastui-calendar-daygrid-cell';
+
 test.describe('Selection', () => {
   /**
    * Suppose we have the following cells in the month view.
@@ -28,12 +30,33 @@ test.describe('Selection', () => {
       page,
       startIndex,
       endIndex,
-      '.toastui-calendar-daygrid-cell',
+      MONTH_GRID_SELECTOR,
       '.toastui-calendar-weekday > .toastui-calendar-daygrid-grid-selection'
     );
   }
+  test('select a cell by clicking.', async ({ page }) => {
+    // Given
+    const monthGridCellLocator = page.locator(MONTH_GRID_SELECTOR).nth(31);
 
-  test('select a cell', async ({ page }) => {
+    // When
+    await monthGridCellLocator.click({ delay: 1 });
+
+    // Then
+    await assertMonthGridSelectionMatching(page, 31, 31);
+  });
+
+  test('select a cell by double clicking.', async ({ page }) => {
+    // Given
+    const monthGridCellLocator = page.locator(MONTH_GRID_SELECTOR).nth(31);
+
+    // When
+    await monthGridCellLocator.dblclick({ delay: 1 });
+
+    // Then
+    await assertMonthGridSelectionMatching(page, 31, 31);
+  });
+
+  test('select a cell by drag and drop.', async ({ page }) => {
     await selectMonthGridCells(page, 31, 31);
 
     await assertMonthGridSelectionMatching(page, 31, 31);

@@ -9,8 +9,10 @@ test.beforeEach(async ({ page }) => {
   await page.goto(WEEK_VIEW_PAGE_URL);
 });
 
+const WEEK_GRID_SELECTOR = '.toastui-calendar-panel-grid';
+
 function selectWeekGridCells(page: Page, startCellIndex: number, endCellIndex: number) {
-  return selectGridCells(page, startCellIndex, endCellIndex, '.toastui-calendar-panel-grid');
+  return selectGridCells(page, startCellIndex, endCellIndex, WEEK_GRID_SELECTOR);
 }
 
 test.describe('DayGrid Selection in week', () => {
@@ -19,10 +21,32 @@ test.describe('DayGrid Selection in week', () => {
       page,
       startIndex,
       endIndex,
-      '.toastui-calendar-panel-grid',
+      WEEK_GRID_SELECTOR,
       '.toastui-calendar-daygrid-grid-selection'
     );
   }
+
+  test('select a cell by clicking.', async ({ page }) => {
+    // Given
+    const weekGridCellLocator = page.locator(WEEK_GRID_SELECTOR).nth(14);
+
+    // When
+    await weekGridCellLocator.click({ delay: 1 });
+
+    // Then
+    await assertWeekGridSelectionMatching(page, 14, 14);
+  });
+
+  test('select a cell by double clicking.', async ({ page }) => {
+    // Given
+    const weekGridCellLocator = page.locator(WEEK_GRID_SELECTOR).nth(14);
+
+    // When
+    await weekGridCellLocator.dblclick({ delay: 1 });
+
+    // Then
+    await assertWeekGridSelectionMatching(page, 14, 14);
+  });
 
   test('select 2 cells from left to right', async ({ page }) => {
     await selectWeekGridCells(page, 14, 15);

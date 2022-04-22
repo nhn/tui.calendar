@@ -50,7 +50,24 @@ test.describe('TimeGrid Selection', () => {
     const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
 
     // When
-    await startGridLineLocator.click({ force: true });
+    await startGridLineLocator.click({ force: true, delay: 1 });
+
+    // Then
+    await assertTimeGridSelection(timeGridSelectionLocator, {
+      startTop: startGridLineBoundingBox.y,
+      endBottom: startGridLineBoundingBox.y + startGridLineBoundingBox.height,
+      formattedTimes: ['03:00', '03:30'],
+    });
+  });
+
+  test('should be able to select a time slot with double clicking', async ({ page }) => {
+    // Given
+    const startGridLineLocator = page.locator(getTimeGridLineSelector(SELECT_START_TIME));
+    const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
+    const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
+
+    // When
+    await startGridLineLocator.dblclick({ force: true, delay: 1 });
 
     // Then
     await assertTimeGridSelection(timeGridSelectionLocator, {
