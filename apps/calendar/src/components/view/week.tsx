@@ -20,6 +20,7 @@ import { useTimeGridScrollSync } from '@src/hooks/timeGrid/useTimeGridScrollSync
 import {
   calendarSelector,
   optionsSelector,
+  timezoneSelector,
   viewSelector,
   weekViewLayoutSelector,
 } from '@src/selectors';
@@ -33,6 +34,7 @@ function useWeekViewState() {
   const calendar = useStore(calendarSelector);
   const { dayGridRows: gridRowLayout } = useStore(weekViewLayoutSelector);
   const { renderDate } = useStore(viewSelector);
+  const { primaryTimezone } = useStore(timezoneSelector);
 
   return useMemo(
     () => ({
@@ -40,13 +42,14 @@ function useWeekViewState() {
       calendar,
       gridRowLayout,
       renderDate,
+      primaryTimezone,
     }),
-    [calendar, gridRowLayout, options, renderDate]
+    [calendar, gridRowLayout, options, renderDate, primaryTimezone]
   );
 }
 
 export function Week() {
-  const { options, calendar, gridRowLayout, renderDate } = useWeekViewState();
+  const { options, calendar, gridRowLayout, renderDate, primaryTimezone } = useWeekViewState();
   const [timePanel, setTimePanelRef] = useDOMNode<HTMLDivElement>();
 
   const { eventView, taskView } = options;
@@ -63,9 +66,9 @@ export function Week() {
   const calendarData = useMemo(
     () => ({
       ...calendar,
-      events: getVisibleEventCollection(calendar.events),
+      events: getVisibleEventCollection(calendar.events, primaryTimezone),
     }),
-    [calendar]
+    [calendar, primaryTimezone]
   );
   const eventByPanel = useMemo(
     () =>

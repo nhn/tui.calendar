@@ -34,6 +34,10 @@ export function getTimezoneFactory(value: number | string) {
   };
 }
 
+/**
+ * Calculate timezone offset from UTC.
+ * Target date is needed for the case when the timezone is applicable to DST.
+ */
 export function calculateTimezoneOffset(targetDate: TZDate, timezoneName: string) {
   if (!isIntlDateTimeFormatSupported()) {
     logger.warn(
