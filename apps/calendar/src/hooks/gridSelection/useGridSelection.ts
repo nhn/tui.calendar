@@ -10,7 +10,6 @@ import { dndSelector, optionsSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import type { GridSelectionType } from '@src/slices/gridSelection';
 import type TZDate from '@src/time/date';
-import { noop } from '@src/utils/noop';
 import { isPresent } from '@src/utils/type';
 
 import type { GridPosition, GridPositionFinder } from '@t/grid';
