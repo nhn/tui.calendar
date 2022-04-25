@@ -9,8 +9,8 @@ export function useClickPrevention({
   onDblClick,
   delay = 300,
 }: {
-  onClick: Function;
-  onDblClick: Function;
+  onClick: (e: MouseEvent) => void;
+  onDblClick: (e: MouseEvent) => void;
   delay?: number;
 }) {
   const cancelCallback = useRef<Function>(noop);
@@ -24,14 +24,14 @@ export function useClickPrevention({
   // Cancels the current scheduled work before the "unmount"
   useEffect(() => cancelScheduledWork, []);
 
-  const handleClick = (...arg: any) => {
+  const handleClick = (e: MouseEvent) => {
     cancelScheduledWork();
-    requestTimeout(onClick.bind(null, ...arg), delay, registerCancel);
+    requestTimeout(onClick.bind(null, e), delay, registerCancel);
   };
 
-  const handleDblClick = (...arg: any) => {
+  const handleDblClick = (e: MouseEvent) => {
     cancelScheduledWork();
-    onDblClick(...arg);
+    onDblClick(e);
   };
 
   return [handleClick, handleDblClick];
