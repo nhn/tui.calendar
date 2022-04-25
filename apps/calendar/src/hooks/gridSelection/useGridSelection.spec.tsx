@@ -21,8 +21,8 @@ import type { GridPosition } from '@t/grid';
 import type { GridSelectionOptions } from '@t/options';
 import type { CalendarStore, InternalStoreAPI } from '@t/store';
 
-const WIDTH = 70;
-const HEIGHT = 480;
+const CONTAINER_WIDTH = 70;
+const CONTAINER_HEIGHT = 480;
 
 describe('useGridSelection', () => {
   let store: InternalStoreAPI<CalendarStore>;
@@ -70,8 +70,8 @@ describe('useGridSelection', () => {
       bottom: 0,
       left: 0,
       right: 0,
-      width: WIDTH,
-      height: HEIGHT,
+      width: CONTAINER_WIDTH,
+      height: CONTAINER_HEIGHT,
       toJSON: noop,
     });
 
@@ -118,6 +118,7 @@ describe('useGridSelection', () => {
   afterEach(() => {
     document.body.innerHTML = '';
     jest.clearAllMocks();
+    jest.useRealTimers();
   });
 
   it('should return null if mousedown not fired', () => {
@@ -145,7 +146,7 @@ describe('useGridSelection', () => {
       },
       {
         initX: 0,
-        initY: HEIGHT,
+        initY: CONTAINER_HEIGHT,
         expected: {
           endColumnIndex: 0,
           endRowIndex: 47,
@@ -154,7 +155,7 @@ describe('useGridSelection', () => {
         },
       },
       {
-        initX: WIDTH,
+        initX: CONTAINER_WIDTH,
         initY: 0,
         expected: {
           endColumnIndex: 6,
@@ -164,8 +165,8 @@ describe('useGridSelection', () => {
         },
       },
       {
-        initX: WIDTH,
-        initY: HEIGHT,
+        initX: CONTAINER_WIDTH,
+        initY: CONTAINER_HEIGHT,
         expected: {
           endColumnIndex: 6,
           endRowIndex: 47,
@@ -206,8 +207,8 @@ describe('useGridSelection', () => {
           element: container,
           initPosition: { clientX: initX, clientY: initY },
           targetPosition: {
-            clientX: initX < WIDTH ? initX + 3 : initX - 3,
-            clientY: initY < HEIGHT ? initY + 3 : initY - 3,
+            clientX: initX < CONTAINER_WIDTH ? initX + 3 : initX - 3,
+            clientY: initY < CONTAINER_HEIGHT ? initY + 3 : initY - 3,
           },
           hold: true,
         });
@@ -250,7 +251,7 @@ describe('useGridSelection', () => {
         },
       },
       {
-        x: WIDTH,
+        x: CONTAINER_WIDTH,
         y: 0,
         expected: {
           startColumnIndex: 3,
@@ -260,7 +261,7 @@ describe('useGridSelection', () => {
         },
       },
       {
-        x: WIDTH,
+        x: CONTAINER_WIDTH,
         y: initY,
         expected: {
           startColumnIndex: 3,
@@ -270,8 +271,8 @@ describe('useGridSelection', () => {
         },
       },
       {
-        x: WIDTH,
-        y: HEIGHT,
+        x: CONTAINER_WIDTH,
+        y: CONTAINER_HEIGHT,
         expected: {
           startColumnIndex: 3,
           startRowIndex: 24,
@@ -281,7 +282,7 @@ describe('useGridSelection', () => {
       },
       {
         x: initX,
-        y: HEIGHT,
+        y: CONTAINER_HEIGHT,
         expected: {
           startColumnIndex: 3,
           startRowIndex: 24,
@@ -291,7 +292,7 @@ describe('useGridSelection', () => {
       },
       {
         x: 0,
-        y: HEIGHT,
+        y: CONTAINER_HEIGHT,
         expected: {
           startColumnIndex: 0,
           startRowIndex: 47,
