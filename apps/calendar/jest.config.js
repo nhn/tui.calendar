@@ -6,6 +6,7 @@ module.exports = {
   moduleNameMapper: {
     '\\.(css)$': '<rootDir>/src/test/cssFileMock.ts',
     '^@src/(.*)$': '<rootDir>/src/$1',
+    '^@stories/(.*)$': '<rootDir>/stories/$1',
   },
   globals: { 'ts-jest': { tsconfig: '<rootDir>/tsconfig.test.json' } },
   watchPathIgnorePatterns: ['<rootDir>/.storybook', '<rootDir>/.stories', '/node_modules/'],
