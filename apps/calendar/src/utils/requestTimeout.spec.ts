@@ -24,7 +24,7 @@ describe('requestTimeout', () => {
     expect(fn).not.toHaveBeenCalled();
 
     // When
-    jest.advanceTimersByTime(delay + 10);
+    jest.advanceTimersByTime(delay + 30);
 
     // Then
     expect(fn).toHaveBeenCalled();

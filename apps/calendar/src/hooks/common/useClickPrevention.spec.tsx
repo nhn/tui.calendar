@@ -42,7 +42,7 @@ describe('useClickPrevention', () => {
 
     // When
     fireEvent.click(button);
-    jest.advanceTimersByTime(delay + 10);
+    jest.advanceTimersByTime(delay + 30);
     fireEvent.click(button);
     jest.advanceTimersByTime(delay + 50);
 
