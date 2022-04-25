@@ -34,8 +34,14 @@ export function getTimezoneFactory(value: number | string) {
   };
 }
 
+// Get the timezone offset from the system using the calendar.
+export function getLocalTimezoneOffset() {
+  return -new Date().getTimezoneOffset();
+}
+
 /**
  * Calculate timezone offset from UTC.
+ *
  * Target date is needed for the case when the timezone is applicable to DST.
  */
 export function calculateTimezoneOffset(targetDate: TZDate, timezoneName: string) {
@@ -44,7 +50,7 @@ export function calculateTimezoneOffset(targetDate: TZDate, timezoneName: string
       'Intl.DateTimeFormat is not fully supported. So It will return the local timezone offset only.\nYou can use a polyfill to fix this issue.'
     );
 
-    return targetDate.getTimezoneOffset();
+    return -targetDate.getTimezoneOffset();
   }
 
   validateIANATimezoneName(timezoneName);
@@ -52,9 +58,7 @@ export function calculateTimezoneOffset(targetDate: TZDate, timezoneName: string
   const token = tokenizeTZDate(targetDate, timezoneName);
   const utcDate = tokenToUtcDate(token);
 
-  const offset = Math.round((utcDate.getTime() - targetDate.getTime()) / 60 / 1000);
-
-  return -offset;
+  return Math.round((utcDate.getTime() - targetDate.getTime()) / 60 / 1000);
 }
 
 // Reference: https://stackoverflow.com/a/30280636/16702531
@@ -70,9 +74,9 @@ export function isUsingDST(targetDate: TZDate, timezoneName?: string) {
   if (timezoneName) {
     return (
       Math.max(
-        calculateTimezoneOffset(jan, timezoneName),
-        calculateTimezoneOffset(jul, timezoneName)
-      ) !== calculateTimezoneOffset(targetDate, timezoneName)
+        -calculateTimezoneOffset(jan, timezoneName),
+        -calculateTimezoneOffset(jul, timezoneName)
+      ) !== -calculateTimezoneOffset(targetDate, timezoneName)
     );
   }
 
@@ -160,9 +164,8 @@ function tokenizeTZDate(tzDate: TZDate, timezoneName: string): TokenizeResult {
 }
 
 function tokenToUtcDate(token: TokenizeResult) {
-  const [year, monthPlusOne, day, _hour, minute, second] = token;
+  const [year, monthPlusOne, day, hour, minute, second] = token;
   const month = monthPlusOne - 1;
-  const hour = _hour > 23 ? 0 : _hour;
 
-  return new Date(Date.UTC(year, month, day, hour, minute, second));
+  return new Date(Date.UTC(year, month, day, hour % 24, minute, second));
 }

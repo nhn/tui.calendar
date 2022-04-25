@@ -1,8 +1,8 @@
 import { createEventCollection } from '@src/controller/base';
 import type EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
-import { millisecondsFrom, MS_EVENT_MIN_DURATION } from '@src/time/datetime';
-import { calculateTimezoneOffset } from '@src/time/timezone';
+import { millisecondsFrom, MS_EVENT_MIN_DURATION, MS_PER_MINUTES } from '@src/time/datetime';
+import { calculateTimezoneOffset, getLocalTimezoneOffset } from '@src/time/timezone';
 import type Collection from '@src/utils/collection';
 
 type CollisionParam = {
@@ -69,15 +69,19 @@ export function getVisibleEventCollection(
   const visibleEvents = events.toArray().filter((eventModel) => eventModel.isVisible);
 
   if (timezoneName !== 'Local') {
-    const localTimezoneOffset = new Date().getTimezoneOffset();
+    const localTimezoneOffset = getLocalTimezoneOffset();
 
-    visibleEvents.forEach((eventModel) => {
-      const startOffset =
-        localTimezoneOffset - calculateTimezoneOffset(eventModel.start, timezoneName);
-      const endOffset = localTimezoneOffset - calculateTimezoneOffset(eventModel.end, timezoneName);
-      eventModel.start = new TZDate(eventModel.start.getTime() + startOffset * 60 * 1000);
-      eventModel.end = new TZDate(eventModel.end.getTime() + endOffset * 60 * 1000);
-    });
+    visibleEvents
+      .filter((eventModel) => eventModel.category === 'time')
+      .forEach((eventModel) => {
+        const startOffset =
+          localTimezoneOffset - calculateTimezoneOffset(eventModel.start, timezoneName);
+        const endOffset =
+          localTimezoneOffset - calculateTimezoneOffset(eventModel.end, timezoneName);
+
+        eventModel.start = new TZDate(eventModel.start.getTime() - startOffset * MS_PER_MINUTES);
+        eventModel.end = new TZDate(eventModel.end.getTime() - endOffset * MS_PER_MINUTES);
+      });
   }
 
   return createEventCollection<EventModel>(...visibleEvents);

@@ -188,7 +188,7 @@ describe('calculateTimezoneOffset', () => {
 
     // Then
     // Pacific Daylight Time (PDT) is UTC -7.
-    expect(offset).toBe(420);
+    expect(offset).toBe(-420);
   });
 
   it('should calculate timezone offset of date which is not applicable DST', () => {
@@ -202,7 +202,19 @@ describe('calculateTimezoneOffset', () => {
     const offset = calculateTimezoneOffset(tzDate, timezoneName);
 
     // Then
-    expect(offset).toBe(480);
+    expect(offset).toBe(-480);
+  });
+
+  it('should return positive number when the timezone is UTC+', () => {
+    // Given
+    const timezoneName = 'Asia/Seoul'; // UTC+9
+    const tzDate = new TZDate('2022-11-06T09:00:00');
+
+    // When
+    const offset = calculateTimezoneOffset(tzDate, timezoneName);
+
+    // Then
+    expect(offset).toBe(540);
   });
 
   it('should throw if the timezone name is invalid', () => {
