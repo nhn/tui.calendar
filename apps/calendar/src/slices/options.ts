@@ -1,12 +1,13 @@
 import produce from 'immer';
 import range from 'tui-code-snippet/array/range';
+import isBoolean from 'tui-code-snippet/type/isBoolean';
 
 import { getDayName } from '@src/helpers/dayName';
 import { Day } from '@src/time/datetime';
 import { mergeObject } from '@src/utils/object';
 
 import type { EventModelData } from '@t/events';
-import type { Options } from '@t/options';
+import type { GridSelectionOptions, Options } from '@t/options';
 import type {
   CalendarMonthOptions,
   CalendarState,
@@ -66,11 +67,30 @@ function initializeMonthOptions(monthOptions: Options['month']): CalendarMonthOp
   return month;
 }
 
+export function initializeGridSelectionOptions(
+  options: Options['gridSelection']
+): GridSelectionOptions {
+  if (isBoolean(options)) {
+    return {
+      enableDblClick: options,
+      enableClick: options,
+    };
+  }
+
+  return {
+    enableDblClick: true,
+    enableClick: true,
+    ...options,
+  };
+}
+
 // @TODO: some of options has default values. so it should be `Required` type.
 // But it needs a complex type such as `DeepRequired`.
 // maybe leveraging library like `ts-essential` might be helpful.
 export type OptionsSlice = {
-  options: Omit<Required<Options>, 'template' | 'calendars' | 'theme' | 'timezone'>;
+  options: Omit<Required<Options>, 'template' | 'calendars' | 'theme' | 'timezone'> & {
+    gridSelection: GridSelectionOptions;
+  };
 };
 
 export type OptionsDispatchers = {
@@ -86,11 +106,10 @@ export function createOptionsSlice(options: Options = {}): OptionsSlice {
       eventView: options.eventView ?? true,
       useCreationPopup: options.useCreationPopup ?? false,
       useDetailPopup: options.useDetailPopup ?? false,
-      disableDblClick: options.disableDblClick ?? false,
-      disableClick: options.disableClick ?? false,
       isReadOnly: options.isReadOnly ?? false,
       week: initializeWeekOptions(options.week),
       month: initializeMonthOptions(options.month),
+      gridSelection: initializeGridSelectionOptions(options.gridSelection),
       usageStatistics: options.usageStatistics ?? true,
     },
   };

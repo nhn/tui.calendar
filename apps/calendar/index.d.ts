@@ -170,6 +170,11 @@ export interface IMonthOptions {
   eventFilter?: (eventData: EventModelData) => boolean;
 }
 
+export interface IGridSelectionOptions {
+  enableDblClick?: boolean;
+  enableClick?: boolean;
+}
+
 export interface EventModelData {
   id?: string;
   calendarId?: string;
@@ -238,8 +243,7 @@ export interface IOptions {
   calendars?: ICalendarInfo[];
   useCreationPopup?: boolean;
   useDetailPopup?: boolean;
-  disableDblClick?: boolean;
-  disableClick?: boolean;
+  gridSelection?: boolean | IGridSelectionOptions;
   isReadOnly?: boolean;
   usageStatistics?: boolean;
   timezone?: ICustomTimezone;

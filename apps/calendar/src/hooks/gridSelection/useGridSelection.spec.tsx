@@ -18,7 +18,11 @@ import { noop } from '@src/utils/noop';
 import type { PropsWithChildren } from '@t/components/common';
 import type { ExternalEventTypes } from '@t/eventBus';
 import type { GridPosition } from '@t/grid';
+import type { GridSelectionOptions } from '@t/options';
 import type { CalendarStore, InternalStoreAPI } from '@t/store';
+
+const CONTAINER_WIDTH = 70;
+const CONTAINER_HEIGHT = 480;
 
 describe('useGridSelection', () => {
   let store: InternalStoreAPI<CalendarStore>;
@@ -32,6 +36,7 @@ describe('useGridSelection', () => {
 
   function setup<DateCollection>({
     type = 'timeGrid',
+    gridSelection = { enableDblClick: true, enableClick: true },
     useCreationPopup = false,
     selectionSorter = jest.fn((init, current) => ({
       startColumnIndex: current.columnIndex,
@@ -43,6 +48,7 @@ describe('useGridSelection', () => {
     dateCollection = {} as DateCollection,
   }: {
     type?: GridSelectionType;
+    gridSelection?: GridSelectionOptions;
     useCreationPopup?: boolean;
     dateCollection?: DateCollection;
     selectionSorter?: (
@@ -64,16 +70,15 @@ describe('useGridSelection', () => {
       bottom: 0,
       left: 0,
       right: 0,
-      width: 70,
-      height: 480,
+      width: CONTAINER_WIDTH,
+      height: CONTAINER_HEIGHT,
       toJSON: noop,
     });
 
-    if (useCreationPopup) {
-      store.getState().dispatch.options.setOptions({
-        useCreationPopup: true,
-      });
-    }
+    store.getState().dispatch.options.setOptions({
+      useCreationPopup,
+      gridSelection,
+    });
 
     const gridPositionFinder = createGridPositionFinder({
       rowsCount: 48,
@@ -113,6 +118,7 @@ describe('useGridSelection', () => {
   afterEach(() => {
     document.body.innerHTML = '';
     jest.clearAllMocks();
+    jest.useRealTimers();
   });
 
   it('should return null if mousedown not fired', () => {
@@ -140,7 +146,7 @@ describe('useGridSelection', () => {
       },
       {
         initX: 0,
-        initY: 480,
+        initY: CONTAINER_HEIGHT,
         expected: {
           endColumnIndex: 0,
           endRowIndex: 47,
@@ -149,7 +155,7 @@ describe('useGridSelection', () => {
         },
       },
       {
-        initX: 70,
+        initX: CONTAINER_WIDTH,
         initY: 0,
         expected: {
           endColumnIndex: 6,
@@ -159,8 +165,8 @@ describe('useGridSelection', () => {
         },
       },
       {
-        initX: 70,
-        initY: 480,
+        initX: CONTAINER_WIDTH,
+        initY: CONTAINER_HEIGHT,
         expected: {
           endColumnIndex: 6,
           endRowIndex: 47,
@@ -191,15 +197,20 @@ describe('useGridSelection', () => {
     ];
 
     cases.forEach(({ initX, initY, expected }) => {
-      it(`should return grid selection data when just click at (${initX}, ${initY})`, () => {
+      it(`should return grid selection data when just mousedown and mousemove at (${initX}, ${initY})`, () => {
         // Given
         setup();
         const container = screen.getByTestId('container');
 
         // When
-        userEvent.click(container, {
-          clientX: initX,
-          clientY: initY,
+        dragAndDrop({
+          element: container,
+          initPosition: { clientX: initX, clientY: initY },
+          targetPosition: {
+            clientX: initX < CONTAINER_WIDTH ? initX + 3 : initX - 3,
+            clientY: initY < CONTAINER_HEIGHT ? initY + 3 : initY - 3,
+          },
+          hold: true,
         });
 
         // Then
@@ -240,7 +251,7 @@ describe('useGridSelection', () => {
         },
       },
       {
-        x: 70,
+        x: CONTAINER_WIDTH,
         y: 0,
         expected: {
           startColumnIndex: 3,
@@ -250,7 +261,7 @@ describe('useGridSelection', () => {
         },
       },
       {
-        x: 70,
+        x: CONTAINER_WIDTH,
         y: initY,
         expected: {
           startColumnIndex: 3,
@@ -260,8 +271,8 @@ describe('useGridSelection', () => {
         },
       },
       {
-        x: 70,
-        y: 480,
+        x: CONTAINER_WIDTH,
+        y: CONTAINER_HEIGHT,
         expected: {
           startColumnIndex: 3,
           startRowIndex: 24,
@@ -271,7 +282,7 @@ describe('useGridSelection', () => {
       },
       {
         x: initX,
-        y: 480,
+        y: CONTAINER_HEIGHT,
         expected: {
           startColumnIndex: 3,
           startRowIndex: 24,
@@ -281,7 +292,7 @@ describe('useGridSelection', () => {
       },
       {
         x: 0,
-        y: 480,
+        y: CONTAINER_HEIGHT,
         expected: {
           startColumnIndex: 0,
           startRowIndex: 47,
@@ -395,6 +406,7 @@ describe('useGridSelection', () => {
 
     it('should open event form popup after clicking when the `useCreationPopup` option is enabled', () => {
       // Given
+      jest.useFakeTimers(); // Test for debounced click handler.
       const showFormPopupAction = store.getState().dispatch.popup.showFormPopup;
       setup({
         useCreationPopup: true,
@@ -406,6 +418,7 @@ describe('useGridSelection', () => {
 
       // When
       userEvent.click(container, { clientX: 35, clientY: 240 });
+      jest.advanceTimersByTime(1000);
 
       // Then
       expect(showFormPopupAction).toHaveBeenCalledWith(
@@ -459,10 +472,12 @@ describe('useGridSelection', () => {
 
     it('should fire `selectDateTime` custom event after clicking', () => {
       // Given
+      jest.useFakeTimers(); // Test for debounced click handler.
       const container = screen.getByTestId('container');
 
       // When
       userEvent.click(container, { clientX: 35, clientY: 240 });
+      jest.advanceTimersByTime(1000);
 
       // Then
       expect(mockHandler).toHaveBeenCalledWith(
@@ -471,6 +486,85 @@ describe('useGridSelection', () => {
           end: new Date('2022-02-16T12:30:00.000'),
         })
       );
+    });
+  });
+
+  describe('GridSelection options', () => {
+    const cases: GridSelectionOptions[] = [
+      {
+        enableDblClick: true,
+        enableClick: true,
+      },
+      {
+        enableDblClick: true,
+        enableClick: false,
+      },
+      {
+        enableDblClick: false,
+        enableClick: true,
+      },
+      {
+        enableDblClick: false,
+        enableClick: false,
+      },
+    ];
+
+    cases.forEach(({ enableDblClick, enableClick }) => {
+      it(`should make enable/disable the click event depending on gridSelection options: { enableDblClick: ${enableDblClick}, enableClick: ${enableClick} }`, () => {
+        // Given
+        jest.useFakeTimers(); // Test for debounced click handler.
+        setup({ gridSelection: { enableDblClick, enableClick } });
+        const container = screen.getByTestId('container');
+
+        // When
+        userEvent.click(container, {
+          clientX: 0,
+          clientY: 0,
+        });
+        jest.advanceTimersByTime(1000);
+
+        // Then
+        if (enableClick) {
+          expect(getGridSelectionState().timeGrid).not.toBeNull();
+        } else {
+          expect(getGridSelectionState().timeGrid).toBeNull();
+        }
+      });
+
+      it(`should make enable/disable the double click event depending on gridSelection options: { enableDblClick: ${enableDblClick}, enableClick: ${enableClick} }`, () => {
+        // Given
+        setup({ gridSelection: { enableDblClick, enableClick } });
+        const container = screen.getByTestId('container');
+
+        // When
+        userEvent.dblClick(container, {
+          clientX: 0,
+          clientY: 0,
+        });
+
+        // Then
+        if (enableDblClick) {
+          expect(getGridSelectionState().timeGrid).not.toBeNull();
+        } else {
+          expect(getGridSelectionState().timeGrid).toBeNull();
+        }
+      });
+
+      it(`should not affect the drag event: { enableDblClick: ${enableDblClick}, enableClick: ${enableClick} }`, () => {
+        // Given
+        setup({ gridSelection: { enableDblClick, enableClick } });
+        const container = screen.getByTestId('container');
+
+        // When
+        dragAndDrop({
+          element: container,
+          initPosition: { clientX: 0, clientY: 0 },
+          targetPosition: { clientX: 35, clientY: 240 },
+        });
+
+        // Then
+        expect(getGridSelectionState().timeGrid).not.toBeNull();
+      });
     });
   });
 });
