@@ -1,5 +1,6 @@
 import produce from 'immer';
 import range from 'tui-code-snippet/array/range';
+import isBoolean from 'tui-code-snippet/type/isBoolean';
 
 import { getDayName } from '@src/helpers/dayName';
 import { Day } from '@src/time/datetime';
@@ -69,12 +70,10 @@ function initializeMonthOptions(monthOptions: Options['month']): CalendarMonthOp
 export function initializeGridSelectionOptions(
   options: Options['gridSelection']
 ): GridSelectionOptions {
-  if (options === true) {
-    options = {};
-  } else if (options === false) {
+  if (isBoolean(options)) {
     return {
-      enableDblClick: false,
-      enableClick: false,
+      enableDblClick: options,
+      enableClick: options,
     };
   }
 
