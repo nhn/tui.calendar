@@ -71,16 +71,15 @@ export function useGridSelection<DateCollection>({
     }
   };
 
-  let isDragEvent = false;
   const [handleClickWithDebounce, handleDblClickPreventingClick] = useClickPrevention({
     onClick: (e: MouseEvent) => {
       if (enableClick) {
-        onMouseUp(e);
+        onMouseUp(e, true);
       }
     },
     onDblClick: (e: MouseEvent) => {
       if (enableDblClick) {
-        onMouseUp(e);
+        onMouseUp(e, true);
       }
     },
     delay: 250, // heuristic value
@@ -103,12 +102,12 @@ export function useGridSelection<DateCollection>({
       return;
     }
 
-    onMouseUp(e);
+    onMouseUp(e, true);
   };
 
-  const onMouseUp = (e: MouseEvent) => {
+  const onMouseUp = (e: MouseEvent, isClickEvent: boolean) => {
     // The grid selection is created on mouseup in case of the click event.
-    if (!isDragEvent && isPresent(initGridPosition)) {
+    if (isClickEvent && isPresent(initGridPosition)) {
       setGridSelectionByPosition(e, initGridPosition);
     }
 
@@ -165,8 +164,6 @@ export function useGridSelection<DateCollection>({
       }
     },
     onDragStart: (e) => {
-      isDragEvent = true;
-
       // The grid selection is created on mousemove in case of the drag event.
       if (isPresent(initGridPosition)) {
         setGridSelectionByPosition(e, initGridPosition);
@@ -177,16 +174,16 @@ export function useGridSelection<DateCollection>({
         setGridSelectionByPosition(e, initGridPosition);
       }
     },
-    onMouseUp: (e) => {
+    onMouseUp: (e, { draggingState }) => {
       e.stopPropagation();
 
-      if (isDragEvent) {
-        onMouseUp(e);
-      } else {
-        onMouseUpWithClick(e);
-      }
+      const isClickEvent = draggingState <= DraggingState.INIT;
 
-      isDragEvent = false;
+      if (isClickEvent) {
+        onMouseUpWithClick(e);
+      } else {
+        onMouseUp(e, isClickEvent);
+      }
     },
   });
 
