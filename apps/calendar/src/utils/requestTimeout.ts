@@ -2,12 +2,15 @@ import { noop } from '@src/utils/noop';
 
 // Reference: https://medium.com/trabe/preventing-click-events-on-double-click-with-react-the-performant-way-1416ab03b835
 export function requestTimeout(fn: Function, delay: number, registerCancel: Function) {
-  const start = new Date().getTime();
+  let start: DOMHighResTimeStamp;
 
-  const loop = () => {
-    const delta = new Date().getTime() - start;
+  const loop = (timestamp: DOMHighResTimeStamp) => {
+    if (!start) {
+      start = timestamp;
+    }
+    const elapsed = timestamp - start;
 
-    if (delta >= delay) {
+    if (elapsed >= delay) {
       fn();
       registerCancel(noop);
 
