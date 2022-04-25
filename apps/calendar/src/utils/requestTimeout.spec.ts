@@ -12,15 +12,15 @@ describe('requestTimeout', () => {
     fn = jest.fn();
   });
 
+  afterAll(() => {
+    jest.useRealTimers();
+  });
+
   it('should execute the callback function after a specific time.', () => {
     // Given
     const delay = 1000;
     requestTimeout(fn, delay, noop);
 
-    // When
-    // Nothing
-
-    // Then
     expect(fn).not.toHaveBeenCalled();
 
     // When

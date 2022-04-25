@@ -19,6 +19,10 @@ describe('useClickPrevention', () => {
     render(<Button />);
   });
 
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
   it('should prevent the click event on double click.', () => {
     // Given
     const button = screen.getByRole('button');
