@@ -49,9 +49,9 @@ export function Day() {
   const { calendar, options, gridRowLayout, renderDate } = useDayViewState();
   const [timePanel, setTimePanelRef] = useDOMNode<HTMLDivElement>();
 
-  const { eventView, taskView } = options;
   const weekOptions = options.week as Required<WeekOptions>;
-  const { narrowWeekend, startDayOfWeek, workweek, hourStart, hourEnd } = weekOptions;
+  const { narrowWeekend, startDayOfWeek, workweek, hourStart, hourEnd, eventView, taskView } =
+    weekOptions;
   const days = useMemo(() => [renderDate], [renderDate]);
   const dayNames = getDayNames(days);
   const { rowStyleInfo, cellWidthMap } = getRowStyleInfo(
@@ -103,7 +103,7 @@ export function Day() {
               events={dayGridEvents[rowType]}
               weekDates={days}
               height={gridRowLayout[rowType].height}
-              options={options.week}
+              options={weekOptions}
               gridColWidthMap={cellWidthMap}
             />
           )}

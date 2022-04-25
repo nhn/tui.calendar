@@ -7,6 +7,9 @@ import type { EventModelData } from '@t/events';
 import type { TemplateConfig } from '@t/template';
 import type { ThemeState } from '@t/theme';
 
+type eventViewValue = 'allday' | 'time';
+type taskViewValue = 'milestone' | 'task';
+
 export interface WeekOptions {
   startDayOfWeek?: number;
   daynames?: string[];
@@ -17,6 +20,8 @@ export interface WeekOptions {
   timezones?: TimezoneConfig[];
   hourStart?: number;
   hourEnd?: number;
+  eventView?: boolean | eventViewValue[];
+  taskView?: boolean | taskViewValue[];
 }
 
 export interface MonthOptions {
@@ -77,8 +82,6 @@ export type ViewType = 'month' | 'week' | 'day';
 // @TODO: Options 정의 필요
 export interface Options {
   defaultView?: ViewType;
-  taskView?: boolean | string[];
-  eventView?: boolean | string[];
   theme?: DeepPartial<ThemeState>;
   template?: TemplateConfig;
   week?: WeekOptions;

@@ -1,10 +1,10 @@
 import { DEFAULT_EVENT_PANEL, DEFAULT_TASK_PANEL } from '@src/constants/view';
 
-import type { Options } from '@t/options';
+import type { WeekOptions } from '@t/options';
 
 export function getDisplayPanel(
-  taskView: Required<Options>['taskView'],
-  eventView: Required<Options>['eventView']
+  taskView: Required<WeekOptions>['taskView'],
+  eventView: Required<WeekOptions>['eventView']
 ) {
   const displayPanel: string[] = [];
 

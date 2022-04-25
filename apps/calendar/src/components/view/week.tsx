@@ -49,9 +49,9 @@ export function Week() {
   const { options, calendar, gridRowLayout, renderDate } = useWeekViewState();
   const [timePanel, setTimePanelRef] = useDOMNode<HTMLDivElement>();
 
-  const { eventView, taskView } = options;
   const weekOptions = options.week as Required<WeekOptions>;
-  const { narrowWeekend, startDayOfWeek, workweek, hourStart, hourEnd } = weekOptions;
+  const { narrowWeekend, startDayOfWeek, workweek, hourStart, hourEnd, eventView, taskView } =
+    weekOptions;
   const weekDates = useMemo(() => getWeekDates(renderDate, weekOptions), [renderDate, weekOptions]);
   const dayNames = getDayNames(weekDates);
   const { rowStyleInfo, cellWidthMap } = getRowStyleInfo(
