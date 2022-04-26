@@ -59,11 +59,9 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
       end: toStartOfDay(),
     };
 
-    const initOptions = this.initOptions(options);
-
-    this.theme = initThemeStore(initOptions.theme);
+    this.theme = initThemeStore(options.theme);
     this.eventBus = new EventBusImpl<ExternalEventTypes>();
-    this.store = initCalendarStore(initOptions);
+    this.store = initCalendarStore(options);
 
     addAttributeHooks();
   }
@@ -88,38 +86,6 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
     const dispatchers = this.store.getState().dispatch;
 
     return group ? dispatchers[group] : dispatchers;
-  }
-
-  private initOptions(options: Options = {}): Options {
-    const {
-      defaultView = 'week',
-      taskView = true,
-      eventView = true,
-      template = {},
-      week = {},
-      month = {},
-      calendars = [],
-      useCreationPopup = false,
-      useDetailPopup = false,
-      disableDblClick = false,
-      disableClick = false,
-      isReadOnly = false,
-    } = options;
-
-    return {
-      defaultView,
-      taskView,
-      eventView,
-      template,
-      week,
-      month,
-      calendars,
-      useCreationPopup,
-      useDetailPopup,
-      disableDblClick,
-      disableClick,
-      isReadOnly,
-    };
   }
 
   /**
