@@ -31,7 +31,7 @@ import type { AlldayEventCategory } from '@t/panel';
 function useWeekViewState() {
   const options = useStore(optionsSelector);
   const calendar = useStore(calendarSelector);
-  const { dayGridRows: gridRowLayout } = useStore(weekViewLayoutSelector);
+  const { dayGridRows: gridRowLayout, lastPanelType } = useStore(weekViewLayoutSelector);
   const { renderDate } = useStore(viewSelector);
 
   return useMemo(
@@ -39,14 +39,15 @@ function useWeekViewState() {
       options,
       calendar,
       gridRowLayout,
+      lastPanelType,
       renderDate,
     }),
-    [calendar, gridRowLayout, options, renderDate]
+    [calendar, gridRowLayout, lastPanelType, options, renderDate]
   );
 }
 
 export function Week() {
-  const { options, calendar, gridRowLayout, renderDate } = useWeekViewState();
+  const { options, calendar, gridRowLayout, lastPanelType, renderDate } = useWeekViewState();
   const [timePanel, setTimePanelRef] = useDOMNode<HTMLDivElement>();
 
   const weekOptions = options.week as Required<WeekOptions>;
@@ -92,14 +93,14 @@ export function Week() {
       const rowType = key as AlldayEventCategory;
 
       return (
-        <Panel name={rowType} key={rowType} resizable>
+        <Panel name={rowType} key={rowType} resizable={rowType !== lastPanelType}>
           {rowType === 'allday' ? (
             <AlldayGridRow
               events={eventByPanel[rowType]}
               rowStyleInfo={rowStyleInfo}
               gridColWidthMap={cellWidthMap}
               weekDates={weekDates}
-              height={gridRowLayout[rowType].height}
+              height={gridRowLayout[rowType]?.height}
               options={weekOptions}
             />
           ) : (
@@ -107,7 +108,7 @@ export function Week() {
               category={rowType}
               events={eventByPanel[rowType]}
               weekDates={weekDates}
-              height={gridRowLayout[rowType].height}
+              height={gridRowLayout[rowType]?.height}
               options={weekOptions}
               gridColWidthMap={cellWidthMap}
             />
@@ -131,9 +132,11 @@ export function Week() {
         />
       </Panel>
       {dayGridRows}
-      <Panel name="time" autoSize={1} ref={setTimePanelRef}>
-        <TimeGrid events={eventByPanel.time} timeGridData={timeGridData} />
-      </Panel>
+      {displayPanel.includes('time') ? (
+        <Panel name="time" autoSize={1} ref={setTimePanelRef}>
+          <TimeGrid events={eventByPanel.time} timeGridData={timeGridData} />
+        </Panel>
+      ) : null}
     </Layout>
   );
 }

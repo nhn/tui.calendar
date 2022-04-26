@@ -1,4 +1,4 @@
-import type { ViewType } from '@t/options';
+import type { eventViewValue, taskViewValue, ViewType } from '@t/options';
 
 export const VIEW_TYPE: {
   [key: string]: ViewType;
@@ -8,6 +8,6 @@ export const VIEW_TYPE: {
   DAY: 'day',
 };
 
-export const DEFAULT_TASK_PANEL = ['milestone', 'task'];
+export const DEFAULT_TASK_PANEL: taskViewValue[] = ['milestone', 'task'];
 
-export const DEFAULT_EVENT_PANEL = ['allday', 'time'];
+export const DEFAULT_EVENT_PANEL: eventViewValue[] = ['allday', 'time'];

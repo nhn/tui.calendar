@@ -31,7 +31,7 @@ import type { AlldayEventCategory } from '@t/panel';
 function useDayViewState() {
   const calendar = useStore(calendarSelector);
   const options = useStore(optionsSelector);
-  const { dayGridRows: gridRowLayout } = useStore(weekViewLayoutSelector);
+  const { dayGridRows: gridRowLayout, lastPanelType } = useStore(weekViewLayoutSelector);
   const { renderDate } = useStore(viewSelector);
 
   return useMemo(
@@ -39,14 +39,15 @@ function useDayViewState() {
       calendar,
       options,
       gridRowLayout,
+      lastPanelType,
       renderDate,
     }),
-    [calendar, options, gridRowLayout, renderDate]
+    [calendar, options, gridRowLayout, lastPanelType, renderDate]
   );
 }
 
 export function Day() {
-  const { calendar, options, gridRowLayout, renderDate } = useDayViewState();
+  const { calendar, options, gridRowLayout, lastPanelType, renderDate } = useDayViewState();
   const [timePanel, setTimePanelRef] = useDOMNode<HTMLDivElement>();
 
   const weekOptions = options.week as Required<WeekOptions>;
@@ -87,14 +88,14 @@ export function Day() {
       const rowType = key as AlldayEventCategory;
 
       return (
-        <Panel key={rowType} name={rowType} resizable>
+        <Panel key={rowType} name={rowType} resizable={rowType !== lastPanelType}>
           {rowType === 'allday' ? (
             <AlldayGridRow
               events={dayGridEvents[rowType]}
               rowStyleInfo={rowStyleInfo}
               gridColWidthMap={cellWidthMap}
               weekDates={days}
-              height={gridRowLayout[rowType].height}
+              height={gridRowLayout[rowType]?.height}
               options={weekOptions}
             />
           ) : (
@@ -102,7 +103,7 @@ export function Day() {
               category={rowType}
               events={dayGridEvents[rowType]}
               weekDates={days}
-              height={gridRowLayout[rowType].height}
+              height={gridRowLayout[rowType]?.height}
               options={weekOptions}
               gridColWidthMap={cellWidthMap}
             />
@@ -125,9 +126,11 @@ export function Day() {
         />
       </Panel>
       {gridRows}
-      <Panel name="time" autoSize={1} ref={setTimePanelRef}>
-        <TimeGrid events={dayGridEvents.time} timeGridData={timeGridData} />
-      </Panel>
+      {displayPanel.includes('time') ? (
+        <Panel name="time" autoSize={1} ref={setTimePanelRef}>
+          <TimeGrid events={dayGridEvents.time} timeGridData={timeGridData} />
+        </Panel>
+      ) : null}
     </Layout>
   );
 }
