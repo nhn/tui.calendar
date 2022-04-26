@@ -16,7 +16,6 @@ export const templateSelector = topLevelStateSelector<CalendarState, 'template'>
 export const viewSelector = topLevelStateSelector<CalendarState, 'view'>('view');
 export const optionsSelector = topLevelStateSelector<CalendarState, 'options'>('options');
 export const dndSelector = topLevelStateSelector<CalendarState, 'dnd'>('dnd');
-export const timezoneSelector = topLevelStateSelector<CalendarState, 'timezone'>('timezone');
 
 export const commonThemeSelector = topLevelStateSelector<ThemeState, 'common'>('common');
 export const weekThemeSelector = topLevelStateSelector<ThemeState, 'week'>('week');

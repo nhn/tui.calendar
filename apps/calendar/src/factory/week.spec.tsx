@@ -1,30 +1,82 @@
 import Week from '@src/factory/week';
-import { act } from '@src/test/utils';
+import { act, screen } from '@src/test/utils';
 
 import { mockWeekViewEvents } from '@stories/mocks/mockWeekViewEvents';
 
-describe('Week Calendar', () => {
-  let instance: Week;
-  let container: HTMLDivElement;
+import type { Options } from '@t/options';
 
-  beforeEach(() => {
-    container = document.createElement('div');
-    document.body.appendChild(container);
-    instance = new Week(container);
-    act(() => {
-      instance.createEvents(mockWeekViewEvents);
-    });
+// file.only
+
+function setup(options: Options = {}) {
+  const container = document.createElement('div');
+  document.body.appendChild(container);
+  const instance = new Week(container, options);
+  act(() => {
+    instance.createEvents(mockWeekViewEvents);
   });
 
-  afterEach(() => {
-    document.body.innerHTML = '';
-  });
+  return { container, instance };
+}
 
-  it('renders with the mock events', () => {
+afterEach(() => {
+  document.body.innerHTML = '';
+});
+
+describe('Basic', () => {
+  it('should render with mock events', () => {
     // Given
-    // Setup in the `beforeEach` hook
+    const { container } = setup();
 
     // Then
     expect(container).not.toBeEmptyDOMElement();
+  });
+});
+
+describe('Primary Timezone', () => {
+  it('should apply timezone option to timed events', () => {
+    // Given
+    setup({
+      timezone: {
+        zones: [
+          {
+            timezoneName: 'Asia/Karachi', // UTC+5
+          },
+        ],
+      },
+    });
+
+    // When
+    const timedEvents = screen.getAllByTestId(/time-event/);
+    const possibleShortEvent = timedEvents.find((e) => e.textContent?.includes('00:00'));
+
+    // Then
+    expect(possibleShortEvent).toBeInTheDocument();
+  });
+
+  it('should change events immediately when timezone option changes', () => {
+    // Given
+    const { instance } = setup();
+    let timedEvents = screen.getAllByTestId(/time-event/);
+    const currentShortEvent = timedEvents.find((e) => e.textContent?.includes('04:00'));
+    expect(currentShortEvent).toBeInTheDocument();
+
+    // When
+    act(() => {
+      instance.setOptions({
+        timezone: {
+          zones: [
+            {
+              timezoneName: 'Asia/Karachi', // UTC+5
+            },
+          ],
+        },
+      });
+    });
+
+    timedEvents = screen.getAllByTestId(/time-event/);
+    const possibleShortEvent = timedEvents.find((e) => e.textContent?.includes('00:00'));
+
+    // Then
+    expect(possibleShortEvent).toBeInTheDocument();
   });
 });

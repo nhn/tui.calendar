@@ -6,7 +6,7 @@ import { Day } from '@src/time/datetime';
 import { mergeObject } from '@src/utils/object';
 
 import type { EventModelData } from '@t/events';
-import type { Options } from '@t/options';
+import type { Options, TimezoneOptions } from '@t/options';
 import type {
   CalendarMonthOptions,
   CalendarState,
@@ -30,6 +30,13 @@ function initializeWeekOptions(weekOptions: Options['week'] = {}): CalendarWeekO
     hourStart: 0,
     hourEnd: 24,
     ...weekOptions,
+  };
+}
+
+function initializeTimezoneOptions(timezoneOptions: Options['timezone'] = {}): TimezoneOptions {
+  return {
+    zones: [],
+    ...timezoneOptions,
   };
 }
 
@@ -63,7 +70,7 @@ function initializeMonthOptions(monthOptions: Options['month']): CalendarMonthOp
 // But it needs a complex type such as `DeepRequired`.
 // maybe leveraging library like `ts-essential` might be helpful.
 export type OptionsSlice = {
-  options: Omit<Required<Options>, 'template' | 'calendars' | 'theme' | 'timezone'>;
+  options: Omit<Required<Options>, 'template' | 'calendars' | 'theme'>;
 };
 
 export type OptionsDispatchers = {
@@ -85,6 +92,7 @@ export function createOptionsSlice(options: Options = {}): OptionsSlice {
       week: initializeWeekOptions(options.week),
       month: initializeMonthOptions(options.month),
       usageStatistics: options.usageStatistics ?? true,
+      timezone: initializeTimezoneOptions(options.timezone),
     },
   };
 }

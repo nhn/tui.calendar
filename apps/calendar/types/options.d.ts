@@ -47,6 +47,11 @@ export interface TimezoneConfig {
   tooltip?: string;
 }
 
+export interface TimezoneOptions {
+  zones?: TimezoneConfig[];
+  customOffsetCalculator?: (primaryTimezoneName: string, timestamp: number) => number;
+}
+
 export interface CalendarColor {
   color?: string;
   bgColor?: string;
@@ -77,10 +82,7 @@ export interface Options {
   disableClick?: boolean;
   isReadOnly?: boolean;
   usageStatistics?: boolean;
-  timezone?: {
-    zones?: TimezoneConfig[];
-    customOffsetCalculator?: (primaryTimezoneName: string, timestamp: number) => number;
-  };
+  timezone?: TimezoneOptions;
 }
 
 interface ViewInfoUserInput {
