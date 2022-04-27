@@ -1,6 +1,6 @@
 import { Fragment, h } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { useCallback, useLayoutEffect } from 'preact/hooks';
+import { useCallback, useLayoutEffect, useMemo } from 'preact/hooks';
 
 import { PanelResizer } from '@src/components/panelResizer';
 import { DEFAULT_RESIZER_LENGTH } from '@src/constants/layout';
@@ -115,20 +115,20 @@ export const Panel = forwardRef<HTMLDivElement, PropsWithChildren<Props>>(functi
     maxWidth,
   });
 
-  const isResizable = (category: string) => {
+  const isResizable = useMemo(() => {
     if (isNil(resizable) || isBoolean(resizable)) {
       return !!resizable;
     }
 
-    return resizable.includes(category);
-  };
+    return resizable.includes(name);
+  }, [resizable, name]);
 
   return (
     <Fragment>
       <div className={cls('panel', name)} style={styles} ref={ref}>
         {children}
       </div>
-      {isResizable(name) ? (
+      {isResizable ? (
         <PanelResizer
           name={name as AlldayEventCategory}
           width={resizerWidth}
