@@ -1,37 +1,22 @@
 import { h } from 'preact';
 
-import { render } from '@testing-library/preact';
-
 import { Week } from '@src/components/view/week';
 import { DEFAULT_EVENT_PANEL, DEFAULT_TASK_PANEL } from '@src/constants/view';
-import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
-import { EventBusProvider } from '@src/contexts/eventBus';
-import { initThemeStore, ThemeProvider } from '@src/contexts/themeStore';
+import { initCalendarStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
-import { EventBusImpl } from '@src/utils/eventBus';
-import { isBoolean } from '@src/utils/type';
+import { getActivePanels } from '@src/helpers/view';
+import { render } from '@src/test/utils';
 
 import type { WeekOptions } from '@t/options';
 
 describe('week', () => {
   function setup(weekOptions: WeekOptions) {
-    const eventBus = new EventBusImpl();
     const store = initCalendarStore();
-    const theme = initThemeStore();
-
     store.getState().dispatch.options.setOptions({
       week: weekOptions,
     });
 
-    return render(
-      <EventBusProvider value={eventBus}>
-        <ThemeProvider store={theme}>
-          <StoreProvider store={store}>
-            <Week />
-          </StoreProvider>
-        </ThemeProvider>
-      </EventBusProvider>
-    );
+    return render(<Week />, { store });
   }
 
   describe('eventView and taskView options', () => {
@@ -42,27 +27,11 @@ describe('week', () => {
       { eventView: ['allday', 'time'], taskView: false },
     ];
 
-    function getExpectedResult({ eventView, taskView }: WeekOptions) {
-      const result: {
-        milestone?: boolean;
-        task?: boolean;
-        allday?: boolean;
-        time?: boolean;
-      } = {};
+    const panels = [...DEFAULT_TASK_PANEL, ...DEFAULT_EVENT_PANEL];
 
-      DEFAULT_EVENT_PANEL.forEach((eventPanel) => {
-        result[eventPanel] = isBoolean(eventView) ? eventView : !!eventView?.includes(eventPanel);
-      });
-
-      DEFAULT_TASK_PANEL.forEach((taskPanel) => {
-        result[taskPanel] = isBoolean(taskView) ? taskView : !!taskView?.includes(taskPanel);
-      });
-
-      return result;
-    }
-
-    cases.forEach((weekOptions) => {
-      it(`show/hide the panels in the weekly view: { eventView: ${weekOptions.eventView}, taskView: ${weekOptions.taskView} }`, () => {
+    it.each(cases)(
+      'should show/hide the panels in the daily view: { eventView: $eventView, taskView: $eventView }',
+      (weekOptions) => {
         // Given
         const { container } = setup(weekOptions);
 
@@ -70,16 +39,19 @@ describe('week', () => {
         // Nothing
 
         // Then
-        const results = getExpectedResult(weekOptions);
-        for (const [name, result] of Object.entries(results)) {
-          const panel = container.querySelector(`.${cls(name)}`);
-          if (result) {
-            expect(panel).not.toBeNull();
+        const activePanels = getActivePanels(
+          weekOptions.taskView ?? false,
+          weekOptions.eventView ?? false
+        );
+        panels.forEach((panel) => {
+          const panelEl = container.querySelector(`.${cls(panel)}`);
+          if (activePanels.includes(panel)) {
+            expect(panelEl).not.toBeNull();
           } else {
-            expect(panel).toBeNull();
+            expect(panelEl).toBeNull();
           }
-        }
-      });
-    });
+        });
+      }
+    );
   });
 });

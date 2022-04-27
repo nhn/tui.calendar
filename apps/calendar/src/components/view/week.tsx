@@ -7,14 +7,13 @@ import { OtherGridRow } from '@src/components/dayGridWeek/otherGridRow';
 import { Layout } from '@src/components/layout';
 import { Panel } from '@src/components/panel';
 import { TimeGrid } from '@src/components/timeGrid/timeGrid';
-import { DEFAULT_WEEK_PANEL_TYPES } from '@src/constants/layout';
 import { WEEK_DAYNAME_BORDER, WEEK_DAYNAME_HEIGHT } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
 import { getDayNames } from '@src/helpers/dayName';
 import { getVisibleEventCollection } from '@src/helpers/events';
 import { createTimeGridData, getDayGridEvents, getWeekDates } from '@src/helpers/grid';
-import { getDisplayPanel } from '@src/helpers/view';
+import { getActivePanels } from '@src/helpers/view';
 import { useDOMNode } from '@src/hooks/common/useDOMNode';
 import { useTimeGridScrollSync } from '@src/hooks/timeGrid/useTimeGridScrollSync';
 import {
@@ -86,36 +85,38 @@ export function Week() {
     [weekDates, weekOptions.hourEnd, weekOptions.hourStart]
   );
 
-  const displayPanel = getDisplayPanel(taskView, eventView);
-  const dayGridRows = displayPanel
-    .filter((panel) => DEFAULT_WEEK_PANEL_TYPES.includes(panel))
-    .map((key) => {
-      const rowType = key as AlldayEventCategory;
+  const activePanels = getActivePanels(taskView, eventView);
+  const dayGridRows = activePanels.map((key) => {
+    if (key === 'time') {
+      return null;
+    }
 
-      return (
-        <Panel name={rowType} key={rowType} resizable={rowType !== lastPanelType}>
-          {rowType === 'allday' ? (
-            <AlldayGridRow
-              events={eventByPanel[rowType]}
-              rowStyleInfo={rowStyleInfo}
-              gridColWidthMap={cellWidthMap}
-              weekDates={weekDates}
-              height={gridRowLayout[rowType]?.height}
-              options={weekOptions}
-            />
-          ) : (
-            <OtherGridRow
-              category={rowType}
-              events={eventByPanel[rowType]}
-              weekDates={weekDates}
-              height={gridRowLayout[rowType]?.height}
-              options={weekOptions}
-              gridColWidthMap={cellWidthMap}
-            />
-          )}
-        </Panel>
-      );
-    });
+    const rowType = key as AlldayEventCategory;
+
+    return (
+      <Panel name={rowType} key={rowType} resizable={rowType !== lastPanelType}>
+        {rowType === 'allday' ? (
+          <AlldayGridRow
+            events={eventByPanel[rowType]}
+            rowStyleInfo={rowStyleInfo}
+            gridColWidthMap={cellWidthMap}
+            weekDates={weekDates}
+            height={gridRowLayout[rowType]?.height}
+            options={weekOptions}
+          />
+        ) : (
+          <OtherGridRow
+            category={rowType}
+            events={eventByPanel[rowType]}
+            weekDates={weekDates}
+            height={gridRowLayout[rowType]?.height}
+            options={weekOptions}
+            gridColWidthMap={cellWidthMap}
+          />
+        )}
+      </Panel>
+    );
+  });
 
   useTimeGridScrollSync(timePanel, timeGridData.rows.length);
 
@@ -132,7 +133,7 @@ export function Week() {
         />
       </Panel>
       {dayGridRows}
-      {displayPanel.includes('time') ? (
+      {activePanels.includes('time') ? (
         <Panel name="time" autoSize={1} ref={setTimePanelRef}>
           <TimeGrid events={eventByPanel.time} timeGridData={timeGridData} />
         </Panel>
