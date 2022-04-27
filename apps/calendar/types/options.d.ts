@@ -7,8 +7,8 @@ import type { EventModelData } from '@t/events';
 import type { TemplateConfig } from '@t/template';
 import type { ThemeState } from '@t/theme';
 
-type eventViewValue = 'allday' | 'time';
-type taskViewValue = 'milestone' | 'task';
+type EventView = 'allday' | 'time';
+type TaskView = 'milestone' | 'task';
 
 export interface WeekOptions {
   startDayOfWeek?: number;
@@ -20,8 +20,8 @@ export interface WeekOptions {
   timezones?: TimezoneConfig[];
   hourStart?: number;
   hourEnd?: number;
-  eventView?: boolean | eventViewValue[];
-  taskView?: boolean | taskViewValue[];
+  eventView?: boolean | EventView[];
+  taskView?: boolean | TaskView[];
 }
 
 export interface MonthOptions {
