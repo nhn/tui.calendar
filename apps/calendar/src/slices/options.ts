@@ -57,8 +57,6 @@ function initializeMonthOptions(monthOptions: Options['month']): CalendarMonthOp
       footer: { height: 31 },
     },
     visibleEventCount: 6,
-    eventFilter: (event: Required<EventModelData>) =>
-      event.isVisible && ['allday', 'time'].includes(event.category),
     ...monthOptions,
   };
 
@@ -86,6 +84,9 @@ export function initializeGridSelectionOptions(
   };
 }
 
+const initialEventFilter = (event: EventModelData) =>
+  !!(event.isVisible && ['allday', 'time'].includes(event.category || ''));
+
 // @TODO: some of options has default values. so it should be `Required` type.
 // But it needs a complex type such as `DeepRequired`.
 // maybe leveraging library like `ts-essential` might be helpful.
@@ -111,6 +112,7 @@ export function createOptionsSlice(options: Options = {}): OptionsSlice {
       month: initializeMonthOptions(options.month),
       gridSelection: initializeGridSelectionOptions(options.gridSelection),
       usageStatistics: options.usageStatistics ?? true,
+      eventFilter: options.eventFilter ?? initialEventFilter,
     },
   };
 }

@@ -55,7 +55,6 @@ export const Month = () => {
       footer: { height: 31 },
     },
     visibleEventCount: 6,
-    eventFilter: () => true,
   };
 
   const dateMatrix = createDateMatrixOfMonth(new Date(), options);
