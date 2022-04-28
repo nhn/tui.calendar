@@ -117,6 +117,7 @@ export function Week() {
       </Panel>
     );
   });
+  const hasTimePanel = useMemo(() => activePanels.includes('time'), [activePanels]);
 
   useTimeGridScrollSync(timePanel, timeGridData.rows.length);
 
@@ -133,7 +134,7 @@ export function Week() {
         />
       </Panel>
       {dayGridRows}
-      {activePanels.includes('time') ? (
+      {hasTimePanel ? (
         <Panel name="time" autoSize={1} ref={setTimePanelRef}>
           <TimeGrid events={eventByPanel.time} timeGridData={timeGridData} />
         </Panel>
