@@ -11,10 +11,7 @@ import type { WeekOptions } from '@t/options';
 
 describe('week', () => {
   function setup(weekOptions: WeekOptions) {
-    const store = initCalendarStore();
-    store.getState().dispatch.options.setOptions({
-      week: weekOptions,
-    });
+    const store = initCalendarStore({ week: weekOptions });
 
     return render(<Week />, { store });
   }
