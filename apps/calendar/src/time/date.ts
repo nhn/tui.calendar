@@ -1,6 +1,14 @@
 import type { DateInterface } from '@toast-ui/date';
 
-import { date as newDate, getTimezoneFactory, setDateConstructor } from '@src/time/timezone';
+import { MS_PER_MINUTES } from '@src/time/datetime';
+import {
+  calculateTimezoneOffset,
+  date as newDate,
+  getLocalTimezoneOffset,
+  getTimezoneFactory,
+  setDateConstructor,
+} from '@src/time/timezone';
+import { isNil, isString } from '@src/utils/type';
 
 let createDate = newDate;
 
@@ -9,6 +17,8 @@ let createDate = newDate;
  * @param {number|TZDate|Date|string} date - date to be converted
  */
 export default class TZDate {
+  private tzOffset: number | null = null;
+
   private d: DateInterface;
 
   /**
@@ -72,7 +82,7 @@ export default class TZDate {
   }
 
   getTimezoneOffset() {
-    return this.d.getTimezoneOffset();
+    return isNil(this.tzOffset) ? this.d.getTimezoneOffset() : this.tzOffset;
   }
 
   // Native properties
@@ -151,5 +161,24 @@ export default class TZDate {
 
   setMilliseconds(ms: number): number {
     return this.d.setMilliseconds(ms);
+  }
+
+  tz(tzValue: string | number) {
+    const tzOffset = isString(tzValue) ? calculateTimezoneOffset(this, tzValue) : tzValue;
+
+    const msDifference = (getLocalTimezoneOffset() - tzOffset) * MS_PER_MINUTES;
+    const newTZDate = new TZDate(this.getTime() - msDifference);
+    newTZDate.tzOffset = tzOffset;
+
+    return newTZDate;
+  }
+
+  local() {
+    if (isNil(this.tzOffset)) {
+      return new TZDate(this.getTime());
+    }
+
+    const msDifference = (this.tzOffset - getLocalTimezoneOffset()) * MS_PER_MINUTES;
+    return new TZDate(this.getTime() + msDifference);
   }
 }

@@ -82,16 +82,10 @@ export function getVisibleEventCollection(
     eventModel.category === 'time' ? 'timedEvents' : 'totalEvents'
   );
 
-  const localTimezoneOffset = getLocalTimezoneOffset();
-
   timedEvents.each((eventModel) => {
-    const startOffset =
-      localTimezoneOffset - calculateTimezoneOffset(eventModel.start, timezoneName);
-    const endOffset = localTimezoneOffset - calculateTimezoneOffset(eventModel.end, timezoneName);
-
     const clonedEventModel = clone(eventModel);
-    clonedEventModel.start = new TZDate(eventModel.start.getTime() - startOffset * MS_PER_MINUTES);
-    clonedEventModel.end = new TZDate(eventModel.end.getTime() - endOffset * MS_PER_MINUTES);
+    clonedEventModel.start = clonedEventModel.start.tz(timezoneName);
+    clonedEventModel.end = clonedEventModel.end.tz(timezoneName);
     totalEvents.add(clonedEventModel);
   });
 
