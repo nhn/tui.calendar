@@ -217,11 +217,8 @@ export default class Collection<ItemType extends Item> {
         key = key.call(item);
       }
 
-      let collection = result[key];
-      if (!collection) {
-        collection = result[key] = new Collection<ItemType>(this.getItemID);
-      }
-      collection.add(item);
+      result[key] ??= new Collection<ItemType>(this.getItemID);
+      result[key].add(item);
     });
 
     return result;
