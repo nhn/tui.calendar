@@ -1,5 +1,4 @@
 import { expect, test } from '@playwright/test';
-import waitForExpect from 'wait-for-expect';
 
 import { addHours, setTimeStrToDate } from '../../src/time/datetime';
 import { mockDayViewEvents } from '../../stories/mocks/mockDayViewEvents';

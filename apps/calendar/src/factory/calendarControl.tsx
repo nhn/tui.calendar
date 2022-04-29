@@ -98,8 +98,6 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   private initOptions(options: Options = {}): Options {
     const {
       defaultView = 'week',
-      taskView = true,
-      eventView = true,
       template = {},
       week = {},
       month = {},
@@ -112,8 +110,6 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
 
     return {
       defaultView,
-      taskView,
-      eventView,
       template,
       week,
       month,

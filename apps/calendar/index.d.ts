@@ -145,6 +145,8 @@ export interface IWeekOptions {
   timezones?: TimezoneConfig[];
   hourStart?: number;
   hourEnd?: number;
+  eventView?: boolean | string[];
+  taskView?: boolean | string[];
 }
 
 export interface IMonthOptions {
@@ -234,8 +236,6 @@ export interface ITheme {
 
 export interface IOptions {
   defaultView?: string;
-  taskView?: boolean | string[];
-  eventView?: boolean | string[];
   theme?: ITheme;
   template?: ITemplateConfig;
   week?: IWeekOptions;

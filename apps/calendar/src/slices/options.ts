@@ -1,10 +1,10 @@
 import produce from 'immer';
 import range from 'tui-code-snippet/array/range';
-import isBoolean from 'tui-code-snippet/type/isBoolean';
 
 import { getDayName } from '@src/helpers/dayName';
 import { Day } from '@src/time/datetime';
 import { mergeObject } from '@src/utils/object';
+import { isBoolean } from '@src/utils/type';
 
 import type { EventModelData } from '@t/events';
 import type { GridSelectionOptions, Options } from '@t/options';
@@ -37,6 +37,8 @@ function initializeWeekOptions(weekOptions: Options['week'] = {}): CalendarWeekO
     ],
     hourStart: 0,
     hourEnd: 24,
+    eventView: true,
+    taskView: true,
     ...weekOptions,
   };
 }
@@ -102,8 +104,6 @@ export function createOptionsSlice(options: Options = {}): OptionsSlice {
   return {
     options: {
       defaultView: options.defaultView ?? 'week',
-      taskView: options.taskView ?? true,
-      eventView: options.eventView ?? true,
       useCreationPopup: options.useCreationPopup ?? false,
       useDetailPopup: options.useDetailPopup ?? false,
       isReadOnly: options.isReadOnly ?? false,
