@@ -1,6 +1,8 @@
 import { h } from 'preact';
 import { useEffect } from 'preact/hooks';
 
+import { waitFor } from '@testing-library/preact';
+
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import { Layout } from '@src/components/layout';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
@@ -473,11 +475,11 @@ describe('prev/next/today', () => {
       });
 
       // Then
-      thisDates.forEach((date) => {
-        expect(screen.queryByText(`date: ${date}`)).not.toBeInTheDocument();
+      thisDates.forEach(async (date) => {
+        await waitFor(() => expect(screen.queryByText(`date: ${date}`)).not.toBeInTheDocument());
       });
-      nextDates.forEach((date) => {
-        expect(screen.queryByText(`date: ${date}`)).toBeInTheDocument();
+      nextDates.forEach(async (date) => {
+        await waitFor(() => expect(screen.queryByText(`date: ${date}`)).toBeInTheDocument());
       });
     });
 
@@ -500,11 +502,11 @@ describe('prev/next/today', () => {
       });
 
       // Then
-      thisDates.forEach((date) => {
-        expect(screen.queryByText(`date: ${date}`)).not.toBeInTheDocument();
+      thisDates.forEach(async (date) => {
+        await waitFor(() => expect(screen.queryByText(`date: ${date}`)).not.toBeInTheDocument());
       });
-      prevDates.forEach((date) => {
-        expect(screen.queryByText(`date: ${date}`)).toBeInTheDocument();
+      prevDates.forEach(async (date) => {
+        await waitFor(() => expect(screen.queryByText(`date: ${date}`)).toBeInTheDocument());
       });
     });
 
@@ -517,8 +519,9 @@ describe('prev/next/today', () => {
       act(() => {
         mockCalendarWeek.next();
       });
-      thisDates.forEach((date) => {
-        expect(screen.queryByText(`date: ${date}`)).not.toBeInTheDocument();
+
+      thisDates.forEach(async (date) => {
+        await waitFor(() => expect(screen.queryByText(`date: ${date}`)).not.toBeInTheDocument());
       });
 
       // When
