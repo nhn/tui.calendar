@@ -1,9 +1,9 @@
-import { createEventCollection } from '@src/controller/base';
 import type EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 import { millisecondsFrom, MS_EVENT_MIN_DURATION, MS_PER_MINUTES } from '@src/time/datetime';
 import { calculateTimezoneOffset, getLocalTimezoneOffset } from '@src/time/timezone';
 import type Collection from '@src/utils/collection';
+import { clone } from '@src/utils/object';
 
 type CollisionParam = {
   start: number;
@@ -66,23 +66,34 @@ export function getVisibleEventCollection(
   events: Collection<EventModel>,
   timezoneName: string | 'Local' = 'Local'
 ) {
-  const visibleEvents = events.toArray().filter((eventModel) => eventModel.isVisible);
+  const visibleEventsCollection = events.filter((eventModel) => eventModel.isVisible);
 
-  if (timezoneName !== 'Local') {
-    const localTimezoneOffset = getLocalTimezoneOffset();
-
-    visibleEvents
-      .filter((eventModel) => eventModel.category === 'time')
-      .forEach((eventModel) => {
-        const startOffset =
-          localTimezoneOffset - calculateTimezoneOffset(eventModel.start, timezoneName);
-        const endOffset =
-          localTimezoneOffset - calculateTimezoneOffset(eventModel.end, timezoneName);
-
-        eventModel.start = new TZDate(eventModel.start.getTime() - startOffset * MS_PER_MINUTES);
-        eventModel.end = new TZDate(eventModel.end.getTime() - endOffset * MS_PER_MINUTES);
-      });
+  if (timezoneName === 'Local' || visibleEventsCollection.size === 0) {
+    return visibleEventsCollection;
   }
 
-  return createEventCollection<EventModel>(...visibleEvents);
+  const {
+    timedEvents,
+    totalEvents,
+  }: Record<
+    'timedEvents' | 'totalEvents',
+    Collection<EventModel>
+  > = visibleEventsCollection.groupBy((eventModel) =>
+    eventModel.category === 'time' ? 'timedEvents' : 'totalEvents'
+  );
+
+  const localTimezoneOffset = getLocalTimezoneOffset();
+
+  timedEvents.each((eventModel) => {
+    const startOffset =
+      localTimezoneOffset - calculateTimezoneOffset(eventModel.start, timezoneName);
+    const endOffset = localTimezoneOffset - calculateTimezoneOffset(eventModel.end, timezoneName);
+
+    const clonedEventModel = clone(eventModel);
+    clonedEventModel.start = new TZDate(eventModel.start.getTime() - startOffset * MS_PER_MINUTES);
+    clonedEventModel.end = new TZDate(eventModel.end.getTime() - endOffset * MS_PER_MINUTES);
+    totalEvents.add(clonedEventModel);
+  });
+
+  return totalEvents;
 }

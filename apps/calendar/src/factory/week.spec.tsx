@@ -1,11 +1,11 @@
 import Week from '@src/factory/week';
 import { act, screen } from '@src/test/utils';
+import { isPresent } from '@src/utils/type';
 
 import { mockWeekViewEvents } from '@stories/mocks/mockWeekViewEvents';
 
 import type { Options } from '@t/options';
-
-// file.only
+import type { FormattedTimeString } from '@t/time/datetime';
 
 function setup(options: Options = {}) {
   const container = document.createElement('div');
@@ -33,6 +33,19 @@ describe('Basic', () => {
 });
 
 describe('Primary Timezone', () => {
+  function hasDesiredStartTime(el: HTMLElement, startTimeStr: FormattedTimeString) {
+    let node: HTMLElement | null = el;
+    while (isPresent(node)) {
+      if (node.textContent?.includes(startTimeStr)) {
+        return true;
+      }
+      node = node.parentElement;
+    }
+
+    return false;
+  }
+  const reTargetEvent = /short time event/i;
+
   it('should apply timezone option to timed events', () => {
     // Given
     setup({
@@ -46,19 +59,17 @@ describe('Primary Timezone', () => {
     });
 
     // When
-    const timedEvents = screen.getAllByTestId(/time-event/);
-    const possibleShortEvent = timedEvents.find((e) => e.textContent?.includes('00:00'));
+    const targetEvent = screen.getByText(reTargetEvent);
 
     // Then
-    expect(possibleShortEvent).toBeInTheDocument();
+    expect(hasDesiredStartTime(targetEvent, '00:00')).toBe(true);
   });
 
-  it('should change events immediately when timezone option changes', () => {
+  it('should change start & end time of events when timezone option changes from the local timezone', () => {
     // Given
     const { instance } = setup();
-    let timedEvents = screen.getAllByTestId(/time-event/);
-    const currentShortEvent = timedEvents.find((e) => e.textContent?.includes('04:00'));
-    expect(currentShortEvent).toBeInTheDocument();
+    let targetEvent = screen.getByText(reTargetEvent);
+    expect(hasDesiredStartTime(targetEvent, '04:00')).toBe(true);
 
     // When
     act(() => {
@@ -73,10 +84,44 @@ describe('Primary Timezone', () => {
       });
     });
 
-    timedEvents = screen.getAllByTestId(/time-event/);
-    const possibleShortEvent = timedEvents.find((e) => e.textContent?.includes('00:00'));
+    // Then
+    targetEvent = screen.getByText(reTargetEvent);
+    expect(hasDesiredStartTime(targetEvent, '00:00')).toBe(true);
+  });
+
+  it('should change start & end time of events when timezone option changes from another timezone', () => {
+    // Given
+    // To avoid DST when changing timezone
+    // jest.spyOn(Date, 'now').mockImplementationOnce(() => new Date('2022-04-01T00:00:00').getTime());
+    const { instance } = setup({
+      timezone: {
+        zones: [
+          {
+            timezoneName: 'Asia/Karachi', // UTC+5
+          },
+        ],
+      },
+    });
+    let targetEvent = screen.getByText(reTargetEvent);
+
+    expect(hasDesiredStartTime(targetEvent, '00:00')).toBe(true);
+
+    // When
+    act(() => {
+      instance.setOptions({
+        timezone: {
+          zones: [
+            {
+              timezoneName: 'Australia/Sydney', // UTC+10
+            },
+          ],
+        },
+      });
+    });
 
     // Then
-    expect(possibleShortEvent).toBeInTheDocument();
+    targetEvent = screen.getByText(reTargetEvent);
+
+    expect(hasDesiredStartTime(targetEvent, '05:00')).toBe(true);
   });
 });
