@@ -14,6 +14,17 @@ export function pick<T extends object, K extends keyof T>(obj: T, ...propNames: 
 }
 
 /**
+ * Clone an instance of a ES6 class.
+ *
+ * The cloned instance will have the (most of) same properties as the original.
+ *
+ * Reference: https://stackoverflow.com/a/44782052
+ */
+export function clone<T extends object>(source: T): T {
+  return Object.assign(Object.create(Object.getPrototypeOf(source)), source);
+}
+
+/**
  * Merge two objects together. And It has some pitfalls.
  *
  * For performance reason this function only mutates the target object.
