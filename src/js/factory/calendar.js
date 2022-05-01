@@ -1270,6 +1270,14 @@ Calendar.prototype.next = function() {
 };
 
 /**
+ * Move the calendar forward a year.
+ */
+Calendar.prototype.nextYear = function() {
+    this.move(12);
+    this.render();
+};
+
+/**
  * Move the calendar backward a day, a week, a month, 2 weeks, 3 weeks.
  * @example
  * function moveToNextOrPrevRange(val) {
@@ -1282,6 +1290,14 @@ Calendar.prototype.next = function() {
  */
 Calendar.prototype.prev = function() {
     this.move(-1);
+    this.render();
+};
+
+/**
+ * Move the calendar backward a year ago.
+ */
+Calendar.prototype.prevYear = function() {
+    this.move(-12);
     this.render();
 };
 

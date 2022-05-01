@@ -46,6 +46,14 @@
   background: url('../images/ic-arrow-line-right.png') no-repeat;
 }
 
+.ic-arrow-double-line-left {
+  background: url('../images/ic-arrow-double-line-left.png') no-repeat;
+}
+
+.ic-arrow-double-line-right {
+  background: url('../images/ic-arrow-double-line-right.png') no-repeat;
+}
+
 .ic-travel-time {
   background: url('../images/ic-traveltime-w.png') no-repeat;
 }
