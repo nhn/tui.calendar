@@ -184,6 +184,12 @@
         var action = getDataAction(e.target);
 
         switch (action) {
+            case 'move-prev-year':
+                cal.prevYear();
+                break;
+            case 'move-next-year':
+                cal.nextYear();
+                break;
             case 'move-prev':
                 cal.prev();
                 break;
