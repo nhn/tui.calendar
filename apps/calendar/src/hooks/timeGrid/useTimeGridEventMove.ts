@@ -137,20 +137,33 @@ export function useTimeGridEventMove({
       gridDiff.rowIndex * MS_PER_THIRTY_MINUTES + gridDiff.columnIndex * MS_PER_DAY
     );
     const expectedEndTime = addMilliseconds(expectedStartTime, clonedEvent.duration());
-    const { top, height } = getEventUIModelPosition({
-      expectedStartTime,
-      expectedEndTime,
-      currentDate: timeGridData.columns[currentGridPos.columnIndex].date,
-      rowHeight,
-      timeGridDataRows: timeGridData.rows,
-    });
+    const currentDate = timeGridData.columns[currentGridPos.columnIndex].date;
 
-    clonedEvent.setUIProps({
-      left: timeGridData.columns[currentGridPos.columnIndex].left,
-      width: timeGridData.columns[currentGridPos.columnIndex].width,
-      top,
-      height,
-    });
+    if (
+      expectedStartTime.getDate() === currentDate.getDate() &&
+      expectedEndTime.getDate() === currentDate.getDate()
+    ) {
+      clonedEvent.setUIProps({
+        left: timeGridData.columns[currentGridPos.columnIndex].left,
+        width: timeGridData.columns[currentGridPos.columnIndex].width,
+        top: clonedEvent.top + gridDiff.rowIndex * rowHeight,
+      });
+    } else {
+      const { top, height } = getEventUIModelPosition({
+        expectedStartTime,
+        expectedEndTime,
+        currentDate,
+        rowHeight,
+        timeGridDataRows: timeGridData.rows,
+      });
+
+      clonedEvent.setUIProps({
+        left: timeGridData.columns[currentGridPos.columnIndex].left,
+        width: timeGridData.columns[currentGridPos.columnIndex].width,
+        top,
+        height,
+      });
+    }
 
     return clonedEvent;
   }, [currentGridPos, draggingEvent, gridDiff, rowHeight, timeGridData.columns, timeGridData.rows]);
