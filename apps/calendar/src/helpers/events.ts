@@ -1,7 +1,6 @@
+import { createEventCollection } from '@src/controller/base';
 import type EventModel from '@src/model/eventModel';
-import TZDate from '@src/time/date';
-import { millisecondsFrom, MS_EVENT_MIN_DURATION, MS_PER_MINUTES } from '@src/time/datetime';
-import { calculateTimezoneOffset, getLocalTimezoneOffset } from '@src/time/timezone';
+import { millisecondsFrom, MS_EVENT_MIN_DURATION } from '@src/time/datetime';
 import type Collection from '@src/utils/collection';
 import { clone } from '@src/utils/object';
 
@@ -73,8 +72,8 @@ export function getVisibleEventCollection(
   }
 
   const {
-    timedEvents,
-    totalEvents,
+    timedEvents = createEventCollection(),
+    totalEvents = createEventCollection(),
   }: Record<
     'timedEvents' | 'totalEvents',
     Collection<EventModel>

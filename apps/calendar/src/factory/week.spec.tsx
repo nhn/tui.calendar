@@ -4,15 +4,16 @@ import { isPresent } from '@src/utils/type';
 
 import { mockWeekViewEvents } from '@stories/mocks/mockWeekViewEvents';
 
+import type { EventModelData } from '@t/events';
 import type { Options } from '@t/options';
 import type { FormattedTimeString } from '@t/time/datetime';
 
-function setup(options: Options = {}) {
+function setup(options: Options = {}, events: EventModelData[] = mockWeekViewEvents) {
   const container = document.createElement('div');
   document.body.appendChild(container);
   const instance = new Week(container, options);
   act(() => {
-    instance.createEvents(mockWeekViewEvents);
+    instance.createEvents(events);
   });
 
   return { container, instance };
@@ -45,6 +46,66 @@ describe('Primary Timezone', () => {
     return false;
   }
   const reTargetEvent = /short time event/i;
+
+  it('should create a zoned event with a string different from the primary timezone', () => {
+    // Given
+    jest
+      .spyOn(Date, 'now')
+      .mockImplementationOnce(() => new Date('2022-05-04T00:00:00+09:00').getTime());
+    setup(
+      {
+        timezone: {
+          zones: [{ timezoneName: 'Asia/Karachi' }], // UTC+05:00
+        },
+      },
+      [
+        {
+          id: '1',
+          calendarId: 'cal1',
+          title: 'short time event',
+          category: 'time',
+          start: '2022-05-04T04:00:00+09:00',
+          end: '2022-05-04T06:00:00+09:00',
+        },
+      ]
+    );
+
+    // When
+    const el = screen.getByText(reTargetEvent);
+
+    // Then
+    expect(hasDesiredStartTime(el, '00:00')).toBe(true);
+  });
+
+  it('should create zoned event with a string same as the primary timezone', () => {
+    // Given
+    jest
+      .spyOn(Date, 'now')
+      .mockImplementationOnce(() => new Date('2022-05-04T00:00:00+09:00').getTime());
+    setup(
+      {
+        timezone: {
+          zones: [{ timezoneName: 'Asia/Karachi' }], // UTC+05:00
+        },
+      },
+      [
+        {
+          id: '1',
+          calendarId: 'cal1',
+          title: 'short time event',
+          category: 'time',
+          start: '2022-05-04T04:00:00+05:00',
+          end: '2022-05-04T06:00:00+05:00',
+        },
+      ]
+    );
+
+    // When
+    const el = screen.getByText(reTargetEvent);
+
+    // Then
+    expect(hasDesiredStartTime(el, '04:00')).toBe(true);
+  });
 
   it('should apply timezone option to timed events', () => {
     // Given
@@ -92,7 +153,7 @@ describe('Primary Timezone', () => {
   it('should change start & end time of events when timezone option changes from another timezone', () => {
     // Given
     // To avoid DST when changing timezone
-    // jest.spyOn(Date, 'now').mockImplementationOnce(() => new Date('2022-04-01T00:00:00').getTime());
+    jest.spyOn(Date, 'now').mockImplementationOnce(() => new Date('2022-04-01T00:00:00').getTime());
     const { instance } = setup({
       timezone: {
         zones: [
