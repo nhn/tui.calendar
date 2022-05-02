@@ -19,14 +19,20 @@ test.beforeEach(async ({ page }) => {
 // Every time grid events in mockDayViewEvents should include DRAG_START_TIME.
 const DRAG_START_TIME = '04:00';
 
-const cases: { title: string; step: number }[] = [
+const cases: {
+  title: string;
+  step: number;
+  matcherToCompare: Extract<keyof jest.Matchers<number>, 'toBeGreaterThan' | 'toBeLessThan'>;
+}[] = [
   {
     title: 'to the top',
     step: -3, // move to 3 hours back
+    matcherToCompare: 'toBeLessThan',
   },
   {
     title: 'to the bottom',
     step: 5, // move to 5 hours later
+    matcherToCompare: 'toBeGreaterThan',
   },
 ];
 
@@ -69,3 +75,37 @@ mockDayViewEvents
       });
     });
   });
+
+const [LONG_TIME_EVENT] = mockDayViewEvents.filter(({ title }) => title === 'long time');
+
+test.describe(`Calibrate event's height when dragging`, () => {
+  cases.forEach(({ title, step, matcherToCompare }) => {
+    test(`${title}`, async ({ page }) => {
+      // Given
+      const targetEventSelector = `[data-testid*="time-event-${LONG_TIME_EVENT.title}"]`;
+      const eventLocator = page.locator(targetEventSelector);
+      const eventBoundingBoxBeforeMove = await getBoundingBox(eventLocator);
+
+      const targetTime = getTimeStrFromDate(
+        addHours(setTimeStrToDate(LONG_TIME_EVENT.end, DRAG_START_TIME), step)
+      ) as FormattedTimeString;
+      const targetRowLocator = page.locator(getTimeGridLineSelector(targetTime));
+      const targetBoundingBox = await getBoundingBox(targetRowLocator);
+
+      // When
+      await page.mouse.move(
+        eventBoundingBoxBeforeMove.x + eventBoundingBoxBeforeMove.width / 2,
+        eventBoundingBoxBeforeMove.y + eventBoundingBoxBeforeMove.height / 2
+      );
+      await page.mouse.down();
+      await page.mouse.move(
+        targetBoundingBox.x + targetBoundingBox.width / 2,
+        targetBoundingBox.y + targetBoundingBox.height / 2
+      );
+
+      // Then
+      const shadowEventBoundingBox = await getBoundingBox(eventLocator.first());
+      expect(shadowEventBoundingBox.height)[matcherToCompare](eventBoundingBoxBeforeMove.height);
+    });
+  });
+});
