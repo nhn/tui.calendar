@@ -55,7 +55,7 @@ function getEventUIModelPosition({
     const minutes = expectedEndTime.getMinutes();
     const rowIndex = getCurrentIndexByTime(expectedEndTime);
 
-    height = (rowIndex + 1 + (minutes % THIRTY_MINUTES) / THIRTY_MINUTES) * rowHeight;
+    height = (rowIndex + (minutes % THIRTY_MINUTES) / THIRTY_MINUTES) * rowHeight;
   }
 
   return { top, height };
