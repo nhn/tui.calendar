@@ -2,65 +2,41 @@ import { h } from 'preact';
 
 import { screen } from '@testing-library/preact';
 
-import { Day } from '@src/components/view/day';
-import { DEFAULT_EVENT_PANEL, DEFAULT_TASK_PANEL } from '@src/constants/view';
+import { Month } from '@src/components/view/month';
 import { initCalendarStore } from '@src/contexts/calendarStore';
-import { cls } from '@src/helpers/css';
-import { getActivePanels } from '@src/helpers/view';
 import EventModel from '@src/model/eventModel';
 import { render } from '@src/test/utils';
 import TZDate from '@src/time/date';
+import { noop } from '@src/utils/noop';
 
 import type { EventModelData } from '@t/events';
-import type { Options, WeekOptions } from '@t/options';
+import type { Options } from '@t/options';
 
-describe('day', () => {
+describe('Month', () => {
   function setup(options: Options, events?: EventModel[]) {
     const store = initCalendarStore(options);
     if (events) {
       store.getState().dispatch.calendar.createEvents(events);
     }
 
-    return render(<Day />, { store });
+    return render(<Month />, { store });
   }
 
-  describe('eventView and taskView options', () => {
-    const cases: WeekOptions[] = [
-      { eventView: true, taskView: true },
-      { eventView: false, taskView: false },
-      { eventView: ['allday'], taskView: ['milestone'] },
-      { eventView: ['allday', 'time'], taskView: false },
-    ];
-
-    const panels = [...DEFAULT_TASK_PANEL, ...DEFAULT_EVENT_PANEL];
-
-    it.each(cases)(
-      'should show/hide the panels in the daily view: { eventView: $eventView, taskView: $eventView }',
-      (weekOptions) => {
-        // Given
-        const { container } = setup({ week: weekOptions });
-
-        // When
-        // Nothing
-
-        // Then
-        const activePanels = getActivePanels(
-          weekOptions.taskView ?? false,
-          weekOptions.eventView ?? false
-        );
-        panels.forEach((panel) => {
-          const panelEl = container.querySelector(`.${cls(panel)}`);
-          if (activePanels.includes(panel)) {
-            expect(panelEl).not.toBeNull();
-          } else {
-            expect(panelEl).toBeNull();
-          }
-        });
-      }
-    );
-  });
-
   describe('eventFilter option', () => {
+    beforeEach(() => {
+      jest.spyOn(Element.prototype, 'getBoundingClientRect').mockReturnValue({
+        x: 0,
+        y: 0,
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        width: 100,
+        height: 100,
+        toJSON: noop,
+      });
+    });
+
     const events: EventModel[] = [];
     for (let i = 0; i < 2; i += 1) {
       events.push(
