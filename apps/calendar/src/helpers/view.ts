@@ -1,12 +1,12 @@
 import { DEFAULT_EVENT_PANEL, DEFAULT_TASK_PANEL } from '@src/constants/view';
 
-import type { WeekOptions } from '@t/options';
+import type { EventView, TaskView, WeekOptions } from '@t/options';
 
 export function getActivePanels(
   taskView: Required<WeekOptions>['taskView'],
   eventView: Required<WeekOptions>['eventView']
-) {
-  const activePanels: string[] = [];
+): (TaskView | EventView)[] {
+  const activePanels: (TaskView | EventView)[] = [];
 
   if (taskView === true) {
     activePanels.push(...DEFAULT_TASK_PANEL);

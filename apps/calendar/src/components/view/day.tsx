@@ -11,9 +11,9 @@ import { WEEK_DAYNAME_BORDER, WEEK_DAYNAME_HEIGHT } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
 import { getDayNames } from '@src/helpers/dayName';
-import { getVisibleEventCollection } from '@src/helpers/events';
 import { createTimeGridData, getDayGridEvents } from '@src/helpers/grid';
 import { getActivePanels } from '@src/helpers/view';
+import { useCalendarData } from '@src/hooks/calendar/useCalendarData';
 import { useDOMNode } from '@src/hooks/common/useDOMNode';
 import { useTimeGridScrollSync } from '@src/hooks/timeGrid/useTimeGridScrollSync';
 import {
@@ -60,13 +60,7 @@ export function Day() {
     startDayOfWeek,
     workweek
   );
-  const calendarData = useMemo(
-    () => ({
-      ...calendar,
-      events: getVisibleEventCollection(calendar.events),
-    }),
-    [calendar]
-  );
+  const calendarData = useCalendarData(calendar, options.eventFilter);
   const dayGridEvents = getDayGridEvents(days, calendarData, {
     narrowWeekend,
     hourStart,

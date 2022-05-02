@@ -42,7 +42,7 @@ export const Week = () => {
 };
 
 export const Month = () => {
-  const options: CalendarMonthOptions = {
+  const monthOptions: CalendarMonthOptions = {
     visibleWeeksCount: 3,
     workweek: false,
     narrowWeekend: false,
@@ -57,13 +57,13 @@ export const Month = () => {
     visibleEventCount: 6,
   };
 
-  const dateMatrix = createDateMatrixOfMonth(new Date(), options);
+  const dateMatrix = createDateMatrixOfMonth(new Date(), monthOptions);
 
   const { rowStyleInfo, cellWidthMap } = getRowStyleInfo(
     dateMatrix[0].length,
-    options.narrowWeekend,
-    options.startDayOfWeek,
-    options.workweek
+    monthOptions.narrowWeekend,
+    monthOptions.startDayOfWeek,
+    monthOptions.workweek
   );
 
   const rowInfo = rowStyleInfo.map((cellStyleInfo, index) => ({
@@ -74,12 +74,7 @@ export const Month = () => {
   return (
     <ProviderWrapper>
       <Layout>
-        <DayGridMonth
-          options={options}
-          dateMatrix={dateMatrix}
-          rowInfo={rowInfo}
-          cellWidthMap={cellWidthMap}
-        />
+        <DayGridMonth dateMatrix={dateMatrix} rowInfo={rowInfo} cellWidthMap={cellWidthMap} />
       </Layout>
     </ProviderWrapper>
   );

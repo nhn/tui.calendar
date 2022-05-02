@@ -65,12 +65,7 @@ export function Month() {
         rowStyleInfo={rowStyleInfo}
         type="month"
       />
-      <DayGridMonth
-        options={monthOptions}
-        dateMatrix={dateMatrix}
-        rowInfo={rowInfo}
-        cellWidthMap={cellWidthMap}
-      />
+      <DayGridMonth dateMatrix={dateMatrix} rowInfo={rowInfo} cellWidthMap={cellWidthMap} />
     </Layout>
   );
 }
