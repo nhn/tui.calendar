@@ -12,71 +12,73 @@ import { noop } from '@src/utils/noop';
 import type { EventModelData } from '@t/events';
 import type { Options } from '@t/options';
 
-describe('Month', () => {
-  function setup(options: Options, events?: EventModel[]) {
-    const store = initCalendarStore(options);
-    if (events) {
-      store.getState().dispatch.calendar.createEvents(events);
-    }
-
-    return render(<Month />, { store });
+function setup(options: Options, events?: EventModel[]) {
+  const store = initCalendarStore(options);
+  if (events) {
+    store.getState().dispatch.calendar.createEvents(events);
   }
 
-  describe('eventFilter option', () => {
-    beforeEach(() => {
-      jest.spyOn(Element.prototype, 'getBoundingClientRect').mockReturnValue({
-        x: 0,
-        y: 0,
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
-        width: 100,
-        height: 100,
-        toJSON: noop,
-      });
+  return render(<Month />, { store });
+}
+
+describe('eventFilter option', () => {
+  beforeAll(() => {
+    jest.spyOn(Element.prototype, 'getBoundingClientRect').mockReturnValue({
+      x: 0,
+      y: 0,
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0,
+      width: 100,
+      height: 100,
+      toJSON: noop,
     });
+  });
 
-    const events: EventModel[] = [];
-    for (let i = 0; i < 2; i += 1) {
-      events.push(
-        EventModel.create({
-          id: `${i}`,
-          title: `Event ${i}`,
-          start: new TZDate().addMinutes(60 * i),
-          end: new TZDate().addMinutes(60 * i + 30),
-          isVisible: !!(i % 2),
-        })
-      );
-    }
+  afterAll(() => {
+    jest.restoreAllMocks();
+  });
 
-    it('should show only the events which of isVisible is true when the eventFilter option is not specified.', () => {
-      // Given
-      setup({}, events);
+  const events: EventModel[] = [];
+  for (let i = 0; i < 2; i += 1) {
+    events.push(
+      EventModel.create({
+        id: `${i}`,
+        title: `Event ${i}`,
+        start: new TZDate().addMinutes(60 * i),
+        end: new TZDate().addMinutes(60 * i + 30),
+        isVisible: !!(i % 2),
+      })
+    );
+  }
 
-      // When
-      // Nothing
+  it('should show only the events which of isVisible is true when the eventFilter option is not specified.', () => {
+    // Given
+    setup({}, events);
 
-      // Then
-      const visibleEvent = events.find((event) => event.isVisible) as EventModel;
-      const invisibleEvent = events.find((event) => !event.isVisible) as EventModel;
-      expect(screen.queryByText(visibleEvent.title)).toBeInTheDocument();
-      expect(screen.queryByText(invisibleEvent.title)).not.toBeInTheDocument();
-    });
+    // When
+    // Nothing
 
-    it('should show only the events that pass the eventFilter function.', () => {
-      // Given
-      const eventFilter = (event: EventModelData) => !!(Number(event.id) % 2);
-      setup({ eventFilter }, events);
+    // Then
+    const visibleEvent = events.find((event) => event.isVisible) as EventModel;
+    const invisibleEvent = events.find((event) => !event.isVisible) as EventModel;
+    expect(screen.queryByText(visibleEvent.title)).toBeInTheDocument();
+    expect(screen.queryByText(invisibleEvent.title)).not.toBeInTheDocument();
+  });
 
-      // When
-      // Nothing
+  it('should show only the events that pass the eventFilter function.', () => {
+    // Given
+    const eventFilter = (event: EventModelData) => !!(Number(event.id) % 2);
+    setup({ eventFilter }, events);
 
-      // Then
-      const visibleEvent = events.find(eventFilter) as EventModel;
-      const invisibleEvent = events.find((event) => !eventFilter(event)) as EventModel;
-      expect(screen.queryByText(visibleEvent.title)).toBeInTheDocument();
-      expect(screen.queryByText(invisibleEvent.title)).not.toBeInTheDocument();
-    });
+    // When
+    // Nothing
+
+    // Then
+    const visibleEvent = events.find(eventFilter) as EventModel;
+    const invisibleEvent = events.find((event) => !eventFilter(event)) as EventModel;
+    expect(screen.queryByText(visibleEvent.title)).toBeInTheDocument();
+    expect(screen.queryByText(invisibleEvent.title)).not.toBeInTheDocument();
   });
 });
