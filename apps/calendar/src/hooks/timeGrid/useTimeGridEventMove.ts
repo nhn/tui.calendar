@@ -11,6 +11,8 @@ import { isNil, isPresent } from '@src/utils/type';
 import type { GridPosition, GridPositionFinder, TimeGridData } from '@t/grid';
 import type { CalendarState } from '@t/store';
 
+const THIRTY_MINUTES = 30;
+
 const initXSelector = (state: CalendarState) => state.dnd.initX;
 const initYSelector = (state: CalendarState) => state.dnd.initY;
 function useDragInitCoords() {
@@ -18,6 +20,45 @@ function useDragInitCoords() {
   const initY = useStore(initYSelector);
 
   return useMemo(() => ({ initX, initY }), [initX, initY]);
+}
+function getCurrentIndexByTime(time: TZDate) {
+  const hour = time.getHours();
+  const minutes = time.getMinutes();
+
+  return hour * 2 + Math.floor(minutes / THIRTY_MINUTES);
+}
+function getEventUIModelPosition({
+  expectedStartTime,
+  expectedEndTime,
+  currentDate,
+  rowHeight,
+  timeGridDataRows,
+}: {
+  expectedStartTime: TZDate;
+  expectedEndTime: TZDate;
+  currentDate: TZDate;
+  rowHeight: number;
+  timeGridDataRows: TimeGridData['rows'];
+}) {
+  let top = 0;
+  let height = rowHeight * timeGridDataRows.length;
+
+  if (expectedStartTime.getDate() === currentDate.getDate()) {
+    const minutes = expectedStartTime.getMinutes();
+    const rowIndex = getCurrentIndexByTime(expectedStartTime);
+
+    top =
+      timeGridDataRows[rowIndex].top + ((minutes % THIRTY_MINUTES) / THIRTY_MINUTES) * rowHeight;
+  }
+
+  if (expectedEndTime.getDate() === currentDate.getDate()) {
+    const minutes = expectedEndTime.getMinutes();
+    const rowIndex = getCurrentIndexByTime(expectedEndTime);
+
+    height = (rowIndex + 1 + (minutes % THIRTY_MINUTES) / THIRTY_MINUTES) * rowHeight;
+  }
+
+  return { top, height };
 }
 
 export function useTimeGridEventMove({
@@ -91,14 +132,28 @@ export function useTimeGridEventMove({
     }
 
     const clonedEvent = draggingEvent.clone();
+    const expectedStartTime = addMilliseconds(
+      clonedEvent.getStarts(),
+      gridDiff.rowIndex * MS_PER_THIRTY_MINUTES + gridDiff.columnIndex * MS_PER_DAY
+    );
+    const expectedEndTime = addMilliseconds(expectedStartTime, clonedEvent.duration());
+    const { top, height } = getEventUIModelPosition({
+      expectedStartTime,
+      expectedEndTime,
+      currentDate: timeGridData.columns[currentGridPos.columnIndex].date,
+      rowHeight,
+      timeGridDataRows: timeGridData.rows,
+    });
+
     clonedEvent.setUIProps({
-      top: clonedEvent.top + gridDiff.rowIndex * rowHeight,
       left: timeGridData.columns[currentGridPos.columnIndex].left,
       width: timeGridData.columns[currentGridPos.columnIndex].width,
+      top,
+      height,
     });
 
     return clonedEvent;
-  }, [currentGridPos, draggingEvent, gridDiff, rowHeight, timeGridData.columns]);
+  }, [currentGridPos, draggingEvent, gridDiff, rowHeight, timeGridData.columns, timeGridData.rows]);
 
   useWhen(() => {
     const shouldUpdate =
