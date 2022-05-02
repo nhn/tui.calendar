@@ -8,9 +8,13 @@ import {
   getTimezoneFactory,
   setDateConstructor,
 } from '@src/time/timezone';
-import { isNil, isString } from '@src/utils/type';
+import { isNil, isPresent, isString } from '@src/utils/type';
 
 let createDate = newDate;
+
+function getTZOffsetMSDifference(offset: number) {
+  return (getLocalTimezoneOffset() - offset) * MS_PER_MINUTES;
+}
 
 /**
  * Timezone Date Class
@@ -166,19 +170,29 @@ export default class TZDate {
   tz(tzValue: string | number) {
     const tzOffset = isString(tzValue) ? calculateTimezoneOffset(this, tzValue) : tzValue;
 
-    const msDifference = (getLocalTimezoneOffset() - tzOffset) * MS_PER_MINUTES;
-    const newTZDate = new TZDate(this.getTime() - msDifference);
+    const newTZDate = new TZDate(this.getTime() - getTZOffsetMSDifference(tzOffset));
     newTZDate.tzOffset = tzOffset;
 
     return newTZDate;
   }
 
-  local() {
-    if (isNil(this.tzOffset)) {
-      return new TZDate(this.getTime());
+  /**
+   * Get the new instance following the system's timezone.
+   * If the system timezone is different from the timezone of the instance,
+   * the instance is converted to the system timezone.
+   *
+   * Instance's `tzOffset` property will be ignored if there is a `tzValue` parameter.
+   */
+  local(tzValue?: string | number) {
+    if (isPresent(tzValue)) {
+      const tzOffset = isString(tzValue) ? calculateTimezoneOffset(this, tzValue) : tzValue;
+      return new TZDate(this.getTime() + getTZOffsetMSDifference(tzOffset));
     }
 
-    const msDifference = (this.tzOffset - getLocalTimezoneOffset()) * MS_PER_MINUTES;
-    return new TZDate(this.getTime() + msDifference);
+    if (isPresent(this.tzOffset)) {
+      return new TZDate(this.getTime() + getTZOffsetMSDifference(this.tzOffset));
+    }
+
+    return new TZDate(this.getTime());
   }
 }
