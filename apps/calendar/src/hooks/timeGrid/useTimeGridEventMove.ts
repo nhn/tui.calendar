@@ -138,11 +138,11 @@ export function useTimeGridEventMove({
     );
     const expectedEndTime = addMilliseconds(expectedStartTime, clonedEvent.duration());
     const currentDate = timeGridData.columns[currentGridPos.columnIndex].date;
-
-    if (
+    const isRenderedInOneColumn =
       expectedStartTime.getDate() === currentDate.getDate() &&
-      expectedEndTime.getDate() === currentDate.getDate()
-    ) {
+      expectedEndTime.getDate() === currentDate.getDate();
+
+    if (isRenderedInOneColumn) {
       clonedEvent.setUIProps({
         left: timeGridData.columns[currentGridPos.columnIndex].left,
         width: timeGridData.columns[currentGridPos.columnIndex].width,
