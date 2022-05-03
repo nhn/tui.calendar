@@ -21,12 +21,6 @@ function useDragInitCoords() {
 
   return useMemo(() => ({ initX, initY }), [initX, initY]);
 }
-function getCurrentIndexByTime(time: TZDate) {
-  const hour = time.getHours();
-  const minutes = time.getMinutes();
-
-  return hour * 2 + Math.floor(minutes / THIRTY_MINUTES);
-}
 function getEventUIModelPosition({
   expectedStartTime,
   expectedEndTime,
@@ -40,6 +34,12 @@ function getEventUIModelPosition({
   rowHeight: number;
   timeGridDataRows: TimeGridData['rows'];
 }) {
+  function getCurrentIndexByTime(time: TZDate) {
+    const hour = time.getHours();
+    const minutes = time.getMinutes();
+
+    return hour * 2 + Math.floor(minutes / THIRTY_MINUTES);
+  }
   let top = 0;
   let height = rowHeight * timeGridDataRows.length;
 
