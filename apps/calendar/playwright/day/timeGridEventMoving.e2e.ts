@@ -78,7 +78,7 @@ mockDayViewEvents
 
 const [LONG_TIME_EVENT] = mockDayViewEvents.filter(({ title }) => title === 'long time');
 
-test.describe(`Calibrate event's height when dragging`, () => {
+test.describe(`Calibrate event's height while dragging`, () => {
   cases.forEach(({ title, step, matcherToCompare }) => {
     test(`${title}`, async ({ page }) => {
       // Given

@@ -153,7 +153,7 @@ cases.forEach(({ title, eventColumnIndex, directionInfo }) => {
   });
 });
 
-test.describe(`Calibrate event's height when dragging`, () => {
+test.describe(`Calibrate event's height while dragging`, () => {
   let eventLocator: Locator;
   let lowerLongTimeEventLocator: Locator;
   let upperLongTimeEventLocator: Locator;
@@ -166,7 +166,7 @@ test.describe(`Calibrate event's height when dragging`, () => {
     eventLocator = page.locator(targetEventSelector);
   });
 
-  test('lower long time event become longer when drag to upper side', async ({ page }) => {
+  test('lower long time event become longer while drag to upper side', async ({ page }) => {
     // Given
     const eventBoundingBox = await getBoundingBox(lowerLongTimeEventLocator);
 
@@ -181,7 +181,7 @@ test.describe(`Calibrate event's height when dragging`, () => {
     expect(shadowEventBoundingBox.height).toBeGreaterThan(eventBoundingBox.height);
   });
 
-  test('lower long time event become shorter when drag to lower side', async ({ page }) => {
+  test('lower long time event become shorter while drag to lower side', async ({ page }) => {
     // Given
     const eventBoundingBox = await getBoundingBox(lowerLongTimeEventLocator);
 
@@ -197,7 +197,7 @@ test.describe(`Calibrate event's height when dragging`, () => {
     expect(shadowEventBoundingBox.y).toBeGreaterThan(eventBoundingBox.y);
   });
 
-  test('upper long time event become longer when drag to lower side', async ({ page }) => {
+  test('upper long time event become longer while drag to lower side', async ({ page }) => {
     // Given
     const eventBoundingBox = await getBoundingBox(upperLongTimeEventLocator);
 
@@ -211,7 +211,7 @@ test.describe(`Calibrate event's height when dragging`, () => {
     expect(shadowEventBoundingBox.height).toBeGreaterThan(eventBoundingBox.height);
   });
 
-  test('upper long time event become shorter when drag to upper side', async ({ page }) => {
+  test('upper long time event become shorter while drag to upper side', async ({ page }) => {
     // Given
     const eventBoundingBox = await getBoundingBox(upperLongTimeEventLocator);
 
