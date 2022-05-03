@@ -24,7 +24,6 @@ import {
   viewSelector,
   weekViewLayoutSelector,
 } from '@src/selectors';
-import { primaryTimezoneSelector } from '@src/selectors/timezone';
 import { getRowStyleInfo } from '@src/time/datetime';
 
 import type { WeekOptions } from '@t/options';
@@ -35,7 +34,6 @@ function useWeekViewState() {
   const calendar = useStore(calendarSelector);
   const { dayGridRows: gridRowLayout } = useStore(weekViewLayoutSelector);
   const { renderDate } = useStore(viewSelector);
-  const primaryTimezone = useStore(primaryTimezoneSelector);
 
   return useMemo(
     () => ({
@@ -43,9 +41,8 @@ function useWeekViewState() {
       calendar,
       gridRowLayout,
       renderDate,
-      primaryTimezone,
     }),
-    [calendar, gridRowLayout, options, renderDate, primaryTimezone]
+    [calendar, gridRowLayout, options, renderDate]
   );
 }
 
