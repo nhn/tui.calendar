@@ -61,32 +61,6 @@ export function isVisibleEvent(event: EventModel) {
   return event.isVisible;
 }
 
-export function getVisibleEventCollection(
-  events: Collection<EventModel>,
-  timezoneName: string | 'Local' = 'Local'
-) {
-  const visibleEventsCollection = events.filter((eventModel) => eventModel.isVisible);
-
-  if (timezoneName === 'Local' || visibleEventsCollection.size === 0) {
-    return visibleEventsCollection;
-  }
-
-  const {
-    timedEvents = createEventCollection(),
-    totalEvents = createEventCollection(),
-  }: Record<
-    'timedEvents' | 'totalEvents',
-    Collection<EventModel>
-  > = visibleEventsCollection.groupBy((eventModel) =>
-    eventModel.category === 'time' ? 'timedEvents' : 'totalEvents'
-  );
-
-  timedEvents.each((eventModel) => {
-    const clonedEventModel = clone(eventModel);
-    clonedEventModel.start = clonedEventModel.start.tz(timezoneName);
-    clonedEventModel.end = clonedEventModel.end.tz(timezoneName);
-    totalEvents.add(clonedEventModel);
-  });
-
-  return totalEvents;
+export function getVisibleEventCollection(events: Collection<EventModel>) {
+  return events.filter((eventModel) => eventModel.isVisible);
 }
