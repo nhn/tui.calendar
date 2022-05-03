@@ -4,6 +4,7 @@ import { addHours, setTimeStrToDate } from '../../src/time/datetime';
 import { mockDayViewEvents } from '../../stories/mocks/mockDayViewEvents';
 import type { FormattedTimeString } from '../../types/time/datetime';
 import { DAY_VIEW_PAGE_URL } from '../configs';
+import type { BoundingBox } from '../types';
 import {
   dragAndDrop,
   getBoundingBox,
@@ -78,6 +79,10 @@ mockDayViewEvents
 
 const [LONG_TIME_EVENT] = mockDayViewEvents.filter(({ title }) => title === 'long time');
 
+function getCenterOfBoundingBox(boundingBox: BoundingBox): [number, number] {
+  return [boundingBox.x + boundingBox.width / 2, boundingBox.y + boundingBox.height / 2];
+}
+
 test.describe(`Calibrate event's height while dragging`, () => {
   cases.forEach(({ title, step, matcherToCompare }) => {
     test(`${title}`, async ({ page }) => {
@@ -93,15 +98,9 @@ test.describe(`Calibrate event's height while dragging`, () => {
       const targetBoundingBox = await getBoundingBox(targetRowLocator);
 
       // When
-      await page.mouse.move(
-        eventBoundingBoxBeforeMove.x + eventBoundingBoxBeforeMove.width / 2,
-        eventBoundingBoxBeforeMove.y + eventBoundingBoxBeforeMove.height / 2
-      );
+      await page.mouse.move(...getCenterOfBoundingBox(eventBoundingBoxBeforeMove));
       await page.mouse.down();
-      await page.mouse.move(
-        targetBoundingBox.x + targetBoundingBox.width / 2,
-        targetBoundingBox.y + targetBoundingBox.height / 2
-      );
+      await page.mouse.move(...getCenterOfBoundingBox(targetBoundingBox));
 
       // Then
       const shadowEventBoundingBox = await getBoundingBox(eventLocator.first());
