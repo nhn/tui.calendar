@@ -20,6 +20,7 @@ import { createGridPositionFinder, getRenderedEventUIModels } from '@src/helpers
 import { dayGridMonthSelectionHelper } from '@src/helpers/gridSelection';
 import { useDOMNode } from '@src/hooks/common/useDOMNode';
 import { useGridSelection } from '@src/hooks/gridSelection/useGridSelection';
+import { useEventsWithTimezone } from '@src/hooks/timezone/useEventsWithTimezone';
 import { calendarSelector } from '@src/selectors';
 import type TZDate from '@src/time/date';
 import { getSize } from '@src/utils/dom';
@@ -68,13 +69,16 @@ export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidth
     [dateMatrix, gridContainer]
   );
 
+  // TODO: Merge two hooks together
+  const events = useEventsWithTimezone(getVisibleEventCollection(calendar.events));
   const calendarData = useMemo(
     () => ({
       ...calendar,
-      events: getVisibleEventCollection(calendar.events),
+      events,
     }),
-    [calendar]
+    [calendar, events]
   );
+
   const renderedEventUIModels = useMemo(
     () => dateMatrix.map((week) => getRenderedEventUIModels(week, calendarData, narrowWeekend)),
     [calendarData, dateMatrix, narrowWeekend]

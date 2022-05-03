@@ -1,12 +1,10 @@
 import Week from '@src/factory/week';
-import { act, screen } from '@src/test/utils';
-import { isPresent } from '@src/utils/type';
+import { act, hasDesiredStartTime, screen } from '@src/test/utils';
 
 import { mockWeekViewEvents } from '@stories/mocks/mockWeekViewEvents';
 
 import type { EventModelData } from '@t/events';
 import type { Options } from '@t/options';
-import type { FormattedTimeString } from '@t/time/datetime';
 
 function setup(options: Options = {}, events: EventModelData[] = mockWeekViewEvents) {
   const container = document.createElement('div');
@@ -34,17 +32,6 @@ describe('Basic', () => {
 });
 
 describe('Primary Timezone', () => {
-  function hasDesiredStartTime(el: HTMLElement, startTimeStr: FormattedTimeString) {
-    let node: HTMLElement | null = el;
-    while (isPresent(node)) {
-      if (node.textContent?.includes(startTimeStr)) {
-        return true;
-      }
-      node = node.parentElement;
-    }
-
-    return false;
-  }
   const reTargetEvent = /short time event/i;
 
   it('should create a zoned event with a string different from the primary timezone', () => {

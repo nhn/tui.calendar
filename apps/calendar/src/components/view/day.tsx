@@ -17,6 +17,7 @@ import { createTimeGridData, getDayGridEvents } from '@src/helpers/grid';
 import { getDisplayPanel } from '@src/helpers/view';
 import { useDOMNode } from '@src/hooks/common/useDOMNode';
 import { useTimeGridScrollSync } from '@src/hooks/timeGrid/useTimeGridScrollSync';
+import { useEventsWithTimezone } from '@src/hooks/timezone/useEventsWithTimezone';
 import {
   calendarSelector,
   optionsSelector,
@@ -60,12 +61,14 @@ export function Day() {
     startDayOfWeek,
     workweek
   );
+  // TODO: Merge two hooks together
+  const events = useEventsWithTimezone(getVisibleEventCollection(calendar.events));
   const calendarData = useMemo(
     () => ({
       ...calendar,
-      events: getVisibleEventCollection(calendar.events),
+      events,
     }),
-    [calendar]
+    [calendar, events]
   );
   const dayGridEvents = getDayGridEvents(days, calendarData, {
     narrowWeekend,
