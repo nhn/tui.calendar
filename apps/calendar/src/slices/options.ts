@@ -84,8 +84,7 @@ export function initializeGridSelectionOptions(
   };
 }
 
-const initialEventFilter = (event: EventModelData) =>
-  !!(event.isVisible && ['allday', 'time'].includes(event.category || ''));
+const initialEventFilter = (event: EventModelData) => !!event.isVisible;
 
 // @TODO: some of options has default values. so it should be `Required` type.
 // But it needs a complex type such as `DeepRequired`.
