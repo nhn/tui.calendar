@@ -44,7 +44,6 @@ export interface MonthOptions {
       height?: number;
     };
   };
-  eventFilter?: (event: Required<EventModelData>) => boolean;
 }
 
 export interface GridSelectionOptions {
@@ -93,6 +92,7 @@ export interface Options {
   isReadOnly?: boolean;
   usageStatistics?: boolean;
   timezone?: CustomTimezone;
+  eventFilter?: (event: EventModelData) => boolean;
 }
 
 interface ViewInfoUserInput {

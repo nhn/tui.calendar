@@ -59,9 +59,3 @@ export function isSameEvent(event: EventModel, eventId: string, calendarId: stri
 export function isVisibleEvent(event: EventModel) {
   return event.isVisible;
 }
-
-export function getVisibleEventCollection(events: Collection<EventModel>) {
-  const visibleEvents = events.toArray().filter((eventModel) => eventModel.isVisible);
-
-  return createEventCollection<EventModel>(...visibleEvents);
-}

@@ -169,7 +169,6 @@ export interface IMonthOptions {
       height?: number;
     };
   };
-  eventFilter?: (eventData: EventModelData) => boolean;
 }
 
 export interface IGridSelectionOptions {
@@ -247,6 +246,7 @@ export interface IOptions {
   isReadOnly?: boolean;
   usageStatistics?: boolean;
   timezone?: ICustomTimezone;
+  eventFilter?: (event: EventModelData) => boolean;
 }
 
 export default class Calendar {
