@@ -67,7 +67,8 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
 
     addAttributeHooks();
 
-    if (options.usageStatistics === true) {
+    // NOTE: To make sure the user really wants to do this. Ignore any invalid values.
+    if (this.getStoreState().options.usageStatistics === true) {
       sendHostname('calendar', GA_TRACKING_ID);
     }
   }
