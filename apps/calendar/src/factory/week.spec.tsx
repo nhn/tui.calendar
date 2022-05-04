@@ -58,10 +58,10 @@ describe('Primary Timezone', () => {
     );
 
     // When
-    const el = screen.getByText(reTargetEvent);
+    const targetEvent = screen.getByText(reTargetEvent);
 
     // Then
-    expect(hasDesiredStartTime(el, '00:00')).toBe(true);
+    expect(hasDesiredStartTime(targetEvent, '00:00')).toBe(true);
   });
 
   it('should create zoned event with a string same as the primary timezone', () => {
@@ -88,10 +88,10 @@ describe('Primary Timezone', () => {
     );
 
     // When
-    const el = screen.getByText(reTargetEvent);
+    const targetEvent = screen.getByText(reTargetEvent);
 
     // Then
-    expect(hasDesiredStartTime(el, '04:00')).toBe(true);
+    expect(hasDesiredStartTime(targetEvent, '04:00')).toBe(true);
   });
 
   it('should apply timezone option to timed events', () => {

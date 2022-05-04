@@ -62,11 +62,11 @@ describe('Primary Timezone', () => {
     );
 
     // When
-    const el = screen.getByText(reTargetEvent);
+    const targetEvent = screen.getByText(reTargetEvent);
 
     // Then
     // From UTC+9 to UTC+5
-    expect(hasDesiredStartTime(el, '06:00')).toBe(true);
+    expect(hasDesiredStartTime(targetEvent, '06:00')).toBe(true);
   });
 
   it('should change the start time of events when setting the new timezone option', () => {
