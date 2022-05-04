@@ -1,24 +1,24 @@
 import { DEFAULT_EVENT_PANEL, DEFAULT_TASK_PANEL } from '@src/constants/view';
 
-import type { Options } from '@t/options';
+import type { EventView, TaskView, WeekOptions } from '@t/options';
 
-export function getDisplayPanel(
-  taskView: Required<Options>['taskView'],
-  eventView: Required<Options>['eventView']
-) {
-  const displayPanel: string[] = [];
+export function getActivePanels(
+  taskView: Required<WeekOptions>['taskView'],
+  eventView: Required<WeekOptions>['eventView']
+): (TaskView | EventView)[] {
+  const activePanels: (TaskView | EventView)[] = [];
 
   if (taskView === true) {
-    displayPanel.push(...DEFAULT_TASK_PANEL);
+    activePanels.push(...DEFAULT_TASK_PANEL);
   } else if (Array.isArray(taskView)) {
-    displayPanel.push(...taskView);
+    activePanels.push(...taskView);
   }
 
   if (eventView === true) {
-    displayPanel.push(...DEFAULT_EVENT_PANEL);
+    activePanels.push(...DEFAULT_EVENT_PANEL);
   } else if (Array.isArray(eventView)) {
-    displayPanel.push(...eventView);
+    activePanels.push(...eventView);
   }
 
-  return displayPanel;
+  return activePanels;
 }

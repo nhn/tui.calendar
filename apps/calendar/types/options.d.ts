@@ -7,6 +7,9 @@ import type { EventModelData } from '@t/events';
 import type { TemplateConfig } from '@t/template';
 import type { ThemeState } from '@t/theme';
 
+type EventView = 'allday' | 'time';
+type TaskView = 'milestone' | 'task';
+
 export interface WeekOptions {
   startDayOfWeek?: number;
   daynames?: string[];
@@ -16,6 +19,8 @@ export interface WeekOptions {
   timezonesCollapsed?: boolean;
   hourStart?: number;
   hourEnd?: number;
+  eventView?: boolean | EventView[];
+  taskView?: boolean | TaskView[];
 }
 
 export interface MonthOptions {
@@ -38,7 +43,11 @@ export interface MonthOptions {
       height?: number;
     };
   };
-  eventFilter?: (event: Required<EventModelData>) => boolean;
+}
+
+export interface GridSelectionOptions {
+  enableDblClick?: boolean;
+  enableClick?: boolean;
 }
 
 export interface TimezoneConfig {
@@ -69,8 +78,6 @@ export type ViewType = 'month' | 'week' | 'day';
 // @TODO: Options 정의 필요
 export interface Options {
   defaultView?: ViewType;
-  taskView?: boolean | string[];
-  eventView?: boolean | string[];
   theme?: DeepPartial<ThemeState>;
   template?: TemplateConfig;
   week?: WeekOptions;
@@ -78,10 +85,10 @@ export interface Options {
   calendars?: CalendarInfo[];
   useCreationPopup?: boolean;
   useDetailPopup?: boolean;
-  disableDblClick?: boolean;
-  disableClick?: boolean;
+  gridSelection?: boolean | GridSelectionOptions;
   isReadOnly?: boolean;
   usageStatistics?: boolean;
+  eventFilter?: (event: EventModelData) => boolean;
   timezone?: TimezoneOptions;
 }
 

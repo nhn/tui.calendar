@@ -1,6 +1,6 @@
 import produce from 'immer';
 
-import { DEFAULT_RESIZER_LENGTH, DEFAULT_WEEK_PANEL_TYPES } from '@src/constants/layout';
+import { DEFAULT_RESIZER_LENGTH } from '@src/constants/layout';
 import { DEFAULT_PANEL_HEIGHT } from '@src/constants/style';
 
 import type { CalendarStore, SetState } from '@t/store';
@@ -9,9 +9,9 @@ export type WeekGridRows = 'milestone' | 'task' | 'allday' | string;
 
 // @TODO: Change name to layout & merge slice into layout
 export type WeekViewLayoutSlice = {
-  lastPanelType: string | null;
   layout: number;
   weekViewLayout: {
+    lastPanelType: string | null;
     dayGridRows: {
       [row in WeekGridRows]: {
         height: number;
@@ -46,16 +46,10 @@ function getRestPanelHeight(
 
 export function createWeekViewLayoutSlice(): WeekViewLayoutSlice {
   return {
-    lastPanelType: null,
     layout: 500,
     weekViewLayout: {
-      dayGridRows: DEFAULT_WEEK_PANEL_TYPES.reduce((acc, rowName) => {
-        acc[rowName] = {
-          height: DEFAULT_PANEL_HEIGHT,
-        };
-
-        return acc;
-      }, {} as WeekViewLayoutSlice['weekViewLayout']['dayGridRows']),
+      lastPanelType: null,
+      dayGridRows: {} as WeekViewLayoutSlice['weekViewLayout']['dayGridRows'],
     },
   };
 }
@@ -67,12 +61,12 @@ export function createWeekViewLayoutDispatchers(
     setLastPanelType: (type) => {
       set(
         produce((state) => {
-          state.lastPanelType = type;
+          state.weekViewLayout.lastPanelType = type;
 
           if (type) {
             state.weekViewLayout.dayGridRows[type].height = getRestPanelHeight(
               state.weekViewLayout.dayGridRows,
-              state.lastPanelType,
+              type,
               state.layout
             );
           }
@@ -82,13 +76,13 @@ export function createWeekViewLayoutDispatchers(
     updateLayoutHeight: (height) =>
       set(
         produce((state) => {
-          const { lastPanelType } = state;
+          const { lastPanelType } = state.weekViewLayout;
 
           state.layout = height;
           if (lastPanelType) {
             state.weekViewLayout.dayGridRows[lastPanelType].height = getRestPanelHeight(
               state.weekViewLayout.dayGridRows,
-              state.lastPanelType,
+              lastPanelType,
               height
             );
           }
@@ -97,13 +91,13 @@ export function createWeekViewLayoutDispatchers(
     updateDayGridRowHeight: ({ rowName, height }) =>
       set(
         produce((state) => {
-          const { lastPanelType } = state;
+          const { lastPanelType } = state.weekViewLayout;
 
           state.weekViewLayout.dayGridRows[rowName] = { height };
           if (lastPanelType) {
             state.weekViewLayout.dayGridRows[lastPanelType].height = getRestPanelHeight(
               state.weekViewLayout.dayGridRows,
-              state.lastPanelType,
+              lastPanelType,
               state.layout
             );
           }
@@ -112,7 +106,7 @@ export function createWeekViewLayoutDispatchers(
     updateDayGridRowHeightByDiff: ({ rowName, diff }) =>
       set(
         produce((state) => {
-          const { lastPanelType } = state;
+          const { lastPanelType } = state.weekViewLayout;
           const height =
             state.weekViewLayout.dayGridRows?.[rowName]?.height ?? DEFAULT_PANEL_HEIGHT;
 
@@ -120,7 +114,7 @@ export function createWeekViewLayoutDispatchers(
           if (lastPanelType) {
             state.weekViewLayout.dayGridRows[lastPanelType].height = getRestPanelHeight(
               state.weekViewLayout.dayGridRows,
-              state.lastPanelType,
+              lastPanelType,
               state.layout
             );
           }

@@ -15,13 +15,12 @@ import {
 } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
 import { cls, toPercent } from '@src/helpers/css';
-import { getVisibleEventCollection } from '@src/helpers/events';
 import { createGridPositionFinder, getRenderedEventUIModels } from '@src/helpers/grid';
 import { dayGridMonthSelectionHelper } from '@src/helpers/gridSelection';
+import { useCalendarData } from '@src/hooks/calendar/useCalendarData';
 import { useDOMNode } from '@src/hooks/common/useDOMNode';
 import { useGridSelection } from '@src/hooks/gridSelection/useGridSelection';
-import { useEventsWithTimezone } from '@src/hooks/timezone/useEventsWithTimezone';
-import { calendarSelector } from '@src/selectors';
+import { calendarSelector, optionsSelector } from '@src/selectors';
 import type TZDate from '@src/time/date';
 import { getSize } from '@src/utils/dom';
 
@@ -31,7 +30,6 @@ import type { CellInfo } from '@t/time/datetime';
 const TOTAL_PERCENT_HEIGHT = 100;
 
 interface Props {
-  options: CalendarMonthOptions;
   dateMatrix: TZDate[][];
   rowInfo: CellInfo[];
   cellWidthMap: string[][];
@@ -50,12 +48,13 @@ function useGridHeight() {
   return { ref, height };
 }
 
-export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidthMap = [] }: Props) {
+export function DayGridMonth({ dateMatrix = [], rowInfo = [], cellWidthMap = [] }: Props) {
   const [gridContainer, setGridContainerRef] = useDOMNode<HTMLDivElement>();
   const calendar = useStore(calendarSelector);
   const { ref, height } = useGridHeight();
 
-  const { visibleWeeksCount, narrowWeekend } = options;
+  const { eventFilter, month: monthOptions } = useStore(optionsSelector);
+  const { visibleWeeksCount, narrowWeekend } = monthOptions as CalendarMonthOptions;
   const rowHeight =
     TOTAL_PERCENT_HEIGHT / Math.max(visibleWeeksCount === 0 ? 6 : visibleWeeksCount, 1);
 
@@ -69,16 +68,7 @@ export function DayGridMonth({ options, dateMatrix = [], rowInfo = [], cellWidth
     [dateMatrix, gridContainer]
   );
 
-  // TODO: Merge two hooks together
-  const events = useEventsWithTimezone(getVisibleEventCollection(calendar.events));
-  const calendarData = useMemo(
-    () => ({
-      ...calendar,
-      events,
-    }),
-    [calendar, events]
-  );
-
+  const calendarData = useCalendarData(calendar, eventFilter);
   const renderedEventUIModels = useMemo(
     () => dateMatrix.map((week) => getRenderedEventUIModels(week, calendarData, narrowWeekend)),
     [calendarData, dateMatrix, narrowWeekend]

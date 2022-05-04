@@ -5,8 +5,10 @@ import renderToString from 'preact-render-to-string';
 
 import type { DateInterface } from '@toast-ui/date';
 import type { DeepPartial } from 'ts-essentials';
+import sendHostname from 'tui-code-snippet/request/sendHostname';
 
 import { CalendarContainer } from '@src/calendarContainer';
+import { GA_TRACKING_ID } from '@src/constants/statistics';
 import { initCalendarStore } from '@src/contexts/calendarStore';
 import { initThemeStore } from '@src/contexts/themeStore';
 import { createDateMatrixOfMonth, getWeekDates } from '@src/helpers/grid';
@@ -64,6 +66,10 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
     this.store = initCalendarStore(options);
 
     addAttributeHooks();
+
+    if (options.usageStatistics === true) {
+      sendHostname('calendar', GA_TRACKING_ID);
+    }
   }
 
   protected abstract getComponent(): ComponentChild;

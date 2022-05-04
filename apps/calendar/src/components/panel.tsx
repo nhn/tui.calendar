@@ -1,12 +1,13 @@
 import { Fragment, h } from 'preact';
 import { forwardRef } from 'preact/compat';
-import { useCallback, useLayoutEffect } from 'preact/hooks';
+import { useCallback, useLayoutEffect, useMemo } from 'preact/hooks';
 
 import { PanelResizer } from '@src/components/panelResizer';
 import { DEFAULT_RESIZER_LENGTH } from '@src/constants/layout';
 import { DEFAULT_PANEL_HEIGHT } from '@src/constants/style';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
+import { isBoolean, isNil } from '@src/utils/type';
 
 import type { PropsWithChildren, StyleProp } from '@t/components/common';
 import type { AlldayEventCategory } from '@t/panel';
@@ -29,7 +30,7 @@ interface Props {
   maxExpandableHeight?: number;
   maxExpandableWidth?: number;
 
-  resizable?: boolean;
+  resizable?: boolean | string[];
   resizerHeight?: number;
   resizerWidth?: number;
 }
@@ -114,18 +115,26 @@ export const Panel = forwardRef<HTMLDivElement, PropsWithChildren<Props>>(functi
     maxWidth,
   });
 
+  const isResizable = useMemo(() => {
+    if (isNil(resizable) || isBoolean(resizable)) {
+      return !!resizable;
+    }
+
+    return resizable.includes(name);
+  }, [resizable, name]);
+
   return (
     <Fragment>
       <div className={cls('panel', name)} style={styles} ref={ref}>
         {children}
       </div>
-      {resizable && (
+      {isResizable ? (
         <PanelResizer
           name={name as AlldayEventCategory}
           width={resizerWidth}
           height={resizerHeight}
         />
-      )}
+      ) : null}
     </Fragment>
   );
 });

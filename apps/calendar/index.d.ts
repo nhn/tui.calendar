@@ -145,6 +145,8 @@ export interface IWeekOptions {
   timezones?: TimezoneConfig[];
   hourStart?: number;
   hourEnd?: number;
+  eventView?: boolean | string[];
+  taskView?: boolean | string[];
 }
 
 export interface IMonthOptions {
@@ -167,7 +169,11 @@ export interface IMonthOptions {
       height?: number;
     };
   };
-  eventFilter?: (eventData: EventModelData) => boolean;
+}
+
+export interface IGridSelectionOptions {
+  enableDblClick?: boolean;
+  enableClick?: boolean;
 }
 
 export interface EventModelData {
@@ -229,8 +235,6 @@ export interface ITheme {
 
 export interface IOptions {
   defaultView?: string;
-  taskView?: boolean | string[];
-  eventView?: boolean | string[];
   theme?: ITheme;
   template?: ITemplateConfig;
   week?: IWeekOptions;
@@ -238,11 +242,11 @@ export interface IOptions {
   calendars?: ICalendarInfo[];
   useCreationPopup?: boolean;
   useDetailPopup?: boolean;
-  disableDblClick?: boolean;
-  disableClick?: boolean;
+  gridSelection?: boolean | IGridSelectionOptions;
   isReadOnly?: boolean;
   usageStatistics?: boolean;
   timezone?: ICustomTimezone;
+  eventFilter?: (event: EventModelData) => boolean;
 }
 
 export default class Calendar {

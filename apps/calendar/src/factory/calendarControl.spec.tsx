@@ -2,9 +2,11 @@ import { h } from 'preact';
 import { useEffect } from 'preact/hooks';
 
 import { waitFor } from '@testing-library/preact';
+import sendHostname from 'tui-code-snippet/request/sendHostname';
 
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import { Layout } from '@src/components/layout';
+import { GA_TRACKING_ID } from '@src/constants/statistics';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useAllTheme } from '@src/contexts/themeStore';
 import CalendarControl from '@src/factory/calendarControl';
@@ -18,6 +20,8 @@ import TZDate from '@src/time/date';
 import { addDate, subtractDate } from '@src/time/datetime';
 
 import type { CalendarInfo } from '@t/options';
+
+jest.mock('tui-code-snippet/request/sendHostname');
 
 function cleanup() {
   document.body.innerHTML = '';
@@ -1124,5 +1128,56 @@ describe('setCalendarVisibility', () => {
     // Then
     expect(screen.queryByText('mockEvent1')).toBeInTheDocument();
     expect(screen.queryByText('mockEvent2')).toBeInTheDocument();
+  });
+});
+
+describe('usageStatistics option', () => {
+  let container: HTMLDivElement;
+
+  beforeAll(() => {
+    container = document.createElement('div');
+    document.body.appendChild(container);
+  });
+
+  afterEach(() => {
+    mockCalendar.destroy();
+    jest.clearAllMocks();
+  });
+
+  afterAll(() => {
+    cleanup();
+  });
+
+  it('should send a hostname when it is not specified.', () => {
+    // Given
+    mockCalendar = new MockCalendar(container);
+
+    // When
+    // Nothing
+
+    // Then
+    expect(sendHostname).toHaveBeenCalledWith('calendar', GA_TRACKING_ID);
+  });
+
+  it('should send a hostname when it is true.', () => {
+    // Given
+    mockCalendar = new MockCalendar(container, { usageStatistics: true });
+
+    // When
+    // Nothing
+
+    // Then
+    expect(sendHostname).toHaveBeenCalledWith('calendar', GA_TRACKING_ID);
+  });
+
+  it('should not send a hostname when it is false.', () => {
+    // Given
+    mockCalendar = new MockCalendar(container, { usageStatistics: false });
+
+    // When
+    // Nothing
+
+    // Then
+    expect(sendHostname).not.toHaveBeenCalled();
   });
 });

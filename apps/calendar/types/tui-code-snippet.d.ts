@@ -76,3 +76,7 @@ declare module 'tui-code-snippet/customEvents/customEvents' {
     public invoke(eventName: string, ...args: any[]): boolean;
   }
 }
+
+declare module 'tui-code-snippet/request/sendHostname' {
+  export default function sendHostname(appName: string, trackingId: string): void;
+}
