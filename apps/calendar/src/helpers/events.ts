@@ -61,5 +61,5 @@ export function isVisibleEvent(event: EventModel) {
 }
 
 export function getVisibleEventCollection(events: Collection<EventModel>) {
-  return events.filter((eventModel) => eventModel.isVisible);
+  return events.filter(({ isVisible }) => isVisible);
 }

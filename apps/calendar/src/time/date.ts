@@ -8,7 +8,7 @@ import {
   getTimezoneFactory,
   setDateConstructor,
 } from '@src/time/timezone';
-import { isNil, isPresent, isString } from '@src/utils/type';
+import { isPresent, isString } from '@src/utils/type';
 
 let createDate = newDate;
 
@@ -86,7 +86,7 @@ export default class TZDate {
   }
 
   getTimezoneOffset() {
-    return isNil(this.tzOffset) ? this.d.getTimezoneOffset() : this.tzOffset;
+    return this.tzOffset ?? this.d.getTimezoneOffset();
   }
 
   // Native properties
@@ -189,10 +189,8 @@ export default class TZDate {
       return new TZDate(this.getTime() + getTZOffsetMSDifference(tzOffset));
     }
 
-    if (isPresent(this.tzOffset)) {
-      return new TZDate(this.getTime() + getTZOffsetMSDifference(this.tzOffset));
-    }
-
-    return new TZDate(this.getTime());
+    return new TZDate(
+      this.getTime() + (isPresent(this.tzOffset) ? getTZOffsetMSDifference(this.tzOffset) : 0)
+    );
   }
 }
