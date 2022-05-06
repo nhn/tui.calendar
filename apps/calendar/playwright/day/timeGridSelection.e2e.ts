@@ -3,7 +3,12 @@ import { expect, test } from '@playwright/test';
 
 import type { FormattedTimeString } from '../../types/time/datetime';
 import { DAY_VIEW_PAGE_URL } from '../configs';
-import { dragAndDrop, getBoundingBox, getTimeGridLineSelector } from '../utils';
+import {
+  dragAndDrop,
+  getBoundingBox,
+  getTimeGridLineSelector,
+  waitForSingleElement,
+} from '../utils';
 
 test.beforeEach(async ({ page }) => {
   await page.goto(DAY_VIEW_PAGE_URL);
@@ -17,12 +22,9 @@ async function assertTimeGridSelection(
     formattedTimes: FormattedTimeString[];
   }
 ) {
-  const timeGridSelectionElements = (await selectionLocator.evaluateAll(
-    (selection) => selection
-  )) as HTMLElement[];
-  const expectedFormattedTime = expected.formattedTimes.join(' - ');
+  await waitForSingleElement(selectionLocator);
 
-  expect(timeGridSelectionElements).toHaveLength(1);
+  const expectedFormattedTime = expected.formattedTimes.join(' - ');
 
   await expect(selectionLocator.first()).toHaveText(expectedFormattedTime);
 
@@ -50,8 +52,8 @@ test.describe('TimeGrid Selection', () => {
     const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
 
     // When
-    await startGridLineLocator.click({ force: true, delay: 1 });
-    await timeGridSelectionLocator.waitFor(); // Test for debounced click handler.
+    await startGridLineLocator.click({ force: true, delay: 300 });
+    await waitForSingleElement(timeGridSelectionLocator); // Test for debounced click handler.
 
     // Then
     await assertTimeGridSelection(timeGridSelectionLocator, {

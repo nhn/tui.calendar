@@ -1,6 +1,5 @@
 import type { Page } from '@playwright/test';
 import { expect, test } from '@playwright/test';
-import waitForExpect from 'wait-for-expect';
 
 import { mockDayViewEvents } from '../../stories/mocks/mockDayViewEvents';
 import { DAY_VIEW_PAGE_URL } from '../configs';
@@ -63,8 +62,12 @@ test.describe('Scroll syncing in time grid when selecting grid', () => {
     );
 
     // Then
-    const scrollTopAfterSync = await timeGridContainerLocator.evaluate(getScrollTop);
-    expect(scrollTopAfterSync).toBeGreaterThan(scrollTopBeforeSync);
+    await expect
+      .poll(async () => {
+        const scrollTopAfterSync = await timeGridContainerLocator.evaluate(getScrollTop);
+        return scrollTopAfterSync;
+      })
+      .toBeGreaterThan(scrollTopBeforeSync);
   });
 
   test('it should sync scroll while dragging up to the top', async ({ page }) => {
@@ -75,32 +78,36 @@ test.describe('Scroll syncing in time grid when selecting grid', () => {
       timeGridContainerLocator,
       containerBoundingBox,
     } = await setup(page);
-    const initialScrollTop = await timeGridContainerLocator.evaluate(getScrollTop);
 
     // Middle of the column
     const xPosition = columnBoundingBox.x + columnBoundingBox.width / 2;
 
     // Scroll down to the bottom of the column
     await targetColumnLocator.hover();
-    await page.mouse.wheel(0, columnBoundingBox.height);
+    await page.mouse.wheel(0, containerBoundingBox.height);
     let scrollTopBeforeSync = await timeGridContainerLocator.evaluate(getScrollTop);
-    await waitForExpect(async () => {
-      scrollTopBeforeSync = await timeGridContainerLocator.evaluate(getScrollTop);
-      expect(scrollTopBeforeSync).toBeGreaterThan(initialScrollTop);
-    });
+    await expect
+      .poll(async () => {
+        scrollTopBeforeSync = await timeGridContainerLocator.evaluate(getScrollTop);
+
+        return scrollTopBeforeSync;
+      })
+      .toBe(containerBoundingBox.height);
 
     // When
     // drag up to the top of the column
     await page.mouse.move(xPosition, containerBoundingBox.y + containerBoundingBox.height - 10);
     await page.mouse.down();
 
-    await waitForExpect(async () => {
-      await page.mouse.move(xPosition, containerBoundingBox.y);
+    await expect
+      .poll(async () => {
+        await page.mouse.move(xPosition, containerBoundingBox.y);
 
-      // Then
-      const scrollTopAfterSync = await timeGridContainerLocator.evaluate(getScrollTop);
-      expect(scrollTopAfterSync).toBeLessThan(scrollTopBeforeSync);
-    });
+        // Then
+        const scrollTopAfterSync = await timeGridContainerLocator.evaluate(getScrollTop);
+        return scrollTopAfterSync;
+      })
+      .toBeLessThan(scrollTopBeforeSync);
   });
 });
 
@@ -152,8 +159,12 @@ mockDayViewEvents
         await page.mouse.up();
 
         // Then
-        const scrollTopAfterSync = await timeGridContainerLocator.evaluate(getScrollTop);
-        expect(scrollTopAfterSync).toBeGreaterThan(scrollTopBeforeSync);
+        await expect
+          .poll(async () => {
+            const scrollTopAfterSync = await timeGridContainerLocator.evaluate(getScrollTop);
+            return scrollTopAfterSync;
+          })
+          .toBeGreaterThan(scrollTopBeforeSync);
       });
 
       test('it should sync scroll while moving event to the edge of the top', async ({ page }) => {
@@ -164,7 +175,6 @@ mockDayViewEvents
           containerBoundingBox,
           eventBoundingBox,
         } = await setup(page);
-        const initialScrollTop = await timeGridContainerLocator.evaluate(getScrollTop);
 
         // Let's move the event to the bottom first.
         const middleXOfEvent = eventBoundingBox.x + eventBoundingBox.width / 2;
@@ -185,10 +195,13 @@ mockDayViewEvents
         // Then scroll down a little.
         await page.mouse.wheel(0, containerBoundingBox.height / 2);
         let scrollTopBeforeSync = await timeGridContainerLocator.evaluate(getScrollTop);
-        await waitForExpect(async () => {
-          scrollTopBeforeSync = await timeGridContainerLocator.evaluate(getScrollTop);
-          expect(scrollTopBeforeSync).toBeGreaterThan(initialScrollTop);
-        });
+        await expect
+          .poll(async () => {
+            scrollTopBeforeSync = await timeGridContainerLocator.evaluate(getScrollTop);
+
+            return scrollTopBeforeSync;
+          })
+          .toBeGreaterThan(containerBoundingBox.height / 2);
 
         // When
         await targetEventLocator.hover({
@@ -200,13 +213,15 @@ mockDayViewEvents
         });
         await page.mouse.down();
 
-        await waitForExpect(async () => {
-          await page.mouse.move(middleXOfEvent, containerBoundingBox.y);
+        await expect
+          .poll(async () => {
+            await page.mouse.move(middleXOfEvent, containerBoundingBox.y);
 
-          // Then
-          const scrollTopAfterSync = await timeGridContainerLocator.evaluate(getScrollTop);
-          expect(scrollTopAfterSync).toBeLessThan(scrollTopBeforeSync);
-        });
+            // Then
+            const scrollTopAfterSync = await timeGridContainerLocator.evaluate(getScrollTop);
+            return scrollTopAfterSync;
+          })
+          .toBeLessThan(scrollTopBeforeSync);
       });
     });
   });
