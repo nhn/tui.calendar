@@ -4,7 +4,6 @@ import { unmountComponentAtNode } from 'preact/compat';
 import renderToString from 'preact-render-to-string';
 
 import type { DateInterface } from '@toast-ui/date';
-import { LocalDate } from '@toast-ui/date';
 import type { DeepPartial } from 'ts-essentials';
 import sendHostname from 'tui-code-snippet/request/sendHostname';
 
@@ -20,11 +19,11 @@ import { last } from '@src/utils/array';
 import type { EventBus } from '@src/utils/eventBus';
 import { EventBusImpl } from '@src/utils/eventBus';
 import { addAttributeHooks, removeAttributeHooks } from '@src/utils/sanitizer';
-import { isNumber, isString } from '@src/utils/type';
+import { isString } from '@src/utils/type';
 
 import type { ExternalEventTypes } from '@t/eventBus';
 import type { DateType, EventModelData } from '@t/events';
-import type { CalendarColor, CalendarInfo, CustomTimezone, Options, ViewType } from '@t/options';
+import type { CalendarColor, CalendarInfo, Options, ViewType } from '@t/options';
 import type {
   CalendarMonthOptions,
   CalendarState,
@@ -55,11 +54,6 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   protected store: InternalStoreAPI<CalendarStore>;
 
   constructor(container: string | Element, options: Options = {}) {
-    const { timezone } = options;
-    if (timezone) {
-      this.setTimezone(timezone);
-    }
-
     this.container = isString(container) ? document.querySelector(container) : container;
 
     this.renderRange = {
@@ -67,14 +61,14 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
       end: toStartOfDay(),
     };
 
-    const initOptions = this.initOptions(options);
-
-    this.theme = initThemeStore(initOptions.theme);
+    this.theme = initThemeStore(options.theme);
     this.eventBus = new EventBusImpl<ExternalEventTypes>();
-    this.store = initCalendarStore(initOptions);
+    this.store = initCalendarStore(options);
+
     addAttributeHooks();
 
-    if (initOptions.usageStatistics === true) {
+    // NOTE: To make sure the user really wants to do this. Ignore any invalid values.
+    if (this.getStoreState().options.usageStatistics === true) {
       sendHostname('calendar', GA_TRACKING_ID);
     }
   }
@@ -99,44 +93,6 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
     const dispatchers = this.store.getState().dispatch;
 
     return group ? dispatchers[group] : dispatchers;
-  }
-
-  private initOptions(options: Options = {}): Options {
-    const {
-      defaultView = 'week',
-      template = {},
-      week = {},
-      month = {},
-      calendars = [],
-      useCreationPopup = false,
-      useDetailPopup = false,
-      gridSelection = true,
-      isReadOnly = false,
-      usageStatistics = true,
-    } = options;
-
-    return {
-      defaultView,
-      template,
-      week,
-      month,
-      calendars,
-      useCreationPopup,
-      useDetailPopup,
-      gridSelection,
-      isReadOnly,
-      usageStatistics,
-    };
-  }
-
-  private setTimezone(timezone: CustomTimezone) {
-    const { dateConstructor = LocalDate, offset, name = '' } = timezone;
-
-    if (dateConstructor) {
-      TZDate.setDateConstructor(dateConstructor);
-    }
-
-    TZDate.setTimezone(isNumber(offset) ? offset : name);
   }
 
   /**

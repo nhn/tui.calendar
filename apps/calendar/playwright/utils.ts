@@ -73,3 +73,10 @@ export function waitForSingleElement(locator: Locator) {
     locator.count().then((count) => (count === 1 ? Promise.resolve() : Promise.reject()))
   );
 }
+
+/**
+ * Get locator matches testId.
+ */
+export function queryLocatorByTestId(page: Page, testId: string) {
+  return page.locator(`[data-testid*="${testId}"]`);
+}

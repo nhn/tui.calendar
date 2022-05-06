@@ -7,7 +7,7 @@ import { mergeObject } from '@src/utils/object';
 import { isBoolean } from '@src/utils/type';
 
 import type { EventModelData } from '@t/events';
-import type { GridSelectionOptions, Options } from '@t/options';
+import type { GridSelectionOptions, Options, TimezoneOptions } from '@t/options';
 import type {
   CalendarMonthOptions,
   CalendarState,
@@ -28,18 +28,18 @@ function initializeWeekOptions(weekOptions: Options['week'] = {}): CalendarWeekO
     workweek: false,
     showTimezoneCollapseButton: false,
     timezonesCollapsed: false,
-    timezones: [
-      {
-        timezoneOffset: 540,
-        displayLabel: 'GMT+09:00',
-        tooltip: 'Seoul',
-      },
-    ],
     hourStart: 0,
     hourEnd: 24,
     eventView: true,
     taskView: true,
     ...weekOptions,
+  };
+}
+
+function initializeTimezoneOptions(timezoneOptions: Options['timezone'] = {}): TimezoneOptions {
+  return {
+    zones: [],
+    ...timezoneOptions,
   };
 }
 
@@ -90,7 +90,7 @@ const initialEventFilter = (event: EventModelData) => !!event.isVisible;
 // But it needs a complex type such as `DeepRequired`.
 // maybe leveraging library like `ts-essential` might be helpful.
 export type OptionsSlice = {
-  options: Omit<Required<Options>, 'template' | 'calendars' | 'theme' | 'timezone'> & {
+  options: Omit<Required<Options>, 'template' | 'calendars' | 'theme'> & {
     gridSelection: GridSelectionOptions;
   };
 };
@@ -112,6 +112,7 @@ export function createOptionsSlice(options: Options = {}): OptionsSlice {
       gridSelection: initializeGridSelectionOptions(options.gridSelection),
       usageStatistics: options.usageStatistics ?? true,
       eventFilter: options.eventFilter ?? initialEventFilter,
+      timezone: initializeTimezoneOptions(options.timezone),
     },
   };
 }

@@ -4,8 +4,9 @@ module.exports = {
   preset: 'ts-jest',
   moduleFileExtensions: ['js', 'json', 'jsx', 'ts', 'tsx', 'node', 'd.ts'],
   moduleNameMapper: {
+    '\\.(css)$': '<rootDir>/src/test/cssFileMock.ts',
     '^@src/(.*)$': '<rootDir>/src/$1',
-    '\\.(css)$': '<rootDir>/__mocks__/styleMock.ts',
+    '^@stories/(.*)$': '<rootDir>/stories/$1',
   },
   globals: { 'ts-jest': { tsconfig: '<rootDir>/tsconfig.test.json' } },
   watchPathIgnorePatterns: ['<rootDir>/.storybook', '<rootDir>/.stories', '/node_modules/'],

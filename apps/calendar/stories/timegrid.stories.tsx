@@ -117,29 +117,3 @@ RandomEvents.args = {
   events: getRandomEvents(),
   timeGridData: getTimeGridData(),
 };
-
-export const MultipleTimezones = Template.bind({});
-MultipleTimezones.args = {
-  events: getEvents(),
-  timeGridData: getTimeGridData(),
-  timezones: [
-    {
-      displayLabel: 'Local Time',
-      tooltip: 'Local',
-    },
-    {
-      timezoneOffset: 420,
-      displayLabel: 'GMT-08:00',
-      tooltip: 'Los Angeles',
-    },
-    {
-      timezoneOffset: -180,
-      displayLabel: 'GMT+3',
-      tooltip: 'Moscow Standard Time',
-    },
-  ],
-  timesWidth: 60,
-};
-MultipleTimezones.story = {
-  name: 'Multiple timezones',
-};

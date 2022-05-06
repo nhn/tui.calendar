@@ -10,10 +10,12 @@ import { initCalendarStore } from '@src/contexts/calendarStore';
 import { initThemeStore } from '@src/contexts/themeStore';
 import type { EventBus } from '@src/utils/eventBus';
 import { EventBusImpl } from '@src/utils/eventBus';
+import { isPresent } from '@src/utils/type';
 
 import type { PropsWithChildren } from '@t/components/common';
 import type { CalendarStore, InternalStoreAPI } from '@t/store';
 import type { ThemeStore } from '@t/theme';
+import type { FormattedTimeString } from '@t/time/datetime';
 
 function render(
   component: Parameters<typeof ptlRender>[0],
@@ -78,6 +80,18 @@ export function dragAndDrop({
   if (!hold) {
     fireEvent.mouseUp(document);
   }
+}
+
+export function hasDesiredStartTime(el: HTMLElement, startTimeStr: FormattedTimeString) {
+  let node: HTMLElement | null = el;
+  while (isPresent(node)) {
+    if (node.textContent?.includes(startTimeStr)) {
+      return true;
+    }
+    node = node.parentElement;
+  }
+
+  return false;
 }
 
 export * from '@testing-library/preact';

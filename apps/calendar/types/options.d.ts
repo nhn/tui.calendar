@@ -17,7 +17,6 @@ export interface WeekOptions {
   workweek?: boolean;
   showTimezoneCollapseButton?: boolean;
   timezonesCollapsed?: boolean;
-  timezones?: TimezoneConfig[];
   hourStart?: number;
   hourEnd?: number;
   eventView?: boolean | EventView[];
@@ -51,17 +50,15 @@ export interface GridSelectionOptions {
   enableClick?: boolean;
 }
 
-export interface CustomTimezone {
-  dateConstructor?: TuiDateConstructor; // YourCustomDate or LocalDate, UTCDate, MomentDate from @toast-ui/date;
-  offset?: number; // If using YourCustomDate or MomentDate
-  name?: string; // If using YourCustomDate or MomentDate
-}
-
 export interface TimezoneConfig {
-  timezoneOffset?: number;
   timezoneName?: string;
   displayLabel?: string;
   tooltip?: string;
+}
+
+export interface TimezoneOptions {
+  zones?: TimezoneConfig[];
+  customOffsetCalculator?: (primaryTimezoneName: string, timestamp: number) => number;
 }
 
 export interface CalendarColor {
@@ -91,8 +88,8 @@ export interface Options {
   gridSelection?: boolean | GridSelectionOptions;
   isReadOnly?: boolean;
   usageStatistics?: boolean;
-  timezone?: CustomTimezone;
   eventFilter?: (event: EventModelData) => boolean;
+  timezone?: TimezoneOptions;
 }
 
 interface ViewInfoUserInput {

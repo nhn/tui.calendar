@@ -1,14 +1,28 @@
 import type { DateInterface } from '@toast-ui/date';
 
-import { date as newDate, getTimezoneFactory, setDateConstructor } from '@src/time/timezone';
+import { MS_PER_MINUTES } from '@src/time/datetime';
+import {
+  calculateTimezoneOffset,
+  date as newDate,
+  getLocalTimezoneOffset,
+  getTimezoneFactory,
+  setDateConstructor,
+} from '@src/time/timezone';
+import { isPresent, isString } from '@src/utils/type';
 
 let createDate = newDate;
+
+function getTZOffsetMSDifference(offset: number) {
+  return (getLocalTimezoneOffset() - offset) * MS_PER_MINUTES;
+}
 
 /**
  * Timezone Date Class
  * @param {number|TZDate|Date|string} date - date to be converted
  */
 export default class TZDate {
+  private tzOffset: number | null = null;
+
   private d: DateInterface;
 
   /**
@@ -72,7 +86,7 @@ export default class TZDate {
   }
 
   getTimezoneOffset() {
-    return this.d.getTimezoneOffset();
+    return this.tzOffset ?? this.d.getTimezoneOffset();
   }
 
   // Native properties
@@ -151,5 +165,32 @@ export default class TZDate {
 
   setMilliseconds(ms: number): number {
     return this.d.setMilliseconds(ms);
+  }
+
+  tz(tzValue: string | number) {
+    const tzOffset = isString(tzValue) ? calculateTimezoneOffset(this, tzValue) : tzValue;
+
+    const newTZDate = new TZDate(this.getTime() - getTZOffsetMSDifference(tzOffset));
+    newTZDate.tzOffset = tzOffset;
+
+    return newTZDate;
+  }
+
+  /**
+   * Get the new instance following the system's timezone.
+   * If the system timezone is different from the timezone of the instance,
+   * the instance is converted to the system timezone.
+   *
+   * Instance's `tzOffset` property will be ignored if there is a `tzValue` parameter.
+   */
+  local(tzValue?: string | number) {
+    if (isPresent(tzValue)) {
+      const tzOffset = isString(tzValue) ? calculateTimezoneOffset(this, tzValue) : tzValue;
+      return new TZDate(this.getTime() + getTZOffsetMSDifference(tzOffset));
+    }
+
+    return new TZDate(
+      this.getTime() + (isPresent(this.tzOffset) ? getTZOffsetMSDifference(this.tzOffset) : 0)
+    );
   }
 }

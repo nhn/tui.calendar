@@ -1,3 +1,6 @@
+// TODO: This component will be replaced with the `TimeColumn` component.
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
 import { Component, Fragment, h } from 'preact';
 import { createPortal } from 'preact/compat';
 

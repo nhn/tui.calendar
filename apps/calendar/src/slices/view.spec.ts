@@ -29,7 +29,7 @@ describe('View Slice', () => {
     // When
 
     // Then
-    expect(view.currentView).toBe('month');
+    expect(view.currentView).toBe('week');
   });
 
   it('should be able to change currentView', () => {

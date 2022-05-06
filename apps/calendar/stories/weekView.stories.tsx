@@ -81,3 +81,19 @@ CustomTemplate.args = {
     },
   },
 };
+
+export const FixedEventsWithTimezone = Template.bind({});
+FixedEventsWithTimezone.args = {
+  options: {
+    timezone: {
+      zones: [
+        {
+          timezoneName: 'Asia/Karachi',
+          displayLabel: '+04:00',
+          tooltip: 'Pakistan',
+        },
+      ],
+    },
+  },
+  events: createWeekEvents(mockWeekViewEvents),
+};

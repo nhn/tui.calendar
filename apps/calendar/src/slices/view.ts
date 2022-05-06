@@ -18,7 +18,7 @@ export type ViewDispatchers = {
   setRenderDate: (date: TZDate) => void;
 };
 
-export function createViewSlice(initialView: ViewType = 'month'): ViewSlice {
+export function createViewSlice(initialView: ViewType = 'week'): ViewSlice {
   const renderDate = new TZDate();
   renderDate.setHours(0, 0, 0, 0);
 
