@@ -189,10 +189,10 @@ test.describe('event moving', () => {
 
     // When
     await dragAndDrop(page, eventLocator, endOfWeekCellLocator);
-    await waitForSingleElement(eventLocator);
 
     // Then
-    const targetEventsCount = await eventLocator.evaluateAll((events) => events.length);
+    await expect.poll(() => eventLocator.evaluateAll((events) => events.length)).toBe(2);
+
     const targetEventLength = await eventLocator.evaluateAll((events) =>
       (events as HTMLElement[]).reduce(
         (total, eventRow) => eventRow.getBoundingClientRect().width + total,
@@ -204,7 +204,6 @@ test.describe('event moving', () => {
     const firstEventBoundingBox = await getBoundingBox(firstEventLocator);
     const lastEventBoundingBox = await getBoundingBox(lastEventLocator);
 
-    expect(targetEventsCount).toBe(2);
     expect(firstEventBoundingBox.x).toBeCloseTo(endOfWeekCellBoundingBox.x, 3);
     expect(lastEventBoundingBox.x).toBeLessThan(
       secondOfWeekCellBoundingBox.x + secondOfWeekCellBoundingBox.width
