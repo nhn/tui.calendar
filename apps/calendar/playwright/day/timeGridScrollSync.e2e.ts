@@ -92,7 +92,7 @@ test.describe('Scroll syncing in time grid when selecting grid', () => {
 
         return scrollTopBeforeSync;
       })
-      .toBe(containerBoundingBox.height);
+      .toBeCloseTo(containerBoundingBox.height, -2);
 
     // When
     // drag up to the top of the column
