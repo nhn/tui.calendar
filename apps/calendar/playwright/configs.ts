@@ -4,7 +4,7 @@ const PORT = process.env.CI ? 8080 : 6006;
 const generatePageUrl = (viewId: string) =>
   `http://localhost:${PORT}/iframe.html?id=${viewId}&args=&viewMode=story`;
 
-export const DAY_VIEW_PAGE_URL = generatePageUrl('views-dayview--fixed-events');
+export const DAY_VIEW_PAGE_URL = generatePageUrl('e2e-day-view--day-view-with-fixed-events');
 
 export const WEEK_VIEW_PAGE_URL = generatePageUrl('views-weekview--fixed-events');
 
