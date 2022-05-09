@@ -11,7 +11,7 @@ test.beforeEach(async ({ page }) => {
 
 const MONTH_GRID_SELECTOR = '.toastui-calendar-daygrid-cell';
 
-test.describe('Selection', () => {
+test.describe('Grid Selection', () => {
   /**
    * Suppose we have the following cells in the month view.
    * Each number represents the index of the cell.
@@ -39,7 +39,7 @@ test.describe('Selection', () => {
     const monthGridCellLocator = page.locator(MONTH_GRID_SELECTOR).nth(31);
 
     // When
-    await monthGridCellLocator.click({ delay: 1 });
+    await monthGridCellLocator.click({ delay: 100 });
 
     // Then
     await assertMonthGridSelectionMatching(page, 31, 31);

@@ -2,13 +2,13 @@ import type { Locator } from '@playwright/test';
 import { expect, test } from '@playwright/test';
 import waitForExpect from 'wait-for-expect';
 
-import { mockMonthViewEvents } from '../../stories/mocks/mockMonthViewEvents';
+import { mockMonthViewEventsFixed } from '../../stories/mocks/mockMonthViewEvents';
 import { assertBoundingBoxIncluded } from '../assertions';
 import { MONTH_VIEW_PAGE_URL } from '../configs';
 import { dragAndDrop, getBoundingBox } from '../utils';
 
 const CELL_SELECTOR = '.toastui-calendar-daygrid-cell';
-const [TARGET_EVENT1] = mockMonthViewEvents;
+const [TARGET_EVENT1] = mockMonthViewEventsFixed;
 
 test.beforeEach(async ({ page }) => {
   await page.goto(MONTH_VIEW_PAGE_URL);

@@ -8,9 +8,9 @@ export const DAY_VIEW_PAGE_URL = generatePageUrl('views-dayview--fixed-events');
 
 export const WEEK_VIEW_PAGE_URL = generatePageUrl('views-weekview--fixed-events');
 
-export const MONTH_VIEW_PAGE_URL = generatePageUrl('views-monthview--fixed-events');
+export const MONTH_VIEW_EMPTY_PAGE_URL = generatePageUrl('e2e-month-view--empty-month-view');
 
-export const MONTH_VIEW_BASIC_PAGE_URL = generatePageUrl('views-monthview--basic');
+export const MONTH_VIEW_PAGE_URL = generatePageUrl('e2e-month-view--month-view-with-fixed-events');
 
 export const WEEK_VIEW_TIMEZONE_PAGE_URL = generatePageUrl(
   'views-weekview--fixed-events-with-timezone'

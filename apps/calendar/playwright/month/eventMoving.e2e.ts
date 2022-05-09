@@ -2,7 +2,7 @@ import type { Page } from '@playwright/test';
 import { expect, test } from '@playwright/test';
 import waitForExpect from 'wait-for-expect';
 
-import { mockMonthViewEvents } from '../../stories/mocks/mockMonthViewEvents';
+import { mockMonthViewEventsFixed } from '../../stories/mocks/mockMonthViewEvents';
 import type { EventModelData } from '../../types/events';
 import { MONTH_VIEW_PAGE_URL } from '../configs';
 import { Direction } from '../types';
@@ -14,7 +14,7 @@ test.beforeEach(async ({ page }) => {
   await page.goto(MONTH_VIEW_PAGE_URL);
 });
 
-const [TARGET_EVENT1, TARGET_EVENT2, TARGET_EVENT3] = mockMonthViewEvents;
+const [TARGET_EVENT1, TARGET_EVENT2, TARGET_EVENT3] = mockMonthViewEventsFixed;
 const testCases: {
   event: EventModelData;
   startCellIndex: number;
