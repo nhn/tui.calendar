@@ -36,10 +36,9 @@ describe('Primary Timezone', () => {
 
   it('should create a zoned event with a string different from the primary timezone', () => {
     // Given
-    jest
-      .spyOn(Date, 'now')
-      .mockImplementationOnce(() => new Date('2022-05-04T00:00:00+09:00').getTime());
-    setup(
+    const baseDate = new Date('2022-05-04T00:00:00+09:00');
+    jest.spyOn(Date, 'now').mockImplementationOnce(() => baseDate.getTime());
+    const { instance } = setup(
       {
         timezone: {
           zones: [{ timezoneName: 'Asia/Karachi' }], // UTC+05:00
@@ -56,6 +55,9 @@ describe('Primary Timezone', () => {
         },
       ]
     );
+    act(() => {
+      instance.setDate(baseDate);
+    });
 
     // When
     const targetEvent = screen.getByText(reTargetEvent);
@@ -66,10 +68,9 @@ describe('Primary Timezone', () => {
 
   it('should create zoned event with a string same as the primary timezone', () => {
     // Given
-    jest
-      .spyOn(Date, 'now')
-      .mockImplementationOnce(() => new Date('2022-05-04T00:00:00+09:00').getTime());
-    setup(
+    const baseDate = new Date('2022-05-04T00:00:00+09:00');
+    jest.spyOn(Date, 'now').mockImplementationOnce(() => baseDate.getTime());
+    const { instance } = setup(
       {
         timezone: {
           zones: [{ timezoneName: 'Asia/Karachi' }], // UTC+05:00
@@ -86,6 +87,9 @@ describe('Primary Timezone', () => {
         },
       ]
     );
+    act(() => {
+      instance.setDate(baseDate);
+    });
 
     // When
     const targetEvent = screen.getByText(reTargetEvent);
