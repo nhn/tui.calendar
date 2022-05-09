@@ -1,5 +1,5 @@
 import { Meta, Canvas } from '@storybook/addon-docs';
-import { Example1 } from './example1.stories';
+import { CalendarExample } from '@stories/util/calendarExample';
 
 <Meta title="Documentation/Initialize Calendar Instance" />
 
@@ -8,7 +8,15 @@ import { Example1 } from './example1.stories';
 Here's a simple example of how to create a calendar instance.
 
 <Canvas>
-  <Example1 />
+  <CalendarExample
+    options={{
+      defaultView: 'month',
+    }}
+    onInit={(cal) => {
+      console.log('Calendar initialized', cal);
+      cal.setDate('2022-03-04');
+    }}
+  />
 </Canvas>
 
 ```html
@@ -18,5 +26,3 @@ Here's a simple example of how to create a calendar instance.
   const cal = new Calendar(document.querySelector('.container'));
 </script>
 ```
-
-
