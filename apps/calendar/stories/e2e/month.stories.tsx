@@ -14,16 +14,16 @@ Template.args = {
   containerHeight: '100vh',
 };
 
-export const EmptyMonthView = Template.bind({});
-EmptyMonthView.args = {
+export const Empty = Template.bind({});
+Empty.args = {
   ...Template.args,
   options: {
     defaultView: 'month',
   },
 };
 
-export const MonthViewWithFixedEvents = Template.bind({});
-MonthViewWithFixedEvents.args = {
+export const FixedEvents = Template.bind({});
+FixedEvents.args = {
   ...Template.args,
   options: {
     defaultView: 'month',

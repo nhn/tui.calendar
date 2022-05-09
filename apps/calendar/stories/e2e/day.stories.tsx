@@ -16,8 +16,8 @@ Template.args = {
   containerHeight: '100vh',
 };
 
-export const DayViewWithFixedEvents = Template.bind({});
-DayViewWithFixedEvents.args = {
+export const FixedEvents = Template.bind({});
+FixedEvents.args = {
   ...Template.args,
   onInit: (cal) => {
     cal.createEvents(mockDayViewEvents);
