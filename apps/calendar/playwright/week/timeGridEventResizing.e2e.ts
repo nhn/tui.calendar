@@ -1,6 +1,5 @@
 import type { Page } from '@playwright/test';
 import { expect, test } from '@playwright/test';
-import waitForExpect from 'wait-for-expect';
 
 import { mockWeekViewEvents } from '../../stories/mocks/mockWeekViewEvents';
 import type { FormattedTimeString } from '../../types/time/datetime';
@@ -9,6 +8,7 @@ import {
   dragAndDrop,
   getBoundingBox,
   getTimeGridLineSelector,
+  queryLocatorByTestId,
   waitForSingleElement,
 } from '../utils';
 
@@ -94,11 +94,10 @@ async function setup({
   targetColumnIndex: number;
 }) {
   // Given
-  const targetEventSelector = `[data-testid*="time-event-${targetEventTitle}"]`;
-  const eventLocator = page.locator(targetEventSelector).last();
+  const eventLocator = queryLocatorByTestId(page, `time-event-${targetEventTitle}`).last();
   const resizeHandlerLocator = eventLocator.locator('[class*="resize-handler"]');
   const targetRowLocator = page.locator(getTimeGridLineSelector(targetEndTime));
-  const targetColumnLocator = page.locator(`data-testid=timegrid-column-${targetColumnIndex}`);
+  const targetColumnLocator = queryLocatorByTestId(page, `timegrid-column-${targetColumnIndex}`);
   const eventBoundingBoxBeforeResize = await getBoundingBox(eventLocator);
 
   const targetRowBoundingBox = await getBoundingBox(targetRowLocator);
@@ -117,7 +116,14 @@ async function setup({
   });
   await waitForSingleElement(eventLocator);
 
-  const eventBoundingBoxAfterResize = await getBoundingBox(eventLocator);
+  let eventBoundingBoxAfterResize = await getBoundingBox(eventLocator);
+  await expect
+    .poll(async () => {
+      eventBoundingBoxAfterResize = await getBoundingBox(eventLocator);
+
+      return eventBoundingBoxAfterResize;
+    })
+    .not.toEqual(eventBoundingBoxBeforeResize);
 
   return {
     eventLocator,
@@ -148,18 +154,16 @@ targetEvents.forEach(({ title: eventTitle, startTime, endTime, endDateColumnInde
           });
 
           // Then
-          await waitForExpect(async () => {
-            expect(eventBoundingBoxAfterResize.height)[compareAssertion](
-              eventBoundingBoxBeforeResize.height
-            );
+          expect(eventBoundingBoxAfterResize.height)[compareAssertion](
+            eventBoundingBoxBeforeResize.height
+          );
 
-            await expect(eventLocator).toContainText(startTime);
+          await expect(eventLocator).toContainText(startTime);
 
-            const rowCount = getHourDifference(targetEndTime, endTime) * 2 + 1;
-            expect(
-              eventBoundingBoxAfterResize.height - eventBoundingBoxBeforeResize.height
-            ).toBeCloseTo(targetRowBoundingBox.height * rowCount, -1);
-          });
+          const rowCount = getHourDifference(targetEndTime, endTime) * 2 + 1;
+          expect(
+            eventBoundingBoxAfterResize.height - eventBoundingBoxBeforeResize.height
+          ).toBeCloseTo(targetRowBoundingBox.height * rowCount, -1);
         });
       }
     );

@@ -51,7 +51,7 @@ test.describe('TimeGrid Selection in week', () => {
     const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
 
     // When
-    await startGridLineLocator.click({ force: true, delay: 1 });
+    await startGridLineLocator.click({ force: true, delay: 100 });
     await timeGridSelectionLocator.waitFor(); // Test for debounced click handler.
 
     // Then

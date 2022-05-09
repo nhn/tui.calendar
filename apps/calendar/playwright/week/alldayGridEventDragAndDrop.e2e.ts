@@ -1,5 +1,5 @@
+import type { Locator } from '@playwright/test';
 import { expect, test } from '@playwright/test';
-import waitForExpect from 'wait-for-expect';
 
 import { mockWeekViewEvents } from '../../stories/mocks/mockWeekViewEvents';
 import { WEEK_VIEW_PAGE_URL } from '../configs';
@@ -15,6 +15,18 @@ const ALL_DAY_GRID_CELL_SELECTOR = `${getPrefixedClassName(
 
 const [{ calendarId, id, title }] = mockWeekViewEvents;
 const TARGET_EVENT_SELECTOR = `data-testid=${calendarId}-${id}-${title}`;
+
+async function getX(locator: Locator) {
+  const boundingBox = await getBoundingBox(locator);
+
+  return boundingBox.x;
+}
+
+async function getWidth(locator: Locator) {
+  const boundingBox = await getBoundingBox(locator);
+
+  return boundingBox.width;
+}
 
 /**
  * Suppose we have the following cells in the week view.
@@ -33,10 +45,9 @@ test('resizing allday grid row event from left to right', async ({ page }) => {
   await dragAndDrop(page, resizerLocator, endOfWeekCellLocator);
 
   // Then
-  await waitForExpect(async () => {
-    const boundingBoxAfterResizing = await getBoundingBox(targetEventLocator);
-    expect(boundingBoxBeforeResizing.width).toBeLessThan(boundingBoxAfterResizing.width);
-  });
+  await expect
+    .poll(() => getWidth(targetEventLocator))
+    .toBeGreaterThan(boundingBoxBeforeResizing.width);
 });
 
 test('moving allday grid row event from left to right', async ({ page }) => {
@@ -59,11 +70,10 @@ test('moving allday grid row event from left to right', async ({ page }) => {
   });
 
   // Then
-  await waitForExpect(async () => {
-    const boundingBoxAfterMoving = await getBoundingBox(targetEventLocator);
-    expect(boundingBoxAfterMoving.x).toBeGreaterThan(boundingBoxBeforeMoving.x);
-    expect(boundingBoxAfterMoving.width).toBeCloseTo(boundingBoxBeforeMoving.width, 3);
-  });
+  await expect.poll(() => getX(targetEventLocator)).toBeGreaterThan(boundingBoxBeforeMoving.x);
+  await expect
+    .poll(() => getWidth(targetEventLocator))
+    .toBeCloseTo(boundingBoxBeforeMoving.width, 3);
 });
 
 test.describe('moving allday grid row event when moving by holding the middle or end', () => {
@@ -87,16 +97,12 @@ test.describe('moving allday grid row event when moving by holding the middle or
     });
 
     // Then
-    await waitForExpect(async () => {
-      const boundingBoxAfterMoving = await getBoundingBox(targetEventLocator);
-      expect(boundingBoxAfterMoving.x).toBeCloseTo(
-        boundingBoxBeforeMoving.x + (boundingBoxBeforeMoving.width * 2) / 3,
-        1
-      );
-      expect(boundingBoxAfterMoving.x).toBeLessThan(
-        boundingBoxBeforeMoving.x + boundingBoxBeforeMoving.width
-      );
-    });
+    await expect
+      .poll(() => getX(targetEventLocator))
+      .toBeCloseTo(boundingBoxBeforeMoving.x + (boundingBoxBeforeMoving.width * 2) / 3, 1);
+    await expect
+      .poll(() => getX(targetEventLocator))
+      .toBeLessThan(boundingBoxBeforeMoving.x + boundingBoxBeforeMoving.width);
   });
 
   test('holding end of event', async ({ page }) => {
@@ -119,15 +125,11 @@ test.describe('moving allday grid row event when moving by holding the middle or
     });
 
     // Then
-    await waitForExpect(async () => {
-      const boundingBoxAfterMoving = await getBoundingBox(targetEventLocator);
-      expect(boundingBoxAfterMoving.x).toBeCloseTo(
-        boundingBoxBeforeMoving.x + boundingBoxBeforeMoving.width / 3,
-        1
-      );
-      expect(boundingBoxAfterMoving.x).toBeLessThan(
-        boundingBoxBeforeMoving.x + boundingBoxBeforeMoving.width
-      );
-    });
+    await expect
+      .poll(() => getX(targetEventLocator))
+      .toBeCloseTo(boundingBoxBeforeMoving.x + boundingBoxBeforeMoving.width / 3, 1);
+    await expect
+      .poll(() => getX(targetEventLocator))
+      .toBeLessThan(boundingBoxBeforeMoving.x + boundingBoxBeforeMoving.width);
   });
 });

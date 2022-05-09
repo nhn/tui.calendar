@@ -6,12 +6,12 @@ const generatePageUrl = (viewId: string) =>
 
 export const DAY_VIEW_PAGE_URL = generatePageUrl('e2e-day-view--fixed-events');
 
-export const WEEK_VIEW_PAGE_URL = generatePageUrl('views-weekview--fixed-events');
+export const WEEK_VIEW_PAGE_URL = generatePageUrl('e2e-week-view--fixed-events');
 
 export const MONTH_VIEW_EMPTY_PAGE_URL = generatePageUrl('e2e-month-view--empty');
 
 export const MONTH_VIEW_PAGE_URL = generatePageUrl('e2e-month-view--fixed-events');
 
 export const WEEK_VIEW_TIMEZONE_PAGE_URL = generatePageUrl(
-  'views-weekview--fixed-events-with-timezone'
+  'e2e-week-view--different-primary-timezone'
 );

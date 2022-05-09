@@ -7,11 +7,8 @@ import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 import { addDate, Day } from '@src/time/datetime';
 
-import { mockWeekViewEvents } from '@stories/mocks/mockWeekViewEvents';
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { createRandomEventModelsForMonth, createRandomEvents } from '@stories/util/randomEvents';
-
-import type { EventModelData } from '@t/events';
 
 export default { title: 'Views/WeekView', component: Week };
 
@@ -21,10 +18,6 @@ function createTimeGridEvents() {
   const end = addDate(start, 6);
 
   return createRandomEvents('week', start, end).map((event) => EventModel.create(event));
-}
-
-function createWeekEvents(events: EventModelData[]) {
-  return events.map((event) => EventModel.create(event));
 }
 
 const Template: Story = (args) => (
@@ -56,44 +49,4 @@ WorkWeek.args = {
 export const RandomEvents = Template.bind({});
 RandomEvents.args = {
   events: [...createRandomEventModelsForMonth(40), ...createTimeGridEvents()],
-};
-
-export const FixedEvents = Template.bind({});
-FixedEvents.args = {
-  options: { useCreationPopup: true, useDetailPopup: true },
-  events: createWeekEvents(mockWeekViewEvents),
-};
-
-export const CustomTemplate = Template.bind({});
-CustomTemplate.args = {
-  events: createWeekEvents(mockWeekViewEvents),
-  options: {
-    useCreationPopup: true,
-    useDetailPopup: true,
-    template: {
-      alldayTitle() {
-        // Insert <script> for DOM Purify Test
-        return '<span><script></script>CUSTOM All Day</span>';
-      },
-      taskTitle() {
-        return '<span>CUSTOM TASK</span>';
-      },
-    },
-  },
-};
-
-export const FixedEventsWithTimezone = Template.bind({});
-FixedEventsWithTimezone.args = {
-  options: {
-    timezone: {
-      zones: [
-        {
-          timezoneName: 'Asia/Karachi',
-          displayLabel: '+04:00',
-          tooltip: 'Pakistan',
-        },
-      ],
-    },
-  },
-  events: createWeekEvents(mockWeekViewEvents),
 };

@@ -31,7 +31,7 @@ test.describe('DayGrid Selection in week', () => {
     const weekGridCellLocator = page.locator(WEEK_GRID_SELECTOR).nth(14);
 
     // When
-    await weekGridCellLocator.click({ delay: 1 });
+    await weekGridCellLocator.click({ delay: 100 });
 
     // Then
     await assertWeekGridSelectionMatching(page, 14, 14);
