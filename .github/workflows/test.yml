@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout next branch
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Install dependencies
         uses: ./.github/composite-actions/install-dependencies
       - name: Lint & Type Checking
@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout next branch
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Install dependencies
         uses: ./.github/composite-actions/install-dependencies
       - name: run unit test
@@ -35,7 +35,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout next branch
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Install dependencies
         uses: ./.github/composite-actions/install-dependencies
       - name: Install playwright dependencies
