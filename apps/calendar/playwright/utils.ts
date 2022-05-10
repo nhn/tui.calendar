@@ -62,10 +62,12 @@ export function getTimeGridLineSelector(start: FormattedTimeString): string {
 }
 
 export function getTimeStrFromDate(d: TZDate) {
+  const fixToTwoDigits = (num: number) => num.toString().padStart(2, '0');
+
   const hour = d.getHours();
   const minute = d.getMinutes();
 
-  return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+  return `${fixToTwoDigits(hour)}:${fixToTwoDigits(minute)}`;
 }
 
 export function waitForSingleElement(locator: Locator) {
