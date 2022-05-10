@@ -65,7 +65,7 @@ export function getTimeStrFromDate(d: TZDate) {
   const hour = d.getHours();
   const minute = d.getMinutes();
 
-  return `${hour < 10 ? `0${hour}` : hour}:${minute < 10 ? `0${minute}` : minute}`;
+  return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
 }
 
 export function waitForSingleElement(locator: Locator) {
