@@ -55,6 +55,7 @@ mockDayViewEvents
             addHours(setTimeStrToDate(end, DRAG_START_TIME), step)
           ) as FormattedTimeString;
           const targetRowLocator = page.locator(getTimeGridLineSelector(targetTime));
+          const expectedStartTimeAfterMove = getTimeStrFromDate(addHours(start, step));
 
           // When
           await dragAndDrop(page, eventLocator, targetRowLocator, {
@@ -70,8 +71,9 @@ mockDayViewEvents
           await waitForSingleElement(eventLocator);
 
           // Then
-          const startTimeAfterMove = getTimeStrFromDate(addHours(start, step));
-          await expect(eventLocator).toHaveText(new RegExp(startTimeAfterMove));
+          await expect
+            .poll(() => eventLocator.textContent())
+            .toMatch(new RegExp(expectedStartTimeAfterMove));
         });
       });
     });
@@ -103,8 +105,12 @@ test.describe(`Calibrate event's height while dragging`, () => {
       await page.mouse.move(...getCenterOfBoundingBox(targetBoundingBox));
 
       // Then
-      const shadowEventBoundingBox = await getBoundingBox(eventLocator.first());
-      expect(shadowEventBoundingBox.height)[matcherToCompare](eventBoundingBoxBeforeMove.height);
+      await expect
+        .poll(async () => {
+          const shadowEventBoundingBox = await getBoundingBox(eventLocator.first());
+          return shadowEventBoundingBox.height;
+        })
+        [matcherToCompare](eventBoundingBoxBeforeMove.height);
     });
   });
 });

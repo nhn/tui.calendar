@@ -3,19 +3,11 @@ import { h } from 'preact';
 import type { Story } from '@storybook/preact';
 
 import { Month } from '@src/components/view/month';
-import EventModel from '@src/model/eventModel';
 
-import { mockMonthViewEvents } from '@stories/mocks/mockMonthViewEvents';
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { createRandomEventModelsForMonth } from '@stories/util/randomEvents';
 
-import type { EventModelData } from '@t/events';
-
 export default { title: 'Views/MonthView', component: Month };
-
-function createMonthEvents(events: EventModelData[]) {
-  return events.map((event) => EventModel.create(event));
-}
 
 const Template: Story = (args) => (
   <ProviderWrapper options={args.options} events={args.events}>
@@ -58,10 +50,4 @@ export const randomEvents = Template.bind({});
 randomEvents.args = {
   options: { month: { narrowWeekend: true } },
   events: createRandomEventModelsForMonth(40),
-};
-
-export const FixedEvents = Template.bind({});
-FixedEvents.args = {
-  options: { useCreationPopup: true, useDetailPopup: true },
-  events: createMonthEvents(mockMonthViewEvents),
 };

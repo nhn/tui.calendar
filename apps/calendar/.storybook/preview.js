@@ -23,4 +23,5 @@ export const parameters = {
       Canvas: StyledCanvas,
     },
   },
+  layout: 'fullscreen',
 };

@@ -16,13 +16,11 @@ const config: PlaywrightTestConfig = {
       height: 900,
     },
     launchOptions: {
-      slowMo: isCI ? 300 : 150,
-    }
+      slowMo: 250,
+    },
   },
   webServer: {
-    command: isCI
-      ? 'npm run serve:storybook'
-      : 'lerna run --scope @toast-ui/calendar storybook',
+    command: isCI ? 'npm run serve:storybook' : 'lerna run --scope @toast-ui/calendar storybook',
     port: isCI ? 8080 : 6006,
     timeout: 120 * 1000,
     reuseExistingServer: !isCI,

@@ -2,7 +2,6 @@ import { h } from 'preact';
 
 import type { Story } from '@storybook/preact';
 
-import { Button } from '@src/components/ui/button';
 import { Main } from '@src/components/view/main';
 import { useDispatch } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
@@ -35,9 +34,9 @@ const Toolbar = () => {
 
   return (
     <div>
-      <Button onClick={() => changeView('month')}>Month</Button>
-      <Button onClick={() => changeView('week')}>Week</Button>
-      <Button onClick={() => changeView('day')}>Day</Button>
+      <button onClick={() => changeView('month')}>Month</button>
+      <button onClick={() => changeView('week')}>Week</button>
+      <button onClick={() => changeView('day')}>Day</button>
     </div>
   );
 };

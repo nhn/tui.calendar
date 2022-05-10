@@ -46,27 +46,21 @@ export const minutesInAnHour = () => {
     </ProviderWrapper>
   );
 };
-minutesInAnHour.story = {
-  name: 'Every 10 mins in an hour',
-};
+minutesInAnHour.storyName = 'Every 10 mins in an hour';
 
 export const hoursInADay = () => (
   <ProviderWrapper>
     <Times showCurrentTime currentTime={new TZDate()} />
   </ProviderWrapper>
 );
-hoursInADay.story = {
-  name: '24 hours',
-};
+hoursInADay.storyName = '24 hours';
 
 export const hoursInOfficeHour = () => (
   <ProviderWrapper>
     <Times start={9} end={18} showFirst showLast showCurrentTime />
   </ProviderWrapper>
 );
-hoursInOfficeHour.story = {
-  name: 'From 9 to 18 hour',
-};
+hoursInOfficeHour.storyName = 'From 9 to 18 hour';
 
 export const datesInAWeek = () => {
   const month = addDate(new TZDate(), -3);
@@ -93,9 +87,7 @@ export const datesInAWeek = () => {
     </ProviderWrapper>
   );
 };
-datesInAWeek.story = {
-  name: 'Dates in a week',
-};
+datesInAWeek.storyName = 'Dates in a week';
 
 export const datesInAMonth = () => {
   const month = toStartOfMonth(new TZDate());
@@ -123,9 +115,7 @@ export const datesInAMonth = () => {
   );
 };
 
-datesInAMonth.story = {
-  name: 'Dates in a month',
-};
+datesInAMonth.storyName = 'Dates in a month';
 
 export const monthsInAnYear = () => {
   const startOfYear = toStartOfYear(new TZDate());
@@ -145,9 +135,7 @@ export const monthsInAnYear = () => {
     </ProviderWrapper>
   );
 };
-monthsInAnYear.story = {
-  name: 'Months in an year',
-};
+monthsInAnYear.storyName = 'Months in an year';
 
 export const yearsInDecade = () => {
   const startOfYear = toStartOfYear(new TZDate());
@@ -176,9 +164,7 @@ export const yearsInDecade = () => {
     </ProviderWrapper>
   );
 };
-yearsInDecade.story = {
-  name: 'An year in 10 years',
-};
+yearsInDecade.storyName = 'An year in 10 years';
 
 export const multipleTimezones = () => {
   const timezones = [
@@ -209,6 +195,4 @@ export const multipleTimezones = () => {
     </ProviderWrapper>
   );
 };
-multipleTimezones.story = {
-  name: 'Multiple timezones',
-};
+multipleTimezones.storyName = 'Multiple timezones';

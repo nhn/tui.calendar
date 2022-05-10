@@ -1,5 +1,5 @@
 import type { Locator, Page } from '@playwright/test';
-import waitForExpect from 'wait-for-expect';
+import { expect } from '@playwright/test';
 
 import type TZDate from '../src/time/date';
 import type { FormattedTimeString } from '../types/time/datetime';
@@ -62,16 +62,16 @@ export function getTimeGridLineSelector(start: FormattedTimeString): string {
 }
 
 export function getTimeStrFromDate(d: TZDate) {
+  const fixToTwoDigits = (num: number) => num.toString().padStart(2, '0');
+
   const hour = d.getHours();
   const minute = d.getMinutes();
 
-  return `${hour < 10 ? `0${hour}` : hour}:${minute < 10 ? `0${minute}` : minute}`;
+  return `${fixToTwoDigits(hour)}:${fixToTwoDigits(minute)}`;
 }
 
 export function waitForSingleElement(locator: Locator) {
-  return waitForExpect(() =>
-    locator.count().then((count) => (count === 1 ? Promise.resolve() : Promise.reject()))
-  );
+  return expect.poll(() => locator.count()).toBe(1);
 }
 
 /**

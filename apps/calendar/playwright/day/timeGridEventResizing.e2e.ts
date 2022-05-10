@@ -101,7 +101,7 @@ mockDayViewEvents
             eventBoundingBoxBeforeResize.height
           );
 
-          await expect(eventLocator).toContainText(getTimeStrFromDate(start));
+          await expect.poll(() => eventLocator.textContent()).toContain(getTimeStrFromDate(start));
 
           expect(
             eventBoundingBoxAfterResize.height - eventBoundingBoxBeforeResize.height

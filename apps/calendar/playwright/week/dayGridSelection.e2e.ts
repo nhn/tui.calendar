@@ -3,6 +3,7 @@ import { expect, test } from '@playwright/test';
 
 import { assertDayGridSelectionMatching } from '../assertions';
 import { WEEK_VIEW_PAGE_URL } from '../configs';
+import { ClickDelay } from '../constants';
 import { selectGridCells } from '../utils';
 
 test.beforeEach(async ({ page }) => {
@@ -31,7 +32,7 @@ test.describe('DayGrid Selection in week', () => {
     const weekGridCellLocator = page.locator(WEEK_GRID_SELECTOR).nth(14);
 
     // When
-    await weekGridCellLocator.click({ delay: 1 });
+    await weekGridCellLocator.click({ delay: ClickDelay.Short });
 
     // Then
     await assertWeekGridSelectionMatching(page, 14, 14);
@@ -42,7 +43,7 @@ test.describe('DayGrid Selection in week', () => {
     const weekGridCellLocator = page.locator(WEEK_GRID_SELECTOR).nth(14);
 
     // When
-    await weekGridCellLocator.dblclick({ delay: 1 });
+    await weekGridCellLocator.dblclick({ delay: ClickDelay.Immediate });
 
     // Then
     await assertWeekGridSelectionMatching(page, 14, 14);

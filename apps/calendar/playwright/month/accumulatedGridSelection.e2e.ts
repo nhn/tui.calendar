@@ -1,12 +1,12 @@
 import { test } from '@playwright/test';
 
 import { assertAccumulatedDayGridSelectionMatching } from '../assertions';
-import { MONTH_VIEW_BASIC_PAGE_URL } from '../configs';
+import { MONTH_VIEW_EMPTY_PAGE_URL } from '../configs';
 import { selectMonthGridCells } from '../utils';
 
 test.describe('Accumulated grid selection', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto(MONTH_VIEW_BASIC_PAGE_URL);
+    await page.goto(MONTH_VIEW_EMPTY_PAGE_URL);
   });
 
   test('select 2 cells in each week', async ({ page }) => {
