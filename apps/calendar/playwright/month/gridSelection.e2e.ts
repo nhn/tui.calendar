@@ -3,6 +3,7 @@ import { expect, test } from '@playwright/test';
 
 import { assertDayGridSelectionMatching } from '../assertions';
 import { MONTH_VIEW_PAGE_URL } from '../configs';
+import { ClickDelay } from '../constants';
 import { selectMonthGridCells } from '../utils';
 
 test.beforeEach(async ({ page }) => {
@@ -39,7 +40,7 @@ test.describe('Grid Selection', () => {
     const monthGridCellLocator = page.locator(MONTH_GRID_SELECTOR).nth(31);
 
     // When
-    await monthGridCellLocator.click({ delay: 100 });
+    await monthGridCellLocator.click({ delay: ClickDelay.Short });
 
     // Then
     await assertMonthGridSelectionMatching(page, 31, 31);
@@ -50,7 +51,7 @@ test.describe('Grid Selection', () => {
     const monthGridCellLocator = page.locator(MONTH_GRID_SELECTOR).nth(31);
 
     // When
-    await monthGridCellLocator.dblclick({ delay: 1 });
+    await monthGridCellLocator.dblclick({ delay: ClickDelay.Immediate });
 
     // Then
     await assertMonthGridSelectionMatching(page, 31, 31);

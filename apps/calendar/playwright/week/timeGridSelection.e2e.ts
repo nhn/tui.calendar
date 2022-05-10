@@ -3,6 +3,7 @@ import { expect, test } from '@playwright/test';
 
 import type { FormattedTimeString } from '../../types/time/datetime';
 import { WEEK_VIEW_PAGE_URL } from '../configs';
+import { ClickDelay } from '../constants';
 import { dragAndDrop, getBoundingBox, getTimeGridLineSelector } from '../utils';
 
 test.beforeEach(async ({ page }) => {
@@ -51,7 +52,7 @@ test.describe('TimeGrid Selection in week', () => {
     const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
 
     // When
-    await startGridLineLocator.click({ force: true, delay: 100 });
+    await startGridLineLocator.click({ force: true, delay: ClickDelay.Short });
     await timeGridSelectionLocator.waitFor(); // Test for debounced click handler.
 
     // Then
@@ -70,7 +71,7 @@ test.describe('TimeGrid Selection in week', () => {
     const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
 
     // When
-    await startGridLineLocator.dblclick({ force: true, delay: 1 });
+    await startGridLineLocator.dblclick({ force: true, delay: ClickDelay.Immediate });
 
     // Then
     await assertTimeGridSelection(timeGridSelectionLocator, {
