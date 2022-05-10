@@ -3,27 +3,19 @@ description: 'Set Node.js and install dependencies using cache'
 runs:
   using: 'composite'
   steps:
+    - name: Setup timezone
+      uses: szenius/set-timezone@v1.0
+      with:
+        timezoneLinux: 'Asia/Seoul'
     - name: Use Node.js 16
       uses: actions/setup-node@v2
       with:
         node-version: '16'
         registry-url: https://registry.npmjs.org/
+        cache: 'npm'
     - name: Update npm to latest version
       run: npm install -g npm@latest
       shell: bash
-    - name: Setup timezone
-      uses: szenius/set-timezone@v1.0
-      with:
-        timezoneLinux: 'Asia/Seoul'
-    - name: Check dependencies cache
-      id: cache
-      uses: actions/cache@v2
-      with:
-        path: ./npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
     - name: Install dependencies
-      if: steps.cache.outputs.cache-hit != 'true'
       run: npm ci
       shell: bash
