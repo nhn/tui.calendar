@@ -173,10 +173,9 @@ export const templates: Template = {
   },
 
   collapseBtnTitle() {
-    const iconName = cls('icon');
-    const closeIconName = cls('ic-arrow-solid-top');
+    const className = cls('collapse-btn');
 
-    return <span className={`${iconName} ${closeIconName}`}></span>;
+    return <i className={className} />;
   },
 
   timezoneDisplayLabel(props: TemplateTimezone) {
