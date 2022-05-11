@@ -1,6 +1,5 @@
 import type { ComponentType } from 'preact';
 
-import type { TuiDateConstructor } from '@toast-ui/date';
 import type { DeepPartial } from 'ts-essentials';
 
 import type { EventModelData } from '@t/events';

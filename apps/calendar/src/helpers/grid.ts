@@ -232,11 +232,10 @@ function flattenMatrix3d(matrices: DayGridEventMatrix): EventUIModel[] {
   return matrices.flatMap((matrix) => matrix.flatMap((models) => getModels(models)));
 }
 
-// @TODO: check & remove unused parameters
 const getTimeGridEventModels = (
-  eventMatrix: TimeGridEventMatrix,
-  row: TZDate[],
-  narrowWeekend = false
+  eventMatrix: TimeGridEventMatrix
+  // row: TZDate[],
+  // narrowWeekend = false
 ): EventUIModel[] =>
   // NOTE: there are same ui models in different rows. so we need to get unique ui models.
   Array.from(
@@ -295,7 +294,7 @@ export const getDayGridEvents = (
         ...acc,
         [cur]: Array.isArray(events)
           ? getDayGridEventModels(events, row, narrowWeekend)
-          : getTimeGridEventModels(events, row, narrowWeekend),
+          : getTimeGridEventModels(events),
       };
     },
     {
