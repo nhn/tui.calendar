@@ -97,13 +97,9 @@ export const templates: Template = {
 
   monthGridHeader(model: TemplateMonthGrid) {
     const date = parseInt(model.date.split('-')[2], 10);
-    const classNames = [cls('weekday-grid-date')];
+    const classNames = cls('weekday-grid-date', { 'weekday-grid-date-decorator': model.isToday });
 
-    if (model.isToday) {
-      classNames.push(cls('weekday-grid-date-decorator'));
-    }
-
-    return <span className={classNames.join(' ')}>{date}</span>;
+    return <span className={classNames}>{date}</span>;
   },
 
   monthGridHeaderExceed(hiddenEvents: number) {
