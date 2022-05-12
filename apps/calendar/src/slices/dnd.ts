@@ -9,6 +9,7 @@ export enum DraggingState {
   IDLE,
   INIT,
   DRAGGING,
+  CANCELED,
 }
 
 export interface DndSlice {
@@ -26,6 +27,7 @@ export interface DndSlice {
 export interface DndDispatchers {
   initDrag: (initState: Pick<DndSlice['dnd'], 'initX' | 'initY' | 'draggingItemType'>) => void;
   setDraggingState: (newState: Partial<Omit<DndSlice['dnd'], 'draggingState'>>) => void;
+  cancelDrag: () => void;
   reset: () => void;
   setDraggingEventUIModel: (eventUIModel: EventUIModel | null) => void;
 }
@@ -57,6 +59,7 @@ export function createDndDispatchers(set: SetState<CalendarStore>): DndDispatche
         })
       );
     },
+    // TODO @dotaitch: change the action name
     setDraggingState: (newState) => {
       set(
         produce((state: CalendarState) => {
@@ -65,6 +68,14 @@ export function createDndDispatchers(set: SetState<CalendarStore>): DndDispatche
             ...newState,
             draggingState: DraggingState.DRAGGING,
           };
+        })
+      );
+    },
+    cancelDrag: () => {
+      set(
+        produce((state: CalendarState) => {
+          state.dnd = createDndSlice().dnd;
+          state.dnd.draggingState = DraggingState.CANCELED;
         })
       );
     },
