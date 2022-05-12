@@ -3,27 +3,27 @@ on:
   pull_request:
     branches: [next]
 jobs:
-  install-dependencies:
-    name: Install dependencies
+  lint:
+    name: Lint & Type Checking
     runs-on: ubuntu-latest
     steps:
       - name: Checkout next branch
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Install dependencies
-        id: cache-keys
         uses: ./.github/composite-actions/install-dependencies
-    outputs:
-      root_cache_key: ${{ steps.cache-keys.outputs.root_cache_key }}
+      - name: Lint & Type Checking
+        run: |
+          # This should check all packages when other packages are ready.
+          npm run validate -w "@toast-ui/calendar" 
 
   test-jest:
     name: Test jest
-    needs: [install-dependencies]
+    needs: [lint]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout next branch
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Install dependencies
-        id: cache-keys
         uses: ./.github/composite-actions/install-dependencies
       - name: run unit test
         run: |
@@ -31,20 +31,19 @@ jobs:
 
   test-playwright:
     name: Test playwright
-    needs: [install-dependencies]
+    needs: [lint]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout next branch
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Install dependencies
-        id: cache-keys
         uses: ./.github/composite-actions/install-dependencies
       - name: Install playwright dependencies
         run: |
           npx playwright install --with-deps
       - name: Build storybook
         run: |
-          npx lerna run --scope @toast-ui/calendar storybook:build
+          npm run storybook:build -w "@toast-ui/calendar"
       - name: Run E2E test
         run: |
           npm run test:playwright
