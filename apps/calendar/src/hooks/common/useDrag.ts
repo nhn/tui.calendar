@@ -44,7 +44,7 @@ export function useDrag(
   draggingItemType: DraggingTypes,
   { onInit, onDragStart, onDrag, onMouseUp, onPressESCKey }: DragListeners = {}
 ) {
-  const { initDrag, setDraggingState, cancelDrag, reset } = useDispatch('dnd');
+  const { initDrag, setDragging, cancelDrag, reset } = useDispatch('dnd');
 
   const store = useInternalStore();
   const dndSliceRef = useRef(store.getState().dnd);
@@ -109,16 +109,16 @@ export function useDrag(
       }
 
       if (draggingState <= DraggingState.INIT) {
-        setDraggingState({ x: e.clientX, y: e.clientY });
+        setDragging({ x: e.clientX, y: e.clientY });
         onDragStart?.(e, dndSliceRef.current);
 
         return;
       }
 
-      setDraggingState({ x: e.clientX, y: e.clientY });
+      setDragging({ x: e.clientX, y: e.clientY });
       onDrag?.(e, dndSliceRef.current);
     },
-    [draggingItemType, onDrag, onDragStart, setDraggingState, reset]
+    [draggingItemType, onDrag, onDragStart, setDragging, reset]
   );
 
   const handleMouseUp = useCallback<MouseEventListener>(
