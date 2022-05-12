@@ -27,29 +27,34 @@ const getTargetEventId = (
 
 export function useDraggingEvent(area: EventDraggingArea, behavior: EventDraggingBehavior) {
   const [isDraggingEnd, setIsDraggingEnd] = useState(false);
+  const [isDraggingCanceled, setIsDraggingCanceled] = useState(false);
   const [draggingEvent, setDraggingEvent] = useState<EventUIModel | null>(null);
 
   useTransientUpdate(dndSelector, ({ draggingItemType, draggingEventUIModel, draggingState }) => {
     const targetEventId = getTargetEventId(draggingItemType, area, behavior);
     const hasMatchingTargetEvent = Number(targetEventId) === draggingEventUIModel?.cid();
     const isIdle = draggingState === DraggingState.IDLE;
+    const isCanceled = draggingState === DraggingState.CANCELED;
 
     if (isNil(draggingEvent) && hasMatchingTargetEvent) {
       setDraggingEvent(draggingEventUIModel);
     }
 
-    if (isPresent(draggingEvent) && isIdle) {
+    if (isPresent(draggingEvent) && (isIdle || isCanceled)) {
       setIsDraggingEnd(true);
+      setIsDraggingCanceled(isCanceled);
     }
   });
 
   const clearDraggingEvent = () => {
     setDraggingEvent(null);
     setIsDraggingEnd(false);
+    setIsDraggingCanceled(false);
   };
 
   return {
     isDraggingEnd,
+    isDraggingCanceled,
     draggingEvent,
     clearDraggingEvent,
   };
