@@ -57,6 +57,10 @@ export async function getBoundingBox(locator: Locator): Promise<BoundingBox> {
   return boundingBox;
 }
 
+export function getTimeEventSelector(title: string): string {
+  return `[data-testid*="time-event-${title}"]`;
+}
+
 export function getTimeGridLineSelector(start: FormattedTimeString): string {
   return `[data-testid*="gridline-${start}"]`;
 }

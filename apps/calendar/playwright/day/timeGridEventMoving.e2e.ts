@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test';
 
+import type TZDate from '../../src/time/date';
 import { addHours, setTimeStrToDate } from '../../src/time/datetime';
 import { mockDayViewEvents } from '../../stories/mocks/mockDayViewEvents';
 import type { FormattedTimeString } from '../../types/time/datetime';
@@ -8,6 +9,7 @@ import type { BoundingBox } from '../types';
 import {
   dragAndDrop,
   getBoundingBox,
+  getTimeEventSelector,
   getTimeGridLineSelector,
   getTimeStrFromDate,
   waitForSingleElement,
@@ -37,47 +39,72 @@ const cases: {
   },
 ];
 
-mockDayViewEvents
-  .filter(({ isAllday }) => !isAllday)
-  .forEach(({ title: eventTitle, start, end }) => {
-    test.describe(`Move the ${eventTitle} event in the time grid`, () => {
-      cases.forEach(({ title, step }) => {
-        test(`${title}`, async ({ page }) => {
-          // Given
-          const targetEventSelector = `[data-testid*="time-event-${eventTitle}"]`;
-          const eventLocator = page.locator(targetEventSelector);
-          const eventBoundingBoxBeforeMove = await getBoundingBox(eventLocator);
+const timeEvents = mockDayViewEvents.filter(({ isAllday }) => !isAllday);
 
-          const dragStartRowLocator = page.locator(getTimeGridLineSelector(DRAG_START_TIME));
-          const dragStartRowBoundingBox = await getBoundingBox(dragStartRowLocator);
+timeEvents.forEach(({ title: eventTitle, start, end }) => {
+  test.describe(`Move the ${eventTitle} event in the time grid`, () => {
+    cases.forEach(({ title, step }) => {
+      test(`${title}`, async ({ page }) => {
+        // Given
+        const targetEventSelector = `[data-testid*="time-event-${eventTitle}"]`;
+        const eventLocator = page.locator(targetEventSelector);
+        const eventBoundingBoxBeforeMove = await getBoundingBox(eventLocator);
 
-          const targetTime = getTimeStrFromDate(
-            addHours(setTimeStrToDate(end, DRAG_START_TIME), step)
-          ) as FormattedTimeString;
-          const targetRowLocator = page.locator(getTimeGridLineSelector(targetTime));
-          const expectedStartTimeAfterMove = getTimeStrFromDate(addHours(start, step));
+        const dragStartRowLocator = page.locator(getTimeGridLineSelector(DRAG_START_TIME));
+        const dragStartRowBoundingBox = await getBoundingBox(dragStartRowLocator);
 
-          // When
-          await dragAndDrop(page, eventLocator, targetRowLocator, {
-            sourcePosition: {
-              x: 1,
-              y: dragStartRowBoundingBox.y - eventBoundingBoxBeforeMove.y + 1,
-            },
-            targetPosition: {
-              y: 1,
-              x: 1,
-            },
-          });
-          await waitForSingleElement(eventLocator);
+        const targetTime = getTimeStrFromDate(
+          addHours(setTimeStrToDate(end, DRAG_START_TIME), step)
+        ) as FormattedTimeString;
+        const targetRowLocator = page.locator(getTimeGridLineSelector(targetTime));
+        const expectedStartTimeAfterMove = getTimeStrFromDate(addHours(start, step));
 
-          // Then
-          await expect
-            .poll(() => eventLocator.textContent())
-            .toMatch(new RegExp(expectedStartTimeAfterMove));
+        // When
+        await dragAndDrop(page, eventLocator, targetRowLocator, {
+          sourcePosition: {
+            x: 1,
+            y: dragStartRowBoundingBox.y - eventBoundingBoxBeforeMove.y + 1,
+          },
+          targetPosition: {
+            y: 1,
+            x: 1,
+          },
         });
+        await waitForSingleElement(eventLocator);
+
+        // Then
+        await expect
+          .poll(() => eventLocator.textContent())
+          .toMatch(new RegExp(expectedStartTimeAfterMove));
       });
     });
   });
+});
+
+test('When pressing down the ESC key, the moving event resets to the initial position.', async ({
+  page,
+}) => {
+  // Given
+  const [, SHORT_TIME_EVENT] = timeEvents;
+  const eventLocator = page.locator(getTimeEventSelector(SHORT_TIME_EVENT.title));
+  const eventBoundingBoxBeforeMove = await getBoundingBox(eventLocator);
+
+  const targetStartTime = getTimeStrFromDate(
+    addHours(SHORT_TIME_EVENT.end as TZDate, 1)
+  ) as FormattedTimeString;
+  const targetRowLocator = page.locator(getTimeGridLineSelector(targetStartTime));
+  const targetRowBoundingBox = await getBoundingBox(targetRowLocator);
+
+  // When
+  await page.mouse.move(eventBoundingBoxBeforeMove.x + 10, eventBoundingBoxBeforeMove.y + 10);
+  await page.mouse.down();
+  await page.mouse.move(eventBoundingBoxBeforeMove.x + 10, targetRowBoundingBox.y + 10);
+  await page.keyboard.down('Escape');
+
+  // Then
+  const eventBoundingBoxAfterMove = await getBoundingBox(eventLocator);
+  expect(eventBoundingBoxAfterMove).toEqual(eventBoundingBoxBeforeMove);
+});
 
 const [LONG_TIME_EVENT] = mockDayViewEvents.filter(({ title }) => title === 'long time');
 

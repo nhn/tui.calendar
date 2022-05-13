@@ -1,11 +1,19 @@
 import type { Locator } from '@playwright/test';
 import { expect, test } from '@playwright/test';
 
+import type TZDate from '../../src/time/date';
+import { addHours } from '../../src/time/datetime';
 import { mockWeekViewEvents } from '../../stories/mocks/mockWeekViewEvents';
 import type { FormattedTimeString } from '../../types/time/datetime';
 import { WEEK_VIEW_PAGE_URL } from '../configs';
 import { Direction } from '../types';
-import { dragAndDrop, getBoundingBox, getTimeGridLineSelector } from '../utils';
+import {
+  dragAndDrop,
+  getBoundingBox,
+  getTimeEventSelector,
+  getTimeGridLineSelector,
+  getTimeStrFromDate,
+} from '../utils';
 
 test.beforeEach(async ({ page }) => {
   await page.goto(WEEK_VIEW_PAGE_URL);
@@ -121,13 +129,11 @@ const cases: {
   },
 ];
 
-const getTargetEventSelector = (title: string) => `[data-testid*="time-event-${title}"]`;
-
 cases.forEach(({ title, eventColumnIndex, directionInfo }) => {
   directionInfo.forEach(({ direction, startTimeAfterMoving, timeToDrop }) => {
     test(`Moving event: ${title} for ${direction}`, async ({ page }) => {
       // Given
-      const eventLocator = page.locator(getTargetEventSelector(title)).last();
+      const eventLocator = page.locator(getTimeEventSelector(title)).last();
       const targetRowLocator = page.locator(getTimeGridLineSelector(timeToDrop));
       const targetColumnLocator = page.locator(`data-testid=timegrid-column-${eventColumnIndex}`);
 
@@ -153,13 +159,37 @@ cases.forEach(({ title, eventColumnIndex, directionInfo }) => {
   });
 });
 
+test('When pressing down the ESC key, the moving event resets to the initial position.', async ({
+  page,
+}) => {
+  // Given
+  const eventLocator = page.locator(getTimeEventSelector(SHORT_TIME_EVENT.title));
+  const eventBoundingBoxBeforeMove = await getBoundingBox(eventLocator);
+
+  const targetStartTime = getTimeStrFromDate(
+    addHours(SHORT_TIME_EVENT.end as TZDate, 1)
+  ) as FormattedTimeString;
+  const targetRowLocator = page.locator(getTimeGridLineSelector(targetStartTime));
+  const targetRowBoundingBox = await getBoundingBox(targetRowLocator);
+
+  // When
+  await page.mouse.move(eventBoundingBoxBeforeMove.x + 10, eventBoundingBoxBeforeMove.y + 10);
+  await page.mouse.down();
+  await page.mouse.move(eventBoundingBoxBeforeMove.x + 10, targetRowBoundingBox.y + 10);
+  await page.keyboard.down('Escape');
+
+  // Then
+  const eventBoundingBoxAfterMove = await getBoundingBox(eventLocator);
+  expect(eventBoundingBoxAfterMove).toEqual(eventBoundingBoxBeforeMove);
+});
+
 test.describe(`Calibrate event's height while dragging`, () => {
   let eventLocator: Locator;
   let lowerLongTimeEventLocator: Locator;
   let upperLongTimeEventLocator: Locator;
 
   test.beforeEach(({ page }) => {
-    const targetEventSelector = getTargetEventSelector(LONG_TIME_EVENT.title);
+    const targetEventSelector = getTimeEventSelector(LONG_TIME_EVENT.title);
 
     lowerLongTimeEventLocator = page.locator(targetEventSelector).first();
     upperLongTimeEventLocator = page.locator(targetEventSelector).last();
