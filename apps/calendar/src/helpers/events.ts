@@ -1,7 +1,5 @@
-import { createEventCollection } from '@src/controller/base';
 import type EventModel from '@src/model/eventModel';
 import { millisecondsFrom, MS_EVENT_MIN_DURATION } from '@src/time/datetime';
-import type Collection from '@src/utils/collection';
 
 type CollisionParam = {
   start: number;
@@ -58,8 +56,4 @@ export function isSameEvent(event: EventModel, eventId: string, calendarId: stri
 
 export function isVisibleEvent(event: EventModel) {
   return event.isVisible;
-}
-
-export function getVisibleEventCollection(events: Collection<EventModel>) {
-  return events.filter(({ isVisible }) => isVisible);
 }
