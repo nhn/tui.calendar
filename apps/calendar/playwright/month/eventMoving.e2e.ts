@@ -5,9 +5,13 @@ import { mockMonthViewEventsFixed } from '../../stories/mocks/mockMonthViewEvent
 import type { EventModelData } from '../../types/events';
 import { MONTH_VIEW_PAGE_URL } from '../configs';
 import { Direction } from '../types';
-import { dragAndDrop, getBoundingBox, waitForSingleElement } from '../utils';
-
-const CELL_SELECTOR = '.toastui-calendar-daygrid-cell';
+import {
+  dragAndDrop,
+  getBoundingBox,
+  getCellSelector,
+  getHorizontalEventSelector,
+  waitForSingleElement,
+} from '../utils';
 
 test.beforeEach(async ({ page }) => {
   await page.goto(MONTH_VIEW_PAGE_URL);
@@ -52,14 +56,10 @@ const upperDirectionTestCases = testCases.filter((testCase) =>
   testCase.directions.includes(Direction.Up)
 );
 
-const getCellSelector = (cellIndex: number) => `${CELL_SELECTOR} >> nth=${cellIndex}`;
-
 async function setup(page: Page, event: EventModelData, targetCellIndex: number) {
   const targetCellLocator = page.locator(getCellSelector(targetCellIndex));
   const targetCellBoundingBox = await getBoundingBox(targetCellLocator);
-  const eventLocator = page
-    .locator(`data-testid=${event.calendarId}-${event.id}-${event.title}`)
-    .first();
+  const eventLocator = page.locator(getHorizontalEventSelector(event)).first();
   const boundingBoxBeforeMoving = await getBoundingBox(eventLocator);
 
   await dragAndDrop(page, eventLocator, targetCellLocator);
@@ -179,12 +179,10 @@ test.describe('event moving', () => {
 
   test('moving month grid event to end of week', async ({ page }) => {
     // Given
-    const eventLocator = page.locator(
-      `data-testid=${TARGET_EVENT2.calendarId}-${TARGET_EVENT2.id}-${TARGET_EVENT2.title}`
-    );
-    const endOfWeekCellLocator = page.locator(`${CELL_SELECTOR} >> nth=20`);
+    const eventLocator = page.locator(getHorizontalEventSelector(TARGET_EVENT2));
+    const endOfWeekCellLocator = page.locator(getCellSelector(20));
     const endOfWeekCellBoundingBox = await getBoundingBox(endOfWeekCellLocator);
-    const secondOfWeekCellLocator = page.locator(`${CELL_SELECTOR} >> nth=22`);
+    const secondOfWeekCellLocator = page.locator(getCellSelector(22));
     const secondOfWeekCellBoundingBox = await getBoundingBox(secondOfWeekCellLocator);
 
     // When
@@ -212,4 +210,25 @@ test.describe('event moving', () => {
     expect(lastEventBoundingBox.y).toBeGreaterThan(secondOfWeekCellBoundingBox.y);
     expect(targetEventLength).toBeCloseTo(endOfWeekCellBoundingBox.width * 3, 1);
   });
+});
+
+test('When pressing down the ESC key, the moving event resets to the initial position.', async ({
+  page,
+}) => {
+  // Given
+  const eventLocator = page.locator(getHorizontalEventSelector(TARGET_EVENT2)).first();
+  const eventBoundingBoxBeforeMove = await getBoundingBox(eventLocator);
+
+  const targetCellLocator = page.locator(getCellSelector(20));
+  const targetCellBoundingBox = await getBoundingBox(targetCellLocator);
+
+  // When
+  await page.mouse.move(eventBoundingBoxBeforeMove.x + 10, eventBoundingBoxBeforeMove.y + 3);
+  await page.mouse.down();
+  await page.mouse.move(targetCellBoundingBox.x + 10, targetCellBoundingBox.y + 10);
+  await page.keyboard.down('Escape');
+
+  // Then
+  const eventBoundingBoxAfterMove = await getBoundingBox(eventLocator);
+  expect(eventBoundingBoxAfterMove).toEqual(eventBoundingBoxBeforeMove);
 });
