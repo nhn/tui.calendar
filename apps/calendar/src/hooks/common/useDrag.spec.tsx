@@ -7,6 +7,7 @@ import { MINIMUM_DRAG_MOUSE_DISTANCE } from '@src/constants/mouse';
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
 import type { DragListeners } from '@src/hooks/common/useDrag';
 import { useDrag } from '@src/hooks/common/useDrag';
+import { DraggingState } from '@src/slices/dnd';
 import { dragAndDrop } from '@src/test/utils';
 
 import type { PropsWithChildren } from '@t/components/common';
@@ -157,5 +158,79 @@ describe('drag hook', () => {
 
     // Then
     expect(listeners.onPressESCKey).toBeCalled();
+  });
+  describe('draggingState', () => {
+    it('should be an idle state when a drag is not started', () => {
+      // Given
+      setup();
+
+      // When
+      // Nothing
+
+      // Then
+      expect(store.getState().dnd.draggingState).toBe(DraggingState.IDLE);
+    });
+
+    it('should be an init state when a drag is started (after mousedown and before mousemove)', () => {
+      // Given
+      setup();
+      const button = screen.getByRole('button');
+
+      // When
+      fireEvent.mouseDown(button);
+
+      // Then
+      expect(store.getState().dnd.draggingState).toBe(DraggingState.INIT);
+    });
+
+    it('should be a dragging state when a drag is working (after mousemove)', () => {
+      // Given
+      setup();
+      const button = screen.getByRole('button');
+
+      // When
+      fireEvent.mouseDown(button);
+      fireEvent.mouseMove(document, {
+        clientX: MINIMUM_DRAG_MOUSE_DISTANCE,
+        clientY: MINIMUM_DRAG_MOUSE_DISTANCE,
+      });
+
+      // Then
+      expect(store.getState().dnd.draggingState).toBe(DraggingState.DRAGGING);
+    });
+
+    it('should be an idle state when a drag is finished (after mouseup)', () => {
+      // Given
+      setup();
+      const button = screen.getByRole('button');
+
+      // When
+      fireEvent.mouseDown(button);
+      fireEvent.mouseMove(document, {
+        clientX: MINIMUM_DRAG_MOUSE_DISTANCE,
+        clientY: MINIMUM_DRAG_MOUSE_DISTANCE,
+      });
+      fireEvent.mouseUp(button);
+
+      // Then
+      expect(store.getState().dnd.draggingState).toBe(DraggingState.IDLE);
+    });
+
+    it('should be a canceled state when a drag is canceled by pressing an ESC key', () => {
+      // Given
+      setup();
+      const button = screen.getByRole('button');
+
+      // When
+      fireEvent.mouseDown(button);
+      fireEvent.mouseMove(document, {
+        clientX: MINIMUM_DRAG_MOUSE_DISTANCE,
+        clientY: MINIMUM_DRAG_MOUSE_DISTANCE,
+      });
+      fireEvent.keyDown(document, { key: 'Escape' });
+
+      // Then
+      expect(store.getState().dnd.draggingState).toBe(DraggingState.CANCELED);
+    });
   });
 });
