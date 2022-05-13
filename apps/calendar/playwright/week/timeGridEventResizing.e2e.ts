@@ -1,13 +1,17 @@
 import type { Page } from '@playwright/test';
 import { expect, test } from '@playwright/test';
 
+import type TZDate from '../../src/time/date';
+import { addHours } from '../../src/time/datetime';
 import { mockWeekViewEvents } from '../../stories/mocks/mockWeekViewEvents';
 import type { FormattedTimeString } from '../../types/time/datetime';
 import { WEEK_VIEW_PAGE_URL } from '../configs';
 import {
   dragAndDrop,
   getBoundingBox,
+  getTimeEventSelector,
   getTimeGridLineSelector,
+  getTimeStrFromDate,
   queryLocatorByTestId,
   waitForSingleElement,
 } from '../utils';
@@ -15,6 +19,8 @@ import {
 test.beforeEach(async ({ page }) => {
   await page.goto(WEEK_VIEW_PAGE_URL);
 });
+
+const RESIZE_HANDLER_SELECTOR = '[class*="resize-handler"]';
 
 function getHourDifference(minuend: FormattedTimeString, subtrahend: FormattedTimeString) {
   return Number(minuend.split(':')[0]) - Number(subtrahend.split(':')[0]);
@@ -95,7 +101,7 @@ async function setup({
 }) {
   // Given
   const eventLocator = queryLocatorByTestId(page, `time-event-${targetEventTitle}`).last();
-  const resizeHandlerLocator = eventLocator.locator('[class*="resize-handler"]');
+  const resizeHandlerLocator = eventLocator.locator(RESIZE_HANDLER_SELECTOR);
   const targetRowLocator = page.locator(getTimeGridLineSelector(targetEndTime));
   const targetColumnLocator = queryLocatorByTestId(page, `timegrid-column-${targetColumnIndex}`);
   const eventBoundingBoxBeforeResize = await getBoundingBox(eventLocator);
@@ -185,4 +191,31 @@ targetEvents.forEach(({ title: eventTitle, startTime, endTime, endDateColumnInde
       expect(eventBoundingBoxAfterResize.height).toBeCloseTo(targetRowBoundingBox.height, -1);
     });
   });
+});
+
+test('When pressing down the ESC key, the resizing event resets to the initial size.', async ({
+  page,
+}) => {
+  // Given
+  const eventLocator = page.locator(getTimeEventSelector(SHORT_TIME_EVENT.title));
+  const eventBoundingBoxBeforeResize = await getBoundingBox(eventLocator);
+
+  const resizeHandlerLocator = eventLocator.locator(RESIZE_HANDLER_SELECTOR);
+  const resizeHandlerBoundingBox = await getBoundingBox(resizeHandlerLocator);
+
+  const targetStartTime = getTimeStrFromDate(
+    addHours(SHORT_TIME_EVENT.end as TZDate, 1)
+  ) as FormattedTimeString;
+  const targetRowLocator = page.locator(getTimeGridLineSelector(targetStartTime));
+  const targetRowBoundingBox = await getBoundingBox(targetRowLocator);
+
+  // When
+  await page.mouse.move(resizeHandlerBoundingBox.x + 10, resizeHandlerBoundingBox.y + 3);
+  await page.mouse.down();
+  await page.mouse.move(resizeHandlerBoundingBox.x + 10, targetRowBoundingBox.y + 10);
+  await page.keyboard.down('Escape');
+
+  // Then
+  const eventBoundingBoxAfterResize = await getBoundingBox(eventLocator);
+  expect(eventBoundingBoxAfterResize).toEqual(eventBoundingBoxBeforeResize);
 });
