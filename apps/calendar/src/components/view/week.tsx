@@ -7,6 +7,7 @@ import { OtherGridRow } from '@src/components/dayGridWeek/otherGridRow';
 import { Layout } from '@src/components/layout';
 import { Panel } from '@src/components/panel';
 import { TimeGrid } from '@src/components/timeGrid/timeGrid';
+import { TimezoneLabels } from '@src/components/timeGrid/timezoneLabels';
 import { WEEK_DAYNAME_BORDER, WEEK_DAYNAME_HEIGHT } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
@@ -153,11 +154,10 @@ export function Week() {
       {dayGridRows}
       {hasTimePanel ? (
         <Panel name="time" autoSize={1} ref={setTimePanelRef}>
-          <div
-            style={{ position: 'absolute', top: stickyTop }}
-            className={cls('timezone-labels-slot')}
-          />
           <TimeGrid events={eventByPanel.time} timeGridData={timeGridData} />
+          <div style={{ top: stickyTop, width: 120 }} className={cls('timezone-labels-slot')}>
+            <TimezoneLabels />
+          </div>
         </Panel>
       ) : null}
     </Layout>

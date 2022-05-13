@@ -39,6 +39,25 @@ DifferentPrimaryTimezone.args = {
   },
 };
 
+export const MultipleTimezones = Template.bind({});
+MultipleTimezones.args = {
+  ...Template.args,
+  options: {
+    ...Template.args.options,
+    timezone: {
+      zones: [
+        {
+          timezoneName: 'Asia/Seoul',
+          displayLabel: '+09:00',
+        },
+        {
+          timezoneName: 'Asia/Karachi',
+        },
+      ],
+    },
+  },
+};
+
 export const CustomTemplate = Template.bind({});
 CustomTemplate.args = {
   ...Template.args,

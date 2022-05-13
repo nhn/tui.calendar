@@ -2,7 +2,6 @@ import { h } from 'preact';
 
 import range from 'tui-code-snippet/array/range';
 
-import { MultipleTimezones } from '@src/components/timeGrid/multipleTimezones';
 import { Times } from '@src/components/timeGrid/times';
 import TZDate from '@src/time/date';
 import {
@@ -165,34 +164,3 @@ export const yearsInDecade = () => {
   );
 };
 yearsInDecade.storyName = 'An year in 10 years';
-
-export const multipleTimezones = () => {
-  const timezones = [
-    {
-      displayLabel: 'Local Time',
-      tooltip: 'Local',
-    },
-    {
-      timezoneOffset: 420,
-      displayLabel: 'GMT-08:00',
-      tooltip: 'Los Angeles',
-    },
-    {
-      timezoneOffset: -180,
-      displayLabel: 'GMT+3',
-      tooltip: 'Moscow Standard Time',
-    },
-    {
-      timezoneOffset: 0,
-      displayLabel: 'GMT+0',
-      tooltip: 'GMT',
-    },
-  ];
-
-  return (
-    <ProviderWrapper>
-      <MultipleTimezones timezones={timezones} showTimezoneLabel={timezones.length > 1} />
-    </ProviderWrapper>
-  );
-};
-multipleTimezones.storyName = 'Multiple timezones';
