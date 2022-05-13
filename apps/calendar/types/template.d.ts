@@ -4,7 +4,6 @@ import type EventModel from '@src/model/eventModel';
 import type TZDate from '@src/time/date';
 
 import type { EventCategory, TimeUnit } from '@t/events';
-import type { TimezoneConfig } from '@t/options';
 
 export interface TemplateTimeGridHourLabel {
   hidden: boolean;
@@ -48,9 +47,13 @@ export interface TemplateMonthDayName {
   label: string;
 }
 
-export interface TemplateTimezone extends TimezoneConfig {
-  timezoneOffset: number;
-}
+/**
+ * If display label does not exist in the timezone options,
+ * timezone offset based on timezone name will be passed
+ */
+export type TemplateTimezone =
+  | { displayLabel: string; timezoneOffset: null }
+  | { displayLabel: null; timezoneOffset: number };
 
 export type TemplateReturnType = string | VNode;
 

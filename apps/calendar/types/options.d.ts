@@ -1,6 +1,5 @@
 import type { ComponentType } from 'preact';
 
-import type { TuiDateConstructor } from '@toast-ui/date';
 import type { DeepPartial } from 'ts-essentials';
 
 import type { EventModelData } from '@t/events';
@@ -51,7 +50,7 @@ export interface GridSelectionOptions {
 }
 
 export interface TimezoneConfig {
-  timezoneName?: string;
+  timezoneName: string;
   displayLabel?: string;
   tooltip?: string;
 }
