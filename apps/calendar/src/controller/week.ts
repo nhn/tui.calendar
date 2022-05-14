@@ -1,5 +1,3 @@
-import pluck from 'tui-code-snippet/collection/pluck';
-
 import { filterByCategory, getDateRange } from '@src/controller/base';
 import {
   convertToUIModel,

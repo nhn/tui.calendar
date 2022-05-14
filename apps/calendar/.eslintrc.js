@@ -6,7 +6,15 @@ module.exports = {
     node: true,
   },
   parser: '@typescript-eslint/parser',
-  plugins: ['simple-import-sort', 'prettier', 'react', 'react-hooks', '@typescript-eslint', 'jest'],
+  plugins: [
+    'unused-imports',
+    'simple-import-sort',
+    'prettier',
+    'react',
+    'react-hooks',
+    '@typescript-eslint',
+    'jest',
+  ],
   extends: [
     'tui',
     'prettier',
@@ -41,6 +49,10 @@ module.exports = {
     '@typescript-eslint/no-duplicate-imports': 'error',
     'no-shadow': 'off',
     'no-use-before-define': 0,
+    // use unused-imports plugin
+    '@typescript-eslint/no-unused-vars': 'off',
+    'unused-imports/no-unused-imports': 'error',
+    'unused-imports/no-unused-vars': ['warn', { args: 'after-used', argsIgnorePattern: '^_' }],
     'react/prop-types': 0,
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'error',

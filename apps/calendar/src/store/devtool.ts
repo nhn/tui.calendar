@@ -80,6 +80,7 @@ export const devtools =
     if (!extension) {
       // eslint-disable-next-line no-process-env
       if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
+        // eslint-disable-next-line no-console
         console.warn('Please install/enable Redux devtools extension');
       }
       delete api.devtools;

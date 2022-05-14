@@ -112,11 +112,11 @@ export const templates: Template = {
     return <span className={className}>{hiddenEvents} more</span>;
   },
 
-  monthGridFooter(model: TemplateMonthGrid) {
+  monthGridFooter(_model: TemplateMonthGrid) {
     return '';
   },
 
-  monthGridFooterExceed(hiddenEvents: number) {
+  monthGridFooterExceed(_hiddenEvents: number) {
     return '';
   },
 
