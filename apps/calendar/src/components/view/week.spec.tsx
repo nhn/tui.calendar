@@ -1,6 +1,6 @@
 import { h } from 'preact';
 
-import { screen } from '@testing-library/preact';
+import range from 'tui-code-snippet/array/range';
 
 import { Week } from '@src/components/view/week';
 import { DEFAULT_EVENT_PANEL, DEFAULT_TASK_PANEL } from '@src/constants/view';
@@ -8,8 +8,9 @@ import { initCalendarStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
 import { getActivePanels } from '@src/helpers/view';
 import EventModel from '@src/model/eventModel';
-import { render } from '@src/test/utils';
+import { render, screen, within } from '@src/test/utils';
 import TZDate from '@src/time/date';
+import { toFormat } from '@src/time/datetime';
 
 import type { EventModelData } from '@t/events';
 import type { Options, WeekOptions } from '@t/options';
@@ -101,6 +102,109 @@ describe('week', () => {
       const invisibleEvent = events.find((event) => !eventFilter(event)) as EventModel;
       expect(screen.queryByText(visibleEvent.title)).toBeInTheDocument();
       expect(screen.queryByText(invisibleEvent.title)).not.toBeInTheDocument();
+    });
+  });
+
+  describe('Multiple Timezone', () => {
+    it('should not render timezone labels when only one timezone is given', () => {
+      // Given
+      const timezoneOption: Options = {
+        timezone: {
+          zones: [
+            {
+              timezoneName: 'Asia/Seoul',
+            },
+          ],
+        },
+      };
+
+      // When
+      setup(timezoneOption);
+
+      // Then
+      expect(screen.queryByRole('columnheader')).toBeNull();
+    });
+
+    it('should render one hours column when only one timezone is given', () => {
+      // Given
+      const timezoneOption: Options = {
+        timezone: {
+          zones: [
+            {
+              timezoneName: 'Asia/Seoul',
+            },
+          ],
+        },
+      };
+      const expectedHoursColumn = range(0, 25).map((hour) =>
+        toFormat(new TZDate(2022, 6, 1, hour), 'hh tt')
+      );
+
+      // When
+      setup(timezoneOption);
+
+      // Then
+      const hourRowsContainer = screen.getAllByRole('rowgroup');
+      expect(hourRowsContainer.length).toBe(1);
+
+      const hourRows = Array.from(hourRowsContainer[0].children).map(
+        (hourRow) => hourRow.textContent
+      );
+      expect(hourRows).toEqual(expectedHoursColumn);
+    });
+
+    it('should render default timezone labels', () => {
+      // Given
+      const timezoneOption: Options = {
+        timezone: {
+          zones: [
+            {
+              timezoneName: 'Asia/Seoul', // GMT+09:00
+            },
+            {
+              timezoneName: 'Asia/Karachi', // GMT+05:00
+            },
+          ],
+        },
+      };
+      const expectedLabels = ['GMT+05:00', 'GMT+09:00'];
+
+      // When
+      setup(timezoneOption);
+
+      // Then
+      const labelContainer = screen.getByRole('columnheader');
+      const labels = within(labelContainer).getAllByRole('gridcell');
+
+      expect(labels.map((label) => label.textContent)).toEqual(expectedLabels);
+    });
+
+    it('should render custom timezone labels', () => {
+      // Given
+      const timezoneOption: Options = {
+        timezone: {
+          zones: [
+            {
+              timezoneName: 'Asia/Seoul', // GMT+09:00
+              displayLabel: '+09',
+            },
+            {
+              timezoneName: 'Asia/Karachi', // GMT+05:00
+              displayLabel: '+05',
+            },
+          ],
+        },
+      };
+      const expectedLabels = ['+05', '+09'];
+
+      // When
+      setup(timezoneOption);
+
+      // Then
+      const labelContainer = screen.getByRole('columnheader');
+      const labels = within(labelContainer).getAllByRole('gridcell');
+
+      expect(labels.map((label) => label.textContent)).toEqual(expectedLabels);
     });
   });
 });

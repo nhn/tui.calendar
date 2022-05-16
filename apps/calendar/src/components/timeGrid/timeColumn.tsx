@@ -58,27 +58,29 @@ export const TimeColumn = memo(function TimeColumn({
   return (
     <div
       className={cls(classNames.times)}
-      style={{ width: columnWidth, borderRight, backgroundColor }}
+      style={{ width: columnWidth, backgroundColor }}
       data-testid="timegrid-time-column"
     >
       {/* timezone 갯수에 따라 렌더링 필요 */}
-      {rowsByHour.map((row, index) => {
-        const isFirst = index === 0;
-        const isLast = index === rowsByHour.length - 1;
-        const className = cls(classNames.time, {
-          [classNames.first]: isFirst,
-          [classNames.last]: isLast,
-          [classNames.hidden]: shouldHideRow(row),
-        });
-        const top = toPercent(row.top);
-        const date = setTimeStrToDate(new TZDate(), isLast ? row.endTime : row.startTime);
+      <div style={{ borderRight }} role="rowgroup">
+        {rowsByHour.map((row, index) => {
+          const isFirst = index === 0;
+          const isLast = index === rowsByHour.length - 1;
+          const className = cls(classNames.time, {
+            [classNames.first]: isFirst,
+            [classNames.last]: isLast,
+            [classNames.hidden]: shouldHideRow(row),
+          });
+          const top = toPercent(row.top);
+          const date = setTimeStrToDate(new TZDate(), isLast ? row.endTime : row.startTime);
 
-        return (
-          <div key={`slot-${row.startTime}`} className={className} style={{ top }}>
-            <Template template="timegridDisplayPrimaryTime" model={{ time: date }} as="span" />
-          </div>
-        );
-      })}
+          return (
+            <div key={`slot-${row.startTime}`} className={className} style={{ top }} role="row">
+              <Template template="timegridDisplayPrimaryTime" model={{ time: date }} as="span" />
+            </div>
+          );
+        })}
+      </div>
       {isPresent(currentTimeIndicatorState) && (
         <CurrentTimeLabel
           unit="hour"

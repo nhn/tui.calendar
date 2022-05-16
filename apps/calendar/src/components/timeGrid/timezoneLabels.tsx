@@ -27,6 +27,7 @@ function TimezoneLabel({ label, offset, tooltip, width = 100, left }: TimezoneLa
         height: toPercent(100),
         left: toPercent(left),
       }}
+      role="gridcell"
     >
       <Template
         template="timezoneDisplayLabel"
@@ -70,6 +71,7 @@ export function TimezoneLabels({ top }: { top: number | null }) {
         top,
         width: 120, // TODO: use theme value
       }}
+      role="columnheader"
       className={cls('timezone-labels-slot')}
     >
       {subTimezones.map((subTimezone, index) => (
