@@ -41,238 +41,255 @@ async function assertTimeGridSelection(
 // NOTE: Only firefox automatically scrolls into view at some random tests, so narrowing the range of movement.
 // Maybe `scrollIntoViewIfNeeded` is not supported in the firefox?
 // reference: https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoViewIfNeeded
-test.describe('TimeGrid Selection in week', () => {
-  const BASE_GRIDLINE_LOCATOR = 'data-testid=gridline-03:00-03:30';
-  const GRID_SELECTION_SELECTOR = '[data-testid*="time-grid-selection"]';
+const BASE_GRIDLINE_SELECTOR = 'data-testid=gridline-03:00-03:30';
+const GRID_SELECTION_SELECTOR = '[data-testid*="time-grid-selection"]';
 
-  test('should be able to select a time slot with clicking', async ({ page }) => {
-    // Given
-    const startGridLineLocator = page.locator(BASE_GRIDLINE_LOCATOR);
-    const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
-    const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
+test('should be able to select a time slot with clicking', async ({ page }) => {
+  // Given
+  const startGridLineLocator = page.locator(BASE_GRIDLINE_SELECTOR);
+  const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
+  const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
 
-    // When
-    await startGridLineLocator.click({ force: true, delay: ClickDelay.Short });
-    await timeGridSelectionLocator.waitFor(); // Test for debounced click handler.
+  // When
+  await startGridLineLocator.click({ force: true, delay: ClickDelay.Short });
+  await timeGridSelectionLocator.waitFor(); // Test for debounced click handler.
 
-    // Then
-    await assertTimeGridSelection(timeGridSelectionLocator, {
-      totalElements: 1,
-      formattedTimes: ['03:00', '03:30'],
-      startTop: startGridLineBoundingBox.y,
-      endBottom: startGridLineBoundingBox.y + startGridLineBoundingBox.height,
-    });
+  // Then
+  await assertTimeGridSelection(timeGridSelectionLocator, {
+    totalElements: 1,
+    formattedTimes: ['03:00', '03:30'],
+    startTop: startGridLineBoundingBox.y,
+    endBottom: startGridLineBoundingBox.y + startGridLineBoundingBox.height,
+  });
+});
+
+test('should be able to select a time slot with double clicking', async ({ page }) => {
+  // Given
+  const startGridLineLocator = page.locator(BASE_GRIDLINE_SELECTOR);
+  const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
+  const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
+
+  // When
+  await startGridLineLocator.dblclick({ force: true, delay: ClickDelay.Immediate });
+
+  // Then
+  await assertTimeGridSelection(timeGridSelectionLocator, {
+    totalElements: 1,
+    formattedTimes: ['03:00', '03:30'],
+    startTop: startGridLineBoundingBox.y,
+    endBottom: startGridLineBoundingBox.y + startGridLineBoundingBox.height,
+  });
+});
+
+test('should be able to select a range of time from bottom to top', async ({ page }) => {
+  // Given
+  const startGridLineLocator = page.locator(BASE_GRIDLINE_SELECTOR);
+  const targetGridLineLocator = page.locator(getTimeGridLineSelector('01:00'));
+  const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
+
+  const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
+  const targetGridLineBoundingBox = await getBoundingBox(targetGridLineLocator);
+
+  // When
+  await dragAndDrop(page, startGridLineLocator, targetGridLineLocator);
+
+  // Then
+  await assertTimeGridSelection(timeGridSelectionLocator, {
+    totalElements: 1,
+    formattedTimes: ['01:00', '03:30'],
+    startTop: targetGridLineBoundingBox.y,
+    endBottom: startGridLineBoundingBox.y + startGridLineBoundingBox.height,
+  });
+});
+
+test('should be able to select a range of time to upper right', async ({ page }) => {
+  // Given
+  const startGridLineLocator = page.locator(BASE_GRIDLINE_SELECTOR);
+  const targetGridLineLocator = page.locator(getTimeGridLineSelector('01:00'));
+  const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
+
+  const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
+  const targetGridLineBoundingBox = await getBoundingBox(targetGridLineLocator);
+
+  // When
+  await dragAndDrop(page, startGridLineLocator, targetGridLineLocator, {
+    targetPosition: {
+      x: targetGridLineBoundingBox.width,
+      y: startGridLineBoundingBox.height,
+    },
   });
 
-  test('should be able to select a time slot with double clicking', async ({ page }) => {
-    // Given
-    const startGridLineLocator = page.locator(BASE_GRIDLINE_LOCATOR);
-    const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
-    const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
+  // Then
+  await assertTimeGridSelection(timeGridSelectionLocator, {
+    totalElements: 4,
+    formattedTimes: ['03:00'],
+    startTop: startGridLineBoundingBox.y,
+    endBottom: targetGridLineBoundingBox.y + targetGridLineBoundingBox.height,
+  });
+});
 
-    // When
-    await startGridLineLocator.dblclick({ force: true, delay: ClickDelay.Immediate });
+test('should be able to select a range of time to right', async ({ page }) => {
+  // Given
+  const startGridLineLocator = page.locator(BASE_GRIDLINE_SELECTOR);
+  const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
 
-    // Then
-    await assertTimeGridSelection(timeGridSelectionLocator, {
-      totalElements: 1,
-      formattedTimes: ['03:00', '03:30'],
-      startTop: startGridLineBoundingBox.y,
-      endBottom: startGridLineBoundingBox.y + startGridLineBoundingBox.height,
-    });
+  const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
+
+  // When
+  await dragAndDrop(page, startGridLineLocator, startGridLineLocator, {
+    targetPosition: {
+      x: startGridLineBoundingBox.width,
+      y: 1,
+    },
   });
 
-  test('should be able to select a range of time from bottom to top', async ({ page }) => {
-    // Given
-    const startGridLineLocator = page.locator(BASE_GRIDLINE_LOCATOR);
-    const targetGridLineLocator = page.locator(getTimeGridLineSelector('01:00'));
-    const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
+  // Then
+  await assertTimeGridSelection(timeGridSelectionLocator, {
+    totalElements: 4,
+    formattedTimes: ['03:00'],
+    startTop: startGridLineBoundingBox.y,
+    endBottom: startGridLineBoundingBox.y + startGridLineBoundingBox.height,
+  });
+});
 
-    const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
-    const targetGridLineBoundingBox = await getBoundingBox(targetGridLineLocator);
+test('should be able to select a range of time to lower right', async ({ page }) => {
+  // Given
+  const startGridLineLocator = page.locator(BASE_GRIDLINE_SELECTOR);
+  const targetGridLineLocator = page.locator(getTimeGridLineSelector('05:00'));
+  const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
 
-    // When
-    await dragAndDrop(page, startGridLineLocator, targetGridLineLocator);
+  const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
+  const targetGridLineBoundingBox = await getBoundingBox(targetGridLineLocator);
 
-    // Then
-    await assertTimeGridSelection(timeGridSelectionLocator, {
-      totalElements: 1,
-      formattedTimes: ['01:00', '03:30'],
-      startTop: targetGridLineBoundingBox.y,
-      endBottom: startGridLineBoundingBox.y + startGridLineBoundingBox.height,
-    });
+  // When
+  await dragAndDrop(page, startGridLineLocator, targetGridLineLocator, {
+    targetPosition: {
+      x: targetGridLineBoundingBox.width,
+      y: targetGridLineBoundingBox.height,
+    },
   });
 
-  test('should be able to select a range of time to upper right', async ({ page }) => {
-    // Given
-    const startGridLineLocator = page.locator(BASE_GRIDLINE_LOCATOR);
-    const targetGridLineLocator = page.locator(getTimeGridLineSelector('01:00'));
-    const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
+  // Then
+  await assertTimeGridSelection(timeGridSelectionLocator, {
+    totalElements: 4,
+    formattedTimes: ['03:00'],
+    startTop: startGridLineBoundingBox.y,
+    endBottom: targetGridLineBoundingBox.y + targetGridLineBoundingBox.height,
+  });
+});
 
-    const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
-    const targetGridLineBoundingBox = await getBoundingBox(targetGridLineLocator);
+test('should be able to select a range of time from top to bottom', async ({ page }) => {
+  // Given
+  const startGridLineLocator = page.locator(BASE_GRIDLINE_SELECTOR);
+  const targetGridLineLocator = page.locator(getTimeGridLineSelector('05:00'));
+  const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
 
-    // When
-    await dragAndDrop(page, startGridLineLocator, targetGridLineLocator, {
-      targetPosition: {
-        x: targetGridLineBoundingBox.width,
-        y: startGridLineBoundingBox.height,
-      },
-    });
+  const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
+  const targetGridLineBoundingBox = await getBoundingBox(targetGridLineLocator);
 
-    // Then
-    await assertTimeGridSelection(timeGridSelectionLocator, {
-      totalElements: 4,
-      formattedTimes: ['03:00'],
-      startTop: startGridLineBoundingBox.y,
-      endBottom: targetGridLineBoundingBox.y + targetGridLineBoundingBox.height,
-    });
+  // When
+  await dragAndDrop(page, startGridLineLocator, targetGridLineLocator);
+
+  // Then
+  await assertTimeGridSelection(timeGridSelectionLocator, {
+    totalElements: 1,
+    formattedTimes: ['03:00', '05:30'],
+    startTop: startGridLineBoundingBox.y,
+    endBottom: targetGridLineBoundingBox.y + targetGridLineBoundingBox.height,
+  });
+});
+
+test('should be able to select a range of time to lower left', async ({ page }) => {
+  // Given
+  const startGridLineLocator = page.locator(BASE_GRIDLINE_SELECTOR);
+  const targetGridLineLocator = page.locator(getTimeGridLineSelector('05:00'));
+  const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
+
+  const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
+  const targetGridLineBoundingBox = await getBoundingBox(targetGridLineLocator);
+
+  // When
+  await dragAndDrop(page, startGridLineLocator, targetGridLineLocator, {
+    targetPosition: {
+      x: 0,
+      y: targetGridLineBoundingBox.height,
+    },
   });
 
-  test('should be able to select a range of time to right', async ({ page }) => {
-    // Given
-    const startGridLineLocator = page.locator(BASE_GRIDLINE_LOCATOR);
-    const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
+  // Then
+  await assertTimeGridSelection(timeGridSelectionLocator, {
+    totalElements: 4,
+    formattedTimes: ['05:00'],
+    startTop: targetGridLineBoundingBox.y,
+    endBottom: startGridLineBoundingBox.y + startGridLineBoundingBox.height,
+  });
+});
 
-    const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
+test('should be able to select a range of time to left', async ({ page }) => {
+  // Given
+  const startGridLineLocator = page.locator(BASE_GRIDLINE_SELECTOR);
+  const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
 
-    // When
-    await dragAndDrop(page, startGridLineLocator, startGridLineLocator, {
-      targetPosition: {
-        x: startGridLineBoundingBox.width,
-        y: 1,
-      },
-    });
+  const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
 
-    // Then
-    await assertTimeGridSelection(timeGridSelectionLocator, {
-      totalElements: 4,
-      formattedTimes: ['03:00'],
-      startTop: startGridLineBoundingBox.y,
-      endBottom: startGridLineBoundingBox.y + startGridLineBoundingBox.height,
-    });
+  // When
+  await dragAndDrop(page, startGridLineLocator, startGridLineLocator, {
+    targetPosition: {
+      x: 1,
+      y: 1,
+    },
   });
 
-  test('should be able to select a range of time to lower right', async ({ page }) => {
-    // Given
-    const startGridLineLocator = page.locator(BASE_GRIDLINE_LOCATOR);
-    const targetGridLineLocator = page.locator(getTimeGridLineSelector('05:00'));
-    const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
+  // Then
+  await assertTimeGridSelection(timeGridSelectionLocator, {
+    totalElements: 4,
+    formattedTimes: ['03:00'],
+    startTop: startGridLineBoundingBox.y,
+    endBottom: startGridLineBoundingBox.y + startGridLineBoundingBox.height,
+  });
+});
 
-    const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
-    const targetGridLineBoundingBox = await getBoundingBox(targetGridLineLocator);
+test('should be able to select a range of time to upper left', async ({ page }) => {
+  // Given
+  const startGridLineLocator = page.locator(BASE_GRIDLINE_SELECTOR);
+  const targetGridLineLocator = page.locator(getTimeGridLineSelector('01:00'));
+  const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
 
-    // When
-    await dragAndDrop(page, startGridLineLocator, targetGridLineLocator, {
-      targetPosition: {
-        x: targetGridLineBoundingBox.width,
-        y: targetGridLineBoundingBox.height,
-      },
-    });
+  const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
+  const targetGridLineBoundingBox = await getBoundingBox(targetGridLineLocator);
 
-    // Then
-    await assertTimeGridSelection(timeGridSelectionLocator, {
-      totalElements: 4,
-      formattedTimes: ['03:00'],
-      startTop: startGridLineBoundingBox.y,
-      endBottom: targetGridLineBoundingBox.y + targetGridLineBoundingBox.height,
-    });
+  // When
+  await dragAndDrop(page, startGridLineLocator, targetGridLineLocator, {
+    targetPosition: {
+      x: 1,
+      y: 1,
+    },
   });
 
-  test('should be able to select a range of time from top to bottom', async ({ page }) => {
-    // Given
-    const startGridLineLocator = page.locator(BASE_GRIDLINE_LOCATOR);
-    const targetGridLineLocator = page.locator(getTimeGridLineSelector('05:00'));
-    const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
-
-    const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
-    const targetGridLineBoundingBox = await getBoundingBox(targetGridLineLocator);
-
-    // When
-    await dragAndDrop(page, startGridLineLocator, targetGridLineLocator);
-
-    // Then
-    await assertTimeGridSelection(timeGridSelectionLocator, {
-      totalElements: 1,
-      formattedTimes: ['03:00', '05:30'],
-      startTop: startGridLineBoundingBox.y,
-      endBottom: targetGridLineBoundingBox.y + targetGridLineBoundingBox.height,
-    });
+  // Then
+  await assertTimeGridSelection(timeGridSelectionLocator, {
+    totalElements: 4,
+    formattedTimes: ['01:00'],
+    startTop: targetGridLineBoundingBox.y,
+    endBottom: startGridLineBoundingBox.y + startGridLineBoundingBox.height,
   });
+});
 
-  test('should be able to select a range of time to lower left', async ({ page }) => {
-    // Given
-    const startGridLineLocator = page.locator(BASE_GRIDLINE_LOCATOR);
-    const targetGridLineLocator = page.locator(getTimeGridLineSelector('05:00'));
-    const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
+test('When pressing down the ESC key, the grid selection is canceled.', async ({ page }) => {
+  // Given
+  const startGridLineLocator = page.locator(getTimeGridLineSelector('03:00'));
+  const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
 
-    const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
-    const targetGridLineBoundingBox = await getBoundingBox(targetGridLineLocator);
+  const targetGridLineLocator = page.locator(getTimeGridLineSelector('05:00'));
+  const targetGridLineBoundingBox = await getBoundingBox(targetGridLineLocator);
 
-    // When
-    await dragAndDrop(page, startGridLineLocator, targetGridLineLocator, {
-      targetPosition: {
-        x: 0,
-        y: targetGridLineBoundingBox.height,
-      },
-    });
+  // When
+  await page.mouse.move(startGridLineBoundingBox.x + 10, startGridLineBoundingBox.y + 10);
+  await page.mouse.down();
+  await page.mouse.move(targetGridLineBoundingBox.x + 10, targetGridLineBoundingBox.y + 10);
+  await page.keyboard.down('Escape');
 
-    // Then
-    await assertTimeGridSelection(timeGridSelectionLocator, {
-      totalElements: 4,
-      formattedTimes: ['05:00'],
-      startTop: targetGridLineBoundingBox.y,
-      endBottom: startGridLineBoundingBox.y + startGridLineBoundingBox.height,
-    });
-  });
-
-  test('should be able to select a range of time to left', async ({ page }) => {
-    // Given
-    const startGridLineLocator = page.locator(BASE_GRIDLINE_LOCATOR);
-    const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
-
-    const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
-
-    // When
-    await dragAndDrop(page, startGridLineLocator, startGridLineLocator, {
-      targetPosition: {
-        x: 1,
-        y: 1,
-      },
-    });
-
-    // Then
-    await assertTimeGridSelection(timeGridSelectionLocator, {
-      totalElements: 4,
-      formattedTimes: ['03:00'],
-      startTop: startGridLineBoundingBox.y,
-      endBottom: startGridLineBoundingBox.y + startGridLineBoundingBox.height,
-    });
-  });
-
-  test('should be able to select a range of time to upper left', async ({ page }) => {
-    // Given
-    const startGridLineLocator = page.locator(BASE_GRIDLINE_LOCATOR);
-    const targetGridLineLocator = page.locator(getTimeGridLineSelector('01:00'));
-    const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
-
-    const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
-    const targetGridLineBoundingBox = await getBoundingBox(targetGridLineLocator);
-
-    // When
-    await dragAndDrop(page, startGridLineLocator, targetGridLineLocator, {
-      targetPosition: {
-        x: 1,
-        y: 1,
-      },
-    });
-
-    // Then
-    await assertTimeGridSelection(timeGridSelectionLocator, {
-      totalElements: 4,
-      formattedTimes: ['01:00'],
-      startTop: targetGridLineBoundingBox.y,
-      endBottom: startGridLineBoundingBox.y + startGridLineBoundingBox.height,
-    });
-  });
+  // Then
+  const gridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
+  expect(await gridSelectionLocator.count()).toBe(0);
 });
