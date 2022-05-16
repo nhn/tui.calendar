@@ -1,43 +1,47 @@
-.timegrid-times {
-  display: inline-block;
-  position: relative;
+.timegrid-time-column {
   font-size: 11px;
   height: 100%;
 }
 
-.timegrid-times .timegrid-time {
+.timegrid-time-column .timegrid-hour-rows {
+  display: inline-block;
+  position: relative;
+  height: 100%;
+}
+
+.timegrid-time-column .timegrid-time {
   text-align: right;
   position: absolute;
   right: 5px;
   color: #333;
 }
 
-.timegrid-times .timegrid-time.timegrid-time-past {
+.timegrid-time-column .timegrid-time.timegrid-time-past {
   font-weight: normal;
 }
 
-.timegrid-times .timegrid-time.timegrid-time-first {
+.timegrid-time-column .timegrid-time.timegrid-time-first {
   line-height: normal;
   visibility: hidden;
 }
 
-.timegrid-times .timegrid-time.timegrid-time-last {
+.timegrid-time-column .timegrid-time.timegrid-time-last {
   height: 0;
   visibility: hidden;
 }
 
-.timegrid-times .timegrid-time .timegrid-time-label,
-.timegrid-times .timegrid-time .template-timegridDisplayPrimaryTime {
+.timegrid-time-column .timegrid-time .timegrid-time-label,
+.timegrid-time-column .timegrid-time span {
   transform: translateY(-50%);
   position: absolute;
   right: 0;
 }
 
-.timegrid-times .timegrid-time-hidden {
+.timegrid-time-column .timegrid-time-hidden {
   visibility: hidden;
 }
 
-.timegrid-times .timegrid-current-time {
+.timegrid-time-column .timegrid-current-time {
   position: absolute;
   text-align: right;
   right: 5px;

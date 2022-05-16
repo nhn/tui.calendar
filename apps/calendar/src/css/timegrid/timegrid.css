@@ -72,6 +72,7 @@
 
 .timezone-labels-slot {
   display: table;
+  table-layout: fixed;
   position: absolute;
   height: 40px;
   border-bottom: 1px solid #e9e9e9;

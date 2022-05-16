@@ -1,5 +1,9 @@
+import range from 'tui-code-snippet/array/range';
+
 import Week from '@src/factory/week';
-import { act, hasDesiredStartTime, screen } from '@src/test/utils';
+import { act, hasDesiredStartTime, screen, within } from '@src/test/utils';
+import TZDate from '@src/time/date';
+import { toFormat } from '@src/time/datetime';
 
 import { mockWeekViewEvents } from '@stories/mocks/mockWeekViewEvents';
 
@@ -175,5 +179,148 @@ describe('Primary Timezone', () => {
     targetEvent = screen.getByText(reTargetEvent);
 
     expect(hasDesiredStartTime(targetEvent, '05:00')).toBe(true);
+  });
+});
+
+describe('Multiple Timezone', () => {
+  it('should not render timezone labels when only one timezone is given', () => {
+    // Given
+    const timezoneOption: Options = {
+      timezone: {
+        zones: [
+          {
+            timezoneName: 'Asia/Seoul',
+          },
+        ],
+      },
+    };
+
+    // When
+    setup(timezoneOption);
+
+    // Then
+    expect(screen.queryByRole('columnheader')).toBeNull();
+  });
+
+  it('should render one hours column when only one timezone is given', () => {
+    // Given
+    const timezoneOption: Options = {
+      timezone: {
+        zones: [
+          {
+            timezoneName: 'Asia/Seoul',
+          },
+        ],
+      },
+    };
+    const expectedHoursColumn = range(0, 25).map((hour) =>
+      toFormat(new TZDate(2022, 6, 1, hour), 'hh tt')
+    );
+
+    // When
+    const { instance } = setup(timezoneOption);
+    act(() => {
+      // Set render date to the past so that current time indicator doesn't show up
+      instance.setDate('2020-06-01');
+    });
+
+    // Then
+    const hoursColumn = screen.getAllByRole('rowgroup');
+    expect(hoursColumn.length).toBe(1);
+
+    const hourRows = Array.from(hoursColumn[0].children).map((hourRow) => hourRow.textContent);
+    expect(hourRows).toEqual(expectedHoursColumn);
+  });
+
+  it('should render default timezone labels', () => {
+    // Given
+    const timezoneOption: Options = {
+      timezone: {
+        zones: [
+          {
+            timezoneName: 'Asia/Seoul', // GMT+09:00
+          },
+          {
+            timezoneName: 'Asia/Karachi', // GMT+05:00
+          },
+        ],
+      },
+    };
+    const expectedLabels = ['GMT+05:00', 'GMT+09:00'];
+
+    // When
+    setup(timezoneOption);
+
+    // Then
+    const labelContainer = screen.getByRole('columnheader');
+    const labels = within(labelContainer).getAllByRole('gridcell');
+
+    expect(labels.map((label) => label.textContent)).toEqual(expectedLabels);
+  });
+
+  it('should render custom timezone labels', () => {
+    // Given
+    const timezoneOption: Options = {
+      timezone: {
+        zones: [
+          {
+            timezoneName: 'Asia/Seoul', // GMT+09:00
+            displayLabel: '+09',
+          },
+          {
+            timezoneName: 'Asia/Karachi', // GMT+05:00
+            displayLabel: '+05',
+          },
+        ],
+      },
+    };
+    const expectedLabels = ['+05', '+09'];
+
+    // When
+    setup(timezoneOption);
+
+    // Then
+    const labelContainer = screen.getByRole('columnheader');
+    const labels = within(labelContainer).getAllByRole('gridcell');
+
+    expect(labels.map((label) => label.textContent)).toEqual(expectedLabels);
+  });
+  it('should render multiple hours column when multiple timezone is given', () => {
+    // Given
+    const timezoneOption: Options = {
+      timezone: {
+        zones: [
+          {
+            timezoneName: 'Asia/Seoul',
+          },
+          {
+            timezoneName: 'Asia/Karachi',
+          },
+        ],
+      },
+    };
+    const expectedPrimaryHoursColumn = range(0, 25).map((hour) =>
+      toFormat(new TZDate(2022, 6, 1, hour), 'hh tt')
+    );
+    // -4 hours each
+    const expectedSecondaryHoursColumn = range(0, 25).map((hour) =>
+      toFormat(new TZDate(2022, 6, 1, hour - 4), 'HH:mm')
+    );
+
+    // When
+    const { instance } = setup(timezoneOption);
+    act(() => {
+      // Set render date to the past so that current time indicator doesn't show up
+      instance.setDate('2020-06-01');
+    });
+
+    // Then
+    const hourColumns = screen.getAllByRole('rowgroup');
+    expect(hourColumns.length).toBe(2);
+
+    const hourRowsByColumn = hourColumns.map((hourCol) =>
+      Array.from(hourCol.children).map((hourRow) => hourRow.textContent)
+    );
+    expect(hourRowsByColumn).toEqual([expectedSecondaryHoursColumn, expectedPrimaryHoursColumn]);
   });
 });

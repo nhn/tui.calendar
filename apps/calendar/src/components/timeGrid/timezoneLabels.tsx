@@ -4,10 +4,9 @@ import { Template } from '@src/components/template';
 import { addTimeGridPrefix } from '@src/components/timeGrid';
 import { useStore } from '@src/contexts/calendarStore';
 import { cls, toPercent } from '@src/helpers/css';
+import { timezonesSelector } from '@src/selectors/timezone';
 import { calculateTimezoneOffset } from '@src/time/timezone';
 import { isUndefined } from '@src/utils/type';
-
-import type { CalendarState } from '@t/store';
 
 interface TimezoneLabelProps {
   label: string | null;
@@ -38,12 +37,8 @@ function TimezoneLabel({ label, offset, tooltip, width = 100, left }: TimezoneLa
   );
 }
 
-function timezoneSelector(state: CalendarState) {
-  return state.options.timezone.zones ?? [];
-}
-
 export function TimezoneLabels({ top }: { top: number | null }) {
-  const timezones = useStore(timezoneSelector);
+  const timezones = useStore(timezonesSelector);
 
   if (timezones.length <= 1) {
     return null;
