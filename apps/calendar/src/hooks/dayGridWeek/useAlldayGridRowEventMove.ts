@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef } from 'preact/hooks';
 
-import { useDispatch } from '@src/contexts/calendarStore';
+import { useEventBus } from '@src/contexts/eventBus';
 import { useWhen } from '@src/hooks/common/useWhen';
 import { useCurrentPointerPositionInGrid } from '@src/hooks/event/useCurrentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/useDraggingEvent';
@@ -16,12 +16,13 @@ interface Params {
 }
 
 export function useAlldayGridRowEventMove({ rowStyleInfo, gridPositionFinder }: Params) {
+  const eventBus = useEventBus();
   const {
     isDraggingEnd,
+    isDraggingCanceled,
     draggingEvent: movingEvent,
     clearDraggingEvent,
   } = useDraggingEvent('dayGrid', 'move');
-  const { updateEvent } = useDispatch('calendar');
   const startGridXRef = useRef<number | null>(null);
 
   const [currentGridPos, clearCurrentGridPos] = useCurrentPointerPositionInGrid(gridPositionFinder);
@@ -53,6 +54,7 @@ export function useAlldayGridRowEventMove({ rowStyleInfo, gridPositionFinder }: 
 
   useWhen(() => {
     const shouldUpdate =
+      !isDraggingCanceled &&
       isPresent(movingEvent) &&
       isPresent(columnIndex) &&
       isPresent(currentMovingLeft) &&
@@ -65,9 +67,9 @@ export function useAlldayGridRowEventMove({ rowStyleInfo, gridPositionFinder }: 
       newStartDate.addDate(dateOffset);
       newEndDate.addDate(dateOffset);
 
-      updateEvent({
+      eventBus.fire('beforeUpdateEvent', {
         event: movingEvent.model,
-        eventData: {
+        changes: {
           start: newStartDate,
           end: newEndDate,
         },

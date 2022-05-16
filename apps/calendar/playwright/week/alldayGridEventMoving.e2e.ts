@@ -3,7 +3,12 @@ import { expect, test } from '@playwright/test';
 
 import { mockWeekViewEvents } from '../../stories/mocks/mockWeekViewEvents';
 import { WEEK_VIEW_PAGE_URL } from '../configs';
-import { dragAndDrop, getBoundingBox, getPrefixedClassName } from '../utils';
+import {
+  dragAndDrop,
+  getBoundingBox,
+  getHorizontalEventSelector,
+  getPrefixedClassName,
+} from '../utils';
 
 test.beforeEach(async ({ page }) => {
   await page.goto(WEEK_VIEW_PAGE_URL);
@@ -12,9 +17,10 @@ test.beforeEach(async ({ page }) => {
 const ALL_DAY_GRID_CELL_SELECTOR = `${getPrefixedClassName(
   'panel'
 )}:has-text("All Day") ${getPrefixedClassName('panel-grid')}`;
+const MOVE_EVENT_SELECTOR = '[class*="dragging--move-event"]';
 
-const [{ calendarId, id, title }] = mockWeekViewEvents;
-const TARGET_EVENT_SELECTOR = `data-testid=${calendarId}-${id}-${title}`;
+const [TARGET_EVENT] = mockWeekViewEvents.filter(({ isAllday }) => isAllday);
+const TARGET_EVENT_SELECTOR = getHorizontalEventSelector(TARGET_EVENT);
 
 async function getX(locator: Locator) {
   const boundingBox = await getBoundingBox(locator);
@@ -34,22 +40,6 @@ async function getWidth(locator: Locator) {
  *
  * [ 0,  1,  2,  3,  4,  5,  6]
  */
-test('resizing allday grid row event from left to right', async ({ page }) => {
-  // Given
-  const targetEventLocator = page.locator(TARGET_EVENT_SELECTOR);
-  const boundingBoxBeforeResizing = await getBoundingBox(targetEventLocator);
-  const resizerLocator = targetEventLocator.locator(getPrefixedClassName('handle-y'));
-  const endOfWeekCellLocator = page.locator(ALL_DAY_GRID_CELL_SELECTOR).last();
-
-  // When
-  await dragAndDrop(page, resizerLocator, endOfWeekCellLocator);
-
-  // Then
-  await expect
-    .poll(() => getWidth(targetEventLocator))
-    .toBeGreaterThan(boundingBoxBeforeResizing.width);
-});
-
 test('moving allday grid row event from left to right', async ({ page }) => {
   // Given
   const targetEventLocator = page.locator(TARGET_EVENT_SELECTOR);
@@ -131,5 +121,70 @@ test.describe('moving allday grid row event when moving by holding the middle or
     await expect
       .poll(() => getX(targetEventLocator))
       .toBeLessThan(boundingBoxBeforeMoving.x + boundingBoxBeforeMoving.width);
+  });
+});
+
+test('When pressing down the ESC key, the moving event resets to the initial position.', async ({
+  page,
+}) => {
+  // Given
+  const eventLocator = page.locator(TARGET_EVENT_SELECTOR);
+  const eventBoundingBoxBeforeMove = await getBoundingBox(eventLocator);
+
+  const targetCellLocator = page.locator(ALL_DAY_GRID_CELL_SELECTOR).nth(4);
+  const targetCellBoundingBox = await getBoundingBox(targetCellLocator);
+
+  // When
+  await page.mouse.move(eventBoundingBoxBeforeMove.x + 10, eventBoundingBoxBeforeMove.y + 3);
+  await page.mouse.down();
+  await page.mouse.move(targetCellBoundingBox.x + 10, targetCellBoundingBox.y + 10);
+  await page.keyboard.down('Escape');
+
+  // Then
+  const eventBoundingBoxAfterMove = await getBoundingBox(eventLocator);
+  expect(eventBoundingBoxAfterMove).toEqual(eventBoundingBoxBeforeMove);
+});
+
+test.describe('CSS class for a move event', () => {
+  test('should be applied depending on a dragging state.', async ({ page }) => {
+    // Given
+    const eventLocator = page.locator(TARGET_EVENT_SELECTOR);
+    const eventBoundingBox = await getBoundingBox(eventLocator);
+    const moveEventClassLocator = page.locator(MOVE_EVENT_SELECTOR);
+
+    // When (a drag has not started yet)
+    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 10);
+    await page.mouse.down();
+
+    // Then
+    expect(await moveEventClassLocator.count()).toBe(0);
+
+    // When (a drag is working)
+    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 50);
+
+    // Then
+    expect(await moveEventClassLocator.count()).toBe(1);
+
+    // When (a drag is finished)
+    await page.mouse.up();
+
+    // Then
+    expect(await moveEventClassLocator.count()).toBe(0);
+  });
+
+  test('should not be applied when a drag is canceled.', async ({ page }) => {
+    // Given
+    const eventLocator = page.locator(TARGET_EVENT_SELECTOR);
+    const eventBoundingBox = await getBoundingBox(eventLocator);
+    const moveEventClassLocator = page.locator(MOVE_EVENT_SELECTOR);
+
+    // When
+    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 10);
+    await page.mouse.down();
+    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 50);
+    await page.keyboard.down('Escape');
+
+    // Then
+    expect(await moveEventClassLocator.count()).toBe(0);
   });
 });
