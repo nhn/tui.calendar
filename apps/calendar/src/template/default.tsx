@@ -180,11 +180,11 @@ export const templates: Template = {
 
   timezoneDisplayLabel({ displayLabel, timezoneOffset }: TemplateTimezone) {
     if (isNil(displayLabel) && isPresent(timezoneOffset)) {
-      const gmt = timezoneOffset < 0 ? '-' : '+';
+      const sign = timezoneOffset < 0 ? '-' : '+';
       const hours = Math.abs(timezoneOffset / SIXTY_MINUTES);
       const minutes = Math.abs(timezoneOffset % SIXTY_MINUTES);
 
-      return `${gmt}${leadingZero(hours, 2)}:${leadingZero(minutes, 2)}`;
+      return `GMT${sign}${leadingZero(hours, 2)}:${leadingZero(minutes, 2)}`;
     }
 
     return displayLabel as string;
