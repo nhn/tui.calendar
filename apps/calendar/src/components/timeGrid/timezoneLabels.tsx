@@ -1,4 +1,4 @@
-import { Fragment, h } from 'preact';
+import { h } from 'preact';
 
 import { Template } from '@src/components/template';
 import { addTimeGridPrefix } from '@src/components/timeGrid';
@@ -10,7 +10,7 @@ import { isUndefined } from '@src/utils/type';
 
 import type { CalendarState } from '@t/store';
 
-interface Props {
+interface TimezoneLabelProps {
   label: string | null;
   offset: number | null;
   tooltip: string;
@@ -18,11 +18,7 @@ interface Props {
   left: number;
 }
 
-function timezoneSelector(state: CalendarState) {
-  return state.options.timezone.zones ?? [];
-}
-
-function TimezoneLabel({ label, offset, tooltip, width = 100, left }: Props) {
+function TimezoneLabel({ label, offset, tooltip, width = 100, left }: TimezoneLabelProps) {
   return (
     <div
       title={tooltip}
@@ -42,7 +38,11 @@ function TimezoneLabel({ label, offset, tooltip, width = 100, left }: Props) {
   );
 }
 
-export function TimezoneLabels() {
+function timezoneSelector(state: CalendarState) {
+  return state.options.timezone.zones ?? [];
+}
+
+export function TimezoneLabels({ top }: { top: number | null }) {
   const timezones = useStore(timezoneSelector);
   const timezoneLabelProps = timezones.map(({ displayLabel, timezoneName, tooltip }) => {
     return !isUndefined(displayLabel)
@@ -65,7 +65,13 @@ export function TimezoneLabels() {
   }
 
   return (
-    <Fragment>
+    <div
+      style={{
+        top,
+        width: 120, // TODO: use theme value
+      }}
+      className={cls('timezone-labels-slot')}
+    >
       {subTimezones.map((subTimezone, index) => (
         <TimezoneLabel
           key={`subTimezone-${subTimezone.label ?? subTimezone.offset}`}
@@ -79,6 +85,6 @@ export function TimezoneLabels() {
         left={timezoneLabelWidth * subTimezones.length}
         {...primaryTimezone}
       />
-    </Fragment>
+    </div>
   );
 }

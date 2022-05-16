@@ -155,9 +155,7 @@ export function Week() {
       {hasTimePanel ? (
         <Panel name="time" autoSize={1} ref={setTimePanelRef}>
           <TimeGrid events={eventByPanel.time} timeGridData={timeGridData} />
-          <div style={{ top: stickyTop, width: 120 }} className={cls('timezone-labels-slot')}>
-            <TimezoneLabels />
-          </div>
+          <TimezoneLabels top={stickyTop} />
         </Panel>
       ) : null}
     </Layout>
