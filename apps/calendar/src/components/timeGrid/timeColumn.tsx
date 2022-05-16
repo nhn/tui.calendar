@@ -82,7 +82,6 @@ interface Props {
   currentTimeIndicatorState: { top: number; now: TZDate } | null;
 }
 
-// TODO: replace MultipleTimezones component
 export const TimeColumn = memo(function TimeColumn({
   timeGridRows,
   columnWidth,
