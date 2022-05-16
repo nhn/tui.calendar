@@ -19,6 +19,8 @@ test.beforeEach(async ({ page }) => {
   await page.goto(DAY_VIEW_PAGE_URL);
 });
 
+const MOVE_EVENT_SELECTOR = '[class*="dragging--move-event"]';
+
 // Every time grid events in mockDayViewEvents should include DRAG_START_TIME.
 const DRAG_START_TIME = '04:00';
 
@@ -40,6 +42,7 @@ const cases: {
 ];
 
 const timeEvents = mockDayViewEvents.filter(({ isAllday }) => !isAllday);
+const [, SHORT_TIME_EVENT] = timeEvents;
 
 timeEvents.forEach(({ title: eventTitle, start, end }) => {
   test.describe(`Move the ${eventTitle} event in the time grid`, () => {
@@ -85,7 +88,6 @@ test('When pressing down the ESC key, the moving event resets to the initial pos
   page,
 }) => {
   // Given
-  const [, SHORT_TIME_EVENT] = timeEvents;
   const eventLocator = page.locator(getTimeEventSelector(SHORT_TIME_EVENT.title));
   const eventBoundingBoxBeforeMove = await getBoundingBox(eventLocator);
 
@@ -104,6 +106,50 @@ test('When pressing down the ESC key, the moving event resets to the initial pos
   // Then
   const eventBoundingBoxAfterMove = await getBoundingBox(eventLocator);
   expect(eventBoundingBoxAfterMove).toEqual(eventBoundingBoxBeforeMove);
+});
+
+test.describe('CSS class for a move event', () => {
+  test('should be applied depending on a dragging state.', async ({ page }) => {
+    // Given
+    const eventLocator = page.locator(getTimeEventSelector(SHORT_TIME_EVENT.title));
+    const eventBoundingBox = await getBoundingBox(eventLocator);
+    const moveEventClassLocator = page.locator(MOVE_EVENT_SELECTOR);
+
+    // When (a drag has not started yet)
+    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 10);
+    await page.mouse.down();
+
+    // Then
+    expect(await moveEventClassLocator.count()).toBe(0);
+
+    // When (a drag is working)
+    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 50);
+
+    // Then
+    expect(await moveEventClassLocator.count()).toBe(1);
+
+    // When (a drag is finished)
+    await page.mouse.up();
+
+    // Then
+    expect(await moveEventClassLocator.count()).toBe(0);
+  });
+
+  test('should not be applied when a drag is canceled.', async ({ page }) => {
+    // Given
+    const eventLocator = page.locator(getTimeEventSelector(SHORT_TIME_EVENT.title));
+    const eventBoundingBox = await getBoundingBox(eventLocator);
+    const moveEventClassLocator = page.locator(MOVE_EVENT_SELECTOR);
+
+    // When
+    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 10);
+    await page.mouse.down();
+    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 50);
+    await page.keyboard.down('Escape');
+
+    // Then
+    expect(await moveEventClassLocator.count()).toBe(0);
+  });
 });
 
 const [LONG_TIME_EVENT] = mockDayViewEvents.filter(({ title }) => title === 'long time');

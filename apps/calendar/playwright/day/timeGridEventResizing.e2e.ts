@@ -20,6 +20,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 const RESIZE_HANDLER_SELECTOR = '[class*="resize-handler"]';
+const RESIZE_EVENT_SELECTOR = '[class*="dragging--resize-vertical-event"]';
 
 const cases: {
   title: string;
@@ -81,6 +82,7 @@ async function setup({
 }
 
 const timeEvents = mockDayViewEvents.filter(({ isAllday }) => !isAllday);
+const [, SHORT_TIME_EVENT] = timeEvents;
 
 timeEvents.forEach(({ title: eventTitle, start, end }) => {
   test.describe(`Resize the ${eventTitle} event in the time grid`, () => {
@@ -132,7 +134,6 @@ test('When pressing down the ESC key, the resizing event resets to the initial s
   page,
 }) => {
   // Given
-  const [, SHORT_TIME_EVENT] = timeEvents;
   const eventLocator = page.locator(getTimeEventSelector(SHORT_TIME_EVENT.title));
   const eventBoundingBoxBeforeResize = await getBoundingBox(eventLocator);
 
@@ -154,4 +155,52 @@ test('When pressing down the ESC key, the resizing event resets to the initial s
   // Then
   const eventBoundingBoxAfterResize = await getBoundingBox(eventLocator);
   expect(eventBoundingBoxAfterResize).toEqual(eventBoundingBoxBeforeResize);
+});
+
+test.describe('CSS class for a resize event', () => {
+  test('should be applied depending on a dragging state.', async ({ page }) => {
+    // Given
+    const eventLocator = page.locator(getTimeEventSelector(SHORT_TIME_EVENT.title));
+    const resizeHandlerLocator = eventLocator.locator(RESIZE_HANDLER_SELECTOR);
+    const resizeHandlerBoundingBox = await getBoundingBox(resizeHandlerLocator);
+
+    const resizeEventClassLocator = page.locator(RESIZE_EVENT_SELECTOR);
+
+    // When (a drag has not started yet)
+    await page.mouse.move(resizeHandlerBoundingBox.x + 10, resizeHandlerBoundingBox.y + 3);
+    await page.mouse.down();
+
+    // Then
+    expect(await resizeEventClassLocator.count()).toBe(0);
+
+    // When (a drag is working)
+    await page.mouse.move(resizeHandlerBoundingBox.x + 10, resizeHandlerBoundingBox.y + 50);
+
+    // Then
+    expect(await resizeEventClassLocator.count()).toBe(1);
+
+    // When (a drag is finished)
+    await page.mouse.up();
+
+    // Then
+    expect(await resizeEventClassLocator.count()).toBe(0);
+  });
+
+  test('should not be applied when a drag is canceled.', async ({ page }) => {
+    // Given
+    const eventLocator = page.locator(getTimeEventSelector(SHORT_TIME_EVENT.title));
+    const resizeHandlerLocator = eventLocator.locator(RESIZE_HANDLER_SELECTOR);
+    const resizeHandlerBoundingBox = await getBoundingBox(resizeHandlerLocator);
+
+    const resizeEventClassLocator = page.locator(RESIZE_EVENT_SELECTOR);
+
+    // When
+    await page.mouse.move(resizeHandlerBoundingBox.x + 10, resizeHandlerBoundingBox.y + 3);
+    await page.mouse.down();
+    await page.mouse.move(resizeHandlerBoundingBox.x + 10, resizeHandlerBoundingBox.y + 50);
+    await page.keyboard.down('Escape');
+
+    // Then
+    expect(await resizeEventClassLocator.count()).toBe(0);
+  });
 });

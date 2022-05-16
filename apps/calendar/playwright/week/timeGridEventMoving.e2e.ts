@@ -23,6 +23,8 @@ const [TWO_VIEW_EVENT, SHORT_TIME_EVENT, LONG_TIME_EVENT] = mockWeekViewEvents.f
   ({ isAllday }) => !isAllday
 );
 
+const MOVE_EVENT_SELECTOR = '[class*="dragging--move-event"]';
+
 /**
  * 8 Directions for testing
  *
@@ -181,6 +183,50 @@ test('When pressing down the ESC key, the moving event resets to the initial pos
   // Then
   const eventBoundingBoxAfterMove = await getBoundingBox(eventLocator);
   expect(eventBoundingBoxAfterMove).toEqual(eventBoundingBoxBeforeMove);
+});
+
+test.describe('CSS class for a move event', () => {
+  test('should be applied depending on a dragging state.', async ({ page }) => {
+    // Given
+    const eventLocator = page.locator(getTimeEventSelector(SHORT_TIME_EVENT.title));
+    const eventBoundingBox = await getBoundingBox(eventLocator);
+    const moveEventClassLocator = page.locator(MOVE_EVENT_SELECTOR);
+
+    // When (a drag has not started yet)
+    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 10);
+    await page.mouse.down();
+
+    // Then
+    expect(await moveEventClassLocator.count()).toBe(0);
+
+    // When (a drag is working)
+    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 50);
+
+    // Then
+    expect(await moveEventClassLocator.count()).toBe(1);
+
+    // When (a drag is finished)
+    await page.mouse.up();
+
+    // Then
+    expect(await moveEventClassLocator.count()).toBe(0);
+  });
+
+  test('should not be applied when a drag is canceled.', async ({ page }) => {
+    // Given
+    const eventLocator = page.locator(getTimeEventSelector(SHORT_TIME_EVENT.title));
+    const eventBoundingBox = await getBoundingBox(eventLocator);
+    const moveEventClassLocator = page.locator(MOVE_EVENT_SELECTOR);
+
+    // When
+    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 10);
+    await page.mouse.down();
+    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 50);
+    await page.keyboard.down('Escape');
+
+    // Then
+    expect(await moveEventClassLocator.count()).toBe(0);
+  });
 });
 
 test.describe(`Calibrate event's height while dragging`, () => {

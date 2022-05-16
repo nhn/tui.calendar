@@ -16,6 +16,8 @@ test.beforeEach(async ({ page }) => {
   await page.goto(MONTH_VIEW_PAGE_URL);
 });
 
+const RESIZE_EVENT_SELECTOR = '[class*="dragging--resize-horizontal-event"]';
+
 const [TARGET_EVENT1, TARGET_EVENT2] = mockMonthViewEventsFixed;
 
 function getResizeIconLocatorOfEvent(eventLocator: Locator) {
@@ -198,4 +200,52 @@ test('When pressing down the ESC key, the resizing event resets to the initial s
   // Then
   const eventBoundingBoxAfterResize = await getBoundingBox(eventLocator);
   expect(eventBoundingBoxAfterResize).toEqual(eventBoundingBoxBeforeResize);
+});
+
+test.describe('CSS class for a resize event', () => {
+  test('should be applied depending on a dragging state.', async ({ page }) => {
+    // Given
+    const eventLocator = page.locator(getHorizontalEventSelector(TARGET_EVENT2));
+    const resizeHandlerLocator = getResizeIconLocatorOfEvent(eventLocator);
+    const resizeHandlerBoundingBox = await getBoundingBox(resizeHandlerLocator);
+
+    const resizeEventClassLocator = page.locator(RESIZE_EVENT_SELECTOR);
+
+    // When (a drag has not started yet)
+    await page.mouse.move(resizeHandlerBoundingBox.x + 1, resizeHandlerBoundingBox.y + 3);
+    await page.mouse.down();
+
+    // Then
+    expect(await resizeEventClassLocator.count()).toBe(0);
+
+    // When (a drag is working)
+    await page.mouse.move(resizeHandlerBoundingBox.x + 10, resizeHandlerBoundingBox.y + 50);
+
+    // Then
+    expect(await resizeEventClassLocator.count()).toBe(1);
+
+    // When (a drag is finished)
+    await page.mouse.up();
+
+    // Then
+    expect(await resizeEventClassLocator.count()).toBe(0);
+  });
+
+  test('should not be applied when a drag is canceled.', async ({ page }) => {
+    // Given
+    const eventLocator = page.locator(getHorizontalEventSelector(TARGET_EVENT2));
+    const resizeHandlerLocator = getResizeIconLocatorOfEvent(eventLocator);
+    const resizeHandlerBoundingBox = await getBoundingBox(resizeHandlerLocator);
+
+    const resizeEventClassLocator = page.locator(RESIZE_EVENT_SELECTOR);
+
+    // When
+    await page.mouse.move(resizeHandlerBoundingBox.x + 1, resizeHandlerBoundingBox.y + 3);
+    await page.mouse.down();
+    await page.mouse.move(resizeHandlerBoundingBox.x + 10, resizeHandlerBoundingBox.y + 50);
+    await page.keyboard.down('Escape');
+
+    // Then
+    expect(await resizeEventClassLocator.count()).toBe(0);
+  });
 });
