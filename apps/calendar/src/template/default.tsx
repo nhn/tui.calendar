@@ -198,10 +198,8 @@ export const templates: Template = {
 
   timegridDisplayTime(props: TemplateCurrentTime) {
     const { time } = props;
-    const hour = time.getHours();
-    const minutes = time.getMinutes();
 
-    return `${leadingZero(hour, 2)}:${leadingZero(minutes, 2)}`;
+    return toFormat(time, 'HH:mm');
   },
 
   timegridCurrentTime(timezone: TemplateCurrentTime) {
