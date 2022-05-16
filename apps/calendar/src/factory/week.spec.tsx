@@ -1,6 +1,7 @@
 import range from 'tui-code-snippet/array/range';
 
 import Week from '@src/factory/week';
+import { currentTimeLabelTestId } from '@src/test/testIds';
 import { act, hasDesiredStartTime, screen, within } from '@src/test/utils';
 import TZDate from '@src/time/date';
 import { toFormat } from '@src/time/datetime';
@@ -22,6 +23,7 @@ function setup(options: Options = {}, events: EventModelData[] = mockWeekViewEve
 }
 
 afterEach(() => {
+  jest.useRealTimers();
   document.body.innerHTML = '';
 });
 
@@ -185,7 +187,7 @@ describe('Primary Timezone', () => {
 describe('Multiple Timezone', () => {
   it('should not render timezone labels when only one timezone is given', () => {
     // Given
-    const timezoneOption: Options = {
+    const timezoneOptions: Options = {
       timezone: {
         zones: [
           {
@@ -196,7 +198,7 @@ describe('Multiple Timezone', () => {
     };
 
     // When
-    setup(timezoneOption);
+    setup(timezoneOptions);
 
     // Then
     expect(screen.queryByRole('columnheader')).toBeNull();
@@ -204,7 +206,7 @@ describe('Multiple Timezone', () => {
 
   it('should render one hours column when only one timezone is given', () => {
     // Given
-    const timezoneOption: Options = {
+    const timezoneOptions: Options = {
       timezone: {
         zones: [
           {
@@ -218,7 +220,7 @@ describe('Multiple Timezone', () => {
     );
 
     // When
-    const { instance } = setup(timezoneOption);
+    const { instance } = setup(timezoneOptions);
     act(() => {
       // Set render date to the past so that current time indicator doesn't show up
       instance.setDate('2020-06-01');
@@ -234,7 +236,7 @@ describe('Multiple Timezone', () => {
 
   it('should render default timezone labels', () => {
     // Given
-    const timezoneOption: Options = {
+    const timezoneOptions: Options = {
       timezone: {
         zones: [
           {
@@ -249,7 +251,7 @@ describe('Multiple Timezone', () => {
     const expectedLabels = ['GMT+05:00', 'GMT+09:00'];
 
     // When
-    setup(timezoneOption);
+    setup(timezoneOptions);
 
     // Then
     const labelContainer = screen.getByRole('columnheader');
@@ -260,7 +262,7 @@ describe('Multiple Timezone', () => {
 
   it('should render custom timezone labels', () => {
     // Given
-    const timezoneOption: Options = {
+    const timezoneOptions: Options = {
       timezone: {
         zones: [
           {
@@ -277,7 +279,7 @@ describe('Multiple Timezone', () => {
     const expectedLabels = ['+05', '+09'];
 
     // When
-    setup(timezoneOption);
+    setup(timezoneOptions);
 
     // Then
     const labelContainer = screen.getByRole('columnheader');
@@ -287,7 +289,7 @@ describe('Multiple Timezone', () => {
   });
   it('should render multiple hours column when multiple timezone is given', () => {
     // Given
-    const timezoneOption: Options = {
+    const timezoneOptions: Options = {
       timezone: {
         zones: [
           {
@@ -308,7 +310,7 @@ describe('Multiple Timezone', () => {
     );
 
     // When
-    const { instance } = setup(timezoneOption);
+    const { instance } = setup(timezoneOptions);
     act(() => {
       // Set render date to the past so that current time indicator doesn't show up
       instance.setDate('2020-06-01');
@@ -322,5 +324,59 @@ describe('Multiple Timezone', () => {
       Array.from(hourCol.children).map((hourRow) => hourRow.textContent)
     );
     expect(hourRowsByColumn).toEqual([expectedSecondaryHoursColumn, expectedPrimaryHoursColumn]);
+  });
+
+  it('should render current time of each timezones including date differences (minus 1)', () => {
+    // Given
+    jest.useFakeTimers();
+    const baseDate = new Date('2022-05-16T04:00:00Z'); // Make sure it's on UTC
+    jest.setSystemTime(baseDate);
+    const timezoneOptions: Options = {
+      timezone: {
+        zones: [
+          {
+            timezoneName: 'Etc/UTC',
+          },
+          {
+            timezoneName: 'US/Pacific', // UTC -7
+          },
+        ],
+      },
+    };
+    const expectedCurrentTimeLabels = ['[-1]21:00', '04:00'];
+
+    // When
+    setup(timezoneOptions);
+
+    // Then
+    const currentTimeLabels = screen.getAllByTestId(currentTimeLabelTestId);
+    expect(currentTimeLabels.map((label) => label.textContent)).toEqual(expectedCurrentTimeLabels);
+  });
+
+  it('should render current time of each timezones including date differences (plus 1)', () => {
+    // Given
+    jest.useFakeTimers();
+    const baseDate = new Date('2022-05-16T20:00:00Z'); // Make sure it's on UTC
+    jest.setSystemTime(baseDate);
+    const timezoneOptions: Options = {
+      timezone: {
+        zones: [
+          {
+            timezoneName: 'Etc/UTC',
+          },
+          {
+            timezoneName: 'Asia/Seoul', // UTC +9
+          },
+        ],
+      },
+    };
+    const expectedCurrentTimeLabels = ['[+1]05:00', '20:00'];
+
+    // When
+    setup(timezoneOptions);
+
+    // Then
+    const currentTimeLabels = screen.getAllByTestId(currentTimeLabelTestId);
+    expect(currentTimeLabels.map((label) => label.textContent)).toEqual(expectedCurrentTimeLabels);
   });
 });

@@ -47,11 +47,12 @@ MultipleTimezones.args = {
     timezone: {
       zones: [
         {
-          timezoneName: 'Asia/Seoul',
-          displayLabel: '+09:00',
+          timezoneName: 'Asia/Karachi',
+          displayLabel: '+05:00',
         },
         {
-          timezoneName: 'Asia/Karachi',
+          timezoneName: 'US/Samoa',
+          displayLabel: '-11:00',
         },
       ],
     },

@@ -167,7 +167,11 @@ export default class TZDate {
     return this.d.setMilliseconds(ms);
   }
 
-  tz(tzValue: string | number) {
+  tz(tzValue: string | 'Local' | number) {
+    if (tzValue === 'Local') {
+      return new TZDate(this.getTime());
+    }
+
     const tzOffset = isString(tzValue) ? calculateTimezoneOffset(tzValue, this) : tzValue;
 
     const newTZDate = new TZDate(this.getTime() - getTZOffsetMSDifference(tzOffset));

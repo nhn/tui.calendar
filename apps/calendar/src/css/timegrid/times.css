@@ -37,6 +37,12 @@
   right: 0;
 }
 
+.timegrid-time-column .timegrid-current-time .timegrid-day-difference {
+  position: absolute;
+  right: 0;
+  bottom: 100%;
+}
+
 .timegrid-time-column .timegrid-time-hidden {
   visibility: hidden;
 }

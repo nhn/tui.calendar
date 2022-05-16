@@ -31,6 +31,7 @@ interface HourRowsProps {
     date: TZDate;
     top: number;
     className: string;
+    diffFromPrimaryTimezone?: number;
   }[];
   isPrimary: boolean;
   borderRight?: string;
@@ -68,6 +69,7 @@ function HourRows({
           unit="hour"
           top={currentTimeIndicatorState.top}
           time={currentTimeIndicatorState.now}
+          diffFromPrimaryTimezone={rowsInfo[0].diffFromPrimaryTimezone}
         />
       )}
     </div>
@@ -166,7 +168,6 @@ export const TimeColumn = memo(function TimeColumn({
           isPrimary={false}
           borderRight={borderRight}
           width={hourRowsWidth}
-          // TODO: apply timezone difference
           currentTimeIndicatorState={currentTimeIndicatorState}
         />
       ))}
