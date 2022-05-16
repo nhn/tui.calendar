@@ -43,6 +43,11 @@ function timezoneSelector(state: CalendarState) {
 
 export function TimezoneLabels({ top }: { top: number | null }) {
   const timezones = useStore(timezoneSelector);
+
+  if (timezones.length <= 1) {
+    return null;
+  }
+
   const timezoneLabelProps = timezones.map(({ displayLabel, timezoneName, tooltip }) => {
     return !isUndefined(displayLabel)
       ? { label: displayLabel, offset: null, tooltip: tooltip ?? timezoneName }
@@ -58,10 +63,6 @@ export function TimezoneLabels({ top }: { top: number | null }) {
 
   const timezonesCount = timezones.length;
   const timezoneLabelWidth = 100 / timezonesCount;
-
-  if (timezones.length <= 1) {
-    return null;
-  }
 
   return (
     <div
