@@ -83,7 +83,7 @@
     "serve:storybook": "http-server ./apps/calendar/storybook-static",
     "install:date": "cd libs/date && npm install",
     "setup:date": "npm run install:date && npm run build:date",
-    "test": "jest --detectOpenHandles --forceExit",
+    "test": "jest",
     "test:watch": "jest --watch",
     "test:playwright": "playwright test",
     "test:playwright:inspect": "playwright test --debug",
