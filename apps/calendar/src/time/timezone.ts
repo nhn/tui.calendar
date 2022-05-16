@@ -44,7 +44,7 @@ export function getLocalTimezoneOffset() {
  *
  * Target date is needed for the case when the timezone is applicable to DST.
  */
-export function calculateTimezoneOffset(targetDate: TZDate, timezoneName: string) {
+export function calculateTimezoneOffset(timezoneName: string, targetDate: TZDate = new TZDate()) {
   if (!isIntlDateTimeFormatSupported()) {
     logger.warn(
       'Intl.DateTimeFormat is not fully supported. So It will return the local timezone offset only.\nYou can use a polyfill to fix this issue.'
@@ -74,9 +74,9 @@ export function isUsingDST(targetDate: TZDate, timezoneName?: string) {
   if (timezoneName) {
     return (
       Math.max(
-        -calculateTimezoneOffset(jan, timezoneName),
-        -calculateTimezoneOffset(jul, timezoneName)
-      ) !== -calculateTimezoneOffset(targetDate, timezoneName)
+        -calculateTimezoneOffset(timezoneName, jan),
+        -calculateTimezoneOffset(timezoneName, jul)
+      ) !== -calculateTimezoneOffset(timezoneName, targetDate)
     );
   }
 

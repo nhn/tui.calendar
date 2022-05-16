@@ -4,7 +4,6 @@ import { Template } from '@src/components/template';
 import { addTimeGridPrefix } from '@src/components/timeGrid';
 import { useStore } from '@src/contexts/calendarStore';
 import { cls, toPercent } from '@src/helpers/css';
-import TZDate from '@src/time/date';
 import { calculateTimezoneOffset } from '@src/time/timezone';
 import { isUndefined } from '@src/utils/type';
 
@@ -49,7 +48,7 @@ export function TimezoneLabels({ top }: { top: number | null }) {
       ? { label: displayLabel, offset: null, tooltip: tooltip ?? timezoneName }
       : {
           label: null,
-          offset: calculateTimezoneOffset(new TZDate(), timezoneName),
+          offset: calculateTimezoneOffset(timezoneName),
           tooltip: tooltip ?? timezoneName,
         };
   });

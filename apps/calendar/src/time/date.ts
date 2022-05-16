@@ -168,7 +168,7 @@ export default class TZDate {
   }
 
   tz(tzValue: string | number) {
-    const tzOffset = isString(tzValue) ? calculateTimezoneOffset(this, tzValue) : tzValue;
+    const tzOffset = isString(tzValue) ? calculateTimezoneOffset(tzValue, this) : tzValue;
 
     const newTZDate = new TZDate(this.getTime() - getTZOffsetMSDifference(tzOffset));
     newTZDate.tzOffset = tzOffset;
@@ -185,7 +185,7 @@ export default class TZDate {
    */
   local(tzValue?: string | number) {
     if (isPresent(tzValue)) {
-      const tzOffset = isString(tzValue) ? calculateTimezoneOffset(this, tzValue) : tzValue;
+      const tzOffset = isString(tzValue) ? calculateTimezoneOffset(tzValue, this) : tzValue;
       return new TZDate(this.getTime() + getTZOffsetMSDifference(tzOffset));
     }
 
