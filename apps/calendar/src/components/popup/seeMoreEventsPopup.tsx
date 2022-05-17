@@ -81,7 +81,7 @@ export function SeeMoreEventsPopup() {
       <div className={classNames.seeMore} style={moreView}>
         <div className={classNames.header} style={style}>
           <Template template="monthMoreTitleDate" model={moreTitle} />
-          <ClosePopupButton />
+          <ClosePopupButton type="moreEvents" />
         </div>
         <div className={classNames.list} style={moreViewListStyle}>
           {events.map((uiModel) => (
