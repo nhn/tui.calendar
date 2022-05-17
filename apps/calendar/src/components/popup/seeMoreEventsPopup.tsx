@@ -60,7 +60,7 @@ export function SeeMoreEventsPopup() {
   const moreTitle = {
     ymd: toFormat(date, 'YYYY-MM-DD'),
     day: date.getDay(),
-    date: date.getDate(),
+    date: date.getDate().toString().padStart(2, '0'),
   };
 
   const moreViewListStyle = {

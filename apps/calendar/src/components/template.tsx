@@ -7,6 +7,8 @@ import type { TemplateName } from '@src/template/default';
 import { sanitize } from '@src/utils/sanitizer';
 import { isString } from '@src/utils/type';
 
+import type { TemplateReturnType } from '@t/template';
+
 interface Props {
   template: TemplateName;
   model: any;
@@ -14,13 +16,13 @@ interface Props {
 }
 
 function identity(value: unknown) {
-  return value;
+  return value as TemplateReturnType;
 }
 
 export function Template({ template, model, as: tagName = 'div' }: Props) {
   const templates = useStore(templateSelector);
   const templateFunc: Function = templates[template] || identity;
-  const htmlOrVnode = templateFunc(model, h);
+  const htmlOrVnode: TemplateReturnType = templateFunc(model, h);
 
   return isString(htmlOrVnode)
     ? createElement(tagName, {

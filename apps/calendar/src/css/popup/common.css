@@ -2,6 +2,10 @@
   z-index: 1;
 }
 
+.floating-layer * {
+  box-sizing: border-box;
+}
+
 .popup-container {
   position: absolute;
   font-weight: 2.5;
