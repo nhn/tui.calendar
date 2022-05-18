@@ -52,7 +52,7 @@ export interface TemplateTimezone extends TimezoneConfig {
   timezoneOffset: number;
 }
 
-export type TemplateReturnType = string | VNode;
+export type TemplateReturnType = string | VNode<{ className: string }>;
 
 export interface Template {
   milestoneTitle: () => TemplateReturnType;

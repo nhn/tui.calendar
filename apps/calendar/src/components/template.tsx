@@ -1,4 +1,4 @@
-import { createElement, h } from 'preact';
+import { cloneElement, createElement } from 'preact';
 
 import { useStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
@@ -11,13 +11,10 @@ import type { TemplateReturnType } from '@t/template';
 
 interface Props {
   template: TemplateName;
-  model: any;
+  model?: any;
   as?: keyof HTMLElementTagNameMap;
 }
 
-/**
- * model props is required, but may not be used in practice.
- */
 export function Template({ template, model, as: tagName = 'div' }: Props) {
   const templates = useStore(templateSelector);
   const templateFunc: Function = templates[template];
@@ -26,7 +23,7 @@ export function Template({ template, model, as: tagName = 'div' }: Props) {
     return null;
   }
 
-  const htmlOrVnode: TemplateReturnType = templateFunc(model, h);
+  const htmlOrVnode: TemplateReturnType = templateFunc(model);
 
   return isString(htmlOrVnode)
     ? createElement(tagName, {
@@ -35,5 +32,7 @@ export function Template({ template, model, as: tagName = 'div' }: Props) {
           __html: sanitize(htmlOrVnode),
         },
       })
-    : htmlOrVnode;
+    : cloneElement(htmlOrVnode, {
+        className: `${htmlOrVnode.props.className} ${cls(`template-${template}`)}`,
+      });
 }
