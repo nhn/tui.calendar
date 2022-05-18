@@ -91,7 +91,11 @@ test('should be able to select a range of time from bottom to top', async ({ pag
   const targetGridLineBoundingBox = await getBoundingBox(targetGridLineLocator);
 
   // When
-  await dragAndDrop(page, startGridLineLocator, targetGridLineLocator);
+  await dragAndDrop({
+    page,
+    sourceLocator: startGridLineLocator,
+    targetLocator: targetGridLineLocator,
+  });
 
   // Then
   await assertTimeGridSelection(timeGridSelectionLocator, {
@@ -112,10 +116,15 @@ test('should be able to select a range of time to upper right', async ({ page })
   const targetGridLineBoundingBox = await getBoundingBox(targetGridLineLocator);
 
   // When
-  await dragAndDrop(page, startGridLineLocator, targetGridLineLocator, {
-    targetPosition: {
-      x: targetGridLineBoundingBox.width,
-      y: startGridLineBoundingBox.height,
+  await dragAndDrop({
+    page,
+    sourceLocator: startGridLineLocator,
+    targetLocator: targetGridLineLocator,
+    options: {
+      targetPosition: {
+        x: targetGridLineBoundingBox.width,
+        y: startGridLineBoundingBox.height,
+      },
     },
   });
 
@@ -136,10 +145,15 @@ test('should be able to select a range of time to right', async ({ page }) => {
   const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
 
   // When
-  await dragAndDrop(page, startGridLineLocator, startGridLineLocator, {
-    targetPosition: {
-      x: startGridLineBoundingBox.width,
-      y: 1,
+  await dragAndDrop({
+    page,
+    sourceLocator: startGridLineLocator,
+    targetLocator: startGridLineLocator,
+    options: {
+      targetPosition: {
+        x: startGridLineBoundingBox.width,
+        y: 1,
+      },
     },
   });
 
@@ -162,10 +176,15 @@ test('should be able to select a range of time to lower right', async ({ page })
   const targetGridLineBoundingBox = await getBoundingBox(targetGridLineLocator);
 
   // When
-  await dragAndDrop(page, startGridLineLocator, targetGridLineLocator, {
-    targetPosition: {
-      x: targetGridLineBoundingBox.width,
-      y: targetGridLineBoundingBox.height,
+  await dragAndDrop({
+    page,
+    sourceLocator: startGridLineLocator,
+    targetLocator: targetGridLineLocator,
+    options: {
+      targetPosition: {
+        x: targetGridLineBoundingBox.width,
+        y: targetGridLineBoundingBox.height,
+      },
     },
   });
 
@@ -188,7 +207,11 @@ test('should be able to select a range of time from top to bottom', async ({ pag
   const targetGridLineBoundingBox = await getBoundingBox(targetGridLineLocator);
 
   // When
-  await dragAndDrop(page, startGridLineLocator, targetGridLineLocator);
+  await dragAndDrop({
+    page,
+    sourceLocator: startGridLineLocator,
+    targetLocator: targetGridLineLocator,
+  });
 
   // Then
   await assertTimeGridSelection(timeGridSelectionLocator, {
@@ -209,10 +232,15 @@ test('should be able to select a range of time to lower left', async ({ page }) 
   const targetGridLineBoundingBox = await getBoundingBox(targetGridLineLocator);
 
   // When
-  await dragAndDrop(page, startGridLineLocator, targetGridLineLocator, {
-    targetPosition: {
-      x: 0,
-      y: targetGridLineBoundingBox.height,
+  await dragAndDrop({
+    page,
+    sourceLocator: startGridLineLocator,
+    targetLocator: targetGridLineLocator,
+    options: {
+      targetPosition: {
+        x: 0,
+        y: targetGridLineBoundingBox.height,
+      },
     },
   });
 
@@ -233,10 +261,15 @@ test('should be able to select a range of time to left', async ({ page }) => {
   const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
 
   // When
-  await dragAndDrop(page, startGridLineLocator, startGridLineLocator, {
-    targetPosition: {
-      x: 1,
-      y: 1,
+  await dragAndDrop({
+    page,
+    sourceLocator: startGridLineLocator,
+    targetLocator: startGridLineLocator,
+    options: {
+      targetPosition: {
+        x: 1,
+        y: 1,
+      },
     },
   });
 
@@ -259,10 +292,15 @@ test('should be able to select a range of time to upper left', async ({ page }) 
   const targetGridLineBoundingBox = await getBoundingBox(targetGridLineLocator);
 
   // When
-  await dragAndDrop(page, startGridLineLocator, targetGridLineLocator, {
-    targetPosition: {
-      x: 1,
-      y: 1,
+  await dragAndDrop({
+    page,
+    sourceLocator: startGridLineLocator,
+    targetLocator: targetGridLineLocator,
+    options: {
+      targetPosition: {
+        x: 1,
+        y: 1,
+      },
     },
   });
 

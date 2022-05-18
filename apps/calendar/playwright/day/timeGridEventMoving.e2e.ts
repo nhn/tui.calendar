@@ -63,14 +63,19 @@ timeEvents.forEach(({ title: eventTitle, start, end }) => {
         const expectedStartTimeAfterMove = getTimeStrFromDate(addHours(start, step));
 
         // When
-        await dragAndDrop(page, eventLocator, targetRowLocator, {
-          sourcePosition: {
-            x: 1,
-            y: dragStartRowBoundingBox.y - eventBoundingBoxBeforeMove.y + 1,
-          },
-          targetPosition: {
-            y: 1,
-            x: 1,
+        await dragAndDrop({
+          page,
+          sourceLocator: eventLocator,
+          targetLocator: targetRowLocator,
+          options: {
+            sourcePosition: {
+              x: 1,
+              y: dragStartRowBoundingBox.y - eventBoundingBoxBeforeMove.y + 1,
+            },
+            targetPosition: {
+              y: 1,
+              x: 1,
+            },
           },
         });
         await waitForSingleElement(eventLocator);

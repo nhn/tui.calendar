@@ -43,7 +43,7 @@ test('resizing allday grid row event from left to right', async ({ page }) => {
   const endOfWeekCellLocator = page.locator(ALL_DAY_GRID_CELL_SELECTOR).last();
 
   // When
-  await dragAndDrop(page, resizerLocator, endOfWeekCellLocator);
+  await dragAndDrop({ page, sourceLocator: resizerLocator, targetLocator: endOfWeekCellLocator });
 
   // Then
   await expect

@@ -142,14 +142,19 @@ cases.forEach(({ title, eventColumnIndex, directionInfo }) => {
       const targetColumnBoundingBox = await getBoundingBox(targetColumnLocator);
 
       // When
-      await dragAndDrop(page, eventLocator, targetRowLocator, {
-        sourcePosition: {
-          x: 1,
-          y: 1,
-        },
-        targetPosition: {
-          y: 1,
-          x: targetColumnBoundingBox.x - 1,
+      await dragAndDrop({
+        page,
+        sourceLocator: eventLocator,
+        targetLocator: targetRowLocator,
+        options: {
+          sourcePosition: {
+            x: 1,
+            y: 1,
+          },
+          targetPosition: {
+            y: 1,
+            x: targetColumnBoundingBox.x - 1,
+          },
         },
       });
 

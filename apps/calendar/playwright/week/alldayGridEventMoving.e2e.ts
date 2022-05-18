@@ -45,18 +45,12 @@ test('moving allday grid row event from left to right', async ({ page }) => {
   const targetEventLocator = page.locator(TARGET_EVENT_SELECTOR);
   const boundingBoxBeforeMoving = await getBoundingBox(targetEventLocator);
   const fifthOfWeekCellLocator = page.locator(ALL_DAY_GRID_CELL_SELECTOR).nth(4);
-  const targetBoundingBox = await getBoundingBox(fifthOfWeekCellLocator);
 
   // When
-  await dragAndDrop(page, targetEventLocator, fifthOfWeekCellLocator, {
-    sourcePosition: {
-      x: boundingBoxBeforeMoving.width / 2,
-      y: boundingBoxBeforeMoving.height / 2,
-    },
-    targetPosition: {
-      x: targetBoundingBox.width / 2,
-      y: targetBoundingBox.height / 2,
-    },
+  await dragAndDrop({
+    page,
+    sourceLocator: targetEventLocator,
+    targetLocator: fifthOfWeekCellLocator,
   });
 
   // Then
@@ -72,18 +66,12 @@ test.describe('moving allday grid row event when moving by holding the middle or
     const targetEventLocator = page.locator(TARGET_EVENT_SELECTOR);
     const boundingBoxBeforeMoving = await getBoundingBox(targetEventLocator);
     const fourthOfWeekCellLocator = page.locator(ALL_DAY_GRID_CELL_SELECTOR).nth(3);
-    const targetBoundingBox = await getBoundingBox(fourthOfWeekCellLocator);
 
     // When
-    await dragAndDrop(page, targetEventLocator, fourthOfWeekCellLocator, {
-      sourcePosition: {
-        x: boundingBoxBeforeMoving.width / 2,
-        y: boundingBoxBeforeMoving.height / 2,
-      },
-      targetPosition: {
-        x: targetBoundingBox.width / 2,
-        y: targetBoundingBox.height / 2,
-      },
+    await dragAndDrop({
+      page,
+      sourceLocator: targetEventLocator,
+      targetLocator: fourthOfWeekCellLocator,
     });
 
     // Then
@@ -100,17 +88,17 @@ test.describe('moving allday grid row event when moving by holding the middle or
     const targetEventLocator = page.locator(TARGET_EVENT_SELECTOR);
     const boundingBoxBeforeMoving = await getBoundingBox(targetEventLocator);
     const fourthOfWeekCellLocator = page.locator(ALL_DAY_GRID_CELL_SELECTOR).nth(3);
-    const targetBoundingBox = await getBoundingBox(fourthOfWeekCellLocator);
 
     // When
-    await dragAndDrop(page, targetEventLocator, fourthOfWeekCellLocator, {
-      sourcePosition: {
-        x: (boundingBoxBeforeMoving.width * 5) / 6,
-        y: boundingBoxBeforeMoving.height / 2,
-      },
-      targetPosition: {
-        x: targetBoundingBox.width / 2,
-        y: targetBoundingBox.height / 2,
+    await dragAndDrop({
+      page,
+      sourceLocator: targetEventLocator,
+      targetLocator: fourthOfWeekCellLocator,
+      options: {
+        sourcePosition: {
+          x: (boundingBoxBeforeMoving.width * 5) / 6,
+          y: boundingBoxBeforeMoving.height / 2,
+        },
       },
     });
 

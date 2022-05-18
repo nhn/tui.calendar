@@ -59,14 +59,19 @@ async function setup({
   const targetRowBoundingBox = await getBoundingBox(targetRowLocator);
 
   // When
-  await dragAndDrop(page, resizeHandlerLocator, targetRowLocator, {
-    sourcePosition: {
-      x: 1,
-      y: 1,
-    },
-    targetPosition: {
-      x: 1,
-      y: targetRowBoundingBox.height / 2,
+  await dragAndDrop({
+    page,
+    sourceLocator: resizeHandlerLocator,
+    targetLocator: targetRowLocator,
+    options: {
+      sourcePosition: {
+        x: 1,
+        y: 1,
+      },
+      targetPosition: {
+        x: 1,
+        y: targetRowBoundingBox.height / 2,
+      },
     },
   });
 
