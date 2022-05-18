@@ -11,6 +11,7 @@ import { viewSelector } from '@src/selectors';
 import type { TemplateName } from '@src/template/default';
 import TZDate from '@src/time/date';
 import { Day, toFormat } from '@src/time/datetime';
+import { capitalize } from '@src/utils/keyboard';
 
 import type { CommonTheme, MonthTheme } from '@t/theme';
 
@@ -78,9 +79,7 @@ export function CellHeader({
     ymd,
   };
   const gridCellDateStyle = { color: getDateColor({ date, theme, renderDate }) };
-  const monthGridTemplate = `monthGrid${
-    type === CellBarType.header ? 'Header' : 'Footer'
-  }` as TemplateName;
+  const monthGridTemplate = `monthGrid${capitalize(type)}` as TemplateName;
 
   return (
     <div className={cls(`grid-cell-${type}`)}>
