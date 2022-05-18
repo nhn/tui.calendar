@@ -89,7 +89,7 @@ export interface Template {
   endDatePlaceholder: () => TemplateReturnType;
   popupSave: () => TemplateReturnType;
   popupUpdate: () => TemplateReturnType;
-  popupDetailDate: (isAllday: boolean, start: TZDate, end: TZDate) => TemplateReturnType;
+  popupDetailDate: (event: EventModel) => TemplateReturnType;
   popupDetailLocation: (event: EventModel) => TemplateReturnType;
   popupDetailUser: (event: EventModel) => TemplateReturnType;
   popupDetailState: (event: EventModel) => TemplateReturnType;

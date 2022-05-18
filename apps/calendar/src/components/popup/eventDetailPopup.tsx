@@ -4,6 +4,7 @@ import { useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
 
 import { EventDetailSectionDetail } from '@src/components/popup/eventDetailSectionDetail';
 import { EventDetailSectionHeader } from '@src/components/popup/eventDetailSectionHeader';
+import { Template } from '@src/components/template';
 import { DetailPopupArrowDirection, HALF_OF_POPUP_ARROW_HEIGHT } from '@src/constants/popup';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
@@ -111,12 +112,8 @@ export function EventDetailPopup() {
     start = new TZDate(),
     end = new TZDate(),
     location,
-    recurrenceRule,
-    attendees,
     state,
-    calendarId,
     bgColor,
-    body,
     isReadOnly,
     isPrivate,
   } = event;
@@ -145,25 +142,22 @@ export function EventDetailPopup() {
   return createPortal(
     <div role="dialog" className={classNames.popupContainer} ref={popupContainerRef} style={style}>
       <div className={classNames.detailContainer}>
-        <EventDetailSectionHeader title={title} isAllday={isAllday} start={start} end={end} />
-        <EventDetailSectionDetail
-          location={location}
-          recurrenceRule={recurrenceRule}
-          attendees={attendees}
-          state={state}
-          calendarId={calendarId}
-          body={body}
-        />
+        <EventDetailSectionHeader event={event} />
+        <EventDetailSectionDetail event={event} />
         {!isReadOnly && (
           <div className={classNames.sectionButton}>
             <button type="button" className={classNames.editButton} onClick={onClickEditButton}>
               <span className={classNames.editIcon} />
-              <span className={classNames.content}>Edit</span>
+              <span className={classNames.content}>
+                <Template template="popupEdit" as="span" />
+              </span>
             </button>
             <div className={classNames.verticalLine} />
             <button type="button" className={classNames.deleteButton} onClick={onClickDeleteButton}>
               <span className={classNames.deleteIcon} />
-              <span className={classNames.content}>Delete</span>
+              <span className={classNames.content}>
+                <Template template="popupDelete" as="span" />
+              </span>
             </button>
           </div>
         )}

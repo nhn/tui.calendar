@@ -1,14 +1,11 @@
 import { h } from 'preact';
 
+import { Template } from '@src/components/template';
 import { cls } from '@src/helpers/css';
-import type TZDate from '@src/time/date';
-import { isSameDate, toFormat } from '@src/time/datetime';
+import type EventModel from '@src/model/eventModel';
 
 interface Props {
-  title: string;
-  isAllday: boolean;
-  start: TZDate;
-  end: TZDate;
+  event: EventModel;
 }
 
 const classNames = {
@@ -17,27 +14,15 @@ const classNames = {
   eventTitle: cls('event-title'),
 };
 
-function getDetailDate(isAllday: boolean, start: TZDate, end: TZDate) {
-  const dayFormat = 'YYYY.MM.DD';
-  const timeFormat = 'hh:mm tt';
-  const detailFormat = `${dayFormat} ${timeFormat}`;
-  const startDate = toFormat(start, isAllday ? dayFormat : timeFormat);
-  const endDateFormat = isSameDate(start, end) ? timeFormat : detailFormat;
-
-  if (isAllday) {
-    return `${startDate}${isSameDate(start, end) ? '' : ` - ${toFormat(end, dayFormat)}`}`;
-  }
-
-  return `${toFormat(start, detailFormat)} - ${toFormat(end, endDateFormat)}`;
-}
-
-export function EventDetailSectionHeader({ title, isAllday, start, end }: Props) {
+export function EventDetailSectionHeader({ event }: Props) {
   return (
     <div className={classNames.sectionHeader}>
       <div>
-        <span className={classNames.eventTitle}>{title}</span>
+        <span className={classNames.eventTitle}>{event.title}</span>
       </div>
-      <div className={classNames.content}>{getDetailDate(isAllday, start, end)}</div>
+      <div className={classNames.content}>
+        <Template template="popupDetailDate" model={event} />
+      </div>
     </div>
   );
 }
