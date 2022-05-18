@@ -8,6 +8,7 @@ import { GridLines } from '@src/components/timeGrid/gridLines';
 import { MovingEventShadow } from '@src/components/timeGrid/movingEventShadow';
 import { TimeColumn } from '@src/components/timeGrid/timeColumn';
 import { useStore } from '@src/contexts/calendarStore';
+import { useTheme } from '@src/contexts/themeStore';
 import { isBetween, setRenderInfoOfUIModels } from '@src/controller/column';
 import { getTopPercentByTime } from '@src/controller/times';
 import { cls, toPercent } from '@src/helpers/css';
@@ -18,6 +19,7 @@ import { useInterval } from '@src/hooks/common/useInterval';
 import { useIsMounted } from '@src/hooks/common/useIsMounted';
 import { useGridSelection } from '@src/hooks/gridSelection/useGridSelection';
 import type EventUIModel from '@src/model/eventUIModel';
+import { weekTimeGridLeftSelector } from '@src/selectors/theme';
 import { primaryTimezoneSelector } from '@src/selectors/timezone';
 import TZDate from '@src/time/date';
 import {
@@ -40,12 +42,12 @@ const classNames = {
 interface Props {
   events: EventUIModel[];
   timeGridData: TimeGridData;
-  timesWidth?: number;
 }
 
-export function TimeGrid({ timesWidth = 120, timeGridData, events }: Props) {
+export function TimeGrid({ timeGridData, events }: Props) {
   const primaryTimezoneName = useStore(primaryTimezoneSelector);
   const isMounted = useIsMounted();
+  const { width: timeGridLeftWidth } = useTheme(weekTimeGridLeftSelector);
 
   const [currentTimeIndicatorState, setCurrentTimeIndicatorState] = useState<{
     top: number;
@@ -147,14 +149,10 @@ export function TimeGrid({ timesWidth = 120, timeGridData, events }: Props) {
   return (
     <div className={classNames.timegrid}>
       <div className={classNames.scrollArea}>
-        <TimeColumn
-          timeGridRows={rows}
-          columnWidth={timesWidth}
-          currentTimeIndicatorState={currentTimeIndicatorState}
-        />
+        <TimeColumn timeGridRows={rows} currentTimeIndicatorState={currentTimeIndicatorState} />
         <div
           className={cls('columns')}
-          style={{ left: timesWidth }}
+          style={{ left: timeGridLeftWidth }}
           ref={setColumnsContainer}
           onMouseDown={onMouseDown}
         >

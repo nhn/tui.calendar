@@ -1,6 +1,6 @@
 import { useCallback } from 'preact/hooks';
 
-import { commonThemeSelector, monthThemeSelector, weekThemeSelector } from '@src/selectors';
+import { commonThemeSelector, monthThemeSelector, weekThemeSelector } from '@src/selectors/theme';
 import { createStoreContext } from '@src/store';
 import { createStore } from '@src/store/internal';
 import { createCommonTheme } from '@src/theme/common';

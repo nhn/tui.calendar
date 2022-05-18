@@ -44,6 +44,16 @@ MultipleTimezones.args = {
   ...Template.args,
   options: {
     ...Template.args.options,
+    theme: {
+      week: {
+        dayGridLeft: {
+          width: '120px',
+        },
+        timeGridLeft: {
+          width: '120px',
+        },
+      },
+    },
     timezone: {
       zones: [
         {

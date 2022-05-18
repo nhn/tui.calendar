@@ -8,6 +8,7 @@ import { CurrentTimeLabel } from '@src/components/timeGrid/currentTimeLabel';
 import { useStore } from '@src/contexts/calendarStore';
 import { useTheme } from '@src/contexts/themeStore';
 import { cls, toPercent } from '@src/helpers/css';
+import { weekTimeGridLeftSelector } from '@src/selectors/theme';
 import { timezonesSelector } from '@src/selectors/timezone';
 import TZDate from '@src/time/date';
 import { addMinutes, setTimeStrToDate } from '@src/time/datetime';
@@ -78,19 +79,15 @@ function HourRows({
 
 interface Props {
   timeGridRows: TimeGridRow[];
-  columnWidth: number;
   currentTimeIndicatorState: { top: number; now: TZDate } | null;
 }
 
 export const TimeColumn = memo(function TimeColumn({
   timeGridRows,
-  columnWidth,
   currentTimeIndicatorState,
 }: Props) {
   const timezones = useStore(timezonesSelector);
-  const { borderRight, backgroundColor } = useTheme(
-    useCallback((theme) => theme.week.timeGridLeft, [])
-  );
+  const { width, borderRight, backgroundColor } = useTheme(weekTimeGridLeftSelector);
 
   const rowsByHour = useMemo(
     () => timeGridRows.filter((_, index) => index % 2 === 0 || index === timeGridRows.length - 1),
@@ -155,7 +152,7 @@ export const TimeColumn = memo(function TimeColumn({
   return (
     <div
       className={cls(classNames.timeColumn)}
-      style={{ width: columnWidth, backgroundColor }}
+      style={{ width, backgroundColor }}
       data-testid="timegrid-time-column"
     >
       {otherTimezoneHourRowsProps.map((rowsInfo) => (
