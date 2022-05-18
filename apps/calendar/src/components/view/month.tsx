@@ -7,10 +7,10 @@ import { Layout } from '@src/components/layout';
 import { useStore } from '@src/contexts/calendarStore';
 import { useTheme } from '@src/contexts/themeStore';
 import { cls } from '@src/helpers/css';
-import { capitalizeDayName } from '@src/helpers/dayName';
 import { createDateMatrixOfMonth } from '@src/helpers/grid';
 import { optionsSelector, viewSelector } from '@src/selectors';
 import { getRowStyleInfo, isWeekend } from '@src/time/datetime';
+import { capitalize } from '@src/utils/string';
 
 import type { MonthOptions } from '@t/options';
 import type { CalendarStore } from '@t/store';
@@ -24,7 +24,7 @@ function getDayNames(options: CalendarStore['options']) {
   daynames.forEach((name, index) => {
     if (!workweek || (workweek && !isWeekend(index))) {
       dayNames.push({
-        label: capitalizeDayName(name),
+        label: capitalize(name),
         day: index,
       });
     }

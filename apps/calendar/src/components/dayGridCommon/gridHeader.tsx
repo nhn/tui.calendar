@@ -2,10 +2,11 @@ import { h } from 'preact';
 
 import { DayName } from '@src/components/dayGridCommon/dayName';
 import { cls, toPercent } from '@src/helpers/css';
+import type { TemplateName } from '@src/template/default';
 
 import type { CalendarViewType } from '@t/components/common';
 import type { CalendarMonthOptions, CalendarWeekOptions } from '@t/store';
-import type { Template, TemplateMonthDayName, TemplateWeekDayName } from '@t/template';
+import type { TemplateMonthDayName, TemplateWeekDayName } from '@t/template';
 import type { MonthDayNameTheme } from '@t/theme';
 import type { CellStyle } from '@t/time/datetime';
 
@@ -16,7 +17,7 @@ interface Props {
   theme?: MonthDayNameTheme;
   options?: CalendarMonthOptions | CalendarWeekOptions;
   marginLeft?: number;
-  templateType: keyof Template;
+  templateType: Extract<TemplateName, 'weekDayname' | 'monthDayname'>;
   rowStyleInfo: CellStyle[];
   type?: CalendarViewType;
 }

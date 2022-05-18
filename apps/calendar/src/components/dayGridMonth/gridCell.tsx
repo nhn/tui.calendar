@@ -2,6 +2,7 @@ import { h } from 'preact';
 import { useCallback, useEffect, useState } from 'preact/hooks';
 
 import { CellHeader } from '@src/components/dayGridMonth/cellHeader';
+import { CellBarType } from '@src/constants/grid';
 import {
   MONTH_EVENT_HEIGHT,
   MONTH_EVENT_MARGIN_TOP,
@@ -185,7 +186,18 @@ export function GridCell({ date, events = [], style, parentContainer, height }: 
 
   return (
     <div className={cls('daygrid-cell')} style={style} ref={containerRefCallback}>
-      <CellHeader exceedCount={exceedCount} date={date} onClickExceedCount={onOpenSeeMorePopup} />
+      <CellHeader
+        type={CellBarType.header}
+        exceedCount={exceedCount}
+        date={date}
+        onClickExceedCount={onOpenSeeMorePopup}
+      />
+      <CellHeader
+        type={CellBarType.footer}
+        exceedCount={exceedCount}
+        date={date}
+        onClickExceedCount={onOpenSeeMorePopup}
+      />
     </div>
   );
 }
