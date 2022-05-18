@@ -33,5 +33,8 @@ FixedEvents.args = {
   onInit: (cal) => {
     cal.setDate(MOCK_MONTH_VIEW_BASE_DATE);
     cal.createEvents(mockMonthViewEventsFixed);
+    cal.on('beforeUpdateEvent', ({ event, changes }) => {
+      cal.updateEvent(event.id, event.calendarId, changes);
+    });
   },
 };

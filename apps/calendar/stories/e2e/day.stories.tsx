@@ -21,5 +21,8 @@ FixedEvents.args = {
   ...Template.args,
   onInit: (cal) => {
     cal.createEvents(mockDayViewEvents);
+    cal.on('beforeUpdateEvent', ({ event, changes }) => {
+      cal.updateEvent(event.id, event.calendarId, changes);
+    });
   },
 };

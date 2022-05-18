@@ -130,16 +130,19 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
     }
   });
 
-  const clearIsDraggingTarget = () => setIsDraggingTarget(false);
+  const startDragEvent = (className: string) => {
+    setDraggingEventUIModel(uiModel);
+    layoutContainer?.classList.add(className);
+  };
+  const endDragEvent = (className: string) => {
+    setIsDraggingTarget(false);
+    layoutContainer?.classList.remove(className);
+  };
 
   const onMoveStart = useDrag(DRAGGING_TYPE_CREATORS.moveEvent('timeGrid', `${uiModel.cid()}`), {
-    onDragStart: () => {
-      setDraggingEventUIModel(uiModel);
-      layoutContainer?.classList.add(classNames.moveEvent);
-    },
+    onDragStart: () => startDragEvent(classNames.moveEvent),
     onMouseUp: (e, { draggingState }) => {
-      layoutContainer?.classList.remove(classNames.moveEvent);
-      clearIsDraggingTarget();
+      endDragEvent(classNames.moveEvent);
 
       const isClick = draggingState <= DraggingState.INIT;
       if (isClick && useDetailPopup && eventContainerRef.current) {
@@ -154,6 +157,7 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
 
       eventBus.fire('clickEvent', { event: uiModel.model, nativeEvent: e });
     },
+    onPressESCKey: () => endDragEvent(classNames.moveEvent),
   });
   const handleMoveStart = (e: MouseEvent) => {
     e.stopPropagation();
@@ -163,14 +167,9 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
   const onResizeStart = useDrag(
     DRAGGING_TYPE_CREATORS.resizeEvent('timeGrid', `${uiModel.cid()}`),
     {
-      onDragStart: () => {
-        setDraggingEventUIModel(uiModel);
-        layoutContainer?.classList.add(classNames.resizeEvent);
-      },
-      onMouseUp: () => {
-        layoutContainer?.classList.remove(classNames.resizeEvent);
-        clearIsDraggingTarget();
-      },
+      onDragStart: () => startDragEvent(classNames.resizeEvent),
+      onMouseUp: () => endDragEvent(classNames.resizeEvent),
+      onPressESCKey: () => endDragEvent(classNames.resizeEvent),
     }
   );
   const handleResizeStart = (e: MouseEvent) => {

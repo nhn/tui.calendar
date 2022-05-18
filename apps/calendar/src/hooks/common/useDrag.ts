@@ -44,7 +44,7 @@ export function useDrag(
   draggingItemType: DraggingTypes,
   { onInit, onDragStart, onDrag, onMouseUp, onPressESCKey }: DragListeners = {}
 ) {
-  const { initDrag, setDraggingState, reset } = useDispatch('dnd');
+  const { initDrag, setDragging, cancelDrag, reset } = useDispatch('dnd');
 
   const store = useInternalStore();
   const dndSliceRef = useRef(store.getState().dnd);
@@ -95,6 +95,7 @@ export function useDrag(
 
       if (currentDraggingItemType !== draggingItemType) {
         setStarted(false);
+        reset();
 
         return;
       }
@@ -108,16 +109,16 @@ export function useDrag(
       }
 
       if (draggingState <= DraggingState.INIT) {
-        setDraggingState({ x: e.clientX, y: e.clientY });
+        setDragging({ x: e.clientX, y: e.clientY });
         onDragStart?.(e, dndSliceRef.current);
 
         return;
       }
 
-      setDraggingState({ x: e.clientX, y: e.clientY });
+      setDragging({ x: e.clientX, y: e.clientY });
       onDrag?.(e, dndSliceRef.current);
     },
-    [draggingItemType, onDrag, onDragStart, setDraggingState]
+    [draggingItemType, onDrag, onDragStart, setDragging, reset]
   );
 
   const handleMouseUp = useCallback<MouseEventListener>(
@@ -127,19 +128,21 @@ export function useDrag(
       if (isStarted) {
         onMouseUp?.(e, dndSliceRef.current);
         setStarted(false);
+        reset();
       }
     },
-    [isStarted, onMouseUp]
+    [isStarted, onMouseUp, reset]
   );
 
   const handleKeyDown = useCallback<KeyboardEventListener>(
     (e) => {
       if (isKeyPressed(e, KEY.ESCAPE)) {
-        onPressESCKey?.(e, dndSliceRef.current);
         setStarted(false);
+        cancelDrag();
+        onPressESCKey?.(e, dndSliceRef.current);
       }
     },
-    [onPressESCKey]
+    [onPressESCKey, cancelDrag]
   );
 
   useEffect(() => {
@@ -159,7 +162,6 @@ export function useDrag(
       document.addEventListener('keydown', wrappedHandleKeyDown);
 
       return () => {
-        reset();
         document.removeEventListener('mousemove', wrappedHandleMouseMove);
         document.removeEventListener('mouseup', wrappedHandleMouseUp);
         document.removeEventListener('keydown', wrappedHandleKeyDown);

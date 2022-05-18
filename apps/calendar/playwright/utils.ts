@@ -2,6 +2,7 @@ import type { Locator, Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 
 import type TZDate from '../src/time/date';
+import type { EventModelData } from '../types/events';
 import type { FormattedTimeString } from '../types/time/datetime';
 import type { BoundingBox } from './types';
 
@@ -9,12 +10,19 @@ export function getPrefixedClassName(className: string) {
   return `.toastui-calendar-${className}`;
 }
 
-export async function dragAndDrop(
-  page: Page,
-  sourceLocator: Locator,
-  targetLocator: Locator,
-  options: Parameters<Locator['dragTo']>[1] = {}
-) {
+export async function dragAndDrop({
+  page,
+  sourceLocator,
+  targetLocator,
+  options = {},
+  hold = false,
+}: {
+  page: Page;
+  sourceLocator: Locator;
+  targetLocator: Locator;
+  options?: Parameters<Locator['dragTo']>[1];
+  hold?: boolean;
+}) {
   const sourceBoundingBox = await getBoundingBox(sourceLocator);
   const targetBoundingBox = await getBoundingBox(targetLocator);
 
@@ -28,7 +36,9 @@ export async function dragAndDrop(
   await page.mouse.move(sourceX, sourceY);
   await page.mouse.down();
   await page.mouse.move(targetX, targetY, { steps: 4 });
-  await page.mouse.up();
+  if (!hold) {
+    await page.mouse.up();
+  }
 }
 
 export async function selectGridCells(
@@ -40,7 +50,7 @@ export async function selectGridCells(
   const startCellLocator = page.locator(className).nth(startCellIdx);
   const endCellLocator = page.locator(className).nth(endCellIdx);
 
-  await dragAndDrop(page, startCellLocator, endCellLocator);
+  await dragAndDrop({ page, sourceLocator: startCellLocator, targetLocator: endCellLocator });
 }
 
 export function selectMonthGridCells(page: Page, startCellIndex: number, endCellIndex: number) {
@@ -57,8 +67,20 @@ export async function getBoundingBox(locator: Locator): Promise<BoundingBox> {
   return boundingBox;
 }
 
+export function getTimeEventSelector(title: string): string {
+  return `[data-testid*="time-event-${title}"]`;
+}
+
+export function getHorizontalEventSelector(event: EventModelData): string {
+  return `data-testid=${event.calendarId}-${event.id}-${event.title}`;
+}
+
 export function getTimeGridLineSelector(start: FormattedTimeString): string {
   return `[data-testid*="gridline-${start}"]`;
+}
+
+export function getCellSelector(cellIndex: number): string {
+  return `.toastui-calendar-daygrid-cell >> nth=${cellIndex}`;
 }
 
 export function getTimeStrFromDate(d: TZDate) {

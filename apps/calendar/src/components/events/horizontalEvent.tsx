@@ -170,7 +170,14 @@ export function HorizontalEvent({
 
   const eventContainerRef = useRef<HTMLDivElement>(null);
 
-  const clearIsDraggingTarget = () => setIsDraggingTarget(false);
+  const startDragEvent = (className: string) => {
+    setDraggingEventUIModel(uiModel);
+    layoutContainer?.classList.add(className);
+  };
+  const endDragEvent = (className: string) => {
+    setIsDraggingTarget(false);
+    layoutContainer?.classList.remove(className);
+  };
 
   useTransientUpdate(dndSelector, ({ draggingEventUIModel, draggingState }) => {
     if (
@@ -186,23 +193,14 @@ export function HorizontalEvent({
   });
 
   const onResizeStart = useDrag(DRAGGING_TYPE_CREATORS.resizeEvent('dayGrid', `${uiModel.cid()}`), {
-    onDragStart: () => {
-      setDraggingEventUIModel(uiModel);
-      layoutContainer?.classList.add(classNames.resizeEvent);
-    },
-    onMouseUp: () => {
-      layoutContainer?.classList.remove(classNames.resizeEvent);
-      clearIsDraggingTarget();
-    },
+    onDragStart: () => startDragEvent(classNames.resizeEvent),
+    onMouseUp: () => endDragEvent(classNames.resizeEvent),
+    onPressESCKey: () => endDragEvent(classNames.resizeEvent),
   });
   const onMoveStart = useDrag(DRAGGING_TYPE_CREATORS.moveEvent('dayGrid', `${uiModel.cid()}`), {
-    onDragStart: () => {
-      setDraggingEventUIModel(uiModel);
-      layoutContainer?.classList.add(classNames.moveEvent);
-    },
+    onDragStart: () => startDragEvent(classNames.moveEvent),
     onMouseUp: (e, { draggingState }) => {
-      layoutContainer?.classList.remove(classNames.moveEvent);
-      clearIsDraggingTarget();
+      endDragEvent(classNames.moveEvent);
 
       const isClick = draggingState <= DraggingState.INIT;
       if (isClick && useDetailPopup && eventContainerRef.current) {
@@ -217,6 +215,7 @@ export function HorizontalEvent({
 
       eventBus.fire('clickEvent', { event: uiModel.model, nativeEvent: e });
     },
+    onPressESCKey: () => endDragEvent(classNames.moveEvent),
   });
 
   const handleResizeStart = (e: MouseEvent) => {

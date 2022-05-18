@@ -1,6 +1,6 @@
 import { useMemo } from 'preact/hooks';
 
-import { useDispatch } from '@src/contexts/calendarStore';
+import { useEventBus } from '@src/contexts/eventBus';
 import { getGridDateIndex } from '@src/helpers/grid';
 import { useWhen } from '@src/hooks/common/useWhen';
 import { useCurrentPointerPositionInGrid } from '@src/hooks/event/useCurrentPointerPositionInGrid';
@@ -29,10 +29,10 @@ export function useAlldayGridRowEventResize({
   gridColWidthMap,
   gridPositionFinder,
 }: Params) {
-  const { updateEvent } = useDispatch('calendar');
-
+  const eventBus = useEventBus();
   const {
     isDraggingEnd,
+    isDraggingCanceled,
     draggingEvent: resizingEvent,
     clearDraggingEvent,
   } = useDraggingEvent('dayGrid', 'resize');
@@ -58,6 +58,7 @@ export function useAlldayGridRowEventResize({
 
   useWhen(() => {
     const shouldUpdateEvent =
+      !isDraggingCanceled &&
       isPresent(resizingEvent) &&
       isPresent(columnIndex) &&
       targetEventGridIndices.start <= columnIndex &&
@@ -66,9 +67,9 @@ export function useAlldayGridRowEventResize({
     if (shouldUpdateEvent) {
       const targetDate = weekDates[columnIndex];
 
-      updateEvent({
+      eventBus.fire('beforeUpdateEvent', {
         event: resizingEvent.model,
-        eventData: { end: targetDate },
+        changes: { end: targetDate },
       });
     }
 
