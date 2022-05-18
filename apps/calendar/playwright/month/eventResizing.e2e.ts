@@ -186,15 +186,16 @@ test('When pressing down the ESC key, the resizing event resets to the initial s
   const eventBoundingBoxBeforeResize = await getBoundingBox(eventLocator.last());
 
   const resizeHandlerLocator = getResizeIconLocatorOfEvent(eventLocator);
-  const resizeHandlerBoundingBox = await getBoundingBox(resizeHandlerLocator);
 
   const targetCellLocator = page.locator(getCellSelector(20));
-  const targetCellBoundingBox = await getBoundingBox(targetCellLocator);
 
   // When
-  await page.mouse.move(resizeHandlerBoundingBox.x + 1, resizeHandlerBoundingBox.y + 3);
-  await page.mouse.down();
-  await page.mouse.move(targetCellBoundingBox.x + 10, targetCellBoundingBox.y + 10);
+  await dragAndDrop({
+    page,
+    sourceLocator: resizeHandlerLocator,
+    targetLocator: targetCellLocator,
+    hold: true,
+  });
   await page.keyboard.down('Escape');
 
   // Then
@@ -235,14 +236,19 @@ test.describe('CSS class for a resize event', () => {
     // Given
     const eventLocator = page.locator(getHorizontalEventSelector(TARGET_EVENT2));
     const resizeHandlerLocator = getResizeIconLocatorOfEvent(eventLocator);
-    const resizeHandlerBoundingBox = await getBoundingBox(resizeHandlerLocator);
 
     const resizeEventClassLocator = page.locator(RESIZE_EVENT_SELECTOR);
 
     // When
-    await page.mouse.move(resizeHandlerBoundingBox.x + 1, resizeHandlerBoundingBox.y + 3);
-    await page.mouse.down();
-    await page.mouse.move(resizeHandlerBoundingBox.x + 10, resizeHandlerBoundingBox.y + 50);
+    await dragAndDrop({
+      page,
+      sourceLocator: resizeHandlerLocator,
+      targetLocator: resizeHandlerLocator,
+      options: {
+        targetPosition: { x: 10, y: 30 },
+      },
+      hold: true,
+    });
     await page.keyboard.down('Escape');
 
     // Then

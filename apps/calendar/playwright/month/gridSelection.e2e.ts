@@ -4,7 +4,7 @@ import { expect, test } from '@playwright/test';
 import { assertDayGridSelectionMatching } from '../assertions';
 import { MONTH_VIEW_PAGE_URL } from '../configs';
 import { ClickDelay } from '../constants';
-import { getBoundingBox, getPrefixedClassName, selectMonthGridCells } from '../utils';
+import { dragAndDrop, getPrefixedClassName, selectMonthGridCells } from '../utils';
 
 test.beforeEach(async ({ page }) => {
   await page.goto(MONTH_VIEW_PAGE_URL);
@@ -107,15 +107,15 @@ test('event form popup with grid selection', async ({ page }) => {
 test('When pressing down the ESC key, the grid selection is canceled.', async ({ page }) => {
   // Given
   const startCellLocator = page.locator(MONTH_GRID_CELL_SELECTOR).nth(31);
-  const startCellBoundingBox = await getBoundingBox(startCellLocator);
-
   const targetCellLocator = page.locator(MONTH_GRID_CELL_SELECTOR).nth(32);
-  const targetCellBoundingBox = await getBoundingBox(targetCellLocator);
 
   // When
-  await page.mouse.move(startCellBoundingBox.x + 10, startCellBoundingBox.y + 10);
-  await page.mouse.down();
-  await page.mouse.move(targetCellBoundingBox.x + 10, targetCellBoundingBox.y + 10);
+  await dragAndDrop({
+    page,
+    sourceLocator: startCellLocator,
+    targetLocator: targetCellLocator,
+    hold: true,
+  });
   await page.keyboard.down('Escape');
 
   // Then

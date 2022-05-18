@@ -5,7 +5,6 @@ import { addHours, setTimeStrToDate } from '../../src/time/datetime';
 import { mockDayViewEvents } from '../../stories/mocks/mockDayViewEvents';
 import type { FormattedTimeString } from '../../types/time/datetime';
 import { DAY_VIEW_PAGE_URL } from '../configs';
-import type { BoundingBox } from '../types';
 import {
   dragAndDrop,
   getBoundingBox,
@@ -100,12 +99,14 @@ test('When pressing down the ESC key, the moving event resets to the initial pos
     addHours(SHORT_TIME_EVENT.end as TZDate, 1)
   ) as FormattedTimeString;
   const targetRowLocator = page.locator(getTimeGridLineSelector(targetStartTime));
-  const targetRowBoundingBox = await getBoundingBox(targetRowLocator);
 
   // When
-  await page.mouse.move(eventBoundingBoxBeforeMove.x + 10, eventBoundingBoxBeforeMove.y + 10);
-  await page.mouse.down();
-  await page.mouse.move(eventBoundingBoxBeforeMove.x + 10, targetRowBoundingBox.y + 10);
+  await dragAndDrop({
+    page,
+    sourceLocator: eventLocator,
+    targetLocator: targetRowLocator,
+    hold: true,
+  });
   await page.keyboard.down('Escape');
 
   // Then
@@ -143,13 +144,18 @@ test.describe('CSS class for a move event', () => {
   test('should not be applied when a drag is canceled.', async ({ page }) => {
     // Given
     const eventLocator = page.locator(getTimeEventSelector(SHORT_TIME_EVENT.title));
-    const eventBoundingBox = await getBoundingBox(eventLocator);
     const moveEventClassLocator = page.locator(MOVE_EVENT_SELECTOR);
 
     // When
-    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 10);
-    await page.mouse.down();
-    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 50);
+    await dragAndDrop({
+      page,
+      sourceLocator: eventLocator,
+      targetLocator: eventLocator,
+      options: {
+        targetPosition: { x: 10, y: 30 },
+      },
+      hold: true,
+    });
     await page.keyboard.down('Escape');
 
     // Then
@@ -158,10 +164,6 @@ test.describe('CSS class for a move event', () => {
 });
 
 const [LONG_TIME_EVENT] = mockDayViewEvents.filter(({ title }) => title === 'long time');
-
-function getCenterOfBoundingBox(boundingBox: BoundingBox): [number, number] {
-  return [boundingBox.x + boundingBox.width / 2, boundingBox.y + boundingBox.height / 2];
-}
 
 test.describe(`Calibrate event's height while dragging`, () => {
   cases.forEach(({ title, step, matcherToCompare }) => {
@@ -175,12 +177,14 @@ test.describe(`Calibrate event's height while dragging`, () => {
         addHours(setTimeStrToDate(LONG_TIME_EVENT.end, DRAG_START_TIME), step)
       ) as FormattedTimeString;
       const targetRowLocator = page.locator(getTimeGridLineSelector(targetTime));
-      const targetBoundingBox = await getBoundingBox(targetRowLocator);
 
       // When
-      await page.mouse.move(...getCenterOfBoundingBox(eventBoundingBoxBeforeMove));
-      await page.mouse.down();
-      await page.mouse.move(...getCenterOfBoundingBox(targetBoundingBox));
+      await dragAndDrop({
+        page,
+        sourceLocator: eventLocator,
+        targetLocator: targetRowLocator,
+        hold: true,
+      });
 
       // Then
       await expect

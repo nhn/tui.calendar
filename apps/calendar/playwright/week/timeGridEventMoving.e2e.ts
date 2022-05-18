@@ -177,12 +177,14 @@ test('When pressing down the ESC key, the moving event resets to the initial pos
     addHours(SHORT_TIME_EVENT.end as TZDate, 1)
   ) as FormattedTimeString;
   const targetRowLocator = page.locator(getTimeGridLineSelector(targetStartTime));
-  const targetRowBoundingBox = await getBoundingBox(targetRowLocator);
 
   // When
-  await page.mouse.move(eventBoundingBoxBeforeMove.x + 10, eventBoundingBoxBeforeMove.y + 10);
-  await page.mouse.down();
-  await page.mouse.move(eventBoundingBoxBeforeMove.x + 10, targetRowBoundingBox.y + 10);
+  await dragAndDrop({
+    page,
+    sourceLocator: eventLocator,
+    targetLocator: targetRowLocator,
+    hold: true,
+  });
   await page.keyboard.down('Escape');
 
   // Then
@@ -220,13 +222,18 @@ test.describe('CSS class for a move event', () => {
   test('should not be applied when a drag is canceled.', async ({ page }) => {
     // Given
     const eventLocator = page.locator(getTimeEventSelector(SHORT_TIME_EVENT.title));
-    const eventBoundingBox = await getBoundingBox(eventLocator);
     const moveEventClassLocator = page.locator(MOVE_EVENT_SELECTOR);
 
     // When
-    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 10);
-    await page.mouse.down();
-    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 50);
+    await dragAndDrop({
+      page,
+      sourceLocator: eventLocator,
+      targetLocator: eventLocator,
+      options: {
+        targetPosition: { x: 10, y: 30 },
+      },
+      hold: true,
+    });
     await page.keyboard.down('Escape');
 
     // Then
@@ -252,9 +259,16 @@ test.describe(`Calibrate event's height while dragging`, () => {
     const eventBoundingBox = await getBoundingBox(lowerLongTimeEventLocator);
 
     // When
-    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 10);
-    await page.mouse.down();
-    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y - 10);
+    await dragAndDrop({
+      page,
+      sourceLocator: lowerLongTimeEventLocator,
+      targetLocator: lowerLongTimeEventLocator,
+      options: {
+        sourcePosition: { x: 10, y: 10 },
+        targetPosition: { x: 10, y: -10 },
+      },
+      hold: true,
+    });
 
     // Then
     const shadowEventBoundingBox = await getBoundingBox(eventLocator.first());
@@ -267,9 +281,16 @@ test.describe(`Calibrate event's height while dragging`, () => {
     const eventBoundingBox = await getBoundingBox(lowerLongTimeEventLocator);
 
     // When
-    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 10);
-    await page.mouse.down();
-    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 30);
+    await dragAndDrop({
+      page,
+      sourceLocator: lowerLongTimeEventLocator,
+      targetLocator: lowerLongTimeEventLocator,
+      options: {
+        sourcePosition: { x: 10, y: 10 },
+        targetPosition: { x: 10, y: 30 },
+      },
+      hold: true,
+    });
 
     // Then
     const shadowEventBoundingBox = await getBoundingBox(eventLocator.first());
@@ -283,9 +304,16 @@ test.describe(`Calibrate event's height while dragging`, () => {
     const eventBoundingBox = await getBoundingBox(upperLongTimeEventLocator);
 
     // When
-    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 10);
-    await page.mouse.down();
-    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 30);
+    await dragAndDrop({
+      page,
+      sourceLocator: upperLongTimeEventLocator,
+      targetLocator: upperLongTimeEventLocator,
+      options: {
+        sourcePosition: { x: 10, y: 10 },
+        targetPosition: { x: 10, y: 30 },
+      },
+      hold: true,
+    });
 
     // Then
     const shadowEventBoundingBox = await getBoundingBox(eventLocator.first());
@@ -297,9 +325,16 @@ test.describe(`Calibrate event's height while dragging`, () => {
     const eventBoundingBox = await getBoundingBox(upperLongTimeEventLocator);
 
     // When
-    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 100);
-    await page.mouse.down();
-    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 50);
+    await dragAndDrop({
+      page,
+      sourceLocator: upperLongTimeEventLocator,
+      targetLocator: upperLongTimeEventLocator,
+      options: {
+        sourcePosition: { x: 10, y: 100 },
+        targetPosition: { x: 10, y: 50 },
+      },
+      hold: true,
+    });
 
     // Then
     const shadowEventBoundingBox = await getBoundingBox(eventLocator.first());

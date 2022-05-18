@@ -316,15 +316,15 @@ test('should be able to select a range of time to upper left', async ({ page }) 
 test('When pressing down the ESC key, the grid selection is canceled.', async ({ page }) => {
   // Given
   const startGridLineLocator = page.locator(getTimeGridLineSelector('03:00'));
-  const startGridLineBoundingBox = await getBoundingBox(startGridLineLocator);
-
   const targetGridLineLocator = page.locator(getTimeGridLineSelector('05:00'));
-  const targetGridLineBoundingBox = await getBoundingBox(targetGridLineLocator);
 
   // When
-  await page.mouse.move(startGridLineBoundingBox.x + 10, startGridLineBoundingBox.y + 10);
-  await page.mouse.down();
-  await page.mouse.move(targetGridLineBoundingBox.x + 10, targetGridLineBoundingBox.y + 10);
+  await dragAndDrop({
+    page,
+    sourceLocator: startGridLineLocator,
+    targetLocator: targetGridLineLocator,
+    hold: true,
+  });
   await page.keyboard.down('Escape');
 
   // Then

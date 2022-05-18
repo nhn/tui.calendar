@@ -143,18 +143,19 @@ test('When pressing down the ESC key, the resizing event resets to the initial s
   const eventBoundingBoxBeforeResize = await getBoundingBox(eventLocator);
 
   const resizeHandlerLocator = eventLocator.locator(RESIZE_HANDLER_SELECTOR);
-  const resizeHandlerBoundingBox = await getBoundingBox(resizeHandlerLocator);
 
   const targetStartTime = getTimeStrFromDate(
     addHours(SHORT_TIME_EVENT.end as TZDate, 1)
   ) as FormattedTimeString;
   const targetRowLocator = page.locator(getTimeGridLineSelector(targetStartTime));
-  const targetRowBoundingBox = await getBoundingBox(targetRowLocator);
 
   // When
-  await page.mouse.move(resizeHandlerBoundingBox.x + 10, resizeHandlerBoundingBox.y + 3);
-  await page.mouse.down();
-  await page.mouse.move(resizeHandlerBoundingBox.x + 10, targetRowBoundingBox.y + 10);
+  await dragAndDrop({
+    page,
+    sourceLocator: resizeHandlerLocator,
+    targetLocator: targetRowLocator,
+    hold: true,
+  });
   await page.keyboard.down('Escape');
 
   // Then
@@ -195,14 +196,19 @@ test.describe('CSS class for a resize event', () => {
     // Given
     const eventLocator = page.locator(getTimeEventSelector(SHORT_TIME_EVENT.title));
     const resizeHandlerLocator = eventLocator.locator(RESIZE_HANDLER_SELECTOR);
-    const resizeHandlerBoundingBox = await getBoundingBox(resizeHandlerLocator);
 
     const resizeEventClassLocator = page.locator(RESIZE_EVENT_SELECTOR);
 
     // When
-    await page.mouse.move(resizeHandlerBoundingBox.x + 10, resizeHandlerBoundingBox.y + 3);
-    await page.mouse.down();
-    await page.mouse.move(resizeHandlerBoundingBox.x + 10, resizeHandlerBoundingBox.y + 50);
+    await dragAndDrop({
+      page,
+      sourceLocator: resizeHandlerLocator,
+      targetLocator: resizeHandlerLocator,
+      options: {
+        targetPosition: { x: 10, y: 30 },
+      },
+      hold: true,
+    });
     await page.keyboard.down('Escape');
 
     // Then

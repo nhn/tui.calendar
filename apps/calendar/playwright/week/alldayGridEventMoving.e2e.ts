@@ -120,12 +120,14 @@ test('When pressing down the ESC key, the moving event resets to the initial pos
   const eventBoundingBoxBeforeMove = await getBoundingBox(eventLocator);
 
   const targetCellLocator = page.locator(ALL_DAY_GRID_CELL_SELECTOR).nth(4);
-  const targetCellBoundingBox = await getBoundingBox(targetCellLocator);
 
   // When
-  await page.mouse.move(eventBoundingBoxBeforeMove.x + 10, eventBoundingBoxBeforeMove.y + 3);
-  await page.mouse.down();
-  await page.mouse.move(targetCellBoundingBox.x + 10, targetCellBoundingBox.y + 10);
+  await dragAndDrop({
+    page,
+    sourceLocator: eventLocator,
+    targetLocator: targetCellLocator,
+    hold: true,
+  });
   await page.keyboard.down('Escape');
 
   // Then
@@ -163,13 +165,17 @@ test.describe('CSS class for a move event', () => {
   test('should not be applied when a drag is canceled.', async ({ page }) => {
     // Given
     const eventLocator = page.locator(TARGET_EVENT_SELECTOR);
-    const eventBoundingBox = await getBoundingBox(eventLocator);
     const moveEventClassLocator = page.locator(MOVE_EVENT_SELECTOR);
 
     // When
-    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 10);
-    await page.mouse.down();
-    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 50);
+    await dragAndDrop({
+      page,
+      sourceLocator: eventLocator,
+      targetLocator: eventLocator,
+      options: {
+        targetPosition: { x: 10, y: 30 },
+      },
+    });
     await page.keyboard.down('Escape');
 
     // Then
