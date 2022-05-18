@@ -4,6 +4,7 @@ import { PopupSection } from '@src/components/popup/popupSection';
 import { cls } from '@src/helpers/css';
 import type { FormStateDispatcher } from '@src/hooks/popup/useFormState';
 import { FormStateActionType } from '@src/hooks/popup/useFormState';
+import { useTemplateString } from '@src/hooks/template/useTemplateString';
 
 interface Props {
   title: string;
@@ -19,6 +20,11 @@ const classNames = {
 };
 
 export function TitleInputBox({ title, isPrivate = false, formStateDispatch }: Props) {
+  const titlePlaceholder = useTemplateString({
+    template: 'titlePlaceholder',
+    defaultValue: 'Subject',
+  });
+
   const togglePrivate = () =>
     formStateDispatch({ type: FormStateActionType.setPrivate, isPrivate: !isPrivate });
 
@@ -29,7 +35,7 @@ export function TitleInputBox({ title, isPrivate = false, formStateDispatch }: P
         <input
           name="title"
           className={classNames.content}
-          placeholder="Subject"
+          placeholder={titlePlaceholder}
           value={title}
           required
         />

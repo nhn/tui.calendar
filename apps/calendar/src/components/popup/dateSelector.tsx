@@ -7,10 +7,12 @@ import type { DateRangePicker } from 'tui-date-picker';
 import DatePicker from 'tui-date-picker';
 
 import { PopupSection } from '@src/components/popup/popupSection';
+import { Template } from '@src/components/template';
 import { useStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
 import type { FormStateDispatcher } from '@src/hooks/popup/useFormState';
 import { FormStateActionType } from '@src/hooks/popup/useFormState';
+import { useTemplateString } from '@src/hooks/template/useTemplateString';
 import { optionsSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
 
@@ -40,6 +42,14 @@ export const DateSelector = forwardRef<DateRangePicker, Props>(function DateSele
   const endPickerContainerRef = useRef<HTMLDivElement>(null);
   const endPickerInputRef = useRef<HTMLInputElement>(null);
 
+  const startDatePlaceholder = useTemplateString({
+    template: 'startDatePlaceholder',
+    defaultValue: 'Start Date',
+  });
+  const endDatePlaceholder = useTemplateString({
+    template: 'endDatePlaceholder',
+    defaultValue: 'End Date',
+  });
   const toggleAllday = () =>
     formStateDispatch({ type: FormStateActionType.setAllday, isAllday: !isAllday });
 
@@ -89,7 +99,7 @@ export const DateSelector = forwardRef<DateRangePicker, Props>(function DateSele
         <input
           name="start"
           className={classNames.content}
-          placeholder="Start date"
+          placeholder={startDatePlaceholder}
           ref={startPickerInputRef}
         />
         <div className={classNames.datePickerContainer} ref={startPickerContainerRef} />
@@ -100,7 +110,7 @@ export const DateSelector = forwardRef<DateRangePicker, Props>(function DateSele
         <input
           name="end"
           className={classNames.content}
-          placeholder="End date"
+          placeholder={endDatePlaceholder}
           ref={endPickerInputRef}
         />
         <div className={classNames.datePickerContainer} ref={endPickerContainerRef} />
@@ -112,7 +122,9 @@ export const DateSelector = forwardRef<DateRangePicker, Props>(function DateSele
             'ic-checkbox-checked': isAllday,
           })}
         />
-        <span className={classNames.content}>All day</span>
+        <span className={classNames.content}>
+          <Template template="popupIsAllday" />
+        </span>
         <input
           name="isAllday"
           type="checkbox"
