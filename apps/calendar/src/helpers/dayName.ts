@@ -1,5 +1,5 @@
 import type TZDate from '@src/time/date';
-import { capitalize } from '@src/utils/keyboard';
+import { capitalize } from '@src/utils/string';
 
 import type { TemplateWeekDayName } from '@t/template';
 

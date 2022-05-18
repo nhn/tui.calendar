@@ -10,7 +10,7 @@ import { cls } from '@src/helpers/css';
 import { createDateMatrixOfMonth } from '@src/helpers/grid';
 import { optionsSelector, viewSelector } from '@src/selectors';
 import { getRowStyleInfo, isWeekend } from '@src/time/datetime';
-import { capitalize } from '@src/utils/keyboard';
+import { capitalize } from '@src/utils/string';
 
 import type { MonthOptions } from '@t/options';
 import type { CalendarStore } from '@t/store';

@@ -11,7 +11,7 @@ import { viewSelector } from '@src/selectors';
 import type { TemplateName } from '@src/template/default';
 import TZDate from '@src/time/date';
 import { Day, toFormat } from '@src/time/datetime';
-import { capitalize } from '@src/utils/keyboard';
+import { capitalize } from '@src/utils/string';
 
 import type { CommonTheme, MonthTheme } from '@t/theme';
 

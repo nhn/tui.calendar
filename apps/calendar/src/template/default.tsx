@@ -6,7 +6,7 @@ import type EventModel from '@src/model/eventModel';
 import type TZDate from '@src/time/date';
 import { isSameDate, leadingZero, toFormat } from '@src/time/datetime';
 import { stripTags } from '@src/utils/dom';
-import { capitalize } from '@src/utils/keyboard';
+import { capitalize } from '@src/utils/string';
 import { isUndefined } from '@src/utils/type';
 
 import type { EventCategory } from '@t/events';
