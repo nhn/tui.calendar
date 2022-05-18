@@ -17,6 +17,9 @@ function identity(value: unknown) {
   return value;
 }
 
+/**
+ * model props is required, but may not be used in practice.
+ */
 export function Template({ template, model, as: tagName = 'div' }: Props) {
   const templates = useStore(templateSelector);
   const templateFunc: Function = templates[template] || identity;
