@@ -202,7 +202,7 @@ export function EventFormPopup() {
             ref={datePickerRef}
           />
           <EventStateSelector eventState={formState.state} formStateDispatch={formStateDispatch} />
-          <ClosePopupButton close={close} />
+          <ClosePopupButton type="form" close={close} />
           <PopupSection>
             <ConfirmPopupButton>{confirmMessage}</ConfirmPopupButton>
           </PopupSection>

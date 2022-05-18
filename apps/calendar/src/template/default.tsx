@@ -1,11 +1,12 @@
-import { h } from 'preact';
+import { Fragment, h } from 'preact';
 
 import { cls } from '@src/helpers/css';
-import { capitalizeDayName, getDayName } from '@src/helpers/dayName';
+import { getDayName } from '@src/helpers/dayName';
 import type EventModel from '@src/model/eventModel';
 import type TZDate from '@src/time/date';
 import { isSameDate, leadingZero, toFormat } from '@src/time/datetime';
 import { stripTags } from '@src/utils/dom';
+import { capitalize } from '@src/utils/string';
 import { isNil, isPresent } from '@src/utils/type';
 
 import type { EventCategory } from '@t/events';
@@ -23,12 +24,20 @@ const SIXTY_MINUTES = 60;
 
 export const templates: Template = {
   milestone(model: EventModel) {
-    const icon = cls('icon');
-    const iconName = cls('ic-milestone');
+    const classNames = cls('icon', 'ic-milestone');
 
-    return `<span class="${icon} ${iconName}"></span><span style="background-color: ${
-      model.bgColor
-    }">${stripTags(model.title)}</span>`;
+    return (
+      <Fragment>
+        <span className={classNames} />
+        <span
+          style={{
+            backgroundColor: model.bgColor,
+          }}
+        >
+          {stripTags(model.title)}
+        </span>
+      </Fragment>
+    );
   },
 
   milestoneTitle() {
@@ -86,9 +95,14 @@ export const templates: Template = {
 
     const classNameDay = cls('more-title-date');
     const classNameDayLabel = cls('more-title-day');
-    const dayName = capitalizeDayName(getDayName(day));
+    const dayName = capitalize(getDayName(day));
 
-    return `<span class="${classNameDay}">${date}</span><span class="${classNameDayLabel}">${dayName}</span>`;
+    return (
+      <Fragment>
+        <span className={classNameDay}>{date}</span>
+        <span className={classNameDayLabel}>{dayName}</span>
+      </Fragment>
+    );
   },
 
   monthMoreClose() {
@@ -97,13 +111,9 @@ export const templates: Template = {
 
   monthGridHeader(model: TemplateMonthGrid) {
     const date = parseInt(model.date.split('-')[2], 10);
-    const classNames = [cls('weekday-grid-date')];
+    const classNames = cls('weekday-grid-date', { 'weekday-grid-date-decorator': model.isToday });
 
-    if (model.isToday) {
-      classNames.push(cls('weekday-grid-date-decorator'));
-    }
-
-    return <span className={classNames.join(' ')}>{date}</span>;
+    return <span className={classNames}>{date}</span>;
   },
 
   monthGridHeaderExceed(hiddenEvents: number) {
@@ -128,7 +138,12 @@ export const templates: Template = {
     const classDate = cls('dayname-date');
     const className = cls('dayname-name');
 
-    return `<span class="${classDate}">${model.date}</span>&nbsp;&nbsp;<span class="${className}">${model.dayName}</span>`;
+    return (
+      <Fragment>
+        <span className={classDate}>{model.date}</span>&nbsp;&nbsp;
+        <span className={className}>{model.dayName}</span>
+      </Fragment>
+    );
   },
 
   weekGridFooterExceed(hiddenEvents: number) {
@@ -173,10 +188,9 @@ export const templates: Template = {
   },
 
   collapseBtnTitle() {
-    const iconName = cls('icon');
-    const closeIconName = cls('ic-arrow-solid-top');
+    const className = cls('collapse-btn-icon');
 
-    return <span className={`${iconName} ${closeIconName}`}></span>;
+    return <span className={className} />;
   },
 
   timezoneDisplayLabel({ displayLabel, timezoneOffset }: TemplateTimezone) {

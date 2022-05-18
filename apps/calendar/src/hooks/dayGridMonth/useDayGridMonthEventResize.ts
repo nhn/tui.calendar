@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 
-import { useDispatch } from '@src/contexts/calendarStore';
+import { useEventBus } from '@src/contexts/eventBus';
 import type { getRenderedEventUIModels } from '@src/helpers/grid';
 import { getGridDateIndex } from '@src/helpers/grid';
 import { useWhen } from '@src/hooks/common/useWhen';
@@ -40,9 +40,10 @@ export function useDayGridMonthEventResize({
   cellWidthMap,
   rowIndex,
 }: EventResizeHookParams) {
-  const { updateEvent } = useDispatch('calendar');
+  const eventBus = useEventBus();
   const {
     isDraggingEnd,
+    isDraggingCanceled,
     draggingEvent: resizingStartUIModel,
     clearDraggingEvent,
   } = useDraggingEvent('dayGrid', 'resize');
@@ -168,15 +169,17 @@ export function useDayGridMonthEventResize({
        */
       const { eventStartDateColumnIndex, eventStartDateRowIndex } = baseResizingInfo;
       const shouldUpdate =
-        (currentGridPos.rowIndex === eventStartDateRowIndex &&
+        !isDraggingCanceled &&
+        ((currentGridPos.rowIndex === eventStartDateRowIndex &&
           currentGridPos.columnIndex >= eventStartDateColumnIndex) ||
-        currentGridPos.rowIndex > eventStartDateRowIndex;
+          currentGridPos.rowIndex > eventStartDateRowIndex);
 
       if (shouldUpdate) {
         const targetEndDate = dateMatrix[currentGridPos.rowIndex][currentGridPos.columnIndex];
-        updateEvent({
+
+        eventBus.fire('beforeUpdateEvent', {
           event: resizingStartUIModel.model,
-          eventData: {
+          changes: {
             end: targetEndDate,
           },
         });

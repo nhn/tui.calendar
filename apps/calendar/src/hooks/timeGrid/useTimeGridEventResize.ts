@@ -2,7 +2,7 @@ import type { ComponentProps } from 'preact';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 
 import type { ResizingGuideByColumn } from '@src/components/timeGrid/resizingGuideByColumn';
-import { useDispatch } from '@src/contexts/calendarStore';
+import { useEventBus } from '@src/contexts/eventBus';
 import { useWhen } from '@src/hooks/common/useWhen';
 import { useCurrentPointerPositionInGrid } from '@src/hooks/event/useCurrentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/useDraggingEvent';
@@ -22,9 +22,10 @@ export function useTimeGridEventResize({
   columnIndex,
   timeGridData,
 }: ComponentProps<typeof ResizingGuideByColumn>) {
-  const { updateEvent } = useDispatch('calendar');
+  const eventBus = useEventBus();
   const {
     isDraggingEnd,
+    isDraggingCanceled,
     draggingEvent: resizingStartUIModel,
     clearDraggingEvent,
   } = useDraggingEvent('timeGrid', 'resize');
@@ -165,6 +166,7 @@ export function useTimeGridEventResize({
 
   useWhen(() => {
     const shouldUpdate =
+      !isDraggingCanceled &&
       isPresent(baseResizingInfo) &&
       isPresent(currentGridPos) &&
       isPresent(resizingStartUIModel) &&
@@ -181,9 +183,10 @@ export function useTimeGridEventResize({
             : currentGridPos.rowIndex
         ].endTime
       );
-      updateEvent({
+
+      eventBus.fire('beforeUpdateEvent', {
         event: resizingStartUIModel.model,
-        eventData: {
+        changes: {
           end: targetEndDate,
         },
       });

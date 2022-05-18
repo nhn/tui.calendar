@@ -1,11 +1,19 @@
 import type { Locator } from '@playwright/test';
 import { expect, test } from '@playwright/test';
 
+import type TZDate from '../../src/time/date';
+import { addHours } from '../../src/time/datetime';
 import { mockWeekViewEvents } from '../../stories/mocks/mockWeekViewEvents';
 import type { FormattedTimeString } from '../../types/time/datetime';
 import { WEEK_VIEW_PAGE_URL } from '../configs';
 import { Direction } from '../types';
-import { dragAndDrop, getBoundingBox, getTimeGridLineSelector } from '../utils';
+import {
+  dragAndDrop,
+  getBoundingBox,
+  getTimeEventSelector,
+  getTimeGridLineSelector,
+  getTimeStrFromDate,
+} from '../utils';
 
 test.beforeEach(async ({ page }) => {
   await page.goto(WEEK_VIEW_PAGE_URL);
@@ -14,6 +22,8 @@ test.beforeEach(async ({ page }) => {
 const [TWO_VIEW_EVENT, SHORT_TIME_EVENT, LONG_TIME_EVENT] = mockWeekViewEvents.filter(
   ({ isAllday }) => !isAllday
 );
+
+const MOVE_EVENT_SELECTOR = '[class*="dragging--move-event"]';
 
 /**
  * 8 Directions for testing
@@ -121,27 +131,30 @@ const cases: {
   },
 ];
 
-const getTargetEventSelector = (title: string) => `[data-testid*="time-event-${title}"]`;
-
 cases.forEach(({ title, eventColumnIndex, directionInfo }) => {
   directionInfo.forEach(({ direction, startTimeAfterMoving, timeToDrop }) => {
     test(`Moving event: ${title} for ${direction}`, async ({ page }) => {
       // Given
-      const eventLocator = page.locator(getTargetEventSelector(title)).last();
+      const eventLocator = page.locator(getTimeEventSelector(title)).last();
       const targetRowLocator = page.locator(getTimeGridLineSelector(timeToDrop));
       const targetColumnLocator = page.locator(`data-testid=timegrid-column-${eventColumnIndex}`);
 
       const targetColumnBoundingBox = await getBoundingBox(targetColumnLocator);
 
       // When
-      await dragAndDrop(page, eventLocator, targetRowLocator, {
-        sourcePosition: {
-          x: 1,
-          y: 1,
-        },
-        targetPosition: {
-          y: 1,
-          x: targetColumnBoundingBox.x - 1,
+      await dragAndDrop({
+        page,
+        sourceLocator: eventLocator,
+        targetLocator: targetRowLocator,
+        options: {
+          sourcePosition: {
+            x: 1,
+            y: 1,
+          },
+          targetPosition: {
+            y: 1,
+            x: targetColumnBoundingBox.x - 1,
+          },
         },
       });
 
@@ -153,13 +166,88 @@ cases.forEach(({ title, eventColumnIndex, directionInfo }) => {
   });
 });
 
+test('When pressing down the ESC key, the moving event resets to the initial position.', async ({
+  page,
+}) => {
+  // Given
+  const eventLocator = page.locator(getTimeEventSelector(SHORT_TIME_EVENT.title));
+  const eventBoundingBoxBeforeMove = await getBoundingBox(eventLocator);
+
+  const targetStartTime = getTimeStrFromDate(
+    addHours(SHORT_TIME_EVENT.end as TZDate, 1)
+  ) as FormattedTimeString;
+  const targetRowLocator = page.locator(getTimeGridLineSelector(targetStartTime));
+
+  // When
+  await dragAndDrop({
+    page,
+    sourceLocator: eventLocator,
+    targetLocator: targetRowLocator,
+    hold: true,
+  });
+  await page.keyboard.down('Escape');
+
+  // Then
+  const eventBoundingBoxAfterMove = await getBoundingBox(eventLocator);
+  expect(eventBoundingBoxAfterMove).toEqual(eventBoundingBoxBeforeMove);
+});
+
+test.describe('CSS class for a move event', () => {
+  test('should be applied depending on a dragging state.', async ({ page }) => {
+    // Given
+    const eventLocator = page.locator(getTimeEventSelector(SHORT_TIME_EVENT.title));
+    const eventBoundingBox = await getBoundingBox(eventLocator);
+    const moveEventClassLocator = page.locator(MOVE_EVENT_SELECTOR);
+
+    // When (a drag has not started yet)
+    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 10);
+    await page.mouse.down();
+
+    // Then
+    expect(await moveEventClassLocator.count()).toBe(0);
+
+    // When (a drag is working)
+    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 50);
+
+    // Then
+    expect(await moveEventClassLocator.count()).toBe(1);
+
+    // When (a drag is finished)
+    await page.mouse.up();
+
+    // Then
+    expect(await moveEventClassLocator.count()).toBe(0);
+  });
+
+  test('should not be applied when a drag is canceled.', async ({ page }) => {
+    // Given
+    const eventLocator = page.locator(getTimeEventSelector(SHORT_TIME_EVENT.title));
+    const moveEventClassLocator = page.locator(MOVE_EVENT_SELECTOR);
+
+    // When
+    await dragAndDrop({
+      page,
+      sourceLocator: eventLocator,
+      targetLocator: eventLocator,
+      options: {
+        targetPosition: { x: 10, y: 30 },
+      },
+      hold: true,
+    });
+    await page.keyboard.down('Escape');
+
+    // Then
+    expect(await moveEventClassLocator.count()).toBe(0);
+  });
+});
+
 test.describe(`Calibrate event's height while dragging`, () => {
   let eventLocator: Locator;
   let lowerLongTimeEventLocator: Locator;
   let upperLongTimeEventLocator: Locator;
 
   test.beforeEach(({ page }) => {
-    const targetEventSelector = getTargetEventSelector(LONG_TIME_EVENT.title);
+    const targetEventSelector = getTimeEventSelector(LONG_TIME_EVENT.title);
 
     lowerLongTimeEventLocator = page.locator(targetEventSelector).first();
     upperLongTimeEventLocator = page.locator(targetEventSelector).last();
@@ -171,9 +259,16 @@ test.describe(`Calibrate event's height while dragging`, () => {
     const eventBoundingBox = await getBoundingBox(lowerLongTimeEventLocator);
 
     // When
-    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 10);
-    await page.mouse.down();
-    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y - 10);
+    await dragAndDrop({
+      page,
+      sourceLocator: lowerLongTimeEventLocator,
+      targetLocator: lowerLongTimeEventLocator,
+      options: {
+        sourcePosition: { x: 10, y: 10 },
+        targetPosition: { x: 10, y: -10 },
+      },
+      hold: true,
+    });
 
     // Then
     const shadowEventBoundingBox = await getBoundingBox(eventLocator.first());
@@ -186,9 +281,16 @@ test.describe(`Calibrate event's height while dragging`, () => {
     const eventBoundingBox = await getBoundingBox(lowerLongTimeEventLocator);
 
     // When
-    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 10);
-    await page.mouse.down();
-    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 30);
+    await dragAndDrop({
+      page,
+      sourceLocator: lowerLongTimeEventLocator,
+      targetLocator: lowerLongTimeEventLocator,
+      options: {
+        sourcePosition: { x: 10, y: 10 },
+        targetPosition: { x: 10, y: 30 },
+      },
+      hold: true,
+    });
 
     // Then
     const shadowEventBoundingBox = await getBoundingBox(eventLocator.first());
@@ -202,9 +304,16 @@ test.describe(`Calibrate event's height while dragging`, () => {
     const eventBoundingBox = await getBoundingBox(upperLongTimeEventLocator);
 
     // When
-    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 10);
-    await page.mouse.down();
-    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 30);
+    await dragAndDrop({
+      page,
+      sourceLocator: upperLongTimeEventLocator,
+      targetLocator: upperLongTimeEventLocator,
+      options: {
+        sourcePosition: { x: 10, y: 10 },
+        targetPosition: { x: 10, y: 30 },
+      },
+      hold: true,
+    });
 
     // Then
     const shadowEventBoundingBox = await getBoundingBox(eventLocator.first());
@@ -216,9 +325,16 @@ test.describe(`Calibrate event's height while dragging`, () => {
     const eventBoundingBox = await getBoundingBox(upperLongTimeEventLocator);
 
     // When
-    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 100);
-    await page.mouse.down();
-    await page.mouse.move(eventBoundingBox.x + 10, eventBoundingBox.y + 50);
+    await dragAndDrop({
+      page,
+      sourceLocator: upperLongTimeEventLocator,
+      targetLocator: upperLongTimeEventLocator,
+      options: {
+        sourcePosition: { x: 10, y: 100 },
+        targetPosition: { x: 10, y: 50 },
+      },
+      hold: true,
+    });
 
     // Then
     const shadowEventBoundingBox = await getBoundingBox(eventLocator.first());

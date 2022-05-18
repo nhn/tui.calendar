@@ -2,7 +2,7 @@ import type { ComponentProps } from 'preact';
 import { useMemo } from 'preact/hooks';
 
 import type { MovingEventShadow } from '@src/components/dayGridMonth/movingEventShadow';
-import { useDispatch } from '@src/contexts/calendarStore';
+import { useEventBus } from '@src/contexts/eventBus';
 import { useWhen } from '@src/hooks/common/useWhen';
 import { useCurrentPointerPositionInGrid } from '@src/hooks/event/useCurrentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/useDraggingEvent';
@@ -16,12 +16,13 @@ export function useDayGridMonthEventMove({
   gridPositionFinder,
   rowIndex,
 }: ComponentProps<typeof MovingEventShadow>) {
+  const eventBus = useEventBus();
   const {
     isDraggingEnd,
+    isDraggingCanceled,
     draggingEvent: movingEvent,
     clearDraggingEvent,
   } = useDraggingEvent('dayGrid', 'move');
-  const { updateEvent } = useDispatch('calendar');
 
   const [currentGridPos, clearCurrentGridPos] = useCurrentPointerPositionInGrid(gridPositionFinder);
 
@@ -38,7 +39,8 @@ export function useDayGridMonthEventMove({
   }, [movingEvent, currentGridPos?.rowIndex, currentGridPos?.columnIndex, rowIndex, rowInfo]);
 
   useWhen(() => {
-    const shouldUpdate = isPresent(movingEventUIModel) && isPresent(currentGridPos);
+    const shouldUpdate =
+      !isDraggingCanceled && isPresent(movingEventUIModel) && isPresent(currentGridPos);
     if (shouldUpdate) {
       const preStartDate = movingEventUIModel.model.getStarts();
       const eventDuration = movingEventUIModel.duration();
@@ -49,9 +51,9 @@ export function useDayGridMonthEventMove({
       const newStartDate = new TZDate(preStartDate.getTime() + timeOffsetPerDay);
       const newEndDate = new TZDate(newStartDate.getTime() + eventDuration);
 
-      updateEvent({
+      eventBus.fire('beforeUpdateEvent', {
         event: movingEventUIModel.model,
-        eventData: {
+        changes: {
           start: newStartDate,
           end: newEndDate,
         },

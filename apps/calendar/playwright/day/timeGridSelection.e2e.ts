@@ -15,6 +15,8 @@ test.beforeEach(async ({ page }) => {
   await page.goto(DAY_VIEW_PAGE_URL);
 });
 
+const GRID_SELECTION_SELECTOR = '[data-testid*="time-grid-selection"]';
+
 async function assertTimeGridSelection(
   selectionLocator: Locator,
   expected: {
@@ -44,7 +46,6 @@ async function assertTimeGridSelection(
 // reference: https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoViewIfNeeded
 test.describe('TimeGrid Selection', () => {
   const SELECT_START_TIME = '03:00';
-  const GRID_SELECTION_SELECTOR = '[data-testid*="time-grid-selection"]';
 
   test('should be able to select a time slot with clicking', async ({ page }) => {
     // Given
@@ -91,7 +92,11 @@ test.describe('TimeGrid Selection', () => {
     const targetGridLineBoundingBox = await getBoundingBox(targetGridLineLocator);
 
     // When
-    await dragAndDrop(page, startGridLineLocator, targetGridLineLocator);
+    await dragAndDrop({
+      page,
+      sourceLocator: startGridLineLocator,
+      targetLocator: targetGridLineLocator,
+    });
 
     // Then
     await assertTimeGridSelection(timeGridSelectionLocator, {
@@ -111,7 +116,11 @@ test.describe('TimeGrid Selection', () => {
     const targetGridLineBoundingBox = await getBoundingBox(targetGridLineLocator);
 
     // When
-    await dragAndDrop(page, startGridLineLocator, targetGridLineLocator);
+    await dragAndDrop({
+      page,
+      sourceLocator: startGridLineLocator,
+      targetLocator: targetGridLineLocator,
+    });
 
     // Then
     await assertTimeGridSelection(timeGridSelectionLocator, {
@@ -120,4 +129,23 @@ test.describe('TimeGrid Selection', () => {
       endBottom: startGridLineBoundingBox.y + startGridLineBoundingBox.height,
     });
   });
+});
+
+test('When pressing down the ESC key, the grid selection is canceled.', async ({ page }) => {
+  // Given
+  const startGridLineLocator = page.locator(getTimeGridLineSelector('03:00'));
+  const targetGridLineLocator = page.locator(getTimeGridLineSelector('05:00'));
+
+  // When
+  await dragAndDrop({
+    page,
+    sourceLocator: startGridLineLocator,
+    targetLocator: targetGridLineLocator,
+    hold: true,
+  });
+  await page.keyboard.down('Escape');
+
+  // Then
+  const gridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
+  expect(await gridSelectionLocator.count()).toBe(0);
 });

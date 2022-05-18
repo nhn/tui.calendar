@@ -147,6 +147,12 @@ export function useGridSelection<DateCollection>({
     }
   };
 
+  const clearGridSelection = useCallback(() => {
+    setInitMousePosition(null);
+    setInitGridPosition(null);
+    setGridSelection(type, null);
+  }, [setGridSelection, type]);
+
   const onMouseDown = useDrag(currentGridSelectionType, {
     onInit: (e) => {
       if (useCreationPopup) {
@@ -185,16 +191,10 @@ export function useGridSelection<DateCollection>({
         onMouseUp(e, isClickEvent);
       }
     },
+    onPressESCKey: clearGridSelection,
   });
 
-  useEffect(
-    () => () => {
-      setInitMousePosition(null);
-      setInitGridPosition(null);
-      setGridSelection(type, null);
-    },
-    [setGridSelection, type]
-  );
+  useEffect(() => clearGridSelection, [clearGridSelection]);
 
   return onMouseDown;
 }

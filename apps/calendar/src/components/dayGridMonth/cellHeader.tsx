@@ -3,19 +3,17 @@ import { useMemo } from 'preact/hooks';
 
 import { MoreEventsButton } from '@src/components/dayGridMonth/moreEventsButton';
 import { Template } from '@src/components/template';
+import { CellBarType } from '@src/constants/grid';
 import { useStore } from '@src/contexts/calendarStore';
 import { useCommonTheme, useMonthTheme } from '@src/contexts/themeStore';
 import { cls } from '@src/helpers/css';
 import { viewSelector } from '@src/selectors';
+import type { TemplateName } from '@src/template/default';
 import TZDate from '@src/time/date';
 import { Day, toFormat } from '@src/time/datetime';
+import { capitalize } from '@src/utils/string';
 
 import type { CommonTheme, MonthTheme } from '@t/theme';
-
-enum CellBarType {
-  header = 'header',
-  footer = 'footer',
-}
 
 interface Props {
   type?: CellBarType;
@@ -81,14 +79,16 @@ export function CellHeader({
     ymd,
   };
   const gridCellDateStyle = { color: getDateColor({ date, theme, renderDate }) };
+  const monthGridTemplate = `monthGrid${capitalize(type)}` as TemplateName;
 
   return (
     <div className={cls(`grid-cell-${type}`)}>
       <span className={cls('grid-cell-date')} style={gridCellDateStyle}>
-        <Template template="monthGridHeader" model={model} />
+        <Template template={monthGridTemplate} model={model} />
       </span>
       {exceedCount ? (
         <MoreEventsButton
+          type={type}
           number={exceedCount}
           onClickButton={onClickExceedCount}
           className={cls('grid-cell-more-events')}

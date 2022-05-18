@@ -3,6 +3,7 @@ import { h } from 'preact';
 import userEvent from '@testing-library/user-event';
 
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
+import { EventBusProvider } from '@src/contexts/eventBus';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { createGridPositionFinder, createTimeGridData, getWeekDates } from '@src/helpers/grid';
 import { useDrag } from '@src/hooks/common/useDrag';
@@ -12,6 +13,7 @@ import EventUIModel from '@src/model/eventUIModel';
 import { createDate } from '@src/test/helpers';
 import { dragAndDrop, renderHook, screen } from '@src/test/utils';
 import { Day, setTimeStrToDate, toFormat } from '@src/time/datetime';
+import { EventBusImpl } from '@src/utils/eventBus';
 import { noop } from '@src/utils/noop';
 import { isNil } from '@src/utils/type';
 
@@ -55,6 +57,7 @@ describe('useTimeGridEventMove', () => {
       height: DEFAULT_CONTAINER_HEIGHT,
       toJSON: noop,
     });
+    const eventBus = new EventBusImpl();
     const store = initCalendarStore();
     const gridPositionFinder = createGridPositionFinder({
       rowsCount: timeGridData.rows.length,
@@ -81,10 +84,12 @@ describe('useTimeGridEventMove', () => {
         }),
       {
         wrapper: ({ children }) => (
-          <StoreProvider store={store}>
-            <MockBody />
-            {children}
-          </StoreProvider>
+          <EventBusProvider value={eventBus}>
+            <StoreProvider store={store}>
+              <MockBody />
+              {children}
+            </StoreProvider>
+          </EventBusProvider>
         ),
       }
     );

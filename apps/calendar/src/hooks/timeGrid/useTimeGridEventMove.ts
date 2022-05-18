@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 
-import { useDispatch, useStore } from '@src/contexts/calendarStore';
+import { useStore } from '@src/contexts/calendarStore';
+import { useEventBus } from '@src/contexts/eventBus';
 import { useWhen } from '@src/hooks/common/useWhen';
 import { useCurrentPointerPositionInGrid } from '@src/hooks/event/useCurrentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/useDraggingEvent';
@@ -68,8 +69,11 @@ export function useTimeGridEventMove({
   gridPositionFinder: GridPositionFinder;
   timeGridData: TimeGridData;
 }) {
-  const { updateEvent } = useDispatch('calendar');
-  const { isDraggingEnd, draggingEvent, clearDraggingEvent } = useDraggingEvent('timeGrid', 'move');
+  const eventBus = useEventBus();
+  const { isDraggingEnd, isDraggingCanceled, draggingEvent, clearDraggingEvent } = useDraggingEvent(
+    'timeGrid',
+    'move'
+  );
 
   const [currentGridPos, clearCurrentGridPos] = useCurrentPointerPositionInGrid(gridPositionFinder);
   const { initX, initY } = useDragInitCoords();
@@ -170,6 +174,7 @@ export function useTimeGridEventMove({
 
   useWhen(() => {
     const shouldUpdate =
+      !isDraggingCanceled &&
       isPresent(draggingEvent) &&
       isPresent(currentGridPos) &&
       isPresent(gridDiff) &&
@@ -178,9 +183,10 @@ export function useTimeGridEventMove({
     if (shouldUpdate) {
       const duration = draggingEvent.duration();
       const nextEndTime = addMilliseconds(nextStartTime, duration);
-      updateEvent({
+
+      eventBus.fire('beforeUpdateEvent', {
         event: draggingEvent.model,
-        eventData: {
+        changes: {
           start: nextStartTime,
           end: nextEndTime,
         },

@@ -2,16 +2,16 @@
   z-index: 1;
 }
 
+.floating-layer * {
+  box-sizing: border-box;
+}
+
 .popup-container {
   position: absolute;
   font-weight: 2.5;
   box-shadow: 0 2px 6px 0 rgb(0 0 0 / 10%);
   clear: both;
   z-index: 2;
-}
-
-.popup-container * {
-  box-sizing: border-box;
 }
 
 .popup-section {
@@ -24,7 +24,7 @@
   top: 10px;
   right: 10px;
   background-color: #fff;
-  padding: 2px;
+  padding: 0;
   border: none;
 }
 

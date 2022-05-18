@@ -16,6 +16,9 @@ Template.args = {
   containerHeight: '100vh',
   onInit: (cal) => {
     cal.createEvents(mockWeekViewEvents);
+    cal.on('beforeUpdateEvent', ({ event, changes }) => {
+      cal.updateEvent(event.id, event.calendarId, changes);
+    });
   },
 };
 
