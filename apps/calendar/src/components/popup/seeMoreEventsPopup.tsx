@@ -60,7 +60,7 @@ export function SeeMoreEventsPopup() {
   const moreTitle = {
     ymd: toFormat(date, 'YYYY-MM-DD'),
     day: date.getDay(),
-    date: date.getDate(),
+    date: date.getDate().toString().padStart(2, '0'),
   };
 
   const moreViewListStyle = {
@@ -81,7 +81,7 @@ export function SeeMoreEventsPopup() {
       <div className={classNames.seeMore} style={moreView}>
         <div className={classNames.header} style={style}>
           <Template template="monthMoreTitleDate" model={moreTitle} />
-          <ClosePopupButton />
+          <ClosePopupButton type="moreEvents" />
         </div>
         <div className={classNames.list} style={moreViewListStyle}>
           {events.map((uiModel) => (

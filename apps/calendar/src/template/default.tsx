@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { Fragment, h } from 'preact';
 
 import { cls } from '@src/helpers/css';
 import { getDayName } from '@src/helpers/dayName';
@@ -24,12 +24,20 @@ const SIXTY_MINUTES = 60;
 
 export const templates: Template = {
   milestone(model: EventModel) {
-    const icon = cls('icon');
-    const iconName = cls('ic-milestone');
+    const classNames = cls('icon', 'ic-milestone');
 
-    return `<span class="${icon} ${iconName}"></span><span style="background-color: ${
-      model.bgColor
-    }">${stripTags(model.title)}</span>`;
+    return (
+      <Fragment>
+        <span className={classNames} />
+        <span
+          style={{
+            backgroundColor: model.bgColor,
+          }}
+        >
+          {stripTags(model.title)}
+        </span>
+      </Fragment>
+    );
   },
 
   milestoneTitle() {
@@ -89,7 +97,12 @@ export const templates: Template = {
     const classNameDayLabel = cls('more-title-day');
     const dayName = capitalize(getDayName(day));
 
-    return `<span class="${classNameDay}">${date}</span><span class="${classNameDayLabel}">${dayName}</span>`;
+    return (
+      <Fragment>
+        <span className={classNameDay}>{date}</span>
+        <span className={classNameDayLabel}>{dayName}</span>
+      </Fragment>
+    );
   },
 
   monthMoreClose() {
@@ -125,7 +138,12 @@ export const templates: Template = {
     const classDate = cls('dayname-date');
     const className = cls('dayname-name');
 
-    return `<span class="${classDate}">${model.date}</span>&nbsp;&nbsp;<span class="${className}">${model.dayName}</span>`;
+    return (
+      <Fragment>
+        <span className={classDate}>{model.date}</span>&nbsp;&nbsp;
+        <span className={className}>{model.dayName}</span>
+      </Fragment>
+    );
   },
 
   weekGridFooterExceed(hiddenEvents: number) {
