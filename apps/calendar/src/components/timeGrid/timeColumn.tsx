@@ -98,14 +98,12 @@ export const TimeColumn = memo(function TimeColumn({
   );
   const hourRowsPropsMapper = useCallback(
     (row: TimeGridRow, index: number, diffFromPrimaryTimezone?: number) => {
-      const shouldHideRow = (_row: TimeGridRow) => {
+      const shouldHideRow = ({ top: rowTop, height: rowHeight }: TimeGridRow) => {
         if (isNil(currentTimeIndicatorState)) {
           return false;
         }
 
         const indicatorTop = currentTimeIndicatorState.top;
-        const rowTop = _row.top;
-        const rowHeight = _row.height;
 
         return rowTop - rowHeight <= indicatorTop && indicatorTop <= rowTop + rowHeight;
       };
