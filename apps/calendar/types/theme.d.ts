@@ -33,11 +33,13 @@ type DayGridTheme = {
 type DayGridLeftTheme = {
   borderRight: string;
   backgroundColor: string;
+  width: string;
 };
 
 type TimeGridLeftTheme = {
   borderRight: string;
   backgroundColor: string;
+  width: string;
 };
 
 type WeekTheme = {

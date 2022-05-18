@@ -1,5 +1,4 @@
 import type { CalendarState } from '@t/store';
-import type { ThemeState } from '@t/theme';
 
 export function topLevelStateSelector<State, Group extends keyof State>(
   group: Group
@@ -16,7 +15,3 @@ export const templateSelector = topLevelStateSelector<CalendarState, 'template'>
 export const viewSelector = topLevelStateSelector<CalendarState, 'view'>('view');
 export const optionsSelector = topLevelStateSelector<CalendarState, 'options'>('options');
 export const dndSelector = topLevelStateSelector<CalendarState, 'dnd'>('dnd');
-
-export const commonThemeSelector = topLevelStateSelector<ThemeState, 'common'>('common');
-export const weekThemeSelector = topLevelStateSelector<ThemeState, 'week'>('week');
-export const monthThemeSelector = topLevelStateSelector<ThemeState, 'month'>('month');

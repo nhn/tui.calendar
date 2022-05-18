@@ -5,3 +5,5 @@ export const primaryTimezoneSelector = (state: CalendarState) =>
 
 export const customOffsetCalculatorSelector = (state: CalendarState) =>
   state.options?.timezone?.customOffsetCalculator;
+
+export const timezonesSelector = (state: CalendarState) => state.options.timezone.zones ?? [];

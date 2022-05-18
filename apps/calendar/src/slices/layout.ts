@@ -5,7 +5,7 @@ import { DEFAULT_PANEL_HEIGHT } from '@src/constants/style';
 
 import type { CalendarStore, SetState } from '@t/store';
 
-export type WeekGridRows = 'milestone' | 'task' | 'allday' | string;
+export type WeekGridRows = 'milestone' | 'task' | 'allday' | 'time' | string;
 
 // @TODO: Change name to layout & merge slice into layout
 export type WeekViewLayoutSlice = {

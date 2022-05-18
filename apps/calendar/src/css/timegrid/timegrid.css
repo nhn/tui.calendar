@@ -70,36 +70,21 @@
   border-top: none;
 }
 
-.timegrid-sticky {
+.timezone-labels-slot {
+  display: table;
+  table-layout: fixed;
   position: absolute;
-  top: 0;
-  border-bottom: 1px solid #e5e5e5;
+  height: 40px;
+  border-bottom: 1px solid #e9e9e9;
+  background-color: white;
+}
+
+.timezone-labels-slot .timegrid-timezone-label {
+  display: table-cell;
   background-color: white;
   font-size: 11px;
-  user-select: none;
-}
-
-.timegrid-sticky .timegrid-timezone-label {
-  display: inline-block;
-  text-align: right;
-  padding-right: 5px;
   border-right: 1px solid #e5e5e5;
-  height: 40px;
-  line-height: 40px;
-}
-
-.timegrid-sticky .timegrid-collapse-button {
-  cursor: pointer;
-  position: absolute;
-  text-align: center;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  top: 2px;
-  bottom: 2px;
-  width: 10px;
-  border-left: none;
-}
-
-.timegrid-sticky .timegrid-collapse-button .icon {
-  width: 5px;
+  vertical-align: middle;
+  padding-right: 5px;
+  text-align: right;
 }

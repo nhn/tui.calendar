@@ -42,6 +42,36 @@ DifferentPrimaryTimezone.args = {
   },
 };
 
+export const MultipleTimezones = Template.bind({});
+MultipleTimezones.args = {
+  ...Template.args,
+  options: {
+    ...Template.args.options,
+    theme: {
+      week: {
+        dayGridLeft: {
+          width: '120px',
+        },
+        timeGridLeft: {
+          width: '120px',
+        },
+      },
+    },
+    timezone: {
+      zones: [
+        {
+          timezoneName: 'Asia/Karachi',
+          displayLabel: '+05:00',
+        },
+        {
+          timezoneName: 'US/Samoa',
+          displayLabel: '-11:00',
+        },
+      ],
+    },
+  },
+};
+
 export const CustomTemplate = Template.bind({});
 CustomTemplate.args = {
   ...Template.args,

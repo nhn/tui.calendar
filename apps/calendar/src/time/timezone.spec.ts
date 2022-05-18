@@ -184,7 +184,7 @@ describe('calculateTimezoneOffset', () => {
     const tzDate = new TZDate('2022-04-12T00:00:00');
 
     // When
-    const offset = calculateTimezoneOffset(tzDate, timezoneName);
+    const offset = calculateTimezoneOffset(timezoneName, tzDate);
 
     // Then
     // Pacific Daylight Time (PDT) is UTC -7.
@@ -199,7 +199,7 @@ describe('calculateTimezoneOffset', () => {
     const tzDate = new TZDate('2022-11-06T09:00:00');
 
     // When
-    const offset = calculateTimezoneOffset(tzDate, timezoneName);
+    const offset = calculateTimezoneOffset(timezoneName, tzDate);
 
     // Then
     expect(offset).toBe(-480);
@@ -212,7 +212,7 @@ describe('calculateTimezoneOffset', () => {
     const tzDate = new TZDate('2022-11-06T09:00:00');
 
     // When
-    const offset = calculateTimezoneOffset(tzDate, timezoneName);
+    const offset = calculateTimezoneOffset(timezoneName, tzDate);
 
     // Then
     expect(offset).toBe(660);
@@ -225,7 +225,7 @@ describe('calculateTimezoneOffset', () => {
     const tzDate = new TZDate('2022-04-06T09:00:00');
 
     // When
-    const offset = calculateTimezoneOffset(tzDate, timezoneName);
+    const offset = calculateTimezoneOffset(timezoneName, tzDate);
 
     // Then
     expect(offset).toBe(600);
@@ -237,7 +237,7 @@ describe('calculateTimezoneOffset', () => {
     const tzDate = new TZDate('2022-11-06T09:00:00');
 
     // When
-    const offset = calculateTimezoneOffset(tzDate, timezoneName);
+    const offset = calculateTimezoneOffset(timezoneName, tzDate);
 
     // Then
     expect(offset).toBe(540);
@@ -249,7 +249,7 @@ describe('calculateTimezoneOffset', () => {
     const tzDate = new TZDate('2022-04-12T00:00:00');
 
     // When
-    const fn = () => calculateTimezoneOffset(tzDate, invalidTimezoneName);
+    const fn = () => calculateTimezoneOffset(invalidTimezoneName, tzDate);
 
     // Then
     expect(fn).toThrow();

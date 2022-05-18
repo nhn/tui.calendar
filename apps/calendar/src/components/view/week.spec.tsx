@@ -1,20 +1,18 @@
 import { h } from 'preact';
 
-import { screen } from '@testing-library/preact';
-
 import { Week } from '@src/components/view/week';
 import { DEFAULT_EVENT_PANEL, DEFAULT_TASK_PANEL } from '@src/constants/view';
 import { initCalendarStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
 import { getActivePanels } from '@src/helpers/view';
 import EventModel from '@src/model/eventModel';
-import { render } from '@src/test/utils';
+import { render, screen } from '@src/test/utils';
 import TZDate from '@src/time/date';
 
 import type { EventModelData } from '@t/events';
 import type { Options, WeekOptions } from '@t/options';
 
-describe('week', () => {
+describe('WeekView Component', () => {
   function setup(options: Options, events?: EventModel[]) {
     const store = initCalendarStore(options);
     if (events) {
