@@ -27,7 +27,7 @@ export const templates: Template = {
 
     return (
       <Fragment>
-        <span className={classNames}></span>
+        <span className={classNames} />
         <span
           style={{
             backgroundColor: model.bgColor,

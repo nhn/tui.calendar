@@ -26,16 +26,13 @@ export function ClosePopupButton({ type, close }: Props) {
     }
   };
 
-  const children =
-    type === 'moreEvents' ? (
-      <Template template="monthMoreClose" model="close" />
-    ) : (
-      <i className={classNames.closeIcon} />
-    );
-
   return (
     <button type="button" className={classNames.closeButton} onClick={onClickHandler}>
-      {children}
+      {type === 'moreEvents' ? (
+        <Template template="monthMoreClose" model="close" />
+      ) : (
+        <i className={classNames.closeIcon} />
+      )}
     </button>
   );
 }
