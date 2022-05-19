@@ -197,7 +197,9 @@ export function HorizontalEvent({
     if (isDraggableEvent) {
       eventBus.fire('afterRenderEvent', uiModel.model);
     }
-  }, [eventBus, uiModel.model, isDraggableEvent]);
+    // This effect is only for the first render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onResizeStart = useDrag(DRAGGING_TYPE_CREATORS.resizeEvent('dayGrid', `${uiModel.cid()}`), {
     onDragStart: () => startDragEvent(classNames.resizeEvent),

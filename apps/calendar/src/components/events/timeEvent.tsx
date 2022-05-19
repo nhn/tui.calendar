@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useRef, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 
 import { Template } from '@src/components/template';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
@@ -129,6 +129,14 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
       setIsDraggingTarget(false);
     }
   });
+
+  useEffect(() => {
+    if (!isResizingGuide) {
+      eventBus.fire('afterRenderEvent', uiModel.model);
+    }
+    // This effect is only for the first render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const startDragEvent = (className: string) => {
     setDraggingEventUIModel(uiModel);
