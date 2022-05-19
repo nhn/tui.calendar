@@ -20,13 +20,13 @@ import type { FormattedTimeString } from '@t/time/datetime';
 function render(
   component: Parameters<typeof ptlRender>[0],
   {
-    eventBus = new EventBusImpl<any>(),
+    eventBus = new EventBusImpl<Record<string, any>>(),
     store = initCalendarStore(),
     theme = initThemeStore(),
     ...options
   }: Parameters<typeof ptlRender>[1] &
     Partial<{
-      eventBus: EventBus<any>;
+      eventBus: EventBus<Record<string, any>>;
       store: InternalStoreAPI<CalendarStore>;
       theme: InternalStoreAPI<ThemeStore>;
     }> = {}

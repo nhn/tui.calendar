@@ -35,6 +35,7 @@ type ExternalEventTypes = {
   beforeCreateEvent: (event: EventModelData) => void;
   beforeUpdateEvent: (updatedEventInfo: UpdatedEventInfo) => void;
   beforeDeleteEvent: (event: EventModel) => void;
+  afterRenderEvent: (event: EventModel) => void;
   clickDayname: (daynameInfo: DaynameInfo) => void;
   clickEvent: (eventInfo: EventInfo) => void;
   clickMoreEventsBtn: (moreEventsBtnInfo: MoreEventsButton) => void;

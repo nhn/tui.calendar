@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useRef, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 
 import { HorizontalEventResizeIcon } from '@src/components/events/horizontalEventResizeIcon';
 import { Template } from '@src/components/template';
@@ -151,8 +151,16 @@ export function HorizontalEvent({
   movingLeft = null,
 }: Props) {
   const layoutContainer = useLayoutContainer();
-  const [isDraggingTarget, setIsDraggingTarget] = useState<boolean>(false);
 
+  const { useDetailPopup } = useStore(optionsSelector);
+  const { setDraggingEventUIModel } = useDispatch('dnd');
+  const { showDetailPopup } = useDispatch('popup');
+  const eventBus = useEventBus();
+
+  const [isDraggingTarget, setIsDraggingTarget] = useState<boolean>(false);
+  const eventContainerRef = useRef<HTMLDivElement>(null);
+
+  const isDraggableEvent = isNil(resizingWidth) && isNil(movingLeft);
   const { dayEventBlockClassName, containerStyle, eventItemStyle } = getStyles({
     uiModel,
     eventHeight,
@@ -162,13 +170,6 @@ export function HorizontalEvent({
     resizingWidth,
     movingLeft,
   });
-
-  const { useDetailPopup } = useStore(optionsSelector);
-  const { setDraggingEventUIModel } = useDispatch('dnd');
-  const { showDetailPopup } = useDispatch('popup');
-  const eventBus = useEventBus();
-
-  const eventContainerRef = useRef<HTMLDivElement>(null);
 
   const startDragEvent = (className: string) => {
     setDraggingEventUIModel(uiModel);
@@ -191,6 +192,12 @@ export function HorizontalEvent({
       setIsDraggingTarget(false);
     }
   });
+
+  useEffect(() => {
+    if (isDraggableEvent) {
+      eventBus.fire('afterRenderEvent', uiModel.model);
+    }
+  }, [eventBus, uiModel.model, isDraggableEvent]);
 
   const onResizeStart = useDrag(DRAGGING_TYPE_CREATORS.resizeEvent('dayGrid', `${uiModel.cid()}`), {
     onDragStart: () => startDragEvent(classNames.resizeEvent),
@@ -230,7 +237,6 @@ export function HorizontalEvent({
 
   const { isReadOnly, id, calendarId } = uiModel.model;
   const shouldHideResizeHandler = flat || isDraggingTarget || uiModel.exceedRight || isReadOnly;
-  const isDraggableEvent = isNil(resizingWidth) && isNil(movingLeft);
 
   return (
     <div
