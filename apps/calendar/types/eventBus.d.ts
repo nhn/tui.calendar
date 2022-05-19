@@ -38,5 +38,6 @@ type ExternalEventTypes = {
   clickDayname: (daynameInfo: DaynameInfo) => void;
   clickEvent: (eventInfo: EventInfo) => void;
   clickMoreEventsBtn: (moreEventsBtnInfo: MoreEventsButton) => void;
+  clickTimezonesCollapseBtn: (prevCollapsedState: boolean) => void;
   [eventName: string]: AnyFunc;
 };
