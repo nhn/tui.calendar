@@ -1,16 +1,18 @@
 import { h } from 'preact';
-import { useCallback, useMemo } from 'preact/hooks';
+import { useMemo } from 'preact/hooks';
 
 import { Template } from '@src/components/template';
 import { addTimeGridPrefix } from '@src/components/timeGrid';
 import { TimezoneCollapseButton } from '@src/components/timeGrid/timezoneCollapseButton';
 import { useStore } from '@src/contexts/calendarStore';
 import { cls, toPercent } from '@src/helpers/css';
+import {
+  showTimezoneCollapseButtonOptionSelector,
+  timezonesCollapsedOptionSelector,
+} from '@src/selectors/options';
 import { timezonesSelector } from '@src/selectors/timezone';
 import { calculateTimezoneOffset } from '@src/time/timezone';
 import { isUndefined } from '@src/utils/type';
-
-import type { CalendarState } from '@t/store';
 
 interface TimezoneLabelProps {
   label: string | null;
@@ -42,15 +44,8 @@ function TimezoneLabel({ label, offset, tooltip, width = 100, left }: TimezoneLa
 }
 
 function useTimezoneCollapseOptions() {
-  const showTimezoneCollapseButton = useStore(
-    useCallback(
-      (state: CalendarState) => state.options.week.showTimezoneCollapseButton ?? false,
-      []
-    )
-  );
-  const timezonesCollapsed = useStore(
-    useCallback((state: CalendarState) => state.options.week.timezonesCollapsed ?? false, [])
-  );
+  const showTimezoneCollapseButton = useStore(showTimezoneCollapseButtonOptionSelector);
+  const timezonesCollapsed = useStore(timezonesCollapsedOptionSelector);
 
   return useMemo(() => {
     return {
@@ -93,14 +88,15 @@ export function TimezoneLabels({ top }: { top: number | null }) {
       role="columnheader"
       className={cls('timezone-labels-slot')}
     >
-      {subTimezones.map((subTimezone, index) => (
-        <TimezoneLabel
-          key={`subTimezone-${subTimezone.label ?? subTimezone.offset}`}
-          width={timezoneLabelWidth}
-          left={timezoneLabelWidth * index}
-          {...subTimezone}
-        />
-      ))}
+      {!timezonesCollapsed &&
+        subTimezones.map((subTimezone, index) => (
+          <TimezoneLabel
+            key={`subTimezone-${subTimezone.label ?? subTimezone.offset}`}
+            width={timezoneLabelWidth}
+            left={timezoneLabelWidth * index}
+            {...subTimezone}
+          />
+        ))}
       {showTimezoneCollapseButton && <TimezoneCollapseButton isCollapsed={timezonesCollapsed} />}
       <TimezoneLabel
         width={timezoneLabelWidth}

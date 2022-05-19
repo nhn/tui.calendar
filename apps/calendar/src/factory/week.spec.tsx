@@ -287,6 +287,7 @@ describe('Multiple Timezone', () => {
 
     expect(labels.map((label) => label.textContent)).toEqual(expectedLabels);
   });
+
   it('should render multiple hours column when multiple timezone is given', () => {
     // Given
     const timezoneOptions: Options = {
@@ -378,6 +379,35 @@ describe('Multiple Timezone', () => {
     // Then
     const currentTimeLabels = screen.getAllByTestId(currentTimeLabelTestId);
     expect(currentTimeLabels.map((label) => label.textContent)).toEqual(expectedCurrentTimeLabels);
+  });
+
+  it('should show only primary timezone when the timezonesCollapsed option is enabled', () => {
+    // Given
+    const option: Options = {
+      week: {
+        timezonesCollapsed: true,
+      },
+      timezone: {
+        zones: [
+          {
+            timezoneName: 'Etc/UTC',
+          },
+          {
+            timezoneName: 'Asia/Seoul', // UTC +9
+          },
+        ],
+      },
+    };
+
+    // When
+    setup(option);
+
+    // Then
+    const labelContainer = screen.getByRole('columnheader');
+    const hourColumns = screen.getAllByRole('rowgroup');
+
+    expect(labelContainer.children).toHaveLength(1);
+    expect(hourColumns).toHaveLength(1);
   });
 });
 
