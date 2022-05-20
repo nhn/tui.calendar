@@ -148,12 +148,12 @@ cases.forEach(({ title, eventColumnIndex, directionInfo }) => {
         targetLocator: targetRowLocator,
         options: {
           sourcePosition: {
-            x: 1,
-            y: 1,
+            x: 5,
+            y: 5,
           },
           targetPosition: {
-            y: 1,
-            x: targetColumnBoundingBox.x - 1,
+            y: 5,
+            x: targetColumnBoundingBox.x - 5,
           },
         },
       });
@@ -161,7 +161,7 @@ cases.forEach(({ title, eventColumnIndex, directionInfo }) => {
       // Then
       const eventBoundingBoxAfterMove = await getBoundingBox(eventLocator);
       expect(eventBoundingBoxAfterMove.x).toBeCloseTo(targetColumnBoundingBox.x, -1);
-      await expect(eventLocator).toHaveText(new RegExp(startTimeAfterMoving));
+      await expect.poll(() => eventLocator.textContent()).toMatch(new RegExp(startTimeAfterMoving));
     });
   });
 });
