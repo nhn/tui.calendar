@@ -1,0 +1,354 @@
+import { Meta } from '@storybook/addon-docs';
+
+<Meta title="Documentation/ko/API/템플릿" />
+
+# 템플릿
+
+## 설명
+
+템플릿은 커스텀 렌더링을 지원하는 기능이다. 캘린더 인스턴스 생성 시 템플릿 옵션으로 커스텀 렌더링을 할 수 있으며, `setOptions`로 템플릿 옵션을 변경할 수 있다.
+
+```jsx
+const cal = new Calendar('#container', {
+  template: {
+    milestone(event) {
+      return <span style={{ color: 'red' }}>{event.title}</span>;
+    },
+  },
+});
+
+cal.setOptions({
+  template: {
+    milestone(event) {
+      return <span style={{ color: 'blue' }}>{event.title}</span>;
+    },
+  },
+});
+```
+
+## 템플릿 목록
+
+템플릿의 각 프로퍼티들은 문자열 또는 VNode를 반환하는 함수이며 파라미터는 템플릿의 종류에 따라 다르다. 아래는 전체 템플릿 목록이다.
+
+| 템플릿명                                                  | 파라미터                | 설명                                                             |
+| --------------------------------------------------------- | ----------------------- | ---------------------------------------------------------------- |
+| [milestone](#milestone)                                   | EventModel              | milestone 이벤트                                                 |
+| [milestoneTitle](#milestonetitle)                         | 없음                    | milestone 패널의 왼쪽 영역                                       |
+| [task](#task)                                             | EventModel              | task 이벤트                                                      |
+| [taskTitle](#tasktitle)                                   | 없음                    | task 패널의 왼쪽 영역                                            |
+| [allday](#allday)                                         | EventModel              | allday 이벤트                                                    |
+| [alldayTitle](#alldaytitle)                               | 없음                    | allday 패널의 왼쪽 영역                                          |
+| [time](#time)                                             | EventModel              | time 이벤트                                                      |
+| [goingDuration](#goingduration)                           | EventModel              | time 이벤트의 going duration                                     |
+| [comingDuration](#comingduration)                         | EventModel              | time 이벤트의 coming duration                                    |
+| [monthMoreTitleDate](#monthmoretitledate)                 | TemplateMoreTitleDate   | 월간뷰의 더 보기 팝업의 날짜                                     |
+| [monthMoreClose](#monthmoreclose)                         | 없음                    | 월간뷰의 더 보기 팝업의 닫기 버튼                                |
+| [monthGridHeader](#monthgridheader)                       | TemplateMonthGrid       | 월간뷰의 각 셀의 헤더의 날짜                                     |
+| [monthGridHeaderExceed](#monthgridheaderexceed)           | number                  | 월간뷰의 각 셀의 헤더의 초과되는 이벤트 갯수를 표시하는 컴포넌트 |
+| [monthGridFooter](#monthgridfooter)                       | TemplateMonthGrid       | 월간뷰의 각 셀의 푸터의 날짜                                     |
+| [monthGridFooterExceed](#monthgridfooterexceed)           | number                  | 월간뷰의 각 셀의 푸터의 초과되는 이벤트 갯수를 표시하는 컴포넌트 |
+| [monthDayname](#monthdayname)                             | TemplateMonthDayName    | 월간뷰의 요일 표시                                               |
+| [weekDayname](#weekdayname)                               | TemplateWeekDayName     | 주간뷰의 요일 표시                                               |
+| [weekGridFooterExceed](#weekgridfooterexceed)             | number                  | 주간뷰의 allday 패널의 초과된 이벤트 표시 컴포넌트               |
+| [dayGridTitle](#daygridtitle)                             | EventCategory           | 주간뷰의 패널 왼쪽 영역                                          |
+| [event](#event)                                           | EventModel              | 이벤트 컴포넌트                                                  |
+| [collapseBtnTitle](#collapsebtntitle)                     | 없음                    | 주간뷰의 allday 패널의 접기 버튼 컴포넌트                        |
+| [timezoneDisplayLabel](#timezonedisplaylabel)             | TemplateTimezone        | 주간뷰의 타임존 표시 컴포넌트                                    |
+| [timegridDisplayPrimaryTime](#timegriddisplayprimarytime) | TemplateCurrentTime     | 주간뷰의 primary 타임존 시간 표시                                |
+| [timegridDisplayTime](#timegriddisplaytime)               | TemplateCurrentTime     | 주간뷰의 primary 타임존 외의 타임존 시간 표시                    |
+| [timegridCurrentTime](#timegridcurrenttime)               | TemplateCurrentTime     | 주간뷰의 현재 시간 표시                                          |
+| [popupIsAllday](#popupisallday)                           | 없음                    | 이벤트 생성 팝업에서 all day 텍스트                              |
+| [popupStateFree](#popupstatefree)                         | 없음                    | 이벤트 생성 팝업에서 이벤트 free 상태 텍스트                     |
+| [popupStateBusy](#popupstatebusy)                         | 없음                    | 이벤트 생성 팝업에서 이벤트 busy 상태 텍스트                     |
+| [titlePlaceholder](#titleplaceholder)                     | 없음                    | 이벤트 생성 팝업에서 이벤트명 placeholder                        |
+| [locationPlaceholder](#locationplaceholder)               | 없음                    | 이벤트 생성 팝업에서 이벤트 장소 placeholder                     |
+| [startDatePlaceholder](#startdateplaceholder)             | 없음                    | 이벤트 생성 팝업에서 이벤트 시작 날짜 placeholder                |
+| [endDatePlaceholder](#enddateplaceholder)                 | 없음                    | 이벤트 생성 팝업에서 이벤트 종료 날짜 placeholder                |
+| [popupSave](#popupsave)                                   | 없음                    | 이벤트 생성 팝업에서 save 버튼 텍스트                            |
+| [popupUpdate](#popupupdate)                               | 없음                    | 이벤트 수정 팝업에서 update 버튼 텍스트                          |
+| [popupEdit](#popupedit)                                   | 없음                    | 이벤트 상세 팝업에서 edit 버튼 텍스트                            |
+| [popupDelete](#popupdelete)                               | 없음                    | 이벤트 상세 팝업에서 delete 버튼 텍스트                          |
+| [popupDetailDate](#popupdetaildate)                       | boolean, TZDate, TZDate | 이벤트 상세 팝업에서 이벤트의 기간 표시                          |
+| [popupDetailLocation](#popupdetaillocation)               | EventModel              | 이벤트 상세 팝업에서 이벤트의 장소 표시                          |
+| [popupDetailUser](#popupdetailuser)                       | EventModel              | 이벤트 상세 팝업에서 이벤트의 참석자 표시                        |
+| [popupDetailState](#popupdetailstate)                     | EventModel              | 이벤트 상세 팝업에서 이벤트의 상태 표시                          |
+| [popupDetailRepeat](#popupdetailrepeat)                   | EventModel              | 이벤트 상세 팝업에서 이벤트의 반복 룰 표시                       |
+| [popupDetailBody](#popupdetailbody)                       | EventModel              | 이벤트 상세 팝업에서 이벤트의 내용 표시                          |
+
+## 사용 예시
+
+### milestone 관련
+
+![milestone](https://user-images.githubusercontent.com/28647773/169249313-a6e03bc3-5234-462c-a0a6-186da13e8bb7.png)
+
+#### milestone
+
+`eventModel` 파라미터를 이용해 각 milestone 이벤트를 커스터마이징할 수 있다.
+
+#### milestoneTitle
+
+milestone 패널 왼쪽의 영역을 커스터마이징할 수 있다.
+
+### task 관련
+
+![task](https://user-images.githubusercontent.com/28647773/169249339-79e28856-b748-4b1d-8acf-dd9da6f28287.png)
+
+#### task
+
+`eventModel` 파라미터를 이용해 각 task 이벤트를 커스터마이징할 수 있다.
+
+#### taskTitle
+
+task 패널 왼쪽의 영역을 커스터마이징할 수 있다.
+
+### allday 관련
+
+![allday](https://user-images.githubusercontent.com/28647773/169249361-c8547a8b-d037-4d47-8340-fe027e223cfb.png)
+
+#### allday
+
+`eventModel` 파라미터를 이용해 각 allday 이벤트를 커스터마이징할 수 있다.
+
+#### alldayTitle
+
+allday 패널 왼쪽의 영역을 커스터마이징할 수 있다.
+
+### time 관련
+
+![time](https://user-images.githubusercontent.com/28647773/169249967-5e642cf0-a892-46fe-abda-d378dab6aaa3.png)
+
+#### time
+
+`eventModel` 파라미터를 이용해 각 time 이벤트를 커스터마이징할 수 있다. going, coming duration을 제외한 부분이다.
+
+#### goingDuration
+
+`eventModel` 파라미터를 이용해 각 going duration을 커스터마이징할 수 있다.
+
+#### comingDuration
+
+`eventModel` 파라미터를 이용해 각 coming duration을 커스터마이징할 수 있다.
+
+### 월간뷰의 더보기 팝업 관련
+
+![more-events-popup](https://user-images.githubusercontent.com/28647773/169254478-f625bbe0-6b4f-4783-a8a5-560b1b7a26d4.png)
+
+#### monthMoreTitleDate
+
+```ts
+interface TemplateMoreTitleDate {
+  ymd: string;
+  date: number;
+  day: number;
+}
+```
+
+더 보기 팝업의 날짜를 커스터마이징할 수 있다. 파라미터는 `TemplateMoreTitleDate` 객체로, `ymd` 프로퍼티는 해당 날짜의 `YYYY-MM-DD` 문자열 형식 데이터다. `date` 프로퍼티는 해당 날짜의 일, `day`는 해당 날짜의 요일이다.
+
+#### monthMoreClose
+
+더 보기 팝업의 닫기 버튼을 커스터마이징할 수 있다. 기본 값이 빈 문자열을 반환하기 때문에 기본적으로는 닫기 버튼이 표시되지 않는다.
+
+### 월간뷰의 header, footer 관련
+
+![grid-header-footer](https://user-images.githubusercontent.com/28647773/169254710-c190ef82-5525-4f55-a4f7-3aebef20f306.png)
+
+```ts
+interface TemplateMonthGrid {
+  date: string;
+  day: number;
+  hiddenEventCount: number;
+  isOtherMonth: boolean;
+  isToday: boolean;
+  month: number;
+  ymd: string;
+}
+```
+
+#### monthGridHeader
+
+월간뷰 각 셀의 헤더의 날짜를 커스터마이징할 수 있다. `TemplateMonthGrid` 객체를 파라미터로 받는다.
+`date`는 해당 날짜의 일, `day`는 해당 요일, `month`는 해당 월, `hiddenEventCount`는 표시되지 않은 이벤트의 갯수, `isOtherMonth`는 현재 월간뷰의 달과 다른 달의 날짜인지 여부, `isToday`는 오늘 날짜인지 여부, `ymd`는 해당 날짜의 `YYYY-MM-DD` 문자열 형식 데이터다.
+
+#### monthGridHeaderExceed
+
+월간뷰 각 셀의 헤더의 초과되는 이벤트의 갯수를 표시하는 컴포넌트를 커스터마이징할 수 있다. 초과된 이벤트의 갯수를 파라미터로 받는다.
+
+#### monthGridFooter
+
+월간뷰 각 셀의 푸터의 날짜를 커스터마이징할 수 있다. `TemplateMonthGrid` 객체를 파라미터로 받는다.
+`date`는 해당 날짜의 일, `day`는 해당 요일, `month`는 해당 월, `hiddenEventCount`는 표시되지 않은 이벤트의 갯수, `isOtherMonth`는 현재 월간뷰의 달과 다른 달의 날짜인지 여부, `isToday`는 오늘 날짜인지 여부, `ymd`는 해당 날짜의 `YYYY-MM-DD` 문자열 형식 데이터다.
+기본 값이 빈 문자열을 반환하기 때문에 따로 설정하지 않는다면 표시되지 않는다.
+
+#### monthGridFooterExceed
+
+월간뷰 각 셀의 푸터의 초과되는 이벤트의 갯수를 표시하는 컴포넌트를 커스터마이징할 수 있다. 초과된 이벤트의 갯수를 파라미터로 받는다.
+기본 값이 빈 문자열을 반환하기 때문에 따로 설정하지 않는다면 표시되지 않는다.
+
+### dayname 관련
+
+#### monthDayname
+
+![month-dayname](https://user-images.githubusercontent.com/28647773/169263287-e9003fdd-a701-4a92-a01c-2ec4597381d7.png)
+
+```ts
+interface TemplateMonthDayName {
+  day: number;
+  label: string;
+}
+```
+
+월간뷰의 각 요일을 커스터마이징할 수 있다. `day`는 해당 요일, `label`은 해당 요일의 기본적인 영문 축약형 문자열이다.
+
+#### weekDayname
+
+![week-dayname](https://user-images.githubusercontent.com/28647773/169263334-79b626bb-d092-434c-b25d-f1cf4d6d4f48.png)
+
+```ts
+interface TemplateWeekDayName {
+  date: number;
+  day: number;
+  dayName: string;
+  isToday: boolean;
+  renderDate: string;
+  dateInstance: TZDate;
+}
+```
+
+주간뷰의 각 요일을 커스터마이징할 수 있다. `date`는 해당 요일의 일, `day`는 해당 요일, `dayName`은 해당 요일의 기본적인 영문 축약형 문자열, `isToday`는 해당 요일이 오늘인지 여부, `renderDate`는 주간뷰 렌더링의 기준 날짜, `dateInstance`는 해당 요일의 `Date` 객체다.
+
+### weekGridFooterExceed
+
+![week-exceed](https://user-images.githubusercontent.com/28647773/169265175-e59d0dde-eb44-4359-98df-7bd0d914a18b.png)
+
+주간뷰의 allday 패널의 초과된 이벤트 표시 컴포넌트를 커스터마이징할 수 있다. 초과된 이벤트의 갯수를 파라미터로 받는다.
+
+### dayGridTitle
+
+![dayGrid-title](https://user-images.githubusercontent.com/28647773/169429687-b5557690-c393-4a48-8fe1-db1188d09b96.png)
+
+주간뷰의 패널 왼쪽 영역을 커스터마이징할 수 있다. 기본 값은 파라미터에 따라 `milestoneTitle`, `tastTitle`, `alldayTitle` 템플릿을 반환한다.
+
+### event
+
+이벤트 컴포넌트를 커스터마이징할 수 있다. 기본 값은 이벤트의 카테고리에 따라 `milestone`, `task`, `allday`, `time` 템플릿을 반환한다.
+
+### collapseBtnTitle
+
+![collapse-btn](https://user-images.githubusercontent.com/28647773/169430840-6b4d70d6-30b7-4bc3-bbbb-41abb19d9d5e.png)
+
+주간뷰의 접기 버튼 컴포넌트를 커스터마이징할 수 있다.
+
+### timezoneDisplayLabel
+
+![timezone-display](https://user-images.githubusercontent.com/28647773/169431402-1e006772-d34d-49e2-90e5-4d48a68a5ef1.png)
+
+2개 이상의 타임존을 사용하는 주간뷰에서 타임존을 표시하는 컴포넌트를 커스터마이징할 수 있다.
+
+### 시간 표시 관련
+
+![timegrid-time](https://user-images.githubusercontent.com/28647773/169463203-d27010ce-0aa6-45ed-9068-4d2f6f63f66b.png)
+
+```ts
+type TimeUnit = 'second' | 'minute' | 'hour' | 'date' | 'month' | 'year';
+
+interface TemplateCurrentTime {
+  unit: TimeUnit;
+  time: TZDate;
+  format: string;
+}
+```
+
+`unit`은 시간의 단위, `time`은 해당 시간, `format`은 해당 시간의 포맷을 의미한다.
+
+#### timegridDisplayPrimaryTime
+
+primary 타임존의 시간 표시를 커스터마이징할 수 있다.
+
+#### timegridDisplayTime
+
+primary 타임존을 제외한 타임존의 시간 표시를 커스터마이징할 수 있다.
+
+#### timegridCurrentTime
+
+현재 가리키는 시간 표시를 커스터마이징할 수 있다.
+
+### 이벤트 생성 팝업 관련
+
+![popup-create](https://user-images.githubusercontent.com/28647773/169463937-88165a20-c13f-4f82-8c6c-797d6fc8ff28.png)
+
+#### popupIsAllday
+
+이벤트 생성 팝업에서 all day 텍스트를 커스터마이징할 수 있다.
+
+#### popupStateFree
+
+이벤트 생성 팝업에서 이벤트의 free 상태를 커스터마이징할 수 있다.
+
+#### popupStateBusy
+
+이벤트 생성 팝업에서 이벤트의 busy 상태를 커스터마이징할 수 있다.
+
+#### titlePlaceholder
+
+이벤트 생성 팝업에서 이벤트명의 placeholder를 커스터마이징할 수 있다.
+
+#### locationPlaceholder
+
+이벤트 생성 팝업에서 이벤트 장소의 placeholder를 커스터마이징할 수 있다.
+
+#### startDatePlaceholder
+
+이벤트 생성 팝업에서 이벤트의 시작 날짜 placeholder를 커스터마이징할 수 있다.
+
+#### endDatePlaceholder
+
+이벤트 생성 팝업에서 이벤트의 종료 날짜 placeholder를 커스터마이징할 수 있다.
+
+#### popupSave
+
+이벤트 생성 팝업에서 save 버튼의 텍스트를 커스터마이징할 수 있다.
+
+### 이벤트 수정 팝업 관련
+
+![popup-edit](https://user-images.githubusercontent.com/28647773/169470248-5a95a604-b524-4bc6-ae9c-ca94f76e2ecf.png)
+
+#### popupUpdate
+
+이벤트 수정 팝업에서 update 버튼의 텍스트를 커스터마이징할 수 있다.
+
+### 이벤트 상세 팝업 관련
+
+![popup-detail](https://user-images.githubusercontent.com/28647773/169470524-c8118a7a-2ca2-46c9-b9b2-28cac71ae0ff.png)
+
+#### popupEdit
+
+이벤트 상세 팝업에서 edit 버튼의 텍스트를 커스터마이징할 수 있다.
+
+#### popupDelete
+
+이벤트 상세 팝업에서 delete 버튼의 텍스트를 커스터마이징할 수 있다.
+
+#### popupDetailDate
+
+이벤트 상세 팝업에서 이벤트의 기간 표시를 커스터마이징할 수 있다.
+
+#### popupDetailLocation
+
+이벤트 상세 팝업에서 이벤트의 장소 표시를 커스터마이징할 수 있다.
+
+#### popupDetailUser
+
+이벤트 상세 팝업에서 이벤트의 참석자 표시를 커스터마이징할 수 있다.
+
+#### popupDetailState
+
+이벤트 상세 팝업에서 이벤트의 상태 표시를 커스터마이징할 수 있다.
+
+#### popupDetailRepeat
+
+이벤트 상세 팝업에서 이벤트의 반복 룰 표시를 커스터마이징할 수 있다.
+
+#### popupDetailBody
+
+이벤트 상세 팝업에서 이벤트의 내용 표시를 커스터마이징할 수 있다.
