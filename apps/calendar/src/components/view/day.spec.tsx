@@ -67,8 +67,9 @@ describe('day', () => {
         EventModel.create({
           id: `${i}`,
           title: `Event ${i}`,
-          start: new TZDate().addMinutes(60 * i),
-          end: new TZDate().addMinutes(60 * i + 30),
+          category: 'time',
+          start: new TZDate('2022-05-22T00:00:00').addMinutes(60 * i),
+          end: new TZDate('2022-05-22T00:00:00').addMinutes(60 * i + 30),
           isVisible: !!(i % 2),
         })
       );
