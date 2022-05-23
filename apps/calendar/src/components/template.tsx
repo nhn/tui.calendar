@@ -11,11 +11,11 @@ import type { TemplateReturnType } from '@t/template';
 
 interface Props {
   template: TemplateName;
-  model?: any;
+  param?: any;
   as?: keyof HTMLElementTagNameMap;
 }
 
-export function Template({ template, model, as: tagName = 'div' }: Props) {
+export function Template({ template, param, as: tagName = 'div' }: Props) {
   const templates = useStore(templateSelector);
   const templateFunc: Function = templates[template];
 
@@ -23,7 +23,7 @@ export function Template({ template, model, as: tagName = 'div' }: Props) {
     return null;
   }
 
-  const htmlOrVnode: TemplateReturnType = templateFunc(model);
+  const htmlOrVnode: TemplateReturnType = templateFunc(param);
 
   return isString(htmlOrVnode)
     ? createElement(tagName, {

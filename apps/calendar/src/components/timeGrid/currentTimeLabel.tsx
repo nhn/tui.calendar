@@ -30,7 +30,7 @@ export function CurrentTimeLabel({ unit, top, time }: Props) {
 
   return (
     <div className={cls(classNames.currentTime)} style={{ top: toPercent(top), color }}>
-      <Template template="timegridCurrentTime" model={model} as="span" />
+      <Template template="timegridCurrentTime" param={model} as="span" />
     </div>
   );
 }

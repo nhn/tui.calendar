@@ -18,7 +18,7 @@ export function TimezoneLabel({ width = '72px', timezone, renderCollapseButton }
 
   return (
     <div title={tooltip} className={cls(addTimeGridPrefix('timezone-label'))} style={{ width }}>
-      <Template template="timezoneDisplayLabel" model={timezone} />
+      <Template template="timezoneDisplayLabel" param={timezone} />
       {renderCollapseButton ? renderCollapseButton() : null}
     </div>
   );

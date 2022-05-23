@@ -64,7 +64,7 @@ export function OtherGridRow({
   return (
     <Fragment>
       <div className={cls('panel-title')} style={style}>
-        <Template template={rowTitleTemplate} model={category} />
+        <Template template={rowTitleTemplate} param={category} />
       </div>
       <div className={cls('allday-panel')}>
         <div className={cls('panel-grid-wrapper')}>

@@ -29,7 +29,7 @@ export function EventDetailSectionDetail({ event }: Props) {
         <div className={classNames.detailItem}>
           <span className={classNames.locationIcon} />
           <span className={classNames.content}>
-            <Template template="popupDetailLocation" model={event} as="span" />
+            <Template template="popupDetailLocation" param={event} as="span" />
           </span>
         </div>
       )}
@@ -37,7 +37,7 @@ export function EventDetailSectionDetail({ event }: Props) {
         <div className={classNames.detailItem}>
           <span className={classNames.repeatIcon} />
           <span className={classNames.content}>
-            <Template template="popupDetailRecurrenceRule" model={event} as="span" />
+            <Template template="popupDetailRecurrenceRule" param={event} as="span" />
           </span>
         </div>
       )}
@@ -45,7 +45,7 @@ export function EventDetailSectionDetail({ event }: Props) {
         <div className={classNames.detailItemIndent}>
           <span className={classNames.userIcon} />
           <span className={classNames.content}>
-            <Template template="popupDetailAttendees" model={event} as="span" />
+            <Template template="popupDetailAttendees" param={event} as="span" />
           </span>
         </div>
       )}
@@ -53,7 +53,7 @@ export function EventDetailSectionDetail({ event }: Props) {
         <div className={classNames.detailItem}>
           <span className={classNames.stateIcon} />
           <span className={classNames.content}>
-            <Template template="popupDetailState" model={event} as="span" />
+            <Template template="popupDetailState" param={event} as="span" />
           </span>
         </div>
       )}
@@ -66,7 +66,7 @@ export function EventDetailSectionDetail({ event }: Props) {
       {body && (
         <div className={classNames.detailItemSeparate}>
           <span className={classNames.content}>
-            <Template template="popupDetailBody" model={event} as="span" />
+            <Template template="popupDetailBody" param={event} as="span" />
           </span>
         </div>
       )}

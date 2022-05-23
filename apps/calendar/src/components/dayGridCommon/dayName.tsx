@@ -50,7 +50,7 @@ export function DayName({ dayname, dayIndex, style, templateType, type }: Props)
         style={dayNameStyle}
         onClick={handleClick}
       >
-        <Template template={templateType} model={dayname} />
+        <Template template={templateType} param={dayname} />
       </span>
     </div>
   );

@@ -74,7 +74,7 @@ export const TimeColumn = memo(function TimeColumn({
 
         return (
           <div key={`slot-${row.startTime}`} className={className} style={{ top }}>
-            <Template template="timegridDisplayPrimaryTime" model={{ time: date }} as="span" />
+            <Template template="timegridDisplayPrimaryTime" param={{ time: date }} as="span" />
           </div>
         );
       })}

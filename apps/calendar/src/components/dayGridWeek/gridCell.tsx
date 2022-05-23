@@ -31,7 +31,7 @@ function ExceedCount({ index, exceedCount, isClicked, onClickExceedCount }: Exce
 
   return exceedCount && !isClicked ? (
     <span className={cls('weekday-exceed-in-week')} onClick={clickExceedCount} style={style}>
-      <Template template="weekGridFooterExceed" model={exceedCount} />
+      <Template template="weekGridFooterExceed" param={exceedCount} />
     </span>
   ) : null;
 }
@@ -39,7 +39,7 @@ function ExceedCount({ index, exceedCount, isClicked, onClickExceedCount }: Exce
 function CollapseButton({ isClicked, isClickedIndex, onClickCollapseButton }: CollapseButtonProps) {
   return isClicked && isClickedIndex ? (
     <span className={cls('weekday-exceed-in-week')} onClick={onClickCollapseButton}>
-      <Template template="collapseBtnTitle" model="collapse" />
+      <Template template="collapseBtnTitle" />
     </span>
   ) : null;
 }
