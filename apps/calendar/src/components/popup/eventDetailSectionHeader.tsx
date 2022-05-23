@@ -17,11 +17,11 @@ const classNames = {
 export function EventDetailSectionHeader({ event }: Props) {
   return (
     <div className={classNames.sectionHeader}>
-      <div>
-        <span className={classNames.eventTitle}>{event.title}</span>
+      <div className={classNames.eventTitle}>
+        <Template template="popupDetailTitle" model={event} as="span" />
       </div>
       <div className={classNames.content}>
-        <Template template="popupDetailDate" model={event} />
+        <Template template="popupDetailDate" model={event} as="span" />
       </div>
     </div>
   );

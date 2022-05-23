@@ -89,6 +89,7 @@ export interface Template {
   endDatePlaceholder: () => TemplateReturnType;
   popupSave: () => TemplateReturnType;
   popupUpdate: () => TemplateReturnType;
+  popupDetailTitle: (event: EventModel) => TemplateReturnType;
   popupDetailDate: (event: EventModel) => TemplateReturnType;
   popupDetailLocation: (event: EventModel) => TemplateReturnType;
   popupDetailUser: (event: EventModel) => TemplateReturnType;

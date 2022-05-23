@@ -270,6 +270,10 @@ export const templates: Template = {
     return 'Delete';
   },
 
+  popupDetailTitle({ title }: EventModel) {
+    return title;
+  },
+
   popupDetailDate({ isAllday, start, end }: EventModel) {
     const dayFormat = 'YYYY.MM.DD';
     const timeFormat = 'hh:mm tt';
