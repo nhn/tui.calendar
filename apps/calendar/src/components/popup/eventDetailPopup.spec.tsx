@@ -77,7 +77,7 @@ describe('event detail popup', () => {
 
   it('should display attendees when `event.attendees` is exists', () => {
     const { attendees } = event;
-    const text = attendees.join(',');
+    const text = attendees.join(', ');
     const attendeesText = screen.getByText(text).textContent;
 
     expect(attendeesText).toBe(text);
