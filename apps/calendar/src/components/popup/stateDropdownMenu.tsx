@@ -1,5 +1,6 @@
 import { h } from 'preact';
 
+import { Template } from '@src/components/template';
 import { cls } from '@src/helpers/css';
 
 import type { EventState } from '@t/events';
@@ -33,7 +34,13 @@ export function StateDropdownMenu({ setOpened, setEventState }: Props) {
           onClick={(e) => onClickDropdown(e, state)}
         >
           <span className={classNames.icon} />
-          <span className={classNames.content}>{state}</span>
+          <span className={classNames.content}>
+            {state === 'Busy' ? (
+              <Template template="popupStateBusy" />
+            ) : (
+              <Template template="popupStateFree" />
+            )}
+          </span>
         </li>
       ))}
     </ul>

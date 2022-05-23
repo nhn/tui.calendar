@@ -53,7 +53,7 @@ export function CurrentTimeLabel({ unit, top, time, diffFromPrimaryTimezone = 0 
           dateDifference > 0 ? '+' : '-'
         }${Math.abs(dateDifference)}]`}</span>
       )}
-      <Template template="timegridCurrentTime" model={model} as="span" />
+      <Template template="timegridCurrentTime" param={model} as="span" />
     </div>
   );
 }

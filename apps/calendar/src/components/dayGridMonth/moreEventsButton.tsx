@@ -31,7 +31,7 @@ export function MoreEventsButton({ type, number, onClickButton, className }: Pro
 
   return (
     <button type="button" onMouseDown={handleMouseDown} onClick={handleClick} className={className}>
-      <Template template={exceedButtonTemplate} model={number} />
+      <Template template={exceedButtonTemplate} param={number} />
     </button>
   );
 }

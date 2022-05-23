@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useRef, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 
 import { Template } from '@src/components/template';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
@@ -130,6 +130,14 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
     }
   });
 
+  useEffect(() => {
+    if (!isResizingGuide) {
+      eventBus.fire('afterRenderEvent', uiModel.model);
+    }
+    // This effect is only for the first render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const startDragEvent = (className: string) => {
     setDraggingEventUIModel(uiModel);
     layoutContainer?.classList.add(className);
@@ -191,14 +199,14 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
     >
       {goingDurationHeight ? (
         <div className={classNames.travelTime} style={goingDurationStyle}>
-          <Template template="goingDuration" model={model} />
+          <Template template="goingDuration" param={model} />
         </div>
       ) : null}
       {modelDurationHeight ? (
         <div className={classNames.content} style={modelDurationStyle}>
           <Template
             template="time"
-            model={{
+            param={{
               start: isNil(nextStartTime) ? model.start : nextStartTime,
               title: model.title,
             }}
@@ -207,7 +215,7 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
       ) : null}
       {comingDurationHeight ? (
         <div className={classNames.travelTime} style={comingDurationStyle}>
-          <Template template="comingDuration" model={model} />
+          <Template template="comingDuration" param={model} />
         </div>
       ) : null}
       {shouldShowResizeHandle ? (
