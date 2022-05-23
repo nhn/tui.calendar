@@ -62,18 +62,28 @@ describe('day', () => {
 
   describe('eventFilter option', () => {
     const events: EventModel[] = [];
+    const baseDateStr = '2022-05-22T00:00:00+09:00';
     for (let i = 0; i < 2; i += 1) {
       events.push(
         EventModel.create({
           id: `${i}`,
           title: `Event ${i}`,
           category: 'time',
-          start: new TZDate('2022-05-22T00:00:00').addMinutes(60 * i),
-          end: new TZDate('2022-05-22T00:00:00').addMinutes(60 * i + 30),
+          start: new TZDate(baseDateStr).addMinutes(60 * i),
+          end: new TZDate(baseDateStr).addMinutes(60 * i + 30),
           isVisible: !!(i % 2),
         })
       );
     }
+
+    beforeAll(() => {
+      jest.useFakeTimers();
+      jest.setSystemTime(new Date(baseDateStr));
+    });
+
+    afterAll(() => {
+      jest.useRealTimers();
+    });
 
     it('should show only the events which of isVisible is true when the eventFilter option is not specified.', () => {
       // Given
