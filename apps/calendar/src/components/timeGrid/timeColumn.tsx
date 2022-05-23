@@ -8,12 +8,12 @@ import { CurrentTimeLabel } from '@src/components/timeGrid/currentTimeLabel';
 import { useStore } from '@src/contexts/calendarStore';
 import { useTheme } from '@src/contexts/themeStore';
 import { cls, toPercent } from '@src/helpers/css';
+import { useTZConverter } from '@src/hooks/timezone/useTZConverter';
 import { timezonesCollapsedOptionSelector } from '@src/selectors/options';
 import { weekTimeGridLeftSelector } from '@src/selectors/theme';
 import { timezonesSelector } from '@src/selectors/timezone';
 import TZDate from '@src/time/date';
 import { addMinutes, setTimeStrToDate } from '@src/time/datetime';
-import { calculateTimezoneOffset } from '@src/time/timezone';
 import { isNil, isPresent } from '@src/utils/type';
 
 import type { TimeGridRow } from '@t/grid';
@@ -90,6 +90,7 @@ export const TimeColumn = memo(function TimeColumn({
   const timezones = useStore(timezonesSelector);
   const timezonesCollapsed = useStore(timezonesCollapsedOptionSelector);
 
+  const tzConverter = useTZConverter();
   const { width, borderRight, backgroundColor } = useTheme(weekTimeGridLeftSelector);
 
   const rowsByHour = useMemo(
@@ -142,15 +143,15 @@ export const TimeColumn = memo(function TimeColumn({
 
     return otherTimezones.reverse().map((timezone) => {
       const { timezoneName } = timezone;
-      const primaryTimezoneOffset = calculateTimezoneOffset(primaryTimezone.timezoneName);
-      const currentTimezoneOffset = calculateTimezoneOffset(timezoneName);
+      const primaryTimezoneOffset = tzConverter(primaryTimezone.timezoneName).getTimezoneOffset();
+      const currentTimezoneOffset = tzConverter(timezoneName).getTimezoneOffset();
       const diffFromPrimaryTimezone = currentTimezoneOffset - primaryTimezoneOffset;
 
       return rowsByHour.map((row, index) =>
         hourRowsPropsMapper(row, index, diffFromPrimaryTimezone)
       );
     });
-  }, [hourRowsPropsMapper, otherTimezones, primaryTimezone, rowsByHour]);
+  }, [hourRowsPropsMapper, otherTimezones, primaryTimezone, rowsByHour, tzConverter]);
 
   return (
     <div
