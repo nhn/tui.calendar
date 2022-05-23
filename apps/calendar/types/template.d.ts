@@ -92,9 +92,9 @@ export interface Template {
   popupDetailTitle: (event: EventModel) => TemplateReturnType;
   popupDetailDate: (event: EventModel) => TemplateReturnType;
   popupDetailLocation: (event: EventModel) => TemplateReturnType;
-  popupDetailUser: (event: EventModel) => TemplateReturnType;
+  popupDetailAttendees: (event: EventModel) => TemplateReturnType;
   popupDetailState: (event: EventModel) => TemplateReturnType;
-  popupDetailRepeat: (event: EventModel) => TemplateReturnType;
+  popupDetailRecurrenceRule: (event: EventModel) => TemplateReturnType;
   popupDetailBody: (event: EventModel) => TemplateReturnType;
   popupEdit: () => TemplateReturnType;
   popupDelete: () => TemplateReturnType;

@@ -292,7 +292,7 @@ export const templates: Template = {
     return location;
   },
 
-  popupDetailUser({ attendees = [] }: EventModel) {
+  popupDetailAttendees({ attendees = [] }: EventModel) {
     return attendees.join(', ');
   },
 
@@ -300,7 +300,7 @@ export const templates: Template = {
     return state || 'Busy';
   },
 
-  popupDetailRepeat({ recurrenceRule }: EventModel) {
+  popupDetailRecurrenceRule({ recurrenceRule }: EventModel) {
     return recurrenceRule;
   },
 

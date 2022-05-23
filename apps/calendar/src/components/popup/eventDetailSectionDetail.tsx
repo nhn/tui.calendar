@@ -37,7 +37,7 @@ export function EventDetailSectionDetail({ event }: Props) {
         <div className={classNames.detailItem}>
           <span className={classNames.repeatIcon} />
           <span className={classNames.content}>
-            <Template template="popupDetailRepeat" model={event} as="span" />
+            <Template template="popupDetailRecurrenceRule" model={event} as="span" />
           </span>
         </div>
       )}
@@ -45,7 +45,7 @@ export function EventDetailSectionDetail({ event }: Props) {
         <div className={classNames.detailItemIndent}>
           <span className={classNames.userIcon} />
           <span className={classNames.content}>
-            <Template template="popupDetailUser" model={event} as="span" />
+            <Template template="popupDetailAttendees" model={event} as="span" />
           </span>
         </div>
       )}
