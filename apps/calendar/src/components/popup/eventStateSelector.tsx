@@ -2,6 +2,7 @@ import { h } from 'preact';
 
 import { PopupSection } from '@src/components/popup/popupSection';
 import { StateDropdownMenu } from '@src/components/popup/stateDropdownMenu';
+import { Template } from '@src/components/template';
 import { cls } from '@src/helpers/css';
 import { useDropdownState } from '@src/hooks/common/useDropdownState';
 import type { FormStateDispatcher } from '@src/hooks/popup/useFormState';
@@ -32,7 +33,13 @@ export function EventStateSelector({ eventState = 'Busy', formStateDispatch }: P
     <PopupSection onClick={toggleDropdown} classNames={classNames.popupSection}>
       <button type="button" className={classNames.popupSectionItem}>
         <span className={classNames.stateIcon} />
-        <span className={classNames.content}>{eventState}</span>
+        <span className={classNames.content}>
+          {eventState === 'Busy' ? (
+            <Template template="popupStateBusy" />
+          ) : (
+            <Template template="popupStateFree" />
+          )}
+        </span>
         <span className={classNames.arrowIcon} />
       </button>
       {isOpened && (

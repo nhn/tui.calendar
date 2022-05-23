@@ -3,7 +3,6 @@ import { Fragment, h } from 'preact';
 import { cls } from '@src/helpers/css';
 import { getDayName } from '@src/helpers/dayName';
 import type EventModel from '@src/model/eventModel';
-import type TZDate from '@src/time/date';
 import { isSameDate, leadingZero, toFormat } from '@src/time/datetime';
 import { stripTags } from '@src/utils/dom';
 import { capitalize } from '@src/utils/string';
@@ -267,34 +266,41 @@ export const templates: Template = {
     return 'Delete';
   },
 
-  popupDetailDate(isAllday: boolean, start: TZDate, end: TZDate) {
-    const isSame = isSameDate(start, end);
-    const endFormat = `${isSame ? '' : 'YYYY.MM.DD '}hh:mm tt`;
-
-    if (isAllday) {
-      return `${toFormat(start, 'YYYY.MM.DD')}${isSame ? '' : ` - ${toFormat(end, 'YYYY.MM.DD')}`}`;
-    }
-
-    return `${toFormat(start, 'YYYY.MM.DD hh:mm tt')} - ${toFormat(end, endFormat)}`;
+  popupDetailTitle({ title }: EventModel) {
+    return title;
   },
 
-  popupDetailLocation({ location }) {
+  popupDetailDate({ isAllday, start, end }: EventModel) {
+    const dayFormat = 'YYYY.MM.DD';
+    const timeFormat = 'hh:mm tt';
+    const detailFormat = `${dayFormat} ${timeFormat}`;
+    const startDate = toFormat(start, isAllday ? dayFormat : timeFormat);
+    const endDateFormat = isSameDate(start, end) ? timeFormat : detailFormat;
+
+    if (isAllday) {
+      return `${startDate}${isSameDate(start, end) ? '' : ` - ${toFormat(end, dayFormat)}`}`;
+    }
+
+    return `${toFormat(start, detailFormat)} - ${toFormat(end, endDateFormat)}`;
+  },
+
+  popupDetailLocation({ location }: EventModel) {
     return location;
   },
 
-  popupDetailUser({ attendees = [] }) {
+  popupDetailAttendees({ attendees = [] }: EventModel) {
     return attendees.join(', ');
   },
 
-  popupDetailState({ state }) {
+  popupDetailState({ state }: EventModel) {
     return state || 'Busy';
   },
 
-  popupDetailRepeat({ recurrenceRule }) {
+  popupDetailRecurrenceRule({ recurrenceRule }: EventModel) {
     return recurrenceRule;
   },
 
-  popupDetailBody({ body }) {
+  popupDetailBody({ body }: EventModel) {
     return body;
   },
 };

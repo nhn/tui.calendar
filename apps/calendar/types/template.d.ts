@@ -55,7 +55,7 @@ export type TemplateTimezone =
   | { displayLabel: string; timezoneOffset: null }
   | { displayLabel: null; timezoneOffset: number };
 
-export type TemplateReturnType = string | VNode;
+export type TemplateReturnType = string | VNode<{ className: string }>;
 
 export interface Template {
   milestoneTitle: () => TemplateReturnType;
@@ -69,13 +69,13 @@ export interface Template {
   comingDuration: (event: EventModel) => TemplateReturnType;
   monthMoreTitleDate: (moreTitle: TemplateMoreTitleDate) => TemplateReturnType;
   monthMoreClose: () => TemplateReturnType;
-  monthGridHeader: (model: TemplateMonthGrid) => TemplateReturnType;
-  monthGridHeaderExceed: (hiddenEvents: number) => TemplateReturnType;
-  monthGridFooter: (model: TemplateMonthGrid) => TemplateReturnType;
-  monthGridFooterExceed: (hiddenEvents: number) => TemplateReturnType;
-  monthDayname: (model: TemplateMonthDayName) => TemplateReturnType;
-  weekDayname: (model: TemplateWeekDayName) => TemplateReturnType;
-  weekGridFooterExceed: (hiddenEvents: number) => TemplateReturnType;
+  monthGridHeader: (cellData: TemplateMonthGrid) => TemplateReturnType;
+  monthGridHeaderExceed: (hiddenEventsCount: number) => TemplateReturnType;
+  monthGridFooter: (cellData: TemplateMonthGrid) => TemplateReturnType;
+  monthGridFooterExceed: (hiddenEventsCount: number) => TemplateReturnType;
+  monthDayname: (monthDaynameData: TemplateMonthDayName) => TemplateReturnType;
+  weekDayname: (weekDaynameData: TemplateWeekDayName) => TemplateReturnType;
+  weekGridFooterExceed: (hiddenEventsCount: number) => TemplateReturnType;
   dayGridTitle: (viewName: EventCategory) => TemplateReturnType;
   event: (event: EventModel) => TemplateReturnType;
   collapseBtnTitle: () => TemplateReturnType;
@@ -92,11 +92,12 @@ export interface Template {
   endDatePlaceholder: () => TemplateReturnType;
   popupSave: () => TemplateReturnType;
   popupUpdate: () => TemplateReturnType;
-  popupDetailDate: (isAllday: boolean, start: TZDate, end: TZDate) => TemplateReturnType;
+  popupDetailTitle: (event: EventModel) => TemplateReturnType;
+  popupDetailDate: (event: EventModel) => TemplateReturnType;
   popupDetailLocation: (event: EventModel) => TemplateReturnType;
-  popupDetailUser: (event: EventModel) => TemplateReturnType;
+  popupDetailAttendees: (event: EventModel) => TemplateReturnType;
   popupDetailState: (event: EventModel) => TemplateReturnType;
-  popupDetailRepeat: (event: EventModel) => TemplateReturnType;
+  popupDetailRecurrenceRule: (event: EventModel) => TemplateReturnType;
   popupDetailBody: (event: EventModel) => TemplateReturnType;
   popupEdit: () => TemplateReturnType;
   popupDelete: () => TemplateReturnType;

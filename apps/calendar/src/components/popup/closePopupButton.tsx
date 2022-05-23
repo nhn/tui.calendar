@@ -29,7 +29,7 @@ export function ClosePopupButton({ type, close }: Props) {
   return (
     <button type="button" className={classNames.closeButton} onClick={onClickHandler}>
       {type === 'moreEvents' ? (
-        <Template template="monthMoreClose" model="close" />
+        <Template template="monthMoreClose" />
       ) : (
         <i className={classNames.closeIcon} />
       )}

@@ -60,7 +60,7 @@ function HourRows({
         <div key={date.getTime()} className={className} style={{ top: toPercent(top) }} role="row">
           <Template
             template={`timegridDisplay${isPrimary ? 'Primary' : ''}Time`}
-            model={{ time: date }}
+            param={{ time: date }}
             as="span"
           />
         </div>

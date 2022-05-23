@@ -199,14 +199,14 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
     >
       {goingDurationHeight ? (
         <div className={classNames.travelTime} style={goingDurationStyle}>
-          <Template template="goingDuration" model={model} />
+          <Template template="goingDuration" param={model} />
         </div>
       ) : null}
       {modelDurationHeight ? (
         <div className={classNames.content} style={modelDurationStyle}>
           <Template
             template="time"
-            model={{
+            param={{
               start: isNil(nextStartTime) ? model.start : nextStartTime,
               title: model.title,
             }}
@@ -215,7 +215,7 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
       ) : null}
       {comingDurationHeight ? (
         <div className={classNames.travelTime} style={comingDurationStyle}>
-          <Template template="comingDuration" model={model} />
+          <Template template="comingDuration" param={model} />
         </div>
       ) : null}
       {shouldShowResizeHandle ? (
