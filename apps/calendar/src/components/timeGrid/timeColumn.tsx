@@ -8,6 +8,7 @@ import { CurrentTimeLabel } from '@src/components/timeGrid/currentTimeLabel';
 import { useStore } from '@src/contexts/calendarStore';
 import { useTheme } from '@src/contexts/themeStore';
 import { cls, toPercent } from '@src/helpers/css';
+import { timezonesCollapsedOptionSelector } from '@src/selectors/options';
 import { weekTimeGridLeftSelector } from '@src/selectors/theme';
 import { timezonesSelector } from '@src/selectors/timezone';
 import TZDate from '@src/time/date';
@@ -87,6 +88,8 @@ export const TimeColumn = memo(function TimeColumn({
   currentTimeIndicatorState,
 }: Props) {
   const timezones = useStore(timezonesSelector);
+  const timezonesCollapsed = useStore(timezonesCollapsedOptionSelector);
+
   const { width, borderRight, backgroundColor } = useTheme(weekTimeGridLeftSelector);
 
   const rowsByHour = useMemo(
@@ -155,16 +158,17 @@ export const TimeColumn = memo(function TimeColumn({
       style={{ width, backgroundColor }}
       data-testid="timegrid-time-column"
     >
-      {otherTimezoneHourRowsProps.map((rowsInfo) => (
-        <HourRows
-          key={rowsInfo[0].diffFromPrimaryTimezone}
-          rowsInfo={rowsInfo}
-          isPrimary={false}
-          borderRight={borderRight}
-          width={hourRowsWidth}
-          currentTimeIndicatorState={currentTimeIndicatorState}
-        />
-      ))}
+      {!timezonesCollapsed &&
+        otherTimezoneHourRowsProps.map((rowsInfo) => (
+          <HourRows
+            key={rowsInfo[0].diffFromPrimaryTimezone}
+            rowsInfo={rowsInfo}
+            isPrimary={false}
+            borderRight={borderRight}
+            width={hourRowsWidth}
+            currentTimeIndicatorState={currentTimeIndicatorState}
+          />
+        ))}
       <HourRows
         rowsInfo={primaryTimezoneHourRowsProps}
         isPrimary={true}

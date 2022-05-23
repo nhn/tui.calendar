@@ -287,6 +287,7 @@ describe('Multiple Timezone', () => {
 
     expect(labels.map((label) => label.textContent)).toEqual(expectedLabels);
   });
+
   it('should render multiple hours column when multiple timezone is given', () => {
     // Given
     const timezoneOptions: Options = {
@@ -378,5 +379,106 @@ describe('Multiple Timezone', () => {
     // Then
     const currentTimeLabels = screen.getAllByTestId(currentTimeLabelTestId);
     expect(currentTimeLabels.map((label) => label.textContent)).toEqual(expectedCurrentTimeLabels);
+  });
+
+  it('should show only primary timezone when the timezonesCollapsed option is enabled', () => {
+    // Given
+    const option: Options = {
+      week: {
+        timezonesCollapsed: true,
+      },
+      timezone: {
+        zones: [
+          {
+            timezoneName: 'Etc/UTC',
+          },
+          {
+            timezoneName: 'Asia/Seoul', // UTC +9
+          },
+        ],
+      },
+    };
+
+    // When
+    setup(option);
+
+    // Then
+    const labelContainer = screen.getByRole('columnheader');
+    const hourColumns = screen.getAllByRole('rowgroup');
+
+    expect(labelContainer.children).toHaveLength(1);
+    expect(hourColumns).toHaveLength(1);
+  });
+});
+
+describe('Timezone Collapse Button', () => {
+  it('should show timezone collapse button when the showTimezoneCollapseButton option is enabled', () => {
+    // Given
+    const option: Options = {
+      week: {
+        showTimezoneCollapseButton: true,
+      },
+      timezone: {
+        zones: [
+          {
+            timezoneName: 'Asia/Seoul',
+          },
+          {
+            timezoneName: 'Asia/Karachi',
+          },
+        ],
+      },
+    };
+
+    // When
+    setup(option);
+
+    // Then
+    const timeLabelsContainer = screen.getByRole('columnheader');
+    expect(within(timeLabelsContainer).getByRole('button')).toBeInTheDocument();
+  });
+
+  it('should have different arrow icon according to the timezonesCollapsed option', () => {
+    // Given
+    const option: Options = {
+      week: {
+        showTimezoneCollapseButton: true,
+        timezonesCollapsed: true, // default is false.
+      },
+      timezone: {
+        zones: [
+          {
+            timezoneName: 'Asia/Seoul',
+          },
+          {
+            timezoneName: 'Asia/Karachi',
+          },
+        ],
+      },
+    };
+
+    // When (collapsed)
+    const { instance } = setup(option);
+
+    // Then
+    let collapseButton = within(screen.getByRole('columnheader')).getByRole('button');
+    let collapseButtonIcon = within(collapseButton).getByRole('img');
+    expect(collapseButtonIcon.classList.toString()).toMatch(/right/);
+    expect(collapseButton).toHaveAttribute('aria-expanded', 'false');
+
+    // When (expanded)
+    act(() => {
+      instance.setOptions({
+        week: {
+          timezonesCollapsed: false,
+        },
+      });
+    });
+
+    // Then
+    collapseButton = within(screen.getByRole('columnheader')).getByRole('button');
+    collapseButtonIcon = within(collapseButton).getByRole('img');
+    expect(collapseButtonIcon.classList.toString()).toMatch(/left/);
+    expect(collapseButton).toHaveAttribute('aria-expanded', 'true');
   });
 });

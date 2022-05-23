@@ -117,6 +117,7 @@ export const devtools =
           try {
             api.setState(JSON.parse(message.payload));
           } catch (e) {
+            // eslint-disable-next-line no-console
             console.error('please dispatch a serializable value that JSON.parse() support\n', e);
           }
         } else if (message.type === 'DISPATCH' && message.state) {

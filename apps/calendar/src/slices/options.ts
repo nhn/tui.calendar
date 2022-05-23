@@ -43,7 +43,7 @@ function initializeTimezoneOptions(timezoneOptions: Options['timezone'] = {}): T
   };
 }
 
-function initializeMonthOptions(monthOptions: Options['month']): CalendarMonthOptions {
+function initializeMonthOptions(monthOptions: Options['month'] = {}): CalendarMonthOptions {
   const month = {
     daynames: [],
     visibleWeeksCount: 0,
