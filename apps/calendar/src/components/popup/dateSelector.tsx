@@ -12,7 +12,7 @@ import { useStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
 import type { FormStateDispatcher } from '@src/hooks/popup/useFormState';
 import { FormStateActionType } from '@src/hooks/popup/useFormState';
-import { useTemplateString } from '@src/hooks/template/useTemplateString';
+import { useStringOnlyTemplate } from '@src/hooks/template/useStringOnlyTemplate';
 import { optionsSelector } from '@src/selectors';
 import TZDate from '@src/time/date';
 
@@ -42,11 +42,11 @@ export const DateSelector = forwardRef<DateRangePicker, Props>(function DateSele
   const endPickerContainerRef = useRef<HTMLDivElement>(null);
   const endPickerInputRef = useRef<HTMLInputElement>(null);
 
-  const startDatePlaceholder = useTemplateString({
+  const startDatePlaceholder = useStringOnlyTemplate({
     template: 'startDatePlaceholder',
     defaultValue: 'Start Date',
   });
-  const endDatePlaceholder = useTemplateString({
+  const endDatePlaceholder = useStringOnlyTemplate({
     template: 'endDatePlaceholder',
     defaultValue: 'End Date',
   });

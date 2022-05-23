@@ -3,7 +3,7 @@ import { templateSelector } from '@src/selectors';
 import type { TemplateName } from '@src/template/default';
 import { isNil, isString } from '@src/utils/type';
 
-export function useTemplateString({
+export function useStringOnlyTemplate({
   template,
   model,
   defaultValue = '',

@@ -2,7 +2,7 @@ import { h } from 'preact';
 
 import { PopupSection } from '@src/components/popup/popupSection';
 import { cls } from '@src/helpers/css';
-import { useTemplateString } from '@src/hooks/template/useTemplateString';
+import { useStringOnlyTemplate } from '@src/hooks/template/useStringOnlyTemplate';
 
 interface Props {
   location: string;
@@ -15,7 +15,7 @@ const classNames = {
 };
 
 export function LocationInputBox({ location }: Props) {
-  const locationPlaceholder = useTemplateString({
+  const locationPlaceholder = useStringOnlyTemplate({
     template: 'locationPlaceholder',
     defaultValue: 'Location',
   });
