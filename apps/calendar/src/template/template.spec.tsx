@@ -35,7 +35,7 @@ describe('Render Template', () => {
     const store = initCalendarStore();
     const vdom = (
       <StoreProvider store={store}>
-        <Template template="time" model={{ title: '<script></script>Custom Title 4' }} />
+        <Template template="time" param={{ title: '<script></script>Custom Title 4' }} />
       </StoreProvider>
     );
     const html = renderToString(vdom);

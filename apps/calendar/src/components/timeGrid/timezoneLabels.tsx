@@ -30,7 +30,7 @@ function TimezoneLabel({ label, offset, tooltip, width = 100, left }: TimezoneLa
     >
       <Template
         template="timezoneDisplayLabel"
-        model={{ displayLabel: label, timezoneOffset: offset }}
+        param={{ displayLabel: label, timezoneOffset: offset }}
         as="span"
       />
     </div>

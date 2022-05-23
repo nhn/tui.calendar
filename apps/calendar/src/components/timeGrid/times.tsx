@@ -137,7 +137,7 @@ export function Times({
           <div className={className} style={style} key={`slot-${index}`}>
             <span className={cls(classNames.timeLabel)}>
               {timeTemplate ? (
-                <Template template={timeTemplate} model={{ time: slot.date }} />
+                <Template template={timeTemplate} param={{ time: slot.date }} />
               ) : (
                 display
               )}

@@ -12,6 +12,7 @@ import { EventStateSelector } from '@src/components/popup/eventStateSelector';
 import { LocationInputBox } from '@src/components/popup/locationInputBox';
 import { PopupSection } from '@src/components/popup/popupSection';
 import { TitleInputBox } from '@src/components/popup/titleInputBox';
+import { Template } from '@src/components/template';
 import {
   BOOLEAN_KEYS_OF_EVENT_MODEL_DATA,
   FormPopupArrowDirection,
@@ -132,7 +133,6 @@ export function EventFormPopup() {
 
     return cls('popup-arrow', { top, bottom });
   }, [arrowDirection]);
-  const confirmMessage = isCreationPopup ? 'Save' : 'Update';
 
   useLayoutEffect(() => {
     if (popupContainerRef.current && popupArrowPointPosition && layoutContainer) {
@@ -204,7 +204,13 @@ export function EventFormPopup() {
           <EventStateSelector eventState={formState.state} formStateDispatch={formStateDispatch} />
           <ClosePopupButton type="form" close={close} />
           <PopupSection>
-            <ConfirmPopupButton>{confirmMessage}</ConfirmPopupButton>
+            <ConfirmPopupButton>
+              {isCreationPopup ? (
+                <Template template="popupSave" />
+              ) : (
+                <Template template="popupUpdate" />
+              )}
+            </ConfirmPopupButton>
           </PopupSection>
         </div>
         <div className={popupArrowClassName}>
