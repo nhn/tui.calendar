@@ -18,6 +18,7 @@ const config: PlaywrightTestConfig = {
     launchOptions: {
       slowMo: 250,
     },
+    timezoneId: 'Asia/Seoul',
   },
   webServer: {
     command: isCI ? 'npm run serve:storybook' : 'npm run storybook --workspace=@toast-ui/calendar',

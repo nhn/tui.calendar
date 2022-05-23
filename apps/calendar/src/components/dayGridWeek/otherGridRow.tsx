@@ -5,11 +5,12 @@ import { GridCells } from '@src/components/dayGridWeek/gridCells';
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import { Template } from '@src/components/template';
 import { DEFAULT_PANEL_HEIGHT, WEEK_EVENT_MARGIN_TOP } from '@src/constants/style';
+import { useTheme } from '@src/contexts/themeStore';
 import { cls } from '@src/helpers/css';
 import { EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
-import { useDayGridRowTitleStyle } from '@src/hooks/dayGridWeek/useDayGridRowTitleStyle';
 import { useGridRowHeightController } from '@src/hooks/dayGridWeek/useGridRowHeightController';
 import type EventUIModel from '@src/model/eventUIModel';
+import { weekDayGridLeftSelector } from '@src/selectors/theme';
 import type TZDate from '@src/time/date';
 
 import type { WeekOptions } from '@t/options';
@@ -34,10 +35,8 @@ export function OtherGridRow({
   category,
   height = DEFAULT_PANEL_HEIGHT,
   options = {},
-  timesWidth = 120,
-  timezonesCount = 1,
 }: Props) {
-  const style = useDayGridRowTitleStyle(timesWidth, timezonesCount);
+  const dayGridLeftTheme = useTheme(weekDayGridLeftSelector);
 
   const maxTop = useMemo(() => Math.max(0, ...events.map(({ top }) => top)), [events]);
   const { narrowWeekend = false } = options;
@@ -63,7 +62,7 @@ export function OtherGridRow({
 
   return (
     <Fragment>
-      <div className={cls('panel-title')} style={style}>
+      <div className={cls('panel-title')} style={dayGridLeftTheme}>
         <Template template={rowTitleTemplate} param={category} />
       </div>
       <div className={cls('allday-panel')}>

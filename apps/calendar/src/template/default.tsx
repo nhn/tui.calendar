@@ -6,7 +6,7 @@ import type EventModel from '@src/model/eventModel';
 import { isSameDate, leadingZero, toFormat } from '@src/time/datetime';
 import { stripTags } from '@src/utils/dom';
 import { capitalize } from '@src/utils/string';
-import { isUndefined } from '@src/utils/type';
+import { isNil, isPresent } from '@src/utils/type';
 
 import type { EventCategory } from '@t/events';
 import type {
@@ -192,18 +192,16 @@ export const templates: Template = {
     return <span className={className} />;
   },
 
-  timezoneDisplayLabel(props: TemplateTimezone) {
-    let { displayLabel = '' } = props;
-
-    if (isUndefined(displayLabel)) {
-      const { timezoneOffset } = props;
-      const gmt = timezoneOffset < 0 ? '-' : '+';
+  timezoneDisplayLabel({ displayLabel, timezoneOffset }: TemplateTimezone) {
+    if (isNil(displayLabel) && isPresent(timezoneOffset)) {
+      const sign = timezoneOffset < 0 ? '-' : '+';
       const hours = Math.abs(timezoneOffset / SIXTY_MINUTES);
       const minutes = Math.abs(timezoneOffset % SIXTY_MINUTES);
-      displayLabel = `${gmt}${leadingZero(hours, 2)}:${leadingZero(minutes, 2)}`;
+
+      return `GMT${sign}${leadingZero(hours, 2)}:${leadingZero(minutes, 2)}`;
     }
 
-    return displayLabel;
+    return displayLabel as string;
   },
 
   timegridDisplayPrimaryTime(props: TemplateCurrentTime) {
@@ -214,10 +212,8 @@ export const templates: Template = {
 
   timegridDisplayTime(props: TemplateCurrentTime) {
     const { time } = props;
-    const hour = time.getHours();
-    const minutes = time.getMinutes();
 
-    return `${leadingZero(hour, 2)}:${leadingZero(minutes, 2)}`;
+    return toFormat(time, 'HH:mm');
   },
 
   timegridCurrentTime(timezone: TemplateCurrentTime) {

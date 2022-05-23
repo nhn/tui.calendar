@@ -50,6 +50,7 @@ export const DEFAULT_WEEK_THEME: DeepRequired<WeekTheme> = {
   dayGridLeft: {
     borderRight: '1px solid #e5e5e5',
     backgroundColor: 'inherit',
+    width: '72px',
   },
   timeGrid: {
     borderRight: '1px solid #e5e5e5',
@@ -57,6 +58,7 @@ export const DEFAULT_WEEK_THEME: DeepRequired<WeekTheme> = {
   timeGridLeft: {
     backgroundColor: 'inherit',
     borderRight: '1px solid #e5e5e5',
+    width: '72px',
   },
   timeGridLeftAdditionalTimezone: {
     backgroundColor: 'white',

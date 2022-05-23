@@ -50,7 +50,7 @@ export interface GridSelectionOptions {
 }
 
 export interface TimezoneConfig {
-  timezoneName?: string;
+  timezoneName: string;
   displayLabel?: string;
   tooltip?: string;
 }
