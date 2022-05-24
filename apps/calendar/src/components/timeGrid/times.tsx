@@ -82,6 +82,8 @@ function hideOverlappedTime(timesElement: HTMLElement) {
   });
 }
 
+// TODO: This component is not used anymore.
+// But it can be the reference for using 'unit' values in templates.
 export function Times({
   unit = 'hour',
   width = '72px',
