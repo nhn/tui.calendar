@@ -6,7 +6,7 @@ import { Day } from '@src/time/datetime';
 import { mergeObject } from '@src/utils/object';
 import { isBoolean } from '@src/utils/type';
 
-import type { EventModelData } from '@t/events';
+import type { EventObject } from '@t/events';
 import type { GridSelectionOptions, Options, TimezoneOptions } from '@t/options';
 import type {
   CalendarMonthOptions,
@@ -84,7 +84,7 @@ export function initializeGridSelectionOptions(
   };
 }
 
-const initialEventFilter = (event: EventModelData) => !!event.isVisible;
+const initialEventFilter = (event: EventObject) => !!event.isVisible;
 
 // @TODO: some of options has default values. so it should be `Required` type.
 // But it needs a complex type such as `DeepRequired`.

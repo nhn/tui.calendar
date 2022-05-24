@@ -9,7 +9,7 @@ import EventModel from '@src/model/eventModel';
 import { render, screen } from '@src/test/utils';
 import TZDate from '@src/time/date';
 
-import type { EventModelData } from '@t/events';
+import type { EventObject } from '@t/events';
 import type { Options, WeekOptions } from '@t/options';
 
 describe('WeekView Component', () => {
@@ -88,7 +88,7 @@ describe('WeekView Component', () => {
 
     it('should show only the events that pass the eventFilter function.', () => {
       // Given
-      const eventFilter = (event: EventModelData) => !!(Number(event.id) % 2);
+      const eventFilter = (event: EventObject) => !!(Number(event.id) % 2);
       setup({ eventFilter }, events);
 
       // When

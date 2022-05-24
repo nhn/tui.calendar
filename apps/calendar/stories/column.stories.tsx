@@ -14,7 +14,7 @@ import { addHours, addMinutes, toStartOfDay } from '@src/time/datetime';
 import { createEventModels } from '@stories/helper/event';
 
 import type { PropsWithChildren } from '@t/components/common';
-import type { EventModelData } from '@t/events';
+import type { EventObject } from '@t/events';
 
 export default { title: 'Components/Column', component: Column };
 
@@ -50,7 +50,7 @@ const getBackgroundEvents = () => {
   const start = toStartOfDay(new TZDate());
   start.setHours(8);
 
-  const data: EventModelData[] = [
+  const data: EventObject[] = [
     {
       category: 'background',
       start,

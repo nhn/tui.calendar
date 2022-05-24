@@ -9,7 +9,7 @@ import { render } from '@src/test/utils';
 import TZDate from '@src/time/date';
 import { noop } from '@src/utils/noop';
 
-import type { EventModelData } from '@t/events';
+import type { EventObject } from '@t/events';
 import type { Options } from '@t/options';
 
 function setup(options: Options, events?: EventModel[]) {
@@ -69,7 +69,7 @@ describe('eventFilter option', () => {
 
   it('should show only the events that pass the eventFilter function.', () => {
     // Given
-    const eventFilter = (event: EventModelData) => !!(Number(event.id) % 2);
+    const eventFilter = (event: EventObject) => !!(Number(event.id) % 2);
     setup({ eventFilter }, events);
 
     // When

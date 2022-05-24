@@ -4,7 +4,7 @@ import pluck from 'tui-code-snippet/collection/pluck';
 import EventModel from '@src/model/eventModel';
 import array from '@src/utils/array';
 
-import type { EventModelData } from '@t/events';
+import type { EventObject } from '@t/events';
 
 describe('common/array', () => {
   describe('common compare methods', () => {
@@ -18,7 +18,7 @@ describe('common/array', () => {
     });
 
     describe('EventModel', () => {
-      let mockData: EventModelData[];
+      let mockData: EventObject[];
       let events: EventModel[];
 
       beforeEach(() => {

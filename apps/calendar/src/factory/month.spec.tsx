@@ -4,7 +4,7 @@ import { noop } from '@src/utils/noop';
 
 import { mockMonthViewEvents } from '@stories/mocks/mockMonthViewEvents';
 
-import type { EventModelData } from '@t/events';
+import type { EventObject } from '@t/events';
 import type { Options } from '@t/options';
 
 afterEach(() => {
@@ -13,7 +13,7 @@ afterEach(() => {
 });
 
 describe('Primary Timezone', () => {
-  function setup(options: Options = {}, events: EventModelData[] = mockMonthViewEvents) {
+  function setup(options: Options = {}, events: EventObject[] = mockMonthViewEvents) {
     const container = document.createElement('div');
     jest.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(() => ({
       x: 0,

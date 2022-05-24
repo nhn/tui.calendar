@@ -9,11 +9,11 @@ import {
 import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 
-import type { CalendarData, EventModelData } from '@t/events';
+import type { CalendarData, EventObject } from '@t/events';
 
 describe('controller/base', () => {
   let calendarData: CalendarData;
-  let eventDataList: EventModelData[];
+  let eventDataList: EventObject[];
 
   beforeEach(() => {
     calendarData = {

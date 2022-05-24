@@ -35,7 +35,7 @@ export type EventCategory = 'milestone' | 'task' | 'allday' | 'time' | 'backgrou
 
 export type EventState = 'Busy' | 'Free';
 
-export interface EventModelData {
+export interface EventObject {
   id?: string;
   calendarId?: string;
   title?: string;
@@ -64,7 +64,7 @@ export interface EventModelData {
   raw?: any;
 }
 
-export type BooleanKeyOfEventModelData =
+export type BooleanKeyOfEventObject =
   | 'isPrivate'
   | 'isAllday'
   | 'isPending'

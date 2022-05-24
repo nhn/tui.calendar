@@ -5,7 +5,7 @@ import { compare, MS_PER_DAY, parse, toEndOfDay, toStartOfDay } from '@src/time/
 import { stamp } from '@src/utils/stamp';
 import { isString } from '@src/utils/type';
 
-import type { DateType, EventCategory, EventModelData, EventState } from '@t/events';
+import type { DateType, EventCategory, EventObject, EventState } from '@t/events';
 
 export default class EventModel {
   /**
@@ -180,16 +180,16 @@ export default class EventModel {
     dateRange: ['start', 'end'],
   };
 
-  static create(data: EventModelData) {
+  static create(data: EventObject) {
     return new EventModel().init(data);
   }
 
   /**
    * Initialize event instance.
-   * @param {EventModelData} event - event model data.
+   * @param {EventObject} event - event model data.
    */
   // eslint-disable-next-line complexity
-  init(event: EventModelData) {
+  init(event: EventObject) {
     event = { ...event };
     if (event.category === 'allday') {
       event.isAllday = true;

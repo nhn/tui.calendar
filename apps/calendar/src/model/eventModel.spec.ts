@@ -3,7 +3,7 @@ import { advanceTo } from 'jest-date-mock';
 import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 
-import type { EventModelData } from '@t/events';
+import type { EventObject } from '@t/events';
 
 describe('model/event basic', () => {
   let event: EventModel;
@@ -119,18 +119,18 @@ describe('model/event basic', () => {
 
   describe('EventModel.create()', () => {
     it('create event model instance from data object.', () => {
-      const mockEventModelData = {
+      const mockEventObject = {
         title: 'hunting',
         isAllday: true,
         start: new TZDate('2015/05/02'),
         end: new TZDate('2015/05/02'),
       };
-      mockEventModelData.start.setHours(0, 0, 0);
-      mockEventModelData.end.setHours(23, 59, 59);
+      mockEventObject.start.setHours(0, 0, 0);
+      mockEventObject.end.setHours(23, 59, 59);
 
-      const mockEventModel = EventModel.create(mockEventModelData);
+      const mockEventModel = EventModel.create(mockEventObject);
 
-      expect(mockEventModel).toMatchObject(mockEventModelData);
+      expect(mockEventModel).toMatchObject(mockEventObject);
     });
   });
 
@@ -275,7 +275,7 @@ describe('model/event basic', () => {
 });
 
 describe('model/EventModel advanced', () => {
-  let eventData: EventModelData[];
+  let eventData: EventObject[];
 
   beforeEach(() => {
     eventData = [
@@ -313,7 +313,7 @@ describe('model/EventModel advanced', () => {
   it('factory function (create())', () => {
     let e = EventModel.create(eventData[0]);
 
-    let expected: EventModelData = {
+    let expected: EventObject = {
       title: '스크럼',
       category: 'time',
       dueDateClass: '',

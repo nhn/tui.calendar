@@ -1,11 +1,11 @@
 import TZDate from '@src/time/date';
 import { addDate } from '@src/time/datetime';
 
-import type { EventModelData } from '@t/events';
+import type { EventObject } from '@t/events';
 
 const DAYS_OF_WEEK = 7;
 
-export function createMockMonthViewEvents(baseDate?: string): EventModelData[] {
+export function createMockMonthViewEvents(baseDate?: string): EventObject[] {
   const today = baseDate ? new TZDate(baseDate) : new TZDate();
   const thisSunday = addDate(today, -today.getDay());
   const sundayDate = thisSunday.getDate();
@@ -24,7 +24,7 @@ export function createMockMonthViewEvents(baseDate?: string): EventModelData[] {
   const thirdThursday = addDate(secondThursday, DAYS_OF_WEEK);
   const thirdSaturday = addDate(thirdThursday, 2);
 
-  const mockMonthViewEvents: EventModelData[] = [
+  const mockMonthViewEvents: EventObject[] = [
     {
       id: '0',
       calendarId: 'cal1',
@@ -61,9 +61,9 @@ export function createMockMonthViewEvents(baseDate?: string): EventModelData[] {
   return mockMonthViewEvents;
 }
 
-export const mockMonthViewEvents: EventModelData[] = createMockMonthViewEvents();
+export const mockMonthViewEvents: EventObject[] = createMockMonthViewEvents();
 
 // For E2E tests, set the base date in order to guarantee the same events are returned
 export const MOCK_MONTH_VIEW_BASE_DATE = '2022-04-01';
-export const mockMonthViewEventsFixed: EventModelData[] =
+export const mockMonthViewEventsFixed: EventObject[] =
   createMockMonthViewEvents(MOCK_MONTH_VIEW_BASE_DATE);

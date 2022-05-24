@@ -22,7 +22,7 @@ import { addAttributeHooks, removeAttributeHooks } from '@src/utils/sanitizer';
 import { isString } from '@src/utils/type';
 
 import type { ExternalEventTypes } from '@t/eventBus';
-import type { DateType, EventModelData } from '@t/events';
+import type { DateType, EventObject } from '@t/events';
 import type { CalendarColor, CalendarInfo, Options, ViewType } from '@t/options';
 import type {
   CalendarMonthOptions,
@@ -215,7 +215,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
 
   /**
    * Create events and render calendar.
-   * @param {EventModelData[]} events - list of {@link EventModelData}
+   * @param {EventObject[]} events - list of {@link EventObject}
    * @example
    * calendar.createEvents([
    *   {
@@ -238,7 +238,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    *   },
    * ]);
    */
-  createEvents(events: EventModelData[]) {
+  createEvents(events: EventObject[]) {
     const { createEvents } = this.getStoreDispatchers('calendar');
 
     createEvents(events);
@@ -266,7 +266,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    * Update the event
    * @param {string} eventId - ID of an event to update
    * @param {string} calendarId - The calendarId of the event to update
-   * @param {EventModelData} changes - The {@link EventModelData} data to update
+   * @param {EventObject} changes - The {@link EventObject} data to update
    * @example
    * calendar.on('beforeUpdateEvent', function ({ event, changes }) {
    *   const { id, calendarId } = event;
@@ -274,7 +274,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    *   calendar.updateEvent(id, calendarId, changes);
    * });
    */
-  updateEvent(eventId: string, calendarId: string, changes: EventModelData) {
+  updateEvent(eventId: string, calendarId: string, changes: EventObject) {
     const { updateEvent } = this.getStoreDispatchers('calendar');
     const event = this.getEvent(eventId, calendarId);
 
@@ -619,17 +619,17 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
 
   /**
    * Open event form popup
-   * @param {EventModelData} eventModelData - The preset {@link EventModelData} data
+   * @param {EventObject} event - The preset {@link EventObject} data
    */
-  openFormPopup(eventModelData: EventModelData) {
+  openFormPopup(event: EventObject) {
     const { showFormPopup } = this.getStoreDispatchers().popup;
 
-    const event = EventModel.create(eventModelData);
-    const { title, location, start, end, isAllday, isPrivate, state: eventState } = event;
+    const eventModel = EventModel.create(event);
+    const { title, location, start, end, isAllday, isPrivate, state: eventState } = eventModel;
 
     showFormPopup({
       isCreationPopup: true,
-      event,
+      event: eventModel,
       title,
       location,
       start,

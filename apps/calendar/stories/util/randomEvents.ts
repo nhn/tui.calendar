@@ -7,14 +7,14 @@ import type TZDate from '@src/time/date';
 
 import { calendars } from '@stories/util/mockCalendars';
 
-import type { EventCategory, EventModelData } from '@t/events';
+import type { EventCategory, EventObject } from '@t/events';
 import type { CalendarInfo, ViewType } from '@t/options';
 
 const chance = new Chance();
 const EVENT_CATEGORY: EventCategory[] = ['milestone', 'task'];
 
 // eslint-disable-next-line complexity
-function createTime(event: EventModelData, renderStart: TZDate, renderEnd: TZDate) {
+function createTime(event: EventObject, renderStart: TZDate, renderEnd: TZDate) {
   const startDate = moment(renderStart.getTime());
   let endDate = moment(renderEnd.getTime());
   const diffDate = endDate.diff(startDate, 'days');
@@ -65,7 +65,7 @@ function createNames() {
 }
 
 function createRandomEvent(calendar: CalendarInfo, renderStart: TZDate, renderEnd: TZDate) {
-  const event: EventModelData = {
+  const event: EventObject = {
     raw: {
       creator: {},
     },
@@ -121,7 +121,7 @@ export function createRandomEvents(
   eventCount?: number
 ) {
   const view = viewName ?? 'week';
-  const events: EventModelData[] = [];
+  const events: EventObject[] = [];
   const count = eventCount ?? defaultEventCount[view];
 
   calendars.forEach((calendar) => {
@@ -143,5 +143,5 @@ export function createRandomEventModelsForMonth(length = defaultEventCount.month
     length
   );
 
-  return data.map((event: EventModelData) => EventModel.create(event));
+  return data.map((event: EventObject) => EventModel.create(event));
 }

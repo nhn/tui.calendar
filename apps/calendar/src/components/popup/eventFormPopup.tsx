@@ -33,7 +33,7 @@ import { compare } from '@src/time/datetime';
 import { isNil } from '@src/utils/type';
 
 import type { FormEvent, StyleProp } from '@t/components/common';
-import type { BooleanKeyOfEventModelData, EventModelData } from '@t/events';
+import type { BooleanKeyOfEventObject, EventObject } from '@t/events';
 import type { PopupArrowPointPosition, Rect } from '@t/store';
 
 const classNames = {
@@ -68,25 +68,25 @@ function calculatePopupPosition(
   return { top, left: Math.max(left, layoutRect.left), direction };
 }
 
-function isBooleanKey(key: string): key is BooleanKeyOfEventModelData {
-  return BOOLEAN_KEYS_OF_EVENT_MODEL_DATA.indexOf(key as BooleanKeyOfEventModelData) !== -1;
+function isBooleanKey(key: string): key is BooleanKeyOfEventObject {
+  return BOOLEAN_KEYS_OF_EVENT_MODEL_DATA.indexOf(key as BooleanKeyOfEventObject) !== -1;
 }
 
-function getChanges(event: EventModel, eventModelData: EventModelData) {
-  return Object.entries(eventModelData).reduce((changes, [key, value]) => {
-    const eventModelDataKey = key as keyof EventModelData;
+function getChanges(event: EventModel, eventObject: EventObject) {
+  return Object.entries(eventObject).reduce((changes, [key, value]) => {
+    const eventObjectKey = key as keyof EventObject;
 
-    if (event[eventModelDataKey] instanceof TZDate) {
+    if (event[eventObjectKey] instanceof TZDate) {
       // NOTE: handle TZDate
-      if (compare(event[eventModelDataKey], value) !== 0) {
-        changes[eventModelDataKey] = value;
+      if (compare(event[eventObjectKey], value) !== 0) {
+        changes[eventObjectKey] = value;
       }
-    } else if (event[eventModelDataKey] !== value) {
-      changes[eventModelDataKey] = value;
+    } else if (event[eventObjectKey] !== value) {
+      changes[eventObjectKey] = value;
     }
 
     return changes;
-  }, {} as EventModelData);
+  }, {} as EventObject);
 }
 
 export function EventFormPopup() {
@@ -160,10 +160,10 @@ export function EventFormPopup() {
     e.preventDefault();
 
     const formData = new FormData(e.target as HTMLFormElement);
-    const eventData: EventModelData = { ...formState };
+    const eventData: EventObject = { ...formState };
 
     formData.forEach((data, key) => {
-      eventData[key as keyof EventModelData] = isBooleanKey(key) ? data === 'true' : data;
+      eventData[key as keyof EventObject] = isBooleanKey(key) ? data === 'true' : data;
     });
 
     eventData.start = new TZDate(datePickerRef.current?.getStartDate());

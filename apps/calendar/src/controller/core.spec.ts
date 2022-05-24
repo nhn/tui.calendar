@@ -11,10 +11,10 @@ import TZDate from '@src/time/date';
 import array from '@src/utils/array';
 import Collection from '@src/utils/collection';
 
-import type { CollisionGroup, EventModelData } from '@t/events';
+import type { CollisionGroup, EventObject } from '@t/events';
 
 describe('Base.Core', () => {
-  let mockData: EventModelData[];
+  let mockData: EventObject[];
   let eventList: EventModel[];
   let expected;
   let actual;
@@ -120,7 +120,7 @@ describe('Base.Core', () => {
       let collisionEventList: EventModel[];
 
       beforeEach(() => {
-        const events: EventModelData[] = [
+        const events: EventObject[] = [
           {
             title: 'A',
             isAllday: false,
@@ -241,7 +241,7 @@ describe('Base.Core', () => {
       let matrixEventList: EventModel[];
 
       beforeEach(() => {
-        const events: EventModelData[] = [
+        const events: EventObject[] = [
           {
             title: 'A',
             isAllday: false,

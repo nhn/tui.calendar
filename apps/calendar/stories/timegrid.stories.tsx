@@ -15,7 +15,7 @@ import { createEventModels } from '@stories/helper/event';
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { createRandomEvents } from '@stories/util/randomEvents';
 
-import type { EventModelData } from '@t/events';
+import type { EventObject } from '@t/events';
 
 export default { title: 'Components/TimeGrid', component: TimeGrid };
 
@@ -45,7 +45,7 @@ function getNormalEvents() {
 function getEvents() {
   const start = toStartOfDay(new TZDate());
   const adjustForWeekStart = start.getDay();
-  const disabledAMEvents: EventModelData[] = range(0, 7).map((date) => {
+  const disabledAMEvents: EventObject[] = range(0, 7).map((date) => {
     const eventStart = addDate(start, date - adjustForWeekStart);
 
     return {
@@ -55,7 +55,7 @@ function getEvents() {
       bgColor: 'rgba(100, 100, 100, .3)',
     };
   });
-  const disabledPMEvents: EventModelData[] = range(0, 7).map((date) => {
+  const disabledPMEvents: EventObject[] = range(0, 7).map((date) => {
     const eventStart = addDate(start, date - adjustForWeekStart);
 
     return {
@@ -65,7 +65,7 @@ function getEvents() {
       bgColor: 'rgba(100, 100, 100, .3)',
     };
   });
-  const disabledLunchEvents: EventModelData[] = range(0, 7).map((date) => {
+  const disabledLunchEvents: EventObject[] = range(0, 7).map((date) => {
     const eventStart = addDate(start, date - adjustForWeekStart);
 
     return {
@@ -75,7 +75,7 @@ function getEvents() {
       bgColor: 'rgba(23, 255, 100, .3)',
     };
   });
-  const data: EventModelData[] = disabledAMEvents.concat(
+  const data: EventObject[] = disabledAMEvents.concat(
     disabledPMEvents,
     disabledLunchEvents,
     getNormalEvents()
@@ -110,7 +110,7 @@ const getRandomEvents = () => {
   const today = new TZDate();
   const start = addDate(new TZDate(), -today.getDay());
   const end = addDate(start, 6);
-  const data: EventModelData[] = createRandomEvents('week', start, end);
+  const data: EventObject[] = createRandomEvents('week', start, end);
   return createEventModels(data);
 };
 RandomEvents.args = {
