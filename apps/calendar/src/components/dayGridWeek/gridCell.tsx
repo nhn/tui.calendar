@@ -1,7 +1,6 @@
 import { h } from 'preact';
 import { useCallback } from 'preact/hooks';
 
-import { Template } from '@src/components/template';
 import { useTheme } from '@src/contexts/themeStore';
 import { cls } from '@src/helpers/css';
 
@@ -30,16 +29,18 @@ function ExceedCount({ index, exceedCount, isClicked, onClickExceedCount }: Exce
   const style = { display: isClicked ? 'none' : '' };
 
   return exceedCount && !isClicked ? (
-    <span className={cls('weekday-exceed-in-week')} onClick={clickExceedCount} style={style}>
-      <Template template="weekGridFooterExceed" model={exceedCount} />
-    </span>
+    <span
+      className={cls('weekday-exceed-in-week')}
+      onClick={clickExceedCount}
+      style={style}
+    >{`+${exceedCount}`}</span>
   ) : null;
 }
 
 function CollapseButton({ isClicked, isClickedIndex, onClickCollapseButton }: CollapseButtonProps) {
   return isClicked && isClickedIndex ? (
     <span className={cls('weekday-exceed-in-week')} onClick={onClickCollapseButton}>
-      <Template template="collapseBtnTitle" model="collapse" />
+      <i className={cls('collapse-btn')} />
     </span>
   ) : null;
 }
