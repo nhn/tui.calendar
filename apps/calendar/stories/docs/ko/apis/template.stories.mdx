@@ -8,11 +8,11 @@ import { Meta } from '@storybook/addon-docs';
 
 템플릿은 커스텀 렌더링을 지원하는 기능이다. 캘린더 인스턴스 생성 시 템플릿 옵션으로 커스텀 렌더링을 할 수 있으며, `setOptions`로 템플릿 옵션을 변경할 수 있다.
 
-```jsx
+```js
 const cal = new Calendar('#container', {
   template: {
     milestone(event) {
-      return <span style={{ color: 'red' }}>{event.title}</span>;
+      return `<span style="color: 'red';">${event.title}</span>`;
     },
   },
 });
@@ -20,7 +20,7 @@ const cal = new Calendar('#container', {
 cal.setOptions({
   template: {
     milestone(event) {
-      return <span style={{ color: 'blue' }}>{event.title}</span>;
+      return `<span style="color: 'blue';">${event.title}</span>`;
     },
   },
 });
@@ -28,19 +28,19 @@ cal.setOptions({
 
 ## 템플릿 목록
 
-템플릿의 각 프로퍼티들은 문자열 또는 VNode를 반환하는 함수이며 파라미터는 템플릿의 종류에 따라 다르다. 아래는 전체 템플릿 목록이다.
+템플릿의 각 프로퍼티들은 문자열 또는 `preact`의 VNode를 반환하는 함수이며 파라미터는 템플릿의 종류에 따라 다르다. 아래는 전체 템플릿 목록이다.
 
 | 템플릿명                                                  | 파라미터                | 설명                                                             |
 | --------------------------------------------------------- | ----------------------- | ---------------------------------------------------------------- |
-| [milestone](#milestone)                                   | EventModel              | milestone 이벤트                                                 |
-| [milestoneTitle](#milestonetitle)                         | 없음                    | milestone 패널의 왼쪽 영역                                       |
-| [task](#task)                                             | EventModel              | task 이벤트                                                      |
-| [taskTitle](#tasktitle)                                   | 없음                    | task 패널의 왼쪽 영역                                            |
-| [allday](#allday)                                         | EventModel              | allday 이벤트                                                    |
-| [alldayTitle](#alldaytitle)                               | 없음                    | allday 패널의 왼쪽 영역                                          |
-| [time](#time)                                             | EventModel              | time 이벤트                                                      |
-| [goingDuration](#goingduration)                           | EventModel              | time 이벤트의 going duration                                     |
-| [comingDuration](#comingduration)                         | EventModel              | time 이벤트의 coming duration                                    |
+| [milestone](#milestone)                                   | EventModel              | 주간뷰의 milestone 이벤트                                        |
+| [milestoneTitle](#milestonetitle)                         | 없음                    | 주간뷰의 milestone 패널의 왼쪽 영역                              |
+| [task](#task)                                             | EventModel              | 주간뷰의 task 이벤트                                             |
+| [taskTitle](#tasktitle)                                   | 없음                    | 주간뷰의 task 패널의 왼쪽 영역                                   |
+| [allday](#allday)                                         | EventModel              | 주간뷰의 allday 이벤트                                           |
+| [alldayTitle](#alldaytitle)                               | 없음                    | 주간뷰의 allday 패널의 왼쪽 영역                                 |
+| [time](#time)                                             | EventModel              | 주간뷰의 time 이벤트                                             |
+| [goingDuration](#goingduration)                           | EventModel              | 주간뷰의 time 이벤트의 going duration                            |
+| [comingDuration](#comingduration)                         | EventModel              | 주간뷰의 time 이벤트의 coming duration                           |
 | [monthMoreTitleDate](#monthmoretitledate)                 | TemplateMoreTitleDate   | 월간뷰의 더 보기 팝업의 날짜                                     |
 | [monthMoreClose](#monthmoreclose)                         | 없음                    | 월간뷰의 더 보기 팝업의 닫기 버튼                                |
 | [monthGridHeader](#monthgridheader)                       | TemplateMonthGrid       | 월간뷰의 각 셀의 헤더의 날짜                                     |
@@ -83,13 +83,13 @@ cal.setOptions({
 
 #### milestone
 
-`eventModel` 파라미터를 이용해 각 milestone 이벤트를 커스터마이징할 수 있다.
+`eventModel` 파라미터를 이용해 주간뷰의 각 milestone 이벤트를 커스터마이징할 수 있다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     milestone(event) {
-      return <span style={{ color: 'blue' }}>{event.title}</span>;
+      return `<span style:"color: 'blue';">${event.title}</span>`;
     },
   },
 });
@@ -97,13 +97,13 @@ calendar.setOptions({
 
 #### milestoneTitle
 
-milestone 패널 왼쪽의 영역을 커스터마이징할 수 있다.
+주간뷰의 milestone 패널 왼쪽의 영역을 커스터마이징할 수 있다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
-    milestoneTitle(event) {
-      return <span>Milestone events</span>;
+    milestoneTitle() {
+      return `<span>Milestone events</span>`;
     },
   },
 });
@@ -115,13 +115,13 @@ calendar.setOptions({
 
 #### task
 
-`eventModel` 파라미터를 이용해 각 task 이벤트를 커스터마이징할 수 있다.
+`eventModel` 파라미터를 이용해 주간뷰의 각 task 이벤트를 커스터마이징할 수 있다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     task(event) {
-      return <span style={{ color: 'red' }}>{event.title}</span>;
+      return `<span style="color: 'red';">${event.title}</span>`;
     },
   },
 });
@@ -129,13 +129,13 @@ calendar.setOptions({
 
 #### taskTitle
 
-task 패널 왼쪽의 영역을 커스터마이징할 수 있다.
+주간뷰의 task 패널 왼쪽의 영역을 커스터마이징할 수 있다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
-    taskTitle(event) {
-      return <span>Task events</span>;
+    taskTitle() {
+      return `<span>Task events</span>`;
     },
   },
 });
@@ -147,13 +147,13 @@ calendar.setOptions({
 
 #### allday
 
-`eventModel` 파라미터를 이용해 각 allday 이벤트를 커스터마이징할 수 있다.
+`eventModel` 파라미터를 이용해 주간뷰의 각 allday 이벤트를 커스터마이징할 수 있다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     allday(event) {
-      return <span style={{ color: 'green' }}>{event.title}</span>;
+      return `<span style="color: 'green';">${event.title}</span>`;
     },
   },
 });
@@ -161,13 +161,13 @@ calendar.setOptions({
 
 #### alldayTitle
 
-allday 패널 왼쪽의 영역을 커스터마이징할 수 있다.
+주간뷰의 allday 패널 왼쪽의 영역을 커스터마이징할 수 있다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
-    allday(event) {
-      return <span>Allday events</span>;
+    allday() {
+      return `<span>Allday events</span>`;
     },
   },
 });
@@ -179,13 +179,13 @@ calendar.setOptions({
 
 #### time
 
-`eventModel` 파라미터를 이용해 각 time 이벤트를 커스터마이징할 수 있다. going, coming duration을 제외한 부분이다.
+`eventModel` 파라미터를 이용해 주간뷰의 각 time 이벤트를 커스터마이징할 수 있다. going, coming duration을 제외한 부분이다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     time(event) {
-      return <span style={{ color: 'black' }}>{event.title}</span>;
+      return `<span style="color: 'black';">${event.title}</span>`;
     },
   },
 });
@@ -193,13 +193,13 @@ calendar.setOptions({
 
 #### goingDuration
 
-`eventModel` 파라미터를 이용해 각 going duration을 커스터마이징할 수 있다.
+`eventModel` 파라미터를 이용해 주간뷰의 각 going duration을 커스터마이징할 수 있다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     goingDuration(event) {
-      return <span>{event.goingDuration}</span>;
+      return `<span>${event.goingDuration}</span>`;
     },
   },
 });
@@ -207,13 +207,13 @@ calendar.setOptions({
 
 #### comingDuration
 
-`eventModel` 파라미터를 이용해 각 coming duration을 커스터마이징할 수 있다.
+`eventModel` 파라미터를 이용해 주간뷰의 각 coming duration을 커스터마이징할 수 있다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     comingDuration(event) {
-      return <span>{event.comingDuration}</span>;
+      return `<span>${event.comingDuration}</span>`;
     },
   },
 });
@@ -235,13 +235,13 @@ interface TemplateMoreTitleDate {
 
 더 보기 팝업의 날짜를 커스터마이징할 수 있다. 파라미터는 `TemplateMoreTitleDate` 객체로, `ymd` 프로퍼티는 해당 날짜의 `YYYY-MM-DD` 문자열 형식 데이터다. `date` 프로퍼티는 해당 날짜의 일, `day`는 해당 날짜의 요일이다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     monthMoreTitleDate(moreTitle) {
       const { date } = moreTitle;
 
-      return <span>{date}</span>;
+      return `<span>${date}</span>`;
     },
   },
 });
@@ -251,7 +251,7 @@ calendar.setOptions({
 
 더 보기 팝업의 닫기 버튼을 커스터마이징할 수 있다. 기본 값이 빈 문자열을 반환하기 때문에 기본적으로는 닫기 버튼이 표시되지 않는다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     monthMoreClose() {
@@ -282,13 +282,13 @@ interface TemplateMonthGrid {
 월간뷰 각 셀의 헤더의 날짜를 커스터마이징할 수 있다. `TemplateMonthGrid` 객체를 파라미터로 받는다.
 `date`는 해당 날짜의 일, `day`는 해당 요일, `month`는 해당 월, `hiddenEventCount`는 표시되지 않은 이벤트의 갯수, `isOtherMonth`는 현재 월간뷰의 달과 다른 달의 날짜인지 여부, `isToday`는 오늘 날짜인지 여부, `ymd`는 해당 날짜의 `YYYY-MM-DD` 문자열 형식 데이터다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     monthGridHeader(model) {
       const date = parseInt(model.date.split('-')[2], 10);
 
-      return <span>{date}</span>;
+      return `<span>${date}</span>`;
     },
   },
 });
@@ -298,11 +298,11 @@ calendar.setOptions({
 
 월간뷰 각 셀의 헤더의 초과되는 이벤트의 갯수를 표시하는 컴포넌트를 커스터마이징할 수 있다. 초과된 이벤트의 갯수를 파라미터로 받는다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     monthGridHeaderExceed(hiddenEvents) {
-      return <span>{hiddenEvents} more</span>;
+      return `<span>${hiddenEvents} more</span>`;
     },
   },
 });
@@ -314,7 +314,7 @@ calendar.setOptions({
 `date`는 해당 날짜의 일, `day`는 해당 요일, `month`는 해당 월, `hiddenEventCount`는 표시되지 않은 이벤트의 갯수, `isOtherMonth`는 현재 월간뷰의 달과 다른 달의 날짜인지 여부, `isToday`는 오늘 날짜인지 여부, `ymd`는 해당 날짜의 `YYYY-MM-DD` 문자열 형식 데이터다.
 기본 값이 빈 문자열을 반환하기 때문에 따로 설정하지 않는다면 표시되지 않는다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     monthGridFooter() {
@@ -329,7 +329,7 @@ calendar.setOptions({
 월간뷰 각 셀의 푸터의 초과되는 이벤트의 갯수를 표시하는 컴포넌트를 커스터마이징할 수 있다. 초과된 이벤트의 갯수를 파라미터로 받는다.
 기본 값이 빈 문자열을 반환하기 때문에 따로 설정하지 않는다면 표시되지 않는다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     monthGridFooterExceed() {
@@ -354,7 +354,7 @@ interface TemplateMonthDayName {
 
 월간뷰의 각 요일을 커스터마이징할 수 있다. `day`는 해당 요일, `label`은 해당 요일의 기본적인 영문 축약형 문자열이다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     monthDayname(model) {
@@ -381,16 +381,11 @@ interface TemplateWeekDayName {
 
 주간뷰의 각 요일을 커스터마이징할 수 있다. `date`는 해당 요일의 일, `day`는 해당 요일, `dayName`은 해당 요일의 기본적인 영문 축약형 문자열, `isToday`는 해당 요일이 오늘인지 여부, `renderDate`는 주간뷰 렌더링의 기준 날짜, `dateInstance`는 해당 요일의 `Date` 객체다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     weekDayname(model) {
-      return (
-        <Fragment>
-          <span>{model.date}</span>&nbsp;&nbsp;
-          <span>{model.dayName}</span>
-        </Fragment>
-      );
+      return `<span>${model.date}</span>&nbsp;&nbsp;<span>${model.dayName}</span>`;
     },
   },
 });
@@ -402,7 +397,7 @@ calendar.setOptions({
 
 주간뷰의 allday 패널의 초과된 이벤트 표시 컴포넌트를 커스터마이징할 수 있다. 초과된 이벤트의 갯수를 파라미터로 받는다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     weekGridFooterExceed(hiddenEvents) {
@@ -418,7 +413,7 @@ calendar.setOptions({
 
 주간뷰의 패널 왼쪽 영역을 커스터마이징할 수 있다. 기본 값은 파라미터에 따라 `milestoneTitle`, `tastTitle`, `alldayTitle` 템플릿을 반환한다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     dayGridTitle(viewName) {
@@ -444,7 +439,7 @@ calendar.setOptions({
 
 이벤트 컴포넌트를 커스터마이징할 수 있다. 기본 값은 이벤트의 카테고리에 따라 `milestone`, `task`, `allday`, `time` 템플릿을 반환한다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     event(model) {
@@ -478,11 +473,11 @@ calendar.setOptions({
 
 주간뷰의 접기 버튼 컴포넌트를 커스터마이징할 수 있다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     collapseBtnTitle() {
-      return <span>↑</span>;
+      return `<span>↑</span>`;
     },
   },
 });
@@ -494,7 +489,7 @@ calendar.setOptions({
 
 2개 이상의 타임존을 사용하는 주간뷰에서 타임존을 표시하는 컴포넌트를 커스터마이징할 수 있다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     timezoneDisplayLabel({ timezoneOffset }) {
@@ -528,7 +523,7 @@ interface TemplateCurrentTime {
 
 primary 타임존의 시간 표시를 커스터마이징할 수 있다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     timegridDisplayPrimaryTime({ time }) {
@@ -542,7 +537,7 @@ calendar.setOptions({
 
 primary 타임존을 제외한 타임존의 시간 표시를 커스터마이징할 수 있다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     timegridDisplayTime({ time }) {
@@ -556,7 +551,7 @@ calendar.setOptions({
 
 현재 가리키는 시간 표시를 커스터마이징할 수 있다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     timegridCurrentTime({ time }) {
@@ -574,7 +569,7 @@ calendar.setOptions({
 
 이벤트 생성 팝업에서 all day 텍스트를 커스터마이징할 수 있다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     popupIsAllday() {
@@ -588,7 +583,7 @@ calendar.setOptions({
 
 이벤트 생성 팝업에서 이벤트의 free 상태를 커스터마이징할 수 있다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     popupStateFree() {
@@ -602,7 +597,7 @@ calendar.setOptions({
 
 이벤트 생성 팝업에서 이벤트의 busy 상태를 커스터마이징할 수 있다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     popupStateBusy() {
@@ -616,7 +611,7 @@ calendar.setOptions({
 
 이벤트 생성 팝업에서 이벤트명의 placeholder를 커스터마이징할 수 있다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     titlePlaceholder() {
@@ -630,7 +625,7 @@ calendar.setOptions({
 
 이벤트 생성 팝업에서 이벤트 장소의 placeholder를 커스터마이징할 수 있다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     locationPlaceholder() {
@@ -644,7 +639,7 @@ calendar.setOptions({
 
 이벤트 생성 팝업에서 이벤트의 시작 날짜 placeholder를 커스터마이징할 수 있다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     startDatePlaceholder() {
@@ -658,7 +653,7 @@ calendar.setOptions({
 
 이벤트 생성 팝업에서 이벤트의 종료 날짜 placeholder를 커스터마이징할 수 있다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     endDatePlaceholder() {
@@ -672,7 +667,7 @@ calendar.setOptions({
 
 이벤트 생성 팝업에서 save 버튼의 텍스트를 커스터마이징할 수 있다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     popupSave() {
@@ -690,7 +685,7 @@ calendar.setOptions({
 
 이벤트 수정 팝업에서 update 버튼의 텍스트를 커스터마이징할 수 있다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     popupUpdate() {
@@ -708,7 +703,7 @@ calendar.setOptions({
 
 이벤트 상세 팝업에서 edit 버튼의 텍스트를 커스터마이징할 수 있다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     popupEdit() {
@@ -722,7 +717,7 @@ calendar.setOptions({
 
 이벤트 상세 팝업에서 delete 버튼의 텍스트를 커스터마이징할 수 있다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     popupDelete() {
@@ -736,7 +731,7 @@ calendar.setOptions({
 
 이벤트 상세 팝업에서 이벤트의 기간 표시를 커스터마이징할 수 있다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     popupDetailDate(isAllday, start, end) {
@@ -750,7 +745,7 @@ calendar.setOptions({
 
 이벤트 상세 팝업에서 이벤트의 장소 표시를 커스터마이징할 수 있다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     popupDetailLocation({ location }) {
@@ -764,7 +759,7 @@ calendar.setOptions({
 
 이벤트 상세 팝업에서 이벤트의 참석자 표시를 커스터마이징할 수 있다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     popupDetailUser({ attendees = [] }) {
@@ -778,7 +773,7 @@ calendar.setOptions({
 
 이벤트 상세 팝업에서 이벤트의 상태 표시를 커스터마이징할 수 있다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     popupDetailState({ state }) {
@@ -792,7 +787,7 @@ calendar.setOptions({
 
 이벤트 상세 팝업에서 이벤트의 반복 룰 표시를 커스터마이징할 수 있다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     popupDetailRepeat({ recurrenceRule }) {
@@ -806,7 +801,7 @@ calendar.setOptions({
 
 이벤트 상세 팝업에서 이벤트의 내용 표시를 커스터마이징할 수 있다.
 
-```jsx
+```js
 calendar.setOptions({
   template: {
     popupDetailBody({ body }) {
