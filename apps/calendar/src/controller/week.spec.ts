@@ -149,7 +149,7 @@ describe('Base.Week', () => {
     let expected: Array<Array<number[]>>;
 
     function getTime(start: number, end: number) {
-      return new EventModel().init({ start, end });
+      return new EventModel({ start, end });
     }
 
     beforeEach(() => {
@@ -329,7 +329,7 @@ describe('Base.Week', () => {
           start: '2015/05/01 09:00:00',
           end: '2015/05/02 09:00:00',
         },
-      ].map((eventData) => EventModel.create(eventData));
+      ].map((eventData) => new EventModel(eventData));
 
       collection.add(...events);
 

@@ -624,7 +624,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   openFormPopup(event: EventObject) {
     const { showFormPopup } = this.getStoreDispatchers().popup;
 
-    const eventModel = EventModel.create(event);
+    const eventModel = new EventModel(event);
     const { title, location, start, end, isAllday, isPrivate, state: eventState } = eventModel;
 
     showFormPopup({

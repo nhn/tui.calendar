@@ -59,7 +59,7 @@ describe('controller/base', () => {
         new TZDate('2015/05/03'),
       ];
 
-      event = EventModel.create({
+      event = new EventModel({
         title: 'A',
         isAllday: true,
         start: '2015/05/01',
@@ -76,7 +76,7 @@ describe('controller/base', () => {
         new TZDate('2015/05/03'),
       ];
 
-      event = EventModel.create({
+      event = new EventModel({
         title: 'A',
         isAllday: false,
         start: '2015/05/01 12:30:00',
@@ -89,7 +89,7 @@ describe('controller/base', () => {
 
   describe('createEvent()', () => {
     it('return itself for chaining pattern.', () => {
-      const event = EventModel.create(eventDataList[0]);
+      const event = new EventModel(eventDataList[0]);
 
       expect(event.equals(createEvent(calendarData, eventDataList[0]))).toBe(true);
     });

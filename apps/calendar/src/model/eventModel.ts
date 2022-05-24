@@ -7,172 +7,69 @@ import { isString } from '@src/utils/type';
 
 import type { DateType, EventCategory, EventObject, EventState } from '@t/events';
 
-export default class EventModel {
-  /**
-   * `Optional` unique id for various use.
-   * @type {string}
-   */
+export default class EventModel implements Required<EventObject> {
   id = '';
 
-  /**
-   * title for event.
-   * @type {string}
-   */
-  title = '';
-
-  /**
-   * body for event.
-   * @type {string}
-   */
-  body = '';
-
-  /**
-   * is event is all day event?
-   * @type {boolean}
-   */
-  isAllday = false;
-
-  /**
-   * event start
-   * @type {TZDate}
-   */
-  start: TZDate = new TZDate();
-
-  /**
-   * event end
-   * @type {TZDate}
-   */
-  end: TZDate = new TZDate();
-
-  /**
-   * event text color
-   * @type {string}
-   */
-  color = '#000';
-
-  /**
-   * event block visibility
-   * @type {boolean}
-   */
-  isVisible = true;
-
-  /**
-   * event background color
-   * @type {string}
-   */
-  bgColor = '#a1b56c';
-
-  /**
-   * event background color when dragging it
-   * @type {string}
-   */
-  dragBgColor = '#a1b56c';
-
-  /**
-   * event left border color
-   * @type {string}
-   */
-  borderColor = '#000';
-
-  /**
-   * calendar ID
-   * @type {string}
-   */
   calendarId = '';
 
-  /**
-   * Event category(milestone, task, allday, time)
-   * @type {string}
-   */
-  category: EventCategory = 'time';
+  title = '';
 
-  /**
-   * Classification of work events (before work, before lunch, before work)
-   * @type {string}
-   */
-  dueDateClass = '';
+  body = '';
 
-  /**
-   * Custom style for event element
-   * @type {string}
-   */
-  customStyle = '';
+  isAllday = false;
 
-  /**
-   * in progress flag to do something
-   * @type {boolean}
-   */
-  isPending = false;
+  start: TZDate = new TZDate();
 
-  /**
-   * focused event flag
-   * @type {boolean}
-   */
-  isFocused = false;
+  end: TZDate = new TZDate();
 
-  /**
-   * read-only event flag
-   * @type {boolean}
-   */
-  isReadOnly = false;
-
-  /**
-   * private event
-   * @type {boolean}
-   */
-  isPrivate = false;
-
-  /**
-   * location
-   * @type {string}
-   */
-  location = '';
-
-  /**
-   * attendees
-   * @type {Array.<string>}
-   */
-  attendees: string[] = [];
-
-  /**
-   * recurrence rule
-   * @type {any}
-   */
-  recurrenceRule = '';
-
-  /**
-   * state. 'Busy' is default.
-   * @type {EventState}
-   */
-  state: EventState = 'Busy';
-
-  /**
-   * travelTime: going-Duration minutes
-   * @type {number}
-   */
   goingDuration = 0;
 
-  /**
-   * travelTime: coming-Duration minutes
-   * @type {number}
-   */
   comingDuration = 0;
 
-  /**
-   * Separate data storage space independent of rendering.
-   * @type {any}
-   */
-  raw: any = null; // eslint-disable-line @typescript-eslint/no-explicit-any
+  location = '';
+
+  attendees: string[] = [];
+
+  category: EventCategory = 'time';
+
+  dueDateClass = '';
+
+  recurrenceRule = '';
+
+  state: EventState = 'Busy';
+
+  isVisible = true;
+
+  isPending = false;
+
+  isFocused = false;
+
+  isReadOnly = false;
+
+  isPrivate = false;
+
+  color = '#000';
+
+  bgColor = '#a1b56c';
+
+  dragBgColor = '#a1b56c';
+
+  borderColor = '#000';
+
+  customStyle = '';
+
+  raw: any = null;
 
   /**
    * whether the event includes multiple dates
-   * @type {boolean}
    */
   hasMultiDates = false;
 
-  constructor() {
+  constructor(event: EventObject = {}) {
     // initialize model id
     stamp(this);
+
+    this.init(event);
   }
 
   static schema = {
@@ -180,14 +77,6 @@ export default class EventModel {
     dateRange: ['start', 'end'],
   };
 
-  static create(data: EventObject) {
-    return new EventModel().init(data);
-  }
-
-  /**
-   * Initialize event instance.
-   * @param {EventObject} event - event model data.
-   */
   // eslint-disable-next-line complexity
   init(event: EventObject) {
     event = { ...event };
@@ -195,30 +84,32 @@ export default class EventModel {
       event.isAllday = true;
     }
 
-    this.id = event.id || '';
-    this.title = event.title || '';
-    this.body = event.body || '';
-    this.isAllday = event.isAllday ?? false;
-    this.isVisible = event.isVisible ?? true;
+    this.id = event.id || this.id;
+    this.calendarId = event.calendarId || this.calendarId;
+    this.title = event.title || this.title;
+    this.body = event.body || this.body;
+    this.isAllday = event.isAllday ?? this.isAllday;
+
+    this.goingDuration = event.goingDuration || this.goingDuration;
+    this.comingDuration = event.comingDuration || this.comingDuration;
+    this.location = event.location || this.location;
+    this.attendees = event.attendees || this.attendees;
+    this.category = event.category || this.category;
+    this.dueDateClass = event.dueDateClass || this.dueDateClass;
+    this.recurrenceRule = event.recurrenceRule || this.recurrenceRule;
+    this.state = event.state || this.state;
+
+    this.isVisible = event.isVisible ?? this.isVisible;
+    this.isPrivate = event.isPrivate || this.isPrivate;
+    this.isPending = event.isPending || this.isPending;
+    this.isFocused = event.isFocused || this.isFocused;
+    this.isReadOnly = event.isReadOnly || this.isReadOnly;
 
     this.color = event.color || this.color;
     this.bgColor = event.bgColor || this.bgColor;
     this.dragBgColor = event.dragBgColor || this.dragBgColor;
     this.borderColor = event.borderColor || this.borderColor;
-    this.calendarId = event.calendarId || '';
-    this.category = event.category || 'time';
-    this.dueDateClass = event.dueDateClass || '';
-    this.customStyle = event.customStyle || '';
-    this.location = event.location || '';
-    this.attendees = event.attendees || [];
-    this.recurrenceRule = event.recurrenceRule || '';
-    this.isPrivate = event.isPrivate || false;
-    this.isPending = event.isPending || false;
-    this.isFocused = event.isFocused || false;
-    this.isReadOnly = event.isReadOnly || false;
-    this.goingDuration = event.goingDuration || 0;
-    this.comingDuration = event.comingDuration || 0;
-    this.state = event.state || 'Busy';
+    this.customStyle = event.customStyle || this.customStyle;
 
     if (this.isAllday) {
       this.setAlldayPeriod(event.start, event.end);
@@ -231,12 +122,10 @@ export default class EventModel {
     }
 
     this.raw = event.raw ?? null;
-
-    return this;
   }
 
   setAlldayPeriod(start?: DateType, end?: DateType) {
-    // If it is an all-day , only the date information of the string is used.
+    // If it is an all-day, only the date information of the string is used.
     let startedAt: TZDate;
     let endedAt: TZDate;
 

@@ -64,7 +64,7 @@ describe('day', () => {
     const events: EventModel[] = [];
     for (let i = 0; i < 2; i += 1) {
       events.push(
-        EventModel.create({
+        new EventModel({
           id: `${i}`,
           title: `Event ${i}`,
           start: new TZDate().addMinutes(60 * i),

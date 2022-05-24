@@ -99,7 +99,7 @@ describe('Base.Core', () => {
         category: 'time',
       },
     ];
-    eventList = mockData.map((data) => EventModel.create(data)).sort(array.compare.event.asc);
+    eventList = mockData.map((data) => new EventModel(data)).sort(array.compare.event.asc);
   });
 
   describe('getCollisionGroup()', () => {
@@ -160,7 +160,7 @@ describe('Base.Core', () => {
         ];
 
         collisionEventList = events
-          .map((data) => EventModel.create(data))
+          .map((data) => new EventModel(data))
           .sort(array.compare.event.asc);
       });
 
@@ -280,9 +280,7 @@ describe('Base.Core', () => {
           },
         ];
 
-        matrixEventList = events
-          .map((data) => EventModel.create(data))
-          .sort(array.compare.event.asc);
+        matrixEventList = events.map((data) => new EventModel(data)).sort(array.compare.event.asc);
         collection.add(...matrixEventList);
       });
 

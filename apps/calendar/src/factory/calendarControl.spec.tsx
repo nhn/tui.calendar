@@ -1000,7 +1000,7 @@ describe('hideMoreView', () => {
 });
 
 describe('getElement', () => {
-  const eventModel = EventModel.create({ calendarId: 'mockCalendarId', id: 'mockEventId' });
+  const eventModel = new EventModel({ calendarId: 'mockCalendarId', id: 'mockEventId' });
   const mockEventUIModel = new EventUIModel(eventModel);
   class MockCalenderEvent extends CalendarControl {
     protected getComponent() {
@@ -1042,7 +1042,7 @@ describe('getElement', () => {
 });
 
 describe('setCalendarVisibility', () => {
-  const eventModel1 = EventModel.create({
+  const eventModel1 = new EventModel({
     calendarId: 'mockCalendarId1',
     id: 'mockEventId1',
     title: 'mockEvent1',
@@ -1050,7 +1050,7 @@ describe('setCalendarVisibility', () => {
     start: new TZDate(2022, 3, 22),
     end: new TZDate(2022, 3, 24),
   });
-  const eventModel2 = EventModel.create({
+  const eventModel2 = new EventModel({
     calendarId: 'mockCalendarId2',
     id: 'mockEventId2',
     title: 'mockEvent2',

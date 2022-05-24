@@ -114,7 +114,7 @@ describe('Base.Month', () => {
       },
     ];
     // mock schedule list
-    eventList = mockData.map((data) => EventModel.create(data)).sort(array.compare.event.asc);
+    eventList = mockData.map((data) => new EventModel(data)).sort(array.compare.event.asc);
   });
 
   describe('findByDateRange()', () => {

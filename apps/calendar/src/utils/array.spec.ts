@@ -71,7 +71,7 @@ describe('common/array', () => {
 
       it('isAllday ASC, start ASC, duration DESC, id ASC', () => {
         mockData.forEach((data) => {
-          events.push(EventModel.create(data));
+          events.push(new EventModel(data));
         });
 
         events.sort(array.compare.event.asc);
@@ -106,7 +106,7 @@ describe('common/array', () => {
         ];
 
         fixtures.forEach((data) => {
-          events.push(EventModel.create(data));
+          events.push(new EventModel(data));
         });
 
         events.sort(array.compare.event.asc);

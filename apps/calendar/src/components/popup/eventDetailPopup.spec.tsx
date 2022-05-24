@@ -13,7 +13,7 @@ import { EventBusImpl } from '@src/utils/eventBus';
 import type { PropsWithChildren } from '@t/components/common';
 
 describe('event detail popup', () => {
-  const event = EventModel.create({
+  const event = new EventModel({
     id: 'id',
     calendarId: 'calendar id',
     title: 'title',

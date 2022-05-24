@@ -99,7 +99,7 @@ export function addEvent(calendarData: CalendarData, event: EventModel) {
 }
 
 export function createEvent(calendarData: CalendarData, eventData: EventObject) {
-  const event = EventModel.create(eventData);
+  const event = new EventModel(eventData);
 
   return addEvent(calendarData, event);
 }

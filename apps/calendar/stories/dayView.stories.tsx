@@ -17,7 +17,7 @@ function createTimeGridEvents() {
   const start = addDate(new TZDate(), -today.getDay());
   const end = addDate(start, 6);
 
-  return createRandomEvents('week', start, end).map((event) => EventModel.create(event));
+  return createRandomEvents('week', start, end).map((event) => new EventModel(event));
 }
 
 const Template: Story = (args) => (

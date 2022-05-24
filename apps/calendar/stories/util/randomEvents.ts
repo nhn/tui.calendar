@@ -143,5 +143,5 @@ export function createRandomEventModelsForMonth(length = defaultEventCount.month
     length
   );
 
-  return data.map((event: EventObject) => EventModel.create(event));
+  return data.map((event: EventObject) => new EventModel(event));
 }
