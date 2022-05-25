@@ -35,6 +35,11 @@ export type EventCategory = 'milestone' | 'task' | 'allday' | 'time' | 'backgrou
 
 export type EventState = 'Busy' | 'Free';
 
+export type EventObjectWithDefaultValues = Required<EventObject> & {
+  start: TZDate;
+  end: TZDate;
+};
+
 export interface EventObject {
   /**
    * `Optional` unique id for various use

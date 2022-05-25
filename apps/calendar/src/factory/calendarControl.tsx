@@ -244,22 +244,26 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
     createEvents(events);
   }
 
+  protected getEventModel(eventId: string, calendarId: string) {
+    const { events } = this.getStoreState('calendar');
+
+    return events.find(
+      ({ id, calendarId: eventCalendarId }) => id === eventId && eventCalendarId === calendarId
+    );
+  }
+
   /**
-   * Get a {@link EventModel} object with event's id and calendar's id.
+   * Get an {@link EventObject} with event's id and calendar's id.
    * @param {string} eventId - event's id
    * @param {string} calendarId - calendar's id of the event
-   * @returns {EventModel} event model object
+   * @returns {EventObject} event
    * @example
    * const event = calendar.getEvent(eventId, calendarId);
    *
    * console.log(event.title);
    */
   getEvent(eventId: string, calendarId: string) {
-    const { events } = this.getStoreState('calendar');
-
-    return events.find(
-      ({ id, calendarId: eventCalendarId }) => id === eventId && eventCalendarId === calendarId
-    );
+    return this.getEventModel(eventId, calendarId)?.toEventObject();
   }
 
   /**
@@ -276,7 +280,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    */
   updateEvent(eventId: string, calendarId: string, changes: EventObject) {
     const { updateEvent } = this.getStoreDispatchers('calendar');
-    const event = this.getEvent(eventId, calendarId);
+    const event = this.getEventModel(eventId, calendarId);
 
     if (event) {
       updateEvent({ event, eventData: changes });
@@ -290,7 +294,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    */
   deleteEvent(eventId: string, calendarId: string) {
     const { deleteEvent } = this.getStoreDispatchers('calendar');
-    const event = this.getEvent(eventId, calendarId);
+    const event = this.getEventModel(eventId, calendarId);
 
     if (event) {
       deleteEvent(event);

@@ -1,9 +1,8 @@
 import type { VNode } from 'preact';
 
-import type EventModel from '@src/model/eventModel';
 import type TZDate from '@src/time/date';
 
-import type { EventCategory, TimeUnit } from '@t/events';
+import type { EventCategory, EventObjectWithDefaultValues, TimeUnit } from '@t/events';
 
 export interface TemplateTimeGridHourLabel {
   hidden: boolean;
@@ -59,14 +58,14 @@ export type TemplateReturnType = string | VNode<{ className: string }>;
 
 export interface Template {
   milestoneTitle: () => TemplateReturnType;
-  milestone: (event: EventModel) => TemplateReturnType;
+  milestone: (event: EventObjectWithDefaultValues) => TemplateReturnType;
   taskTitle: () => TemplateReturnType;
-  task: (event: EventModel) => TemplateReturnType;
+  task: (event: EventObjectWithDefaultValues) => TemplateReturnType;
   alldayTitle: () => TemplateReturnType;
-  allday: (event: EventModel) => TemplateReturnType;
-  time: (event: EventModel) => TemplateReturnType;
-  goingDuration: (event: EventModel) => TemplateReturnType;
-  comingDuration: (event: EventModel) => TemplateReturnType;
+  allday: (event: EventObjectWithDefaultValues) => TemplateReturnType;
+  time: (event: EventObjectWithDefaultValues) => TemplateReturnType;
+  goingDuration: (event: EventObjectWithDefaultValues) => TemplateReturnType;
+  comingDuration: (event: EventObjectWithDefaultValues) => TemplateReturnType;
   monthMoreTitleDate: (moreTitle: TemplateMoreTitleDate) => TemplateReturnType;
   monthMoreClose: () => TemplateReturnType;
   monthGridHeader: (cellData: TemplateMonthGrid) => TemplateReturnType;
@@ -77,7 +76,7 @@ export interface Template {
   weekDayname: (weekDaynameData: TemplateWeekDayName) => TemplateReturnType;
   weekGridFooterExceed: (hiddenEventsCount: number) => TemplateReturnType;
   dayGridTitle: (viewName: EventCategory) => TemplateReturnType;
-  event: (event: EventModel) => TemplateReturnType;
+  event: (event: EventObjectWithDefaultValues) => TemplateReturnType;
   collapseBtnTitle: () => TemplateReturnType;
   timezoneDisplayLabel: (props: TemplateTimezone) => TemplateReturnType;
   timegridDisplayPrimaryTime: (props: TemplateCurrentTime) => TemplateReturnType;
@@ -92,13 +91,13 @@ export interface Template {
   endDatePlaceholder: () => TemplateReturnType;
   popupSave: () => TemplateReturnType;
   popupUpdate: () => TemplateReturnType;
-  popupDetailTitle: (event: EventModel) => TemplateReturnType;
-  popupDetailDate: (event: EventModel) => TemplateReturnType;
-  popupDetailLocation: (event: EventModel) => TemplateReturnType;
-  popupDetailAttendees: (event: EventModel) => TemplateReturnType;
-  popupDetailState: (event: EventModel) => TemplateReturnType;
-  popupDetailRecurrenceRule: (event: EventModel) => TemplateReturnType;
-  popupDetailBody: (event: EventModel) => TemplateReturnType;
+  popupDetailTitle: (event: EventObjectWithDefaultValues) => TemplateReturnType;
+  popupDetailDate: (event: EventObjectWithDefaultValues) => TemplateReturnType;
+  popupDetailLocation: (event: EventObjectWithDefaultValues) => TemplateReturnType;
+  popupDetailAttendees: (event: EventObjectWithDefaultValues) => TemplateReturnType;
+  popupDetailState: (event: EventObjectWithDefaultValues) => TemplateReturnType;
+  popupDetailRecurrenceRule: (event: EventObjectWithDefaultValues) => TemplateReturnType;
+  popupDetailBody: (event: EventObjectWithDefaultValues) => TemplateReturnType;
   popupEdit: () => TemplateReturnType;
   popupDelete: () => TemplateReturnType;
 }

@@ -68,7 +68,7 @@ export function useAlldayGridRowEventResize({
       const targetDate = weekDates[columnIndex];
 
       eventBus.fire('beforeUpdateEvent', {
-        event: resizingEvent.model,
+        event: resizingEvent.model.toEventObject(),
         changes: { end: targetDate },
       });
     }

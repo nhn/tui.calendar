@@ -3,11 +3,17 @@ import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { compare, MS_PER_DAY, parse, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { stamp } from '@src/utils/stamp';
-import { isString } from '@src/utils/type';
+import { isFunction, isString } from '@src/utils/type';
 
-import type { DateType, EventCategory, EventObject, EventState } from '@t/events';
+import type {
+  DateType,
+  EventCategory,
+  EventObject,
+  EventObjectWithDefaultValues,
+  EventState,
+} from '@t/events';
 
-export default class EventModel implements Required<EventObject> {
+export default class EventModel implements EventObjectWithDefaultValues {
   id = '';
 
   calendarId = '';
@@ -273,6 +279,18 @@ export default class EventModel implements Required<EventObject> {
       targetComingDuration: event.comingDuration,
       usingTravelTime, // Daygrid does not use travelTime, TimeGrid uses travelTime.
     });
+  }
+
+  toEventObject(): EventObjectWithDefaultValues {
+    const result: { [k: string]: any } = {};
+
+    Object.entries(this).forEach(([key, value]) => {
+      if (!key.startsWith('_') && !isFunction(value)) {
+        result[key] = value;
+      }
+    });
+
+    return result as EventObjectWithDefaultValues;
   }
 }
 

@@ -68,7 +68,7 @@ export function useAlldayGridRowEventMove({ rowStyleInfo, gridPositionFinder }: 
       newEndDate.addDate(dateOffset);
 
       eventBus.fire('beforeUpdateEvent', {
-        event: movingEvent.model,
+        event: movingEvent.model.toEventObject(),
         changes: {
           start: newStartDate,
           end: newEndDate,

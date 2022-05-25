@@ -41,7 +41,7 @@ describe(`Firing 'afterRenderEvent'`, () => {
     const { rerender } = render(<HorizontalEvent {...props} />, { eventBus });
 
     // Then
-    expect(handler).toBeCalledWith(props.uiModel.model);
+    expect(handler).toBeCalledWith(props.uiModel.model.toEventObject());
 
     // When rerender
     handler.mockReset();

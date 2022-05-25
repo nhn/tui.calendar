@@ -41,7 +41,7 @@ describe(`Firing 'afterRenderEvent'`, () => {
     const { rerender } = render(<TimeEvent {...props} />, { eventBus });
 
     // Then
-    expect(handler).toBeCalledWith(props.uiModel.model);
+    expect(handler).toBeCalledWith(props.uiModel.model.toEventObject());
 
     // When (re-render)
     handler.mockReset();

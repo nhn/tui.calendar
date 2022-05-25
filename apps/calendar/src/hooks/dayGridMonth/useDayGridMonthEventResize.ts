@@ -178,7 +178,7 @@ export function useDayGridMonthEventResize({
         const targetEndDate = dateMatrix[currentGridPos.rowIndex][currentGridPos.columnIndex];
 
         eventBus.fire('beforeUpdateEvent', {
-          event: resizingStartUIModel.model,
+          event: resizingStartUIModel.model.toEventObject(),
           changes: {
             end: targetEndDate,
           },

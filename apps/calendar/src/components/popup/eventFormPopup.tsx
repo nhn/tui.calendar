@@ -174,7 +174,7 @@ export function EventFormPopup() {
     } else if (event) {
       const changes = getChanges(event, eventData);
 
-      eventBus.fire('beforeUpdateEvent', { event, changes });
+      eventBus.fire('beforeUpdateEvent', { event: event.toEventObject(), changes });
     }
     hideAllPopup();
   };
