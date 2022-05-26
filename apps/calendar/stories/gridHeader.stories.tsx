@@ -3,6 +3,8 @@ import { h } from 'preact';
 import type { Story } from '@storybook/preact';
 
 import { GridHeader } from '@src/components/dayGridCommon/gridHeader';
+import { createCommonTheme } from '@src/theme/common';
+import { createMonthTheme } from '@src/theme/month';
 import { getRowStyleInfo } from '@src/time/datetime';
 
 import { ProviderWrapper } from '@stories/util/providerWrapper';
@@ -13,16 +15,18 @@ export default { title: 'Components/GridHeader', component: GridHeader };
 
 interface DayNamesStory {
   dayNames: TemplateMonthDayName[];
-  marginLeft?: number;
+  marginLeft?: string;
 }
 
 const Template: Story<DayNamesStory> = ({ dayNames, marginLeft }) => {
   const { rowStyleInfo } = getRowStyleInfo(dayNames.length, true, 0, true);
+  const monthDaynameTheme = { ...createCommonTheme(), ...createMonthTheme() };
 
   return (
     <ProviderWrapper>
       <GridHeader
-        templateType="monthDayname"
+        type="month"
+        theme={monthDaynameTheme}
         dayNames={dayNames}
         marginLeft={marginLeft}
         rowStyleInfo={rowStyleInfo}
@@ -66,11 +70,11 @@ threeDays.args = {
 export const oneDayWithMargin = Template.bind({});
 oneDayWithMargin.args = {
   dayNames: oneDayName,
-  marginLeft: 60,
+  marginLeft: '60px',
 };
 
 export const threeDaysWithMargin = Template.bind({});
 threeDaysWithMargin.args = {
   dayNames: threeDayNames,
-  marginLeft: 60,
+  marginLeft: '60px',
 };

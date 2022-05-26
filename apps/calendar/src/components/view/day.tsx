@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useMemo } from 'preact/hooks';
+import { useCallback, useMemo } from 'preact/hooks';
 
 import { GridHeader } from '@src/components/dayGridCommon/gridHeader';
 import { AlldayGridRow } from '@src/components/dayGridWeek/alldayGridRow';
@@ -9,12 +9,14 @@ import { Panel } from '@src/components/panel';
 import { TimeGrid } from '@src/components/timeGrid/timeGrid';
 import { WEEK_DAYNAME_BORDER, WEEK_DAYNAME_HEIGHT } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
+import { useTheme } from '@src/contexts/themeStore';
 import { cls } from '@src/helpers/css';
 import { getDayNames } from '@src/helpers/dayName';
 import { createTimeGridData, getDayGridEvents } from '@src/helpers/grid';
 import { getActivePanels } from '@src/helpers/view';
 import { useCalendarData } from '@src/hooks/calendar/useCalendarData';
 import { useDOMNode } from '@src/hooks/common/useDOMNode';
+import { useWeekDaynameTheme } from '@src/hooks/theme/useWeekDaynameTheme';
 import { useTimeGridScrollSync } from '@src/hooks/timeGrid/useTimeGridScrollSync';
 import {
   calendarSelector,
@@ -26,6 +28,7 @@ import { getRowStyleInfo } from '@src/time/datetime';
 
 import type { WeekOptions } from '@t/options';
 import type { AlldayEventCategory } from '@t/panel';
+import type { ThemeState } from '@t/theme';
 
 function useDayViewState() {
   const calendar = useStore(calendarSelector);
@@ -47,6 +50,10 @@ function useDayViewState() {
 
 export function Day() {
   const { calendar, options, gridRowLayout, lastPanelType, renderDate } = useDayViewState();
+  const daynameTheme = useWeekDaynameTheme();
+  const gridHeaderMarginLeft = useTheme(
+    useCallback((theme: ThemeState) => theme.week.dayGridLeft.width, [])
+  );
   const [timePanel, setTimePanelRef] = useDOMNode<HTMLDivElement>();
 
   const weekOptions = options.week as Required<WeekOptions>;
@@ -113,11 +120,11 @@ export function Day() {
     <Layout className={cls('day-view')} autoAdjustPanels={true}>
       <Panel name="day-view-daynames" initialHeight={WEEK_DAYNAME_HEIGHT + WEEK_DAYNAME_BORDER}>
         <GridHeader
-          dayNames={dayNames}
-          marginLeft={120}
-          templateType="weekDayname"
-          rowStyleInfo={rowStyleInfo}
           type="week"
+          dayNames={dayNames}
+          theme={daynameTheme}
+          marginLeft={gridHeaderMarginLeft}
+          rowStyleInfo={rowStyleInfo}
         />
       </Panel>
       {gridRows}

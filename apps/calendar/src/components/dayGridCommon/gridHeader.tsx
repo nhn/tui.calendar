@@ -1,41 +1,53 @@
 import { h } from 'preact';
 
 import { DayName } from '@src/components/dayGridCommon/dayName';
+import { DEFAULT_DAYNAME_MARGIN_LEFT } from '@src/constants/style';
 import { cls, toPercent } from '@src/helpers/css';
 
 import type { CalendarViewType } from '@t/components/common';
 import type { CalendarMonthOptions, CalendarWeekOptions } from '@t/store';
-import type { Template, TemplateMonthDayName, TemplateWeekDayName } from '@t/template';
-import type { MonthDayNameTheme } from '@t/theme';
+import type { TemplateMonthDayName, TemplateWeekDayName } from '@t/template';
+import type { CommonTheme, MonthTheme, WeekTheme } from '@t/theme';
 import type { CellStyle } from '@t/time/datetime';
 
 type TemplateDayNames = (TemplateWeekDayName | TemplateMonthDayName)[];
 
+export type DaynameTheme = {
+  common: {
+    saturday: CommonTheme['saturday'];
+    holiday: CommonTheme['holiday'];
+    today: CommonTheme['today'];
+    dayname: CommonTheme['dayname'];
+  };
+  week?: {
+    pastDay: WeekTheme['pastDay'];
+    today: WeekTheme['today'];
+    dayname: WeekTheme['dayname'];
+  };
+  month?: {
+    dayExceptThisMonth: MonthTheme['dayExceptThisMonth'];
+    holidayExceptThisMonth: MonthTheme['holidayExceptThisMonth'];
+    dayname: MonthTheme['dayname'];
+  };
+};
+
 interface Props {
+  type: CalendarViewType;
   dayNames: TemplateDayNames;
-  theme?: MonthDayNameTheme;
+  theme: DaynameTheme;
   options?: CalendarMonthOptions | CalendarWeekOptions;
-  marginLeft?: number;
-  templateType: keyof Template;
+  marginLeft?: string;
   rowStyleInfo: CellStyle[];
-  type?: CalendarViewType;
 }
 
-const defaultDayNameTheme = {
-  borderLeft: '1px solid #ddd',
-  backgroundColor: 'inherit',
-};
-const defaultMarginLeft = 0;
-
 export function GridHeader({
-  dayNames = [],
-  theme = defaultDayNameTheme,
-  marginLeft = defaultMarginLeft,
-  templateType,
+  dayNames,
+  theme,
+  marginLeft = DEFAULT_DAYNAME_MARGIN_LEFT,
   rowStyleInfo,
   type = 'month',
 }: Props) {
-  const { backgroundColor } = theme;
+  const { backgroundColor = 'white' } = theme[type]?.dayname ?? {};
 
   return (
     <div
@@ -47,15 +59,14 @@ export function GridHeader({
     >
       {(dayNames as TemplateDayNames).map((dayName, index) => (
         <DayName
-          templateType={templateType}
-          dayname={dayName}
-          dayIndex={dayName.day}
+          type={type}
           key={`dayNames-${dayName.day}`}
+          dayname={dayName}
           style={{
             width: toPercent(rowStyleInfo[index].width),
             left: toPercent(rowStyleInfo[index].left),
           }}
-          type={type}
+          theme={theme}
         />
       ))}
     </div>

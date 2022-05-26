@@ -324,6 +324,10 @@ export function isSunday(day: Day): boolean {
   return day === Day.SUN;
 }
 
+export function isSaturday(day: Day): boolean {
+  return day === Day.SAT;
+}
+
 /**
  * Whether date is between supplied dates with date value?
  */
