@@ -15,6 +15,7 @@ function GridSelection({ top, height, text }: { top: number; height: number; tex
   const { backgroundColor, border } = useTheme(
     useCallback((theme: ThemeState) => theme.common.gridSelection, [])
   );
+  const { color } = useTheme(useCallback((theme: ThemeState) => theme.week.gridSelection, []));
 
   const style = {
     top: toPercent(top),
@@ -29,7 +30,11 @@ function GridSelection({ top, height, text }: { top: number; height: number; tex
       style={style}
       data-testid={`time-grid-selection-${top}-${height}`}
     >
-      {text.length > 0 ? <span className={cls('grid-selection-label')}>{text}</span> : null}
+      {text.length > 0 ? (
+        <span className={cls('grid-selection-label')} style={{ color }}>
+          {text}
+        </span>
+      ) : null}
     </div>
   );
 }
