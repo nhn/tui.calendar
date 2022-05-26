@@ -11,7 +11,7 @@ import { usePrimaryTimezone } from '@src/hooks/timezone/usePrimaryTimezone';
 import { viewSelector } from '@src/selectors';
 import type { TemplateName } from '@src/template/default';
 import type TZDate from '@src/time/date';
-import { Day, toFormat } from '@src/time/datetime';
+import { isSaturday, isSunday, toFormat } from '@src/time/datetime';
 import { capitalize } from '@src/utils/string';
 
 import type { CommonTheme, MonthTheme } from '@t/theme';
@@ -41,12 +41,12 @@ function getDateColor({
     month: { dayExceptThisMonth, holidayExceptThisMonth },
   } = theme;
 
-  if (dayIndex === Day.SUN) {
+  if (isSunday(dayIndex)) {
     return isSameMonth ? holiday.color : holidayExceptThisMonth.color;
   }
 
   if (isSameMonth) {
-    return dayIndex === Day.SAT ? saturday.color : today.color;
+    return isSaturday(dayIndex) ? saturday.color : today.color;
   }
 
   return dayExceptThisMonth.color;

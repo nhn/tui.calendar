@@ -25,8 +25,6 @@ export type DaynameTheme = {
     dayname: WeekTheme['dayname'];
   };
   month?: {
-    dayExceptThisMonth: MonthTheme['dayExceptThisMonth'];
-    holidayExceptThisMonth: MonthTheme['holidayExceptThisMonth'];
     dayname: MonthTheme['dayname'];
   };
 };

@@ -13,8 +13,6 @@ export function useMonthDaynameTheme() {
           dayname: themeState.common.dayname,
         },
         month: {
-          dayExceptThisMonth: themeState.month.dayExceptThisMonth,
-          holidayExceptThisMonth: themeState.month.holidayExceptThisMonth,
           dayname: themeState.month.dayname,
         },
       }),

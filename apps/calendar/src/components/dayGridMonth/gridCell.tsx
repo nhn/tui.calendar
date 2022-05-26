@@ -13,15 +13,18 @@ import {
 } from '@src/constants/style';
 import { useDispatch } from '@src/contexts/calendarStore';
 import { useLayoutContainer } from '@src/contexts/layoutContainer';
+import { useTheme } from '@src/contexts/themeStore';
 import { cls, toPercent } from '@src/helpers/css';
 import { getExceedCount } from '@src/helpers/grid';
 import { useDOMNode } from '@src/hooks/common/useDOMNode';
 import type EventUIModel from '@src/model/eventUIModel';
 import type TZDate from '@src/time/date';
+import { isWeekend } from '@src/time/datetime';
 import { getPosition, getRelativePosition, getSize } from '@src/utils/dom';
 import { ratio } from '@src/utils/math';
 
 import type { PopupPosition } from '@t/store';
+import type { ThemeState } from '@t/theme';
 
 interface Props {
   date: TZDate;
@@ -162,9 +165,14 @@ function usePopupPosition(
   return { popupPosition, containerRefCallback };
 }
 
+function weekendBackgroundColorSelector(theme: ThemeState) {
+  return theme.month.weekend.backgroundColor;
+}
+
 export function GridCell({ date, events = [], style, parentContainer, height }: Props) {
   const layoutContainer = useLayoutContainer();
   const { showSeeMorePopup } = useDispatch('popup');
+  const backgroundColor = useTheme(weekendBackgroundColorSelector);
 
   const { popupPosition, containerRefCallback } = usePopupPosition(
     events.length,
@@ -185,7 +193,11 @@ export function GridCell({ date, events = [], style, parentContainer, height }: 
   const exceedCount = getExceedCount(events, height, MONTH_EVENT_HEIGHT);
 
   return (
-    <div className={cls('daygrid-cell')} style={style} ref={containerRefCallback}>
+    <div
+      className={cls('daygrid-cell')}
+      style={{ ...style, backgroundColor: isWeekend(date.getDay()) ? backgroundColor : 'inherit' }}
+      ref={containerRefCallback}
+    >
       <CellHeader
         type={CellBarType.header}
         exceedCount={exceedCount}
