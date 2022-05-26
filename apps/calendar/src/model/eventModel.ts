@@ -3,7 +3,7 @@ import EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
 import { compare, MS_PER_DAY, parse, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 import { stamp } from '@src/utils/stamp';
-import { isFunction, isString } from '@src/utils/type';
+import { isString } from '@src/utils/type';
 
 import type {
   DateType,
@@ -83,51 +83,68 @@ export default class EventModel implements EventObjectWithDefaultValues {
     dateRange: ['start', 'end'],
   };
 
-  // eslint-disable-next-line complexity
-  init(event: EventObject) {
-    event = { ...event };
-    if (event.category === 'allday') {
-      event.isAllday = true;
-    }
-
-    this.id = event.id || this.id;
-    this.calendarId = event.calendarId || this.calendarId;
-    this.title = event.title || this.title;
-    this.body = event.body || this.body;
-    this.isAllday = event.isAllday ?? this.isAllday;
-
-    this.goingDuration = event.goingDuration || this.goingDuration;
-    this.comingDuration = event.comingDuration || this.comingDuration;
-    this.location = event.location || this.location;
-    this.attendees = event.attendees || this.attendees;
-    this.category = event.category || this.category;
-    this.dueDateClass = event.dueDateClass || this.dueDateClass;
-    this.recurrenceRule = event.recurrenceRule || this.recurrenceRule;
-    this.state = event.state || this.state;
-
-    this.isVisible = event.isVisible ?? this.isVisible;
-    this.isPrivate = event.isPrivate || this.isPrivate;
-    this.isPending = event.isPending || this.isPending;
-    this.isFocused = event.isFocused || this.isFocused;
-    this.isReadOnly = event.isReadOnly || this.isReadOnly;
-
-    this.color = event.color || this.color;
-    this.bgColor = event.bgColor || this.bgColor;
-    this.dragBgColor = event.dragBgColor || this.dragBgColor;
-    this.borderColor = event.borderColor || this.borderColor;
-    this.customStyle = event.customStyle || this.customStyle;
+  init({
+    id = '',
+    calendarId = '',
+    title = '',
+    body = '',
+    isAllday = false,
+    start = new TZDate(),
+    end = new TZDate(),
+    goingDuration = 0,
+    comingDuration = 0,
+    location = '',
+    attendees = [],
+    category = 'time',
+    dueDateClass = '',
+    recurrenceRule = '',
+    state = 'Busy',
+    isVisible = true,
+    isPending = false,
+    isFocused = false,
+    isReadOnly = false,
+    isPrivate = false,
+    color = '#000',
+    bgColor = '#a1b56c',
+    dragBgColor = '#a1b56c',
+    borderColor = '#000',
+    customStyle = '',
+    raw = null,
+  }: EventObject = {}) {
+    this.id = id;
+    this.calendarId = calendarId;
+    this.title = title;
+    this.body = body;
+    this.isAllday = category === 'allday' ? true : isAllday;
+    this.goingDuration = goingDuration;
+    this.comingDuration = comingDuration;
+    this.location = location;
+    this.attendees = attendees;
+    this.category = category;
+    this.dueDateClass = dueDateClass;
+    this.recurrenceRule = recurrenceRule;
+    this.state = state;
+    this.isVisible = isVisible;
+    this.isPending = isPending;
+    this.isFocused = isFocused;
+    this.isReadOnly = isReadOnly;
+    this.isPrivate = isPrivate;
+    this.color = color;
+    this.bgColor = bgColor;
+    this.dragBgColor = dragBgColor;
+    this.borderColor = borderColor;
+    this.customStyle = customStyle;
+    this.raw = raw;
 
     if (this.isAllday) {
-      this.setAlldayPeriod(event.start, event.end);
+      this.setAlldayPeriod(start, end);
     } else {
-      this.setTimePeriod(event.start, event.end);
+      this.setTimePeriod(start, end);
     }
 
-    if (event.category === 'milestone' || event.category === 'task') {
+    if (category === 'milestone' || category === 'task') {
       this.start = new TZDate(this.end);
     }
-
-    this.raw = event.raw ?? null;
   }
 
   setAlldayPeriod(start?: DateType, end?: DateType) {
@@ -282,15 +299,34 @@ export default class EventModel implements EventObjectWithDefaultValues {
   }
 
   toEventObject(): EventObjectWithDefaultValues {
-    const result: { [k: string]: any } = {};
-
-    Object.entries(this).forEach(([key, value]) => {
-      if (!key.startsWith('_') && !isFunction(value)) {
-        result[key] = value;
-      }
-    });
-
-    return result as EventObjectWithDefaultValues;
+    return {
+      id: this.id,
+      calendarId: this.calendarId,
+      title: this.title,
+      body: this.body,
+      isAllday: this.isAllday,
+      start: this.start,
+      end: this.end,
+      goingDuration: this.goingDuration,
+      comingDuration: this.comingDuration,
+      location: this.location,
+      attendees: this.attendees,
+      category: this.category,
+      dueDateClass: this.dueDateClass,
+      recurrenceRule: this.recurrenceRule,
+      state: this.state,
+      isVisible: this.isVisible,
+      isPending: this.isPending,
+      isFocused: this.isFocused,
+      isReadOnly: this.isReadOnly,
+      isPrivate: this.isPrivate,
+      color: this.color,
+      bgColor: this.bgColor,
+      dragBgColor: this.dragBgColor,
+      borderColor: this.borderColor,
+      customStyle: this.customStyle,
+      raw: this.raw,
+    };
   }
 }
 

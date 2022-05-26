@@ -256,7 +256,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    * Get an {@link EventObject} with event's id and calendar's id.
    * @param {string} eventId - event's id
    * @param {string} calendarId - calendar's id of the event
-   * @returns {EventObject} event
+   * @returns {EventObject | null} event. If the event can't be found, it returns null.
    * @example
    * const event = calendar.getEvent(eventId, calendarId);
    *
