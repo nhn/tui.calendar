@@ -9,6 +9,7 @@ import { Meta } from '@storybook/addon-docs';
 색상, 배경색 등을 변경하여 원하는 테마를 적용할 수 있다. `setTheme` 메서드를 통해 자유롭게 테마를 변경할 수 있다.
 
 ```js
+// 인스턴스를 생성하며 테마 설정하기
 const cal = new Calendar('#container', {
   theme: {
     week: {
@@ -18,6 +19,8 @@ const cal = new Calendar('#container', {
     },
   },
 });
+
+// 생성된 인스턴스의 테마를 setTheme 메서드로 변경하기
 cal.setTheme({
   week: {
     today: {
@@ -29,10 +32,10 @@ cal.setTheme({
 
 ## 테마 객체
 
-테마 객체는 객체는 공통으로 적용되는 `common`, 주간/일간뷰를 위한 `week`, 월간뷰를 위한 `month` 세 부분으로 나뉘어진 중첩 객체다.
+테마 객체는 공통으로 적용되는 `common`, 주간/일간뷰를 위한 `week`, 월간뷰를 위한 `month` 세 부분으로 나뉘어진 중첩 객체다. 모든 값은 해당 속성에 대응되는 CSS 문자열 값이다.
 
 ```ts
-interface themeObject {
+interface ThemeObject {
   common: CommonTheme;
   week: WeekTheme;
   month: MonthTheme;
@@ -56,15 +59,22 @@ interface CommonTheme {
 }
 ```
 
-| 테마                                   | 설명   |
-| -------------------------------------- | ------ |
-| [background](#common-backgroundcolor)  | 배경색 |
-| [border](#common-border)               | 테두리 |
-| [gridSelection](#common-gridselection) | 셀렉션 |
-| [dayname](#common-dayname)             | 요일   |
-| [holiday](#common-holiday)             | 휴일   |
-| [saturday](#common-saturday)           | 토요일 |
-| [today](#common-today)                 | 오늘   |
+| 테마                                       | 기본값                 | 설명            |
+| ------------------------------------------ | ---------------------- | --------------- |
+| [backgroundColor](#common-backgroundcolor) | 'white'                | 캘린더의 배경색 |
+| [border](#common-border)                   | '1px solid #e5e5e5'    | 캘린더의 테두리 |
+| [gridSelection](#common-gridselection)     | DEFAULT_GRID_SELECTION | 날짜/시간 선택  |
+| [dayname](#common-dayname)                 | { color: '#333' }      | 요일            |
+| [holiday](#common-holiday)                 | { color: '#ff4040' }   | 휴일            |
+| [saturday](#common-saturday)               | { color: '#333' }      | 토요일          |
+| [today](#common-today)                     | { color: '#333' }      | 오늘            |
+
+```ts
+const DEFAULT_GRID_SELECTION = {
+  backgroundColor: 'rgba(81, 92, 230, 0.05)',
+  border: '1px solid #515ce6',
+};
+```
 
 ### week 테마
 
@@ -108,27 +118,58 @@ interface WeekTheme {
 }
 ```
 
-| 테마                                                                   | 설명                                                                                   |
-| ---------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| [dayname](#week-dayname)                                               | 요일                                                                                   |
-| [dayGrid](#week-daygrid)                                               | 주간/일간뷰의 패널의 각 셀                                                             |
-| [dayGridLeft](#week-daygridleft)                                       | 주간/일간뷰의 패널 왼쪽 영역                                                           |
-| [timeGrid](#week-timegrid)                                             | 주간/일간뷰의 timed 이벤트 영역                                                        |
-| [timeGridLeft](#week-timegridleft)                                     | 주간/일간뷰의 timed 이벤트 영역의 왼쪽 영역                                            |
-| [timeGridLeftAdditionalTimezone](#week-timegridleftadditionaltimezone) | 주간/일간뷰의 timed 이벤트 영역의 왼쪽 영역의 서브 타임존                              |
-| [timeGridHalfHour](#week-timegridhalfhour)                             | 주간/일간뷰의 timed 이벤트 영역에서 30분 단위의 셀                                     |
-| [currentTime](#week-currenttime)                                       | 현재 시간선                                                                            |
-| [currentTimeLinePast](#week-currenttimelinepast)                       | 현재 시간선에서 지난 날짜선                                                            |
-| [currentTimeLineBullet](#week-currenttimelinebullet)                   | 현재 시간선에서 오늘 날짜                                                              |
-| [currentTimeLineToday](#week-currenttimelinetoday)                     | 현재 시간선에서 오늘 날짜선                                                            |
-| [currentTimeLineFuture](#week-currenttimelinefuture)                   | 현재 시간선에서 미래 날짜선                                                            |
-| [pastTime](#week-pasttime)                                             | 주간/일간뷰의 timed 이벤트 영역의 왼쪽 영역에서 지난 시간                              |
-| [futureTime](#week-futuretime)                                         | 주간/일간뷰의 timed 이벤트 영역의 왼쪽 영역에서 미래 시간                              |
-| [weekend](#week-weekend)                                               | 주간/일간뷰의 timed 이벤트 영역에서 주말 컬럼                                          |
-| [today](#week-today)                                                   | 주간/일간뷰의 timed 이벤트 영역에서 오늘 컬럼(color는 dayname, backgroundColor는 컬럼) |
-| [pastDay](#week-pastday)                                               | 주간/일간뷰의 과거 요일                                                                |
-| [panelResizer](#week-panelresizer)                                     | 패널 조절 컴포넌트                                                                     |
-| [gridSelection](#week-gridselection)                                   | 주간/일간뷰의 셀렉션                                                                   |
+| 테마                                                                   | 기본값                                | 설명                                                                                   |
+| ---------------------------------------------------------------------- | ------------------------------------- | -------------------------------------------------------------------------------------- |
+| [dayname](#week-dayname)                                               | DEFAULT_WEEK_DAYNAME                  | 요일                                                                                   |
+| [dayGrid](#week-daygrid)                                               | DEFAULT_DAY_GRID                      | 주간/일간뷰에서 패널의 각 셀                                                           |
+| [dayGridLeft](#week-daygridleft)                                       | DEFAULT_DAY_GRID_LEFT                 | 주간/일간뷰에서 패널 왼쪽 영역                                                         |
+| [timeGrid](#week-timegrid)                                             | { borderRight: '1px solid #e5e5e5' }  | 주간/일간뷰에서 timed 이벤트 영역                                                      |
+| [timeGridLeft](#week-timegridleft)                                     | DEFAULT_TIME_GRID_LEFT                | 주간/일간뷰에서 timed 이벤트 영역의 왼쪽 영역                                          |
+| [timeGridLeftAdditionalTimezone](#week-timegridleftadditionaltimezone) | { backgroundColor: 'white' }          | 주간/일간뷰에서 timed 이벤트 영역의 왼쪽 영역에 표시되는 서브 타임존                   |
+| [timeGridHalfHour](#week-timegridhalfhour)                             | { borderBottom: '1px solid #e5e5e5' } | 주간/일간뷰에서 timed 이벤트 영역의 30분 단위의 셀                                     |
+| [currentTime](#week-currenttime)                                       | { color: '#515ce6' }                  | 현재 시간선                                                                            |
+| [currentTimeLinePast](#week-currenttimelinepast)                       | { border: '1px dashed #515ce6' }      | 현재 시간선에서 지난 날짜선                                                            |
+| [currentTimeLineBullet](#week-currenttimelinebullet)                   | { backgroundColor: '#515ce6' }        | 현재 시간선에서 오늘 날짜                                                              |
+| [currentTimeLineToday](#week-currenttimelinetoday)                     | { border: '1px solid #515ce6' }       | 현재 시간선에서 오늘 날짜선                                                            |
+| [currentTimeLineFuture](#week-currenttimelinefuture)                   | { border: 'none' }                    | 현재 시간선에서 미래 날짜선                                                            |
+| [pastTime](#week-pasttime)                                             | { color: '#bbb' }                     | 주간/일간뷰에서 timed 이벤트 영역의 왼쪽 영역에 표시되는 지난 시간                     |
+| [futureTime](#week-futuretime)                                         | { color: '#333' }                     | 주간/일간뷰에서 timed 이벤트 영역의 왼쪽 영역에 표시되는 미래 시간                     |
+| [weekend](#week-weekend)                                               | { backgroundColor: 'inherit' }        | 주간/일간뷰에서 timed 이벤트 영역의 주말 컬럼                                          |
+| [today](#week-today)                                                   | DEFAULT_TODAY                         | 주간/일간뷰에서 timed 이벤트 영역의 오늘 컬럼(color는 dayname, backgroundColor는 컬럼) |
+| [pastDay](#week-pastday)                                               | { color: '#bbb' }                     | 주간/일간뷰에서 과거 요일                                                              |
+| [panelResizer](#week-panelresizer)                                     | { border: '1px solid #e5e5e5' }       | 패널 크기 조절 컴포넌트                                                                |
+| [gridSelection](#week-gridselection)                                   | { color: '#515ce6' }                  | 주간/일간뷰에서 날짜/시간 선택                                                         |
+
+```ts
+const DEFAULT_WEEK_DAYNAME = {
+  borderLeft: 'none',
+  borderTop: '1px solid #e5e5e5',
+  borderBottom: '1px solid #e5e5e5',
+  backgroundColor: 'inherit',
+};
+
+const DEFAULT_DAY_GRID = {
+  borderRight: '1px solid #e5e5e5',
+  backgroundColor: 'inherit',
+};
+
+const DEFAULT_DAY_GRID_LEFT = {
+  borderRight: '1px solid #e5e5e5',
+  backgroundColor: 'inherit',
+  width: '72px',
+};
+
+const DEFAULT_TIME_GRID_LEFT = {
+  backgroundColor: 'inherit',
+  borderRight: '1px solid #e5e5e5',
+  width: '72px',
+};
+
+const DEFAULT_TODAY = {
+  color: 'inherit',
+  backgroundColor: 'rgba(81, 92, 230, 0.05)',
+};
+```
 
 ### month 테마
 
@@ -152,14 +193,27 @@ interface MonthTheme {
 }
 ```
 
-| 테마                                                    | 설명                             |
-| ------------------------------------------------------- | -------------------------------- |
-| [dayExceptThisMonth](#month-dayexceptthismonth)         | 다른 달인 날짜                   |
-| [holidayExceptThisMonth](#month-holidayexceptthismonth) | 다른 달인 휴일                   |
-| [dayname](#month-dayname)                               | 요일                             |
-| [moreView](#month-moreview)                             | 월간뷰의 더보기 팝업             |
-| [moreViewTitle](#month-moreviewtitle)                   | 월간뷰의 더보기 팝업의 헤더 영역 |
-| [weekend](#month-weekend)                               | 월간뷰의 주말 셀                 |
+| 테마                                                    | 기본값                              | 설명                             |
+| ------------------------------------------------------- | ----------------------------------- | -------------------------------- |
+| [dayExceptThisMonth](#month-dayexceptthismonth)         | { color: 'rgba(51, 51, 51, 0.4)' }  | 다른 달인 날짜                   |
+| [holidayExceptThisMonth](#month-holidayexceptthismonth) | { color: 'rgba(255, 64, 64, 0.4)' } | 다른 달인 휴일                   |
+| [dayname](#month-dayname)                               | DEFAULT_MONTH_DAYNAME               | 요일                             |
+| [moreView](#month-moreview)                             | DEFAULT_MORE_VIEW                   | 월간뷰의 더보기 팝업             |
+| [moreViewTitle](#month-moreviewtitle)                   | { backgroundColor: 'inherit' }      | 월간뷰의 더보기 팝업의 헤더 영역 |
+| [weekend](#month-weekend)                               | { backgroundColor: 'inherit' }      | 월간뷰의 주말 셀                 |
+
+```ts
+const DEFAULT_MONTH_DAYNAME = {
+  borderLeft: 'none',
+  backgroundColor: 'inherit',
+};
+
+const DEFAULT_MORE_VIEW = {
+  border: '1px solid #d5d5d5',
+  boxShadow: '0 2px 6px 0 rgba(0, 0, 0, 0.1)',
+  backgroundColor: 'white',
+};
+```
 
 ## 사용 예시
 
@@ -195,7 +249,7 @@ calendar.setTheme({
 
 #### common-gridSelection
 
-셀렉션의 배경색, 테두리를 지정한다. 기본 값은 `backgroundColor`는 `'rgba(81, 92, 230, 0.05)'` `border`는 `'1px solid #515ce6'`이다.
+날짜/시간 선택의 배경색, 테두리를 지정한다. 기본 값은 `backgroundColor`의 경우 `'rgba(81, 92, 230, 0.05)'`, `border`의 경우 `'1px solid #515ce6'`이다.
 
 ```js
 calendar.setTheme({
@@ -314,7 +368,7 @@ calendar.setTheme({
 
 #### week-dayGridLeft
 
-주간/일간뷰의 각 패널의 왼쪽 영역을 지정한다. `borderRight`, `backgroundColor`, `width`로 오른쪽 테두리, 배경색, 너비를 지정할 수 있으며 각 기본 값은 `'1px solid #e5e5e5'`, `'inherit'`, `'72px'`이다.
+주간/일간뷰에서 각 패널의 왼쪽 영역을 지정한다. `borderRight`, `backgroundColor`, `width`로 오른쪽 테두리, 배경색, 너비를 지정할 수 있으며 각 기본 값은 `'1px solid #e5e5e5'`, `'inherit'`, `'72px'`이다.
 
 ```js
 calendar.setTheme({
@@ -332,7 +386,7 @@ calendar.setTheme({
 
 #### week-timeGrid
 
-주간/일간뷰의 timed 이벤트 영역을 지정한다. `borderRight`로 오른쪽 테두리를 지정할 수 있으며 기본 값은 `'1px solid #e5e5e5'`다.
+주간/일간뷰에서 timed 이벤트 영역을 지정한다. `borderRight`로 오른쪽 테두리를 지정할 수 있으며 기본 값은 `'1px solid #e5e5e5'`다.
 
 ```js
 calendar.setTheme({
@@ -348,7 +402,7 @@ calendar.setTheme({
 
 #### week-timeGridLeft
 
-주간/일간뷰의 timed 이벤트 영역의 왼쪽 영역을 지정한다. `borderRight`, `backgroundColor`, `width`로 오른쪽 테두리와 배경색, 너비를 지정할 수 있으며 각 기본 값은 `'1px solid #e5e5e5'`, `'inherit'`, `'72px'`이다.
+주간/일간뷰에서 timed 이벤트 영역의 왼쪽 영역을 지정한다. `borderRight`, `backgroundColor`, `width`로 오른쪽 테두리와 배경색, 너비를 지정할 수 있으며 각 기본 값은 `'1px solid #e5e5e5'`, `'inherit'`, `'72px'`이다.
 
 ```js
 calendar.setTheme({
@@ -366,7 +420,7 @@ calendar.setTheme({
 
 #### week-timeGridLeftAdditionalTimezone
 
-주간/일간뷰의 timed 이벤트 영역의 왼쪽 영역에서 서브 타임존을 지정한다. `backgroundColor`로 배경색을 지정할 수 있으며 기본 값은 `'white'`이다.
+주간/일간뷰에서 timed 이벤트 영역의 왼쪽 영역에 표시되는 서브 타임존을 지정한다. `backgroundColor`로 배경색을 지정할 수 있으며 기본 값은 `'white'`이다.
 
 ```js
 calendar.setTheme({
@@ -382,7 +436,7 @@ calendar.setTheme({
 
 #### week-timeGridHalfHour
 
-주간/일간뷰의 timed 이벤트 영역에서 30분 단위의 셀을 지정한다. `borderBottom`으로 아래 테두리를 지정할 수 있으며 기본 값은 `'none'`이다.
+주간/일간뷰에서 timed 이벤트 영역의 30분 단위의 셀을 지정한다. `borderBottom`으로 아래 테두리를 지정할 수 있으며 기본 값은 `'none'`이다.
 
 ```js
 calendar.setTheme({
@@ -478,7 +532,7 @@ calendar.setTheme({
 
 #### week-pastTime
 
-주간/일간뷰의 timed 이벤트 영역의 왼쪽 영역에서 지난 시간을 지정한다. `color`로 글자색을 지정할 수 있으며 기본 값은 `'#bbb'`다.
+주간/일간뷰에서 timed 이벤트 영역의 왼쪽 영역에 표시되는 지난 시간을 지정한다. `color`로 글자색을 지정할 수 있으며 기본 값은 `'#bbb'`다.
 
 ```js
 calendar.setTheme({
@@ -494,7 +548,7 @@ calendar.setTheme({
 
 #### week-futureTime
 
-주간/일간뷰의 timed 이벤트 영역의 왼쪽 영역에서 미래 시간을 지정한다. `color`로 글자색을 지정할 수 있으며 기본 값은 `'#333'`다.
+주간/일간뷰에서 timed 이벤트 영역의 왼쪽 영역에 표시되는 미래 시간을 지정한다. `color`로 글자색을 지정할 수 있으며 기본 값은 `'#333'`다.
 
 ```js
 calendar.setTheme({
@@ -510,7 +564,7 @@ calendar.setTheme({
 
 #### week-weekend
 
-주간/일간뷰의 timed 이벤트 영역에서 주말 컬럼을 지정한다. `backgroundColor`로 배경색을 지정할 수 있으며 기본 값은 `'inherit'`이다.
+주간/일간뷰에서 timed 이벤트 영역의 주말 컬럼을 지정한다. `backgroundColor`로 배경색을 지정할 수 있으며 기본 값은 `'inherit'`이다.
 
 ```js
 calendar.setTheme({
@@ -526,7 +580,7 @@ calendar.setTheme({
 
 #### week-today
 
-주간/일간뷰의 timed 이벤트 영역에서 오늘 컬럼을 지정한다. `color`로 글자색, `backgroundColor`로 배경색을 지정할 수 있으며 각 기본 값은 `'inherit'`, `'rgba(81, 92, 230, 0.05)'`이다.
+주간/일간뷰에서 timed 이벤트 영역의 오늘 컬럼을 지정한다. `color`로 글자색, `backgroundColor`로 배경색을 지정할 수 있으며 각 기본 값은 `'inherit'`, `'rgba(81, 92, 230, 0.05)'`이다.
 color는 요일에 적용되고 backgroundColor는 컬럼에 적용된다.
 
 ```js
@@ -544,7 +598,7 @@ calendar.setTheme({
 
 #### week-pastDay
 
-주간/일간뷰의 과거 요일을 지정한다. `color`로 글자색을 지정할 수 있으며 기본 값은 `'#bbb'`다.
+주간/일간뷰에서 과거 요일을 지정한다. `color`로 글자색을 지정할 수 있으며 기본 값은 `'#bbb'`다.
 
 ```js
 calendar.setTheme({
@@ -560,7 +614,7 @@ calendar.setTheme({
 
 #### week-panelResizer
 
-패널 조절 컴포넌트을 지정한다. `border`로 테두리를 지정할 수 있으며 기본 값은 `'1px solid #e5e5e5'`이다.
+패널 크기 조절 컴포넌트을 지정한다. `border`로 테두리를 지정할 수 있으며 기본 값은 `'1px solid #e5e5e5'`이다.
 
 ```js
 calendar.setTheme({
@@ -576,7 +630,7 @@ calendar.setTheme({
 
 #### week-gridSelection
 
-주간/일간뷰의 셀렉션을 지정한다. `color`로 글자색을 지정할 수 있으며 기본 값은 `'#515ce6'`이다.
+주간/일간뷰에서 날짜/시간 선택을 지정한다. `color`로 글자색을 지정할 수 있으며 기본 값은 `'#515ce6'`이다.
 
 ```js
 calendar.setTheme({
