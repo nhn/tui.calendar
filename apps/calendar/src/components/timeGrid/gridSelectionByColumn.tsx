@@ -9,13 +9,12 @@ import { isNil } from '@src/utils/type';
 
 import type { TimeGridRow } from '@t/grid';
 import type { CalendarState } from '@t/store';
-import type { ThemeState } from '@t/theme';
 
 function GridSelection({ top, height, text }: { top: number; height: number; text: string }) {
   const { backgroundColor, border } = useTheme(
-    useCallback((theme: ThemeState) => theme.common.gridSelection, [])
+    useCallback((theme) => theme.common.gridSelection, [])
   );
-  const { color } = useTheme(useCallback((theme: ThemeState) => theme.week.gridSelection, []));
+  const color = useTheme(useCallback((theme) => theme.week.gridSelection.color, []));
 
   const style = {
     top: toPercent(top),

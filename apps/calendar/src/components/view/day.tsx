@@ -28,7 +28,6 @@ import { getRowStyleInfo } from '@src/time/datetime';
 
 import type { WeekOptions } from '@t/options';
 import type { AlldayEventCategory } from '@t/panel';
-import type { ThemeState } from '@t/theme';
 
 function useDayViewState() {
   const calendar = useStore(calendarSelector);
@@ -51,9 +50,7 @@ function useDayViewState() {
 export function Day() {
   const { calendar, options, gridRowLayout, lastPanelType, renderDate } = useDayViewState();
   const daynameTheme = useWeekDaynameTheme();
-  const gridHeaderMarginLeft = useTheme(
-    useCallback((theme: ThemeState) => theme.week.dayGridLeft.width, [])
-  );
+  const gridHeaderMarginLeft = useTheme(useCallback((theme) => theme.week.dayGridLeft.width, []));
   const [timePanel, setTimePanelRef] = useDOMNode<HTMLDivElement>();
 
   const weekOptions = options.week as Required<WeekOptions>;

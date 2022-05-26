@@ -6,8 +6,6 @@ import { cls, toPercent } from '@src/helpers/css';
 import { getLeftAndWidth } from '@src/helpers/grid';
 import type TZDate from '@src/time/date';
 
-import type { ThemeState } from '@t/theme';
-
 interface Props {
   gridSelectionData: GridSelectionDataByRow;
   weekDates: TZDate[];
@@ -16,7 +14,7 @@ interface Props {
 
 export function GridSelection({ gridSelectionData, weekDates, narrowWeekend }: Props) {
   const { backgroundColor, border } = useTheme(
-    useCallback((theme: ThemeState) => theme.common.gridSelection, [])
+    useCallback((theme) => theme.common.gridSelection, [])
   );
   const { startCellIndex, endCellIndex } = gridSelectionData;
 
