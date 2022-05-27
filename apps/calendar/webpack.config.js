@@ -5,10 +5,13 @@ const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const StyleLintPlugin = require('stylelint-webpack-plugin');
-const ESLintPlugin = require('eslint-webpack-plugin');
 
-const { merge } = require('webpack-merge');
+const banner = [
+  'TOAST UI Calendar 2nd Edition',
+  `@version ${pkg.version} | ${new Date().toDateString()}`,
+  `@author ${pkg.author}`,
+  `@license ${pkg.license}`,
+].join('\n');
 
 function getBabelConfig(isIE11) {
   return {
@@ -32,18 +35,15 @@ module.exports = ({ minify, ie11 }) => {
   const isIE11 = !!ie11;
 
   const filenameBase = `toastui-calendar${isIE11 ? '.ie11' : ''}${shouldMinify ? '.min' : ''}`;
-  const banner = [
-    'TOAST UI Calendar 2nd Edition',
-    `@version ${pkg.version} | ${new Date().toDateString()}`,
-    `@author ${pkg.author}`,
-    `@license ${pkg.license}`,
-  ].join('\n');
 
-  const commonConfig = {
+  return {
+    mode: 'production',
     output: {
-      library: ['toastui', 'Calendar'],
-      libraryTarget: 'umd',
-      libraryExport: 'default',
+      library: {
+        name: ['toastui', 'Calendar'],
+        type: 'umd',
+        export: 'default',
+      },
       path: path.join(__dirname, 'dist'),
       filename: `${filenameBase}.js`,
       publicPath: '/dist',
@@ -63,33 +63,7 @@ module.exports = ({ minify, ie11 }) => {
         root: ['tui', 'TimePicker'],
       },
     },
-    resolve: {
-      extensions: ['.ts', '.tsx', '.js'],
-      alias: {
-        '@src': path.resolve(__dirname, './src/'),
-        '@t': path.resolve(__dirname, 'types/'),
-      },
-    },
-    plugins: [
-      new webpack.BannerPlugin({
-        banner,
-        entryOnly: true,
-      }),
-      new ESLintPlugin({ extensions: ['.tsx', '.ts', '.js'] }),
-    ],
-    optimization: shouldMinify
-      ? {
-          minimize: true,
-          minimizer: [new TerserPlugin({ extractComments: false }), new CssMinimizerPlugin()],
-        }
-      : {
-          minimize: false,
-        },
-  };
-
-  const config = {
-    mode: 'production',
-    entry: ['./src/css/index.css', './src/index.ts'],
+    entry: isIE11 ? ['./src/index.ts'] : ['./src/css/index.css', './src/index.ts'],
     module: {
       rules: [
         {
@@ -117,8 +91,27 @@ module.exports = ({ minify, ie11 }) => {
         },
       ],
     },
-    plugins: [new StyleLintPlugin(), new MiniCssExtractPlugin({ filename: `${filenameBase}.css` })],
+    resolve: {
+      extensions: ['.ts', '.tsx', '.js'],
+      alias: {
+        '@src': path.resolve(__dirname, './src/'),
+        '@t': path.resolve(__dirname, 'types/'),
+      },
+    },
+    plugins: [
+      new webpack.BannerPlugin({
+        banner,
+        entryOnly: true,
+      }),
+      new MiniCssExtractPlugin({ filename: `${filenameBase}.css` }),
+    ],
+    optimization: shouldMinify
+      ? {
+          minimize: true,
+          minimizer: [new TerserPlugin({ extractComments: false }), new CssMinimizerPlugin()],
+        }
+      : {
+          minimize: false,
+        },
   };
-
-  return merge(commonConfig, config);
 };
