@@ -27,14 +27,6 @@
   width: 100%;
 }
 
-.timegrid .columns .gridline-half--upper {
-  border-bottom: 1px dotted #f9f9f9;
-}
-
-.timegrid .columns .gridline-half--lower {
-  border-bottom: 1px solid #e5e5e5;
-}
-
 .timegrid .columns .column {
   display: inline-block;
   height: 100%;

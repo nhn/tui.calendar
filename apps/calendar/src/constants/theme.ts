@@ -63,7 +63,10 @@ export const DEFAULT_WEEK_THEME: DeepRequired<WeekTheme> = {
   timeGridLeftAdditionalTimezone: {
     backgroundColor: 'white',
   },
-  timeGridHalfHour: {
+  timeGridHalfHourLine: {
+    borderBottom: 'none',
+  },
+  timeGridHourLine: {
     borderBottom: '1px solid #e5e5e5',
   },
   currentTime: {
