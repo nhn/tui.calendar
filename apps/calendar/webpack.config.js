@@ -5,6 +5,7 @@ const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const InjectPlugin = require('webpack-inject-plugin')['default'];
 
 const banner = [
   'TOAST UI Calendar 2nd Edition',
@@ -35,6 +36,18 @@ module.exports = ({ minify, ie11 }) => {
   const isIE11 = !!ie11;
 
   const filenameBase = `toastui-calendar${isIE11 ? '.ie11' : ''}${shouldMinify ? '.min' : ''}`;
+
+  const plugins = [
+    new webpack.BannerPlugin({
+      banner,
+      entryOnly: true,
+    }),
+    new MiniCssExtractPlugin({ filename: `${filenameBase}.css` }),
+  ];
+
+  if (ie11) {
+    plugins.unshift(new InjectPlugin(() => `import { enableES5 } from 'immer';enableES5();`));
+  }
 
   return {
     mode: 'production',
@@ -98,13 +111,7 @@ module.exports = ({ minify, ie11 }) => {
         '@t': path.resolve(__dirname, 'types/'),
       },
     },
-    plugins: [
-      new webpack.BannerPlugin({
-        banner,
-        entryOnly: true,
-      }),
-      new MiniCssExtractPlugin({ filename: `${filenameBase}.css` }),
-    ],
+    plugins,
     optimization: shouldMinify
       ? {
           minimize: true,
