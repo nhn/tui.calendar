@@ -4,7 +4,7 @@ import pluck from 'tui-code-snippet/collection/pluck';
 import EventModel from '@src/model/eventModel';
 import array from '@src/utils/array';
 
-import type { EventModelData } from '@t/events';
+import type { EventObject } from '@t/events';
 
 describe('common/array', () => {
   describe('common compare methods', () => {
@@ -18,7 +18,7 @@ describe('common/array', () => {
     });
 
     describe('EventModel', () => {
-      let mockData: EventModelData[];
+      let mockData: EventObject[];
       let events: EventModel[];
 
       beforeEach(() => {
@@ -71,7 +71,7 @@ describe('common/array', () => {
 
       it('isAllday ASC, start ASC, duration DESC, id ASC', () => {
         mockData.forEach((data) => {
-          events.push(EventModel.create(data));
+          events.push(new EventModel(data));
         });
 
         events.sort(array.compare.event.asc);
@@ -106,7 +106,7 @@ describe('common/array', () => {
         ];
 
         fixtures.forEach((data) => {
-          events.push(EventModel.create(data));
+          events.push(new EventModel(data));
         });
 
         events.sort(array.compare.event.asc);

@@ -2,7 +2,7 @@ import type { Locator, Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 
 import type TZDate from '../src/time/date';
-import type { EventModelData } from '../types/events';
+import type { EventObject } from '../types/events';
 import type { FormattedTimeString } from '../types/time/datetime';
 import type { BoundingBox } from './types';
 
@@ -71,7 +71,7 @@ export function getTimeEventSelector(title: string): string {
   return `[data-testid*="time-event-${title}"]`;
 }
 
-export function getHorizontalEventSelector(event: EventModelData): string {
+export function getHorizontalEventSelector(event: EventObject): string {
   return `data-testid=${event.calendarId}-${event.id}-${event.title}`;
 }
 

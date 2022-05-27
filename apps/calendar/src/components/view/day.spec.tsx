@@ -11,7 +11,7 @@ import EventModel from '@src/model/eventModel';
 import { render } from '@src/test/utils';
 import TZDate from '@src/time/date';
 
-import type { EventModelData } from '@t/events';
+import type { EventObject } from '@t/events';
 import type { Options, WeekOptions } from '@t/options';
 
 describe('day', () => {
@@ -65,7 +65,7 @@ describe('day', () => {
     const baseDateStr = '2022-05-22T00:00:00+09:00';
     for (let i = 0; i < 2; i += 1) {
       events.push(
-        EventModel.create({
+        new EventModel({
           id: `${i}`,
           title: `Event ${i}`,
           category: 'time',
@@ -101,7 +101,7 @@ describe('day', () => {
 
     it('should show only the events that pass the eventFilter function.', () => {
       // Given
-      const eventFilter = (event: EventModelData) => !!(Number(event.id) % 2);
+      const eventFilter = (event: EventObject) => !!(Number(event.id) % 2);
       setup({ eventFilter }, events);
 
       // When

@@ -137,7 +137,7 @@ export function EventDetailPopup() {
       popupArrowPointPosition,
     });
 
-  const onClickDeleteButton = () => eventBus.fire('beforeDeleteEvent', event);
+  const onClickDeleteButton = () => eventBus.fire('beforeDeleteEvent', event.toEventObject());
 
   return createPortal(
     <div role="dialog" className={classNames.popupContainer} ref={popupContainerRef} style={style}>

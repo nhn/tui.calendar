@@ -4,13 +4,13 @@ import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 import array from '@src/utils/array';
 
-import type { CalendarData, EventModelData } from '@t/events';
+import type { CalendarData, EventObject } from '@t/events';
 
 describe('Base.Month', () => {
   // eslint-disable-next-line no-undefined
   const undef = undefined;
   let calendarData: CalendarData;
-  let mockData: EventModelData[];
+  let mockData: EventObject[];
   let eventList: EventModel[];
   let actual;
 
@@ -114,7 +114,7 @@ describe('Base.Month', () => {
       },
     ];
     // mock schedule list
-    eventList = mockData.map((data) => EventModel.create(data)).sort(array.compare.event.asc);
+    eventList = mockData.map((data) => new EventModel(data)).sort(array.compare.event.asc);
   });
 
   describe('findByDateRange()', () => {

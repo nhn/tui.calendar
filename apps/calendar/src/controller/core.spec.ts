@@ -11,10 +11,10 @@ import TZDate from '@src/time/date';
 import array from '@src/utils/array';
 import Collection from '@src/utils/collection';
 
-import type { CollisionGroup, EventModelData } from '@t/events';
+import type { CollisionGroup, EventObject } from '@t/events';
 
 describe('Base.Core', () => {
-  let mockData: EventModelData[];
+  let mockData: EventObject[];
   let eventList: EventModel[];
   let expected;
   let actual;
@@ -99,7 +99,7 @@ describe('Base.Core', () => {
         category: 'time',
       },
     ];
-    eventList = mockData.map((data) => EventModel.create(data)).sort(array.compare.event.asc);
+    eventList = mockData.map((data) => new EventModel(data)).sort(array.compare.event.asc);
   });
 
   describe('getCollisionGroup()', () => {
@@ -120,7 +120,7 @@ describe('Base.Core', () => {
       let collisionEventList: EventModel[];
 
       beforeEach(() => {
-        const events: EventModelData[] = [
+        const events: EventObject[] = [
           {
             title: 'A',
             isAllday: false,
@@ -160,7 +160,7 @@ describe('Base.Core', () => {
         ];
 
         collisionEventList = events
-          .map((data) => EventModel.create(data))
+          .map((data) => new EventModel(data))
           .sort(array.compare.event.asc);
       });
 
@@ -241,7 +241,7 @@ describe('Base.Core', () => {
       let matrixEventList: EventModel[];
 
       beforeEach(() => {
-        const events: EventModelData[] = [
+        const events: EventObject[] = [
           {
             title: 'A',
             isAllday: false,
@@ -280,9 +280,7 @@ describe('Base.Core', () => {
           },
         ];
 
-        matrixEventList = events
-          .map((data) => EventModel.create(data))
-          .sort(array.compare.event.asc);
+        matrixEventList = events.map((data) => new EventModel(data)).sort(array.compare.event.asc);
         collection.add(...matrixEventList);
       });
 

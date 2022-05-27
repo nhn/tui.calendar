@@ -2,7 +2,7 @@ import type { Page } from '@playwright/test';
 import { expect, test } from '@playwright/test';
 
 import { mockMonthViewEventsFixed } from '../../stories/mocks/mockMonthViewEvents';
-import type { EventModelData } from '../../types/events';
+import type { EventObject } from '../../types/events';
 import { MONTH_VIEW_PAGE_URL } from '../configs';
 import { Direction } from '../types';
 import {
@@ -21,7 +21,7 @@ const MOVE_EVENT_SELECTOR = '[class*="dragging--move-event"]';
 
 const [TARGET_EVENT1, TARGET_EVENT2, TARGET_EVENT3] = mockMonthViewEventsFixed;
 const testCases: {
-  event: EventModelData;
+  event: EventObject;
   startCellIndex: number;
   endCellIndex: number;
   directions: Direction[];
@@ -58,7 +58,7 @@ const upperDirectionTestCases = testCases.filter((testCase) =>
   testCase.directions.includes(Direction.Up)
 );
 
-async function setup(page: Page, event: EventModelData, targetCellIndex: number) {
+async function setup(page: Page, event: EventObject, targetCellIndex: number) {
   const targetCellLocator = page.locator(getCellSelector(targetCellIndex));
   const targetCellBoundingBox = await getBoundingBox(targetCellLocator);
   const eventLocator = page.locator(getHorizontalEventSelector(event)).first();

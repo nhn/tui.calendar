@@ -2,7 +2,7 @@ import type { ComponentType } from 'preact';
 
 import type { DeepPartial } from 'ts-essentials';
 
-import type { EventModelData } from '@t/events';
+import type { EventObject } from '@t/events';
 import type { TemplateConfig } from '@t/template';
 import type { ThemeState } from '@t/theme';
 
@@ -87,7 +87,7 @@ export interface Options {
   gridSelection?: boolean | GridSelectionOptions;
   isReadOnly?: boolean;
   usageStatistics?: boolean;
-  eventFilter?: (event: EventModelData) => boolean;
+  eventFilter?: (event: EventObject) => boolean;
   timezone?: TimezoneOptions;
 }
 

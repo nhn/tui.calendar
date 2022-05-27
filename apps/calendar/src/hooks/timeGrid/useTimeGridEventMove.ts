@@ -185,7 +185,7 @@ export function useTimeGridEventMove({
       const nextEndTime = addMilliseconds(nextStartTime, duration);
 
       eventBus.fire('beforeUpdateEvent', {
-        event: draggingEvent.model,
+        event: draggingEvent.model.toEventObject(),
         changes: {
           start: nextStartTime,
           end: nextEndTime,

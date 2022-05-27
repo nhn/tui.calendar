@@ -107,7 +107,7 @@ describe('useTimeGridEventMove', () => {
       endTime,
     } = timeGridData.rows[DEFAULT_END_ROW_INDEX];
 
-    eventModel = EventModel.create({
+    eventModel = new EventModel({
       start: setTimeStrToDate(timeGridData.columns[DEFAULT_COLUMN_INDEX].date, startTime),
       end: setTimeStrToDate(timeGridData.columns[DEFAULT_COLUMN_INDEX].date, endTime),
     });

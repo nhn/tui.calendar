@@ -12,14 +12,14 @@ import TZDate from '@src/time/date';
 import { MS_EVENT_MIN_DURATION } from '@src/time/datetime';
 import Collection from '@src/utils/collection';
 
-import type { CalendarData, EventModelData, Matrix3d, TimeGridEventMatrix } from '@t/events';
+import type { CalendarData, EventObject, Matrix3d, TimeGridEventMatrix } from '@t/events';
 import type { Panel } from '@t/panel';
 
 const SCHEDULE_MIN_DURATION = MS_EVENT_MIN_DURATION;
 
 describe('Base.Week', () => {
   let calendarData: CalendarData;
-  let mockData: EventModelData[];
+  let mockData: EventObject[];
 
   beforeEach(() => {
     calendarData = {
@@ -149,7 +149,7 @@ describe('Base.Week', () => {
     let expected: Array<Array<number[]>>;
 
     function getTime(start: number, end: number) {
-      return new EventModel().init({ start, end });
+      return new EventModel({ start, end });
     }
 
     beforeEach(() => {
@@ -329,7 +329,7 @@ describe('Base.Week', () => {
           start: '2015/05/01 09:00:00',
           end: '2015/05/02 09:00:00',
         },
-      ].map((eventData) => EventModel.create(eventData));
+      ].map((eventData) => new EventModel(eventData));
 
       collection.add(...events);
 

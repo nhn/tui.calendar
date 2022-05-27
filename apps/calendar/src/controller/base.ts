@@ -5,7 +5,7 @@ import type TZDate from '@src/time/date';
 import { makeDateRange, MS_PER_DAY, toEndOfDay, toFormat, toStartOfDay } from '@src/time/datetime';
 import Collection from '@src/utils/collection';
 
-import type { CalendarData, EventModelData, IDS_OF_DAY } from '@t/events';
+import type { CalendarData, EventObject, IDS_OF_DAY } from '@t/events';
 import type { CalendarInfo } from '@t/options';
 
 /**
@@ -98,13 +98,13 @@ export function addEvent(calendarData: CalendarData, event: EventModel) {
   return event;
 }
 
-export function createEvent(calendarData: CalendarData, eventData: EventModelData) {
-  const event = EventModel.create(eventData);
+export function createEvent(calendarData: CalendarData, eventData: EventObject) {
+  const event = new EventModel(eventData);
 
   return addEvent(calendarData, event);
 }
 
-export function createEvents(calendarData: CalendarData, events: EventModelData[] = []) {
+export function createEvents(calendarData: CalendarData, events: EventObject[] = []) {
   return events.map((eventData) => createEvent(calendarData, eventData));
 }
 
@@ -113,14 +113,14 @@ export function createEvents(calendarData: CalendarData, events: EventModelData[
  * @param {CalendarData} calendarData - data of calendar
  * @param {string} eventId - event id
  * @param {string} calendarId - calendar id
- * @param {EventModelData} eventData - event data
+ * @param {EventObject} eventData - event data
  * @returns {boolean} success or failure
  */
 export function updateEvent(
   calendarData: CalendarData,
   eventId: string,
   calendarId: string,
-  eventData: EventModelData
+  eventData: EventObject
 ) {
   const { idsOfDay } = calendarData;
   const event = calendarData.events.find((item) => isSameEvent(item, eventId, calendarId));

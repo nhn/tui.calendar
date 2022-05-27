@@ -47,7 +47,7 @@ const Template: Story<EventDetailPopupParam> = ({ event }) => (
 
 export const EventDetailPopupWithCalendars = Template.bind({});
 EventDetailPopupWithCalendars.args = {
-  event: EventModel.create({
+  event: new EventModel({
     id: 'id',
     calendarId: 'calendar id',
     title: 'title',

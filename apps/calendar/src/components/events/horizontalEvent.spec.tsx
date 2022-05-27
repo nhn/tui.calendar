@@ -14,7 +14,7 @@ describe(`Firing 'afterRenderEvent'`, () => {
     const handler = jest.fn();
     eventBus.on('afterRenderEvent', handler);
     const uiModel = EventUIModel.create(
-      EventModel.create({
+      new EventModel({
         id: '1',
         start: new Date(2020, 0, 1, 10, 0),
         end: new Date(2020, 0, 1, 12, 0),
@@ -41,7 +41,7 @@ describe(`Firing 'afterRenderEvent'`, () => {
     const { rerender } = render(<HorizontalEvent {...props} />, { eventBus });
 
     // Then
-    expect(handler).toBeCalledWith(props.uiModel.model);
+    expect(handler).toBeCalledWith(props.uiModel.model.toEventObject());
 
     // When rerender
     handler.mockReset();
