@@ -61,3 +61,4 @@ karma.conf.local.js
 .vscode/
 dist/
 test-results/
+stats.json

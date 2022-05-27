@@ -53,7 +53,6 @@
     "build:all": "rm -rf dist && npm run build && npm run build:ie11",
     "build": "webpack --config webpack.config.js && webpack --config webpack.config.js --env minify",
     "build:ie11": "webpack --config webpack.config.js --env ie11 && webpack --config webpack.config.js --env minify ie11",
-    "build:esm": "tsc -p tsconfig.esm.json && prettier dist/esm/**/*.js --write",
     "analyze": "webpack --config webpack.config.js --env --profile --json > stats.json && webpack-bundle-analyzer stats.json ./dist",
     "storybook": "start-storybook -p 6006",
     "storybook:build": "build-storybook",
