@@ -2,16 +2,23 @@
   "name": "@toast-ui/calendar",
   "author": "NHN FE Development Lab <dl_javascript@nhn.com>",
   "version": "2.0.0-alpha",
-  "main": "dist/toastui-calendar.js",
-  "types": "types/index.d.ts",
+  "main": "./dist/toastui-calendar.js",
+  "types": "./types/index.d.ts",
   "sideEffects": [
     "*.css"
   ],
-  "module": "dist/esm/",
+  "module": "./dist/esm/index.mjs",
   "exports": {
+    ".": {
+      "import": "./dist/esm/index.mjs",
+      "require": "./dist/toastui-calendar.js"
+    },
+    "./ie11": {
+      "import": "./dist/toastui-calendar.ie11.js",
+      "require": "./dist/toastui-calendar.ie11.js"
+    },
     "./toastui-calendar.css": "./dist/toastui-calendar.css",
-    "./toastui-calendar.min.css": "./dist/toastui-calendar.min.css",
-    ".": "./"
+    "./toastui-calendar.min.css": "./dist/toastui-calendar.min.css"
   },
   "license": "MIT",
   "description": "TOAST UI Calendar",
@@ -39,7 +46,6 @@
     "index.d.ts",
     "types"
   ],
-  "devDependencies": {},
   "dependencies": {
     "tui-date-picker": "^4.0.1",
     "tui-time-picker": "^2.0.1"
