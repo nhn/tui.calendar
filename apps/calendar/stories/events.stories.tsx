@@ -10,7 +10,7 @@ import { ProviderWrapper } from '@stories/util/providerWrapper';
 export default { title: 'Components/EventBlocks' };
 
 export const timeEvent = () => {
-  const event = EventModel.create({
+  const event = new EventModel({
     title: 'Time Event 2',
     bgColor: 'green',
   });
@@ -25,7 +25,7 @@ export const timeEvent = () => {
 
 export const backgroundEvent = () => {
   const uiModel = EventUIModel.create(
-    EventModel.create({
+    new EventModel({
       bgColor: 'rgba(100, 100, 100, .3)',
     })
   );

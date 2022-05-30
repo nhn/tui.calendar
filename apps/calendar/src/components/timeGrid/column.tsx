@@ -8,13 +8,15 @@ import { GridSelectionByColumn } from '@src/components/timeGrid/gridSelectionByC
 import { useTheme } from '@src/contexts/themeStore';
 import { getTopHeightByTime } from '@src/controller/times';
 import { cls, toPercent } from '@src/helpers/css';
+import { usePrimaryTimezone } from '@src/hooks/timezone/usePrimaryTimezone';
 import { isBackgroundEvent } from '@src/model/eventModel';
 import type EventUIModel from '@src/model/eventUIModel';
 import type TZDate from '@src/time/date';
-import { setTimeStrToDate } from '@src/time/datetime';
+import { isSameDate, isWeekend, setTimeStrToDate } from '@src/time/datetime';
 import { first, last } from '@src/utils/array';
 
 import type { GridPositionFinder, TimeGridData } from '@t/grid';
+import type { ThemeState } from '@t/theme';
 
 import { ResizingGuideByColumn } from './resizingGuideByColumn';
 
@@ -71,6 +73,41 @@ function VerticalEvents({ eventUIModels }: { eventUIModels: EventUIModel[] }) {
   );
 }
 
+function backgroundColorSelector(theme: ThemeState) {
+  return {
+    defaultBackgroundColor: theme.week.dayGrid.backgroundColor,
+    todayBackgroundColor: theme.week.today.backgroundColor,
+    weekendBackgroundColor: theme.week.weekend.backgroundColor,
+  };
+}
+
+function getBackgroundColor({
+  today,
+  columnDate,
+  defaultBackgroundColor,
+  todayBackgroundColor,
+  weekendBackgroundColor,
+}: {
+  today: TZDate;
+  columnDate: TZDate;
+  defaultBackgroundColor: string;
+  todayBackgroundColor: string;
+  weekendBackgroundColor: string;
+}) {
+  const isTodayColumn = isSameDate(today, columnDate);
+  const isWeekendColumn = isWeekend(columnDate.getDay());
+
+  if (isTodayColumn) {
+    return todayBackgroundColor;
+  }
+
+  if (isWeekendColumn) {
+    return weekendBackgroundColor;
+  }
+
+  return defaultBackgroundColor;
+}
+
 interface Props {
   timeGridData: TimeGridData;
   columnDate: TZDate;
@@ -79,7 +116,6 @@ interface Props {
   totalUIModels: EventUIModel[][];
   gridPositionFinder: GridPositionFinder;
   isLastColumn: boolean;
-  backgroundColor?: string;
   readOnly?: boolean;
 }
 
@@ -90,11 +126,13 @@ export const Column = memo(function Column({
   totalUIModels,
   gridPositionFinder,
   timeGridData,
-  backgroundColor,
   isLastColumn,
 }: Props) {
   const { rows: timeGridRows } = timeGridData;
   const borderRight = useTheme(useCallback((theme) => theme.week.timeGrid.borderRight, []));
+  const backgroundColorTheme = useTheme(backgroundColorSelector);
+  const [, getNow] = usePrimaryTimezone();
+  const today = getNow();
 
   const [startTime, endTime] = useMemo(() => {
     const { startTime: startTimeStr } = first(timeGridRows);
@@ -105,6 +143,8 @@ export const Column = memo(function Column({
 
     return [start, end];
   }, [columnDate, timeGridRows]);
+
+  const backgroundColor = getBackgroundColor({ today, columnDate, ...backgroundColorTheme });
 
   const style = {
     width: columnWidth,

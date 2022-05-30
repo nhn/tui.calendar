@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useLayoutEffect, useMemo, useState } from 'preact/hooks';
+import { useCallback, useLayoutEffect, useMemo, useState } from 'preact/hooks';
 
 import { GridHeader } from '@src/components/dayGridCommon/gridHeader';
 import { AlldayGridRow } from '@src/components/dayGridWeek/alldayGridRow';
@@ -10,6 +10,7 @@ import { TimeGrid } from '@src/components/timeGrid/timeGrid';
 import { TimezoneLabels } from '@src/components/timeGrid/timezoneLabels';
 import { WEEK_DAYNAME_BORDER, WEEK_DAYNAME_HEIGHT } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
+import { useTheme } from '@src/contexts/themeStore';
 import { cls } from '@src/helpers/css';
 import { getDayNames } from '@src/helpers/dayName';
 import { createTimeGridData, getDayGridEvents, getWeekDates } from '@src/helpers/grid';
@@ -56,6 +57,7 @@ function timegridHeightSelector(state: CalendarState) {
 export function Week() {
   const { options, calendar, gridRowLayout, lastPanelType, renderDate } = useWeekViewState();
   const timeGridPanelHeight = useStore(timegridHeightSelector);
+  const gridHeaderMarginLeft = useTheme(useCallback((theme) => theme.week.dayGridLeft.width, []));
 
   const [stickyTop, setStickyTop] = useState<number | null>(null);
   const [timePanel, setTimePanelRef] = useDOMNode<HTMLDivElement>();
@@ -141,14 +143,16 @@ export function Week() {
 
   return (
     <Layout className={cls('week-view')} autoAdjustPanels={true}>
-      <Panel name="week-view-daynames" initialHeight={WEEK_DAYNAME_HEIGHT + WEEK_DAYNAME_BORDER}>
+      <Panel
+        name="week-view-daynames"
+        initialHeight={WEEK_DAYNAME_HEIGHT + WEEK_DAYNAME_BORDER * 2}
+      >
         <GridHeader
+          type="week"
           dayNames={dayNames}
-          marginLeft={120}
-          templateType="weekDayname"
+          marginLeft={gridHeaderMarginLeft}
           options={weekOptions}
           rowStyleInfo={rowStyleInfo}
-          type="week"
         />
       </Panel>
       {dayGridRows}

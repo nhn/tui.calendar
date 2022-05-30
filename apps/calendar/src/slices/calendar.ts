@@ -9,16 +9,16 @@ import {
 } from '@src/controller/base';
 import type EventModel from '@src/model/eventModel';
 
-import type { CalendarData, EventModelData } from '@t/events';
+import type { CalendarData, EventObject } from '@t/events';
 import type { CalendarColor, CalendarInfo } from '@t/options';
 import type { CalendarState, CalendarStore, SetState } from '@t/store';
 
 export type CalendarSlice = { calendar: CalendarData };
 
-type UpdateEventParams = { event: EventModel; eventData: EventModelData };
+type UpdateEventParams = { event: EventModel; eventData: EventObject };
 
 export type CalendarDispatchers = {
-  createEvents: (events: EventModelData[]) => void;
+  createEvents: (events: EventObject[]) => void;
   updateEvent: (params: UpdateEventParams) => void;
   deleteEvent: (event: EventModel) => void;
   clearEvents: () => void;

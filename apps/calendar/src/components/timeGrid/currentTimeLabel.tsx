@@ -7,8 +7,7 @@ import { useTheme } from '@src/contexts/themeStore';
 import { cls, toPercent } from '@src/helpers/css';
 import { currentTimeLabelTestId } from '@src/test/testIds';
 import type TZDate from '@src/time/date';
-import { addMinutes, getDateDifference } from '@src/time/datetime';
-import { isNil } from '@src/utils/type';
+import { getDateDifference } from '@src/time/datetime';
 
 import type { TimeUnit } from '@t/events';
 
@@ -20,25 +19,20 @@ const classNames = {
 interface Props {
   unit: TimeUnit;
   top: number;
-  time: TZDate;
-  diffFromPrimaryTimezone?: number;
+  currentTime: TZDate;
+  zonedCurrentTime: TZDate;
 }
 
-export function CurrentTimeLabel({ unit, top, time, diffFromPrimaryTimezone = 0 }: Props) {
+export function CurrentTimeLabel({ unit, top, currentTime, zonedCurrentTime }: Props) {
   const color = useTheme(useCallback((theme) => theme.week.currentTime.color, []));
 
-  const zonedTime = addMinutes(time, diffFromPrimaryTimezone);
   const dateDifference = useMemo(() => {
-    if (isNil(diffFromPrimaryTimezone)) {
-      return 0;
-    }
-
-    return getDateDifference(zonedTime, time);
-  }, [diffFromPrimaryTimezone, time, zonedTime]);
+    return getDateDifference(zonedCurrentTime, currentTime);
+  }, [zonedCurrentTime, currentTime]);
 
   const model = {
     unit,
-    time: zonedTime,
+    time: zonedCurrentTime,
     format: timeFormats[unit],
   };
 

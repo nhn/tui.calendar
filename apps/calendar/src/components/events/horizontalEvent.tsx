@@ -195,7 +195,7 @@ export function HorizontalEvent({
 
   useEffect(() => {
     if (isDraggableEvent) {
-      eventBus.fire('afterRenderEvent', uiModel.model);
+      eventBus.fire('afterRenderEvent', uiModel.model.toEventObject());
     }
     // This effect is only for the first render.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -222,7 +222,7 @@ export function HorizontalEvent({
         );
       }
 
-      eventBus.fire('clickEvent', { event: uiModel.model, nativeEvent: e });
+      eventBus.fire('clickEvent', { event: uiModel.model.toEventObject(), nativeEvent: e });
     },
     onPressESCKey: () => endDragEvent(classNames.moveEvent),
   });

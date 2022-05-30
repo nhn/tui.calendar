@@ -7,7 +7,6 @@ import { CurrentTimeIndicator } from '@src/components/timeGrid/currentTimeIndica
 import { GridLines } from '@src/components/timeGrid/gridLines';
 import { MovingEventShadow } from '@src/components/timeGrid/movingEventShadow';
 import { TimeColumn } from '@src/components/timeGrid/timeColumn';
-import { useStore } from '@src/contexts/calendarStore';
 import { useTheme } from '@src/contexts/themeStore';
 import { isBetween, setRenderInfoOfUIModels } from '@src/controller/column';
 import { getTopPercentByTime } from '@src/controller/times';
@@ -18,10 +17,10 @@ import { useDOMNode } from '@src/hooks/common/useDOMNode';
 import { useInterval } from '@src/hooks/common/useInterval';
 import { useIsMounted } from '@src/hooks/common/useIsMounted';
 import { useGridSelection } from '@src/hooks/gridSelection/useGridSelection';
+import { usePrimaryTimezone } from '@src/hooks/timezone/usePrimaryTimezone';
 import type EventUIModel from '@src/model/eventUIModel';
 import { weekTimeGridLeftSelector } from '@src/selectors/theme';
-import { primaryTimezoneSelector } from '@src/selectors/timezone';
-import TZDate from '@src/time/date';
+import type TZDate from '@src/time/date';
 import {
   isSameDate,
   MS_PER_MINUTES,
@@ -45,7 +44,8 @@ interface Props {
 }
 
 export function TimeGrid({ timeGridData, events }: Props) {
-  const primaryTimezoneName = useStore(primaryTimezoneSelector);
+  const [, getNow] = usePrimaryTimezone();
+
   const isMounted = useIsMounted();
   const { width: timeGridLeftWidth } = useTheme(weekTimeGridLeftSelector);
 
@@ -77,8 +77,7 @@ export function TimeGrid({ timeGridData, events }: Props) {
   );
 
   const currentDateData = useMemo(() => {
-    // TODO: don't create zoned date implicitly. create custom hooks for zoned date
-    const now = new TZDate().tz(primaryTimezoneName);
+    const now = getNow();
     const currentDateIndexInColumns = columns.findIndex((column) => isSameDate(column.date, now));
     if (currentDateIndexInColumns < 0) {
       return null;
@@ -97,7 +96,7 @@ export function TimeGrid({ timeGridData, events }: Props) {
       endTime,
       currentDateIndex: currentDateIndexInColumns,
     };
-  }, [columns, primaryTimezoneName, timeGridData.rows]);
+  }, [columns, getNow, timeGridData.rows]);
 
   const [columnsContainer, setColumnsContainer] = useDOMNode();
   const gridPositionFinder = useMemo(
@@ -121,7 +120,7 @@ export function TimeGrid({ timeGridData, events }: Props) {
   const updateTimeGridIndicator = useCallback(() => {
     if (isPresent(currentDateData)) {
       const { startTime, endTime } = currentDateData;
-      const now = new TZDate().tz(primaryTimezoneName);
+      const now = getNow();
 
       if (startTime <= now && now <= endTime) {
         setCurrentTimeIndicatorState({
@@ -130,7 +129,7 @@ export function TimeGrid({ timeGridData, events }: Props) {
         });
       }
     }
-  }, [currentDateData, primaryTimezoneName]);
+  }, [currentDateData, getNow]);
 
   // Calculate initial setTimeIndicatorTop
   useLayoutEffect(() => {

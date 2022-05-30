@@ -1,6 +1,4 @@
-import type EventModel from '@src/model/eventModel';
-
-import type { EventModelData } from '@t/events';
+import type { EventObject, EventObjectWithDefaultValues } from '@t/events';
 
 type AnyFunc = (...args: any[]) => any;
 
@@ -12,8 +10,8 @@ interface SelectDateTimeInfo {
 }
 
 interface UpdatedEventInfo {
-  event: EventModel;
-  changes: EventModelData;
+  event: EventObjectWithDefaultValues;
+  changes: EventObject;
 }
 
 interface DaynameInfo {
@@ -21,7 +19,7 @@ interface DaynameInfo {
 }
 
 interface EventInfo {
-  event: EventModel;
+  event: EventObjectWithDefaultValues;
   nativeEvent: MouseEvent;
 }
 
@@ -32,10 +30,10 @@ interface MoreEventsButton {
 
 type ExternalEventTypes = {
   selectDateTime: (info: SelectDateTimeInfo) => void;
-  beforeCreateEvent: (event: EventModelData) => void;
+  beforeCreateEvent: (event: EventObject) => void;
   beforeUpdateEvent: (updatedEventInfo: UpdatedEventInfo) => void;
-  beforeDeleteEvent: (event: EventModel) => void;
-  afterRenderEvent: (event: EventModel) => void;
+  beforeDeleteEvent: (event: EventObjectWithDefaultValues) => void;
+  afterRenderEvent: (event: EventObjectWithDefaultValues) => void;
   clickDayname: (daynameInfo: DaynameInfo) => void;
   clickEvent: (eventInfo: EventInfo) => void;
   clickMoreEventsBtn: (moreEventsBtnInfo: MoreEventsButton) => void;

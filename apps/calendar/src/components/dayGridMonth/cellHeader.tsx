@@ -7,10 +7,11 @@ import { CellBarType } from '@src/constants/grid';
 import { useStore } from '@src/contexts/calendarStore';
 import { useCommonTheme, useMonthTheme } from '@src/contexts/themeStore';
 import { cls } from '@src/helpers/css';
+import { usePrimaryTimezone } from '@src/hooks/timezone/usePrimaryTimezone';
 import { viewSelector } from '@src/selectors';
 import type { TemplateName } from '@src/template/default';
-import TZDate from '@src/time/date';
-import { Day, toFormat } from '@src/time/datetime';
+import type TZDate from '@src/time/date';
+import { isSameDate, isSaturday, isSunday, toFormat } from '@src/time/datetime';
 import { capitalize } from '@src/utils/string';
 
 import type { CommonTheme, MonthTheme } from '@t/theme';
@@ -34,21 +35,30 @@ function getDateColor({
   const dayIndex = date.getDay();
   const thisMonth = renderDate.getMonth();
   const isSameMonth = thisMonth === date.getMonth();
+  const isToday = isSameDate(date, renderDate);
 
   const {
-    common: { holiday, saturday, today },
+    common: { holiday, saturday, today, dayname },
     month: { dayExceptThisMonth, holidayExceptThisMonth },
   } = theme;
 
-  if (dayIndex === Day.SUN) {
+  if (isSunday(dayIndex)) {
     return isSameMonth ? holiday.color : holidayExceptThisMonth.color;
   }
 
-  if (isSameMonth) {
-    return dayIndex === Day.SAT ? saturday.color : today.color;
+  if (isSaturday(dayIndex)) {
+    return isSameMonth ? saturday.color : dayExceptThisMonth.color;
   }
 
-  return dayExceptThisMonth.color;
+  if (isToday) {
+    return today.color;
+  }
+
+  if (!isSameMonth) {
+    return dayExceptThisMonth.color;
+  }
+
+  return dayname.color;
 }
 
 function useCellHeaderTheme() {
@@ -65,10 +75,12 @@ export function CellHeader({
   onClickExceedCount,
 }: Props) {
   const { renderDate } = useStore(viewSelector);
+
+  const [, getNow] = usePrimaryTimezone();
   const theme = useCellHeaderTheme();
 
   const ymd = toFormat(date, 'YYYYMMDD');
-  const todayYmd = toFormat(new TZDate(), 'YYYYMMDD');
+  const todayYmd = toFormat(getNow(), 'YYYYMMDD');
   const model = {
     date: toFormat(date, 'YYYY-MM-DD'),
     day: date.getDay(),

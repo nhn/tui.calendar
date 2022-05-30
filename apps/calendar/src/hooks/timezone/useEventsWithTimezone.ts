@@ -2,22 +2,21 @@ import { useMemo } from 'preact/hooks';
 
 import { useStore } from '@src/contexts/calendarStore';
 import { createEventCollection } from '@src/controller/base';
+import { useTZConverter } from '@src/hooks/timezone/useTZConverter';
 import type EventModel from '@src/model/eventModel';
-import { customOffsetCalculatorSelector, primaryTimezoneSelector } from '@src/selectors/timezone';
+import { primaryTimezoneSelector } from '@src/selectors/timezone';
 import type Collection from '@src/utils/collection';
 import { clone } from '@src/utils/object';
-import { isPresent } from '@src/utils/type';
 
 export function useEventsWithTimezone(events: Collection<EventModel>) {
   const primaryTimezoneName = useStore(primaryTimezoneSelector);
-  const customOffsetCalculator = useStore(customOffsetCalculatorSelector);
+  const tzConverter = useTZConverter();
 
   return useMemo(() => {
     if (primaryTimezoneName === 'Local') {
       return events;
     }
 
-    const hasCustomOffsetCalculator = isPresent(customOffsetCalculator);
     const {
       timedEvents = createEventCollection(),
       totalEvents = createEventCollection(),
@@ -27,19 +26,11 @@ export function useEventsWithTimezone(events: Collection<EventModel>) {
 
     timedEvents.each((eventModel) => {
       const clonedEventModel = clone(eventModel);
-      clonedEventModel.start = hasCustomOffsetCalculator
-        ? clonedEventModel.start.tz(
-            customOffsetCalculator(primaryTimezoneName, eventModel.start.getTime())
-          )
-        : clonedEventModel.start.tz(primaryTimezoneName);
-      clonedEventModel.end = hasCustomOffsetCalculator
-        ? clonedEventModel.end.tz(
-            customOffsetCalculator(primaryTimezoneName, eventModel.end.getTime())
-          )
-        : clonedEventModel.end.tz(primaryTimezoneName);
+      clonedEventModel.start = tzConverter(primaryTimezoneName, clonedEventModel.start);
+      clonedEventModel.end = tzConverter(primaryTimezoneName, clonedEventModel.end);
       totalEvents.add(clonedEventModel);
     });
 
     return totalEvents;
-  }, [customOffsetCalculator, events, primaryTimezoneName]);
+  }, [events, primaryTimezoneName, tzConverter]);
 }

@@ -2,13 +2,12 @@ import { Fragment, h } from 'preact';
 
 import { cls } from '@src/helpers/css';
 import { getDayName } from '@src/helpers/dayName';
-import type EventModel from '@src/model/eventModel';
 import { isSameDate, leadingZero, toFormat } from '@src/time/datetime';
 import { stripTags } from '@src/utils/dom';
 import { capitalize } from '@src/utils/string';
 import { isNil, isPresent } from '@src/utils/type';
 
-import type { EventCategory } from '@t/events';
+import type { EventCategory, EventObjectWithDefaultValues } from '@t/events';
 import type {
   Template,
   TemplateCurrentTime,
@@ -22,7 +21,7 @@ import type {
 const SIXTY_MINUTES = 60;
 
 export const templates: Template = {
-  milestone(model: EventModel) {
+  milestone(model: EventObjectWithDefaultValues) {
     const classNames = cls('icon', 'ic-milestone');
 
     return (
@@ -43,7 +42,7 @@ export const templates: Template = {
     return <span className={cls('left-content')}>Milestone</span>;
   },
 
-  task(model: EventModel) {
+  task(model: EventObjectWithDefaultValues) {
     return `#${model.title}`;
   },
 
@@ -55,11 +54,11 @@ export const templates: Template = {
     return <span className={cls('left-content')}>All Day</span>;
   },
 
-  allday(model: EventModel) {
+  allday(model: EventObjectWithDefaultValues) {
     return stripTags(model.title);
   },
 
-  time(model: EventModel) {
+  time(model: EventObjectWithDefaultValues) {
     const { start, title } = model;
 
     if (start) {
@@ -73,7 +72,7 @@ export const templates: Template = {
     return stripTags(title);
   },
 
-  goingDuration(model: EventModel) {
+  goingDuration(model: EventObjectWithDefaultValues) {
     const { goingDuration } = model;
     const hour = Math.floor(goingDuration / SIXTY_MINUTES);
     const minutes = goingDuration % SIXTY_MINUTES;
@@ -81,7 +80,7 @@ export const templates: Template = {
     return `GoingTime ${leadingZero(hour, 2)}:${leadingZero(minutes, 2)}`;
   },
 
-  comingDuration(model: EventModel) {
+  comingDuration(model: EventObjectWithDefaultValues) {
     const { comingDuration } = model;
     const hour = Math.floor(comingDuration / SIXTY_MINUTES);
     const minutes = comingDuration % SIXTY_MINUTES;
@@ -165,7 +164,7 @@ export const templates: Template = {
     return viewName;
   },
 
-  event(model: EventModel) {
+  event(model: EventObjectWithDefaultValues) {
     const { category } = model;
     if (category === 'milestone') {
       return templates.milestone(model);
@@ -266,11 +265,11 @@ export const templates: Template = {
     return 'Delete';
   },
 
-  popupDetailTitle({ title }: EventModel) {
+  popupDetailTitle({ title }: EventObjectWithDefaultValues) {
     return title;
   },
 
-  popupDetailDate({ isAllday, start, end }: EventModel) {
+  popupDetailDate({ isAllday, start, end }: EventObjectWithDefaultValues) {
     const dayFormat = 'YYYY.MM.DD';
     const timeFormat = 'hh:mm tt';
     const detailFormat = `${dayFormat} ${timeFormat}`;
@@ -284,23 +283,23 @@ export const templates: Template = {
     return `${toFormat(start, detailFormat)} - ${toFormat(end, endDateFormat)}`;
   },
 
-  popupDetailLocation({ location }: EventModel) {
+  popupDetailLocation({ location }: EventObjectWithDefaultValues) {
     return location;
   },
 
-  popupDetailAttendees({ attendees = [] }: EventModel) {
+  popupDetailAttendees({ attendees = [] }: EventObjectWithDefaultValues) {
     return attendees.join(', ');
   },
 
-  popupDetailState({ state }: EventModel) {
+  popupDetailState({ state }: EventObjectWithDefaultValues) {
     return state || 'Busy';
   },
 
-  popupDetailRecurrenceRule({ recurrenceRule }: EventModel) {
+  popupDetailRecurrenceRule({ recurrenceRule }: EventObjectWithDefaultValues) {
     return recurrenceRule;
   },
 
-  popupDetailBody({ body }: EventModel) {
+  popupDetailBody({ body }: EventObjectWithDefaultValues) {
     return body;
   },
 };

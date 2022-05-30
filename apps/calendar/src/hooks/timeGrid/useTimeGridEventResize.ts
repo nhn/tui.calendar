@@ -185,7 +185,7 @@ export function useTimeGridEventResize({
       );
 
       eventBus.fire('beforeUpdateEvent', {
-        event: resizingStartUIModel.model,
+        event: resizingStartUIModel.model.toEventObject(),
         changes: {
           end: targetEndDate,
         },

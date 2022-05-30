@@ -2,6 +2,7 @@ import { h } from 'preact';
 import { useCallback, useMemo } from 'preact/hooks';
 
 import { useStore } from '@src/contexts/calendarStore';
+import { useTheme } from '@src/contexts/themeStore';
 import { cls, toPercent } from '@src/helpers/css';
 import { timeGridSelectionHelper } from '@src/helpers/gridSelection';
 import { isNil } from '@src/utils/type';
@@ -10,9 +11,16 @@ import type { TimeGridRow } from '@t/grid';
 import type { CalendarState } from '@t/store';
 
 function GridSelection({ top, height, text }: { top: number; height: number; text: string }) {
+  const { backgroundColor, border } = useTheme(
+    useCallback((theme) => theme.common.gridSelection, [])
+  );
+  const color = useTheme(useCallback((theme) => theme.week.gridSelection.color, []));
+
   const style = {
     top: toPercent(top),
     height: toPercent(height),
+    backgroundColor,
+    border,
   };
 
   return (
@@ -21,7 +29,11 @@ function GridSelection({ top, height, text }: { top: number; height: number; tex
       style={style}
       data-testid={`time-grid-selection-${top}-${height}`}
     >
-      {text.length > 0 ? <span className={cls('grid-selection-label')}>{text}</span> : null}
+      {text.length > 0 ? (
+        <span className={cls('grid-selection-label')} style={{ color }}>
+          {text}
+        </span>
+      ) : null}
     </div>
   );
 }

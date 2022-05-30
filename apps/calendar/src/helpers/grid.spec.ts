@@ -247,7 +247,7 @@ describe('getExceedCount', () => {
 
   it('should calculate the number of events that exceed height of container', () => {
     const uiModels = data.map((e) => {
-      const event = EventModel.create(e);
+      const event = new EventModel(e);
       event.isAllday = true;
 
       return EventUIModel.create(event);

@@ -22,7 +22,7 @@ import { addAttributeHooks, removeAttributeHooks } from '@src/utils/sanitizer';
 import { isString } from '@src/utils/type';
 
 import type { ExternalEventTypes } from '@t/eventBus';
-import type { DateType, EventModelData } from '@t/events';
+import type { DateType, EventObject } from '@t/events';
 import type { CalendarColor, CalendarInfo, Options, ViewType } from '@t/options';
 import type {
   CalendarMonthOptions,
@@ -215,7 +215,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
 
   /**
    * Create events and render calendar.
-   * @param {EventModelData[]} events - list of {@link EventModelData}
+   * @param {EventObject[]} events - list of {@link EventObject}
    * @example
    * calendar.createEvents([
    *   {
@@ -238,23 +238,13 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    *   },
    * ]);
    */
-  createEvents(events: EventModelData[]) {
+  createEvents(events: EventObject[]) {
     const { createEvents } = this.getStoreDispatchers('calendar');
 
     createEvents(events);
   }
 
-  /**
-   * Get a {@link EventModel} object with event's id and calendar's id.
-   * @param {string} eventId - event's id
-   * @param {string} calendarId - calendar's id of the event
-   * @returns {EventModel} event model object
-   * @example
-   * const event = calendar.getEvent(eventId, calendarId);
-   *
-   * console.log(event.title);
-   */
-  getEvent(eventId: string, calendarId: string) {
+  protected getEventModel(eventId: string, calendarId: string) {
     const { events } = this.getStoreState('calendar');
 
     return events.find(
@@ -263,10 +253,24 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
+   * Get an {@link EventObject} with event's id and calendar's id.
+   * @param {string} eventId - event's id
+   * @param {string} calendarId - calendar's id of the event
+   * @returns {EventObject | null} event. If the event can't be found, it returns null.
+   * @example
+   * const event = calendar.getEvent(eventId, calendarId);
+   *
+   * console.log(event.title);
+   */
+  getEvent(eventId: string, calendarId: string) {
+    return this.getEventModel(eventId, calendarId)?.toEventObject();
+  }
+
+  /**
    * Update the event
    * @param {string} eventId - ID of an event to update
    * @param {string} calendarId - The calendarId of the event to update
-   * @param {EventModelData} changes - The {@link EventModelData} data to update
+   * @param {EventObject} changes - The {@link EventObject} data to update
    * @example
    * calendar.on('beforeUpdateEvent', function ({ event, changes }) {
    *   const { id, calendarId } = event;
@@ -274,9 +278,9 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    *   calendar.updateEvent(id, calendarId, changes);
    * });
    */
-  updateEvent(eventId: string, calendarId: string, changes: EventModelData) {
+  updateEvent(eventId: string, calendarId: string, changes: EventObject) {
     const { updateEvent } = this.getStoreDispatchers('calendar');
-    const event = this.getEvent(eventId, calendarId);
+    const event = this.getEventModel(eventId, calendarId);
 
     if (event) {
       updateEvent({ event, eventData: changes });
@@ -290,7 +294,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    */
   deleteEvent(eventId: string, calendarId: string) {
     const { deleteEvent } = this.getStoreDispatchers('calendar');
-    const event = this.getEvent(eventId, calendarId);
+    const event = this.getEventModel(eventId, calendarId);
 
     if (event) {
       deleteEvent(event);
@@ -619,17 +623,17 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
 
   /**
    * Open event form popup
-   * @param {EventModelData} eventModelData - The preset {@link EventModelData} data
+   * @param {EventObject} event - The preset {@link EventObject} data
    */
-  openFormPopup(eventModelData: EventModelData) {
+  openFormPopup(event: EventObject) {
     const { showFormPopup } = this.getStoreDispatchers().popup;
 
-    const event = EventModel.create(eventModelData);
-    const { title, location, start, end, isAllday, isPrivate, state: eventState } = event;
+    const eventModel = new EventModel(event);
+    const { title, location, start, end, isAllday, isPrivate, state: eventState } = eventModel;
 
     showFormPopup({
       isCreationPopup: true,
-      event,
+      event: eventModel,
       title,
       location,
       start,

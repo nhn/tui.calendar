@@ -49,7 +49,8 @@ type WeekTheme = {
   timeGrid: { borderRight: string };
   timeGridLeft: TimeGridLeftTheme;
   timeGridLeftAdditionalTimezone: { backgroundColor: string };
-  timeGridHalfHour: { borderBottom: string };
+  timeGridHalfHourLine: { borderBottom: string };
+  timeGridHourLine: { borderBottom: string };
   currentTime: { color: string };
   currentTimeLinePast: { border: string };
   currentTimeLineBullet: { backgroundColor: string };

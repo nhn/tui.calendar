@@ -15,7 +15,7 @@ export const DEFAULT_COMMON_THEME: DeepRequired<CommonTheme> = {
     color: '#333',
   },
   today: {
-    color: '#333',
+    color: '#fff',
   },
   gridSelection: {
     backgroundColor: 'rgba(81, 92, 230, 0.05)',
@@ -63,7 +63,10 @@ export const DEFAULT_WEEK_THEME: DeepRequired<WeekTheme> = {
   timeGridLeftAdditionalTimezone: {
     backgroundColor: 'white',
   },
-  timeGridHalfHour: {
+  timeGridHalfHourLine: {
+    borderBottom: 'none',
+  },
+  timeGridHourLine: {
     borderBottom: '1px solid #e5e5e5',
   },
   currentTime: {

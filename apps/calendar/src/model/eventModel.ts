@@ -5,174 +5,77 @@ import { compare, MS_PER_DAY, parse, toEndOfDay, toStartOfDay } from '@src/time/
 import { stamp } from '@src/utils/stamp';
 import { isString } from '@src/utils/type';
 
-import type { DateType, EventCategory, EventModelData, EventState } from '@t/events';
+import type {
+  DateType,
+  EventCategory,
+  EventObject,
+  EventObjectWithDefaultValues,
+  EventState,
+} from '@t/events';
 
-export default class EventModel {
-  /**
-   * `Optional` unique id for various use.
-   * @type {string}
-   */
+export default class EventModel implements EventObjectWithDefaultValues {
   id = '';
 
-  /**
-   * title for event.
-   * @type {string}
-   */
-  title = '';
-
-  /**
-   * body for event.
-   * @type {string}
-   */
-  body = '';
-
-  /**
-   * is event is all day event?
-   * @type {boolean}
-   */
-  isAllday = false;
-
-  /**
-   * event start
-   * @type {TZDate}
-   */
-  start: TZDate = new TZDate();
-
-  /**
-   * event end
-   * @type {TZDate}
-   */
-  end: TZDate = new TZDate();
-
-  /**
-   * event text color
-   * @type {string}
-   */
-  color = '#000';
-
-  /**
-   * event block visibility
-   * @type {boolean}
-   */
-  isVisible = true;
-
-  /**
-   * event background color
-   * @type {string}
-   */
-  bgColor = '#a1b56c';
-
-  /**
-   * event background color when dragging it
-   * @type {string}
-   */
-  dragBgColor = '#a1b56c';
-
-  /**
-   * event left border color
-   * @type {string}
-   */
-  borderColor = '#000';
-
-  /**
-   * calendar ID
-   * @type {string}
-   */
   calendarId = '';
 
-  /**
-   * Event category(milestone, task, allday, time)
-   * @type {string}
-   */
-  category: EventCategory = 'time';
+  title = '';
 
-  /**
-   * Classification of work events (before work, before lunch, before work)
-   * @type {string}
-   */
-  dueDateClass = '';
+  body = '';
 
-  /**
-   * Custom style for event element
-   * @type {string}
-   */
-  customStyle = '';
+  isAllday = false;
 
-  /**
-   * in progress flag to do something
-   * @type {boolean}
-   */
-  isPending = false;
+  start: TZDate = new TZDate();
 
-  /**
-   * focused event flag
-   * @type {boolean}
-   */
-  isFocused = false;
+  end: TZDate = new TZDate();
 
-  /**
-   * read-only event flag
-   * @type {boolean}
-   */
-  isReadOnly = false;
-
-  /**
-   * private event
-   * @type {boolean}
-   */
-  isPrivate = false;
-
-  /**
-   * location
-   * @type {string}
-   */
-  location = '';
-
-  /**
-   * attendees
-   * @type {Array.<string>}
-   */
-  attendees: string[] = [];
-
-  /**
-   * recurrence rule
-   * @type {any}
-   */
-  recurrenceRule = '';
-
-  /**
-   * state. 'Busy' is default.
-   * @type {EventState}
-   */
-  state: EventState = 'Busy';
-
-  /**
-   * travelTime: going-Duration minutes
-   * @type {number}
-   */
   goingDuration = 0;
 
-  /**
-   * travelTime: coming-Duration minutes
-   * @type {number}
-   */
   comingDuration = 0;
 
-  /**
-   * Separate data storage space independent of rendering.
-   * @type {any}
-   */
-  raw: any = null; // eslint-disable-line @typescript-eslint/no-explicit-any
+  location = '';
+
+  attendees: string[] = [];
+
+  category: EventCategory = 'time';
+
+  dueDateClass = '';
+
+  recurrenceRule = '';
+
+  state: EventState = 'Busy';
+
+  isVisible = true;
+
+  isPending = false;
+
+  isFocused = false;
+
+  isReadOnly = false;
+
+  isPrivate = false;
+
+  color = '#000';
+
+  bgColor = '#a1b56c';
+
+  dragBgColor = '#a1b56c';
+
+  borderColor = '#000';
+
+  customStyle = '';
+
+  raw: any = null;
 
   /**
    * whether the event includes multiple dates
-   * @type {boolean}
    */
   hasMultiDates = false;
 
-  constructor() {
+  constructor(event: EventObject = {}) {
     // initialize model id
     stamp(this);
+
+    this.init(event);
   }
 
   static schema = {
@@ -180,63 +83,72 @@ export default class EventModel {
     dateRange: ['start', 'end'],
   };
 
-  static create(data: EventModelData) {
-    return new EventModel().init(data);
-  }
-
-  /**
-   * Initialize event instance.
-   * @param {EventModelData} event - event model data.
-   */
-  // eslint-disable-next-line complexity
-  init(event: EventModelData) {
-    event = { ...event };
-    if (event.category === 'allday') {
-      event.isAllday = true;
-    }
-
-    this.id = event.id || '';
-    this.title = event.title || '';
-    this.body = event.body || '';
-    this.isAllday = event.isAllday ?? false;
-    this.isVisible = event.isVisible ?? true;
-
-    this.color = event.color || this.color;
-    this.bgColor = event.bgColor || this.bgColor;
-    this.dragBgColor = event.dragBgColor || this.dragBgColor;
-    this.borderColor = event.borderColor || this.borderColor;
-    this.calendarId = event.calendarId || '';
-    this.category = event.category || 'time';
-    this.dueDateClass = event.dueDateClass || '';
-    this.customStyle = event.customStyle || '';
-    this.location = event.location || '';
-    this.attendees = event.attendees || [];
-    this.recurrenceRule = event.recurrenceRule || '';
-    this.isPrivate = event.isPrivate || false;
-    this.isPending = event.isPending || false;
-    this.isFocused = event.isFocused || false;
-    this.isReadOnly = event.isReadOnly || false;
-    this.goingDuration = event.goingDuration || 0;
-    this.comingDuration = event.comingDuration || 0;
-    this.state = event.state || 'Busy';
+  init({
+    id = '',
+    calendarId = '',
+    title = '',
+    body = '',
+    isAllday = false,
+    start = new TZDate(),
+    end = new TZDate(),
+    goingDuration = 0,
+    comingDuration = 0,
+    location = '',
+    attendees = [],
+    category = 'time',
+    dueDateClass = '',
+    recurrenceRule = '',
+    state = 'Busy',
+    isVisible = true,
+    isPending = false,
+    isFocused = false,
+    isReadOnly = false,
+    isPrivate = false,
+    color = '#000',
+    bgColor = '#a1b56c',
+    dragBgColor = '#a1b56c',
+    borderColor = '#000',
+    customStyle = '',
+    raw = null,
+  }: EventObject = {}) {
+    this.id = id;
+    this.calendarId = calendarId;
+    this.title = title;
+    this.body = body;
+    this.isAllday = category === 'allday' ? true : isAllday;
+    this.goingDuration = goingDuration;
+    this.comingDuration = comingDuration;
+    this.location = location;
+    this.attendees = attendees;
+    this.category = category;
+    this.dueDateClass = dueDateClass;
+    this.recurrenceRule = recurrenceRule;
+    this.state = state;
+    this.isVisible = isVisible;
+    this.isPending = isPending;
+    this.isFocused = isFocused;
+    this.isReadOnly = isReadOnly;
+    this.isPrivate = isPrivate;
+    this.color = color;
+    this.bgColor = bgColor;
+    this.dragBgColor = dragBgColor;
+    this.borderColor = borderColor;
+    this.customStyle = customStyle;
+    this.raw = raw;
 
     if (this.isAllday) {
-      this.setAlldayPeriod(event.start, event.end);
+      this.setAlldayPeriod(start, end);
     } else {
-      this.setTimePeriod(event.start, event.end);
+      this.setTimePeriod(start, end);
     }
 
-    if (event.category === 'milestone' || event.category === 'task') {
+    if (category === 'milestone' || category === 'task') {
       this.start = new TZDate(this.end);
     }
-
-    this.raw = event.raw ?? null;
-
-    return this;
   }
 
   setAlldayPeriod(start?: DateType, end?: DateType) {
-    // If it is an all-day , only the date information of the string is used.
+    // If it is an all-day, only the date information of the string is used.
     let startedAt: TZDate;
     let endedAt: TZDate;
 
@@ -384,6 +296,37 @@ export default class EventModel {
       targetComingDuration: event.comingDuration,
       usingTravelTime, // Daygrid does not use travelTime, TimeGrid uses travelTime.
     });
+  }
+
+  toEventObject(): EventObjectWithDefaultValues {
+    return {
+      id: this.id,
+      calendarId: this.calendarId,
+      title: this.title,
+      body: this.body,
+      isAllday: this.isAllday,
+      start: this.start,
+      end: this.end,
+      goingDuration: this.goingDuration,
+      comingDuration: this.comingDuration,
+      location: this.location,
+      attendees: this.attendees,
+      category: this.category,
+      dueDateClass: this.dueDateClass,
+      recurrenceRule: this.recurrenceRule,
+      state: this.state,
+      isVisible: this.isVisible,
+      isPending: this.isPending,
+      isFocused: this.isFocused,
+      isReadOnly: this.isReadOnly,
+      isPrivate: this.isPrivate,
+      color: this.color,
+      bgColor: this.bgColor,
+      dragBgColor: this.dragBgColor,
+      borderColor: this.borderColor,
+      customStyle: this.customStyle,
+      raw: this.raw,
+    };
   }
 }
 

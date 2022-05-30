@@ -52,7 +52,7 @@ export function useDayGridMonthEventMove({
       const newEndDate = new TZDate(newStartDate.getTime() + eventDuration);
 
       eventBus.fire('beforeUpdateEvent', {
-        event: movingEventUIModel.model,
+        event: movingEventUIModel.model.toEventObject(),
         changes: {
           start: newStartDate,
           end: newEndDate,

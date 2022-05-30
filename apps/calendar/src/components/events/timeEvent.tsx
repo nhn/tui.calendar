@@ -132,7 +132,7 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
 
   useEffect(() => {
     if (!isResizingGuide) {
-      eventBus.fire('afterRenderEvent', uiModel.model);
+      eventBus.fire('afterRenderEvent', uiModel.model.toEventObject());
     }
     // This effect is only for the first render.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -163,7 +163,7 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
         );
       }
 
-      eventBus.fire('clickEvent', { event: uiModel.model, nativeEvent: e });
+      eventBus.fire('clickEvent', { event: uiModel.model.toEventObject(), nativeEvent: e });
     },
     onPressESCKey: () => endDragEvent(classNames.moveEvent),
   });

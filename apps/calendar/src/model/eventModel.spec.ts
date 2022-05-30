@@ -3,7 +3,7 @@ import { advanceTo } from 'jest-date-mock';
 import EventModel from '@src/model/eventModel';
 import TZDate from '@src/time/date';
 
-import type { EventModelData } from '@t/events';
+import type { EventObject } from '@t/events';
 
 describe('model/event basic', () => {
   let event: EventModel;
@@ -117,20 +117,20 @@ describe('model/event basic', () => {
     });
   });
 
-  describe('EventModel.create()', () => {
+  describe('new EventModel()', () => {
     it('create event model instance from data object.', () => {
-      const mockEventModelData = {
+      const mockEventObject = {
         title: 'hunting',
         isAllday: true,
         start: new TZDate('2015/05/02'),
         end: new TZDate('2015/05/02'),
       };
-      mockEventModelData.start.setHours(0, 0, 0);
-      mockEventModelData.end.setHours(23, 59, 59);
+      mockEventObject.start.setHours(0, 0, 0);
+      mockEventObject.end.setHours(23, 59, 59);
 
-      const mockEventModel = EventModel.create(mockEventModelData);
+      const mockEventModel = new EventModel(mockEventObject);
 
-      expect(mockEventModel).toMatchObject(mockEventModelData);
+      expect(mockEventModel).toMatchObject(mockEventObject);
     });
   });
 
@@ -149,13 +149,13 @@ describe('model/event basic', () => {
      * |---|
      */
     it('Check type A, B', () => {
-      const a = EventModel.create({
+      const a = new EventModel({
         title: 'A',
         isAllday: false,
         start: '2015-05-01T09:30:00',
         end: '2015-05-01T10:00:00',
       });
-      const b = EventModel.create({
+      const b = new EventModel({
         title: 'B',
         isAllday: false,
         start: '2015-05-01T09:40:00',
@@ -183,13 +183,13 @@ describe('model/event basic', () => {
      *     |---|
      */
     it('check type C, D', () => {
-      const a = EventModel.create({
+      const a = new EventModel({
         title: 'A',
         isAllday: false,
         start: '2015-05-01T09:30:00',
         end: '2015-05-01T10:00:00',
       });
-      const b = EventModel.create({
+      const b = new EventModel({
         title: 'B',
         isAllday: false,
         start: '2015-05-01T09:00:00',
@@ -218,13 +218,13 @@ describe('model/event basic', () => {
      * |---|
      */
     it('check type E, F', () => {
-      const a = EventModel.create({
+      const a = new EventModel({
         title: 'A',
         isAllday: false,
         start: '2015-05-01T09:30:00',
         end: '2015-05-01T10:00:00',
       });
-      const b = EventModel.create({
+      const b = new EventModel({
         title: 'B',
         isAllday: false,
         start: '2015-05-01T10:00:00',
@@ -255,13 +255,13 @@ describe('model/event basic', () => {
      * |---|
      */
     it('check type G, H', () => {
-      const a = EventModel.create({
+      const a = new EventModel({
         title: 'A',
         isAllday: false,
         start: '2015-05-01T09:30:00',
         end: '2015-05-01T09:50:00',
       });
-      const b = EventModel.create({
+      const b = new EventModel({
         title: 'B',
         isAllday: false,
         start: '2015-05-01T10:10:00',
@@ -275,7 +275,7 @@ describe('model/event basic', () => {
 });
 
 describe('model/EventModel advanced', () => {
-  let eventData: EventModelData[];
+  let eventData: EventObject[];
 
   beforeEach(() => {
     eventData = [
@@ -311,9 +311,9 @@ describe('model/EventModel advanced', () => {
   });
 
   it('factory function (create())', () => {
-    let e = EventModel.create(eventData[0]);
+    let e = new EventModel(eventData[0]);
 
-    let expected: EventModelData = {
+    let expected: EventObject = {
       title: '스크럼',
       category: 'time',
       dueDateClass: '',
@@ -324,7 +324,7 @@ describe('model/EventModel advanced', () => {
 
     expect(e).toMatchObject(expected);
 
-    e = EventModel.create(eventData[1]);
+    e = new EventModel(eventData[1]);
     expected = {
       title: '[홍길동]연차',
       category: 'allday',
@@ -336,7 +336,7 @@ describe('model/EventModel advanced', () => {
 
     expect(e).toMatchObject(expected);
 
-    e = EventModel.create(eventData[2]);
+    e = new EventModel(eventData[2]);
     expected = {
       title: '테스트 마일스톤1',
       category: 'milestone',
@@ -348,7 +348,7 @@ describe('model/EventModel advanced', () => {
 
     expect(e).toMatchObject(expected);
 
-    e = EventModel.create(eventData[3]);
+    e = new EventModel(eventData[3]);
     expected = {
       title: '테스트 업무',
       category: 'task',
@@ -368,7 +368,7 @@ describe('model/EventModel advanced', () => {
     } = {
       hello: 'world',
     };
-    const e = EventModel.create({
+    const e = new EventModel({
       title: '굿',
       category: 'task',
       dueDateClass: 'morning',

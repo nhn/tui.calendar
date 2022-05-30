@@ -35,36 +35,144 @@ export type EventCategory = 'milestone' | 'task' | 'allday' | 'time' | 'backgrou
 
 export type EventState = 'Busy' | 'Free';
 
-export interface EventModelData {
+export type EventObjectWithDefaultValues = Required<EventObject> & {
+  start: TZDate;
+  end: TZDate;
+};
+
+export interface EventObject {
+  /**
+   * `Optional` unique id for various use
+   */
   id?: string;
+
+  /**
+   * Calendar ID
+   */
   calendarId?: string;
+
+  /**
+   * Title for the event
+   */
   title?: string;
+
+  /**
+   * Body for the event
+   */
   body?: string;
-  start?: DateType;
-  end?: DateType;
-  goingDuration?: number;
-  comingDuration?: number;
+
+  /**
+   * Determine if the event is an all-day event
+   */
   isAllday?: boolean;
-  category?: EventCategory;
-  dueDateClass?: string;
+
+  /**
+   * When the event starts
+   */
+  start?: DateType;
+
+  /**
+   * When the event ends
+   */
+  end?: DateType;
+
+  /**
+   * Travel time which is taken to go
+   */
+  goingDuration?: number;
+
+  /**
+   * Travel time which is taken to come back
+   */
+  comingDuration?: number;
+
+  /**
+   * Location of the event
+   */
   location?: string;
+
+  /**
+   * Attendees of the event
+   */
   attendees?: string[];
+
+  /**
+   * Category of the event (milestone, task, allday, time)
+   */
+  category?: EventCategory;
+
+  /**
+   * Classification of work events (before work, before lunch, before work)
+   */
+  dueDateClass?: string;
+
+  /**
+   * Recurrence rule of the event
+   */
   recurrenceRule?: string;
-  isPending?: boolean;
-  isFocused?: boolean;
-  isVisible?: boolean;
-  isReadOnly?: boolean;
-  isPrivate?: boolean;
-  color?: string;
-  bgColor?: string;
-  dragBgColor?: string;
-  borderColor?: string;
-  customStyle?: string;
+
+  /**
+   * State of the event. The default is 'Busy'
+   */
   state?: EventState;
+
+  /**
+   * Determine whether the event is shown or hidden
+   */
+  isVisible?: boolean;
+
+  /**
+   * Determine whether something is in progress
+   */
+  isPending?: boolean;
+
+  /**
+   * Determine whether the event is focused
+   */
+  isFocused?: boolean;
+
+  /**
+   * Determine whether the event is read-only
+   */
+  isReadOnly?: boolean;
+
+  /**
+   * Determine whether the event is private
+   */
+  isPrivate?: boolean;
+
+  /**
+   * Text color of the event element
+   */
+  color?: string;
+
+  /**
+   * Background color of the event element
+   */
+  bgColor?: string;
+
+  /**
+   * Background color of the dragging event element
+   */
+  dragBgColor?: string;
+
+  /**
+   * Left border color of the event element
+   */
+  borderColor?: string;
+
+  /**
+   * Custom style for the event element
+   */
+  customStyle?: string;
+
+  /**
+   * Raw data for the event
+   */
   raw?: any;
 }
 
-export type BooleanKeyOfEventModelData =
+export type BooleanKeyOfEventObject =
   | 'isPrivate'
   | 'isAllday'
   | 'isPending'

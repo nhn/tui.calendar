@@ -8,10 +8,10 @@ import { toFormat } from '@src/time/datetime';
 
 import { mockWeekViewEvents } from '@stories/mocks/mockWeekViewEvents';
 
-import type { EventModelData } from '@t/events';
+import type { EventObject } from '@t/events';
 import type { Options } from '@t/options';
 
-function setup(options: Options = {}, events: EventModelData[] = mockWeekViewEvents) {
+function setup(options: Options = {}, events: EventObject[] = mockWeekViewEvents) {
   const container = document.createElement('div');
   document.body.appendChild(container);
   const instance = new Week(container, options);

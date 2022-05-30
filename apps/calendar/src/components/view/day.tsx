@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useMemo } from 'preact/hooks';
+import { useCallback, useMemo } from 'preact/hooks';
 
 import { GridHeader } from '@src/components/dayGridCommon/gridHeader';
 import { AlldayGridRow } from '@src/components/dayGridWeek/alldayGridRow';
@@ -9,6 +9,7 @@ import { Panel } from '@src/components/panel';
 import { TimeGrid } from '@src/components/timeGrid/timeGrid';
 import { WEEK_DAYNAME_BORDER, WEEK_DAYNAME_HEIGHT } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
+import { useTheme } from '@src/contexts/themeStore';
 import { cls } from '@src/helpers/css';
 import { getDayNames } from '@src/helpers/dayName';
 import { createTimeGridData, getDayGridEvents } from '@src/helpers/grid';
@@ -47,6 +48,7 @@ function useDayViewState() {
 
 export function Day() {
   const { calendar, options, gridRowLayout, lastPanelType, renderDate } = useDayViewState();
+  const gridHeaderMarginLeft = useTheme(useCallback((theme) => theme.week.dayGridLeft.width, []));
   const [timePanel, setTimePanelRef] = useDOMNode<HTMLDivElement>();
 
   const weekOptions = options.week as Required<WeekOptions>;
@@ -113,11 +115,10 @@ export function Day() {
     <Layout className={cls('day-view')} autoAdjustPanels={true}>
       <Panel name="day-view-daynames" initialHeight={WEEK_DAYNAME_HEIGHT + WEEK_DAYNAME_BORDER}>
         <GridHeader
-          dayNames={dayNames}
-          marginLeft={120}
-          templateType="weekDayname"
-          rowStyleInfo={rowStyleInfo}
           type="week"
+          dayNames={dayNames}
+          marginLeft={gridHeaderMarginLeft}
+          rowStyleInfo={rowStyleInfo}
         />
       </Panel>
       {gridRows}

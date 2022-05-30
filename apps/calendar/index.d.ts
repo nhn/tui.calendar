@@ -6,7 +6,7 @@ export type EventHandlerType = IEvents[keyof IEvents];
 export type CustomEventType = keyof IEvents;
 
 export interface IEventObject {
-  eventData: EventModelData;
+  eventData: EventObject;
   end: TZDate;
   start: TZDate;
   calendar?: ICalendarInfo;
@@ -25,12 +25,12 @@ export interface IEventMoreObject {
 export interface IEventEventObject {
   calendar: ICalendarInfo;
   event: MouseEvent;
-  eventData: EventModelData;
+  eventData: EventObject;
 }
 
 export interface IEvents {
-  afterRenderEvent?: (eventObj: { eventData: EventModelData }) => void;
-  beforeCreateEvent?: (eventData: EventModelData) => void;
+  afterRenderEvent?: (eventObj: { eventData: EventObject }) => void;
+  beforeCreateEvent?: (eventData: EventObject) => void;
   beforeDeleteEvent?: (eventObj: IEventEventObject) => void;
   beforeUpdateEvent?: (eventObj: IEventObject) => void;
   clickDayname?: (eventObj: IEventDateObject) => void;
@@ -91,14 +91,14 @@ export interface IMonthDayNameInfo {
 
 export interface ITemplateConfig {
   milestoneTitle?: () => string;
-  milestone?: (eventData: EventModelData) => string;
+  milestone?: (eventData: EventObject) => string;
   taskTitle?: () => string;
-  task?: (eventData: EventModelData) => string;
+  task?: (eventData: EventObject) => string;
   alldayTitle?: () => string;
-  allday?: (eventData: EventModelData) => string;
-  time?: (eventData: EventModelData) => string;
-  goingDuration?: (eventData: EventModelData) => string;
-  comingDuration?: (eventData: EventModelData) => string;
+  allday?: (eventData: EventObject) => string;
+  time?: (eventData: EventObject) => string;
+  goingDuration?: (eventData: EventObject) => string;
+  comingDuration?: (eventData: EventObject) => string;
   monthMoreTitleDate?: (date: string, dayname: string) => string;
   monthMoreClose?: () => string;
   monthGridHeader?: (model: IGridDateModel) => string;
@@ -109,7 +109,7 @@ export interface ITemplateConfig {
   weekDayname?: (model: IWeekDayNameInfo) => string;
   weekGridFooterExceed?: (hiddenEvents: number) => string;
   dayGridTitle?: (viewName: string) => string;
-  eventData?: (eventData: EventModelData) => string;
+  eventData?: (eventData: EventObject) => string;
   collapseBtnTitle?: () => string;
   timezoneDisplayLabel?: (timezoneOffset: number, displayLabel: string) => string;
   timegridDisplayPrimayTime?: (time: ITimeGridHourLabel) => string;
@@ -126,11 +126,11 @@ export interface ITemplateConfig {
   popupSave?: () => string;
   popupUpdate?: () => string;
   popupDetailDate?: (isAllday: boolean, start: DateType, end: DateType) => string;
-  popupDetailLocation?: (eventData: EventModelData) => string;
-  popupDetailUser?: (eventData: EventModelData) => string;
-  popupDetailState?: (eventData: EventModelData) => string;
-  popupDetailRepeat?: (eventData: EventModelData) => string;
-  popupDetailBody?: (eventData: EventModelData) => string;
+  popupDetailLocation?: (eventData: EventObject) => string;
+  popupDetailUser?: (eventData: EventObject) => string;
+  popupDetailState?: (eventData: EventObject) => string;
+  popupDetailRepeat?: (eventData: EventObject) => string;
+  popupDetailBody?: (eventData: EventObject) => string;
   popupEdit?: () => string;
   popupDelete?: () => string;
 }
@@ -176,7 +176,7 @@ export interface IGridSelectionOptions {
   enableClick?: boolean;
 }
 
-export interface EventModelData {
+export interface EventObject {
   id?: string;
   calendarId?: string;
   title?: string;
@@ -246,7 +246,7 @@ export interface IOptions {
   isReadOnly?: boolean;
   usageStatistics?: boolean;
   timezone?: ICustomTimezone;
-  eventFilter?: (event: EventModelData) => boolean;
+  eventFilter?: (event: EventObject) => boolean;
 }
 
 export default class Calendar {
@@ -256,7 +256,7 @@ export default class Calendar {
 
   public clear(): void;
 
-  public createEvents(events: EventModelData[]): void;
+  public createEvents(events: EventObject[]): void;
 
   public deleteEvent(eventId: string, calendarId: string): void;
 
@@ -274,7 +274,7 @@ export default class Calendar {
 
   public getOptions(): IOptions;
 
-  public getEvent(eventId: string, calendarId: string): EventModelData;
+  public getEvent(eventId: string, calendarId: string): EventObject;
 
   public getViewName(): ViewType;
 
@@ -282,7 +282,7 @@ export default class Calendar {
 
   public next(): void;
 
-  public openFormPopup(eventModelData: EventModelData): void;
+  public openFormPopup(event: EventObject): void;
 
   public prev(): void;
 
@@ -306,7 +306,7 @@ export default class Calendar {
 
   public setCalendarVisibility(calendarId: string | string[], isVisible: boolean): void;
 
-  public updateEvent(eventId: string, calendarId: string, changes: EventModelData): void;
+  public updateEvent(eventId: string, calendarId: string, changes: EventObject): void;
 
   public off(
     eventName?: string | object | EventHandlerType,

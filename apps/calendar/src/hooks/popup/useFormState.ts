@@ -1,6 +1,6 @@
 import { useReducer } from 'preact/hooks';
 
-import type { EventModelData, EventState } from '@t/events';
+import type { EventObject, EventState } from '@t/events';
 
 export enum FormStateActionType {
   setCalendarId = 'setCalendarId',
@@ -17,7 +17,7 @@ type FormStateAction =
 
 export type FormStateDispatcher = (action: FormStateAction) => void;
 
-function formStateReducer(state: EventModelData, action: FormStateAction): EventModelData {
+function formStateReducer(state: EventObject, action: FormStateAction): EventObject {
   switch (action.type) {
     case FormStateActionType.setCalendarId:
       return { ...state, calendarId: action.calendarId };
@@ -33,6 +33,6 @@ function formStateReducer(state: EventModelData, action: FormStateAction): Event
   }
 }
 
-export function useFormState(initialState: EventModelData) {
+export function useFormState(initialState: EventObject) {
   return useReducer(formStateReducer, initialState);
 }
