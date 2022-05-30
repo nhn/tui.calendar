@@ -45,28 +45,33 @@ export function GridHeader({
   rowStyleInfo,
   type = 'month',
 }: Props) {
-  const { backgroundColor = 'white' } = theme[type]?.dayname ?? {};
+  const { backgroundColor = 'white', borderLeft = null, ...rest } = theme[type]?.dayname ?? {};
+  const { borderTop = null, borderBottom = null } = rest as WeekTheme['dayname'];
 
   return (
     <div
       className={cls('daynames', type)}
       style={{
         backgroundColor,
-        marginLeft,
+        borderTop,
+        borderBottom,
       }}
     >
-      {(dayNames as TemplateDayNames).map((dayName, index) => (
-        <DayName
-          type={type}
-          key={`dayNames-${dayName.day}`}
-          dayname={dayName}
-          style={{
-            width: toPercent(rowStyleInfo[index].width),
-            left: toPercent(rowStyleInfo[index].left),
-          }}
-          theme={theme}
-        />
-      ))}
+      <div className={cls('dayname-container')} style={{ marginLeft }}>
+        {(dayNames as TemplateDayNames).map((dayName, index) => (
+          <DayName
+            type={type}
+            key={`dayNames-${dayName.day}`}
+            dayname={dayName}
+            style={{
+              width: toPercent(rowStyleInfo[index].width),
+              left: toPercent(rowStyleInfo[index].left),
+              borderLeft,
+            }}
+            theme={theme}
+          />
+        ))}
+      </div>
     </div>
   );
 }

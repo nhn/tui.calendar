@@ -10,16 +10,13 @@ import type { TemplateName } from '@src/template/default';
 import type TZDate from '@src/time/date';
 import { isSameDate, isSaturday, isSunday, isWeekend, toFormat } from '@src/time/datetime';
 
-import type { CalendarViewType } from '@t/components/common';
+import type { CalendarViewType, StyleProp } from '@t/components/common';
 import type { TemplateMonthDayName, TemplateWeekDayName } from '@t/template';
 
 interface Props {
   type: CalendarViewType;
   dayname: TemplateWeekDayName | TemplateMonthDayName;
-  style: {
-    width: CSSValue;
-    left: CSSValue;
-  };
+  style: StyleProp;
   theme: DaynameTheme;
 }
 

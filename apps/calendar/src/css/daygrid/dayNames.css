@@ -2,6 +2,10 @@
   position: relative;
 }
 
+.dayname-container {
+  position: relative;
+}
+
 .dayname-item {
   position: absolute;
   font-size: 12px;
@@ -11,11 +15,13 @@
 }
 
 .dayname-item.week {
-  line-height: 42px;
+  line-height: 38px;
+  height: 42px;
 }
 
 .dayname-item.month {
   line-height: 31px;
+  height: 31px;
 }
 
 .day-view-daynames,

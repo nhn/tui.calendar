@@ -145,7 +145,10 @@ export function Week() {
 
   return (
     <Layout className={cls('week-view')} autoAdjustPanels={true}>
-      <Panel name="week-view-daynames" initialHeight={WEEK_DAYNAME_HEIGHT + WEEK_DAYNAME_BORDER}>
+      <Panel
+        name="week-view-daynames"
+        initialHeight={WEEK_DAYNAME_HEIGHT + WEEK_DAYNAME_BORDER * 2}
+      >
         <GridHeader
           type="week"
           dayNames={dayNames}
