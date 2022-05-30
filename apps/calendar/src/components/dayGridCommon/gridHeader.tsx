@@ -12,7 +12,7 @@ import type { CellStyle } from '@t/time/datetime';
 
 type TemplateDayNames = (TemplateWeekDayName | TemplateMonthDayName)[];
 
-export type DaynameTheme = {
+export type Dayname = {
   common: {
     saturday: CommonTheme['saturday'];
     holiday: CommonTheme['holiday'];
@@ -32,7 +32,7 @@ export type DaynameTheme = {
 interface Props {
   type: CalendarViewType;
   dayNames: TemplateDayNames;
-  theme: DaynameTheme;
+  theme: Dayname;
   options?: CalendarMonthOptions | CalendarWeekOptions;
   marginLeft?: string;
   rowStyleInfo: CellStyle[];

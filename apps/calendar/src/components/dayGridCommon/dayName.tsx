@@ -1,6 +1,6 @@
 import { h } from 'preact';
 
-import type { DaynameTheme } from '@src/components/dayGridCommon/gridHeader';
+import type { Dayname } from '@src/components/dayGridCommon/gridHeader';
 import { Template } from '@src/components/template';
 import { useEventBus } from '@src/contexts/eventBus';
 import { cls } from '@src/helpers/css';
@@ -17,7 +17,7 @@ interface Props {
   type: CalendarViewType;
   dayname: TemplateWeekDayName | TemplateMonthDayName;
   style: StyleProp;
-  theme: DaynameTheme;
+  theme: Dayname;
 }
 
 function isWeekDayName(
