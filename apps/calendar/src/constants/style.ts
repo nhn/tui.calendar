@@ -1,3 +1,6 @@
+// common dayname
+export const DEFAULT_DAYNAME_MARGIN_LEFT = '0';
+
 // month dayname
 export const MONTH_DAY_NAME_HEIGHT = 31;
 

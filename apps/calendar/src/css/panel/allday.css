@@ -28,13 +28,9 @@
   overflow-y: hidden;
 }
 
-/* @TODO: extract background-color & border to theme */
 .allday-panel .daygrid-grid-selection {
   position: absolute;
   right: 10px;
-  background-color: rgba(81, 92, 230, 0.05);
-  border: 1px solid #515ce6;
-
   z-index: 1;
   top: 0;
 }

@@ -17,6 +17,7 @@ import { addMinutes, setTimeStrToDate } from '@src/time/datetime';
 import { isNil, isPresent } from '@src/utils/type';
 
 import type { TimeGridRow } from '@t/grid';
+import type { ThemeState } from '@t/theme';
 
 const classNames = {
   timeColumn: addTimeGridPrefix('time-column'),
@@ -44,6 +45,20 @@ interface HourRowsProps {
   } | null;
 }
 
+function backgroundColorSelector(theme: ThemeState) {
+  return {
+    primaryTimezoneBackgroundColor: theme.week.timeGridLeft.backgroundColor,
+    subTimezoneBackgroundColor: theme.week.timeGridLeftAdditionalTimezone.backgroundColor,
+  };
+}
+
+function timeColorSelector(theme: ThemeState) {
+  return {
+    pastTimeColor: theme.week.pastTime.color,
+    futureTimeColor: theme.week.futureTime.color,
+  };
+}
+
 function HourRows({
   rowsInfo,
   isPrimary,
@@ -51,27 +66,49 @@ function HourRows({
   width,
   currentTimeIndicatorState,
 }: HourRowsProps) {
+  const { primaryTimezoneBackgroundColor, subTimezoneBackgroundColor } =
+    useTheme(backgroundColorSelector);
+  const { pastTimeColor, futureTimeColor } = useTheme(timeColorSelector);
+  const zonedCurrentTime = isPresent(currentTimeIndicatorState)
+    ? addMinutes(currentTimeIndicatorState.now, rowsInfo[0].diffFromPrimaryTimezone ?? 0)
+    : null;
+
+  const backgroundColor = isPrimary ? primaryTimezoneBackgroundColor : subTimezoneBackgroundColor;
+
   return (
     <div
       role="rowgroup"
       className={cls(classNames.hourRows)}
-      style={{ width: toPercent(width), borderRight }}
+      style={{ width: toPercent(width), borderRight, backgroundColor }}
     >
-      {rowsInfo.map(({ date, top, className }) => (
-        <div key={date.getTime()} className={className} style={{ top: toPercent(top) }} role="row">
-          <Template
-            template={`timegridDisplay${isPrimary ? 'Primary' : ''}Time`}
-            param={{ time: date }}
-            as="span"
-          />
-        </div>
-      ))}
-      {isPresent(currentTimeIndicatorState) && (
+      {rowsInfo.map(({ date, top, className }) => {
+        const isPast = isPresent(zonedCurrentTime) && date < zonedCurrentTime;
+        const color = isPast ? pastTimeColor : futureTimeColor;
+
+        return (
+          <div
+            key={date.getTime()}
+            className={className}
+            style={{
+              top: toPercent(top),
+              color,
+            }}
+            role="row"
+          >
+            <Template
+              template={`timegridDisplay${isPrimary ? 'Primary' : ''}Time`}
+              param={{ time: date }}
+              as="span"
+            />
+          </div>
+        );
+      })}
+      {isPresent(currentTimeIndicatorState) && isPresent(zonedCurrentTime) && (
         <CurrentTimeLabel
           unit="hour"
           top={currentTimeIndicatorState.top}
-          time={currentTimeIndicatorState.now}
-          diffFromPrimaryTimezone={rowsInfo[0].diffFromPrimaryTimezone}
+          currentTime={currentTimeIndicatorState.now}
+          zonedCurrentTime={zonedCurrentTime}
         />
       )}
     </div>
@@ -91,7 +128,7 @@ export const TimeColumn = memo(function TimeColumn({
   const timezonesCollapsed = useStore(timezonesCollapsedOptionSelector);
 
   const tzConverter = useTZConverter();
-  const { width, borderRight, backgroundColor } = useTheme(weekTimeGridLeftSelector);
+  const { width, borderRight } = useTheme(weekTimeGridLeftSelector);
 
   const rowsByHour = useMemo(
     () => timeGridRows.filter((_, index) => index % 2 === 0 || index === timeGridRows.length - 1),
@@ -156,7 +193,7 @@ export const TimeColumn = memo(function TimeColumn({
   return (
     <div
       className={cls(classNames.timeColumn)}
-      style={{ width, backgroundColor }}
+      style={{ width }}
       data-testid="timegrid-time-column"
     >
       {!timezonesCollapsed &&

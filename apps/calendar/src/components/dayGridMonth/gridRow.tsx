@@ -49,7 +49,6 @@ export const GridRow = memo(function GridRow({
             key={`daygrid-cell-${dayIndex}`}
             date={date}
             style={{
-              backgroundColor: 'transparent',
               width: toPercent(width),
               left: toPercent(left),
             }}

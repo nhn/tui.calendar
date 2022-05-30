@@ -1,7 +1,8 @@
 import { h } from 'preact';
-import { useRef, useState } from 'preact/hooks';
+import { useCallback, useRef, useState } from 'preact/hooks';
 
 import { useDispatch } from '@src/contexts/calendarStore';
+import { useTheme } from '@src/contexts/themeStore';
 import { cls } from '@src/helpers/css';
 import { DRAGGING_TYPE_CONSTANTS } from '@src/helpers/drag';
 import { useDrag } from '@src/hooks/common/useDrag';
@@ -9,24 +10,25 @@ import { useDrag } from '@src/hooks/common/useDrag';
 import type { StyleProp } from '@t/components/common';
 import type { AlldayEventCategory } from '@t/panel';
 
-const DEFAULT_BORDER = '1px solid #e5e5e5';
-const DEFAULT_STYLE: StyleProp = {
-  borderTop: DEFAULT_BORDER,
-  borderBottom: DEFAULT_BORDER,
-};
-
 interface Props {
   name: AlldayEventCategory;
   width: number;
   height: number;
 }
 
-function getDefaultStyle(width: number, height: number) {
-  return { ...DEFAULT_STYLE, height, width: '100%', cursor: 'row-resize' };
+function getDefaultStyle(height: number, border: string) {
+  return {
+    height,
+    width: '100%',
+    cursor: 'row-resize',
+    borderTop: border,
+    borderBottom: border,
+  };
 }
 
-export function PanelResizer({ name, width, height }: Props) {
-  const style = getDefaultStyle(width, height);
+export function PanelResizer({ name, height }: Props) {
+  const border = useTheme(useCallback((theme) => theme.week.panelResizer.border, []));
+  const style = getDefaultStyle(height, border);
   const defaultGuideStyle = {
     ...style,
     display: 'none',

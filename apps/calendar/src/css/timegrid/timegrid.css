@@ -27,14 +27,6 @@
   width: 100%;
 }
 
-.timegrid .columns .gridline-half--upper {
-  border-bottom: 1px dotted #f9f9f9;
-}
-
-.timegrid .columns .gridline-half--lower {
-  border-bottom: 1px solid #e5e5e5;
-}
-
 .timegrid .columns .column {
   display: inline-block;
   height: 100%;
@@ -48,7 +40,6 @@
 
 .timegrid .timegrid-current-time-line .timegrid-current-time-line-left {
   position: absolute;
-  border-top: 1px dashed;
 }
 
 .timegrid .timegrid-current-time-line .timegrid-current-time-line-marker {
@@ -61,11 +52,9 @@
 
 .timegrid .timegrid-current-time-line .timegrid-current-time-line-today {
   position: absolute;
-  border-top: 1px solid;
 }
 
 .timegrid .timegrid-current-time-line .timegrid-current-time-line-right {
   position: absolute;
   right: 0;
-  border-top: none;
 }

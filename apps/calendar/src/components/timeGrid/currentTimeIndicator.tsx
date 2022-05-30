@@ -1,9 +1,10 @@
 import { h } from 'preact';
-import { useCallback } from 'preact/hooks';
 
 import { addTimeGridPrefix } from '@src/components/timeGrid';
 import { useTheme } from '@src/contexts/themeStore';
 import { cls, toPercent } from '@src/helpers/css';
+
+import type { ThemeState } from '@t/theme';
 
 const classNames = {
   line: cls(addTimeGridPrefix('current-time-line')),
@@ -20,8 +21,18 @@ interface Props {
   columnIndex: number;
 }
 
+function currentTimeIndicatorTheme(theme: ThemeState) {
+  return {
+    pastBorder: theme.week.currentTimeLinePast.border,
+    todayBorder: theme.week.currentTimeLineToday.border,
+    futureBorder: theme.week.currentTimeLineFuture.border,
+    bulletBackgroundColor: theme.week.currentTimeLineBullet.backgroundColor,
+  };
+}
+
 export function CurrentTimeIndicator({ top, columnWidth, columnCount, columnIndex }: Props) {
-  const currentTimeColor = useTheme(useCallback((theme) => theme.week.currentTime.color, []));
+  const { pastBorder, todayBorder, futureBorder, bulletBackgroundColor } =
+    useTheme(currentTimeIndicatorTheme);
 
   const leftLine = {
     left: toPercent(columnWidth * columnIndex),
@@ -38,26 +49,24 @@ export function CurrentTimeIndicator({ top, columnWidth, columnCount, columnInde
       style={{ top: toPercent(top) }}
       data-testid="timegrid-current-time-indicator"
     >
-      <div
-        className={classNames.left}
-        style={{ width: leftLine.width, borderColor: currentTimeColor }}
-      />
+      <div className={classNames.left} style={{ width: leftLine.width, borderTop: pastBorder }} />
       <div
         className={classNames.marker}
-        style={{ left: leftLine.left, backgroundColor: currentTimeColor }}
+        style={{ left: leftLine.left, backgroundColor: bulletBackgroundColor }}
       />
       <div
         className={classNames.today}
         style={{
           left: leftLine.left,
           width: toPercent(columnWidth),
-          borderColor: currentTimeColor,
+          borderTop: todayBorder,
         }}
       />
       <div
         className={classNames.right}
         style={{
           left: rightLine.left,
+          borderTop: futureBorder,
         }}
       />
     </div>

@@ -79,12 +79,3 @@ WithBackgroundEvents.args = {
   totalUIModels: [getBackgroundEvents()],
   columnWidth: '20%',
 };
-
-export const HasBackgroundColor = Template.bind({});
-HasBackgroundColor.args = {
-  columnDate: new TZDate(),
-  timeGridData: getTimeGridData(),
-  totalUIModels: [],
-  columnWidth: '20%',
-  backgroundColor: 'rgba(81, 92, 230, 0.05)',
-};
