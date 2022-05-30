@@ -1,10 +1,11 @@
 import { h } from 'preact';
-import { useCallback } from 'preact/hooks';
 
 import { useTheme } from '@src/contexts/themeStore';
 import { cls, toPercent } from '@src/helpers/css';
 import { getLeftAndWidth } from '@src/helpers/grid';
 import type TZDate from '@src/time/date';
+
+import type { ThemeState } from '@t/theme';
 
 interface Props {
   gridSelectionData: GridSelectionDataByRow;
@@ -12,10 +13,12 @@ interface Props {
   narrowWeekend: boolean;
 }
 
+function commonGridSelectionSelector(theme: ThemeState) {
+  return theme.common.gridSelection;
+}
+
 export function GridSelection({ gridSelectionData, weekDates, narrowWeekend }: Props) {
-  const { backgroundColor, border } = useTheme(
-    useCallback((theme) => theme.common.gridSelection, [])
-  );
+  const { backgroundColor, border } = useTheme(commonGridSelectionSelector);
   const { startCellIndex, endCellIndex } = gridSelectionData;
 
   const { left, width } = getLeftAndWidth(
