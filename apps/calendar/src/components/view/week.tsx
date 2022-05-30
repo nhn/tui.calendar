@@ -17,7 +17,6 @@ import { createTimeGridData, getDayGridEvents, getWeekDates } from '@src/helpers
 import { getActivePanels } from '@src/helpers/view';
 import { useCalendarData } from '@src/hooks/calendar/useCalendarData';
 import { useDOMNode } from '@src/hooks/common/useDOMNode';
-import { useWeekDaynameTheme } from '@src/hooks/theme/useWeekDaynameTheme';
 import { useTimeGridScrollSync } from '@src/hooks/timeGrid/useTimeGridScrollSync';
 import {
   calendarSelector,
@@ -58,7 +57,6 @@ function timegridHeightSelector(state: CalendarState) {
 export function Week() {
   const { options, calendar, gridRowLayout, lastPanelType, renderDate } = useWeekViewState();
   const timeGridPanelHeight = useStore(timegridHeightSelector);
-  const daynameTheme = useWeekDaynameTheme();
   const gridHeaderMarginLeft = useTheme(useCallback((theme) => theme.week.dayGridLeft.width, []));
 
   const [stickyTop, setStickyTop] = useState<number | null>(null);
@@ -152,7 +150,6 @@ export function Week() {
         <GridHeader
           type="week"
           dayNames={dayNames}
-          theme={daynameTheme}
           marginLeft={gridHeaderMarginLeft}
           options={weekOptions}
           rowStyleInfo={rowStyleInfo}

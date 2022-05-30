@@ -7,7 +7,6 @@ import { Layout } from '@src/components/layout';
 import { useStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
 import { createDateMatrixOfMonth } from '@src/helpers/grid';
-import { useMonthDaynameTheme } from '@src/hooks/theme/useMonthDaynameTheme';
 import { optionsSelector, viewSelector } from '@src/selectors';
 import { getRowStyleInfo, isWeekend } from '@src/time/datetime';
 import { capitalize } from '@src/utils/string';
@@ -36,7 +35,6 @@ function getDayNames(options: CalendarStore['options']) {
 export function Month() {
   const options = useStore(optionsSelector);
   const { renderDate } = useStore(viewSelector);
-  const daynameTheme = useMonthDaynameTheme();
 
   const dayNames = getDayNames(options);
   const monthOptions = options.month as Required<MonthOptions>;
@@ -60,7 +58,6 @@ export function Month() {
       <GridHeader
         type="month"
         dayNames={dayNames}
-        theme={daynameTheme}
         options={monthOptions}
         rowStyleInfo={rowStyleInfo}
       />

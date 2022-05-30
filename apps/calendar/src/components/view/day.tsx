@@ -16,7 +16,6 @@ import { createTimeGridData, getDayGridEvents } from '@src/helpers/grid';
 import { getActivePanels } from '@src/helpers/view';
 import { useCalendarData } from '@src/hooks/calendar/useCalendarData';
 import { useDOMNode } from '@src/hooks/common/useDOMNode';
-import { useWeekDaynameTheme } from '@src/hooks/theme/useWeekDaynameTheme';
 import { useTimeGridScrollSync } from '@src/hooks/timeGrid/useTimeGridScrollSync';
 import {
   calendarSelector,
@@ -49,7 +48,6 @@ function useDayViewState() {
 
 export function Day() {
   const { calendar, options, gridRowLayout, lastPanelType, renderDate } = useDayViewState();
-  const daynameTheme = useWeekDaynameTheme();
   const gridHeaderMarginLeft = useTheme(useCallback((theme) => theme.week.dayGridLeft.width, []));
   const [timePanel, setTimePanelRef] = useDOMNode<HTMLDivElement>();
 
@@ -119,7 +117,6 @@ export function Day() {
         <GridHeader
           type="week"
           dayNames={dayNames}
-          theme={daynameTheme}
           marginLeft={gridHeaderMarginLeft}
           rowStyleInfo={rowStyleInfo}
         />
