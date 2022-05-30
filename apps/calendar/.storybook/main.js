@@ -5,7 +5,7 @@ module.exports = {
   core: {
     builder: 'webpack5',
   },
-  stories: isBuildingDocs ? ['../**/docs/*.stories.@(ts|tsx|mdx)'] : ['../**/*.stories.@(ts|tsx|mdx)'],
+  stories: isBuildingDocs ? ['../**/docs/*.stories.mdx'] : ['../**/*.stories.@(ts|tsx|mdx)'],
   addons: ['@storybook/addon-docs'],
   staticDirs: ['../docs/assets/'],
   babel: async (config) => {
