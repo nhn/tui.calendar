@@ -27,6 +27,15 @@ FixedEvents.args = {
   ...Template.args,
 };
 
+export const ReadOnly = Template.bind({});
+ReadOnly.args = {
+  ...Template.args,
+  options: {
+    ...Template.args.options,
+    isReadOnly: true,
+  },
+};
+
 export const DifferentPrimaryTimezone = Template.bind({});
 DifferentPrimaryTimezone.args = {
   ...Template.args,

@@ -8,6 +8,7 @@ import { ResizingEventShadow } from '@src/components/dayGridWeek/resizingEventSh
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import { Template } from '@src/components/template';
 import { DEFAULT_PANEL_HEIGHT, WEEK_EVENT_MARGIN_TOP } from '@src/constants/style';
+import { useStore } from '@src/contexts/calendarStore';
 import { useTheme } from '@src/contexts/themeStore';
 import { cls } from '@src/helpers/css';
 import { createGridPositionFinder, EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
@@ -16,8 +17,10 @@ import { useDOMNode } from '@src/hooks/common/useDOMNode';
 import { useGridRowHeightController } from '@src/hooks/dayGridWeek/useGridRowHeightController';
 import { useGridSelection } from '@src/hooks/gridSelection/useGridSelection';
 import type EventUIModel from '@src/model/eventUIModel';
+import { optionsSelector } from '@src/selectors';
 import { weekDayGridLeftSelector } from '@src/selectors/theme';
 import type TZDate from '@src/time/date';
+import { passConditionalProp } from '@src/utils/preact';
 
 import type { WeekOptions } from '@t/options';
 import type { CellStyle } from '@t/time/datetime';
@@ -44,6 +47,7 @@ export function AlldayGridRow({
   rowStyleInfo,
   gridColWidthMap,
 }: Props) {
+  const { isReadOnly } = useStore(optionsSelector);
   const dayGridLeftTheme = useTheme(weekDayGridLeftSelector);
   const [panelContainer, setPanelContainerRef] = useDOMNode<HTMLDivElement>();
 
@@ -91,7 +95,11 @@ export function AlldayGridRow({
       <div className={cls('panel-title')} style={dayGridLeftTheme}>
         <Template template={rowTitleTemplate} param="allday" />
       </div>
-      <div className={cls('allday-panel')} ref={setPanelContainerRef} onMouseDown={onMouseDown}>
+      <div
+        className={cls('allday-panel')}
+        ref={setPanelContainerRef}
+        onMouseDown={passConditionalProp(!isReadOnly, onMouseDown)}
+      >
         <div className={cls('panel-grid-wrapper')}>
           <GridCells
             uiModels={events}

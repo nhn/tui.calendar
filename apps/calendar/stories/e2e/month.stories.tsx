@@ -38,3 +38,15 @@ FixedEvents.args = {
     });
   },
 };
+
+export const ReadOnly = Template.bind({});
+ReadOnly.args = {
+  ...Template.args,
+  options: {
+    defaultView: 'month',
+    useCreationPopup: true,
+    useDetailPopup: true,
+    isReadOnly: true,
+  },
+  onInit: FixedEvents.args.onInit,
+};

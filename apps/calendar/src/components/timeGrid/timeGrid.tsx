@@ -7,6 +7,7 @@ import { CurrentTimeIndicator } from '@src/components/timeGrid/currentTimeIndica
 import { GridLines } from '@src/components/timeGrid/gridLines';
 import { MovingEventShadow } from '@src/components/timeGrid/movingEventShadow';
 import { TimeColumn } from '@src/components/timeGrid/timeColumn';
+import { useStore } from '@src/contexts/calendarStore';
 import { useTheme } from '@src/contexts/themeStore';
 import { isBetween, setRenderInfoOfUIModels } from '@src/controller/column';
 import { getTopPercentByTime } from '@src/controller/times';
@@ -19,6 +20,7 @@ import { useIsMounted } from '@src/hooks/common/useIsMounted';
 import { useGridSelection } from '@src/hooks/gridSelection/useGridSelection';
 import { usePrimaryTimezone } from '@src/hooks/timezone/usePrimaryTimezone';
 import type EventUIModel from '@src/model/eventUIModel';
+import { optionsSelector } from '@src/selectors';
 import { weekTimeGridLeftSelector } from '@src/selectors/theme';
 import type TZDate from '@src/time/date';
 import {
@@ -29,6 +31,7 @@ import {
   toStartOfDay,
 } from '@src/time/datetime';
 import { first, last } from '@src/utils/array';
+import { passConditionalProp } from '@src/utils/preact';
 import { isPresent } from '@src/utils/type';
 
 import type { TimeGridData } from '@t/grid';
@@ -44,6 +47,7 @@ interface Props {
 }
 
 export function TimeGrid({ timeGridData, events }: Props) {
+  const { isReadOnly } = useStore(optionsSelector);
   const [, getNow] = usePrimaryTimezone();
 
   const isMounted = useIsMounted();
@@ -153,7 +157,7 @@ export function TimeGrid({ timeGridData, events }: Props) {
           className={cls('columns')}
           style={{ left: timeGridLeftWidth }}
           ref={setColumnsContainer}
-          onMouseDown={onMouseDown}
+          onMouseDown={passConditionalProp(!isReadOnly, onMouseDown)}
         >
           <GridLines timeGridRows={rows} />
           <MovingEventShadow gridPositionFinder={gridPositionFinder} timeGridData={timeGridData} />
