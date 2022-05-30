@@ -177,7 +177,29 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
     };
   }
 
-  private move(offset = 0) {
+  /**
+   * Move the rendered date to the next/prev range.
+   *
+   * The range of movement differs depending on the current view, Basically:
+   *   - In month view, it moves to the next/prev month.
+   *   - In week view, it moves to the next/prev week.
+   *   - In day view, it moves to the next/prev day.
+   *
+   * Also, the range depends on the options like how many visible weeks/months should be rendered.
+   *
+   * @param offset{number} The offset to move by.
+   *
+   * @example
+   * // Move to the next month in month view.
+   * calendar.move(1);
+   *
+   * // Move to the next year in month view.
+   * calendar.move(12);
+   *
+   * // Move to yesterday in day view.
+   * calendar.move(-1);
+   */
+  move(offset = 0) {
     const { currentView, renderDate } = this.getStoreState().view;
     const { options } = this.getStoreState();
     const { setRenderDate } = this.getStoreDispatchers().view;
