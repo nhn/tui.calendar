@@ -89,7 +89,7 @@ export function AlldayGridRow({
   return (
     <Fragment>
       <div className={cls('panel-title')} style={dayGridLeftTheme}>
-        <Template template={rowTitleTemplate} param="allday" />
+        <Template template={rowTitleTemplate} param="alldayTitle" />
       </div>
       <div className={cls('allday-panel')} ref={setPanelContainerRef} onMouseDown={onMouseDown}>
         <div className={cls('panel-grid-wrapper')}>

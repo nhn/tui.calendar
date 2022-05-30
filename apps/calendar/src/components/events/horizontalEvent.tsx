@@ -237,7 +237,7 @@ export function HorizontalEvent({
     onMoveStart(e);
   };
 
-  const { isReadOnly, id, calendarId } = uiModel.model;
+  const { isReadOnly, id, calendarId, category, title } = uiModel.model;
   const shouldHideResizeHandler = flat || isDraggingTarget || uiModel.exceedRight || isReadOnly;
 
   return (
