@@ -85,9 +85,10 @@ export function createCalendarDispatchers(set: SetState<CalendarStore>): Calenda
           const events = state.calendar.events.toArray().map((event) => {
             if (event.calendarId === calendarId) {
               event.color = colorOptions.color ?? event.color;
-              event.bgColor = colorOptions.bgColor ?? event.bgColor;
+              event.backgroundColor = colorOptions.backgroundColor ?? event.backgroundColor;
               event.borderColor = colorOptions.borderColor ?? event.borderColor;
-              event.dragBgColor = colorOptions.dragBgColor ?? event.dragBgColor;
+              event.dragBackgroundColor =
+                colorOptions.dragBackgroundColor ?? event.dragBackgroundColor;
             }
 
             return event;

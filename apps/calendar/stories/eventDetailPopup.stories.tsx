@@ -59,7 +59,7 @@ EventDetailPopupWithCalendars.args = {
     attendees: ['attendee1', 'attendee2'],
     recurrenceRule: 'recurrence rule',
     isReadOnly: false,
-    bgColor: '#03bd9e',
+    backgroundColor: '#03bd9e',
     state: 'Busy',
   }),
 };

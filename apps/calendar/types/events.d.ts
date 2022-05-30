@@ -149,12 +149,12 @@ export interface EventObject {
   /**
    * Background color of the event element
    */
-  bgColor?: string;
+  backgroundColor?: string;
 
   /**
    * Background color of the dragging event element
    */
-  dragBgColor?: string;
+  dragBackgroundColor?: string;
 
   /**
    * Left border color of the event element
