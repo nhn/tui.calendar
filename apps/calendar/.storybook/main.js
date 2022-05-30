@@ -28,7 +28,7 @@ module.exports = {
       .concat([
         {
           test: /\.css$/,
-          include: /node_modules/,
+          include: /(node_modules|storybook-styles)/,
           use: [
             require.resolve('style-loader'),
             {
@@ -41,7 +41,7 @@ module.exports = {
         },
         {
           test: /\.css$/,
-          exclude: /node_modules/,
+          exclude: /(node_modules|storybook-styles)/,
           sideEffects: true,
           use: [
             require.resolve('style-loader'),
