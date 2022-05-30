@@ -11,7 +11,7 @@ import { usePrimaryTimezone } from '@src/hooks/timezone/usePrimaryTimezone';
 import { viewSelector } from '@src/selectors';
 import type { TemplateName } from '@src/template/default';
 import type TZDate from '@src/time/date';
-import { isSaturday, isSunday, toFormat } from '@src/time/datetime';
+import { isSameDate, isSaturday, isSunday, toFormat } from '@src/time/datetime';
 import { capitalize } from '@src/utils/string';
 
 import type { CommonTheme, MonthTheme } from '@t/theme';
@@ -35,9 +35,10 @@ function getDateColor({
   const dayIndex = date.getDay();
   const thisMonth = renderDate.getMonth();
   const isSameMonth = thisMonth === date.getMonth();
+  const isToday = isSameDate(date, renderDate);
 
   const {
-    common: { holiday, saturday, today },
+    common: { holiday, saturday, today, dayname },
     month: { dayExceptThisMonth, holidayExceptThisMonth },
   } = theme;
 
@@ -45,11 +46,15 @@ function getDateColor({
     return isSameMonth ? holiday.color : holidayExceptThisMonth.color;
   }
 
-  if (isSameMonth) {
-    return isSaturday(dayIndex) ? saturday.color : today.color;
+  if (isSaturday(dayIndex)) {
+    return isSameMonth ? saturday.color : dayExceptThisMonth.color;
   }
 
-  return dayExceptThisMonth.color;
+  if (isToday) {
+    return today.color;
+  }
+
+  return dayname.color;
 }
 
 function useCellHeaderTheme() {

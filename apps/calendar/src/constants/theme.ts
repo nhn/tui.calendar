@@ -15,7 +15,7 @@ export const DEFAULT_COMMON_THEME: DeepRequired<CommonTheme> = {
     color: '#333',
   },
   today: {
-    color: '#333',
+    color: '#fff',
   },
   gridSelection: {
     backgroundColor: 'rgba(81, 92, 230, 0.05)',
