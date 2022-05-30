@@ -1,8 +1,15 @@
+import produce from 'immer';
+
 import { templates } from '@src/template/default';
 
+import type { CalendarState, CalendarStore, SetState } from '@t/store';
 import type { Template, TemplateConfig } from '@t/template';
 
 export type TemplateSlice = { template: Template };
+
+export type TempalateDispatchers = {
+  setTemplate: (template: TemplateConfig) => void;
+};
 
 export function createTemplateSlice(templateConfig: TemplateConfig = {}): TemplateSlice {
   return {
@@ -10,5 +17,19 @@ export function createTemplateSlice(templateConfig: TemplateConfig = {}): Templa
       ...templates,
       ...templateConfig,
     },
+  };
+}
+
+export function createTemplateDispatchers(set: SetState<CalendarStore>): TempalateDispatchers {
+  return {
+    setTemplate: (template: TemplateConfig) =>
+      set(
+        produce((state: CalendarState) => {
+          state.template = {
+            ...state.template,
+            ...template,
+          };
+        })
+      ),
   };
 }

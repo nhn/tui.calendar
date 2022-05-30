@@ -6,7 +6,7 @@ import type { GridSelectionDispatchers, GridSelectionSlice } from '@src/slices/g
 import type { WeekViewLayoutDispatchers, WeekViewLayoutSlice } from '@src/slices/layout';
 import type { OptionsDispatchers, OptionsSlice } from '@src/slices/options';
 import type { PopupDispatchers, PopupSlice } from '@src/slices/popup';
-import type { TemplateSlice } from '@src/slices/template';
+import type { TempalateDispatchers, TemplateSlice } from '@src/slices/template';
 import type { ViewDispatchers, ViewSlice } from '@src/slices/view';
 import type TZDate from '@src/time/date';
 
@@ -133,6 +133,7 @@ export type Dispatchers = {
   view: ViewDispatchers;
   dnd: DndDispatchers;
   gridSelection: GridSelectionDispatchers;
+  template: TempalateDispatchers;
 };
 
 export type CalendarStore = CalendarState & {

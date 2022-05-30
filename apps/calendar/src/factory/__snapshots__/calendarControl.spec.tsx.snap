@@ -1,0 +1,218 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getOptions/setOptions should get options 1`] = `
+Object {
+  "defaultView": "week",
+  "eventFilter": [Function],
+  "gridSelection": Object {
+    "enableClick": true,
+    "enableDblClick": true,
+  },
+  "isReadOnly": false,
+  "month": Object {
+    "daynames": Array [
+      "sun",
+      "mon",
+      "tue",
+      "wed",
+      "thu",
+      "fri",
+      "sat",
+    ],
+    "grid": Object {
+      "footer": Object {
+        "height": 31,
+      },
+      "header": Object {
+        "height": 31,
+      },
+    },
+    "isAlways6Week": true,
+    "moreLayerSize": Object {
+      "height": null,
+      "width": null,
+    },
+    "narrowWeekend": false,
+    "startDayOfWeek": 0,
+    "visibleEventCount": 6,
+    "visibleWeeksCount": 0,
+    "workweek": false,
+  },
+  "template": Object {
+    "allday": [Function],
+    "alldayTitle": [Function],
+    "collapseBtnTitle": [Function],
+    "comingDuration": [Function],
+    "dayGridTitle": [Function],
+    "endDatePlaceholder": [Function],
+    "event": [Function],
+    "goingDuration": [Function],
+    "locationPlaceholder": [Function],
+    "milestone": [Function],
+    "milestoneTitle": [Function],
+    "monthDayname": [Function],
+    "monthGridFooter": [Function],
+    "monthGridFooterExceed": [Function],
+    "monthGridHeader": [Function],
+    "monthGridHeaderExceed": [Function],
+    "monthMoreClose": [Function],
+    "monthMoreTitleDate": [Function],
+    "popupDelete": [Function],
+    "popupDetailAttendees": [Function],
+    "popupDetailBody": [Function],
+    "popupDetailDate": [Function],
+    "popupDetailLocation": [Function],
+    "popupDetailRecurrenceRule": [Function],
+    "popupDetailState": [Function],
+    "popupDetailTitle": [Function],
+    "popupEdit": [Function],
+    "popupIsAllday": [Function],
+    "popupSave": [Function],
+    "popupStateBusy": [Function],
+    "popupStateFree": [Function],
+    "popupUpdate": [Function],
+    "startDatePlaceholder": [Function],
+    "task": [Function],
+    "taskTitle": [Function],
+    "time": [Function],
+    "timegridCurrentTime": [Function],
+    "timegridDisplayPrimaryTime": [Function],
+    "timegridDisplayTime": [Function],
+    "timezoneDisplayLabel": [Function],
+    "titlePlaceholder": [Function],
+    "weekDayname": [Function],
+    "weekGridFooterExceed": [Function],
+  },
+  "theme": Object {
+    "common": Object {
+      "backgroundColor": "white",
+      "border": "1px solid #e5e5e5",
+      "dayname": Object {
+        "color": "#333",
+      },
+      "gridSelection": Object {
+        "backgroundColor": "rgba(81, 92, 230, 0.05)",
+        "border": "1px solid #515ce6",
+      },
+      "holiday": Object {
+        "color": "#ff4040",
+      },
+      "saturday": Object {
+        "color": "#333",
+      },
+      "today": Object {
+        "color": "#333",
+      },
+    },
+    "month": Object {
+      "dayExceptThisMonth": Object {
+        "color": "rgba(51, 51, 51, 0.4)",
+      },
+      "dayname": Object {
+        "backgroundColor": "inherit",
+        "borderLeft": "none",
+      },
+      "holidayExceptThisMonth": Object {
+        "color": "rgba(255, 64, 64, 0.4)",
+      },
+      "moreView": Object {
+        "backgroundColor": "white",
+        "border": "1px solid #d5d5d5",
+        "boxShadow": "0 2px 6px 0 rgba(0, 0, 0, 0.1)",
+      },
+      "moreViewTitle": Object {
+        "backgroundColor": "inherit",
+      },
+      "weekend": Object {
+        "backgroundColor": "inherit",
+      },
+    },
+    "week": Object {
+      "currentTime": Object {
+        "color": "#515ce6",
+      },
+      "currentTimeLineBullet": Object {
+        "backgroundColor": "#515ce6",
+      },
+      "currentTimeLineFuture": Object {
+        "border": "none",
+      },
+      "currentTimeLinePast": Object {
+        "border": "1px dashed #515ce6",
+      },
+      "currentTimeLineToday": Object {
+        "border": "1px solid #515ce6",
+      },
+      "dayGrid": Object {
+        "backgroundColor": "inherit",
+        "borderRight": "1px solid #e5e5e5",
+      },
+      "dayGridLeft": Object {
+        "backgroundColor": "inherit",
+        "borderRight": "1px solid #e5e5e5",
+        "width": "72px",
+      },
+      "dayname": Object {
+        "backgroundColor": "inherit",
+        "borderBottom": "1px solid #e5e5e5",
+        "borderLeft": "none",
+        "borderTop": "1px solid #e5e5e5",
+      },
+      "futureTime": Object {
+        "color": "#333",
+      },
+      "gridSelection": Object {
+        "color": "#515ce6",
+      },
+      "panelResizer": Object {
+        "border": "1px solid #e5e5e5",
+      },
+      "pastDay": Object {
+        "color": "#bbb",
+      },
+      "pastTime": Object {
+        "color": "#bbb",
+      },
+      "timeGrid": Object {
+        "borderRight": "1px solid #e5e5e5",
+      },
+      "timeGridHalfHour": Object {
+        "borderBottom": "1px solid #e5e5e5",
+      },
+      "timeGridLeft": Object {
+        "backgroundColor": "inherit",
+        "borderRight": "1px solid #e5e5e5",
+        "width": "72px",
+      },
+      "timeGridLeftAdditionalTimezone": Object {
+        "backgroundColor": "white",
+      },
+      "today": Object {
+        "backgroundColor": "rgba(81, 92, 230, 0.05)",
+        "color": "inherit",
+      },
+      "weekend": Object {
+        "backgroundColor": "inherit",
+      },
+    },
+  },
+  "timezone": Object {
+    "zones": Array [],
+  },
+  "usageStatistics": true,
+  "useCreationPopup": false,
+  "useDetailPopup": false,
+  "week": Object {
+    "daynames": Array [],
+    "eventView": true,
+    "hourEnd": 24,
+    "hourStart": 0,
+    "narrowWeekend": false,
+    "showTimezoneCollapseButton": false,
+    "startDayOfWeek": 0,
+    "taskView": true,
+    "timezonesCollapsed": false,
+    "workweek": false,
+  },
+}
+`;

@@ -9,7 +9,7 @@ import {
 import { createWeekViewLayoutDispatchers, createWeekViewLayoutSlice } from '@src/slices/layout';
 import { createOptionsDispatchers, createOptionsSlice } from '@src/slices/options';
 import { createPopupDispatchers, createPopupSlice } from '@src/slices/popup';
-import { createTemplateSlice } from '@src/slices/template';
+import { createTemplateDispatchers, createTemplateSlice } from '@src/slices/template';
 import { createViewDispatchers, createViewSlice } from '@src/slices/view';
 import { createStoreContext } from '@src/store';
 import { devtools } from '@src/store/devtool';
@@ -39,6 +39,7 @@ const storeCreator = (options: Options) => (set: SetState<CalendarStore>) => {
       view: createViewDispatchers(set),
       dnd: createDndDispatchers(set),
       gridSelection: createGridSelectionDispatchers(set),
+      template: createTemplateDispatchers(set),
     },
   };
 };
