@@ -5,19 +5,22 @@ interface StampObj extends Record<string, any> {
   __fe_id?: number;
 }
 
-function* idGenerator() {
+function idGenerator() {
   let id = 0;
 
-  while (true) {
-    id += 1;
-    yield id;
-  }
+  return {
+    next() {
+      id += 1;
+
+      return id;
+    },
+  };
 }
 
 const getId = (function () {
   const generator = idGenerator();
 
-  return () => generator.next().value as number;
+  return () => generator.next();
 })();
 
 export function stamp(obj: StampObj): number {
