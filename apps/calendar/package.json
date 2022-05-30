@@ -56,7 +56,7 @@
     "lint": "eslint .",
     "cpy-dist2doc": "mkdir -p doc/dist && cp -f -r dist doc",
     "release-note": "tuie",
-    "build-all": "rm -rf dist && concurrently 'npm:build:*'",
+    "build": "rm -rf dist && concurrently 'npm:build:*'",
     "build:modern": "webpack --config webpack.config.js && webpack --config webpack.config.js --env minify",
     "build:ie11": "webpack --config webpack.config.js --env ie11 && webpack --config webpack.config.js --env minify ie11",
     "build:esm": "node scripts/build-esm.js",
