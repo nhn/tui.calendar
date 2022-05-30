@@ -54,6 +54,10 @@ function getDateColor({
     return today.color;
   }
 
+  if (!isSameMonth) {
+    return dayExceptThisMonth.color;
+  }
+
   return dayname.color;
 }
 
