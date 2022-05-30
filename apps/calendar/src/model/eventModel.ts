@@ -62,7 +62,7 @@ export default class EventModel implements EventObjectWithDefaultValues {
 
   borderColor = '#000';
 
-  customStyle = '';
+  customStyle = {};
 
   raw: any = null;
 
@@ -108,7 +108,7 @@ export default class EventModel implements EventObjectWithDefaultValues {
     backgroundColor = '#a1b56c',
     dragBackgroundColor = '#a1b56c',
     borderColor = '#000',
-    customStyle = '',
+    customStyle = {},
     raw = null,
   }: EventObject = {}) {
     this.id = id;
