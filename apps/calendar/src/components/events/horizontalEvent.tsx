@@ -152,7 +152,7 @@ export function HorizontalEvent({
 }: Props) {
   const layoutContainer = useLayoutContainer();
 
-  const { useDetailPopup } = useStore(optionsSelector);
+  const { useDetailPopup, isReadOnly: isGloballyReadOnly } = useStore(optionsSelector);
   const { setDraggingEventUIModel } = useDispatch('dnd');
   const { showDetailPopup } = useDispatch('popup');
   const eventBus = useEventBus();
@@ -160,7 +160,7 @@ export function HorizontalEvent({
   const [isDraggingTarget, setIsDraggingTarget] = useState<boolean>(false);
   const eventContainerRef = useRef<HTMLDivElement>(null);
 
-  const isDraggableEvent = isNil(resizingWidth) && isNil(movingLeft);
+  const isDraggableEvent = !isGloballyReadOnly && isNil(resizingWidth) && isNil(movingLeft);
   const { dayEventBlockClassName, containerStyle, eventItemStyle } = getStyles({
     uiModel,
     eventHeight,
@@ -238,7 +238,8 @@ export function HorizontalEvent({
   };
 
   const { isReadOnly, id, calendarId } = uiModel.model;
-  const shouldHideResizeHandler = flat || isDraggingTarget || uiModel.exceedRight || isReadOnly;
+  const shouldHideResizeHandler =
+    !isDraggableEvent || flat || isDraggingTarget || uiModel.exceedRight || isReadOnly;
 
   return (
     <div

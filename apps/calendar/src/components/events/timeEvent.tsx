@@ -14,7 +14,7 @@ import { dndSelector, optionsSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import type TZDate from '@src/time/date';
 import { passConditionalProp } from '@src/utils/preact';
-import { isNil, isPresent } from '@src/utils/type';
+import { isPresent } from '@src/utils/type';
 
 const classNames = {
   time: cls('event-time'),
@@ -95,8 +95,23 @@ function getStyles(uiModel: EventUIModel, isDraggingTarget: boolean, hasNextStar
   };
 }
 
+function isDraggableEvent({
+  uiModel,
+  isGloballyReadOnly,
+  isDraggingTarget,
+  hasNextStartTime,
+}: {
+  uiModel: EventUIModel;
+  isGloballyReadOnly: boolean;
+  isDraggingTarget: boolean;
+  hasNextStartTime: boolean;
+}) {
+  const { model } = uiModel;
+  return !(isGloballyReadOnly || model.isReadOnly || isDraggingTarget || hasNextStartTime);
+}
+
 export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: Props) {
-  const { useDetailPopup } = useStore(optionsSelector);
+  const { useDetailPopup, isReadOnly: isGloballyReadOnly } = useStore(optionsSelector);
 
   const layoutContainer = useLayoutContainer();
   const { showDetailPopup } = useDispatch('popup');
@@ -110,18 +125,19 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
 
   const { model, goingDurationHeight, modelDurationHeight, comingDurationHeight, croppedEnd } =
     uiModel;
-  const { isReadOnly, id, calendarId } = model;
+  const { id, calendarId } = model;
+  const hasNextStartTime = isPresent(nextStartTime);
   const { containerStyle, goingDurationStyle, modelDurationStyle, comingDurationStyle } = getStyles(
     uiModel,
     isDraggingTarget,
-    isPresent(nextStartTime)
+    hasNextStartTime
   );
 
   useTransientUpdate(dndSelector, ({ draggingEventUIModel, draggingState }) => {
     if (
       draggingState === DraggingState.DRAGGING &&
       draggingEventUIModel?.cid() === uiModel.cid() &&
-      isNil(nextStartTime) &&
+      !hasNextStartTime &&
       !isResizingGuide
     ) {
       setIsDraggingTarget(true);
@@ -185,7 +201,13 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
     onResizeStart(e);
   };
 
-  const shouldShowResizeHandle = !croppedEnd && !isReadOnly && !isDraggingTarget;
+  const isDraggable = isDraggableEvent({
+    uiModel,
+    isGloballyReadOnly,
+    isDraggingTarget,
+    hasNextStartTime,
+  });
+  const shouldShowResizeHandle = isDraggable && !croppedEnd;
 
   return (
     <div
@@ -194,7 +216,7 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
       data-event-id={id}
       className={classNames.time}
       style={containerStyle}
-      onMouseDown={passConditionalProp(isNil(nextStartTime), handleMoveStart)}
+      onMouseDown={passConditionalProp(isDraggable, handleMoveStart)}
       ref={eventContainerRef}
     >
       {goingDurationHeight ? (
@@ -207,7 +229,7 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
           <Template
             template="time"
             param={{
-              start: isNil(nextStartTime) ? model.start : nextStartTime,
+              start: hasNextStartTime ? nextStartTime : model.start,
               title: model.title,
             }}
           />
