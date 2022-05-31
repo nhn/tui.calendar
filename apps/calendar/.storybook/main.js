@@ -7,6 +7,7 @@ module.exports = {
   },
   stories: isBuildingDocs ? ['../**/docs/*.stories.@(ts|tsx|mdx)'] : ['../**/*.stories.@(ts|tsx|mdx)'],
   addons: ['@storybook/addon-docs'],
+  staticDirs: ['../docs/assets/'],
   babel: async (config) => {
     // Replace storybook babel preset & plugins with custom ones
     config.presets.splice(config.presets.length - 1, 1, [

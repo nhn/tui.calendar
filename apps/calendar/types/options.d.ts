@@ -62,8 +62,8 @@ export interface TimezoneOptions {
 
 export interface CalendarColor {
   color?: string;
-  bgColor?: string;
-  dragBgColor?: string;
+  backgroundColor?: string;
+  dragBackgroundColor?: string;
   borderColor?: string;
 }
 

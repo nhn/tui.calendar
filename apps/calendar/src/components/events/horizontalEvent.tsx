@@ -50,7 +50,7 @@ function getExceedClassName(exceedLeft: boolean, exceedRight: boolean) {
 
 function getEventItemStyle({
   flat,
-  bgColor,
+  backgroundColor,
   borderColor,
   exceedLeft,
   exceedRight,
@@ -59,7 +59,7 @@ function getEventItemStyle({
 }: EventItemStyleParam) {
   const defaultItemStyle = {
     color: '#333',
-    backgroundColor: bgColor,
+    backgroundColor,
     borderLeft: exceedLeft ? 'none' : `3px solid ${borderColor}`,
     borderRadius: exceedLeft ? 0 : 2,
     overflow: 'hidden',
@@ -96,7 +96,7 @@ function getStyles({
     top,
     exceedLeft,
     exceedRight,
-    model: { bgColor, borderColor },
+    model: { backgroundColor, borderColor },
   } = uiModel;
 
   const margin = getMargin(flat);
@@ -114,7 +114,7 @@ function getStyles({
     flat,
     exceedLeft,
     exceedRight,
-    bgColor,
+    backgroundColor,
     borderColor,
     eventHeight,
     isDraggingTarget,
@@ -237,7 +237,7 @@ export function HorizontalEvent({
     onMoveStart(e);
   };
 
-  const { isReadOnly, id, calendarId } = uiModel.model;
+  const { isReadOnly, id, calendarId, category, title } = uiModel.model;
   const shouldHideResizeHandler = flat || isDraggingTarget || uiModel.exceedRight || isReadOnly;
 
   return (

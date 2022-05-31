@@ -1,5 +1,7 @@
 import type { DateInterface, TuiDateConstructor } from '@toast-ui/date';
 
+import type { StyleProp } from '@t/components/common';
+
 export type ViewType = 'month' | 'week' | 'day';
 export type DateType = string | Date | TZDate;
 export type EventHandlerType = IEvents[keyof IEvents];
@@ -49,8 +51,8 @@ export class TZDate {
 
 export interface ICalendarColor {
   color?: string;
-  bgColor?: string;
-  dragBgColor?: string;
+  backgroundColor?: string;
+  dragBackgroundColor?: string;
   borderColor?: string;
 }
 
@@ -197,10 +199,10 @@ export interface EventObject {
   isReadOnly?: boolean;
   isPrivate?: boolean;
   color?: string;
-  bgColor?: string;
-  dragBgColor?: string;
+  backgroundColor?: string;
+  dragBackgroundColor?: string;
   borderColor?: string;
-  customStyle?: string;
+  customStyle?: StyleProp;
   raw?: {
     [propName: string]: string | number | boolean | object | null;
   };
@@ -224,8 +226,8 @@ export interface ICalendarInfo {
   id: string;
   name: string;
   color?: string;
-  bgColor?: string;
-  dragBgColor?: string;
+  backgroundColor?: string;
+  dragBackgroundColor?: string;
   borderColor?: string;
 }
 

@@ -44,9 +44,9 @@ function initialize() {
       id: String(generateCalendarId()),
       name,
       color: '#000',
-      bgColor: color,
+      backgroundColor: color,
       borderColor: color,
-      dragBgColor: color,
+      dragBackgroundColor: color,
     });
   });
 }

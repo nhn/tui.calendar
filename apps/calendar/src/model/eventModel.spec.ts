@@ -29,7 +29,7 @@ describe('model/event basic', () => {
         start: new TZDate('2015-05-01T00:00:00'),
         end: new TZDate('2015-05-02T00:00:00'),
         color: '#000',
-        bgColor: '#a1b56c',
+        backgroundColor: '#a1b56c',
       };
 
       event.init({

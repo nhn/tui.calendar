@@ -1,19 +1,15 @@
 import { h } from 'preact';
 import { memo } from 'preact/compat';
-import { useCallback, useMemo } from 'preact/hooks';
+import { useCallback } from 'preact/hooks';
 
-import { BackgroundEvent } from '@src/components/events/backgroundEvent';
 import { TimeEvent } from '@src/components/events/timeEvent';
 import { GridSelectionByColumn } from '@src/components/timeGrid/gridSelectionByColumn';
 import { useTheme } from '@src/contexts/themeStore';
-import { getTopHeightByTime } from '@src/controller/times';
-import { cls, toPercent } from '@src/helpers/css';
+import { cls } from '@src/helpers/css';
 import { usePrimaryTimezone } from '@src/hooks/timezone/usePrimaryTimezone';
-import { isBackgroundEvent } from '@src/model/eventModel';
 import type EventUIModel from '@src/model/eventUIModel';
 import type TZDate from '@src/time/date';
-import { isSameDate, isWeekend, setTimeStrToDate } from '@src/time/datetime';
-import { first, last } from '@src/utils/array';
+import { isSameDate, isWeekend } from '@src/time/datetime';
 
 import type { GridPositionFinder, TimeGridData } from '@t/grid';
 import type { ThemeState } from '@t/theme';
@@ -26,39 +22,40 @@ const classNames = {
   events: cls('events'),
 };
 
-function BackgroundEvents({
-  eventUIModels,
-  startTime,
-  endTime,
-}: {
-  eventUIModels: EventUIModel[];
-  startTime: TZDate;
-  endTime: TZDate;
-}) {
-  const backgroundEvents = eventUIModels.filter(isBackgroundEvent);
+// TODO: implement BackgroundEvents
+// function BackgroundEvents({
+//   eventUIModels,
+//   startTime,
+//   endTime,
+// }: {
+//   eventUIModels: EventUIModel[];
+//   startTime: TZDate;
+//   endTime: TZDate;
+// }) {
+//   const backgroundEvents = eventUIModels.filter(isBackgroundEvent);
 
-  return (
-    <div className={classNames.backgrounds}>
-      {backgroundEvents.map((eventUIModel, index) => {
-        const { top, height } = getTopHeightByTime(
-          eventUIModel.model.start,
-          eventUIModel.model.end,
-          startTime,
-          endTime
-        );
+//   return (
+//     <div className={classNames.backgrounds}>
+//       {backgroundEvents.map((eventUIModel, index) => {
+//         const { top, height } = getTopHeightByTime(
+//           eventUIModel.model.start,
+//           eventUIModel.model.end,
+//           startTime,
+//           endTime
+//         );
 
-        return (
-          <BackgroundEvent
-            uiModel={eventUIModel}
-            top={toPercent(top)}
-            height={toPercent(height)}
-            key={`backgroundEvent-${index}`}
-          />
-        );
-      })}
-    </div>
-  );
-}
+//         return (
+//           <BackgroundEvent
+//             uiModel={eventUIModel}
+//             top={toPercent(top)}
+//             height={toPercent(height)}
+//             key={`backgroundEvent-${index}`}
+//           />
+//         );
+//       })}
+//     </div>
+//   );
+// }
 
 function VerticalEvents({ eventUIModels }: { eventUIModels: EventUIModel[] }) {
   // @TODO: use dynamic value
@@ -134,15 +131,15 @@ export const Column = memo(function Column({
   const [, getNow] = usePrimaryTimezone();
   const today = getNow();
 
-  const [startTime, endTime] = useMemo(() => {
-    const { startTime: startTimeStr } = first(timeGridRows);
-    const { endTime: endTimeStr } = last(timeGridRows);
+  // const [startTime, endTime] = useMemo(() => {
+  //   const { startTime: startTimeStr } = first(timeGridRows);
+  //   const { endTime: endTimeStr } = last(timeGridRows);
 
-    const start = setTimeStrToDate(columnDate, startTimeStr);
-    const end = setTimeStrToDate(columnDate, endTimeStr);
+  //   const start = setTimeStrToDate(columnDate, startTimeStr);
+  //   const end = setTimeStrToDate(columnDate, endTimeStr);
 
-    return [start, end];
-  }, [columnDate, timeGridRows]);
+  //   return [start, end];
+  // }, [columnDate, timeGridRows]);
 
   const backgroundColor = getBackgroundColor({ today, columnDate, ...backgroundColorTheme });
 
@@ -160,7 +157,7 @@ export const Column = memo(function Column({
       style={style}
       data-testid={`timegrid-column-${columnDate.getDay()}`}
     >
-      <BackgroundEvents eventUIModels={uiModelsByColumn} startTime={startTime} endTime={endTime} />
+      {/* <BackgroundEvents eventUIModels={uiModelsByColumn} startTime={startTime} endTime={endTime} /> */}
       <VerticalEvents eventUIModels={uiModelsByColumn} />
       <ResizingGuideByColumn
         gridPositionFinder={gridPositionFinder}

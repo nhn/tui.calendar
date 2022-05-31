@@ -32,15 +32,15 @@ cal.setOptions({
 
 | 템플릿명                                                  | 파라미터              | 설명                                                               |
 | --------------------------------------------------------- | --------------------- | ------------------------------------------------------------------ |
-| [milestone](#milestone)                                   | EventModel            | 주간/일간뷰의 milestone 이벤트                                     |
+| [milestone](#milestone)                                   | [EventObject](/story/documentation-ko-api-eventobject--page)            | 주간/일간뷰의 milestone 이벤트                                     |
 | [milestoneTitle](#milestonetitle)                         | 없음                  | 주간/일간뷰의 milestone 패널의 왼쪽 영역                           |
-| [task](#task)                                             | EventModel            | 주간/일간뷰의 task 이벤트                                          |
+| [task](#task)                                             | [EventObject](/story/documentation-ko-api-eventobject--page)            | 주간/일간뷰의 task 이벤트                                          |
 | [taskTitle](#tasktitle)                                   | 없음                  | 주간/일간뷰의 task 패널의 왼쪽 영역                                |
-| [allday](#allday)                                         | EventModel            | 주간/일간뷰의 allday 이벤트                                        |
+| [allday](#allday)                                         | [EventObject](/story/documentation-ko-api-eventobject--page)            | 주간/일간뷰의 allday 이벤트                                        |
 | [alldayTitle](#alldaytitle)                               | 없음                  | 주간/일간뷰의 allday 패널의 왼쪽 영역                              |
-| [time](#time)                                             | EventModel            | 주간/일간뷰의 timed 이벤트                                         |
-| [goingDuration](#goingduration)                           | EventModel            | 주간/일간뷰의 timed 이벤트의 일정 장소까지 이동 시간               |
-| [comingDuration](#comingduration)                         | EventModel            | 주간/일간뷰의 timed 이벤트의 복귀 시간                             |
+| [time](#time)                                             | [EventObject](/story/documentation-ko-api-eventobject--page)            | 주간/일간뷰의 timed 이벤트                                         |
+| [goingDuration](#goingduration)                           | [EventObject](/story/documentation-ko-api-eventobject--page)            | 주간/일간뷰의 timed 이벤트의 일정 장소까지 이동 시간               |
+| [comingDuration](#comingduration)                         | [EventObject](/story/documentation-ko-api-eventobject--page)            | 주간/일간뷰의 timed 이벤트의 복귀 시간                             |
 | [monthMoreTitleDate](#monthmoretitledate)                 | TemplateMoreTitleDate | 월간뷰의 더 보기 팝업의 날짜                                       |
 | [monthMoreClose](#monthmoreclose)                         | 없음                  | 월간뷰의 더 보기 팝업의 닫기 버튼                                  |
 | [monthGridHeader](#monthgridheader)                       | TemplateMonthGrid     | 월간뷰의 셀의 헤더 영역                                            |
@@ -51,7 +51,7 @@ cal.setOptions({
 | [weekDayname](#weekdayname)                               | TemplateWeekDayName   | 주간/일간뷰의 요일                                                 |
 | [weekGridFooterExceed](#weekgridfooterexceed)             | number                | 주간/일간뷰의 allday 패널의 초과된 이벤트 표시 컴포넌트            |
 | [dayGridTitle](#daygridtitle)                             | EventCategory         | 주간/일간뷰의 패널 왼쪽 영역                                       |
-| [event](#event)                                           | EventModel            | 이벤트 컴포넌트                                                    |
+| [event](#event)                                           | [EventObject](/story/documentation-ko-api-eventobject--page)            | 이벤트 컴포넌트                                                    |
 | [collapseBtnTitle](#collapsebtntitle)                     | 없음                  | 주간/일간뷰의 allday 패널의 접기 버튼 컴포넌트                     |
 | [timezoneDisplayLabel](#timezonedisplaylabel)             | TemplateTimezone      | 주간/일간뷰의 타임존 표시 컴포넌트                                 |
 | [timegridDisplayPrimaryTime](#timegriddisplayprimarytime) | TemplateCurrentTime   | 주간/일간뷰의 primary 타임존 시간 표시                             |
@@ -68,13 +68,13 @@ cal.setOptions({
 | [popupUpdate](#popupupdate)                               | 없음                  | 이벤트 수정 팝업에서 수정 버튼 텍스트                              |
 | [popupEdit](#popupedit)                                   | 없음                  | 이벤트 상세 팝업에서 편집 버튼 텍스트                              |
 | [popupDelete](#popupdelete)                               | 없음                  | 이벤트 상세 팝업에서 삭제 버튼 텍스트                              |
-| [popupDetailTitle](#popupdetailtitle)                     | EventModel            | 이벤트 상세 팝업에서 이벤트명                                      |
-| [popupDetailDate](#popupdetaildate)                       | EventModel            | 이벤트 상세 팝업에서 이벤트의 기간                                 |
-| [popupDetailLocation](#popupdetaillocation)               | EventModel            | 이벤트 상세 팝업에서 이벤트의 장소                                 |
-| [popupDetailAttendees](#popupdetailattendees)             | EventModel            | 이벤트 상세 팝업에서 이벤트의 참석자                               |
-| [popupDetailState](#popupdetailstate)                     | EventModel            | 이벤트 상세 팝업에서 이벤트의 상태                                 |
-| [popupDetailRecurrenceRule](#popupdetailrecurrencerule)   | EventModel            | 이벤트 상세 팝업에서 이벤트의 반복 룰                              |
-| [popupDetailBody](#popupdetailbody)                       | EventModel            | 이벤트 상세 팝업에서 이벤트의 내용                                 |
+| [popupDetailTitle](#popupdetailtitle)                     | [EventObject](/story/documentation-ko-api-eventobject--page)            | 이벤트 상세 팝업에서 이벤트명                                      |
+| [popupDetailDate](#popupdetaildate)                       | [EventObject](/story/documentation-ko-api-eventobject--page)            | 이벤트 상세 팝업에서 이벤트의 기간                                 |
+| [popupDetailLocation](#popupdetaillocation)               | [EventObject](/story/documentation-ko-api-eventobject--page)            | 이벤트 상세 팝업에서 이벤트의 장소                                 |
+| [popupDetailAttendees](#popupdetailattendees)             | [EventObject](/story/documentation-ko-api-eventobject--page)            | 이벤트 상세 팝업에서 이벤트의 참석자                               |
+| [popupDetailState](#popupdetailstate)                     | [EventObject](/story/documentation-ko-api-eventobject--page)            | 이벤트 상세 팝업에서 이벤트의 상태                                 |
+| [popupDetailRecurrenceRule](#popupdetailrecurrencerule)   | [EventObject](/story/documentation-ko-api-eventobject--page)            | 이벤트 상세 팝업에서 이벤트의 반복 룰                              |
+| [popupDetailBody](#popupdetailbody)                       | [EventObject](/story/documentation-ko-api-eventobject--page)            | 이벤트 상세 팝업에서 이벤트의 내용                                 |
 
 ## 사용 예시
 
@@ -84,7 +84,7 @@ cal.setOptions({
 
 #### milestone
 
-`eventModel` 파라미터를 이용해 주간/일간뷰의 milestone 이벤트를 커스터마이징할 수 있다.
+[`EventObject`](/story/documentation-ko-api-eventobject--page) 파라미터를 이용해 주간/일간뷰의 milestone 이벤트를 커스터마이징할 수 있다.
 
 ```js
 calendar.setOptions({
@@ -120,7 +120,7 @@ calendar.setOptions({
 
 #### task
 
-`eventModel` 파라미터를 이용해 주간/일간뷰의 task 이벤트를 커스터마이징할 수 있다.
+[`EventObject`](/story/documentation-ko-api-eventobject--page) 파라미터를 이용해 주간/일간뷰의 task 이벤트를 커스터마이징할 수 있다.
 
 ```js
 calendar.setOptions({
@@ -156,7 +156,7 @@ calendar.setOptions({
 
 #### allday
 
-`eventModel` 파라미터를 이용해 주간/일간뷰의 allday 이벤트를 커스터마이징할 수 있다.
+[`EventObject`](/story/documentation-ko-api-eventobject--page) 파라미터를 이용해 주간/일간뷰의 allday 이벤트를 커스터마이징할 수 있다.
 
 ```js
 calendar.setOptions({
@@ -192,7 +192,7 @@ calendar.setOptions({
 
 #### time
 
-`eventModel` 파라미터를 이용해 주간/일간뷰의 timed 이벤트를 커스터마이징할 수 있다. 이동 시간 및 복귀 시간을 제외한 부분이다.
+[`EventObject`](/story/documentation-ko-api-eventobject--page) 파라미터를 이용해 주간/일간뷰의 timed 이벤트를 커스터마이징할 수 있다. 이동 시간 및 복귀 시간을 제외한 부분이다.
 
 ```js
 calendar.setOptions({
@@ -208,7 +208,7 @@ calendar.setOptions({
 
 #### goingDuration
 
-`eventModel` 파라미터를 이용해 주간/일간뷰에서 timed 이벤트의 일정 장소까지 이동 시간을 커스터마이징할 수 있다.
+[`EventObject`](/story/documentation-ko-api-eventobject--page) 파라미터를 이용해 주간/일간뷰에서 timed 이벤트의 일정 장소까지 이동 시간을 커스터마이징할 수 있다.
 
 ```js
 calendar.setOptions({
@@ -224,7 +224,7 @@ calendar.setOptions({
 
 #### comingDuration
 
-`eventModel` 파라미터를 이용해 주간/일간뷰에서 timed 이벤트의 복귀 시간을 커스터마이징할 수 있다.
+[`EventObject`](/story/documentation-ko-api-eventobject--page) 파라미터를 이용해 주간/일간뷰에서 timed 이벤트의 복귀 시간을 커스터마이징할 수 있다.
 
 ```js
 calendar.setOptions({
