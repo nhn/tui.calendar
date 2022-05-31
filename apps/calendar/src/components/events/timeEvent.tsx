@@ -97,21 +97,21 @@ function getStyles(uiModel: EventUIModel, isDraggingTarget: boolean, hasNextStar
 
 function isDraggableEvent({
   uiModel,
-  isGloballyReadOnly,
+  isReadOnlyCalendar,
   isDraggingTarget,
   hasNextStartTime,
 }: {
   uiModel: EventUIModel;
-  isGloballyReadOnly: boolean;
+  isReadOnlyCalendar: boolean;
   isDraggingTarget: boolean;
   hasNextStartTime: boolean;
 }) {
   const { model } = uiModel;
-  return !(isGloballyReadOnly || model.isReadOnly || isDraggingTarget || hasNextStartTime);
+  return !(isReadOnlyCalendar || model.isReadOnly || isDraggingTarget || hasNextStartTime);
 }
 
 export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: Props) {
-  const { useDetailPopup, isReadOnly: isGloballyReadOnly } = useStore(optionsSelector);
+  const { useDetailPopup, isReadOnly: isReadOnlyCalendar } = useStore(optionsSelector);
 
   const layoutContainer = useLayoutContainer();
   const { showDetailPopup } = useDispatch('popup');
@@ -203,7 +203,7 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
 
   const isDraggable = isDraggableEvent({
     uiModel,
-    isGloballyReadOnly,
+    isReadOnlyCalendar,
     isDraggingTarget,
     hasNextStartTime,
   });
