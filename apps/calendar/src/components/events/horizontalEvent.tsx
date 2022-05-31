@@ -160,7 +160,9 @@ export function HorizontalEvent({
   const [isDraggingTarget, setIsDraggingTarget] = useState<boolean>(false);
   const eventContainerRef = useRef<HTMLDivElement>(null);
 
-  const isDraggableEvent = !isGloballyReadOnly && isNil(resizingWidth) && isNil(movingLeft);
+  const { isReadOnly, id, calendarId } = uiModel.model;
+  const isDraggableEvent =
+    !isGloballyReadOnly && !isReadOnly && isNil(resizingWidth) && isNil(movingLeft);
   const { dayEventBlockClassName, containerStyle, eventItemStyle } = getStyles({
     uiModel,
     eventHeight,
@@ -236,10 +238,8 @@ export function HorizontalEvent({
     e.stopPropagation();
     onMoveStart(e);
   };
-
-  const { isReadOnly, id, calendarId } = uiModel.model;
   const shouldHideResizeHandler =
-    !isDraggableEvent || flat || isDraggingTarget || uiModel.exceedRight || isReadOnly;
+    !isDraggableEvent || flat || isDraggingTarget || uiModel.exceedRight;
 
   return (
     <div
