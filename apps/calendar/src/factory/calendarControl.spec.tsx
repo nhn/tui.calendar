@@ -713,7 +713,6 @@ describe('getOptions/setOptions', () => {
   function MockOptionsView() {
     const options = useStore((state) => state.options);
     const { taskTitle } = useStore((state) => state.template);
-    // eslint-disable-next-line unused-imports/no-unused-vars
     const { dispatch, ...themeValues } = useTheme((theme) => theme);
     const { defaultView, useCreationPopup } = options;
 
