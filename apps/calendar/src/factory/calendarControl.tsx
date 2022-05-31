@@ -567,8 +567,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    */
   getOptions() {
     const { options, template } = this.getStoreState();
-    // eslint-disable-next-line unused-imports/no-unused-vars
-    const { dispatch: _, ...theme } = this.theme.getState();
+    const { dispatch, ...theme } = this.theme.getState();
 
     return {
       ...options,
