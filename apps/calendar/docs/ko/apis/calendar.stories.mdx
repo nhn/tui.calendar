@@ -1,0 +1,693 @@
+import { Meta } from '@storybook/addon-docs';
+
+<Meta title="Documentation/ko/API/Calendar" />
+
+# Calendar 클래스
+
+## 설명
+
+`Calendar` 클래스를 사용하여 캘린더를 생성할 수 있다. 캘린더를 생성하기 위해 적절한 옵션을 설정하고, 캘린더를 생성하고 싶은 위치를 지정해야 한다.
+
+인스턴스 생성 시 첫 번째 인자로 캘린더가 마운트 될 엘리먼트를 설정한다. **이 엘리먼트는 적절한 높이의 `height` 값을 가지고 있어야 한다. (최소 600px 이상 권장)**
+
+```js
+// 엘리먼트를 직접 지정하는 경우
+const container = document.querySelector('#container');
+const calendar = new Calendar(container);
+
+// CSS 선택자를 이용하는 경우
+const calendar = new Calendar('#container');
+```
+
+인스턴스 생성 시 두 번째 인자로 옵션을 설정할 수 있다. 별도로 지정하지 않은 옵션은 기본값이 설정된다. 자세한 옵션 기본값은 [여기서](#TODO-options-page) 살펴볼 수 있다.
+
+```js
+const calendar = new Calendar(container, {
+  // 캘린더 옵션
+  defaultView: 'month',
+  isReadOnly: true,
+  timezone: {
+    // ...
+  },
+  theme: {
+    // ...
+  },
+  template: {
+    // ...
+  }
+});
+```
+
+인스턴스를 생성한 이후 캘린더 인스턴스의 메서드를 통해 동작을 제어할 수 있고, 인스턴스 이벤트에 이벤트 핸들러를 등록할 수 있다.
+
+## 인스턴스 메서드
+
+💡 메서드를 클릭하면 더 자세한 설명과 사용 예시를 볼 수 있다.
+
+| 메서드 & 타입                                        | 설명                                                                 |
+|-------------------------------------------------|--------------------------------------------------------------------|
+| [render](#render)                               | 캘린더를 화면에 렌더링한다.                                                    |
+| [renderToString](#rendertostring)               | 서버 사이드 렌더링에서 활용할 수 있도록 현재 캘린더가 렌더링되는 부분을 HTML 문자열로 리턴한다.           |
+| [destroy](#destroy)                             | 캘린더를 제거한다.                                                         |
+| [getEvent](#getevent)                           | 지정된 이벤트의 데이터를 가져온다.                                                |
+| [createEvents](#createevents)                   | 한개 이상의 캘린더 이벤트를 생성한다.                                              |
+| [updateEvent](#updateevent)                     | 지정된 이벤트의 내용을 업데이트한다.                                               |
+| [deleteEvent](#deleteevent)                     | 지정된 이벤트를 삭제한다.                                                     |
+| [clear](#clear)                                 | 캘린더에 저장된 모든 이벤트를 제거한다.                                             |
+| [today](#today)                                 | 현재 날짜가 포함된 범위로 이동한다.                                               |
+| [move](#move)                                   | 뷰에 따라 주어진 숫자만큼 구간을 이동한다.                                           |
+| [prev](#prev)                                   | 현재 화면의 이전 구간으로 이동한다. 이동 범위는 뷰의 범위에 따라 다르다.                         |
+| [next](#next)                                   | 현재 화면의 다음 구간으로 이동한다. 이동 범위는 뷰의 범위에 따라 다르다.                         |
+| [setDate](#setdate)                             | 지정된 날짜가 포함된 범위로 이동한다.                                              |
+| [changeView](#changeview)                       | 캘린더의 뷰를 월간/주간/일간으로 변경한다.                                           |
+| [getElement](#getelement)                       | 특정 이벤트가 렌더링된 HTML 엘리먼트를 찾는다. 찾지 못한 경우 `null` 을 리턴한다.               |
+| [setTheme](#settheme)                           | 캘린더의 테마를 변경한다.                                                     |
+| [getOptions](#getoptions)                       | 현재 캘린더에 설정된 옵션 정보를 가져온다.                                           |
+| [setOptions](#setoptions)                       | 캘린더의 옵션을 변경한다.                                                     |
+| [getDate](#getdate)                             | 현재 캘린더 화면을 표시하는 기준 날짜를 가져온다.                                       |
+| [getDateRangeStart](#getdaterangestart)         | 현재 캘린더 화면을 표시하는 날짜 범위 중 시작일을 가져온다.                                 |
+| [getDateRangeEnd](#getdaterangeend)             | 현재 캘린더 화면을 표시하는 날짜 범위 중 종료일을 가져온다.                                 |
+| [getViewName](#getviewname)                     | 현재 캘린더 화면의 타입을 가져온다. (월간 / 주간 / 일간)                                |
+| [setCalendars](#setcalendars)                   | 이벤트 그룹의 정보를 변경한다.                                                  |
+| [setCalendarVisibility](#setcalendarvisibility) | 지정된 이벤트 그룹에 포함되는 모든 이벤트를 숨기거나 표시한다.                                |
+| [setCalendarColor](#setcalendarcolor)           | 지정된 이벤트 그룹에 포함된 모든 이벤트의 컬러 값을 변경한다.                                |
+| [scrollToNow](#scrolltonow)                     | 일간 뷰 혹은 주간 뷰에서 현재 시간이 포함된 범위를 표시하고 있는 경우, 즉시 현재 시간 영역으로 스크롤을 이동한다. |
+| [openFormPopup](#openformpopup)                 | 이벤트를 생성하는데 사용하는 팝업을 표시한다. 전달한 객체의 정보에 따라 팝업의 값이 채워져 있다.            |
+| [fire](#fire)                                   | 임의의 인스턴스 이벤트를 실행한다. 자세한 설명은 인스턴스 이벤트 단락에서 설명한다.                    |
+| [off](#off)                                     | 임의의 인스턴스 이벤트를 해제한다. 자세한 설명은 인스턴스 이벤트 단락에서 설명한다.                    |
+| [on](#on)                                       | 임의의 인스턴스 이벤트를 할당한다. 자세한 설명은 인스턴스 이벤트 단락에서 설명한다.                    |
+| [once](#once)                                   | 임의의 인스턴스 이벤트를 한 번만 실행되도록 할당한다. 자세한 설명은 인스턴스 이벤트 단락에서 설명한다.         |
+
+### render
+
+- 타입: `render(): Calendar`
+- 리턴: `Calendar` - 캘린더 인스턴스
+
+브라우저 환경에서 캘린더 인스턴스를 생성하면 자동으로 호출되는 메서드이다.
+
+처음 호출될 때 인스턴스 생성 시 인자로 전달한 HTML 엘리먼트 아래에 캘린더 요소가 삽입되며, 직접 `render` 메서드를 호출하는 경우 다시 렌더링한다.
+
+만약 인스턴스 생성 시 HTML 컨테이너가 전달되지 않았다면 아무 일도 일어나지 않는다.
+
+호출 후 캘린더 인스턴스 자신을 반환한다.
+
+```js
+// 아무 일도 일어나지 않는 경우
+const calendar = new Calendar();
+calendar.render();
+
+// 엘리먼트가 있는 경우 자동으로 최초 1회 렌더링 됨
+const calendar = new Calendar('#container');
+
+// 위의 상태에서 강제로 다시 렌더링
+calendar.render();
+```
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+### renderToString
+
+- 타입: `renderToString(): string`
+- 리턴: `string` - HTML 문자열
+
+주어진 옵션, 테마 등의 값을 기반으로 캘린더 전체의 HTML 문자열을 생성하여 리턴한다. 서버 사이드 렌더링 환경을 구축하는 경우 활용할 수 있다.
+
+```js
+const isSSR = typeof window === 'undefined';
+
+// 클라리언트라면 인스턴스 생성 후 `#container`에 자동으로 마운트되지만, 서버에서는 아무 일도 일어나지 않는다.
+const calendar = new Calendar('#container');
+
+if (isSSR) {
+  const calendarHTML = calendar.renderToString();
+  // 서버에서 클라리언트로 HTML 전송 처리
+}
+```
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+### destroy
+
+- 타입: `destroy(): void`
+
+캘린더 인스턴스를 통해 렌더링 된 요소를 삭제하고, 인스턴스를 빈 객체로 만든다.
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+### getEvent
+
+- 타입: `getEvent(eventId: string, calendarId: string): EventObject`
+- 패러매터
+  - `eventId` - 이벤트의 고유 ID
+  - `calendarId` - 이벤트 그룹의 ID
+- 리턴: `EventObject` - 이벤트 정보가 담긴 객체
+
+캘린더 인스턴스 안에 저장된 이벤트를 찾는다. 이벤트 고유의 `eventId` 와, 이벤트 그룹의 `calendarId` 값이 필요하다.
+
+```js
+const calendar = new Calendar('#container', {
+  calendars: [
+    {
+      id: 'cal1',
+      name: 'Work'
+    }
+  ]
+});
+
+calendar.createEvents([
+  {
+    id: 'event1',
+    calendarId: 'cal1',
+    title: 'Weekly Meeting',
+    start: '2022-05-30T09:00:00',
+    end: '2022-05-30T10:00:00'
+  }
+]);
+
+const firstEvent = calendar.getEvent('event1', 'cal1');
+
+console.log(firstEvent.title); // Weekly Meeting
+```
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+### createEvents
+
+- 타입: `createEvents(events: EventObject[]): void`
+- 패러매터: `EventObject[]` - 저장하려는 이벤트 정보의 배열
+
+한 개 이상의 이벤트를 생성한다. 한 개의 이벤트를 생성할 때에도 배열을 전달해야 한다.
+
+이벤트를 생성할 때 필요한 정보는 [Event Object](#TODO-Event-Object) 문서를 참고하라.
+
+```js
+// 한 개의 이벤트 생성
+calendar.createEvents([
+  {
+    id: 'event1',
+    calendarId: 'cal1',
+    title: 'Weekly Meeting',
+    start: '2022-05-30T09:00:00',
+    end: '2022-05-30T10:00:00'
+  }
+]);
+
+// 여러 개의 이벤트 생성
+calendar.createEvents([
+  {
+    id: 'event1',
+    calendarId: 'cal1',
+    title: 'Weekly Meeting',
+    start: '2022-05-30T09:00:00',
+    end: '2022-05-30T10:00:00'
+  },
+  {
+    id: 'event2',
+    calendarId: 'cal2',
+    title: 'Lunch with Teammates',
+    start: '2022-05-30T12:00:00',
+    end: '2022-05-30T13:00:00'
+  }
+]);
+```
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+### updateEvent
+
+- 타입: `updateEvent(eventId: string, calendarId: string, changes: EventObject): void`
+- 패러매터
+  - `eventId` - 이벤트의 고유 ID
+  - `calendarId` - 이벤트 그룹의 ID
+  - `changes` - 변경하려는 내용
+
+생성된 이벤트의 정보를 변경한다. 이벤트를 찾기 위해 이벤트 고유의 `eventId`, 이벤트가 속한 그룹의 `calendarId`,
+그리고 변경하려는 정보가 담긴 객체가 필요하다. 변경하려는 속성과 값이 `EventObject` 의 속성과 일치해야 한다.
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+```js
+// 먼저 아래와 같이 이벤트가 생성되었다고 가정한다.
+calendar.createEvents([
+  {
+    id: 'event1',
+    calendarId: 'cal1',
+    title: 'Weekly Meeting',
+    start: '2022-05-30T09:00:00',
+    end: '2022-05-30T10:00:00'
+  }
+]);
+
+// title 속성 하나만 바꾸는 경우
+calendar.updateEvent('event1', 'cal1', {
+  title: 'Weekly Meeting (Canceled)'
+});
+
+// 여러 속성을 바꾸는 경우
+calendar.updateEvent('event1', 'cal1', {
+  title: 'Going vacation',
+  state: 'Free',
+  start: '2022-05-30T00:00:00',
+  end: '2022-06-03T23:59:59'
+});
+```
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+### deleteEvent
+
+- 타입: `deleteEvent(eventId: string, calendarId: string): void`
+- 패러매터
+  - `eventId` - 이벤트의 고유 ID
+  - `calendarId` - 이벤트 그룹의 ID
+
+생성된 이벤트를 삭제한다.
+
+```js
+// 먼저 아래와 같이 이벤트가 생성되었다고 가정한다.
+calendar.createEvents([
+  {
+    id: 'event1',
+    calendarId: 'cal1',
+    title: 'Weekly Meeting',
+    start: '2022-05-30T09:00:00',
+    end: '2022-05-30T10:00:00'
+  }
+]);
+
+calendar.deleteEvent('event1', 'cal1');
+
+// 이벤트를 찾으려 하면 없다.
+const deletedEvent = calendar.getEvent('event1', 'cal1');
+console.log(deletedEvent); // null
+```
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+### clear
+
+- 타입: `clear(): void`
+
+캘린더 안에 있는 모든 이벤트를 제거한다.
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+### today
+
+- 타입: `today(): void`
+
+캘린더의 표시 범위를 현재 날짜가 있는 곳으로 이동한다.
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+### move
+
+- 타입: `move(offset: number): void`
+- 패러매터: `offset` - 이동할 범위를 정수로 입력한다. 범위가 주어지지 않으면 아무런 일도 일어나지 않는다.
+
+캘린더의 표시 범위를 앞이나 뒤로 이동한다. 양수를 넣으면 현재 범위 기준 미래로 이동하고, 음수를 넣으면 과거로 이동한다.
+
+이동하는 범위는 월간 / 주간 / 일간 뷰에 따라 각각 한 달 / 한 주 / 하루 단위로 다르며, 설정한 옵션에 따라 세세한 차이가 있을 수 있다.
+
+```js
+// 월간 뷰에서 작년으로 이동
+calendar.move(-12);
+
+// 일간 뷰에서 3일 뒤로 이동
+calendar.move(3);
+```
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+### prev
+
+- 타입: `prev(): void`
+
+캘린더의 표시 범위를 한 단위 이전 시간대로 이동한다.
+
+이동하는 범위는 월간 / 주간 / 일간 뷰에 따라 각각 한 달 / 한 주 / 하루 단위로 다르며, 설정한 옵션에 따라 세세한 차이가 있을 수 있다.
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+### next
+
+- 타입: `next(): void`
+
+캘린더의 표시 범위를 한 단위 이후 시간대로 이동한다.
+
+이동하는 범위는 월간 / 주간 / 일간 뷰에 따라 각각 한 달 / 한 주 / 하루 단위로 다르며, 설정한 옵션에 따라 세세한 차이가 있을 수 있다.
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+### setDate
+
+- 타입: `setDate(date: DateType): void`
+- 패러매터: `date` - 시간 정보를 담고있는 객체 혹은 문자열. `Date` 객체나, `Date` 객체를 생성하는데 쓰이는 문자열, 혹은 `TZDate` 객체를 전달할 수 있다.
+
+캘린더를 표시하는 기준 날짜를 주어진 날짜로 변경한다. 그 결과 `date` 를 기준으로 캘린더의 표시 범위가 이동한다.
+
+`move` 메서드가 범위 단위로 이동하는 것과 달리 `setDate` 는 특정 날짜로 바로 이동할 수 있다.
+
+```js
+// 월간 뷰에서 2022년 3월로 이동 (문자열)
+calendar.setDate('2022-03-01');
+
+// Date 객체를 직접 전달
+calendar.setDate(new Date(2022, 4, 1));
+```
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+### changeView
+
+- 타입: `changeView(viewName: ViewType): void`
+- 패러매터: `viewName` - 선택하려는 뷰의 종류. `'month'`, `'week'`, `'day'` 를 전달할 수 있다.
+
+캘린더의 뷰 종류를 월간 / 주간 / 일간 뷰로 변경한다.
+
+```js
+// 월간 뷰로 변경
+calendar.changeView('month');
+
+// 주간 뷰로 변경
+calendar.changeView('week');
+
+// 일간 뷰로 변경
+calendar.changeView('day');
+```
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+### getElement
+
+- 타입: `getElement(eventId: string, calendarId: string): HTMLElement | null`
+- 패러매터
+  - `eventId` - 이벤트의 고유 ID
+  - `calendarId` - 이벤트 그룹의 ID
+- 리턴: `HTMLElement | null` - 이벤트를 찾았다면 해당 이벤트의 HTML 엘리먼트를 리턴하고 찾지 못했다면 `null` 을 리턴한다.
+
+캘린더가 렌더링하고 있는 이벤트의 실제 HTML 엘리먼트를 검색하여 리턴한다.
+
+이벤트를 찾지 못했을 때는 `null` 을 리턴한다.
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+### setTheme
+
+- 타입: `setTheme(theme: DeepPartial<ThemeStore>): void`
+- 패러매터: `theme` - 테마 설정이 담긴 객체
+
+테마를 변경한다. 적용 가능한 테마는 [TODO 테마](TODO - theme) 문서를 참고하라.
+
+```js
+// 월간 뷰에서 표현되는 주말의 배경색을 변경하는 예
+calendar.setTheme({
+  month: {
+    weekend: {
+      backgroundColor: 'aliceblue'
+    }
+  }
+});
+```
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+### getOptions
+
+- 타입: `getOptions(): void`
+
+현재 캘린더 인스턴스의 옵션 전체를 리턴한다.
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+### setOptions
+
+- 타입: `setOptions(options: Options): void`
+- 패러매터: `options` - 캘린더 인스턴스가 사용하는 옵션 객체
+
+현재 캘린더 인스턴스의 옵션을 변경한다. 각 옵션과 자세한 동작은 [TODO Options]() 문서를 참고하라.
+
+```js
+// 타임존 변경 예
+calendar.setOptions({
+  timezone: {
+    zones: [
+      {
+        timezoneName: 'Europe/London'
+      }
+    ]
+  }
+});
+```
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+### getDate
+
+- 타입: `getDate(): TZDate`
+- 리턴: `TZDate` - 시간 정보를 갖고 있는 객체
+
+캘린더의 현재 화면을 렌더링하는데 사용되는 기준 날짜의 정보를 리턴한다.
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+### getDateRangeStart
+
+- 타입: `getDateRangeStart(): TZDate`
+- 리턴: `TZDate` - 시간 정보를 갖고 있는 객체
+
+캘린더가 현재 렌더링하고 있는 날짜의 범위 중 시작 시간을 리턴한다.
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+### getDateRangeEnd
+
+- 타입: `getDateRangeEnd(): TZDate`
+- 리턴: `TZDate` - 시간 정보를 갖고 있는 객체
+
+캘린더가 현재 렌더링하고 있는 날짜의 범위 중 종료 시간을 리턴한다.
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+### getViewName
+
+- 타입: `getViewName(): ViewType`
+- 리턴: `ViewType` - 현재 캘린더 뷰의 타입. `month`, `week`, `day` 로 나뉜다.
+
+현재 캘린더가 표시하고 있는 뷰 타입을 리턴한다.
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+### setCalendars
+
+- 타입: `setCalendars(calendars: CalendarInfo[]): void`
+- 패러매터: `calendars` - 이벤트의 그룹(calendar라는 용어를 사용한다.)을 설정하기 위한 객체. 아래의 타입을 가진다. 자세한 내용은 [TODO 옵션]() 에서 확인하라.
+
+```ts
+interface CalendarInfo {
+  id: string;
+  name: string;
+  color?: string;
+  bgColor?: string;
+  dragBgColor?: string;
+  borderColor?: string;
+}
+```
+
+이벤트의 그룹(calendar라는 용어를 사용한다.)을 설정한다.
+
+```js
+calendar.setCalendars([
+  {
+    id: 'cal1',
+    name: 'Personal',
+    color: '#ffffff',
+    backgroundColor: '#9e5fff',
+    dragBackgroundColor: '#9e5fff',
+    borderColor: '#9e5fff'
+  },
+  {
+    id: 'cal2',
+    name: 'Work',
+    color: '#00a9ff',
+    backgroundColor: '#00a9ff',
+    dragBackgroundColor: '#00a9ff',
+    borderColor: '#00a9ff'
+ }
+]);
+```
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+### setCalendarVisibility
+
+- 타입: `setCalendarVisibility(calendarId: string | string[], isVisible: boolean): void`
+- 패러매터
+  - `calendarId` - 보이기/숨기기를 적용할 이벤트 그룹의 아이디. 한 개 혹은 배열로 여러 개를 전달할 수 있다.
+  - `isVisible` - 해당 이벤트 그룹에 속한 모든 이벤트를 보이거나 숨기기 위한 값. `true` 이면 모두 보이게 하고, `false` 이면 모두 보이지 않게 한다.
+
+특정 이벤트 그룹에 포함되는 모든 이벤트를 보이게 하거나 숨긴다.
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+### setCalendarColor
+
+- 타입: `setCalendarColor(calendarId: string, colorOptions: CalendarColor): void`
+- 패러매터
+  - `calendarId` - 이벤트 그룹의 아이디
+  - `colorOptions` - 적용할 컬러 설정값. 자세한 내용은 [TODO 옵션의 CalendarOption]() 참고
+
+특정 이벤트 그룹에 속한 모든 이벤트의 색상 값을 변경할 때 사용한다.
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+### scrollToNow
+
+- 타입: `scrollToNow(): void`
+
+주간 뷰 혹은 일간 뷰에서 현재 시간이 포함된 영역을 보고 있을 때 호출하면 현재 시간이 있는 위치로 이동한다.
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+### openFormPopup
+
+- 타입: `openFormPopup(event: EventObject): void`
+- 패러매터: `event` - 이벤트 정보를 가지고 있는 객체. 자세한 내용은 [TODO EventObject]() 참고.
+
+`useCreationPopup` 옵션이 `true` 일 때, 별도의 동작을 거치지 않고 바로 일정 생성을 하는 팝업을 표시한다.
+
+패러매터로 전달한 이벤트 데이터가 팝업 안의 입력 필드에 지정된 채로 표시된다.
+
+```js
+calendar.openFormPopup({
+  id: 'some-event-id',
+  calendarId: 'cal1',
+  title: 'Go to live concert',
+  start: '2022-05-31T09:00:00',
+  end: '2022-05-31T12:00:00',
+  category: 'time'
+});
+```
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+### fire
+
+- 타입: `fire(eventName: string, ...args: any[]): Calendar`
+- 패러매터
+  - `eventName` - 이벤트의 이름
+  - `...args` - 이벤트 핸들러에 전달할 패러매터
+- 리턴: 현재 캘린더 인스턴스
+
+임의의 [인스턴스 이벤트](#인스턴스-이벤트)를 실행한다. 이벤트가 등록되어있는 경우, 등록된 이벤트 핸들러에 첫 번째 패러매터 이후의 모든 패러매터를 전달한다.
+
+인스턴스 이벤트에 대한 자세한 설명은 [인스턴스 이벤트](#인스턴스-이벤트) 단락을 참고하라.
+
+```js
+// 먼저 다음과 같은 이벤트가 등록되어있다고 가정하자.
+calendar.on('beforeCreateEvent', (data) => {
+  console.log(`from: ${data.start.toDateString()} to ${data.end.toDateString()}`);
+});
+
+calendar.fire('beforeCreateEvent', {
+  start: new Date('2022-05-31'),
+  end: new Date('2022-06-01')
+});
+// output: from Tue May 31 2022 to Wed Jun 01 2022
+```
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+### off
+
+- 타입: `off(eventName: string, handler?: (...args: any[]) => void): Calendar`
+- 패러매터
+  - `eventName` - 이벤트의 이름
+  - `handler` - 이벤트에 등록된 핸들러 함수
+- 리턴: 현재 캘린더 인스턴스
+
+등록된 인스턴스 이벤트를 해제한다. 핸들러를 전달하지 않은 경우 해당 이벤트에 등록된 모든 핸들러가 해제된다.
+
+핸들러를 패러매터로 전달한 경우, 해당 핸들러만 해제한다.
+
+인스턴스 이벤트에 대한 자세한 설명은 [인스턴스 이벤트](#인스턴스-이벤트) 단락을 참고하라.
+
+```js
+const someEventHandler = () => {
+  console.log('some event fired');
+};
+
+calendar.on('some-event', someEventHandler);
+
+calendar.fire('some-event');
+// output: some event fired
+
+calendar.off('some-event', someEventHandler);
+
+calendar.fire('some-event'); // 아무 일도 일어나지 않는다.
+```
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+### on
+
+- 타입: `on(eventName: string, handler: (...args: any[]) => void): Calendar`
+- 패러매터
+  - `eventName` - 이벤트의 이름
+  - `handler` - 이벤트에 등록된 핸들러 함수
+- 리턴: 현재 캘린더 인스턴스
+
+인스턴스 이벤트를 등록한다. 등록된 이벤트 이름이 `fire` 메서드를 통해 호출된 경우, `on` 을 통해 등록된 모든 핸들러가 실행된다.
+
+인스턴스 이벤트에 대한 자세한 설명은 [인스턴스 이벤트](#인스턴스-이벤트) 단락을 참고하라.
+
+```js
+// 이벤트 등록
+calendar.on('beforeCreateEvent', (data) => {
+  console.log(`from: ${data.start.toDateString()} to ${data.end.toDateString()}`);
+});
+
+calendar.fire('beforeCreateEvent', {
+  start: new Date('2022-05-31'),
+  end: new Date('2022-06-01')
+});
+// output: from Tue May 31 2022 to Wed Jun 01 2022
+```
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+### once
+
+- 타입: `once(eventName: string, handler: (...args: any[]) => void): Calendar`
+- 패러매터
+  - `eventName` - 이벤트의 이름
+  - `handler` - 이벤트에 등록된 핸들러 함수
+- 리턴: 현재 캘린더 인스턴스
+
+인스턴스 이벤트를 등록한다. 등록된 이벤트 이름이 `fire` 메서드를 통해 호출된 경우, `once` 을 통해 등록된 모든 핸들러가 한 번만 실행된다.
+
+인스턴스 이벤트에 대한 자세한 설명은 [인스턴스 이벤트](#인스턴스-이벤트) 단락을 참고하라.
+
+```js
+// 이벤트를 한 번만 등록
+calendar.once('beforeCreateEvent', (data) => {
+  console.log(`from: ${data.start.toDateString()} to ${data.end.toDateString()}`);
+});
+
+calendar.fire('beforeCreateEvent', {
+  start: new Date('2022-05-31'),
+  end: new Date('2022-06-01')
+});
+// output: from Tue May 31 2022 to Wed Jun 01 2022
+
+calendar.fire('beforeCreateEvent', {
+  start: new Date('2022-06-01'),
+  end: new Date('2022-06-02')
+});
+// 아무 일도 일어나지 않는다.
+```
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+## 인스턴스 이벤트
+
