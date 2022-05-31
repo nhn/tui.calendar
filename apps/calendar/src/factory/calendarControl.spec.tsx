@@ -859,9 +859,9 @@ describe('setCalendarColor', () => {
 
     return (
       <div>
-        {calendars.map(({ id, color, bgColor, borderColor, dragBgColor }) => (
+        {calendars.map(({ id, color, backgroundColor, borderColor, dragBackgroundColor }) => (
           <div key={id}>
-            {id}-{color}-{bgColor}-{borderColor}-{dragBgColor}
+            {id}-{color}-{backgroundColor}-{borderColor}-{dragBackgroundColor}
           </div>
         ))}
       </div>
@@ -878,9 +878,9 @@ describe('setCalendarColor', () => {
   const calendarIdToChange = '1';
   const calendarIdToDoNotChange = '2';
   const color = '#ff0';
-  const bgColor = '#ff0';
+  const backgroundColor = '#ff0';
   const borderColor = '#ff0';
-  const dragBgColor = '#ff0';
+  const dragBackgroundColor = '#ff0';
 
   beforeEach(() => {
     container = document.createElement('div');
@@ -892,17 +892,17 @@ describe('setCalendarColor', () => {
           id: '1',
           name: 'calendar1',
           color: '#fff',
-          bgColor: '#fff',
+          backgroundColor: '#fff',
           borderColor: '#fff',
-          dragBgColor: '#fff',
+          dragBackgroundColor: '#fff',
         },
         {
           id: '2',
           name: 'calendar2',
           color: '#000',
-          bgColor: '#000',
+          backgroundColor: '#000',
           borderColor: '#000',
-          dragBgColor: '#000',
+          dragBackgroundColor: '#000',
         },
       ]);
       mockCalendarColor.render();
@@ -916,34 +916,38 @@ describe('setCalendarColor', () => {
   it('should change the calendar color that matches the calendar id', () => {
     // Given
     expect(
-      screen.queryByText(`${calendarIdToChange}-${color}-${bgColor}-${borderColor}-${dragBgColor}`)
+      screen.queryByText(
+        `${calendarIdToChange}-${color}-${backgroundColor}-${borderColor}-${dragBackgroundColor}`
+      )
     ).not.toBeInTheDocument();
 
     // When
     act(() => {
       mockCalendarColor.setCalendarColor(calendarIdToChange, {
         color,
-        bgColor,
+        backgroundColor,
         borderColor,
-        dragBgColor,
+        dragBackgroundColor,
       });
     });
 
     // Then
     expect(
-      screen.queryByText(`${calendarIdToChange}-${color}-${bgColor}-${borderColor}-${dragBgColor}`)
+      screen.queryByText(
+        `${calendarIdToChange}-${color}-${backgroundColor}-${borderColor}-${dragBackgroundColor}`
+      )
     ).toBeInTheDocument();
   });
 
   it(`should not change the calendar color that doesn't matches the calendar id`, () => {
     // Given
     const notChangedColor = '#000';
-    const notChangedBgColor = '#000';
+    const notChangedBackgroundColor = '#000';
     const notChangedBorderColor = '#000';
-    const notChangedDragBgColor = '#000';
+    const notChangedDragBackgroundColor = '#000';
     expect(
       screen.queryByText(
-        `${calendarIdToDoNotChange}-${notChangedColor}-${notChangedBgColor}-${notChangedBorderColor}-${notChangedDragBgColor}`
+        `${calendarIdToDoNotChange}-${notChangedColor}-${notChangedBackgroundColor}-${notChangedBorderColor}-${notChangedDragBackgroundColor}`
       )
     ).toBeInTheDocument();
 
@@ -951,16 +955,16 @@ describe('setCalendarColor', () => {
     act(() => {
       mockCalendarColor.setCalendarColor(calendarIdToChange, {
         color,
-        bgColor,
+        backgroundColor,
         borderColor,
-        dragBgColor,
+        dragBackgroundColor,
       });
     });
 
     // Then
     expect(
       screen.queryByText(
-        `${calendarIdToDoNotChange}-${notChangedColor}-${notChangedBgColor}-${notChangedBorderColor}-${notChangedDragBgColor}`
+        `${calendarIdToDoNotChange}-${notChangedColor}-${notChangedBackgroundColor}-${notChangedBorderColor}-${notChangedDragBackgroundColor}`
       )
     ).toBeInTheDocument();
   });

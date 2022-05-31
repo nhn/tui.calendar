@@ -85,14 +85,14 @@ function createRandomEvent(calendar: CalendarInfo, renderStart: TZDate, renderEn
   event.recurrenceRule = chance.bool({ likelihood: 20 }) ? 'repeated events' : '';
 
   event.color = calendar.color;
-  event.bgColor = calendar.bgColor;
-  event.dragBgColor = calendar.dragBgColor;
+  event.backgroundColor = calendar.backgroundColor;
+  event.dragBackgroundColor = calendar.dragBackgroundColor;
   event.borderColor = calendar.borderColor;
 
   if (event.category === 'milestone') {
-    event.color = event.bgColor;
-    event.bgColor = 'transparent';
-    event.dragBgColor = 'transparent';
+    event.color = event.backgroundColor;
+    event.backgroundColor = 'transparent';
+    event.dragBackgroundColor = 'transparent';
     event.borderColor = 'transparent';
   }
 

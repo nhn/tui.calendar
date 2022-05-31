@@ -55,19 +55,19 @@ const getBackgroundEvents = () => {
       category: 'background',
       start,
       end: addHours(start, 1),
-      bgColor: 'rgba(100, 100, 100, .3)',
+      backgroundColor: 'rgba(100, 100, 100, .3)',
     },
     {
       category: 'background',
       start: addMinutes(start, 150),
       end: addHours(start, 3),
-      bgColor: 'rgba(200, 100, 100, .3)',
+      backgroundColor: 'rgba(200, 100, 100, .3)',
     },
     {
       category: 'background',
       start: addHours(start, 4),
       end: addHours(start, 6),
-      bgColor: 'rgba(100, 200, 100, .3)',
+      backgroundColor: 'rgba(100, 200, 100, .3)',
     },
   ];
   return createEventModels(data);
@@ -78,13 +78,4 @@ WithBackgroundEvents.args = {
   timeGridData: getTimeGridData(),
   totalUIModels: [getBackgroundEvents()],
   columnWidth: '20%',
-};
-
-export const HasBackgroundColor = Template.bind({});
-HasBackgroundColor.args = {
-  columnDate: new TZDate(),
-  timeGridData: getTimeGridData(),
-  totalUIModels: [],
-  columnWidth: '20%',
-  backgroundColor: 'rgba(81, 92, 230, 0.05)',
 };

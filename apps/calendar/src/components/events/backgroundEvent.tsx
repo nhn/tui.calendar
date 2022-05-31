@@ -27,7 +27,7 @@ export function BackgroundEvent({
   left = '',
 }: Props) {
   const style = {
-    backgroundColor: uiModel.model.bgColor,
+    backgroundColor: uiModel.model.backgroundColor,
     width,
     height,
     top,

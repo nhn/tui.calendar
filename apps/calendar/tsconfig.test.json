@@ -1,9 +1,28 @@
 {
-  "extends": "./tsconfig.es6.json",
   "compilerOptions": {
+    "noImplicitAny": true,
+    "target": "es6",
     "jsx": "react-jsx",
     "jsxImportSource": "preact",
-    "jsxFactory": "",
-    "jsxFragmentFactory": ""
-  }
+    "jsxFactory": "h",
+    "jsxFragmentFactory": "Fragment",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "strict": true,
+    "outDir": "dist/es6/",
+    "baseUrl": ".",
+    "paths": {
+      "@src/*": ["src/*"],
+      "@stories/*": ["stories/*"],
+      "@t/*": ["./types/*"],
+    },
+    "sourceMap": true,
+    "lib": ["esnext", "dom"],
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "types/**/*",
+  ]
 }

@@ -51,7 +51,7 @@ function getStyles(uiModel: EventUIModel, isDraggingTarget: boolean, hasNextStar
   const defaultMarginBottom = 2;
   const marginLeft = left > 0 ? paddingLeft : 0;
 
-  const { color, bgColor, borderColor } = model;
+  const { color, backgroundColor, borderColor } = model;
   const containerStyle: Record<string, string | number> = {
     width: width >= 0 ? `calc(${toPercent(width)} - ${marginLeft}px)` : '',
     height: `calc(${toPercent(height)} - ${defaultMarginBottom}px)`,
@@ -61,7 +61,7 @@ function getStyles(uiModel: EventUIModel, isDraggingTarget: boolean, hasNextStar
     borderLeft: `3px solid ${borderColor}`,
     marginLeft,
     color,
-    backgroundColor: bgColor,
+    backgroundColor,
     opacity: isDraggingTarget ? 0.5 : 1,
     zIndex: hasNextStartTime ? 1 : 0,
   };

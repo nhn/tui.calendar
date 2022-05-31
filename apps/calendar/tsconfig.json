@@ -1,21 +1,22 @@
 {
   "compilerOptions": {
     "noImplicitAny": true,
-    "target": "es5",
+    "target": "es6",
     "jsx": "preserve",
     "jsxFactory": "h",
     "jsxFragmentFactory": "Fragment",
     "esModuleInterop": true,
+    "isolatedModules": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "moduleResolution": "node",
     "strict": true,
-    "outDir": "dist/es5/",
+    "outDir": "dist/",
     "baseUrl": ".",
     "paths": {
       "@src/*": ["./src/*"],
       "@t/*": ["./types/*"],
-      "@stories/*": ["./stories/*"],
+      "@stories/*": ["./stories/*"]
     },
     "sourceMap": true,
     "lib": ["esnext", "dom"],

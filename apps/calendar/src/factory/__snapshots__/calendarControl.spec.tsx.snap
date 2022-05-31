@@ -101,7 +101,7 @@ Object {
         "color": "#333",
       },
       "today": Object {
-        "color": "#333",
+        "color": "#fff",
       },
     },
     "month": Object {
@@ -176,7 +176,10 @@ Object {
       "timeGrid": Object {
         "borderRight": "1px solid #e5e5e5",
       },
-      "timeGridHalfHour": Object {
+      "timeGridHalfHourLine": Object {
+        "borderBottom": "none",
+      },
+      "timeGridHourLine": Object {
         "borderBottom": "1px solid #e5e5e5",
       },
       "timeGridLeft": Object {

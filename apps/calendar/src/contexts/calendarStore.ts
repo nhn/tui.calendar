@@ -12,14 +12,11 @@ import { createPopupDispatchers, createPopupSlice } from '@src/slices/popup';
 import { createTemplateDispatchers, createTemplateSlice } from '@src/slices/template';
 import { createViewDispatchers, createViewSlice } from '@src/slices/view';
 import { createStoreContext } from '@src/store';
-import { devtools } from '@src/store/devtool';
 import { createStore } from '@src/store/internal';
 
 import type { Options } from '@t/options';
-import type { CalendarStore, Dispatchers, SetState, StoreCreator } from '@t/store';
+import type { CalendarStore, Dispatchers, SetState } from '@t/store';
 
-// eslint-disable-next-line no-process-env
-const isDevelopmentMode = process.env.NODE_ENV === 'development';
 const storeCreator = (options: Options) => (set: SetState<CalendarStore>) => {
   return {
     ...createOptionsSlice(options),
@@ -44,14 +41,7 @@ const storeCreator = (options: Options) => (set: SetState<CalendarStore>) => {
 };
 
 export const initCalendarStore = (options: Options = {}) =>
-  createStore<CalendarStore>(
-    isDevelopmentMode
-      ? (devtools(storeCreator(options), {
-          name: 'tui-calendar-store',
-          serialize: { options: true },
-        }) as StoreCreator<CalendarStore>)
-      : storeCreator(options)
-  );
+  createStore<CalendarStore>(storeCreator(options));
 
 const { StoreProvider, useStore, useInternalStore } = createStoreContext<CalendarStore>();
 export { StoreProvider, useInternalStore, useStore };

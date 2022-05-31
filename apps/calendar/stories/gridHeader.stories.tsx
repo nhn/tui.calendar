@@ -13,7 +13,7 @@ export default { title: 'Components/GridHeader', component: GridHeader };
 
 interface DayNamesStory {
   dayNames: TemplateMonthDayName[];
-  marginLeft?: number;
+  marginLeft?: string;
 }
 
 const Template: Story<DayNamesStory> = ({ dayNames, marginLeft }) => {
@@ -22,7 +22,7 @@ const Template: Story<DayNamesStory> = ({ dayNames, marginLeft }) => {
   return (
     <ProviderWrapper>
       <GridHeader
-        templateType="monthDayname"
+        type="month"
         dayNames={dayNames}
         marginLeft={marginLeft}
         rowStyleInfo={rowStyleInfo}
@@ -66,11 +66,11 @@ threeDays.args = {
 export const oneDayWithMargin = Template.bind({});
 oneDayWithMargin.args = {
   dayNames: oneDayName,
-  marginLeft: 60,
+  marginLeft: '60px',
 };
 
 export const threeDaysWithMargin = Template.bind({});
 threeDaysWithMargin.args = {
   dayNames: threeDayNames,
-  marginLeft: 60,
+  marginLeft: '60px',
 };

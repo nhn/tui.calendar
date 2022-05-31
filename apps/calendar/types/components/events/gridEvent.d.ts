@@ -1,6 +1,6 @@
 type EventItemStyleParam = {
   flat: boolean;
-  bgColor: string;
+  backgroundColor: string;
   borderColor: string;
   exceedLeft: boolean;
   exceedRight: boolean;

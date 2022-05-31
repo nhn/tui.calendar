@@ -1,28 +1,89 @@
 /* eslint @typescript-eslint/no-var-requires: "off" */
+const pkg = require('./package.json');
+const path = require('path');
+const webpack = require('webpack');
+const TerserPlugin = require('terser-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const StyleLintPlugin = require('stylelint-webpack-plugin');
-const ESLintPlugin = require('eslint-webpack-plugin');
+const InjectPlugin = require('webpack-inject-plugin')['default'];
 
-const { merge } = require('webpack-merge');
-const common = require('./webpack.common.config');
+const banner = [
+  'TOAST UI Calendar 2nd Edition',
+  `@version ${pkg.version} | ${new Date().toDateString()}`,
+  `@author ${pkg.author}`,
+  `@license ${pkg.license}`,
+].join('\n');
 
-module.exports = (env, argv) => {
-  const { minify } = env;
-  const filename = `toastui-calendar${minify ? '.min' : ''}.css`;
+function getBabelConfig(isIE11) {
+  return {
+    presets: [
+      [
+        '@babel/preset-env',
+        {
+          useBuiltIns: 'usage',
+          corejs: '3.22',
+          targets: `defaults${isIE11 ? '' : ', not ie 11'}`,
+        },
+      ],
+      ['@babel/preset-typescript', { jsxPragma: 'h' }],
+    ],
+    plugins: [['@babel/plugin-transform-react-jsx', { pragma: 'h', pragmaFrag: 'Fragment' }]],
+  };
+}
 
-  const config = {
+module.exports = ({ minify, ie11 }) => {
+  const shouldMinify = !!minify;
+  const isIE11 = !!ie11;
+
+  const filenameBase = `toastui-calendar${isIE11 ? '.ie11' : ''}${shouldMinify ? '.min' : ''}`;
+
+  const plugins = [
+    new webpack.BannerPlugin({
+      banner,
+      entryOnly: true,
+    }),
+    new MiniCssExtractPlugin({ filename: `${filenameBase}.css` }),
+  ];
+
+  if (ie11) {
+    plugins.unshift(new InjectPlugin(() => `import { enableES5 } from 'immer';enableES5();`));
+  }
+
+  return {
     mode: 'production',
-    entry: ['./src/css/index.css', './src/index.ts'],
+    output: {
+      library: {
+        name: ['toastui', 'Calendar'],
+        type: 'umd',
+        export: 'default',
+      },
+      path: path.join(__dirname, 'dist'),
+      filename: `${filenameBase}.js`,
+      publicPath: '/dist',
+      globalObject: 'this',
+    },
+    externals: {
+      'tui-date-picker': {
+        commonjs: 'tui-date-picker',
+        commonjs2: 'tui-date-picker',
+        amd: 'tui-date-picker',
+        root: ['tui', 'DatePicker'],
+      },
+      'tui-time-picker': {
+        commonjs: 'tui-time-picker',
+        commonjs2: 'tui-time-picker',
+        amd: 'tui-time-picker',
+        root: ['tui', 'TimePicker'],
+      },
+    },
+    entry: isIE11 ? ['./src/index.ts'] : ['./src/css/index.css', './src/index.ts'],
     module: {
       rules: [
-        // transpile libraries to es5
         {
           test: /\.(ts|tsx|js)$/,
           exclude: /node_modules/,
           loader: 'babel-loader',
-          options: {
-            rootMode: 'upward',
-          },
+          options: getBabelConfig(isIE11),
         },
         {
           test: /\.css$/,
@@ -43,12 +104,21 @@ module.exports = (env, argv) => {
         },
       ],
     },
-    plugins: [
-      new StyleLintPlugin(),
-      new MiniCssExtractPlugin({ filename }),
-      new ESLintPlugin({ extensions: ['.tsx', '.ts', '.js'] }),
-    ],
+    resolve: {
+      extensions: ['.ts', '.tsx', '.js'],
+      alias: {
+        '@src': path.resolve(__dirname, './src/'),
+        '@t': path.resolve(__dirname, 'types/'),
+      },
+    },
+    plugins,
+    optimization: shouldMinify
+      ? {
+          minimize: true,
+          minimizer: [new TerserPlugin({ extractComments: false }), new CssMinimizerPlugin()],
+        }
+      : {
+          minimize: false,
+        },
   };
-
-  return merge(common(env, argv), config);
 };

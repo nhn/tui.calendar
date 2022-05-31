@@ -52,7 +52,7 @@ function getEvents() {
       category: 'background',
       start: eventStart,
       end: addHours(eventStart, 9),
-      bgColor: 'rgba(100, 100, 100, .3)',
+      backgroundColor: 'rgba(100, 100, 100, .3)',
     };
   });
   const disabledPMEvents: EventObject[] = range(0, 7).map((date) => {
@@ -62,7 +62,7 @@ function getEvents() {
       category: 'background',
       start: addHours(eventStart, 18),
       end: addHours(eventStart, 24),
-      bgColor: 'rgba(100, 100, 100, .3)',
+      backgroundColor: 'rgba(100, 100, 100, .3)',
     };
   });
   const disabledLunchEvents: EventObject[] = range(0, 7).map((date) => {
@@ -72,7 +72,7 @@ function getEvents() {
       category: 'background',
       start: addHours(eventStart, 12),
       end: addHours(eventStart, 13),
-      bgColor: 'rgba(23, 255, 100, .3)',
+      backgroundColor: 'rgba(23, 255, 100, .3)',
     };
   });
   const data: EventObject[] = disabledAMEvents.concat(

@@ -1,20 +1,18 @@
 import { h } from 'preact';
 import { memo } from 'preact/compat';
-import { useCallback, useMemo } from 'preact/hooks';
+import { useCallback } from 'preact/hooks';
 
-import { BackgroundEvent } from '@src/components/events/backgroundEvent';
 import { TimeEvent } from '@src/components/events/timeEvent';
 import { GridSelectionByColumn } from '@src/components/timeGrid/gridSelectionByColumn';
 import { useTheme } from '@src/contexts/themeStore';
-import { getTopHeightByTime } from '@src/controller/times';
-import { cls, toPercent } from '@src/helpers/css';
-import { isBackgroundEvent } from '@src/model/eventModel';
+import { cls } from '@src/helpers/css';
+import { usePrimaryTimezone } from '@src/hooks/timezone/usePrimaryTimezone';
 import type EventUIModel from '@src/model/eventUIModel';
 import type TZDate from '@src/time/date';
-import { setTimeStrToDate } from '@src/time/datetime';
-import { first, last } from '@src/utils/array';
+import { isSameDate, isWeekend } from '@src/time/datetime';
 
 import type { GridPositionFinder, TimeGridData } from '@t/grid';
+import type { ThemeState } from '@t/theme';
 
 import { ResizingGuideByColumn } from './resizingGuideByColumn';
 
@@ -24,39 +22,40 @@ const classNames = {
   events: cls('events'),
 };
 
-function BackgroundEvents({
-  eventUIModels,
-  startTime,
-  endTime,
-}: {
-  eventUIModels: EventUIModel[];
-  startTime: TZDate;
-  endTime: TZDate;
-}) {
-  const backgroundEvents = eventUIModels.filter(isBackgroundEvent);
+// TODO: implement BackgroundEvents
+// function BackgroundEvents({
+//   eventUIModels,
+//   startTime,
+//   endTime,
+// }: {
+//   eventUIModels: EventUIModel[];
+//   startTime: TZDate;
+//   endTime: TZDate;
+// }) {
+//   const backgroundEvents = eventUIModels.filter(isBackgroundEvent);
 
-  return (
-    <div className={classNames.backgrounds}>
-      {backgroundEvents.map((eventUIModel, index) => {
-        const { top, height } = getTopHeightByTime(
-          eventUIModel.model.start,
-          eventUIModel.model.end,
-          startTime,
-          endTime
-        );
+//   return (
+//     <div className={classNames.backgrounds}>
+//       {backgroundEvents.map((eventUIModel, index) => {
+//         const { top, height } = getTopHeightByTime(
+//           eventUIModel.model.start,
+//           eventUIModel.model.end,
+//           startTime,
+//           endTime
+//         );
 
-        return (
-          <BackgroundEvent
-            uiModel={eventUIModel}
-            top={toPercent(top)}
-            height={toPercent(height)}
-            key={`backgroundEvent-${index}`}
-          />
-        );
-      })}
-    </div>
-  );
-}
+//         return (
+//           <BackgroundEvent
+//             uiModel={eventUIModel}
+//             top={toPercent(top)}
+//             height={toPercent(height)}
+//             key={`backgroundEvent-${index}`}
+//           />
+//         );
+//       })}
+//     </div>
+//   );
+// }
 
 function VerticalEvents({ eventUIModels }: { eventUIModels: EventUIModel[] }) {
   // @TODO: use dynamic value
@@ -71,6 +70,41 @@ function VerticalEvents({ eventUIModels }: { eventUIModels: EventUIModel[] }) {
   );
 }
 
+function backgroundColorSelector(theme: ThemeState) {
+  return {
+    defaultBackgroundColor: theme.week.dayGrid.backgroundColor,
+    todayBackgroundColor: theme.week.today.backgroundColor,
+    weekendBackgroundColor: theme.week.weekend.backgroundColor,
+  };
+}
+
+function getBackgroundColor({
+  today,
+  columnDate,
+  defaultBackgroundColor,
+  todayBackgroundColor,
+  weekendBackgroundColor,
+}: {
+  today: TZDate;
+  columnDate: TZDate;
+  defaultBackgroundColor: string;
+  todayBackgroundColor: string;
+  weekendBackgroundColor: string;
+}) {
+  const isTodayColumn = isSameDate(today, columnDate);
+  const isWeekendColumn = isWeekend(columnDate.getDay());
+
+  if (isTodayColumn) {
+    return todayBackgroundColor;
+  }
+
+  if (isWeekendColumn) {
+    return weekendBackgroundColor;
+  }
+
+  return defaultBackgroundColor;
+}
+
 interface Props {
   timeGridData: TimeGridData;
   columnDate: TZDate;
@@ -79,7 +113,6 @@ interface Props {
   totalUIModels: EventUIModel[][];
   gridPositionFinder: GridPositionFinder;
   isLastColumn: boolean;
-  backgroundColor?: string;
   readOnly?: boolean;
 }
 
@@ -90,21 +123,25 @@ export const Column = memo(function Column({
   totalUIModels,
   gridPositionFinder,
   timeGridData,
-  backgroundColor,
   isLastColumn,
 }: Props) {
   const { rows: timeGridRows } = timeGridData;
   const borderRight = useTheme(useCallback((theme) => theme.week.timeGrid.borderRight, []));
+  const backgroundColorTheme = useTheme(backgroundColorSelector);
+  const [, getNow] = usePrimaryTimezone();
+  const today = getNow();
 
-  const [startTime, endTime] = useMemo(() => {
-    const { startTime: startTimeStr } = first(timeGridRows);
-    const { endTime: endTimeStr } = last(timeGridRows);
+  // const [startTime, endTime] = useMemo(() => {
+  //   const { startTime: startTimeStr } = first(timeGridRows);
+  //   const { endTime: endTimeStr } = last(timeGridRows);
 
-    const start = setTimeStrToDate(columnDate, startTimeStr);
-    const end = setTimeStrToDate(columnDate, endTimeStr);
+  //   const start = setTimeStrToDate(columnDate, startTimeStr);
+  //   const end = setTimeStrToDate(columnDate, endTimeStr);
 
-    return [start, end];
-  }, [columnDate, timeGridRows]);
+  //   return [start, end];
+  // }, [columnDate, timeGridRows]);
+
+  const backgroundColor = getBackgroundColor({ today, columnDate, ...backgroundColorTheme });
 
   const style = {
     width: columnWidth,
@@ -120,7 +157,7 @@ export const Column = memo(function Column({
       style={style}
       data-testid={`timegrid-column-${columnDate.getDay()}`}
     >
-      <BackgroundEvents eventUIModels={uiModelsByColumn} startTime={startTime} endTime={endTime} />
+      {/* <BackgroundEvents eventUIModels={uiModelsByColumn} startTime={startTime} endTime={endTime} /> */}
       <VerticalEvents eventUIModels={uiModelsByColumn} />
       <ResizingGuideByColumn
         gridPositionFinder={gridPositionFinder}

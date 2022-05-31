@@ -113,7 +113,7 @@ export function EventDetailPopup() {
     end = new TZDate(),
     location,
     state,
-    bgColor,
+    backgroundColor,
     isReadOnly,
     isPrivate,
   } = event;
@@ -162,7 +162,7 @@ export function EventDetailPopup() {
           </div>
         )}
       </div>
-      <div className={classNames.topLine} style={{ backgroundColor: bgColor }} />
+      <div className={classNames.topLine} style={{ backgroundColor }} />
       <div className={popupArrowClassName}>
         <div className={classNames.border} style={{ top: arrowTop }}>
           <div className={classNames.fill} />

@@ -3,6 +3,7 @@ import type EventUIModel from '@src/model/eventUIModel';
 import type TZDate from '@src/time/date';
 import type Collection from '@src/utils/collection';
 
+import type { StyleProp } from '@t/components/common';
 import type { CalendarInfo } from '@t/options';
 
 export type Matrix<T> = T[][];
@@ -149,12 +150,12 @@ export interface EventObject {
   /**
    * Background color of the event element
    */
-  bgColor?: string;
+  backgroundColor?: string;
 
   /**
    * Background color of the dragging event element
    */
-  dragBgColor?: string;
+  dragBackgroundColor?: string;
 
   /**
    * Left border color of the event element
@@ -164,7 +165,7 @@ export interface EventObject {
   /**
    * Custom style for the event element
    */
-  customStyle?: string;
+  customStyle?: StyleProp;
 
   /**
    * Raw data for the event

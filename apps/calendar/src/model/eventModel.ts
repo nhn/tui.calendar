@@ -56,13 +56,13 @@ export default class EventModel implements EventObjectWithDefaultValues {
 
   color = '#000';
 
-  bgColor = '#a1b56c';
+  backgroundColor = '#a1b56c';
 
-  dragBgColor = '#a1b56c';
+  dragBackgroundColor = '#a1b56c';
 
   borderColor = '#000';
 
-  customStyle = '';
+  customStyle = {};
 
   raw: any = null;
 
@@ -105,10 +105,10 @@ export default class EventModel implements EventObjectWithDefaultValues {
     isReadOnly = false,
     isPrivate = false,
     color = '#000',
-    bgColor = '#a1b56c',
-    dragBgColor = '#a1b56c',
+    backgroundColor = '#a1b56c',
+    dragBackgroundColor = '#a1b56c',
     borderColor = '#000',
-    customStyle = '',
+    customStyle = {},
     raw = null,
   }: EventObject = {}) {
     this.id = id;
@@ -130,8 +130,8 @@ export default class EventModel implements EventObjectWithDefaultValues {
     this.isReadOnly = isReadOnly;
     this.isPrivate = isPrivate;
     this.color = color;
-    this.bgColor = bgColor;
-    this.dragBgColor = dragBgColor;
+    this.backgroundColor = backgroundColor;
+    this.dragBackgroundColor = dragBackgroundColor;
     this.borderColor = borderColor;
     this.customStyle = customStyle;
     this.raw = raw;
@@ -238,11 +238,11 @@ export default class EventModel implements EventObjectWithDefaultValues {
       return false;
     }
 
-    if (this.bgColor !== event.bgColor) {
+    if (this.backgroundColor !== event.backgroundColor) {
       return false;
     }
 
-    if (this.dragBgColor !== event.dragBgColor) {
+    if (this.dragBackgroundColor !== event.dragBackgroundColor) {
       return false;
     }
 
@@ -321,8 +321,8 @@ export default class EventModel implements EventObjectWithDefaultValues {
       isReadOnly: this.isReadOnly,
       isPrivate: this.isPrivate,
       color: this.color,
-      bgColor: this.bgColor,
-      dragBgColor: this.dragBgColor,
+      backgroundColor: this.backgroundColor,
+      dragBackgroundColor: this.dragBackgroundColor,
       borderColor: this.borderColor,
       customStyle: this.customStyle,
       raw: this.raw,
