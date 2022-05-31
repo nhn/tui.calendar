@@ -187,7 +187,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    *
    * Also, the range depends on the options like how many visible weeks/months should be rendered.
    *
-   * @param offset{number} The offset to move by.
+   * @param {number} offset The offset to move by.
    *
    * @example
    * // Move to the next month in month view.

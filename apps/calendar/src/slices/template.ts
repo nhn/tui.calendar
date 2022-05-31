@@ -7,7 +7,7 @@ import type { Template, TemplateConfig } from '@t/template';
 
 export type TemplateSlice = { template: Template };
 
-export type TempalateDispatchers = {
+export type TemplateDispatchers = {
   setTemplate: (template: TemplateConfig) => void;
 };
 
@@ -20,7 +20,7 @@ export function createTemplateSlice(templateConfig: TemplateConfig = {}): Templa
   };
 }
 
-export function createTemplateDispatchers(set: SetState<CalendarStore>): TempalateDispatchers {
+export function createTemplateDispatchers(set: SetState<CalendarStore>): TemplateDispatchers {
   return {
     setTemplate: (template: TemplateConfig) =>
       set(
