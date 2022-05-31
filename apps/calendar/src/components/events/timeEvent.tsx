@@ -107,7 +107,7 @@ function isDraggableEvent({
   hasNextStartTime: boolean;
 }) {
   const { model } = uiModel;
-  return !(isReadOnlyCalendar || model.isReadOnly || isDraggingTarget || hasNextStartTime);
+  return !isReadOnlyCalendar && !model.isReadOnly && !isDraggingTarget && !hasNextStartTime;
 }
 
 export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: Props) {
