@@ -26,3 +26,13 @@ FixedEvents.args = {
     });
   },
 };
+
+export const ReadOnly = Template.bind({});
+ReadOnly.args = {
+  ...Template.args,
+  options: {
+    ...Template.args.options,
+    isReadOnly: true,
+  },
+  onInit: FixedEvents.args.onInit,
+};

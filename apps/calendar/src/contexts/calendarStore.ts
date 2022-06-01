@@ -9,11 +9,10 @@ import {
 import { createWeekViewLayoutDispatchers, createWeekViewLayoutSlice } from '@src/slices/layout';
 import { createOptionsDispatchers, createOptionsSlice } from '@src/slices/options';
 import { createPopupDispatchers, createPopupSlice } from '@src/slices/popup';
-import { createTemplateSlice } from '@src/slices/template';
+import { createTemplateDispatchers, createTemplateSlice } from '@src/slices/template';
 import { createViewDispatchers, createViewSlice } from '@src/slices/view';
 import { createStoreContext } from '@src/store';
 import { createStore } from '@src/store/internal';
-import { pick } from '@src/utils/object';
 
 import type { Options } from '@t/options';
 import type { CalendarStore, Dispatchers, SetState } from '@t/store';
@@ -36,6 +35,7 @@ const storeCreator = (options: Options) => (set: SetState<CalendarStore>) => {
       view: createViewDispatchers(set),
       dnd: createDndDispatchers(set),
       gridSelection: createGridSelectionDispatchers(set),
+      template: createTemplateDispatchers(set),
     },
   };
 };
@@ -48,18 +48,12 @@ export { StoreProvider, useInternalStore, useStore };
 
 export function useDispatch(): Dispatchers;
 export function useDispatch<Group extends keyof Dispatchers>(group: Group): Dispatchers[Group];
-export function useDispatch<Group extends keyof Dispatchers>(
-  group: Group[]
-): Pick<Dispatchers, Group>;
-export function useDispatch<Group extends keyof Dispatchers>(group?: Group | Group[]) {
+export function useDispatch<Group extends keyof Dispatchers>(group?: Group) {
   return useStore(
     useCallback(
       (state) => {
         if (!group) {
           return state.dispatch;
-        }
-        if (Array.isArray(group)) {
-          return pick(state.dispatch, ...group);
         }
 
         return state.dispatch[group];

@@ -86,7 +86,7 @@ export function initializeGridSelectionOptions(
 
 const initialEventFilter = (event: EventObject) => !!event.isVisible;
 
-// @TODO: some of options has default values. so it should be `Required` type.
+// TODO: some of options has default values. so it should be `Required` type.
 // But it needs a complex type such as `DeepRequired`.
 // maybe leveraging library like `ts-essential` might be helpful.
 export type OptionsSlice = {

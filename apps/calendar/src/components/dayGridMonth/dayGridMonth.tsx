@@ -23,6 +23,7 @@ import { useGridSelection } from '@src/hooks/gridSelection/useGridSelection';
 import { calendarSelector, optionsSelector } from '@src/selectors';
 import type TZDate from '@src/time/date';
 import { getSize } from '@src/utils/dom';
+import { passConditionalProp } from '@src/utils/preact';
 
 import type { CalendarMonthOptions } from '@t/store';
 import type { CellInfo } from '@t/time/datetime';
@@ -53,7 +54,7 @@ export function DayGridMonth({ dateMatrix = [], rowInfo = [], cellWidthMap = [] 
   const calendar = useStore(calendarSelector);
   const { ref, height } = useGridHeight();
 
-  const { eventFilter, month: monthOptions } = useStore(optionsSelector);
+  const { eventFilter, month: monthOptions, isReadOnly } = useStore(optionsSelector);
   const { visibleWeeksCount, narrowWeekend } = monthOptions as CalendarMonthOptions;
   const rowHeight =
     TOTAL_PERCENT_HEIGHT / Math.max(visibleWeeksCount === 0 ? 6 : visibleWeeksCount, 1);
@@ -83,7 +84,11 @@ export function DayGridMonth({ dateMatrix = [], rowInfo = [], cellWidthMap = [] 
   });
 
   return (
-    <div ref={setGridContainerRef} onMouseDown={onMouseDown} className={cls('month-daygrid')}>
+    <div
+      ref={setGridContainerRef}
+      onMouseDown={passConditionalProp(!isReadOnly, onMouseDown)}
+      className={cls('month-daygrid')}
+    >
       {dateMatrix.map((week, rowIndex) => {
         const { uiModels, gridDateEventModelMap } = renderedEventUIModels[rowIndex];
 

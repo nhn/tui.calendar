@@ -52,7 +52,10 @@ module.exports = {
     // use unused-imports plugin
     '@typescript-eslint/no-unused-vars': 'off',
     'unused-imports/no-unused-imports': 'error',
-    'unused-imports/no-unused-vars': ['warn', { args: 'after-used', argsIgnorePattern: '^_' }],
+    'unused-imports/no-unused-vars': [
+      'warn',
+      { args: 'after-used', argsIgnorePattern: '^_', ignoreRestSiblings: true },
+    ],
     'react/prop-types': 0,
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'error',

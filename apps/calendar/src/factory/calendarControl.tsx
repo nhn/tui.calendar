@@ -19,7 +19,7 @@ import { last } from '@src/utils/array';
 import type { EventBus } from '@src/utils/eventBus';
 import { EventBusImpl } from '@src/utils/eventBus';
 import { addAttributeHooks, removeAttributeHooks } from '@src/utils/sanitizer';
-import { isString } from '@src/utils/type';
+import { isPresent, isString } from '@src/utils/type';
 
 import type { ExternalEventTypes } from '@t/eventBus';
 import type { DateType, EventObject } from '@t/events';
@@ -177,7 +177,29 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
     };
   }
 
-  private move(offset = 0) {
+  /**
+   * Move the rendered date to the next/prev range.
+   *
+   * The range of movement differs depending on the current view, Basically:
+   *   - In month view, it moves to the next/prev month.
+   *   - In week view, it moves to the next/prev week.
+   *   - In day view, it moves to the next/prev day.
+   *
+   * Also, the range depends on the options like how many visible weeks/months should be rendered.
+   *
+   * @param {number} offset The offset to move by.
+   *
+   * @example
+   * // Move to the next month in month view.
+   * calendar.move(1);
+   *
+   * // Move to the next year in month view.
+   * calendar.move(12);
+   *
+   * // Move to yesterday in day view.
+   * calendar.move(-1);
+   */
+  move(offset = 0) {
     const { currentView, renderDate } = this.getStoreState().view;
     const { options } = this.getStoreState();
     const { setRenderDate } = this.getStoreDispatchers().view;
@@ -544,19 +566,36 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    * @returns {Options} options
    */
   getOptions() {
-    const { options } = this.getStoreState();
+    const { options, template } = this.getStoreState();
+    const { dispatch, ...theme } = this.theme.getState();
 
-    return options;
+    return {
+      ...options,
+      template,
+      theme,
+    };
   }
 
   /**
    * Set options of calendar
    * @param {Options} options - set {@link Options}
    */
-  setOptions(options: Options) {
-    const { setOptions } = this.getStoreDispatchers().options;
+  setOptions({ theme, template, ...restOptions }: Options) {
+    const { setTheme } = this.theme.getState().dispatch;
+    const {
+      options: { setOptions },
+      template: { setTemplate },
+    } = this.getStoreDispatchers();
 
-    setOptions(options);
+    if (isPresent(theme)) {
+      setTheme(theme);
+    }
+
+    if (isPresent(template)) {
+      setTemplate(template);
+    }
+
+    setOptions(restOptions);
   }
 
   /**

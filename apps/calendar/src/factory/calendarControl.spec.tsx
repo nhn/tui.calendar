@@ -8,7 +8,7 @@ import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import { Layout } from '@src/components/layout';
 import { GA_TRACKING_ID } from '@src/constants/statistics';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
-import { useAllTheme } from '@src/contexts/themeStore';
+import { useAllTheme, useTheme } from '@src/contexts/themeStore';
 import CalendarControl from '@src/factory/calendarControl';
 import Month from '@src/factory/month';
 import { isVisibleEvent } from '@src/helpers/events';
@@ -712,12 +712,16 @@ describe('setTheme', () => {
 describe('getOptions/setOptions', () => {
   function MockOptionsView() {
     const options = useStore((state) => state.options);
+    const { taskTitle } = useStore((state) => state.template);
+    const { dispatch, ...themeValues } = useTheme((theme) => theme);
     const { defaultView, useCreationPopup } = options;
 
     return (
       <div>
-        <div>defaultView: {defaultView}</div>
-        <div>useCreationPopup: {String(useCreationPopup)}</div>
+        <div data-testid="defaultView">{defaultView}</div>
+        <div data-testid="useCreationPopup">{String(useCreationPopup)}</div>
+        <div data-testid="theme">{JSON.stringify(themeValues)}</div>
+        <div data-testid="template">{taskTitle()}</div>
       </div>
     );
   }
@@ -744,36 +748,44 @@ describe('getOptions/setOptions', () => {
   });
 
   it('should get options', () => {
-    // Given
-    const defaultView = 'week';
-    const useCreationPopup = false;
-
     // When
     const options = mockCalendarOptions.getOptions();
 
     // Then
-    expect(options.defaultView).toBe(defaultView);
-    expect(options.useCreationPopup).toBe(useCreationPopup);
+    expect(options).toMatchSnapshot();
   });
 
   it('should change options', () => {
     // Given
     const defaultView = 'month';
     const useCreationPopup = true;
+    const previousThemeValue = screen.getByTestId('theme').textContent;
 
-    expect(screen.queryByText(`defaultView: ${defaultView}`)).not.toBeInTheDocument();
-    expect(
-      screen.queryByText(`useCreationPopup: ${String(useCreationPopup)}`)
-    ).not.toBeInTheDocument();
+    expect(screen.getByTestId('defaultView')).toHaveTextContent('week');
+    expect(screen.getByTestId('useCreationPopup')).toHaveTextContent('false');
+    expect(screen.getByTestId('template')).toHaveTextContent('Task');
 
     // When
     act(() => {
-      mockCalendarOptions.setOptions({ defaultView, useCreationPopup });
+      mockCalendarOptions.setOptions({
+        defaultView,
+        useCreationPopup,
+        theme: {
+          common: {
+            backgroundColor: '#ff0000',
+          },
+        },
+        template: {
+          taskTitle: () => 'Super Task',
+        },
+      });
     });
 
     // Then
-    expect(screen.queryByText(`defaultView: ${defaultView}`)).toBeInTheDocument();
-    expect(screen.queryByText(`useCreationPopup: ${String(useCreationPopup)}`)).toBeInTheDocument();
+    expect(screen.getByTestId('defaultView')).toHaveTextContent(defaultView);
+    expect(screen.getByTestId('useCreationPopup')).toHaveTextContent(String(useCreationPopup));
+    expect(screen.getByTestId('theme').textContent).not.toEqual(previousThemeValue);
+    expect(screen.getByTestId('template')).toHaveTextContent('Super Task');
   });
 });
 
