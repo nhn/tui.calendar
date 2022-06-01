@@ -7,9 +7,15 @@ import { mockMonthViewEvents } from '@stories/mocks/mockMonthViewEvents';
 import type { EventObject } from '@t/events';
 import type { Options } from '@t/options';
 
+beforeEach(() => {
+  jest.useFakeTimers();
+  jest.setSystemTime(new Date('2022-05-04T00:00:00+09:00'));
+});
+
 afterEach(() => {
   document.body.innerHTML = '';
   jest.resetAllMocks();
+  jest.useRealTimers();
 });
 
 describe('Primary Timezone', () => {
@@ -40,9 +46,6 @@ describe('Primary Timezone', () => {
 
   it('should create a zoned event with a string different from the primary timezone', () => {
     // Given
-    jest
-      .spyOn(Date, 'now')
-      .mockImplementationOnce(() => new Date('2022-05-04T00:00:00+09:00').getTime());
     setup(
       {
         timezone: {
@@ -71,9 +74,6 @@ describe('Primary Timezone', () => {
 
   it('should change the start time of events when setting the new timezone option', () => {
     // Given
-    jest
-      .spyOn(Date, 'now')
-      .mockImplementationOnce(() => new Date('2022-05-04T00:00:00+09:00').getTime());
     const { instance } = setup({}, [
       {
         id: '1',
