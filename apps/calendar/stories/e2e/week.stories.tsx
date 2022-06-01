@@ -56,6 +56,9 @@ MultipleTimezones.args = {
   ...Template.args,
   options: {
     ...Template.args.options,
+    week: {
+      showTimezoneCollapseButton: true,
+    },
     theme: {
       week: {
         dayGridLeft: {
