@@ -1,0 +1,750 @@
+import { Meta } from '@storybook/addon-docs';
+
+<Meta title="Documentation/ko/API/옵션" />
+
+# 옵션
+
+## 설명
+
+옵션을 통해 캘린더를 다양하게 커스터마이징할 수 있다. 인스턴스를 생성할 때 넘기는 옵션 객체를 통해 변경할 수도 있고 `setOptions` 메서드를 통해서도 자유롭게 옵션을 변경할 수 있다.
+
+```js
+// 인스턴스를 생성하며 옵션 설정하기
+const cal = new Calendar('#container', {
+  defaultView: 'month',
+  isReadOnly: true,
+  // ...
+});
+
+// 생성된 인스턴스의 옵션을 setOptions 메서드로 변경하기
+cal.setOptions({
+  defaultView: 'week',
+  isReadOnly: false,
+  // ...
+});
+```
+
+## 옵션 객체
+
+옵션 객체는 아래의 프로퍼티를 가진 중첩 객체이다. 해당 프로퍼티명을 클릭하면 자세한 설명으로 이동한다.
+
+| 프로퍼티                              | 설명                                                                                               |
+| ------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| [defaultView](#defaultview)           | 기본 뷰 타입                                                                                       |
+| [useCreationPopup](#usecreationpopup) | 기본으로 제공하는 일정 생성 팝업 사용 여부                                                         |
+| [useDetailPopup](#usedetailpopup)     | 기본으로 제공하는 일정 상세 팝업 사용 여부                                                         |
+| [isReadOnly](#isreadonly)             | 캘린더 전체의 읽기 전용 여부                                                                       |
+| [usageStatistics](#usagestatistics)   | [Google Analytics(GA)](https://analytics.google.com/analytics/web/)를 위한 hostname 수집 허락 여부 |
+| [eventFilter](#eventfilter)           | 캘린더 전체의 이벤트 필터링 조건                                                                   |
+| [week](#week)                         | 주간/일간뷰 관련 옵션                                                                              |
+| [month](#month)                       | 월간뷰 관련 옵션                                                                                   |
+| [gridSelection](#gridselection)       | 날짜/시간 선택의 클릭/더블 클릭 가능 여부                                                          |
+| [timezone](#timezone)                 | 캘린더에서 사용하는 타임존 정보                                                                    |
+| [theme](#theme)                       | [테마](/story/documentation-ko-api-테마--page)                                                     |
+| [template](#template)                 | [템플릿](/story/documentation-ko-api-템플릿--page)                                                 |
+| [calendars](#calendars)               | 캘린더에서 사용하는 캘린더 목록                                                                    |
+
+## 사용 예시
+
+### defaultView
+
+- 타입: `'month' | 'week' | 'day'`
+- 기본값: `'week'`
+
+캘린더의 기본 뷰를 지정한다. 월간뷰, 주간뷰, 일간뷰를 지정할 수 있으며 각각 `'month'`, `'week'`, `'day'` 이다. 기본값은 `'week'`이다.
+
+```js
+const calendar = new Calendar('#container', {
+  defaultView: 'month',
+});
+```
+
+[⬆ 목록으로 돌아가기](#옵션-객체)
+
+### useCreationPopup
+
+- 타입: `boolean`
+- 기본값: `false`
+
+캘린더에서 기본으로 제공하는 일정 생성 팝업을 사용할지 여부를 지정한다. 기본값은 `false`이다.
+
+```js
+const calendar = new Calendar('#container', {
+  useCreationPopup: true,
+});
+```
+
+[⬆ 목록으로 돌아가기](#옵션-객체)
+
+### useDetailPopup
+
+- 타입: `boolean`
+- 기본값: `false`
+
+캘린더에서 기본으로 제공하는 일정 상세 팝업을 사용할지 여부를 지정한다. 기본값은 `false`이다.
+
+```js
+const calendar = new Calendar('#container', {
+  useDetailPopup: true,
+});
+```
+
+[⬆ 목록으로 돌아가기](#옵션-객체)
+
+### isReadOnly
+
+- 타입: `boolean`
+- 기본값: `false`
+
+캘린더를 읽기 전용으로 만들지 여부를 지정한다. 기본값은 `false`이며 `true`로 설정하면 사용자는 캘린더의 일정을 생성하거나 수정할 수 없다.
+
+```js
+const calendar = new Calendar('#container', {
+  isReadOnly: true,
+});
+```
+
+[⬆ 목록으로 돌아가기](#옵션-객체)
+
+### usageStatistics
+
+- 타입: `boolean`
+- 기본값: `true`
+
+[TOAST UI 캘린더](https://github.com/nhn/tui.calendar)는 [Google Analytics(GA)](https://analytics.google.com/analytics/web/)를 적용하여 오픈 소스 사용에 대한 통계를 수집하여 전 세계에서 얼마나 널리 사용되는지 확인한다.
+이는 프로젝트의 향후 진행을 결정하는 중요한 지표 역할을 한다.
+`location.hostname`(예를 들어 "ui.toast.com")을 수집하며 사용량에 대한 통계를 측정하기 위해서만 사용된다.
+이 옵션을 `false`로 설정하면 통계 수집을 하지 않는다.
+
+```js
+const calendar = new Calendar('#container', {
+  usageStatistics: false,
+});
+```
+
+[⬆ 목록으로 돌아가기](#옵션-객체)
+
+### eventFilter
+
+- 타입: `(event: EventObject) => boolean`
+- 기본값: `(event) => !!event.isVisible`
+
+캘린더의 일정 필터링 조건을 지정한다. 기본값은 `(event) => !!event.isVisible`로 일정의 `isVisible` 속성이 `true`인 일정만 렌더링한다.
+
+```js
+const calendar = new Calendar('#container', {
+  eventFilter: (event) => event.isVisible && event.isAllday,
+});
+```
+
+[⬆ 목록으로 돌아가기](#옵션-객체)
+
+### week
+
+- 타입: `WeekOptions`
+- 기본값: `DEFAULT_WEEK_OPTIONS`
+
+```ts
+type EventView = 'allday' | 'time';
+type TaskView = 'milestone' | 'task';
+
+interface WeekOptions {
+  startDayOfWeek?: number;
+  daynames?: string[];
+  narrowWeekend?: boolean;
+  workweek?: boolean;
+  showTimezoneCollapseButton?: boolean;
+  timezonesCollapsed?: boolean;
+  hourStart?: number;
+  hourEnd?: number;
+  eventView?: boolean | EventView[];
+  taskView?: boolean | TaskView[];
+}
+```
+
+```js
+const DEFAULT_WEEK_OPTIONS = {
+  startDayOfWeek: 0,
+  daynames: [],
+  narrowWeekend: false,
+  workweek: false,
+  showTimezoneCollapseButton: false,
+  timezonesCollapsed: false,
+  hourStart: 0,
+  hourEnd: 24,
+  eventView: true,
+  taskView: true,
+};
+```
+
+일간/주간뷰와 관련된 옵션을 지정한다.
+
+[⬆ 목록으로 돌아가기](#옵션-객체)
+
+#### week.startDayOfWeek
+
+- 타입: `number`
+- 기본값: `0`
+
+일간/주간뷰에서 주의 시작 요일을 지정한다. 기본값은 `0`으로 일요일부터 시작한다. `0`(일요일)부터 `6`(토요일)까지의 값을 지정할 수 있다.
+
+| 값  | 요일   |
+| --- | ------ |
+| 0   | 일요일 |
+| 1   | 월요일 |
+| 2   | 화요일 |
+| 3   | 수요일 |
+| 4   | 목요일 |
+| 5   | 금요일 |
+| 6   | 토요일 |
+
+```js
+calendar.setOptions({
+  week: {
+    startDayOfWeek: 1,
+  },
+});
+```
+
+| 기본값 적용                                                             | 예제 적용                                                              |
+| ----------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| ![week-startDayOfWeek-default](/options_week-startDayOfWeek-before.png) | ![week-startDayOfWeek-example](/options_week-startDayOfWeek-after.png) |
+
+[⬆ 목록으로 돌아가기](#week)
+
+#### week.daynames
+
+- 타입: `string[]`
+- 기본값: `[]`
+
+일간/주간뷰에서 주의 요일명을 변경할 수 있다. 기본값은 `[]`이며, [startDayOfWeek](#week.startDayOfWeek)로 설정한 요일부터 시작한다.
+
+```js
+calendar.setOptions({
+  week: {
+    daynames: ['월', '화', '수', '목', '금', '토', '일'],
+  },
+});
+```
+
+| 기본값 적용  | 예제 적용    |
+| ------------ | ------------ |
+| 구현 후 추가 | 구현 후 추가 |
+
+[⬆ 목록으로 돌아가기](#week)
+
+#### week.narrowWeekend
+
+- 타입: `boolean`
+- 기본값: `false`
+
+일간/주간뷰에서 주말의 너비를 좁게(기존 너비의 1/2) 할 수 있다. 기본값은 `false`이며, 주말의 너비를 좁게 하려면 `true`로 지정한다.
+
+```js
+calendar.setOptions({
+  week: {
+    narrowWeekend: true,
+  },
+});
+```
+
+| 기본값 적용                                                           | 예제 적용                                                            |
+| --------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| ![week-narrowWeekend-default](/options_week-narrowWeekend-before.png) | ![week-narrowWeekend-example](/options_week-narrowWeekend-after.png) |
+
+[⬆ 목록으로 돌아가기](#week)
+
+#### week.workweek
+
+- 타입: `boolean`
+- 기본값: `false`
+
+일간/주간뷰에서 주말을 제외할 수 있다. 기본값은 `false`이며, 주말을 제외하려면 `true`로 지정한다.
+
+```js
+calendar.setOptions({
+  week: {
+    workweek: true,
+  },
+});
+```
+
+| 기본값 적용                                                 | 예제 적용                                                  |
+| ----------------------------------------------------------- | ---------------------------------------------------------- |
+| ![week-workweek-default](/options_week-workweek-before.png) | ![week-workweek-example](/options_week-workweek-after.png) |
+
+[⬆ 목록으로 돌아가기](#week)
+
+#### week.showTimezoneCollapseButton
+
+- 타입: `boolean`
+- 기본값: `false`
+
+주간/일간뷰에서 여러 타임존을 사용할 때, 서브 타임존을 접는 버튼을 표시할지 여부를 지정할 수 있다. 기본값은 `false`이며, 접기 버튼을 표시하려면 `true`로 지정한다.
+
+```js
+calendar.setOptions({
+  week: {
+    showTimezoneCollapseButton: true,
+  },
+});
+```
+
+| 기본값 적용                                                                                     | 예제 적용                                                                                      |
+| ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| ![week-showTimezoneCollapseButton-default](/options_week-showTimezoneCollapseButton-before.png) | ![week-showTimezoneCollapseButton-example](/options_week-showTimezoneCollapseButton-after.png) |
+
+[⬆ 목록으로 돌아가기](#week)
+
+#### week.timezonesCollapsed
+
+- 타입: `boolean`
+- 기본값: `false`
+
+주간/일간뷰에서 여러 타임존을 사용할 때, 서브 타임존들을 접힌 상태로 표시할지 여부를 지정한다. 기본값은 `false`이며, 접힌 상태로 표시하려면 `true`로 지정한다.
+
+```js
+calendar.setOptions({
+  week: {
+    timezonesCollapsed: true,
+  },
+});
+```
+
+| 기본값 적용                                                                     | 예제 적용                                                                      |
+| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| ![week-timezonesCollapsed-default](/options_week-timezonesCollapsed-before.png) | ![week-timezonesCollapsed-example](/options_week-timezonesCollapsed-after.png) |
+
+[⬆ 목록으로 돌아가기](#week)
+
+#### week.hourStart
+
+- 타입: `number`
+- 기본값: `0`
+
+주간/일간뷰에서 각 컬럼의 시작 시간을 지정한다. 기본값은 `0`이며, 원하는 시작 시간을 지정할 수 있다.
+
+```js
+calendar.setOptions({
+  week: {
+    hourStart: 9,
+  },
+});
+```
+
+| 기본값 적용                                                   | 예제 적용                                                    |
+| ------------------------------------------------------------- | ------------------------------------------------------------ |
+| ![week-hourStart-default](/options_week-hourStart-before.png) | ![week-hourStart-example](/options_week-hourStart-after.png) |
+
+[⬆ 목록으로 돌아가기](#week)
+
+#### week.hourEnd
+
+- 타입: `number`
+- 기본값: `24`
+
+주간/일간뷰에서 각 컬럼의 끝 시간을 지정한다. 기본값은 `24`이며, 원하는 끝 시간을 지정할 수 있다.
+
+```js
+calendar.setOptions({
+  week: {
+    hourEnd: 18,
+  },
+});
+```
+
+| 기본값 적용                                               | 예제 적용                                                |
+| --------------------------------------------------------- | -------------------------------------------------------- |
+| ![week-hourEnd-default](/options_week-hourEnd-before.png) | ![week-hourEnd-example](/options_week-hourEnd-after.png) |
+
+[⬆ 목록으로 돌아가기](#week)
+
+#### week.eventView
+
+- 타입: `boolean | ('allday' | 'time')[]`
+- 기본값: `true`
+
+주간/일간뷰에서 allday 패널과 time 패널의 표시 여부를 지정할 수 있다. 기본값은 `true`이며, allday 패널과 time 패널을 모두 표시한다. `false`인 경우엔 두 패널 모두 표시하지 않으며, `['allday']`인 경우엔 allday 패널만 표시한다. `['time']`인 경우엔 time 패널만 표시한다.
+
+```js
+calendar.setOptions({
+  week: {
+    eventView: false,
+  },
+});
+```
+
+| 기본값 적용                                                   | 예제 적용                                                    |
+| ------------------------------------------------------------- | ------------------------------------------------------------ |
+| ![week-eventView-default](/options_week-eventView-before.png) | ![week-eventView-example](/options_week-eventView-after.png) |
+
+[⬆ 목록으로 돌아가기](#week)
+
+#### week.taskView
+
+- 타입: `boolean | ('milestone' | 'task')[]`
+- 기본값: `true`
+
+주간/일간뷰에서 milestone 패널과 task 패널의 표시 여부를 지정할 수 있다. 기본값은 `true`이며, milestone 패널과 task 패널을 모두 표시한다. `false`인 경우엔 두 패널 모두 표시하지 않으며, `['milestone']`인 경우엔 milestone 패널만 표시한다. `['task']`인 경우엔 task 패널만 표시한다.
+
+```js
+calendar.setOptions({
+  week: {
+    taskView: false,
+  },
+});
+```
+
+| 기본값 적용                                                 | 예제 적용                                                  |
+| ----------------------------------------------------------- | ---------------------------------------------------------- |
+| ![week-taskView-default](/options_week-taskView-before.png) | ![week-taskView-example](/options_week-taskView-after.png) |
+
+[⬆ 목록으로 돌아가기](#week)
+
+### month
+
+- 타입: `MonthOptions`
+- 기본값: `DEFAULT_MONTH_OPTIONS`
+
+```ts
+interface MonthOptions {
+  daynames?: string[];
+  startDayOfWeek?: number;
+  narrowWeekend?: boolean;
+  visibleWeeksCount?: number;
+  isAlways6Week?: boolean;
+  workweek?: boolean;
+  visibleEventCount?: number;
+  moreLayerSize?: {
+    width?: string | null;
+    height?: string | null;
+  };
+  grid?: {
+    header?: {
+      height?: number;
+    };
+    footer?: {
+      height?: number;
+    };
+  };
+}
+```
+
+```js
+const DEFAULT_MONTH_OPTIONS = {
+  daynames: ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'],
+  visibleWeeksCount: 0,
+  workweek: false,
+  narrowWeekend: false,
+  startDayOfWeek: 0,
+  isAlways6Week: true,
+  moreLayerSize: { width: null, height: null },
+  grid: {
+    header: { height: 31 },
+    footer: { height: 31 },
+  },
+  visibleEventCount: 6,
+};
+```
+
+월간뷰와 관련된 옵션을 지정한다.
+
+[⬆ 목록으로 돌아가기](#옵션-객체)
+
+#### month.daynames
+
+- 타입: `string[]`
+- 기본값: `['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']`
+
+월간뷰에서 주의 요일명을 변경할 수 있다. 기본값은 `['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']`이며, [startDayOfWeek](#month.startDayOfWeek)로 설정한 요일부터 시작한다.
+
+```js
+calendar.setOptions({
+  month: {
+    daynames: ['일', '월', '화', '수', '목', '금', '토'],
+  },
+});
+```
+
+| 기본값 적용  | 예제 적용    |
+| ------------ | ------------ |
+| 구현 후 추가 | 구현 후 추가 |
+
+[⬆ 목록으로 돌아가기](#month)
+
+#### month.startDayOfWeek
+
+- 타입: `number`
+- 기본값: `0`
+
+월간뷰에서 주의 시작 요일을 지정한다. 기본값은 `0`으로 일요일부터 시작한다. `0`(일요일)부터 `6`(토요일)까지의 값을 지정할 수 있다.
+
+| 값  | 요일   |
+| --- | ------ |
+| 0   | 일요일 |
+| 1   | 월요일 |
+| 2   | 화요일 |
+| 3   | 수요일 |
+| 4   | 목요일 |
+| 5   | 금요일 |
+| 6   | 토요일 |
+
+```js
+calendar.setOptions({
+  month: {
+    startDayOfWeek: 1,
+  },
+});
+```
+
+| 기본값 적용                                                               | 예제 적용                                                                |
+| ------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| ![month-startDayOfWeek-default](/options_month-startDayOfWeek-before.png) | ![month-startDayOfWeek-example](/options_month-startDayOfWeek-after.png) |
+
+[⬆ 목록으로 돌아가기](#month)
+
+#### month.narrowWeekend
+
+- 타입: `boolean`
+- 기본값: `false`
+
+월간뷰에서 주말의 너비를 좁게(기존 너비의 1/2) 할 수 있다. 기본값은 `false`이며, 주말의 너비를 좁게 하려면 `true`로 지정한다.
+
+```js
+calendar.setOptions({
+  month: {
+    narrowWeekend: true,
+  },
+});
+```
+
+| 기본값 적용                                                             | 예제 적용                                                              |
+| ----------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| ![month-narrowWeekend-default](/options_month-narrowWeekend-before.png) | ![month-narrowWeekend-example](/options_month-narrowWeekend-after.png) |
+
+[⬆ 목록으로 돌아가기](#month)
+
+#### month.visibleWeeksCount
+
+- 타입: `number`
+- 기본값: `0`
+
+월간뷰에서 보여지는 주의 개수를 지정한다. 기본값은 `0`이며 6주를 표시한다. 다른 주의 개수를 지정하려면 `1`부터 `6`까지의 값을 지정할 수 있다.
+
+```js
+calendar.setOptions({
+  month: {
+    visibleWeeksCount: 2,
+  },
+});
+```
+
+| 기본값 적용                                                                     | 예제 적용                                                                      |
+| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| ![month-visibleWeeksCount-default](/options_month-visibleWeeksCount-before.png) | ![month-visibleWeeksCount-example](/options_month-visibleWeeksCount-after.png) |
+
+[⬆ 목록으로 돌아가기](#month)
+
+#### month.isAlways6Week
+
+- 타입: `boolean`
+- 기본값: `true`
+
+월간뷰에서 항상 6주로 보일지 여부를 지정한다. 기본값은 `true`이며 항상 6주를 표시한다. `false`로 지정하면 월의 주 수에 따라 5주나 6주로 표시된다.
+
+```js
+calendar.setOptions({
+  month: {
+    isAlways6Week: false,
+  },
+});
+```
+
+| 기본값 적용  | 예제 적용    |
+| ------------ | ------------ |
+| 구현 후 추가 | 구현 후 추가 |
+
+[⬆ 목록으로 돌아가기](#month)
+
+#### month.workweek
+
+- 타입: `boolean`
+- 기본값: `false`
+
+월간뷰에서 주말을 제외할 수 있다. 기본값은 `false`이며, 주말을 제외하려면 `true`로 지정한다.
+
+```js
+calendar.setOptions({
+  week: {
+    workweek: true,
+  },
+});
+```
+
+| 기본값 적용                                                   | 예제 적용                                                    |
+| ------------------------------------------------------------- | ------------------------------------------------------------ |
+| ![month-workweek-default](/options_month-workweek-before.png) | ![month-workweek-example](/options_month-workweek-after.png) |
+
+[⬆ 목록으로 돌아가기](#month)
+
+#### month.visibleEventCount
+
+- 타입: `number`
+- 기본값: `6`
+
+월간뷰에서 각 날짜별 최대로 보여지는 일정의 갯수를 지정한다. 기본값은 `6`이지만 6개가 전부 표시되지 않는 높이라면 가능한 최대의 일정이 보여진다.
+
+| 기본값 적용  | 예제 적용    |
+| ------------ | ------------ |
+| 구현 후 추가 | 구현 후 추가 |
+
+[⬆ 목록으로 돌아가기](#month)
+
+#### month.moreLayerSize
+
+- 타입: `{ width?: string | null; height?: string | null }`
+- 기본값: `{ width: null, height: null }`
+
+월간뷰에서 일정 더보기 팝업창의 크기를 지정한다. 기본값은 `{ width: null, height: null }`이며, `null`을 지정하면 기본값으로 설정된다. CSS 문자열 값을 지정할 수 있다.
+
+```js
+caches.setOptions({
+  month: {
+    moreLayerSize: {
+      width: '200px',
+      height: '200px',
+    },
+  },
+});
+```
+
+| 기본값 적용  | 예제 적용    |
+| ------------ | ------------ |
+| 구현 후 추가 | 구현 후 추가 |
+
+[⬆ 목록으로 돌아가기](#month)
+
+#### month.grid
+
+- 타입: `{ header?: { height?: number; }; footer?: { height?: number; }; }`
+- 기본값: `{ header: { height: 31 }, footer: { height: 31 } }`
+
+월간뷰에서 각 날짜 셀의 헤더와 푸터의 높이를 지정한다. 기본값은 `{ header: { height: 31 }, footer: { height: 31 } }`이며, 해당 `숫자px` 값으로 지정된다.
+
+| 기본값 적용  | 예제 적용    |
+| ------------ | ------------ |
+| 구현 후 추가 | 구현 후 추가 |
+
+[⬆ 목록으로 돌아가기](#month)
+
+### gridSelection
+
+- 타입: `boolean | GridSelectionOptions`
+- 기본값: `true`
+
+```ts
+interface GridSelectionOptions {
+  enableDblClick?: boolean;
+  enableClick?: boolean;
+}
+```
+
+캘린더의 날짜/시간 선택의 클릭과 더블 클릭의 가능 여부를 지정한다. 기본값은 `true`이다. `true`나 `false`의 `boolean` 타입으로 지정하면 클릭과 더블 클릭이 둘 모두 가능하거나 불가능하게 만든다.
+`{ enableDblClick: boolean; enableClick: boolean }`로 지정하면 클릭과 더블 클릭을 각각 지정할 수도 있다.
+
+```js
+const calendar = new Calendar('#container', {
+  gridSelection: {
+    enableDblClick: false,
+    enableClick: true,
+  },
+});
+```
+
+[⬆ 목록으로 돌아가기](#옵션-객체)
+
+### timezone
+
+- 타입: `TimezoneOptions`
+- 기본값: `{ zones: [] }`
+
+```ts
+interface TimezoneConfig {
+  timezoneName: string;
+  displayLabel?: string;
+  tooltip?: string;
+}
+
+interface TimezoneOptions {
+  zones?: TimezoneConfig[];
+  customOffsetCalculator?: (primaryTimezoneName: string, timestamp: number) => number;
+}
+```
+
+캘린더에서 사용되는 타임존 정보를 지정한다. 기본값은 `{ zones: [] }`이다. `zones`는 각 타임존 정보들의 배열이며 타임존 정보는 해당 타임존의 이름(`timezoneName`), 표시 라벨(`displayLabel`), 툴팁(`tooltip`)을 지정할 수 있다.
+`customOffsetCalculator`는 사용자가 직접 정의한 방식으로 타임존 오프셋을 계산하여 사용하도록 할 수 있다.
+
+```js
+const calendar = new Calendar('#container', {
+  timezone: {
+    zones: [
+      {
+        timezoneName: 'Asia/Seoul',
+        displayLabel: 'Seoul',
+        tooltip: 'Seoul Time',
+      },
+      {
+        timezoneName: 'Asia/Tokyo',
+        displayLabel: 'Tokyo',
+        tooltip: 'Tokyo Time',
+      },
+    ],
+    customOffsetCalculator: (primaryTimezoneName, timestamp) => {
+      const primaryOffset = moment.tz(timestamp, primaryTimezoneName).utcOffset();
+      const secondaryOffset = moment.tz(timestamp, 'Asia/Seoul').utcOffset();
+
+      return primaryOffset - secondaryOffset;
+    },
+  },
+});
+```
+
+[⬆ 목록으로 돌아가기](#옵션-객체)
+
+### theme
+
+- 타입: `ThemeObject`
+- 기본값: `DEFAULT_THEME`
+
+캘린더의 테마를 지정한다. 캘린더 인스턴스 생성 시에만 적용할 수 있으며 `setOptions` 메서드로는 변경이 불가능하다. 대신 `setTheme` 메서드로 변경 가능하며 자세한 내용은 [theme 문서](/story/documentation-ko-api-테마--page)에서 확인할 수 있다.
+
+[⬆ 목록으로 돌아가기](#옵션-객체)
+
+### template
+
+- 타입: `TemplateObject`
+- 기본값: `DEFAULT_TEMPLATE`
+
+캘린더의 템플릿을 지정한다. 자세한 내용은 [template 문서](/story/documentation-ko-api-템플릿--page)에서 확인할 수 있다.
+
+[⬆ 목록으로 돌아가기](#옵션-객체)
+
+### calendars
+
+- 타입: `CalendarInfo[]`
+- 기본값: `[]`
+
+캘린더에서 사용되는 캘린더 목록을 지정한다. 캘린더 목록의 각 캘린더 정보는 해당 캘린더의 `id`와 캘린더명, 색상 정보를 가지고 있다. 기본값은 `[]`이다.
+
+```ts
+interface CalendarInfo {
+  id: string;
+  name: string;
+  color?: string;
+  bgColor?: string;
+  dragBgColor?: string;
+  borderColor?: string;
+}
+```
+
+[⬆ 목록으로 돌아가기](#옵션-객체)
