@@ -18,7 +18,7 @@ import { last } from '@src/utils/array';
 import type { EventBus } from '@src/utils/eventBus';
 import { EventBusImpl } from '@src/utils/eventBus';
 import { addAttributeHooks, removeAttributeHooks } from '@src/utils/sanitizer';
-import { isPresent, isString } from '@src/utils/type';
+import { isNil, isPresent, isString } from '@src/utils/type';
 
 import type { ExternalEventTypes } from '@t/eventBus';
 import type { DateType, EventObject } from '@t/events';
@@ -53,7 +53,8 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   protected store: InternalStoreAPI<CalendarStore>;
 
   constructor(container: string | Element, options: Options = {}) {
-    this.container = isString(container) ? document.querySelector(container) : container;
+    // NOTE: Handling server side rendering. When container is not specified,
+    this.container = isString(container) ? document?.querySelector(container) ?? null : container;
 
     this.renderRange = {
       start: toStartOfDay(),
@@ -198,7 +199,11 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    * // Move to yesterday in day view.
    * calendar.move(-1);
    */
-  move(offset = 0) {
+  move(offset: number) {
+    if (isNil(offset)) {
+      return;
+    }
+
     const { currentView, renderDate } = this.getStoreState().view;
     const { options } = this.getStoreState();
     const { setRenderDate } = this.getStoreDispatchers().view;
@@ -286,7 +291,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    * console.log(event.title);
    */
   getEvent(eventId: string, calendarId: string) {
-    return this.getEventModel(eventId, calendarId)?.toEventObject();
+    return this.getEventModel(eventId, calendarId)?.toEventObject() ?? null;
   }
 
   /**
@@ -357,7 +362,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    * });
    */
   render() {
-    if (this.container) {
+    if (isPresent(this.container)) {
       render(
         <CalendarContainer theme={this.theme} store={this.store} eventBus={this.eventBus}>
           {this.getComponent()}
@@ -442,6 +447,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
     const { setRenderDate } = this.getStoreDispatchers('view');
 
     setRenderDate(new TZDate(date));
+    // TODO: should update `this.renderRange`. Perhaps this method have to call `move` method?
   }
 
   /**
