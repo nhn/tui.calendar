@@ -56,7 +56,7 @@ const now1 = new TZDate(new Date()); // Date 인스턴스
 const now2 = new TZDate(new TZDate()); // TZDate 인스턴스
 ```
 
-### 인스턴스 메서드
+## 인스턴스 메서드
 
 💡 메서드를 클릭하면 더 자세한 설명과 사용 예시를 볼 수 있다.
 
@@ -95,7 +95,7 @@ const now2 = new TZDate(new TZDate()); // TZDate 인스턴스
 | [tz](#tz) | 주어진 타임존을 따르는 새로운 TZDate 인스턴스를 반환한다. |
 | [local](#local) | 시스템 타임존을 따르는 새로운 TZDate 인스턴스를 반환한다. |
 
-#### toString
+### toString
 
 - 타입: `toString(): string`
 - 리턴: `string` - TZDate 인스턴스 일시를 나타내는 문자열
@@ -104,7 +104,7 @@ TZDate 인스턴스 일시를 문자열로 반환한다. [Date 객체의 `toStri
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
-#### toDate
+### toDate
 
 - 타입: `toDate(): Date`
 - 리턴: `Date` - TZDate 인스턴스 일시를 나타내는 Date 객체
@@ -113,7 +113,7 @@ TZDate 인스턴스 일시를 자바스크립트 표준 내장 객체인 [Date](
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
-#### toCustomDate
+### toCustomDate
 
 - 타입: `toCustomDate(): DateInterface`
 - 리턴: `DateInterface` - TZDate 인스턴스 일시를 나타내는 CustomDate 객체
@@ -122,7 +122,7 @@ TZDate 인스턴스 일시를 CustomDate 객체로 반환한다. (TODO 사용 �
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
-#### valueOf
+### valueOf
 
 - 타입: `valueOf(): number`
 - 리턴: `number` - 1970년 1월 1일 UTC 이후 TZDate 인스턴스 일시까지 경과 시간(밀리초)
@@ -131,7 +131,7 @@ TZDate 인스턴스 일시를 CustomDate 객체로 반환한다. (TODO 사용 �
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
-#### addFullYear
+### addFullYear
 
 - 타입: `addFullYear(y: number): TZDate`
 - 파라미터
@@ -142,7 +142,7 @@ TZDate 인스턴스 일시를 CustomDate 객체로 반환한다. (TODO 사용 �
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
-#### addMonth
+### addMonth
 
 - 타입: `addMonth(m: number): TZDate`
 - 파라미터
@@ -153,7 +153,7 @@ TZDate 인스턴스 일시를 CustomDate 객체로 반환한다. (TODO 사용 �
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
-#### addDate
+### addDate
 
 - 타입: `addDate(d: number): TZDate`
 - 파라미터
@@ -164,7 +164,7 @@ TZDate 인스턴스 일시를 CustomDate 객체로 반환한다. (TODO 사용 �
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
-#### addHours
+### addHours
 
 - 타입: `addHours(h: number): TZDate`
 - 파라미터
@@ -175,7 +175,7 @@ TZDate 인스턴스 일시를 CustomDate 객체로 반환한다. (TODO 사용 �
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
-#### addMinutes
+### addMinutes
 
 - 타입: `addMinutes(M: number): TZDate`
 - 파라미터
@@ -186,7 +186,7 @@ TZDate 인스턴스 일시를 CustomDate 객체로 반환한다. (TODO 사용 �
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
-#### addSeconds
+### addSeconds
 
 - 타입: `addSeconds(s: number): TZDate`
 - 파라미터
@@ -197,7 +197,7 @@ TZDate 인스턴스 일시를 CustomDate 객체로 반환한다. (TODO 사용 �
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
-#### addMilliseconds
+### addMilliseconds
 
 - 타입: `addMilliseconds(ms: number): TZDate`
 - 파라미터
@@ -208,7 +208,7 @@ TZDate 인스턴스 일시를 CustomDate 객체로 반환한다. (TODO 사용 �
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
-#### getTime
+### getTime
 
 - 타입: `getTime(): number`
 - 리턴: `number` - 1970년 1월 1일 UTC 이후 TZDate 인스턴스 일시까지 경과 시간(밀리초)
@@ -217,7 +217,7 @@ TZDate 인스턴스 일시를 CustomDate 객체로 반환한다. (TODO 사용 �
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
-#### getFullYear
+### getFullYear
 
 - 타입: `getFullYear(): number`
 - 리턴: `number` - TZDate 인스턴스 일시의 연도
@@ -226,7 +226,7 @@ TZDate 인스턴스 일시의 연도를 반환한다.
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
-#### getMonth
+### getMonth
 
 - 타입: `getMonth(): number`
 - 리턴: `number` - TZDate 인스턴스 일시의 월
@@ -235,7 +235,7 @@ TZDate 인스턴스 일시의 월을 반환한다. 월은 0부터 시작하는 �
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
-#### getDate
+### getDate
 
 - 타입: `getDate(): number`
 - 리턴: `number` - TZDate 인스턴스 일시의 일자
@@ -244,7 +244,7 @@ TZDate 인스턴스 일시의 일자를 반환한다.
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
-#### getDay
+### getDay
 
 - 타입: `getDay(): number`
 - 리턴: `number` - TZDate 인스턴스 일시의 요일에 해당하는 숫자 값
@@ -253,7 +253,7 @@ TZDate 인스턴스 일시의 요일에 해당하는 숫자 값을 반환한다.
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
-#### getHours
+### getHours
 
 - 타입: `getHours(): number`
 - 리턴: `number` - TZDate 인스턴스 일시의 시
@@ -262,7 +262,7 @@ TZDate 인스턴스 일시의 시를 반환한다.
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
-#### getMinutes
+### getMinutes
 
 - 타입: `getMinutes(): number`
 - 리턴: `number` - TZDate 인스턴스 일시의 분
@@ -271,7 +271,7 @@ TZDate 인스턴스 일시의 분을 반환한다.
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
-#### getSeconds
+### getSeconds
 
 - 타입: `getSeconds(): number`
 - 리턴: `number` - TZDate 인스턴스 일시의 초
@@ -280,7 +280,7 @@ TZDate 인스턴스 일시의 초를 반환한다.
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
-#### getMilliseconds
+### getMilliseconds
 
 - 타입: `getMilliseconds(): number`
 - 리턴: `number` - TZDate 인스턴스 일시의 밀리초
@@ -289,7 +289,7 @@ TZDate 인스턴스 일시의 밀리초를 반환한다.
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
-#### getTimezoneOffset
+### getTimezoneOffset
 
 - 타입: `getTimezoneOffset(): number`
 - 리턴: `number` - TZDate 인스턴스의 타임존 오프셋
@@ -298,7 +298,7 @@ TZDate 인스턴스의 타임존 오프셋을 반환한다.
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
-#### setWithRaw
+### setWithRaw
 
 - 타입: `setWithRaw(y: number, m: number, d: number, h: number, M: number, s: number, ms: number): TZDate`
 - 파라미터
@@ -315,7 +315,7 @@ TZDate 인스턴스 일시를 개별 날짜 및 시각 구성 요소로 지정�
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
-#### setTime
+### setTime
 
 - 타입: `setTime(t: number): number`
 - 파라미터
@@ -326,7 +326,7 @@ TZDate 인스턴스 일시를 1970년 1월 1일 UTC 이후 경과 시간(밀리�
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
-#### setFullYear
+### setFullYear
 
 - 타입: `setFullYear(y: number, m?: number, d?: number): number`
 - 파라미터
@@ -339,7 +339,7 @@ TZDate 인스턴스 일시의 연도를 주어진 숫자 값으로 지정한다.
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
-#### setMonth
+### setMonth
 
 - 타입: `setMonth(m: number, d?: number): number`
 - 파라미터
@@ -351,7 +351,7 @@ TZDate 인스턴스 일시의 월을 주어진 숫자 값으로 지정한다. �
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
-#### setDate
+### setDate
 
 - 타입: `setDate(d: number): number`
 - 파라미터
@@ -362,7 +362,7 @@ TZDate 인스턴스 일시의 일자를 주어진 숫자 값으로 지정한다.
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
-#### setHours
+### setHours
 
 - 타입: `setHours(h: number, M?: number, s?: number, ms?: number): number`
 - 파라미터
@@ -376,7 +376,7 @@ TZDate 인스턴스 일시의 시를 주어진 숫자 값으로 지정한다. �
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
-#### setMinutes
+### setMinutes
 
 - 타입: `setMinutes(M: number, s?: number, ms?: number): number`
 - 파라미터
@@ -389,7 +389,7 @@ TZDate 인스턴스 일시의 분을 주어진 숫자 값으로 지정한다. �
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
-#### setSeconds
+### setSeconds
 
 - 타입: `setSeconds(s: number, ms?: number): number`
 - 파라미터
@@ -401,7 +401,7 @@ TZDate 인스턴스 일시의 초를 주어진 숫자 값으로 지정한다. �
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
-#### setMilliseconds
+### setMilliseconds
 
 - 타입: `setMilliseconds(ms: number): number`
 - 파라미터
@@ -412,7 +412,7 @@ TZDate 인스턴스 일시의 밀리초를 주어진 숫자 값으로 지정한�
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
-#### tz
+### tz
 
 - 타입: `tz(tzValue: string | 'Local' | number): TZDate`
 - 파라미터
@@ -423,7 +423,7 @@ TZDate 인스턴스 일시의 밀리초를 주어진 숫자 값으로 지정한�
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
-#### local
+### local
 
 - 타입: `local(tzValue?: string | number): TZDate`
 - 파라미터
