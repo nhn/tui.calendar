@@ -3,14 +3,10 @@ import type { DateInterface } from '@toast-ui/date';
 import { MS_PER_MINUTES } from '@src/time/datetime';
 import {
   calculateTimezoneOffset,
-  date as newDate,
+  date as createDate,
   getLocalTimezoneOffset,
-  getTimezoneFactory,
-  setDateConstructor,
 } from '@src/time/timezone';
 import { isPresent, isString } from '@src/utils/type';
-
-let createDate = newDate;
 
 function getTZOffsetMSDifference(offset: number) {
   return (getLocalTimezoneOffset() - offset) * MS_PER_MINUTES;
@@ -35,12 +31,6 @@ export default class TZDate {
     } else {
       this.d = createDate(...args);
     }
-  }
-
-  static setDateConstructor = setDateConstructor;
-
-  static setTimezone(value: number | string | null) {
-    createDate = value === null ? newDate : getTimezoneFactory(value);
   }
 
   toString() {
