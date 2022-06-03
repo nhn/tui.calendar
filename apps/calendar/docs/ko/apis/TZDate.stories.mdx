@@ -66,8 +66,12 @@ const now2 = new TZDate(new TZDate()); // TZDate 인스턴스
 | [toDate](#todate) | TZDate 인스턴스 일시를 Date 객체로 반환한다. |
 | [toCustomDate](#tocustomdate) | TZDate 인스턴스 일시를 CustomDate 객체로 반환한다. (TODO 사용 여부 확인 필요) |
 | [valueOf](#valueof) | 1970년 1월 1일 UTC 이후 TZDate 인스턴스 일시까지 경과 시간(밀리초)을 반환한다. |
+| [addFullYear](#addfullyear) | 주어진 숫자 값만큼 duseh를 더한다. |
+| [addMonth](#addmonth) | 주어진 숫자 값만큼 월을 더한다. |
 | [addDate](#adddate) | 주어진 숫자 값만큼 일자를 더한다. |
+| [addHours](#addhours) | 주어진 숫자 값만큼 시를 더한다. |
 | [addMinutes](#addminutes) | 주어진 숫자 값만큼 분을 더한다. |
+| [addSeconds](#addseconds) | 주어진 숫자 값만큼 초를 더한다. |
 | [addMilliseconds](#addmilliseconds) | 주어진 숫자 값만큼 밀리초를 더한다. |
 | [getTime](#gettime) | 1970년 1월 1일 UTC 이후 TZDate 인스턴스 일시까지 경과 시간(밀리초)을 반환한다. |
 | [getFullYear](#getfullyear) | TZDate 인스턴스 일시의 연도를 반환한다. |
@@ -79,7 +83,7 @@ const now2 = new TZDate(new TZDate()); // TZDate 인스턴스
 | [getSeconds](#getseconds) | TZDate 인스턴스 일시의 초를 반환한다. |
 | [getMilliseconds](#getmilliseconds) | TZDate 인스턴스 일시의 밀리초를 반환한다. |
 | [getTimezoneOffset](#gettimezoneoffset) | TZDate 인스턴스의 타임존 오프셋을 반환한다. |
-| [setWithRaw](#setwithraw) | TZDate 인스턴스 일시를 개별 날짜 및 시각 구성 요소로  지정한다. |
+| [setWithRaw](#setwithraw) | TZDate 인스턴스 일시를 개별 날짜 및 시각 구성 요소로 지정한다. |
 | [setTime](#settime) | TZDate 인스턴스 일시를 1970년 1월 1일 UTC 이후 경과 시간(밀리초)으로 지정한다. |
 | [setFullYear](#setfullyear) | TZDate 인스턴스 일시의 연도를 주어진 숫자 값으로 지정한다. |
 | [setMonth](#setmonth) | TZDate 인스턴스 일시의 월을 주어진 숫자 값으로 지정한다. 월은 0부터 시작하는 값이다. (ex. 3월의 경우 `2`) |
@@ -127,6 +131,28 @@ TZDate 인스턴스 일시를 CustomDate 객체로 반환한다. (TODO 사용 �
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
+#### addFullYear
+
+- 타입: `addFullYear(y: number): TZDate`
+- 파라미터
+    - `y` - 추가할 연도만큼의 숫자 값
+- 리턴: `TZDate` - 변경된 TZDate
+
+주어진 숫자 값만큼 연도를 더한다. 기존 TZDate 인스턴스를 변경한 다음, 이를 반환한다.
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+#### addMonth
+
+- 타입: `addMonth(m: number): TZDate`
+- 파라미터
+    - `m` - 추가할 월만큼의 숫자 값
+- 리턴: `TZDate` - 변경된 TZDate
+
+주어진 숫자 값만큼 월을 더한다. 기존 TZDate 인스턴스를 변경한 다음, 이를 반환한다.
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
 #### addDate
 
 - 타입: `addDate(d: number): TZDate`
@@ -138,6 +164,17 @@ TZDate 인스턴스 일시를 CustomDate 객체로 반환한다. (TODO 사용 �
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
+#### addHours
+
+- 타입: `addHours(h: number): TZDate`
+- 파라미터
+    - `h` - 추가할 시만큼의 숫자 값
+- 리턴: `TZDate` - 변경된 TZDate
+
+주어진 숫자 값만큼 시를 더한다. 기존 TZDate 인스턴스를 변경한 다음, 이를 반환한다.
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
 #### addMinutes
 
 - 타입: `addMinutes(M: number): TZDate`
@@ -146,6 +183,17 @@ TZDate 인스턴스 일시를 CustomDate 객체로 반환한다. (TODO 사용 �
 - 리턴: `TZDate` - 변경된 TZDate
 
 주어진 숫자 값만큼 분을 더한다. 기존 TZDate 인스턴스를 변경한 다음, 이를 반환한다.
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+#### addSeconds
+
+- 타입: `addSeconds(s: number): TZDate`
+- 파라미터
+    - `s` - 추가할 초만큼의 숫자 값
+- 리턴: `TZDate` - 변경된 TZDate
+
+주어진 숫자 값만큼 초를 더한다. 기존 TZDate 인스턴스를 변경한 다음, 이를 반환한다.
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 

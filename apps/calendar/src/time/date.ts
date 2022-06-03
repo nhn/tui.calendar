@@ -37,14 +37,38 @@ export default class TZDate {
     return this.d.toString();
   }
 
+  addFullYear(y: number): TZDate {
+    this.setFullYear(this.getFullYear() + y);
+
+    return this;
+  }
+
+  addMonth(m: number): TZDate {
+    this.setMonth(this.getMonth() + m);
+
+    return this;
+  }
+
   addDate(d: number): TZDate {
     this.setDate(this.getDate() + d);
 
     return this;
   }
 
+  addHours(h: number): TZDate {
+    this.setHours(this.getHours() + h);
+
+    return this;
+  }
+
   addMinutes(M: number): TZDate {
     this.setMinutes(this.getMinutes() + M);
+
+    return this;
+  }
+
+  addSeconds(s: number): TZDate {
+    this.setSeconds(this.getSeconds() + s);
 
     return this;
   }
