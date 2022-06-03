@@ -10,6 +10,7 @@ import type { Options } from '@t/options';
 afterEach(() => {
   document.body.innerHTML = '';
   jest.resetAllMocks();
+  jest.useRealTimers();
 });
 
 describe('Primary Timezone', () => {
@@ -36,13 +37,13 @@ describe('Primary Timezone', () => {
     return { container, instance };
   }
 
-  const reTargetEvent = /short time event/i;
+  const reTargetEventTitle = 'short time event';
 
   it('should create a zoned event with a string different from the primary timezone', () => {
     // Given
-    jest
-      .spyOn(Date, 'now')
-      .mockImplementationOnce(() => new Date('2022-05-04T00:00:00+09:00').getTime());
+    jest.useFakeTimers();
+    jest.setSystemTime(new Date('2022-05-04T00:00:00+09:00'));
+
     setup(
       {
         timezone: {
@@ -53,7 +54,7 @@ describe('Primary Timezone', () => {
         {
           id: '1',
           calendarId: 'cal1',
-          title: 'short time event',
+          title: reTargetEventTitle,
           category: 'time',
           start: '2022-05-04T10:00:00+09:00',
           end: '2022-05-04T11:00:00+09:00',
@@ -62,7 +63,7 @@ describe('Primary Timezone', () => {
     );
 
     // When
-    const targetEvent = screen.getByText(reTargetEvent);
+    const targetEvent = screen.getByText(reTargetEventTitle);
 
     // Then
     // From UTC+9 to UTC+5
@@ -71,20 +72,19 @@ describe('Primary Timezone', () => {
 
   it('should change the start time of events when setting the new timezone option', () => {
     // Given
-    jest
-      .spyOn(Date, 'now')
-      .mockImplementationOnce(() => new Date('2022-05-04T00:00:00+09:00').getTime());
+    jest.useFakeTimers();
+    jest.setSystemTime(new Date('2022-05-04T00:00:00+09:00'));
     const { instance } = setup({}, [
       {
         id: '1',
         calendarId: 'cal1',
-        title: 'short time event',
+        title: reTargetEventTitle,
         category: 'time',
         start: '2022-05-04T10:00:00+09:00',
         end: '2022-05-04T11:00:00+09:00',
       },
     ]);
-    const prevEvent = screen.getByText(reTargetEvent);
+    const prevEvent = screen.getByText(reTargetEventTitle);
     expect(hasDesiredStartTime(prevEvent, '10:00')).toBe(true);
 
     // When
@@ -97,7 +97,7 @@ describe('Primary Timezone', () => {
     });
 
     // Then
-    const changedEvent = screen.getByText(reTargetEvent);
+    const changedEvent = screen.getByText(reTargetEventTitle);
     expect(hasDesiredStartTime(changedEvent, '06:00')).toBe(true);
   });
 });
