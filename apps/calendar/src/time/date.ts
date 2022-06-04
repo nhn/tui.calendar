@@ -91,10 +91,6 @@ export default class TZDate {
     return this.d.toDate();
   }
 
-  toCustomDate(): DateInterface {
-    return createDate(this.d.getTime());
-  }
-
   valueOf(): number {
     return this.getTime();
   }

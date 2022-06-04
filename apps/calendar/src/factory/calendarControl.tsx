@@ -3,7 +3,6 @@ import { h, render } from 'preact';
 import { unmountComponentAtNode } from 'preact/compat';
 import renderToString from 'preact-render-to-string';
 
-import type { DateInterface } from '@toast-ui/date';
 import type { DeepPartial } from 'ts-essentials';
 import sendHostname from 'tui-code-snippet/request/sendHostname';
 
@@ -606,16 +605,6 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
     const { renderDate } = this.getStoreState().view;
 
     return renderDate;
-  }
-
-  /**
-   * Get custom date of current rendered date
-   * @returns {DateInterface}
-   */
-  getDateInterface(): DateInterface {
-    const { renderDate } = this.getStoreState().view;
-
-    return renderDate.toCustomDate();
   }
 
   /**

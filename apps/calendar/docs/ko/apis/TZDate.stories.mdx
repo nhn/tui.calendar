@@ -64,7 +64,6 @@ const now2 = new TZDate(new TZDate()); // TZDate 인스턴스
 | --- | --- |
 | [toString](#tostring) | TZDate 인스턴스 일시를 문자열로 반환한다. |
 | [toDate](#todate) | TZDate 인스턴스 일시를 Date 객체로 반환한다. |
-| [toCustomDate](#tocustomdate) | TZDate 인스턴스 일시를 CustomDate 객체로 반환한다. (TODO 사용 여부 확인 필요) |
 | [valueOf](#valueof) | 1970년 1월 1일 UTC 이후 TZDate 인스턴스 일시까지 경과 시간(밀리초)을 반환한다. |
 | [addFullYear](#addfullyear) | 주어진 숫자 값만큼 duseh를 더한다. |
 | [addMonth](#addmonth) | 주어진 숫자 값만큼 월을 더한다. |
@@ -110,15 +109,6 @@ TZDate 인스턴스 일시를 문자열로 반환한다. [Date 객체의 `toStri
 - 리턴: `Date` - TZDate 인스턴스 일시를 나타내는 Date 객체
 
 TZDate 인스턴스 일시를 자바스크립트 표준 내장 객체인 [Date](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date)로 반환한다.
-
-[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
-
-### toCustomDate
-
-- 타입: `toCustomDate(): DateInterface`
-- 리턴: `DateInterface` - TZDate 인스턴스 일시를 나타내는 CustomDate 객체
-
-TZDate 인스턴스 일시를 CustomDate 객체로 반환한다. (TODO 사용 여부 확인 필요)
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
