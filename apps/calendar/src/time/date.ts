@@ -3,14 +3,10 @@ import type { DateInterface } from '@toast-ui/date';
 import { MS_PER_MINUTES } from '@src/time/datetime';
 import {
   calculateTimezoneOffset,
-  date as newDate,
+  date as createDate,
   getLocalTimezoneOffset,
-  getTimezoneFactory,
-  setDateConstructor,
 } from '@src/time/timezone';
 import { isPresent, isString } from '@src/utils/type';
-
-let createDate = newDate;
 
 function getTZOffsetMSDifference(offset: number) {
   return (getLocalTimezoneOffset() - offset) * MS_PER_MINUTES;
@@ -37,14 +33,20 @@ export default class TZDate {
     }
   }
 
-  static setDateConstructor = setDateConstructor;
-
-  static setTimezone(value: number | string | null) {
-    createDate = value === null ? newDate : getTimezoneFactory(value);
-  }
-
   toString() {
     return this.d.toString();
+  }
+
+  addFullYear(y: number): TZDate {
+    this.setFullYear(this.getFullYear() + y);
+
+    return this;
+  }
+
+  addMonth(m: number): TZDate {
+    this.setMonth(this.getMonth() + m);
+
+    return this;
   }
 
   addDate(d: number): TZDate {
@@ -53,8 +55,20 @@ export default class TZDate {
     return this;
   }
 
+  addHours(h: number): TZDate {
+    this.setHours(this.getHours() + h);
+
+    return this;
+  }
+
   addMinutes(M: number): TZDate {
     this.setMinutes(this.getMinutes() + M);
+
+    return this;
+  }
+
+  addSeconds(s: number): TZDate {
+    this.setSeconds(this.getSeconds() + s);
 
     return this;
   }
@@ -75,10 +89,6 @@ export default class TZDate {
 
   toDate(): Date {
     return this.d.toDate();
-  }
-
-  toCustomDate(): DateInterface {
-    return createDate(this.d.getTime());
   }
 
   valueOf(): number {

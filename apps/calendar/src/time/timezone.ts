@@ -1,16 +1,12 @@
 import type { TuiDateConstructor } from '@toast-ui/date';
-import { LocalDate, UTCDate } from '@toast-ui/date';
+import { LocalDate } from '@toast-ui/date';
 
 import TZDate from '@src/time/date';
 import { InvalidTimezoneNameError } from '@src/utils/error';
 import { logger } from '@src/utils/logger';
-import { isFunction, isNumber, isPresent } from '@src/utils/type';
+import { isFunction, isPresent } from '@src/utils/type';
 
 let Constructor: TuiDateConstructor = LocalDate;
-
-function isTimezoneDisabled() {
-  return Constructor === LocalDate || Constructor === UTCDate;
-}
 
 export function setDateConstructor(constructor: TuiDateConstructor) {
   Constructor = constructor;
@@ -18,20 +14,6 @@ export function setDateConstructor(constructor: TuiDateConstructor) {
 
 export function date(...args: any[]) {
   return new Constructor(...args);
-}
-
-export function getTimezoneFactory(value: number | string) {
-  return (...args: any[]) => {
-    if (isTimezoneDisabled()) {
-      return date(...args);
-    }
-
-    if (isNumber(value)) {
-      return date(...args).setTimezoneOffset(value);
-    }
-
-    return date(...args).setTimezoneName(value);
-  };
 }
 
 // Get the timezone offset from the system using the calendar.
