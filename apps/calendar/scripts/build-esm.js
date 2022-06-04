@@ -32,6 +32,9 @@ const banner = `
       },
       jsxFactory: 'h',
       jsxFragment: 'Fragment',
+      define: {
+        global: 'window',
+      },
       // TODO: separate bundle without default popups
       // it always needs external modules in runtime.
       // external: ['tui-date-picker', 'tui-time-picker'],
