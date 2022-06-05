@@ -160,7 +160,7 @@ export function HorizontalEvent({
   const [isDraggingTarget, setIsDraggingTarget] = useState<boolean>(false);
   const eventContainerRef = useRef<HTMLDivElement>(null);
 
-  const { isReadOnly, id, calendarId } = uiModel.model;
+  const { isReadOnly, id, calendarId, customStyle } = uiModel.model;
   const isDraggableEvent =
     !isReadOnlyCalendar && !isReadOnly && isNil(resizingWidth) && isNil(movingLeft);
   const { dayEventBlockClassName, containerStyle, eventItemStyle } = getStyles({
@@ -244,7 +244,7 @@ export function HorizontalEvent({
   return (
     <div
       className={dayEventBlockClassName}
-      style={containerStyle}
+      style={{ ...containerStyle, ...customStyle }}
       data-testid={passConditionalProp(isDraggableEvent, getTestId(uiModel))}
       data-calendar-id={calendarId}
       data-event-id={id}

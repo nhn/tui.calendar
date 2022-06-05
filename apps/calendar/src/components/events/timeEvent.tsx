@@ -44,7 +44,7 @@ function getStyles(uiModel: EventUIModel, isDraggingTarget: boolean, hasNextStar
     croppedStart,
     croppedEnd,
   } = uiModel;
-  // get theme values
+  // TODO: check and get theme values
   const travelBorderColor = 'white';
   const borderRadius = 2;
   const paddingLeft = 2;
@@ -125,7 +125,7 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
 
   const { model, goingDurationHeight, modelDurationHeight, comingDurationHeight, croppedEnd } =
     uiModel;
-  const { id, calendarId } = model;
+  const { id, calendarId, customStyle } = model;
   const hasNextStartTime = isPresent(nextStartTime);
   const { containerStyle, goingDurationStyle, modelDurationStyle, comingDurationStyle } = getStyles(
     uiModel,
@@ -215,7 +215,7 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
       data-calendar-id={calendarId}
       data-event-id={id}
       className={classNames.time}
-      style={containerStyle}
+      style={{ ...containerStyle, ...customStyle }}
       onMouseDown={passConditionalProp(isDraggable, handleMoveStart)}
       ref={eventContainerRef}
     >

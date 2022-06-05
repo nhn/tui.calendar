@@ -3,7 +3,7 @@ import { h } from 'preact';
 import { TimeEvent } from '@src/components/events/timeEvent';
 import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
-import { render } from '@src/test/utils';
+import { render, screen } from '@src/test/utils';
 import TZDate from '@src/time/date';
 import { EventBusImpl } from '@src/utils/eventBus';
 
@@ -60,5 +60,30 @@ describe(`Firing 'afterRenderEvent'`, () => {
 
     // Then
     expect(handler).not.toBeCalled();
+  });
+});
+
+describe('Apply customStyle', () => {
+  it('should apply customStyle when the EventModel has the customStyle object', () => {
+    // Given
+    const customStyle = {
+      textDecoration: 'line-through',
+    };
+    const uiModel = new EventUIModel(
+      new EventModel({
+        id: '1',
+        title: 'style-test',
+        start: new Date('2022-06-05T09:00:00'),
+        end: new Date('2022-06-05T1100:00'),
+        customStyle,
+      })
+    );
+
+    // When
+    render(<TimeEvent uiModel={uiModel} />);
+
+    // Then
+    const container = screen.getByTestId(/time-event/);
+    expect(container).toHaveStyle(customStyle);
   });
 });

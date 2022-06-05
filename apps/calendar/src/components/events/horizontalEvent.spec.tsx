@@ -3,7 +3,7 @@ import { h } from 'preact';
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
-import { render } from '@src/test/utils';
+import { render, screen } from '@src/test/utils';
 import { EventBusImpl } from '@src/utils/eventBus';
 
 import type { ExternalEventTypes } from '@t/eventBus';
@@ -74,5 +74,36 @@ describe(`Firing 'afterRenderEvent'`, () => {
 
     // Then
     expect(handler).not.toBeCalled();
+  });
+});
+
+describe('Apply customStyle', () => {
+  it('should apply customStyle when the EventModel has the customStyle object', () => {
+    // Given
+    const customStyle = {
+      textDecoration: 'line-through',
+    };
+    const uiModel = new EventUIModel(
+      new EventModel({
+        id: '1',
+        title: 'style-test',
+        start: new Date(2020, 0, 1, 10, 0),
+        end: new Date(2020, 0, 1, 12, 0),
+        customStyle,
+      })
+    );
+    const props = {
+      uiModel,
+      eventHeight: 30,
+      headerHeight: 0,
+    };
+    const testId = '1-style-test';
+
+    // When
+    render(<HorizontalEvent {...props} />);
+
+    // Then
+    const container = screen.getByTestId(testId);
+    expect(container).toHaveStyle(customStyle);
   });
 });
