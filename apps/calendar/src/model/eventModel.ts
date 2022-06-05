@@ -54,13 +54,13 @@ export default class EventModel implements EventObjectWithDefaultValues {
 
   isPrivate = false;
 
-  color = '#000';
+  color?: string;
 
-  backgroundColor = '#a1b56c';
+  backgroundColor?: string;
 
-  dragBackgroundColor = '#a1b56c';
+  dragBackgroundColor?: string;
 
-  borderColor = '#000';
+  borderColor?: string;
 
   customStyle = {};
 
@@ -104,10 +104,10 @@ export default class EventModel implements EventObjectWithDefaultValues {
     isFocused = false,
     isReadOnly = false,
     isPrivate = false,
-    color = '#000',
-    backgroundColor = '#a1b56c',
-    dragBackgroundColor = '#a1b56c',
-    borderColor = '#000',
+    color,
+    backgroundColor,
+    dragBackgroundColor,
+    borderColor,
     customStyle = {},
     raw = null,
   }: EventObject = {}) {
@@ -326,6 +326,15 @@ export default class EventModel implements EventObjectWithDefaultValues {
       borderColor: this.borderColor,
       customStyle: this.customStyle,
       raw: this.raw,
+    };
+  }
+
+  getColors() {
+    return {
+      color: this.color,
+      backgroundColor: this.backgroundColor,
+      dragBackgroundColor: this.dragBackgroundColor,
+      borderColor: this.borderColor,
     };
   }
 }

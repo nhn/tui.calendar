@@ -1,3 +1,5 @@
+import type { MarkOptional } from 'ts-essentials';
+
 import type EventModel from '@src/model/eventModel';
 import type EventUIModel from '@src/model/eventUIModel';
 import type TZDate from '@src/time/date';
@@ -36,7 +38,10 @@ export type EventCategory = 'milestone' | 'task' | 'allday' | 'time' | 'backgrou
 
 export type EventState = 'Busy' | 'Free';
 
-export type EventObjectWithDefaultValues = Required<EventObject> & {
+export type EventObjectWithDefaultValues = MarkOptional<
+  Required<EventObject>,
+  'color' | 'borderColor' | 'backgroundColor' | 'dragBackgroundColor'
+> & {
   start: TZDate;
   end: TZDate;
 };

@@ -60,8 +60,8 @@ function getStyles(uiModel: EventUIModel, isDraggingTarget: boolean, hasNextStar
     borderRadius,
     borderLeft: `3px solid ${borderColor}`,
     marginLeft,
-    color,
-    backgroundColor,
+    color: color as string,
+    backgroundColor: backgroundColor as string,
     opacity: isDraggingTarget ? 0.5 : 1,
     zIndex: hasNextStartTime ? 1 : 0,
   };
