@@ -6,8 +6,9 @@ import { Template } from '@src/components/template';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
 import { useLayoutContainer } from '@src/contexts/layoutContainer';
-import { cls, toPercent, toPx } from '@src/helpers/css';
+import { cls, getEventItemColors, toPercent, toPx } from '@src/helpers/css';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
+import { useCalendarColor } from '@src/hooks/calendar/useCalendarColor';
 import { useDrag } from '@src/hooks/common/useDrag';
 import { useTransientUpdate } from '@src/hooks/common/useTransientUpdate';
 import type EventUIModel from '@src/model/eventUIModel';
@@ -15,6 +16,8 @@ import { dndSelector, optionsSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import { passConditionalProp } from '@src/utils/preact';
 import { isNil } from '@src/utils/type';
+
+import type { CalendarColor } from '@t/options';
 
 interface Props {
   uiModel: EventUIModel;
@@ -37,17 +40,20 @@ function getEventItemStyle({
   flat,
   eventHeight,
   isDraggingTarget,
-}: // calendarColor,
-Required<Pick<Props, 'uiModel' | 'flat' | 'eventHeight'>> & {
+  calendarColor,
+}: Required<Pick<Props, 'uiModel' | 'flat' | 'eventHeight'>> & {
   isDraggingTarget: boolean;
-  // calendarColor: CalendarColor;
+  calendarColor: CalendarColor;
 }) {
-  const { exceedLeft, exceedRight, model } = uiModel;
-  const { backgroundColor, dragBackgroundColor, color, borderColor } = model;
+  const { exceedLeft, exceedRight } = uiModel;
+  const { color, backgroundColor, dragBackgroundColor, borderColor } = getEventItemColors(
+    uiModel,
+    calendarColor
+  );
 
   const defaultItemStyle = {
-    color: '#333',
-    backgroundColor,
+    color,
+    backgroundColor: isDraggingTarget ? dragBackgroundColor : backgroundColor,
     borderLeft: exceedLeft ? 'none' : `3px solid ${borderColor}`,
     borderRadius: exceedLeft ? 0 : 2,
     overflow: 'hidden',
@@ -114,12 +120,13 @@ export function HorizontalEvent({
   resizingWidth = null,
   movingLeft = null,
 }: Props) {
-  const layoutContainer = useLayoutContainer();
-
   const { useDetailPopup, isReadOnly: isReadOnlyCalendar } = useStore(optionsSelector);
   const { setDraggingEventUIModel } = useDispatch('dnd');
   const { showDetailPopup } = useDispatch('popup');
+
+  const layoutContainer = useLayoutContainer();
   const eventBus = useEventBus();
+  const calendarColor = useCalendarColor(uiModel);
 
   const [isDraggingTarget, setIsDraggingTarget] = useState<boolean>(false);
   const eventContainerRef = useRef<HTMLDivElement>(null);
@@ -208,6 +215,7 @@ export function HorizontalEvent({
     flat,
     eventHeight,
     isDraggingTarget,
+    calendarColor,
   });
 
   return (

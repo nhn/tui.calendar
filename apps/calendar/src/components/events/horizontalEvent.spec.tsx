@@ -1,9 +1,10 @@
 import { h } from 'preact';
 
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
+import { initCalendarStore } from '@src/contexts/calendarStore';
 import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
-import { render, screen } from '@src/test/utils';
+import { dragAndDrop, render, screen } from '@src/test/utils';
 import { EventBusImpl } from '@src/utils/eventBus';
 
 import type { ExternalEventTypes } from '@t/eventBus';
@@ -105,5 +106,137 @@ describe('Apply customStyle', () => {
     // Then
     const container = screen.getByTestId(testId);
     expect(container).toHaveStyle(customStyle);
+  });
+});
+
+describe('Color values', () => {
+  const calendarId = 'cal1';
+  const title = 'style-test';
+  const calendarColors = {
+    color: '#ff0000',
+    borderColor: '#ff0000',
+    backgroundColor: '#ff0000',
+    dragBackgroundColor: '#ff0000',
+  };
+  const store = initCalendarStore({
+    calendars: [
+      {
+        id: calendarId,
+        name: calendarId,
+        ...calendarColors,
+      },
+    ],
+  });
+
+  it('should apply calendar color values to the event', () => {
+    // Given
+    const uiModel = new EventUIModel(
+      new EventModel({
+        id: '1',
+        calendarId,
+        title,
+        start: new Date(2020, 0, 1, 10, 0),
+        end: new Date(2020, 0, 1, 12, 0),
+      })
+    );
+    const props = {
+      uiModel,
+      eventHeight: 30,
+      headerHeight: 0,
+    };
+
+    // When
+    render(<HorizontalEvent {...props} />, { store });
+
+    // Then
+    const container = screen.getByTestId(new RegExp(title));
+    expect(container.children[0]).toHaveStyle({
+      color: calendarColors.color,
+      backgroundColor: calendarColors.backgroundColor,
+      borderLeft: `3px solid ${calendarColors.borderColor}`,
+    });
+  });
+
+  it('should apply color properties of the event model overriding calendar color values', () => {
+    // Given
+    const eventColors = {
+      color: '#6f53d4',
+      backgroundColor: '#6f53d4',
+      borderColor: '#6f53d4',
+      dragBackgroundColor: '#6f53d4',
+    };
+
+    const uiModel = new EventUIModel(
+      new EventModel({
+        id: '1',
+        calendarId,
+        title,
+        start: new Date(2020, 0, 1, 10, 0),
+        end: new Date(2020, 0, 1, 12, 0),
+        ...eventColors,
+      })
+    );
+    const props = {
+      uiModel,
+      eventHeight: 30,
+      headerHeight: 0,
+    };
+
+    // When
+    render(<HorizontalEvent {...props} />, { store });
+
+    // Then
+    const container = screen.getByTestId(new RegExp(title));
+    expect(container.children[0]).toHaveStyle({
+      color: eventColors.color,
+      backgroundColor: eventColors.backgroundColor,
+      borderLeft: `3px solid ${eventColors.borderColor}`,
+    });
+  });
+
+  it('should apply the dragBackgroundColor value to the dragging event', () => {
+    // Given
+    const eventColors = {
+      color: '#6f53d4',
+      backgroundColor: '#6f53d4',
+      borderColor: '#6f53d4',
+      dragBackgroundColor: '#fb96f6',
+    };
+
+    const uiModel = new EventUIModel(
+      new EventModel({
+        id: '1',
+        calendarId,
+        title,
+        start: new Date(2020, 0, 1, 10, 0),
+        end: new Date(2020, 0, 1, 12, 0),
+        ...eventColors,
+      })
+    );
+    const props = {
+      uiModel,
+      eventHeight: 30,
+      headerHeight: 0,
+    };
+    const getEventItemElement = () =>
+      screen.getByTestId(new RegExp(title))?.children?.[0] as HTMLElement;
+
+    // When
+    render(<HorizontalEvent {...props} />, { store });
+    dragAndDrop({
+      element: getEventItemElement(),
+      targetPosition: {
+        clientX: 100,
+        clientY: 100,
+      },
+      hold: true,
+    });
+
+    // Then
+    expect(getEventItemElement()).toHaveStyle({
+      color: eventColors.color,
+      backgroundColor: eventColors.dragBackgroundColor,
+      borderLeft: `3px solid ${eventColors.borderColor}`,
+    });
   });
 });
