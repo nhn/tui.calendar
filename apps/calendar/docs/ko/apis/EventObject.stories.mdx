@@ -27,9 +27,9 @@ calendar.createEvents([
     backgroundColor: '#ccc',
     customStyle: {
       fontStyle: 'italic',
-      fontSize: '15px,
-    },
-  }, // EventObject
+      fontSize: '15px'
+    }
+  } // EventObject
 ]);
 
 const timedEvent = calendar.getEvents('1', 'cal1'); // EventObject
@@ -75,7 +75,7 @@ interface EventObject {
 | 프로퍼티 | 기본값 | 설명 |
 | --- | --- | --- |
 | id | <code>''</code> | 일정 ID |
-| calendarId | <code>''</code> | 캘린더 ID |
+| [calendarId](#캘린더calendarid) | <code>''</code> | 캘린더 ID |
 | title | <code>''</code> | 일정 제목 |
 | body | <code>''</code> | 일정 내용 |
 | [isAllday](#isallday) | <code>false</code> | 종일 일정 여부 |
@@ -103,7 +103,100 @@ interface EventObject {
 
 ## 추가 설명
 
-#### isAllday
+### 캘린더(calendarId)
+
+캘린더는 이벤트를 그룹짓기 위해 사용하는 객체이다. 하나의 이벤트는 하나의 캘린더에 속하며, 고유의 ID, 이름, 색상값을 가진다.
+
+```ts
+interface CalendarInfo {
+  id: string;
+  name: string;
+  color?: string;
+  backgroundColor?: string;
+  dragBackgroundColor?: string;
+  borderColor?: string;
+}
+```
+
+하나 이상의 캘린더를 설정하기 위해 인스턴스 생성 시 옵션 값으로 전달하여 지정하거나, `setCalendars` 메서드를 사용할 수 있다.
+
+```js
+// 인스턴스 생성 시
+const calendar = new Calendar('#container', {
+  calendars: [
+    {
+      id: 'cal1',
+      name: 'My Calendar'
+    },
+    {
+      id: 'cal2',
+      name: 'Another Calendar'
+    }
+  ]
+});
+
+// 인스턴스 생성 후
+calendar.setCalendars([
+  {
+    id: 'cal1',
+    name: 'My Calendar'
+  },
+  {
+    id: 'cal2',
+    name: 'Another Calendar'
+  }
+]);
+```
+
+캘린더에 컬러 값을 설정하거나 이벤트에 컬러 값을 설정한 경우 다음과 같은 우선순위로 컬러가 적용된다.
+
+1. 이벤트 고유의 컬러 값
+2. 캘린더의 컬러 값
+3. 둘 다 지정되지 않은 경우 기본값
+
+```js
+calendar.setCalendars([
+  {
+    id: 'cal1',
+    name: 'My Calendar',
+    color: '#000',
+    backgroundColor: '#a1b56c',
+    dragBackgroundColor: '#a1b56c',
+    borderColor: '#000'
+  },
+  {
+    id: 'cal2',
+    name: 'Another Calendar'
+  }
+]);
+
+calendar.createEvents([
+  {
+    id: '1',
+    calendarId: 'cal1',
+    title: 'Event 1',
+    isAllDay: true,
+    start: new Date('2018-08-01'),
+    end: new Date('2018-08-02'),
+    // 아래의 세 컬러는 cal1의 컬러 값을 무시한다.
+    color: '#fff',
+    backgroundColor: '#3c056d',
+    dragBackgroundColor: '#3c056d',
+    // borderColor: '#a73eaf' // 주석처리되었기 때문에 cal1의 '#000' 이 적용된다.
+  },
+  // 이 이벤트는 cal2에 속하지만, cal2가 아무런 컬러를 지정하지 않았기 때문에 기본값이 된다.
+  {
+    id: '2',
+    calendarId: 'cal2',
+    title: 'Event 2',
+    isAllDay: true,
+    start: new Date('2018-08-01'),
+    end: new Date('2018-08-02')
+  }
+]);
+```
+
+### isAllday
 
 ![isAllday](/EventObject_isAllday.png)
 
@@ -114,19 +207,19 @@ interface EventObject {
 - `category`가 `allday`인 경우
 - 일정 기간이 24시간 이상인 경우
 
-#### category
+### category
 
 ![category](/EventObject_category.png)
 
 카테고리에 맞는 패널에 일정이 그려진다. `milestone`, `task`, `allday`, `time` 중 하나이다.
 
-#### isReadOnly
+### isReadOnly
 
 ![isReadOnly](/EventObject_isReadOnly.png)
 
 수정 가능한 일정 여부를 나타낸다. `isReadOnly`가 `true`인 경우 일정 이동, 일정 리사이징이 되지 않으며 일정 상세 팝업에서 편집 버튼이 노출되지 않는다.
 
-#### isPending, isFocused, isPrivate
+### isPending, isFocused, isPrivate
 
 `isPending`은 미정인 일정 여부를, `isFocused`는 일정 강조 여부를, `isPrivate`는 개인적인 일정 여부를 나타낸다. 기본적으로 렌더링에 영향을 주지 않으며, 해당 값에 따라 일정을 다르게 표시하고 싶을 때는 [템플릿](/story/documentation-ko-api-템플릿--page) 기능을 사용한다.
 
@@ -147,14 +240,14 @@ const calendar = new Calendar('#container', {
       }
 
       return title;
-    },
-  },
+    }
+  }
 })
 ```
 
 자세한 예시는 [여기 (TODO 템플릿 예시 문서 상대 경로 추가)]()를 참고한다.
 
-#### 스타일 관련 속성
+### 스타일 관련 속성
 
 ![style](/EventObject_style.png)
 

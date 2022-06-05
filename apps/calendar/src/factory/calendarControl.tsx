@@ -18,7 +18,7 @@ import { last } from '@src/utils/array';
 import type { EventBus } from '@src/utils/eventBus';
 import { EventBusImpl } from '@src/utils/eventBus';
 import { addAttributeHooks, removeAttributeHooks } from '@src/utils/sanitizer';
-import { isPresent, isString } from '@src/utils/type';
+import { isNil, isPresent, isString } from '@src/utils/type';
 
 import type { ExternalEventTypes } from '@t/eventBus';
 import type { DateType, EventObject } from '@t/events';
@@ -53,7 +53,8 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   protected store: InternalStoreAPI<CalendarStore>;
 
   constructor(container: string | Element, options: Options = {}) {
-    this.container = isString(container) ? document.querySelector(container) : container;
+    // NOTE: Handling server side rendering. When container is not specified,
+    this.container = isString(container) ? document?.querySelector(container) ?? null : container;
 
     this.renderRange = {
       start: toStartOfDay(),
@@ -198,7 +199,11 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    * // Move to yesterday in day view.
    * calendar.move(-1);
    */
-  move(offset = 0) {
+  move(offset: number) {
+    if (isNil(offset)) {
+      return;
+    }
+
     const { currentView, renderDate } = this.getStoreState().view;
     const { options } = this.getStoreState();
     const { setRenderDate } = this.getStoreDispatchers().view;
@@ -275,23 +280,27 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
 
   /**
    * Get an {@link EventObject} with event's id and calendar's id.
+   *
    * @param {string} eventId - event's id
    * @param {string} calendarId - calendar's id of the event
    * @returns {EventObject | null} event. If the event can't be found, it returns null.
+   *
    * @example
    * const event = calendar.getEvent(eventId, calendarId);
    *
    * console.log(event.title);
    */
   getEvent(eventId: string, calendarId: string) {
-    return this.getEventModel(eventId, calendarId)?.toEventObject();
+    return this.getEventModel(eventId, calendarId)?.toEventObject() ?? null;
   }
 
   /**
-   * Update the event
+   * Update an event.
+   *
    * @param {string} eventId - ID of an event to update
    * @param {string} calendarId - The calendarId of the event to update
-   * @param {EventObject} changes - The {@link EventObject} data to update
+   * @param {EventObject} changes - The new {@link EventObject} data to apply to the event
+   *
    * @example
    * calendar.on('beforeUpdateEvent', function ({ event, changes }) {
    *   const { id, calendarId } = event;
@@ -309,7 +318,8 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * Delete an event
+   * Delete an event.
+   *
    * @param {string} eventId - event's id to delete
    * @param {string} calendarId - The CalendarId of the event to delete
    */
@@ -328,6 +338,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
 
   /**
    * Set events' visibility by calendar ID
+   *
    * @param {string|string[]} calendarId - The calendar id or ids to change visibility
    * @param {boolean} isVisible - If set to true, show the events. If set to false, hide the events.
    */
@@ -340,16 +351,18 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
 
   /**
    * Render the calendar.
+   *
    * @example
    * calendar.render();
+   *
    * @example
-   * // Render a calendar when resizing a window.
+   * // Re-render the calendar when resizing a window.
    * window.addEventListener('resize', () => {
    *   calendar.render();
    * });
    */
   render() {
-    if (this.container) {
+    if (isPresent(this.container)) {
       render(
         <CalendarContainer theme={this.theme} store={this.store} eventBus={this.eventBus}>
           {this.getComponent()}
@@ -362,8 +375,9 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * for SSR(server side rendering)
-   * @returns HTML string
+   * For SSR(Server Side Rendering), Return the HTML string of the whole calendar.
+   *
+   * @returns {string} HTML string
    */
   renderToString(): string {
     return renderToString(
@@ -375,6 +389,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
 
   /**
    * Delete all events and clear view
+   *
    * @example
    * calendar.clear();
    */
@@ -385,8 +400,9 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * Scroll to current time on today in case of daily, weekly view
-   * @todo implement this
+   * TODO: implement this
+   * Scroll to current time on today in case of daily, weekly view.
+   *
    * @example
    * function onNewEvents(events) {
    *     calendar.createEvents(events);
@@ -400,7 +416,8 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * Move to today
+   * Move to today.
+   *
    * @example
    * function onClickTodayBtn() {
    *   calendar.today();
@@ -413,7 +430,8 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * Move to specific date
+   * Move to specific date.
+   *
    * @param {DateType} date - The date to move
    * @example
    * calendar.on('clickDayname', (event) => {
@@ -429,10 +447,12 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
     const { setRenderDate } = this.getStoreDispatchers('view');
 
     setRenderDate(new TZDate(date));
+    // TODO: should update `this.renderRange`. Perhaps this method have to call `move` method?
   }
 
   /**
-   * Move the calendar forward a day, a week, a month, 2 weeks, 3 weeks.
+   * Move the calendar forward to the next range.
+   *
    * @example
    * function moveToNextOrPrevRange(offset) {
    *   if (offset === -1) {
@@ -447,7 +467,8 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * Move the calendar backward a day, a week, a month, 2 weeks, 3 weeks.
+   * Move the calendar backward to the previous range.
+   *
    * @example
    * function moveToNextOrPrevRange(offset) {
    *   if (offset === -1) {
@@ -462,9 +483,11 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * Change calendar's event color with options
+   * Change color values of events belong to a certain calendar.
+   *
    * @param {string} calendarId - The calendar ID
    * @param {CalendarColor} colorOptions - The {@link CalendarColor} object
+   *
    * @example
    * calendar.setCalendarColor('1', {
    *     color: '#e8e8e8',
@@ -492,8 +515,10 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * Change current view with view name('day', 'week', 'month')
+   * Change current view type.
+   *
    * @param {ViewType} viewName - The new view name to change
+   *
    * @example
    * // change to daily view
    * calendar.changeView('day');
@@ -512,9 +537,11 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
 
   /**
    * Get the DOM element of the event by event id and calendar id
+   *
    * @param {string} eventId - ID of event
    * @param {string} calendarId - calendarId of event
    * @returns {HTMLElement} event element if found or null
+   *
    * @example
    * const element = calendar.getElement(eventId, calendarId);
    *
@@ -533,8 +560,10 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * Set a theme
+   * Set the theme of the calendar.
+   *
    * @param {DeepPartial<ThemeState>} theme - theme object
+   *
    * @example
    * calendar.setTheme({
    *   common: {
@@ -561,7 +590,8 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * Get current {@link Options}
+   * Get current {@link Options}.
+   *
    * @returns {Options} options
    */
   getOptions() {
@@ -576,7 +606,8 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * Set options of calendar
+   * Set options of calendar.
+   *
    * @param {Options} options - set {@link Options}
    */
   setOptions({ theme, template, ...restOptions }: Options) {
@@ -598,7 +629,8 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * Get current rendered date
+   * Get current rendered date.
+   *
    * @returns {TZDate}
    */
   getDate(): TZDate {
@@ -608,29 +640,26 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * Start time of rendered date range ({@link TZDate} for further information)
+   * Start time of rendered date range. ({@link TZDate} for further information)
+   *
    * @returns {TZDate}
-   * @todo implement this
    */
   getDateRangeStart() {
-    // console.log('getDateRangeStart');
-
     return this.renderRange.start;
   }
 
   /**
-   * End time of rendered date range ({@link TZDate} for further information)
+   * End time of rendered date range. ({@link TZDate} for further information)
+   *
    * @returns {TZDate}
-   * @todo implement this
    */
   getDateRangeEnd() {
-    // console.log('getDateRangeEnd');
-
     return this.renderRange.end;
   }
 
   /**
-   * Get current view name('day', 'week', 'month')
+   * Get current view name('day', 'week', 'month').
+   *
    * @returns {ViewType} current view name
    */
   getViewName(): ViewType {
@@ -640,8 +669,9 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * Set calendar list
-   * @param {CalendarInfo[]} calendars - calendar list
+   * Set calendar list.
+   *
+   * @param {CalendarInfo[]} calendars - list of calendars
    */
   setCalendars(calendars: CalendarInfo[]) {
     const { setCalendars } = this.getStoreDispatchers().calendar;
@@ -650,7 +680,10 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * Open event form popup
+   * TODO: specify position of popup
+   *
+   * Open event form popup with predefined form values.
+   *
    * @param {EventObject} event - The preset {@link EventObject} data
    */
   openFormPopup(event: EventObject) {

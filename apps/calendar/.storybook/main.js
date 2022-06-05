@@ -5,7 +5,7 @@ module.exports = {
   core: {
     builder: 'webpack5',
   },
-  stories: isBuildingDocs ? ['../**/docs/*.stories.@(ts|tsx|mdx)'] : ['../**/*.stories.@(ts|tsx|mdx)'],
+  stories: isBuildingDocs ? ['../**/docs/*.stories.mdx'] : ['../**/*.stories.@(ts|tsx|mdx)'],
   addons: ['@storybook/addon-docs'],
   staticDirs: ['../docs/assets/'],
   babel: async (config) => {
@@ -28,7 +28,7 @@ module.exports = {
       .concat([
         {
           test: /\.css$/,
-          include: /node_modules/,
+          include: /(node_modules|storybook-styles)/,
           use: [
             require.resolve('style-loader'),
             {
@@ -41,7 +41,7 @@ module.exports = {
         },
         {
           test: /\.css$/,
-          exclude: /node_modules/,
+          exclude: /(node_modules|storybook-styles)/,
           sideEffects: true,
           use: [
             require.resolve('style-loader'),
