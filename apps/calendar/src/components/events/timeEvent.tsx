@@ -5,8 +5,9 @@ import { Template } from '@src/components/template';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
 import { useLayoutContainer } from '@src/contexts/layoutContainer';
-import { cls, toPercent } from '@src/helpers/css';
+import { cls, getEventItemColors, toPercent } from '@src/helpers/css';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
+import { useCalendarColor } from '@src/hooks/calendar/useCalendarColor';
 import { useDrag } from '@src/hooks/common/useDrag';
 import { useTransientUpdate } from '@src/hooks/common/useTransientUpdate';
 import type EventUIModel from '@src/model/eventUIModel';
@@ -15,6 +16,9 @@ import { DraggingState } from '@src/slices/dnd';
 import type TZDate from '@src/time/date';
 import { passConditionalProp } from '@src/utils/preact';
 import { isPresent } from '@src/utils/type';
+
+import type { StyleProp } from '@t/components/common';
+import type { CalendarColor } from '@t/options';
 
 const classNames = {
   time: cls('event-time'),
@@ -31,13 +35,22 @@ interface Props {
   nextStartTime?: TZDate | null;
 }
 
-function getStyles(uiModel: EventUIModel, isDraggingTarget: boolean, hasNextStartTime: boolean) {
+function getStyles({
+  uiModel,
+  isDraggingTarget,
+  hasNextStartTime,
+  calendarColor,
+}: {
+  uiModel: EventUIModel;
+  isDraggingTarget: boolean;
+  hasNextStartTime: boolean;
+  calendarColor: CalendarColor;
+}) {
   const {
     top,
     left,
     height,
     width,
-    model,
     goingDurationHeight,
     modelDurationHeight,
     comingDurationHeight,
@@ -51,8 +64,11 @@ function getStyles(uiModel: EventUIModel, isDraggingTarget: boolean, hasNextStar
   const defaultMarginBottom = 2;
   const marginLeft = left > 0 ? paddingLeft : 0;
 
-  const { color, backgroundColor, borderColor } = model;
-  const containerStyle: Record<string, string | number> = {
+  const { color, backgroundColor, borderColor, dragBackgroundColor } = getEventItemColors(
+    uiModel,
+    calendarColor
+  );
+  const containerStyle: StyleProp = {
     width: width >= 0 ? `calc(${toPercent(width)} - ${marginLeft}px)` : '',
     height: `calc(${toPercent(height)} - ${defaultMarginBottom}px)`,
     top: toPercent(top),
@@ -60,8 +76,8 @@ function getStyles(uiModel: EventUIModel, isDraggingTarget: boolean, hasNextStar
     borderRadius,
     borderLeft: `3px solid ${borderColor}`,
     marginLeft,
-    color: color as string,
-    backgroundColor: backgroundColor as string,
+    color,
+    backgroundColor: isDraggingTarget ? dragBackgroundColor : backgroundColor,
     opacity: isDraggingTarget ? 0.5 : 1,
     zIndex: hasNextStartTime ? 1 : 0,
   };
@@ -112,6 +128,7 @@ function isDraggableEvent({
 
 export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: Props) {
   const { useDetailPopup, isReadOnly: isReadOnlyCalendar } = useStore(optionsSelector);
+  const calendarColor = useCalendarColor(uiModel);
 
   const layoutContainer = useLayoutContainer();
   const { showDetailPopup } = useDispatch('popup');
@@ -128,9 +145,7 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
   const { id, calendarId, customStyle } = model;
   const hasNextStartTime = isPresent(nextStartTime);
   const { containerStyle, goingDurationStyle, modelDurationStyle, comingDurationStyle } = getStyles(
-    uiModel,
-    isDraggingTarget,
-    hasNextStartTime
+    { uiModel, isDraggingTarget, hasNextStartTime, calendarColor }
   );
 
   useTransientUpdate(dndSelector, ({ draggingEventUIModel, draggingState }) => {

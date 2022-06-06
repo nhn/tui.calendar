@@ -1,9 +1,10 @@
 import { h } from 'preact';
 
 import { TimeEvent } from '@src/components/events/timeEvent';
+import { initCalendarStore } from '@src/contexts/calendarStore';
 import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
-import { render, screen } from '@src/test/utils';
+import { dragAndDrop, render, screen } from '@src/test/utils';
 import TZDate from '@src/time/date';
 import { EventBusImpl } from '@src/utils/eventBus';
 
@@ -85,5 +86,108 @@ describe('Apply customStyle', () => {
     // Then
     const container = screen.getByTestId(/time-event/);
     expect(container).toHaveStyle(customStyle);
+  });
+});
+
+describe('Color values', () => {
+  const calendarId = 'cal1';
+  const title = 'style-test';
+  const calendarColors = {
+    color: '#ff0000',
+    borderColor: '#ff0000',
+    backgroundColor: '#ff0000',
+    dragBackgroundColor: '#ff0000',
+  };
+  const store = initCalendarStore({
+    calendars: [
+      {
+        id: calendarId,
+        name: calendarId,
+        ...calendarColors,
+      },
+    ],
+  });
+  it('should apply calendar color values to the event', () => {
+    // Given
+    const uiModel = new EventUIModel(
+      new EventModel({
+        id: '1',
+        calendarId,
+        title,
+        start: new Date('2022-06-05T09:00:00'),
+        end: new Date('2022-06-05T1100:00'),
+      })
+    );
+
+    // When
+    render(<TimeEvent uiModel={uiModel} />, { store });
+
+    // Then
+    const container = screen.getByTestId(/time-event/);
+    expect(container).toHaveStyle({
+      color: calendarColors.color,
+      borderColor: `3px solid ${calendarColors.borderColor}`,
+      backgroundColor: calendarColors.backgroundColor,
+    });
+  });
+
+  it('should apply color properties of the event model overriding calendar colors', () => {
+    // Given
+    const eventColors = {
+      color: '#723a5c',
+      borderColor: '#723a5c',
+      backgroundColor: '#723a5c',
+    };
+    const uiModel = new EventUIModel(
+      new EventModel({
+        id: '1',
+        calendarId,
+        title,
+        start: new Date('2022-06-05T09:00:00'),
+        end: new Date('2022-06-05T1100:00'),
+        ...eventColors,
+      })
+    );
+
+    // When
+    render(<TimeEvent uiModel={uiModel} />, { store });
+
+    // Then
+    const container = screen.getByTestId(/time-event/);
+    expect(container).toHaveStyle({
+      color: eventColors.color,
+      borderColor: `3px solid ${eventColors.borderColor}`,
+      backgroundColor: eventColors.backgroundColor,
+    });
+  });
+
+  it('should apply the dragBackgroundColor value to the dragging event', () => {
+    // Given
+    const uiModel = new EventUIModel(
+      new EventModel({
+        id: '1',
+        calendarId,
+        title,
+        start: new Date('2022-06-05T09:00:00'),
+        end: new Date('2022-06-05T1100:00'),
+      })
+    );
+    const getEventElement = () => screen.getByTestId(/time-event/);
+
+    // When
+    render(<TimeEvent uiModel={uiModel} />, { store });
+    dragAndDrop({
+      element: getEventElement(),
+      targetPosition: {
+        clientX: 100,
+        clientY: 100,
+      },
+      hold: true,
+    });
+
+    // Then
+    expect(getEventElement()).toHaveStyle({
+      backgroundColor: calendarColors.dragBackgroundColor,
+    });
   });
 });
