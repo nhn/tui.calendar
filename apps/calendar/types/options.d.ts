@@ -57,7 +57,7 @@ export interface TimezoneConfig {
 
 export interface TimezoneOptions {
   zones?: TimezoneConfig[];
-  customOffsetCalculator?: (primaryTimezoneName: string, timestamp: number) => number;
+  customOffsetCalculator?: (timezoneName: string, timestamp: number) => number;
 }
 
 export interface CalendarColor {
