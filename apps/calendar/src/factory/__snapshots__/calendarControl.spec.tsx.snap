@@ -45,7 +45,6 @@ Object {
     "comingDuration": [Function],
     "dayGridTitle": [Function],
     "endDatePlaceholder": [Function],
-    "event": [Function],
     "goingDuration": [Function],
     "locationPlaceholder": [Function],
     "milestone": [Function],

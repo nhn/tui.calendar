@@ -236,7 +236,7 @@ export function HorizontalEvent({
         onMouseDown={passConditionalProp(isDraggableEvent, handleMoveStart)}
       >
         <span className={classNames.eventTitle}>
-          <Template template="event" param={uiModel.model} />
+          <Template template={uiModel.model.category} param={uiModel.model} />
         </span>
         {shouldHideResizeHandler ? null : (
           <HorizontalEventResizeIcon

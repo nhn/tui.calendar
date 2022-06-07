@@ -164,27 +164,6 @@ export const templates: Template = {
     return viewName;
   },
 
-  event(model: EventObjectWithDefaultValues) {
-    const { category } = model;
-    if (category === 'milestone') {
-      return templates.milestone(model);
-    }
-
-    if (category === 'task') {
-      return templates.task(model);
-    }
-
-    if (category === 'allday') {
-      return templates.allday(model);
-    }
-
-    if (category === 'time') {
-      return templates.time(model);
-    }
-
-    return model.title;
-  },
-
   collapseBtnTitle() {
     const className = cls('collapse-btn-icon');
 

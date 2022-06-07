@@ -1,6 +1,7 @@
 import type { DateInterface, TuiDateConstructor } from '@toast-ui/date';
 
-import type { StyleProp } from '@t/components/common';
+import type { StyleProp } from './types/components/common';
+import type { TimezoneConfig } from './types/options';
 
 export type ViewType = 'month' | 'week' | 'day';
 export type DateType = string | Date | TZDate;
@@ -114,7 +115,6 @@ export interface ITemplateConfig {
   eventData?: (eventData: EventObject) => string;
   collapseBtnTitle?: () => string;
   timezoneDisplayLabel?: (timezoneOffset: number, displayLabel: string) => string;
-  timegridDisplayPrimayTime?: (time: ITimeGridHourLabel) => string;
   timegridDisplayPrimaryTime?: (time: ITimeGridHourLabel) => string;
   timegridDisplayTime?: (time: ITimeGridHourLabel) => string;
   timegridCurrentTime?: (hourMarker: ITimezoneHourMarker) => string;

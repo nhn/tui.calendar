@@ -76,7 +76,6 @@ export interface Template {
   weekDayname: (weekDaynameData: TemplateWeekDayName) => TemplateReturnType;
   weekGridFooterExceed: (hiddenEventsCount: number) => TemplateReturnType;
   dayGridTitle: (viewName: EventCategory) => TemplateReturnType;
-  event: (event: EventObjectWithDefaultValues) => TemplateReturnType;
   collapseBtnTitle: () => TemplateReturnType;
   timezoneDisplayLabel: (props: TemplateTimezone) => TemplateReturnType;
   timegridDisplayPrimaryTime: (props: TemplateCurrentTime) => TemplateReturnType;

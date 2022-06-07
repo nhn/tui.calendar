@@ -244,8 +244,8 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
           <Template
             template="time"
             param={{
+              ...model.toEventObject(),
               start: hasNextStartTime ? nextStartTime : model.start,
-              title: model.title,
             }}
           />
         </div>
