@@ -35,7 +35,7 @@ export const Week = () => {
   return (
     <ProviderWrapper>
       <Layout>
-        <GridRow rowInfo={rowStyleInfo} cssHeight={100} week={weekDates} />
+        <GridRow rowInfo={rowStyleInfo} height={100} week={weekDates} />
       </Layout>
     </ProviderWrapper>
   );
@@ -49,11 +49,6 @@ export const Month = () => {
     startDayOfWeek: 0,
     isAlways6Week: true,
     daynames: [],
-    moreLayerSize: { width: null, height: null },
-    grid: {
-      header: { height: 31 },
-      footer: { height: 31 },
-    },
     visibleEventCount: 6,
   };
 

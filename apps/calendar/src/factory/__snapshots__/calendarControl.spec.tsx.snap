@@ -19,19 +19,7 @@ Object {
       "fri",
       "sat",
     ],
-    "grid": Object {
-      "footer": Object {
-        "height": 31,
-      },
-      "header": Object {
-        "height": 31,
-      },
-    },
     "isAlways6Week": true,
-    "moreLayerSize": Object {
-      "height": null,
-      "width": null,
-    },
     "narrowWeekend": false,
     "startDayOfWeek": 0,
     "visibleEventCount": 6,
