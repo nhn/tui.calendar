@@ -50,7 +50,6 @@ cal.setOptions({
 | [monthDayname](#monthdayname)                             | TemplateMonthDayName                                         | 월간뷰의 요일                               |
 | [weekDayname](#weekdayname)                               | TemplateWeekDayName                                          | 주간/일간뷰의 요일                            |
 | [weekGridFooterExceed](#weekgridfooterexceed)             | number                                                       | 주간/일간뷰의 allday 패널의 초과된 이벤트 표시 컴포넌트    |
-| [dayGridTitle](#daygridtitle)                             | EventCategory                                                | 주간/일간뷰의 패널 왼쪽 영역                      |
 | [collapseBtnTitle](#collapsebtntitle)                     | 없음                                                           | 주간/일간뷰의 allday 패널의 접기 버튼 컴포넌트         |
 | [timezoneDisplayLabel](#timezonedisplaylabel)             | TemplateTimezone                                             | 주간/일간뷰의 타임존 표시 컴포넌트                   |
 | [timegridDisplayPrimaryTime](#timegriddisplayprimarytime) | TemplateCurrentTime                                          | 주간/일간뷰의 primary 타임존 시간 표시             |
@@ -434,36 +433,6 @@ calendar.setOptions({
   template: {
     weekGridFooterExceed(hiddenEvents) {
       return `+${hiddenEvents}`;
-    },
-  },
-});
-```
-
-[⬆ 목록으로 돌아가기](#템플릿-목록)
-
-### dayGridTitle
-
-![dayGrid-title](https://user-images.githubusercontent.com/28647773/169429687-b5557690-c393-4a48-8fe1-db1188d09b96.png)
-
-주간/일간뷰의 패널 왼쪽 영역을 커스터마이징할 수 있다. 기본 값은 파라미터에 따라 `milestoneTitle`, `taskTitle`, `alldayTitle` 템플릿을 반환한다.
-
-```js
-calendar.setOptions({
-  template: {
-    dayGridTitle(viewName) {
-      if (viewName === 'milestone') {
-        return 'Milestone events';
-      }
-
-      if (viewName === 'task') {
-        return 'Task events';
-      }
-
-      if (viewName === 'allday') {
-        return 'Allday events';
-      }
-
-      return viewName;
     },
   },
 });

@@ -7,7 +7,7 @@ import { stripTags } from '@src/utils/dom';
 import { capitalize } from '@src/utils/string';
 import { isNil, isPresent } from '@src/utils/type';
 
-import type { EventCategory, EventObjectWithDefaultValues } from '@t/events';
+import type { EventObjectWithDefaultValues } from '@t/events';
 import type {
   Template,
   TemplateCurrentTime,
@@ -146,22 +146,6 @@ export const templates: Template = {
 
   weekGridFooterExceed(hiddenEvents: number) {
     return `+${hiddenEvents}`;
-  },
-
-  dayGridTitle(viewName: EventCategory) {
-    if (viewName === 'milestone') {
-      return templates.milestoneTitle();
-    }
-
-    if (viewName === 'task') {
-      return templates.taskTitle();
-    }
-
-    if (viewName === 'allday') {
-      return templates.alldayTitle();
-    }
-
-    return viewName;
   },
 
   collapseBtnTitle() {

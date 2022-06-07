@@ -43,7 +43,6 @@ Object {
     "alldayTitle": [Function],
     "collapseBtnTitle": [Function],
     "comingDuration": [Function],
-    "dayGridTitle": [Function],
     "endDatePlaceholder": [Function],
     "goingDuration": [Function],
     "locationPlaceholder": [Function],

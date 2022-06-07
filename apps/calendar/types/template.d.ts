@@ -2,7 +2,7 @@ import type { VNode } from 'preact';
 
 import type TZDate from '@src/time/date';
 
-import type { EventCategory, EventObjectWithDefaultValues, TimeUnit } from '@t/events';
+import type { EventObjectWithDefaultValues, TimeUnit } from '@t/events';
 
 export interface TemplateTimeGridHourLabel {
   hidden: boolean;
@@ -75,7 +75,6 @@ export interface Template {
   monthDayname: (monthDaynameData: TemplateMonthDayName) => TemplateReturnType;
   weekDayname: (weekDaynameData: TemplateWeekDayName) => TemplateReturnType;
   weekGridFooterExceed: (hiddenEventsCount: number) => TemplateReturnType;
-  dayGridTitle: (viewName: EventCategory) => TemplateReturnType;
   collapseBtnTitle: () => TemplateReturnType;
   timezoneDisplayLabel: (props: TemplateTimezone) => TemplateReturnType;
   timegridDisplayPrimaryTime: (props: TemplateCurrentTime) => TemplateReturnType;
