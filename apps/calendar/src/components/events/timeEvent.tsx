@@ -5,8 +5,9 @@ import { Template } from '@src/components/template';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
 import { useLayoutContainer } from '@src/contexts/layoutContainer';
-import { cls, toPercent } from '@src/helpers/css';
+import { cls, getEventColors, toPercent } from '@src/helpers/css';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
+import { useCalendarColor } from '@src/hooks/calendar/useCalendarColor';
 import { useDrag } from '@src/hooks/common/useDrag';
 import { useTransientUpdate } from '@src/hooks/common/useTransientUpdate';
 import type EventUIModel from '@src/model/eventUIModel';
@@ -15,6 +16,9 @@ import { DraggingState } from '@src/slices/dnd';
 import type TZDate from '@src/time/date';
 import { passConditionalProp } from '@src/utils/preact';
 import { isPresent } from '@src/utils/type';
+
+import type { StyleProp } from '@t/components/common';
+import type { CalendarColor } from '@t/options';
 
 const classNames = {
   time: cls('event-time'),
@@ -31,28 +35,40 @@ interface Props {
   nextStartTime?: TZDate | null;
 }
 
-function getStyles(uiModel: EventUIModel, isDraggingTarget: boolean, hasNextStartTime: boolean) {
+function getStyles({
+  uiModel,
+  isDraggingTarget,
+  hasNextStartTime,
+  calendarColor,
+}: {
+  uiModel: EventUIModel;
+  isDraggingTarget: boolean;
+  hasNextStartTime: boolean;
+  calendarColor: CalendarColor;
+}) {
   const {
     top,
     left,
     height,
     width,
-    model,
     goingDurationHeight,
     modelDurationHeight,
     comingDurationHeight,
     croppedStart,
     croppedEnd,
   } = uiModel;
-  // get theme values
+  // TODO: check and get theme values
   const travelBorderColor = 'white';
   const borderRadius = 2;
   const paddingLeft = 2;
   const defaultMarginBottom = 2;
   const marginLeft = left > 0 ? paddingLeft : 0;
 
-  const { color, backgroundColor, borderColor } = model;
-  const containerStyle: Record<string, string | number> = {
+  const { color, backgroundColor, borderColor, dragBackgroundColor } = getEventColors(
+    uiModel,
+    calendarColor
+  );
+  const containerStyle: StyleProp = {
     width: width >= 0 ? `calc(${toPercent(width)} - ${marginLeft}px)` : '',
     height: `calc(${toPercent(height)} - ${defaultMarginBottom}px)`,
     top: toPercent(top),
@@ -61,7 +77,7 @@ function getStyles(uiModel: EventUIModel, isDraggingTarget: boolean, hasNextStar
     borderLeft: `3px solid ${borderColor}`,
     marginLeft,
     color,
-    backgroundColor,
+    backgroundColor: isDraggingTarget ? dragBackgroundColor : backgroundColor,
     opacity: isDraggingTarget ? 0.5 : 1,
     zIndex: hasNextStartTime ? 1 : 0,
   };
@@ -112,6 +128,7 @@ function isDraggableEvent({
 
 export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: Props) {
   const { useDetailPopup, isReadOnly: isReadOnlyCalendar } = useStore(optionsSelector);
+  const calendarColor = useCalendarColor(uiModel);
 
   const layoutContainer = useLayoutContainer();
   const { showDetailPopup } = useDispatch('popup');
@@ -125,12 +142,10 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
 
   const { model, goingDurationHeight, modelDurationHeight, comingDurationHeight, croppedEnd } =
     uiModel;
-  const { id, calendarId } = model;
+  const { id, calendarId, customStyle } = model;
   const hasNextStartTime = isPresent(nextStartTime);
   const { containerStyle, goingDurationStyle, modelDurationStyle, comingDurationStyle } = getStyles(
-    uiModel,
-    isDraggingTarget,
-    hasNextStartTime
+    { uiModel, isDraggingTarget, hasNextStartTime, calendarColor }
   );
 
   useTransientUpdate(dndSelector, ({ draggingEventUIModel, draggingState }) => {
@@ -215,7 +230,7 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
       data-calendar-id={calendarId}
       data-event-id={id}
       className={classNames.time}
-      style={containerStyle}
+      style={{ ...containerStyle, ...customStyle }}
       onMouseDown={passConditionalProp(isDraggable, handleMoveStart)}
       ref={eventContainerRef}
     >
@@ -229,8 +244,8 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
           <Template
             template="time"
             param={{
+              ...model.toEventObject(),
               start: hasNextStartTime ? nextStartTime : model.start,
-              title: model.title,
             }}
           />
         </div>

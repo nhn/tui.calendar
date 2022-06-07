@@ -22,6 +22,7 @@ import {
 import array from '@src/utils/array';
 import type { Filter } from '@src/utils/collection';
 import Collection from '@src/utils/collection';
+import { isNil } from '@src/utils/type';
 
 import type {
   CalendarData,
@@ -365,6 +366,10 @@ export function findByDateRange(
   return panels.reduce<EventGroupMap>(
     (acc, cur) => {
       const { name, type } = cur;
+
+      if (isNil(group[name])) {
+        return acc;
+      }
 
       return {
         ...acc,

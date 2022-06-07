@@ -1,4 +1,8 @@
+import { DEFAULT_EVENT_COLORS } from '@src/constants/style';
+import type EventUIModel from '@src/model/eventUIModel';
 import { isString } from '@src/utils/type';
+
+import type { CalendarColor } from '@t/options';
 
 export const CSS_PREFIX = 'toastui-calendar-';
 
@@ -36,4 +40,15 @@ export function toPercent(value: number) {
 
 export function toPx(value: number) {
   return `${value}px`;
+}
+
+export function getEventColors(uiModel: EventUIModel, calendarColor: CalendarColor) {
+  const eventColors = uiModel.model.getColors();
+
+  return Object.keys(DEFAULT_EVENT_COLORS).reduce<CalendarColor>((colors, _key) => {
+    const key = _key as keyof CalendarColor;
+    colors[key] = eventColors[key] ?? calendarColor[key] ?? DEFAULT_EVENT_COLORS[key];
+
+    return colors;
+  }, {});
 }

@@ -6,8 +6,9 @@ import { Template } from '@src/components/template';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
 import { useLayoutContainer } from '@src/contexts/layoutContainer';
-import { cls, toPercent, toPx } from '@src/helpers/css';
+import { cls, getEventColors, toPercent, toPx } from '@src/helpers/css';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
+import { useCalendarColor } from '@src/hooks/calendar/useCalendarColor';
 import { useDrag } from '@src/hooks/common/useDrag';
 import { useTransientUpdate } from '@src/hooks/common/useTransientUpdate';
 import type EventUIModel from '@src/model/eventUIModel';
@@ -15,6 +16,8 @@ import { dndSelector, optionsSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import { passConditionalProp } from '@src/utils/preact';
 import { isNil } from '@src/utils/type';
+
+import type { CalendarColor } from '@t/options';
 
 interface Props {
   uiModel: EventUIModel;
@@ -25,41 +28,32 @@ interface Props {
   movingLeft?: number | null;
 }
 
-type StyleProps = Required<Props> & { isDraggingTarget: boolean };
-
-function getMargin(flat: boolean) {
+function getMargins(flat: boolean) {
   return {
     vertical: flat ? 5 : 2,
     horizontal: 8,
   };
 }
 
-function getExceedClassName(exceedLeft: boolean, exceedRight: boolean) {
-  const className = [];
-
-  if (exceedLeft) {
-    className.push(cls('weekday-exceed-left'));
-  }
-
-  if (exceedRight) {
-    className.push(cls('weekday-exceed-right'));
-  }
-
-  return className.join(' ');
-}
-
 function getEventItemStyle({
+  uiModel,
   flat,
-  backgroundColor,
-  borderColor,
-  exceedLeft,
-  exceedRight,
   eventHeight,
   isDraggingTarget,
-}: EventItemStyleParam) {
+  calendarColor,
+}: Required<Pick<Props, 'uiModel' | 'flat' | 'eventHeight'>> & {
+  isDraggingTarget: boolean;
+  calendarColor: CalendarColor;
+}) {
+  const { exceedLeft, exceedRight } = uiModel;
+  const { color, backgroundColor, dragBackgroundColor, borderColor } = getEventColors(
+    uiModel,
+    calendarColor
+  );
+
   const defaultItemStyle = {
-    color: '#333',
-    backgroundColor,
+    color,
+    backgroundColor: isDraggingTarget ? dragBackgroundColor : backgroundColor,
     borderLeft: exceedLeft ? 'none' : `3px solid ${borderColor}`,
     borderRadius: exceedLeft ? 0 : 2,
     overflow: 'hidden',
@@ -67,65 +61,41 @@ function getEventItemStyle({
     lineHeight: toPx(eventHeight),
     opacity: isDraggingTarget ? 0.5 : 1,
   };
-  const margin = getMargin(flat);
+  const margins = getMargins(flat);
 
   return flat
     ? {
-        marginTop: margin.vertical,
+        marginTop: margins.vertical,
         ...defaultItemStyle,
       }
     : {
-        marginLeft: exceedLeft ? 0 : margin.horizontal,
-        marginRight: exceedRight ? 0 : margin.horizontal,
+        marginLeft: exceedLeft ? 0 : margins.horizontal,
+        marginRight: exceedRight ? 0 : margins.horizontal,
         ...defaultItemStyle,
       };
 }
 
-function getStyles({
+function getContainerStyle({
+  flat,
   uiModel,
+  resizingWidth,
+  movingLeft,
   eventHeight,
   headerHeight,
-  flat,
-  isDraggingTarget,
-  movingLeft,
-  resizingWidth,
-}: StyleProps) {
-  const {
-    width,
-    left,
-    top,
-    exceedLeft,
-    exceedRight,
-    model: { backgroundColor, borderColor },
-  } = uiModel;
+}: Required<Props>) {
+  const { top, left, width, model } = uiModel;
+  const margins = getMargins(flat);
 
-  const margin = getMargin(flat);
-
-  const containerStyle = flat
+  const baseStyle = flat
     ? {}
     : {
         width: resizingWidth || toPercent(width),
         left: toPercent(movingLeft ?? left),
-        top: (top - 1) * (eventHeight + margin.vertical) + headerHeight,
+        top: (top - 1) * (eventHeight + margins.vertical) + headerHeight,
         position: 'absolute',
       };
 
-  const eventItemStyle = getEventItemStyle({
-    flat,
-    exceedLeft,
-    exceedRight,
-    backgroundColor,
-    borderColor,
-    eventHeight,
-    isDraggingTarget,
-  });
-
-  const dayEventBlockClassName = `${cls('weekday-event-block')} ${getExceedClassName(
-    exceedLeft,
-    exceedRight
-  )}`;
-
-  return { dayEventBlockClassName, containerStyle, eventItemStyle };
+  return Object.assign(baseStyle, model.customStyle);
 }
 
 function getTestId({ model }: EventUIModel) {
@@ -150,12 +120,13 @@ export function HorizontalEvent({
   resizingWidth = null,
   movingLeft = null,
 }: Props) {
-  const layoutContainer = useLayoutContainer();
-
   const { useDetailPopup, isReadOnly: isReadOnlyCalendar } = useStore(optionsSelector);
   const { setDraggingEventUIModel } = useDispatch('dnd');
   const { showDetailPopup } = useDispatch('popup');
+
+  const layoutContainer = useLayoutContainer();
   const eventBus = useEventBus();
+  const calendarColor = useCalendarColor(uiModel);
 
   const [isDraggingTarget, setIsDraggingTarget] = useState<boolean>(false);
   const eventContainerRef = useRef<HTMLDivElement>(null);
@@ -163,15 +134,6 @@ export function HorizontalEvent({
   const { isReadOnly, id, calendarId } = uiModel.model;
   const isDraggableEvent =
     !isReadOnlyCalendar && !isReadOnly && isNil(resizingWidth) && isNil(movingLeft);
-  const { dayEventBlockClassName, containerStyle, eventItemStyle } = getStyles({
-    uiModel,
-    eventHeight,
-    headerHeight,
-    flat,
-    isDraggingTarget,
-    resizingWidth,
-    movingLeft,
-  });
 
   const startDragEvent = (className: string) => {
     setDraggingEventUIModel(uiModel);
@@ -240,10 +202,28 @@ export function HorizontalEvent({
   };
   const shouldHideResizeHandler =
     !isDraggableEvent || flat || isDraggingTarget || uiModel.exceedRight;
+  const containerStyle = getContainerStyle({
+    uiModel,
+    eventHeight,
+    headerHeight,
+    flat,
+    movingLeft,
+    resizingWidth,
+  });
+  const eventItemStyle = getEventItemStyle({
+    uiModel,
+    flat,
+    eventHeight,
+    isDraggingTarget,
+    calendarColor,
+  });
 
   return (
     <div
-      className={dayEventBlockClassName}
+      className={cls('weekday-event-block', {
+        'weekday-exceed-left': uiModel.exceedLeft,
+        'weekday-exceed-right': uiModel.exceedRight,
+      })}
       style={containerStyle}
       data-testid={passConditionalProp(isDraggableEvent, getTestId(uiModel))}
       data-calendar-id={calendarId}
@@ -256,7 +236,7 @@ export function HorizontalEvent({
         onMouseDown={passConditionalProp(isDraggableEvent, handleMoveStart)}
       >
         <span className={classNames.eventTitle}>
-          <Template template="event" param={uiModel.model} />
+          <Template template={uiModel.model.category} param={uiModel.model} />
         </span>
         {shouldHideResizeHandler ? null : (
           <HorizontalEventResizeIcon

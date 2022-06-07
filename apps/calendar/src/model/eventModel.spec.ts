@@ -28,8 +28,6 @@ describe('model/event basic', () => {
         isAllday: false,
         start: new TZDate('2015-05-01T00:00:00'),
         end: new TZDate('2015-05-02T00:00:00'),
-        color: '#000',
-        backgroundColor: '#a1b56c',
       };
 
       event.init({

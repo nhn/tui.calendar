@@ -38,3 +38,11 @@ export const WEEK_EVENT_MARGIN_LEFT = 8;
 export const WEEK_EVENT_MARGIN_RIGHT = 8;
 
 export const DEFAULT_PANEL_HEIGHT = 72;
+
+// default color values for events
+export const DEFAULT_EVENT_COLORS = {
+  color: '#000',
+  backgroundColor: '#a1b56c',
+  dragBackgroundColor: '#a1b56c',
+  borderColor: '#000',
+};
