@@ -32,12 +32,6 @@ interface RectSize {
   height: number;
 }
 
-type SeeMoreOptions = {
-  moreLayerSize: { width: number | null; height: number | null };
-  eventHeight: number;
-  eventMarginTop: number;
-};
-
 type SeeMoreRectParam = {
   cell: HTMLDivElement;
   grid: HTMLDivElement;
@@ -45,28 +39,36 @@ type SeeMoreRectParam = {
   popupSize: { width: number; height: number };
 };
 
-function getSeeMorePopupSize(
-  grid: HTMLDivElement,
-  offsetWidth: number,
-  eventLength: number,
-  options: SeeMoreOptions
-): RectSize {
+function getSeeMorePopupSize({
+  grid,
+  offsetWidth,
+  eventLength,
+  layerSize,
+}: {
+  grid: HTMLDivElement;
+  offsetWidth: number;
+  eventLength: number;
+  layerSize: {
+    width: number | null;
+    height: number | null;
+  };
+}): RectSize {
   const minHeight = getSize(grid).height + MONTH_MORE_VIEW_PADDING * 2;
   let width = offsetWidth + MONTH_MORE_VIEW_PADDING * 2;
 
-  const { moreLayerSize, eventHeight, eventMarginTop } = options;
-  const { width: moreViewWidth, height: moreViewHeight } = moreLayerSize;
+  const { width: moreViewWidth, height: moreViewHeight } = layerSize;
 
-  const maxDisplayEventCount = 10;
+  const MAX_DISPLAY_EVENT_COUNT = 10;
 
   width = Math.max(width, MONTH_MORE_VIEW_MIN_WIDTH);
   let height =
     MONTH_MORE_VIEW_HEADER_HEIGHT + MONTH_MORE_VIEW_HEADER_MARGIN_BOTTOM + MONTH_MORE_VIEW_PADDING;
+  const eventHeight = MONTH_EVENT_HEIGHT + MONTH_EVENT_MARGIN_TOP;
 
-  if (eventLength <= maxDisplayEventCount) {
-    height += (eventHeight + eventMarginTop) * eventLength;
+  if (eventLength <= MAX_DISPLAY_EVENT_COUNT) {
+    height += eventHeight * eventLength;
   } else {
-    height += (eventHeight + eventMarginTop) * maxDisplayEventCount;
+    height += eventHeight * MAX_DISPLAY_EVENT_COUNT;
   }
 
   if (moreViewWidth) {
@@ -145,10 +147,14 @@ function usePopupPosition(
 
   useEffect(() => {
     if (layoutContainer && parentContainer && container) {
-      const popupSize = getSeeMorePopupSize(parentContainer, container.offsetWidth, eventLength, {
-        moreLayerSize: { width: null, height: null },
-        eventHeight: MONTH_EVENT_HEIGHT,
-        eventMarginTop: MONTH_EVENT_MARGIN_TOP,
+      const popupSize = getSeeMorePopupSize({
+        grid: parentContainer,
+        offsetWidth: container.offsetWidth,
+        eventLength,
+        layerSize: {
+          width: null,
+          height: null,
+        },
       });
 
       const rect = getSeeMorePopupRect({
