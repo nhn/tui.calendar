@@ -671,6 +671,12 @@ const calendar = new Calendar('#container', {
 - 타입: `TimezoneOptions`
 - 기본값: `{ zones: [] }`
 
+⚠️ 타임존 기능을 이용하기 위해서는 `Intl.DateTimeFormat` API 뿐 아니라 IANA 타임존 데이터베이스를 지원하는 모던 브라우저가 필요하다.
+⚠️ Internet Explorer 11을 지원해야 한다면 폴리필을 적용하거나, 별도의 라이브러리와 함께 `customOffsetCalculator` 옵션을 사용해야 한다.
+
+- [지원 범위 (caniuse)](https://caniuse.com/mdn-javascript_builtins_date_tolocaletimestring_iana_time_zone_names)
+- [`Intl.DateTimeFormat` 폴리필](https://formatjs.io/docs/polyfills/intl-datetimeformat/)
+
 ```ts
 interface TimezoneConfig {
   timezoneName: string;
@@ -680,14 +686,59 @@ interface TimezoneConfig {
 
 interface TimezoneOptions {
   zones?: TimezoneConfig[];
-  customOffsetCalculator?: (primaryTimezoneName: string, timestamp: number) => number;
+  customOffsetCalculator?: (timezoneName: string, timestamp: number) => number;
 }
 ```
 
-캘린더에서 사용되는 타임존 정보를 지정한다. 기본값은 `{ zones: [] }`이다. `zones`는 각 타임존 정보들의 배열이며 타임존 정보는 해당 타임존의 이름(`timezoneName`), 표시 라벨(`displayLabel`), 툴팁(`tooltip`)을 지정할 수 있다.
-`customOffsetCalculator`는 사용자가 직접 정의한 방식으로 타임존 오프셋을 계산하여 사용하도록 할 수 있다.
+#### 기본 타임존 설정
+
+캘린더에서 사용되는 타임존 정보를 지정한다. 기본값은 `{ zones: [] }`이다. `zones`는 각 타임존 정보들의 배열이며 타임존 정보는 해당 타임존의 이름(`timezoneName`)과 주간/일간 뷰에서 사용되는 표시 라벨(`displayLabel`), 툴팁(`tooltip`)을 지정할 수 있다.
+
+타임존 정보 배열의 한 개 이상의 타임존 정보가 설정된 경우 해당 캘린더는 배열의 첫 번째 요소를 기본 타임존으로 설정한다.
 
 ```js
+// 브라우저가 구동되는 시스템의 타임존과 상관 없이 기본 타임존을 런던으로 설정
+const calendar = new Calendar('#container', {
+  timezone: {
+    zones: [
+      {
+        timezoneName: 'Europe/London',
+      },
+    ],
+  },
+});
+```
+
+타임존이 두 개 이상 설정되었고, 주간/일간 뷰를 표시하는 상태라면 좌측 시간 라인에 표시 라벨과 툴팁이 표시된다. 그 외에는 영향을 미치지 않는다.
+
+![타임존을 여러개 설정](/options_timezone-multiple-timezone.png)
+
+#### 사용자 정의 오프셋 계산
+
+`customOffsetCalculator`는 사용자가 직접 정의한 방식으로 주어진 타임존과 UTC와의 차이를 계산하여 분 단위로 리턴해야 한다. 예를 들어 타임존 이름이 `'Asia/Seoul'` 이라면 `UTC +9` 이므로 `540`이 리턴되어야 하는 것이다.
+
+만약 `customOffsetCalculator` 가 정의되어 있다면 캘린더는 타임존이 계산되는 모든 로직에 이 계산 함수를 사용한다. 그렇지 않다면 기본적으로 [`Intl.DateTimeFormat` API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat)를 활용하기 때문에 굳이 별도의 옵션을 정의할 필요가 없다.
+
+구형 브라우저를 지원하기 위해 별도의 라이브러리를 사용하는 등 특수한 경우가 아니라면 `customOffsetCalculator` 옵션을 사용하지 않는 것을 추천한다.
+
+```js
+// moment timezone을 사용하여 오프셋 계산
+function momentTZCalculator(timezoneName, timestamp) {
+  return moment.tz(timezoneName).utcOffset(timestamp);
+}
+
+// Luxon을 사용하여 오프셋 계산
+function luxonTZCalculator(timezoneName, timestamp) {
+  return DateTime.fromMillis(timestamp).setZone(timezoneName).offset;
+}
+
+// date-fns-tz를 사용하여 오프셋 계산
+function dateFnsTZCalculator(timezoneName, timestamp) {
+  return getTimezoneOffset(timezoneName, new Date(timestamp));
+}
+
+// ...
+
 const calendar = new Calendar('#container', {
   timezone: {
     zones: [
@@ -702,12 +753,7 @@ const calendar = new Calendar('#container', {
         tooltip: 'Tokyo Time',
       },
     ],
-    customOffsetCalculator: (primaryTimezoneName, timestamp) => {
-      const primaryOffset = moment.tz(timestamp, primaryTimezoneName).utcOffset();
-      const secondaryOffset = moment.tz(timestamp, 'Asia/Seoul').utcOffset();
-
-      return primaryOffset - secondaryOffset;
-    },
+    customOffsetCalculator: momentTZCalculator, // 혹은 luxonTZCalculator, dateFnsTZCalculator
   },
 });
 ```
@@ -744,8 +790,8 @@ interface CalendarInfo {
   id: string;
   name: string;
   color?: string;
-  bgColor?: string;
-  dragBgColor?: string;
+  backgroundColor?: string;
+  dragBackgroundColor?: string;
   borderColor?: string;
 }
 ```
