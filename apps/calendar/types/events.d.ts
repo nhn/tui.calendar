@@ -34,7 +34,7 @@ export interface CalendarData {
   idsOfDay: IDS_OF_DAY;
 }
 
-export type EventCategory = 'milestone' | 'task' | 'allday' | 'time' | 'background';
+export type EventCategory = 'milestone' | 'task' | 'allday' | 'time'; // | 'background';
 
 export type EventState = 'Busy' | 'Free';
 

@@ -339,9 +339,9 @@ export default class EventModel implements EventObjectWithDefaultValues {
   }
 }
 
-export function isBackgroundEvent({ model }: EventUIModel) {
-  return model.category === 'background';
-}
+// export function isBackgroundEvent({ model }: EventUIModel) {
+//   return model.category === 'background';
+// }
 
 export function isTimeEvent({ model }: EventUIModel) {
   const { category, isAllday, hasMultiDates } = model;

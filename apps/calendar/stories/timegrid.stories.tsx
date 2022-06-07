@@ -2,13 +2,12 @@ import type { ComponentProps } from 'preact';
 import { h } from 'preact';
 
 import type { StoryFn } from '@storybook/preact';
-import range from 'tui-code-snippet/array/range';
 
 import { TimeGrid } from '@src/components/timeGrid/timeGrid';
 import { cls, toPercent } from '@src/helpers/css';
 import { createTimeGridData, getWeekDates } from '@src/helpers/grid';
 import TZDate from '@src/time/date';
-import { addDate, addHours, toStartOfDay } from '@src/time/datetime';
+import { addDate, toStartOfDay } from '@src/time/datetime';
 
 import normalEvents from '@stories/data/events.json';
 import { createEventModels } from '@stories/helper/event';
@@ -43,45 +42,45 @@ function getNormalEvents() {
 }
 
 function getEvents() {
-  const start = toStartOfDay(new TZDate());
-  const adjustForWeekStart = start.getDay();
-  const disabledAMEvents: EventObject[] = range(0, 7).map((date) => {
-    const eventStart = addDate(start, date - adjustForWeekStart);
+  // const start = toStartOfDay(new TZDate());
+  // const adjustForWeekStart = start.getDay();
+  // const disabledAMEvents: EventObject[] = range(0, 7).map((date) => {
+  //   const eventStart = addDate(start, date - adjustForWeekStart);
+  //
+  //   return {
+  //     category: 'background',
+  //     start: eventStart,
+  //     end: addHours(eventStart, 9),
+  //     backgroundColor: 'rgba(100, 100, 100, .3)',
+  //   };
+  // });
+  // const disabledPMEvents: EventObject[] = range(0, 7).map((date) => {
+  //   const eventStart = addDate(start, date - adjustForWeekStart);
+  //
+  //   return {
+  //     category: 'background',
+  //     start: addHours(eventStart, 18),
+  //     end: addHours(eventStart, 24),
+  //     backgroundColor: 'rgba(100, 100, 100, .3)',
+  //   };
+  // });
+  // const disabledLunchEvents: EventObject[] = range(0, 7).map((date) => {
+  //   const eventStart = addDate(start, date - adjustForWeekStart);
+  //
+  //   return {
+  //     category: 'background',
+  //     start: addHours(eventStart, 12),
+  //     end: addHours(eventStart, 13),
+  //     backgroundColor: 'rgba(23, 255, 100, .3)',
+  //   };
+  // });
+  // const data: EventObject[] = disabledAMEvents.concat(
+  //   disabledPMEvents,
+  //   disabledLunchEvents,
+  //   getNormalEvents()
+  // );
 
-    return {
-      category: 'background',
-      start: eventStart,
-      end: addHours(eventStart, 9),
-      backgroundColor: 'rgba(100, 100, 100, .3)',
-    };
-  });
-  const disabledPMEvents: EventObject[] = range(0, 7).map((date) => {
-    const eventStart = addDate(start, date - adjustForWeekStart);
-
-    return {
-      category: 'background',
-      start: addHours(eventStart, 18),
-      end: addHours(eventStart, 24),
-      backgroundColor: 'rgba(100, 100, 100, .3)',
-    };
-  });
-  const disabledLunchEvents: EventObject[] = range(0, 7).map((date) => {
-    const eventStart = addDate(start, date - adjustForWeekStart);
-
-    return {
-      category: 'background',
-      start: addHours(eventStart, 12),
-      end: addHours(eventStart, 13),
-      backgroundColor: 'rgba(23, 255, 100, .3)',
-    };
-  });
-  const data: EventObject[] = disabledAMEvents.concat(
-    disabledPMEvents,
-    disabledLunchEvents,
-    getNormalEvents()
-  );
-
-  return createEventModels(data);
+  return createEventModels(getNormalEvents());
 }
 
 function getTimeGridData() {

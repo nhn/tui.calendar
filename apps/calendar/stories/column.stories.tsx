@@ -9,12 +9,8 @@ import { Column } from '@src/components/timeGrid/column';
 import { cls } from '@src/helpers/css';
 import { createTimeGridData, getWeekDates } from '@src/helpers/grid';
 import TZDate from '@src/time/date';
-import { addHours, addMinutes, toStartOfDay } from '@src/time/datetime';
-
-import { createEventModels } from '@stories/helper/event';
 
 import type { PropsWithChildren } from '@t/components/common';
-import type { EventObject } from '@t/events';
 
 export default { title: 'Components/Column', component: Column };
 
@@ -46,36 +42,36 @@ Default.args = {
   columnWidth: '20%',
 };
 
-const getBackgroundEvents = () => {
-  const start = toStartOfDay(new TZDate());
-  start.setHours(8);
-
-  const data: EventObject[] = [
-    {
-      category: 'background',
-      start,
-      end: addHours(start, 1),
-      backgroundColor: 'rgba(100, 100, 100, .3)',
-    },
-    {
-      category: 'background',
-      start: addMinutes(start, 150),
-      end: addHours(start, 3),
-      backgroundColor: 'rgba(200, 100, 100, .3)',
-    },
-    {
-      category: 'background',
-      start: addHours(start, 4),
-      end: addHours(start, 6),
-      backgroundColor: 'rgba(100, 200, 100, .3)',
-    },
-  ];
-  return createEventModels(data);
-};
-export const WithBackgroundEvents = Template.bind({});
-WithBackgroundEvents.args = {
-  columnDate: new TZDate(),
-  timeGridData: getTimeGridData(),
-  totalUIModels: [getBackgroundEvents()],
-  columnWidth: '20%',
-};
+// const getBackgroundEvents = () => {
+//   const start = toStartOfDay(new TZDate());
+//   start.setHours(8);
+//
+//   const data: EventObject[] = [
+//     {
+//       category: 'background',
+//       start,
+//       end: addHours(start, 1),
+//       backgroundColor: 'rgba(100, 100, 100, .3)',
+//     },
+//     {
+//       category: 'background',
+//       start: addMinutes(start, 150),
+//       end: addHours(start, 3),
+//       backgroundColor: 'rgba(200, 100, 100, .3)',
+//     },
+//     {
+//       category: 'background',
+//       start: addHours(start, 4),
+//       end: addHours(start, 6),
+//       backgroundColor: 'rgba(100, 200, 100, .3)',
+//     },
+//   ];
+//   return createEventModels(data);
+// };
+// export const WithBackgroundEvents = Template.bind({});
+// WithBackgroundEvents.args = {
+//   columnDate: new TZDate(),
+//   timeGridData: getTimeGridData(),
+//   totalUIModels: [getBackgroundEvents()],
+//   columnWidth: '20%',
+// };
