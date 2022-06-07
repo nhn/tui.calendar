@@ -5,7 +5,7 @@ import { Template } from '@src/components/template';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
 import { useLayoutContainer } from '@src/contexts/layoutContainer';
-import { cls, getEventItemColors, toPercent } from '@src/helpers/css';
+import { cls, getEventColors, toPercent } from '@src/helpers/css';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { useCalendarColor } from '@src/hooks/calendar/useCalendarColor';
 import { useDrag } from '@src/hooks/common/useDrag';
@@ -64,7 +64,7 @@ function getStyles({
   const defaultMarginBottom = 2;
   const marginLeft = left > 0 ? paddingLeft : 0;
 
-  const { color, backgroundColor, borderColor, dragBackgroundColor } = getEventItemColors(
+  const { color, backgroundColor, borderColor, dragBackgroundColor } = getEventColors(
     uiModel,
     calendarColor
   );

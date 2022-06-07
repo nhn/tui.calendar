@@ -42,21 +42,13 @@ export function toPx(value: number) {
   return `${value}px`;
 }
 
-// eslint-disable-next-line complexity
-export function getEventItemColors(uiModel: EventUIModel, calendarColor: CalendarColor) {
+export function getEventColors(uiModel: EventUIModel, calendarColor: CalendarColor) {
   const eventColors = uiModel.model.getColors();
 
-  return {
-    color: eventColors.color ?? calendarColor.color ?? DEFAULT_EVENT_COLORS.color,
-    borderColor:
-      eventColors.borderColor ?? calendarColor.borderColor ?? DEFAULT_EVENT_COLORS.borderColor,
-    backgroundColor:
-      eventColors.backgroundColor ??
-      calendarColor.backgroundColor ??
-      DEFAULT_EVENT_COLORS.backgroundColor,
-    dragBackgroundColor:
-      eventColors.dragBackgroundColor ??
-      calendarColor.dragBackgroundColor ??
-      DEFAULT_EVENT_COLORS.dragBackgroundColor,
-  };
+  return Object.keys(DEFAULT_EVENT_COLORS).reduce<CalendarColor>((colors, _key) => {
+    const key = _key as keyof CalendarColor;
+    colors[key] = eventColors[key] ?? calendarColor[key] ?? DEFAULT_EVENT_COLORS[key];
+
+    return colors;
+  }, {});
 }

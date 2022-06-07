@@ -6,7 +6,7 @@ import { Template } from '@src/components/template';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
 import { useLayoutContainer } from '@src/contexts/layoutContainer';
-import { cls, getEventItemColors, toPercent, toPx } from '@src/helpers/css';
+import { cls, getEventColors, toPercent, toPx } from '@src/helpers/css';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { useCalendarColor } from '@src/hooks/calendar/useCalendarColor';
 import { useDrag } from '@src/hooks/common/useDrag';
@@ -46,7 +46,7 @@ function getEventItemStyle({
   calendarColor: CalendarColor;
 }) {
   const { exceedLeft, exceedRight } = uiModel;
-  const { color, backgroundColor, dragBackgroundColor, borderColor } = getEventItemColors(
+  const { color, backgroundColor, dragBackgroundColor, borderColor } = getEventColors(
     uiModel,
     calendarColor
   );
