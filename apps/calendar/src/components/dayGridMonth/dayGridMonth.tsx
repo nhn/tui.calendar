@@ -101,7 +101,6 @@ export function DayGridMonth({ dateMatrix = [], rowInfo = [], cellWidthMap = [] 
           >
             <div className={cls('weekday')}>
               <GridRow
-                cssHeight={toPercent(TOTAL_PERCENT_HEIGHT)}
                 gridDateEventModelMap={gridDateEventModelMap}
                 week={week}
                 rowInfo={rowInfo}

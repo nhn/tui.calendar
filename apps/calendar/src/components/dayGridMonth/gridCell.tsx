@@ -23,27 +23,27 @@ import { isWeekend } from '@src/time/datetime';
 import { getPosition, getRelativePosition, getSize } from '@src/utils/dom';
 import { ratio } from '@src/utils/math';
 
+import type { StyleProp } from '@t/components/common';
 import type { PopupPosition } from '@t/store';
 import type { ThemeState } from '@t/theme';
-
-interface Props {
-  date: TZDate;
-  style?: {
-    width?: CSSValue;
-    left?: CSSValue;
-    backgroundColor?: string;
-    height?: CSSValue;
-    top?: CSSValue;
-  };
-  parentContainer?: HTMLDivElement | null;
-  events?: EventUIModel[];
-  height: number;
-}
 
 interface RectSize {
   width: number;
   height: number;
 }
+
+type SeeMoreOptions = {
+  moreLayerSize: { width: number | null; height: number | null };
+  eventHeight: number;
+  eventMarginTop: number;
+};
+
+type SeeMoreRectParam = {
+  cell: HTMLDivElement;
+  grid: HTMLDivElement;
+  layoutContainer: HTMLDivElement;
+  popupSize: { width: number; height: number };
+};
 
 function getSeeMorePopupSize(
   grid: HTMLDivElement,
@@ -167,6 +167,14 @@ function usePopupPosition(
 
 function weekendBackgroundColorSelector(theme: ThemeState) {
   return theme.month.weekend.backgroundColor;
+}
+
+interface Props {
+  date: TZDate;
+  style?: StyleProp;
+  parentContainer?: HTMLDivElement | null;
+  events?: EventUIModel[];
+  height: number;
 }
 
 export function GridCell({ date, events = [], style, parentContainer, height }: Props) {

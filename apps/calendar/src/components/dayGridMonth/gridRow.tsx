@@ -13,7 +13,6 @@ import { toFormat, toStartOfDay } from '@src/time/datetime';
 import type { CellStyle } from '@t/time/datetime';
 
 interface Props {
-  cssHeight?: CSSValue;
   gridDateEventModelMap?: Record<string, EventUIModel[]>;
   week: TZDate[];
   rowInfo: CellStyle[];
@@ -21,7 +20,6 @@ interface Props {
 }
 
 export const GridRow = memo(function GridRow({
-  cssHeight,
   week,
   rowInfo,
   gridDateEventModelMap = {},
@@ -31,14 +29,7 @@ export const GridRow = memo(function GridRow({
   const border = useTheme(useCallback((theme) => theme.common.border, []));
 
   return (
-    <div
-      className={cls('weekday-grid')}
-      style={{
-        height: cssHeight ?? height,
-        borderTop: border,
-      }}
-      ref={containerRefCallback}
-    >
+    <div className={cls('weekday-grid')} style={{ borderTop: border }} ref={containerRefCallback}>
       {week.map((date, columnIndex) => {
         const dayIndex = date.getDay();
         const { width, left } = rowInfo[columnIndex];
