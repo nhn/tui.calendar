@@ -111,10 +111,11 @@ const calendar = new Calendar('#container', {
 - 타입: `boolean`
 - 기본값: `true`
 
-[TOAST UI 캘린더](https://github.com/nhn/tui.calendar)는 [Google Analytics(GA)](https://analytics.google.com/analytics/web/)를 적용하여 오픈 소스 사용에 대한 통계를 수집하여 전 세계에서 얼마나 널리 사용되는지 확인한다.
+[Google Analytics(GA)](https://analytics.google.com/analytics/web/)를 위한 hostname 수집을 허용할지 여부를 지정한다. 기본값은 `true`이며 `false`로 설정하면 통계 수집을 하지 않는다.
+
+[TOAST UI 캘린더](https://github.com/nhn/tui.calendar)는 [GA](https://analytics.google.com/analytics/web/)를 적용하여 오픈 소스 사용에 대한 통계를 수집하여 전 세계에서 얼마나 널리 사용되는지 확인한다.
 이는 프로젝트의 향후 진행을 결정하는 중요한 지표 역할을 한다.
 `location.hostname`(예를 들어 "ui.toast.com")을 수집하며 사용량에 대한 통계를 측정하기 위해서만 사용된다.
-이 옵션을 `false`로 설정하면 통계 수집을 하지 않는다.
 
 ```js
 const calendar = new Calendar('#container', {
@@ -130,6 +131,8 @@ const calendar = new Calendar('#container', {
 - 기본값: `(event) => !!event.isVisible`
 
 캘린더의 일정 필터링 조건을 지정한다. 기본값은 `(event) => !!event.isVisible`로 일정의 `isVisible` 속성이 `true`인 일정만 렌더링한다.
+
+커스텀 이벤트 필터를 적용할 때 `isVisible`을 필터링하지 않을 경우 `isVisible: false`인 이벤트가 캘린더에 나타날 수 있다.
 
 ```js
 const calendar = new Calendar('#container', {
@@ -649,7 +652,7 @@ interface GridSelectionOptions {
 }
 ```
 
-캘린더의 날짜/시간 선택의 클릭과 더블 클릭의 가능 여부를 지정한다. 기본값은 `true`이다. `true`나 `false`의 `boolean` 타입으로 지정하면 클릭과 더블 클릭이 둘 모두 가능하거나 불가능하게 만든다.
+캘린더의 날짜/시간을 선택할 때 클릭과 더블 클릭의 가능 여부를 지정한다. 기본값은 `true`이다. `true`나 `false`의 `boolean` 타입으로 지정하면 클릭과 더블 클릭이 둘 모두 가능하거나 불가능하게 만든다.
 `{ enableDblClick: boolean; enableClick: boolean }`로 지정하면 클릭과 더블 클릭을 각각 지정할 수도 있다.
 
 ```js
@@ -716,7 +719,7 @@ const calendar = new Calendar('#container', {
 - 타입: `ThemeObject`
 - 기본값: `DEFAULT_THEME`
 
-캘린더의 테마를 지정한다. 캘린더 인스턴스 생성 시에만 적용할 수 있으며 `setOptions` 메서드로는 변경이 불가능하다. 대신 `setTheme` 메서드로 변경 가능하며 자세한 내용은 [theme 문서](/story/documentation-ko-api-테마--page)에서 확인할 수 있다.
+캘린더의 테마를 지정한다. 캘린더 인스턴스 생성 시에만 적용할 수 있으며 `setOptions` 메서드로는 변경이 불가능하다. 대신 `setTheme` 메서드로 변경 가능하며 자세한 내용은 [테마 문서](/story/documentation-ko-api-테마--page)에서 확인할 수 있다.
 
 [⬆ 목록으로 돌아가기](#옵션-객체)
 
@@ -725,7 +728,7 @@ const calendar = new Calendar('#container', {
 - 타입: `TemplateObject`
 - 기본값: `DEFAULT_TEMPLATE`
 
-캘린더의 템플릿을 지정한다. 자세한 내용은 [template 문서](/story/documentation-ko-api-템플릿--page)에서 확인할 수 있다.
+캘린더의 템플릿을 지정한다. 자세한 내용은 [템플릿 문서](/story/documentation-ko-api-템플릿--page)에서 확인할 수 있다.
 
 [⬆ 목록으로 돌아가기](#옵션-객체)
 
