@@ -131,8 +131,7 @@ export function Week() {
   useLayoutEffect(() => {
     const updateStickyTop = () => {
       if (timePanel) {
-        const { top } = timePanel.getBoundingClientRect();
-        setStickyTop(top);
+        setStickyTop(timePanel.offsetTop);
       }
     };
 
