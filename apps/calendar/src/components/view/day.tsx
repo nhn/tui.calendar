@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useCallback, useMemo } from 'preact/hooks';
+import { useCallback, useLayoutEffect, useMemo, useState } from 'preact/hooks';
 
 import { GridHeader } from '@src/components/dayGridCommon/gridHeader';
 import { AlldayGridRow } from '@src/components/dayGridWeek/alldayGridRow';
@@ -7,6 +7,7 @@ import { OtherGridRow } from '@src/components/dayGridWeek/otherGridRow';
 import { Layout } from '@src/components/layout';
 import { Panel } from '@src/components/panel';
 import { TimeGrid } from '@src/components/timeGrid/timeGrid';
+import { TimezoneLabels } from '@src/components/timeGrid/timezoneLabels';
 import { WEEK_DAYNAME_BORDER, WEEK_DAYNAME_HEIGHT } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
 import { useTheme } from '@src/contexts/themeStore';
@@ -24,9 +25,11 @@ import {
   weekViewLayoutSelector,
 } from '@src/selectors';
 import { getRowStyleInfo } from '@src/time/datetime';
+import { isPresent } from '@src/utils/type';
 
 import type { WeekOptions } from '@t/options';
 import type { AlldayEventCategory } from '@t/panel';
+import type { CalendarState } from '@t/store';
 
 function useDayViewState() {
   const calendar = useStore(calendarSelector);
@@ -46,9 +49,17 @@ function useDayViewState() {
   );
 }
 
+function timegridHeightSelector(state: CalendarState) {
+  // TODO: change `dayGridRows` to `panels`
+  return state.weekViewLayout?.dayGridRows?.time?.height;
+}
+
 export function Day() {
   const { calendar, options, gridRowLayout, lastPanelType, renderDate } = useDayViewState();
+  const timeGridPanelHeight = useStore(timegridHeightSelector);
   const gridHeaderMarginLeft = useTheme(useCallback((theme) => theme.week.dayGridLeft.width, []));
+
+  const [stickyTop, setStickyTop] = useState<number | null>(null);
   const [timePanel, setTimePanelRef] = useDOMNode<HTMLDivElement>();
 
   const weekOptions = options.week as Required<WeekOptions>;
@@ -111,6 +122,18 @@ export function Day() {
 
   useTimeGridScrollSync(timePanel, timeGridData.rows.length);
 
+  useLayoutEffect(() => {
+    const updateStickyTop = () => {
+      if (timePanel) {
+        setStickyTop(timePanel.offsetTop);
+      }
+    };
+
+    if (isPresent(timeGridPanelHeight)) {
+      updateStickyTop();
+    }
+  }, [timeGridPanelHeight, timePanel]);
+
   return (
     <Layout className={cls('day-view')} autoAdjustPanels={true}>
       <Panel name="day-view-daynames" initialHeight={WEEK_DAYNAME_HEIGHT + WEEK_DAYNAME_BORDER}>
@@ -125,6 +148,7 @@ export function Day() {
       {activePanels.includes('time') ? (
         <Panel name="time" autoSize={1} ref={setTimePanelRef}>
           <TimeGrid events={dayGridEvents.time} timeGridData={timeGridData} />
+          <TimezoneLabels top={stickyTop} />
         </Panel>
       ) : null}
     </Layout>
