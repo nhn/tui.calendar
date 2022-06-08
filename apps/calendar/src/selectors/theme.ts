@@ -14,3 +14,4 @@ export const weekDayGridLeftSelector = (theme: ThemeState) => theme.week.dayGrid
 export const weekTimeGridLeftSelector = (theme: ThemeState) => theme.week.timeGridLeft;
 
 export const monthMoreViewSelector = (theme: ThemeState) => theme.month.moreView;
+export const monthGridCellSelector = (theme: ThemeState) => theme.month.gridCell;

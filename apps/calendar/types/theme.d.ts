@@ -79,6 +79,10 @@ type MonthTheme = {
   moreViewTitle: {
     backgroundColor: string;
   };
+  gridCell: {
+    headerHeight: number | null;
+    footerHeight: number | null;
+  };
   weekend: { backgroundColor: string };
 };
 

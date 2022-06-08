@@ -98,6 +98,10 @@ Object {
         "backgroundColor": "inherit",
         "borderLeft": "none",
       },
+      "gridCell": Object {
+        "footerHeight": null,
+        "headerHeight": 31,
+      },
       "holidayExceptThisMonth": Object {
         "color": "rgba(255, 64, 64, 0.4)",
       },

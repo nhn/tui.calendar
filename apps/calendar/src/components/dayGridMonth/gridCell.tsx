@@ -183,10 +183,10 @@ interface Props {
   style?: StyleProp;
   parentContainer?: HTMLDivElement | null;
   events?: EventUIModel[];
-  height: number;
+  contentAreaHeight: number;
 }
 
-export function GridCell({ date, events = [], style, parentContainer, height }: Props) {
+export function GridCell({ date, events = [], style, parentContainer, contentAreaHeight }: Props) {
   const layoutContainer = useLayoutContainer();
   const { showSeeMorePopup } = useDispatch('popup');
   const backgroundColor = useTheme(weekendBackgroundColorSelector);
@@ -207,7 +207,11 @@ export function GridCell({ date, events = [], style, parentContainer, height }: 
     }
   }, [date, events, popupPosition, showSeeMorePopup]);
 
-  const exceedCount = getExceedCount(events, height, MONTH_EVENT_HEIGHT);
+  const exceedCount = getExceedCount(
+    events,
+    contentAreaHeight,
+    MONTH_EVENT_HEIGHT + MONTH_EVENT_MARGIN_TOP
+  );
 
   return (
     <div

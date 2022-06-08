@@ -16,14 +16,14 @@ interface Props {
   gridDateEventModelMap?: Record<string, EventUIModel[]>;
   week: TZDate[];
   rowInfo: CellStyle[];
-  height?: number;
+  contentAreaHeight: number;
 }
 
 export const GridRow = memo(function GridRow({
   week,
   rowInfo,
   gridDateEventModelMap = {},
-  height = 0,
+  contentAreaHeight,
 }: Props) {
   const [container, containerRefCallback] = useDOMNode<HTMLDivElement>();
   const border = useTheme(useCallback((theme) => theme.common.border, []));
@@ -45,7 +45,7 @@ export const GridRow = memo(function GridRow({
             }}
             parentContainer={container}
             events={gridDateEventModelMap[ymd]}
-            height={height}
+            contentAreaHeight={contentAreaHeight}
           />
         );
       })}

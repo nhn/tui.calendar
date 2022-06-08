@@ -11,9 +11,9 @@ import {
   MONTH_CELL_BAR_HEIGHT,
   MONTH_CELL_PADDING_TOP,
   MONTH_EVENT_HEIGHT,
-  MONTH_EVENT_MARGIN_TOP,
 } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
+import { useTheme } from '@src/contexts/themeStore';
 import { cls, toPercent } from '@src/helpers/css';
 import { createGridPositionFinder, getRenderedEventUIModels } from '@src/helpers/grid';
 import { dayGridMonthSelectionHelper } from '@src/helpers/gridSelection';
@@ -21,6 +21,7 @@ import { useCalendarData } from '@src/hooks/calendar/useCalendarData';
 import { useDOMNode } from '@src/hooks/common/useDOMNode';
 import { useGridSelection } from '@src/hooks/gridSelection/useGridSelection';
 import { calendarSelector, optionsSelector } from '@src/selectors';
+import { monthGridCellSelector } from '@src/selectors/theme';
 import type TZDate from '@src/time/date';
 import { getSize } from '@src/utils/dom';
 import { passConditionalProp } from '@src/utils/preact';
@@ -36,23 +37,30 @@ interface Props {
   cellWidthMap: string[][];
 }
 
-function useGridHeight() {
+function useCellContentAreaHeight() {
+  const { headerHeight: themeHeaderHeight, footerHeight: themeFooterHeight } =
+    useTheme(monthGridCellSelector);
+
   const ref = useRef<HTMLDivElement>(null);
-  const [height, setHeight] = useState(0);
+  const [cellContentAreaHeight, setCellContentAreaHeight] = useState(0);
 
   useEffect(() => {
     if (ref.current) {
-      setHeight(getSize(ref.current).height);
-    }
-  }, []);
+      const rowHeight = getSize(ref.current).height;
+      const headerHeight = MONTH_CELL_PADDING_TOP + (themeHeaderHeight ?? MONTH_CELL_BAR_HEIGHT);
+      const footerHeight = themeFooterHeight ?? 0;
 
-  return { ref, height };
+      setCellContentAreaHeight(rowHeight - headerHeight - footerHeight);
+    }
+  }, [themeFooterHeight, themeHeaderHeight]);
+
+  return { ref, cellContentAreaHeight };
 }
 
 export function DayGridMonth({ dateMatrix = [], rowInfo = [], cellWidthMap = [] }: Props) {
   const [gridContainer, setGridContainerRef] = useDOMNode<HTMLDivElement>();
   const calendar = useStore(calendarSelector);
-  const { ref, height } = useGridHeight();
+  const { ref, cellContentAreaHeight } = useCellContentAreaHeight();
 
   const { eventFilter, month: monthOptions, isReadOnly } = useStore(optionsSelector);
   const { visibleWeeksCount, narrowWeekend } = monthOptions as CalendarMonthOptions;
@@ -104,17 +112,15 @@ export function DayGridMonth({ dateMatrix = [], rowInfo = [], cellWidthMap = [] 
                 gridDateEventModelMap={gridDateEventModelMap}
                 week={week}
                 rowInfo={rowInfo}
-                height={height}
+                contentAreaHeight={cellContentAreaHeight}
               />
               <MonthEvents
                 name="month"
                 events={uiModels}
-                height={height}
+                contentAreaHeight={cellContentAreaHeight}
                 narrowWeekend={narrowWeekend}
                 eventHeight={MONTH_EVENT_HEIGHT}
                 className={cls('weekday-events')}
-                headerHeight={MONTH_CELL_PADDING_TOP + MONTH_CELL_BAR_HEIGHT}
-                eventTopMargin={MONTH_EVENT_MARGIN_TOP}
               />
               <GridSelectionByRow
                 weekDates={week}

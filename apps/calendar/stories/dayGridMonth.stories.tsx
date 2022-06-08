@@ -21,7 +21,7 @@ export const Cell = () => {
   return (
     <ProviderWrapper>
       <Layout>
-        <GridCell date={date} style={{ width: 100, height: 100 }} height={100} />
+        <GridCell date={date} style={{ width: 100, height: 100 }} contentAreaHeight={100} />
       </Layout>
     </ProviderWrapper>
   );
@@ -35,7 +35,7 @@ export const Week = () => {
   return (
     <ProviderWrapper>
       <Layout>
-        <GridRow rowInfo={rowStyleInfo} height={100} week={weekDates} />
+        <GridRow rowInfo={rowStyleInfo} contentAreaHeight={100} week={weekDates} />
       </Layout>
     </ProviderWrapper>
   );
