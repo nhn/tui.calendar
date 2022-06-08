@@ -1,3 +1,7 @@
 .sbdocs-h1:first-of-type {
     margin-bottom: 2rem;
 }
+
+.sbdocs-a > code {
+    color: #1EA7FD !important;
+}
