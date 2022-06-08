@@ -115,7 +115,7 @@ const Calendar = require('@toast-ui/calendar/ie11');
 
 ### CSS
 
-Calendar를 사용하기 위해서는 CSS 파일을 추가해줘야 한다. import, require를 통해 CSS 파일을 불러오거나, CDN을 통해 불러올 수 있다.
+Calendar를 사용하기 위해서는 CSS 파일을 추가해야 한다. import, require를 통해 CSS 파일을 불러오거나, CDN을 통해 불러올 수 있다.
 
 ```js
 /* Node.js 환경에서 ES6 모듈 */
@@ -135,7 +135,7 @@ require('@toast-ui/calendar/toastui-calendar.min.css');
 생성자 함수는 `container`, `options` 두 개를 인자로 갖는다. 
 
 - `container`: TOAST UI Calendar를 자식 요소로 갖는 HTML 요소
-- `options`: 기본 뷰 타입, 타임존, 테마, 템플릿 등 TOAST UI Calendar를 커스터마이징할 수 있는 옵션 객체. 자세한 정보는 [Options 문서](/story/documentation-한국어-api-옵션--page)를 참고한다.
+- `options`: 기본 뷰 타입, 타임존, 테마, 템플릿 등 TOAST UI Calendar를 커스터마이징할 수 있는 옵션 객체. 자세한 정보는 [옵션 문서](/story/documentation-한국어-api-옵션--page)를 참고한다.
 
 ```js
 const container = document.getElementById('calendar');
@@ -157,12 +157,12 @@ const options = {
     {
       id: 'cal1',
       name: '개인',
-      bgColor: '#03bd9e'
+      backgroundColor: '#03bd9e'
     },
     {
       id: 'cal2',
       name: '직장',
-      bgColor: '#00a9ff',
+      backgroundColor: '#00a9ff',
     }
   ]
 };
@@ -211,7 +211,7 @@ calendar.createEvents([
 
 ### 팝업 사용하기
 
-TOAST UI Calendar는 일정 생성 팝업과 일정 상세 팝업을 기본으로 제공한다. 이를 사용하려면 [`useCreationPopup`](/story/documentation-한국어-api-옵션--page#usecreationpopup)과 [`useDetailPopup`](/story/documentation-한국어-api-옵션--page#usedetailpopup) 옵션을 `true`로 설정한다. 옵션은 인스턴스 생성 시 두번째 인자로 넘기거나, 인스턴스 생성 후 [`setOptions`](/story/documentation-한국어-api-calendar--page#setoptions) 메서드를 사용해서 변경할 수 있다.
+TOAST UI Calendar는 일정 생성 팝업과 일정 상세 팝업을 기본으로 제공한다. 이를 사용하려면 [`useCreationPopup`](/story/documentation-한국어-api-옵션--page#usecreationpopup)과 [`useDetailPopup`](/story/documentation-한국어-api-옵션--page#usedetailpopup) 옵션을 `true`로 설정해야 한다. 옵션은 인스턴스 생성 시 설정하거나, 인스턴스 생성 후 [`setOptions`](/story/documentation-한국어-api-calendar--page#setoptions) 메서드를 사용해서 변경할 수 있다.
 
 일정 생성 팝업을 사용할 때는 [`tui-date-picker`](https://github.com/nhn/tui.date-picker)와 [`tui-time-picker`](https://github.com/nhn/tui.time-picker)의 css 파일을 가져와야 스타일이 제대로 적용된다.
 
@@ -236,7 +236,7 @@ calendar.setOptions({
 
 ### 테마 적용하기
 
-색상, 배경색과 같이 스타일을 변경하고 싶을 때 테마를 사용한다. 테마는 인스턴스 생성 시 [옵션 객체의 `theme` 프로퍼티](/story/documentation-한국어-api-옵션--page#theme)에 명시하거나, 인스턴스 생성 후 [`setTheme`](/story/documentation-한국어-api-calendar--page#settheme) 메서드를 사용해서 변경할 수 있다. 적용 가능한 테마는 [테마 문서](/story/documentation-한국어-api-테마--page)를 참고한다.
+색상, 배경색과 같은 스타일을 변경하고 싶을 때는 테마를 사용한다. 테마는 인스턴스 생성 시 [옵션 객체의 `theme` 프로퍼티](/story/documentation-한국어-api-옵션--page#theme)에 명시하거나, 인스턴스 생성 후 [`setTheme`](/story/documentation-한국어-api-calendar--page#settheme) 메서드를 사용해서 변경할 수 있다. 적용 가능한 테마는 [테마 문서](/story/documentation-한국어-api-테마--page)를 참고한다.
 
 ```js
 calendar.setTheme({
@@ -253,7 +253,7 @@ calendar.setTheme({
 
 ### 템플릿 적용하기
 
-템플릿은 커스텀 렌더링을 지원하는 기능이다. 인스턴스 생성 시 [옵션 객체의 `theme` 프로퍼티](/story/documentation-한국어-api-옵션--page#template)에 명시하거나, 인스턴스 생성 후 [`setOptions`](/story/documentation-한국어-api-calendar--page#setoptions) 메서드를 사용해서 변경할 수 있다. 적용 가능한 템플릿은 [템플릿 문서](/story/documentation-한국어-api-템플릿--page)를 참고한다.
+템플릿은 커스텀 렌더링을 지원하는 기능이다. 인스턴스 생성 시 [옵션 객체의 `template` 프로퍼티](/story/documentation-한국어-api-옵션--page#template)에 명시하거나, 인스턴스 생성 후 [`setOptions`](/story/documentation-한국어-api-calendar--page#setoptions) 메서드를 사용해서 변경할 수 있다. 적용 가능한 템플릿은 [템플릿 문서](/story/documentation-한국어-api-템플릿--page)를 참고한다.
 
 ```js
 function formatTime(time) {
