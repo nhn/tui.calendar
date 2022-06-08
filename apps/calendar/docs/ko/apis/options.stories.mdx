@@ -68,7 +68,17 @@ const calendar = new Calendar('#container', {
 
 캘린더에서 기본으로 제공하는 일정 생성 팝업을 사용할지 여부를 지정한다. 기본값은 `false`이다.
 
+일정 생성 팝업을 사용할 때는 [`tui-date-picker`](https://github.com/nhn/tui.date-picker)와 [`tui-time-picker`](https://github.com/nhn/tui.time-picker)의 css 파일을 가져와야 스타일이 제대로 적용된다.
+
+```sh
+$ npm install tui-date-picker tui-time-picker
+```
+
 ```js
+// 일정 생성 팝업을 사용하기 위해 tui-date-picker와 tui-time-picker의 css 파일을 불러온다.
+import 'tui-date-picker/dist/tui-date-picker.css';
+import 'tui-time-picker/dist/tui-time-picker.css';
+
 const calendar = new Calendar('#container', {
   useCreationPopup: true,
 });
