@@ -78,8 +78,6 @@ TOAST UI Calendar가 생성될 컨테이너 요소를 추가한다. **이 요소
 
 TOAST UI Calendar는 생성자 함수를 통해 인스턴스를 생성할 수 있다. 생성자 함수에 접근하기 위해서는 환경에 따라 접근할 수 있는 세 가지 방법이 존재한다.
 
-(TODO namespace, require 사용 여부 확인)
-
 ```js
 /* Node.js 환경에서 ES6 모듈 */
 import Calendar from '@toast-ui/calendar';
@@ -95,7 +93,9 @@ const Calendar = toastui.Calendar;
 
 #### 레거시 브라우저용 번들 파일 불러오기
 
-TOAST UI Calendar는 레거시 브라우저용 번들 파일을 따로 제공하고 있다. 레거시 브라우저를 지원하기 위해서는 아래 방법 중 하나로 자바스크립트를 불러야 한다.
+TOAST UI Calendar는 레거시 브라우저용 번들 파일을 따로 제공하고 있다. 기본 번들은 모던 브라우저의 최신 2개 버전을 안정적으로 지원한다. 하지만 기본 번들은 IE11을 위한 폴리필이 포함되어있지 않으므로 IE11 혹은 일정 수준 이하의 레거시 브라우저를 지원하기 위해서는 다음과 같이 폴리필이 포함된 IE11 번들을 추가해야 한다.
+
+IE11의 번들 크기는 기본 번들보다 30%가량 크기 때문에 반드시 지원 범위를 잘 고려하여 불필요하게 번들 사이즈를 늘리지 않도록 유의해야 한다.
 
 ```js
 /* Node.js 환경에서 ES6 모듈 */
@@ -134,7 +134,7 @@ require('@toast-ui/calendar/toastui-calendar.min.css');
 
 생성자 함수는 `container`, `options` 두 개를 인자로 갖는다. 
 
-- `container`: TOAST UI Calendar를 자식 요소로 갖는 HTML 요소
+- `container`: TOAST UI Calendar를 자식 요소로 갖는 HTML 요소 또는 HTML 요소를 가져오기 위한 CSS 선택자 문자열
 - `options`: 기본 뷰 타입, 타임존, 테마, 템플릿 등 TOAST UI Calendar를 커스터마이징할 수 있는 옵션 객체. 자세한 정보는 [옵션 문서](/story/documentation-한국어-api-옵션--page)를 참고한다.
 
 ```js
