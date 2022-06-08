@@ -18,6 +18,7 @@ import { cls, toPercent } from '@src/helpers/css';
 import { getExceedCount } from '@src/helpers/grid';
 import { useDOMNode } from '@src/hooks/common/useDOMNode';
 import type EventUIModel from '@src/model/eventUIModel';
+import { monthMoreViewSelector } from '@src/selectors/theme';
 import type TZDate from '@src/time/date';
 import { isWeekend } from '@src/time/datetime';
 import { getPosition, getRelativePosition, getSize } from '@src/utils/dom';
@@ -142,6 +143,8 @@ function usePopupPosition(
   parentContainer?: HTMLDivElement | null,
   layoutContainer?: HTMLDivElement | null
 ) {
+  const { width: moreViewWidth, height: moreViewHeight } = useTheme(monthMoreViewSelector);
+
   const [container, containerRefCallback] = useDOMNode<HTMLDivElement>();
   const [popupPosition, setPopupPosition] = useState<PopupPosition | null>(null);
 
@@ -152,8 +155,8 @@ function usePopupPosition(
         offsetWidth: container.offsetWidth,
         eventLength,
         layerSize: {
-          width: null,
-          height: null,
+          width: moreViewWidth,
+          height: moreViewHeight,
         },
       });
 
@@ -166,7 +169,7 @@ function usePopupPosition(
 
       setPopupPosition(rect);
     }
-  }, [layoutContainer, container, eventLength, parentContainer]);
+  }, [layoutContainer, container, eventLength, parentContainer, moreViewWidth, moreViewHeight]);
 
   return { popupPosition, containerRefCallback };
 }

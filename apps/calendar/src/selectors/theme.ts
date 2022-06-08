@@ -12,3 +12,5 @@ export const monthThemeSelector = topLevelStateSelector<ThemeState, 'month'>('mo
 
 export const weekDayGridLeftSelector = (theme: ThemeState) => theme.week.dayGridLeft;
 export const weekTimeGridLeftSelector = (theme: ThemeState) => theme.week.timeGridLeft;
+
+export const monthMoreViewSelector = (theme: ThemeState) => theme.month.moreView;

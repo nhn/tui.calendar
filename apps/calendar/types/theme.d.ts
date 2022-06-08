@@ -73,6 +73,8 @@ type MonthTheme = {
     backgroundColor: string;
     border: string;
     boxShadow: string;
+    width: number | null;
+    height: number | null;
   };
   moreViewTitle: {
     backgroundColor: string;

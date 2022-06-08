@@ -186,6 +186,8 @@ interface MonthTheme {
     backgroundColor: string;
     border: string;
     boxShadow: string;
+    width: number | null,
+    height: number | null,
   };
   moreViewTitle: {
     backgroundColor: string;
@@ -213,6 +215,8 @@ const DEFAULT_MORE_VIEW = {
   border: '1px solid #d5d5d5',
   boxShadow: '0 2px 6px 0 rgba(0, 0, 0, 0.1)',
   backgroundColor: 'white',
+  width: null,
+  height: null,
 };
 ```
 
@@ -826,6 +830,8 @@ calendar.setTheme({
 
 월간뷰의 더보기 팝업을 지정한다. `border`, `boxShadow`, `backgroundColor`로 테두리, 그림자, 배경색을 지정할 수 있으며 각 기본 값은 `'1px solid #d5e5e5'`, `'0 2px 6px 0 rgba(0, 0, 0, 0.1)'`, `'white'`다.
 
+또한 `width`, `height` 값을 지정하여 팝업의 크기를 지정할 수 있다. 팝업의 크기는 픽셀 값으로만 입력 가능하며, `number` 타입으로 입력되어야 한다.
+
 | 기본값 적용                                           | 예제 적용                                            |
 | ----------------------------------------------------- | ---------------------------------------------------- |
 | ![month-moreView-default](/month-moreView-before.png) | ![month-moreView-example](/month-moreView-after.png) |
@@ -837,6 +843,8 @@ calendar.setTheme({
       border: '1px solid grey',
       boxShadow: '0 2px 6px 0 grey',
       backgroundColor: 'white',
+      width: 320,
+      height: 200,
     },
   },
 });
