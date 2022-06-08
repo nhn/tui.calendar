@@ -1,5 +1,5 @@
 import { h } from 'preact';
-import { useCallback, useLayoutEffect, useMemo, useState } from 'preact/hooks';
+import { useCallback, useMemo } from 'preact/hooks';
 
 import { GridHeader } from '@src/components/dayGridCommon/gridHeader';
 import { AlldayGridRow } from '@src/components/dayGridWeek/alldayGridRow';
@@ -18,6 +18,7 @@ import { getActivePanels } from '@src/helpers/view';
 import { useCalendarData } from '@src/hooks/calendar/useCalendarData';
 import { useDOMNode } from '@src/hooks/common/useDOMNode';
 import { useTimeGridScrollSync } from '@src/hooks/timeGrid/useTimeGridScrollSync';
+import { useTimezoneLabelsTop } from '@src/hooks/timeGrid/useTimezoneLabelsTop';
 import {
   calendarSelector,
   optionsSelector,
@@ -25,11 +26,9 @@ import {
   weekViewLayoutSelector,
 } from '@src/selectors';
 import { getRowStyleInfo } from '@src/time/datetime';
-import { isPresent } from '@src/utils/type';
 
 import type { WeekOptions } from '@t/options';
 import type { AlldayEventCategory } from '@t/panel';
-import type { CalendarState } from '@t/store';
 
 function useDayViewState() {
   const calendar = useStore(calendarSelector);
@@ -49,17 +48,9 @@ function useDayViewState() {
   );
 }
 
-function timegridHeightSelector(state: CalendarState) {
-  // TODO: change `dayGridRows` to `panels`
-  return state.weekViewLayout?.dayGridRows?.time?.height;
-}
-
 export function Day() {
   const { calendar, options, gridRowLayout, lastPanelType, renderDate } = useDayViewState();
-  const timeGridPanelHeight = useStore(timegridHeightSelector);
   const gridHeaderMarginLeft = useTheme(useCallback((theme) => theme.week.dayGridLeft.width, []));
-
-  const [stickyTop, setStickyTop] = useState<number | null>(null);
   const [timePanel, setTimePanelRef] = useDOMNode<HTMLDivElement>();
 
   const weekOptions = options.week as Required<WeekOptions>;
@@ -122,17 +113,7 @@ export function Day() {
 
   useTimeGridScrollSync(timePanel, timeGridData.rows.length);
 
-  useLayoutEffect(() => {
-    const updateStickyTop = () => {
-      if (timePanel) {
-        setStickyTop(timePanel.offsetTop);
-      }
-    };
-
-    if (isPresent(timeGridPanelHeight)) {
-      updateStickyTop();
-    }
-  }, [timeGridPanelHeight, timePanel]);
+  const stickyTop = useTimezoneLabelsTop(timePanel);
 
   return (
     <Layout className={cls('day-view')} autoAdjustPanels={true}>
