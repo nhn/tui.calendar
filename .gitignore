@@ -62,3 +62,4 @@ karma.conf.local.js
 dist/
 test-results/
 stats.json
+types/

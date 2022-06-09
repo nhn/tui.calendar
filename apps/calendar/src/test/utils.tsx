@@ -13,6 +13,7 @@ import { EventBusImpl } from '@src/utils/eventBus';
 import { isPresent } from '@src/utils/type';
 
 import type { PropsWithChildren } from '@t/components/common';
+import type { ClientMousePosition } from '@t/mouse';
 import type { CalendarStore, InternalStoreAPI } from '@t/store';
 import type { ThemeStore } from '@t/theme';
 import type { FormattedTimeString } from '@t/time/datetime';

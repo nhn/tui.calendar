@@ -2,6 +2,7 @@ import produce from 'immer';
 
 import { isFunction } from '@src/utils/type';
 
+import type { GridSelectionData } from '@t/components/gridSelection';
 import type { CalendarState, CalendarStore, SetState } from '@t/store';
 
 export type GridSelectionSlice = {

@@ -4,6 +4,11 @@ import { setTimeStrToDate } from '@src/time/datetime';
 import { isBetween, isBetween as isBetweenValue } from '@src/utils/math';
 import { isNil, isPresent } from '@src/utils/type';
 
+import type {
+  GridSelectionData,
+  GridSelectionDataByRow,
+  TimeGridSelectionDataByCol,
+} from '@t/components/gridSelection';
 import type { GridPosition, TimeGridData } from '@t/grid';
 
 type RequiredGridSelectionHookParams = Pick<

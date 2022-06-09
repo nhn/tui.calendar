@@ -2,8 +2,8 @@ import { expect, test } from '@playwright/test';
 
 import type TZDate from '../../src/time/date';
 import { addHours, setTimeStrToDate } from '../../src/time/datetime';
+import type { FormattedTimeString } from '../../src/types/time/datetime';
 import { mockDayViewEvents } from '../../stories/mocks/mockDayViewEvents';
-import type { FormattedTimeString } from '../../types/time/datetime';
 import { DAY_VIEW_PAGE_URL } from '../configs';
 import {
   dragAndDrop,

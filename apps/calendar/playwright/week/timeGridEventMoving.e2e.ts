@@ -2,8 +2,8 @@ import { expect, test } from '@playwright/test';
 
 import type TZDate from '../../src/time/date';
 import { addHours } from '../../src/time/datetime';
+import type { FormattedTimeString } from '../../src/types/time/datetime';
 import { mockWeekViewEvents } from '../../stories/mocks/mockWeekViewEvents';
-import type { FormattedTimeString } from '../../types/time/datetime';
 import { WEEK_VIEW_PAGE_URL } from '../configs';
 import { Direction } from '../types';
 import {

@@ -59,7 +59,7 @@ module.exports = {
     Object.assign(config.resolve.alias, {
       'core-js/modules': path.resolve(__dirname, '../../../node_modules/core-js/modules'),
       '@src': path.resolve(__dirname, '../src/'),
-      '@t': path.resolve(__dirname, '../types/'),
+      '@t': path.resolve(__dirname, '../src/types/'),
       '@stories': path.resolve(__dirname, '../stories/'),
     });
 

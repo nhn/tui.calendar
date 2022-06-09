@@ -1,7 +1,7 @@
 import type { Locator } from '@playwright/test';
 import { expect, test } from '@playwright/test';
 
-import type { FormattedTimeString } from '../../types/time/datetime';
+import type { FormattedTimeString } from '../../src/types/time/datetime';
 import { DAY_VIEW_PAGE_URL } from '../configs';
 import { ClickDelay } from '../constants';
 import {

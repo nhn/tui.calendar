@@ -108,7 +108,7 @@ module.exports = ({ minify, ie11 }) => {
       extensions: ['.ts', '.tsx', '.js'],
       alias: {
         '@src': path.resolve(__dirname, './src/'),
-        '@t': path.resolve(__dirname, 'types/'),
+        '@t': path.resolve(__dirname, './src/types/'),
       },
     },
     plugins,

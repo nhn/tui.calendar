@@ -5,6 +5,7 @@ import { cls, toPercent } from '@src/helpers/css';
 import { getLeftAndWidth } from '@src/helpers/grid';
 import type TZDate from '@src/time/date';
 
+import type { GridSelectionDataByRow } from '@t/components/gridSelection';
 import type { ThemeState } from '@t/theme';
 
 interface Props {
