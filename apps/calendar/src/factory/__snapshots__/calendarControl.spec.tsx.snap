@@ -195,8 +195,8 @@ Object {
     "zones": Array [],
   },
   "usageStatistics": true,
-  "useCreationPopup": false,
   "useDetailPopup": false,
+  "useFormPopup": false,
   "week": Object {
     "daynames": Array [],
     "eventView": true,

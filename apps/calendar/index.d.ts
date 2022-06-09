@@ -230,7 +230,7 @@ export interface IOptions {
   week?: IWeekOptions;
   month?: IMonthOptions;
   calendars?: ICalendarInfo[];
-  useCreationPopup?: boolean;
+  useFormPopup?: boolean;
   useDetailPopup?: boolean;
   gridSelection?: boolean | IGridSelectionOptions;
   isReadOnly?: boolean;

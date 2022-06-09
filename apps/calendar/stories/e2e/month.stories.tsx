@@ -27,7 +27,7 @@ FixedEvents.args = {
   ...Template.args,
   options: {
     defaultView: 'month',
-    useCreationPopup: true,
+    useFormPopup: true,
     useDetailPopup: true,
   },
   onInit: (cal) => {
@@ -44,7 +44,7 @@ ReadOnly.args = {
   ...Template.args,
   options: {
     defaultView: 'month',
-    useCreationPopup: true,
+    useFormPopup: true,
     useDetailPopup: true,
     isReadOnly: true,
   },

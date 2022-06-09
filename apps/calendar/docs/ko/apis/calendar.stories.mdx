@@ -576,7 +576,7 @@ calendar.setCalendars([
 - 파라미터
   - `event` - 이벤트 정보를 가지고 있는 객체. 자세한 내용은 [EventObject 문서](/story/documentation-한국어-api-eventobject--page)를 참고한다.
 
-`useCreationPopup` 옵션이 `true` 일 때, 별도의 동작을 거치지 않고 바로 일정 생성을 하는 팝업을 표시한다.
+`useFormPopup` 옵션이 `true` 일 때, 별도의 동작을 거치지 않고 바로 일정 생성을 하는 팝업을 표시한다.
 
 파라미터로 전달한 이벤트 데이터가 팝업 안의 입력 필드에 지정된 채로 표시된다.
 
@@ -772,7 +772,7 @@ interface SelectDateTimeInfo {
 
 - 파라미터: `event: EventObject` - 이벤트 생성 팝업에서 입력된 정보가 전달된다. 전달되는 객체의 자세한 정보는 [EventObject 문서](/story/documentation-한국어-api-eventobject--page)를 참고한다.
 
-캘린더 인스턴스 옵션 중 `useCreationPopup` 가 `true` 일 때, 기본 이벤트 생성 팝업을 사용할 수 있다.
+캘린더 인스턴스 옵션 중 `useFormPopup` 가 `true` 일 때, 기본 이벤트 생성 팝업을 사용할 수 있다.
 
 이 이벤트 생성 팝업에서 저장(Save) 버튼을 눌렀을 때 `beforeCreateEvent` 인스턴스 이벤트가 가 발생한다.
 
@@ -805,7 +805,7 @@ interface UpdatedEventInfo {
 
 다음의 경우 `beforeUpdateEvent` 가 실행된다.
 
-- 캘린더 인스턴스 옵션 중 `useCreationPopup` 와 `useDetailPopup` 가 모두 `true` 이고, 이벤트 상세 팝업을 통해 이벤트를 수정 후 Update 버튼을 누를 때
+- 캘린더 인스턴스 옵션 중 `useFormPopup` 와 `useDetailPopup` 가 모두 `true` 이고, 이벤트 상세 팝업을 통해 이벤트를 수정 후 Update 버튼을 누를 때
   - ![팝업을 통한 이벤트 실행](/before-update-event-1.gif)
 - 캘린더 인스턴스 옵션 중 `isReadOnly` 가 `true` 가 아니며, 개별 이벤트의 속성에 `isReadOnly` 가 `true` 가 아닌 상태에서 드래그 앤 드랍으로 일정을 이동하거나 리사이징할 때
   - ![드래그 앤 드랍을 통한 이벤트 실행](/before-update-event-2.gif)

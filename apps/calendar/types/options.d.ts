@@ -70,7 +70,7 @@ export interface Options {
   week?: WeekOptions;
   month?: MonthOptions;
   calendars?: CalendarInfo[];
-  useCreationPopup?: boolean;
+  useFormPopup?: boolean;
   useDetailPopup?: boolean;
   gridSelection?: boolean | GridSelectionOptions;
   isReadOnly?: boolean;

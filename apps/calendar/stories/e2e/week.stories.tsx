@@ -10,7 +10,7 @@ const Template: CalendarExampleStory = (args) => <CalendarExample {...args} />;
 Template.args = {
   options: {
     defaultView: 'week',
-    useCreationPopup: true,
+    useFormPopup: true,
     useDetailPopup: true,
   },
   containerHeight: '100vh',

@@ -99,7 +99,7 @@ export function createOptionsSlice(options: Options = {}): OptionsSlice {
   return {
     options: {
       defaultView: options.defaultView ?? 'week',
-      useCreationPopup: options.useCreationPopup ?? false,
+      useFormPopup: options.useFormPopup ?? false,
       useDetailPopup: options.useDetailPopup ?? false,
       isReadOnly: options.isReadOnly ?? false,
       week: initializeWeekOptions(options.week),

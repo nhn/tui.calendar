@@ -28,21 +28,21 @@ calendar.setOptions({
 
 옵션 객체는 아래의 프로퍼티를 가진 중첩 객체이다. 해당 프로퍼티명을 클릭하면 자세한 설명으로 이동한다.
 
-| 프로퍼티                              | 기본값                                    | 설명                                                                                               |
-| ------------------------------------- | ----------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| [defaultView](#defaultview)           | <code>'week'</code>                       | 기본 뷰 타입                                                                                       |
-| [useCreationPopup](#usecreationpopup) | <code>false</code>                        | 기본으로 제공하는 일정 생성 팝업 사용 여부                                                         |
-| [useDetailPopup](#usedetailpopup)     | <code>false</code>                        | 기본으로 제공하는 일정 상세 팝업 사용 여부                                                         |
-| [isReadOnly](#isreadonly)             | <code>false</code>                        | 캘린더 전체의 읽기 전용 여부                                                                       |
-| [usageStatistics](#usagestatistics)   | <code>true</code>                         | [Google Analytics(GA)](https://analytics.google.com/analytics/web/)를 위한 hostname 수집 허락 여부 |
-| [eventFilter](#eventfilter)           | <code>(event) => !!event.isVisible</code> | 캘린더 전체의 이벤트 필터링 조건                                                                   |
-| [week](#week)                         | <code>DEFAULT_WEEK_OPTIONS</code>         | 주간/일간뷰 관련 옵션                                                                              |
-| [month](#month)                       | <code>DEFAULT_MONTH_OPTIONS</code>        | 월간뷰 관련 옵션                                                                                   |
-| [gridSelection](#gridselection)       | <code>true</code>                         | 날짜/시간 선택의 클릭/더블 클릭 가능 여부                                                          |
-| [timezone](#timezone)                 | <code>{ zones: [] }</code>                | 캘린더에서 사용하는 타임존 정보                                                                    |
-| [theme](#theme)                       | <code>DEFAULT_THEME</code>                | [테마](/story/documentation-한국어-api-테마--page)                                                 |
-| [template](#template)                 | <code>DEFAULT_TEMPLATE</code>             | [템플릿](/story/documentation-한국어-api-템플릿--page)                                             |
-| [calendars](#calendars)               | <code>[]</code>                           | 캘린더에서 사용하는 캘린더 목록                                                                    |
+| 프로퍼티                            | 기본값                                    | 설명                                                                                               |
+| ----------------------------------- | ----------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| [defaultView](#defaultview)         | <code>'week'</code>                       | 기본 뷰 타입                                                                                       |
+| [useFormPopup](#useformpopup)       | <code>false</code>                        | 기본으로 제공하는 일정 생성 팝업 사용 여부                                                         |
+| [useDetailPopup](#usedetailpopup)   | <code>false</code>                        | 기본으로 제공하는 일정 상세 팝업 사용 여부                                                         |
+| [isReadOnly](#isreadonly)           | <code>false</code>                        | 캘린더 전체의 읽기 전용 여부                                                                       |
+| [usageStatistics](#usagestatistics) | <code>true</code>                         | [Google Analytics(GA)](https://analytics.google.com/analytics/web/)를 위한 hostname 수집 허락 여부 |
+| [eventFilter](#eventfilter)         | <code>(event) => !!event.isVisible</code> | 캘린더 전체의 이벤트 필터링 조건                                                                   |
+| [week](#week)                       | <code>DEFAULT_WEEK_OPTIONS</code>         | 주간/일간뷰 관련 옵션                                                                              |
+| [month](#month)                     | <code>DEFAULT_MONTH_OPTIONS</code>        | 월간뷰 관련 옵션                                                                                   |
+| [gridSelection](#gridselection)     | <code>true</code>                         | 날짜/시간 선택의 클릭/더블 클릭 가능 여부                                                          |
+| [timezone](#timezone)               | <code>{ zones: [] }</code>                | 캘린더에서 사용하는 타임존 정보                                                                    |
+| [theme](#theme)                     | <code>DEFAULT_THEME</code>                | [테마](/story/documentation-한국어-api-테마--page)                                                 |
+| [template](#template)               | <code>DEFAULT_TEMPLATE</code>             | [템플릿](/story/documentation-한국어-api-템플릿--page)                                             |
+| [calendars](#calendars)             | <code>[]</code>                           | 캘린더에서 사용하는 캘린더 목록                                                                    |
 
 ## 사용 예시
 
@@ -61,7 +61,7 @@ const calendar = new Calendar('#container', {
 
 [⬆ 목록으로 돌아가기](#옵션-객체)
 
-### useCreationPopup
+### useFormPopup
 
 - 타입: `boolean`
 - 기본값: `false`
@@ -80,7 +80,7 @@ import 'tui-date-picker/dist/tui-date-picker.css';
 import 'tui-time-picker/dist/tui-time-picker.css';
 
 const calendar = new Calendar('#container', {
-  useCreationPopup: true,
+  useFormPopup: true,
 });
 ```
 
