@@ -13,7 +13,7 @@ function isValidViewType(viewType: string): viewType is ViewType {
 }
 
 export default class Calendar extends CalendarControl {
-  constructor(container: Element, options: Options = {}) {
+  constructor(container: Element | string, options: Options = {}) {
     super(container, options);
 
     const { defaultView = 'month' } = options;
