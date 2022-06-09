@@ -162,37 +162,3 @@ test.describe('CSS class for a move event', () => {
     expect(await moveEventClassLocator.count()).toBe(0);
   });
 });
-
-const [LONG_TIME_EVENT] = mockDayViewEvents.filter(({ title }) => title === 'long time');
-
-test.describe(`Calibrate event's height while dragging`, () => {
-  cases.forEach(({ title, step, matcherToCompare }) => {
-    test(`${title}`, async ({ page }) => {
-      // Given
-      const targetEventSelector = `[data-testid*="time-event-${LONG_TIME_EVENT.title}"]`;
-      const eventLocator = page.locator(targetEventSelector);
-      const eventBoundingBoxBeforeMove = await getBoundingBox(eventLocator);
-
-      const targetTime = getTimeStrFromDate(
-        addHours(setTimeStrToDate(LONG_TIME_EVENT.end, DRAG_START_TIME), step)
-      ) as FormattedTimeString;
-      const targetRowLocator = page.locator(getTimeGridLineSelector(targetTime));
-
-      // When
-      await dragAndDrop({
-        page,
-        sourceLocator: eventLocator,
-        targetLocator: targetRowLocator,
-        hold: true,
-      });
-
-      // Then
-      await expect
-        .poll(async () => {
-          const shadowEventBoundingBox = await getBoundingBox(eventLocator.first());
-          return shadowEventBoundingBox.height;
-        })
-        [matcherToCompare](eventBoundingBoxBeforeMove.height);
-    });
-  });
-});
