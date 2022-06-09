@@ -28,6 +28,7 @@ import type {
   TimeGridEventMatrix,
 } from '@t/events';
 import type { CommonGridColumn, GridPositionFinder, TimeGridData } from '@t/grid';
+import type { ClientMousePosition } from '@t/mouse';
 import type { MonthOptions, WeekOptions } from '@t/options';
 import type { Panel } from '@t/panel';
 import type { FormattedTimeString } from '@t/time/datetime';

@@ -12,6 +12,7 @@ import { noop } from '@src/utils/noop';
 import { isPresent } from '@src/utils/type';
 
 import type { DraggingTypes } from '@t/drag';
+import type { KeyboardEventListener, MouseEventListener } from '@t/util';
 
 type MouseListener = (e: MouseEvent, dndSlice: DndSlice['dnd']) => void;
 type KeyboardListener = (e: KeyboardEvent, dndSlice: DndSlice['dnd']) => void;
