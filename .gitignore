@@ -46,7 +46,7 @@ Desktop.ini
 build/
 storybook-static/
 dist/
-types/
+apps/calendar/types/
 
 # etc
 *.swp
