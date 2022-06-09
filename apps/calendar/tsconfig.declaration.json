@@ -1,0 +1,23 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@src/*": ["./src/*"],
+      "@t/*": ["./types/*"],
+    },
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "./types-test"
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "types/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "stories",
+    "playwright",
+    "src/**/*.spec.*"
+  ]
+}

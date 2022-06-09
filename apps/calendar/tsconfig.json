@@ -27,6 +27,7 @@
     "src/**/*.tsx",
     "stories/**/*.ts",
     "stories/**/*.tsx",
-    "types/**/*"
+    "types/**/*",
+    "types-test/**/*"
   ]
 }
