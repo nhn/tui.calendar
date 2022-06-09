@@ -1,14 +1,6 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "paths": {
-      "@src/*": [
-        "./src/*"
-      ],
-      "@t/*": [
-        "./src/types/*"
-      ]
-    },
     "declaration": true,
     "emitDeclarationOnly": true,
     "plugins": [

@@ -45,7 +45,7 @@
     "tui-time-picker": "^2.0.1"
   },
   "scripts": {
-    "check-types": "tsc --project ./tsconfig.json --noEmit",
+    "check-types": "tsc -p ./tsconfig.json --noEmit",
     "validate": "npm run check-types && npm run lint",
     "lint": "eslint .",
     "cpy-dist2doc": "mkdir -p doc/dist && cp -f -r dist doc",
