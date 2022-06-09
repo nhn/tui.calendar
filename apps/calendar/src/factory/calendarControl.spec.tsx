@@ -714,12 +714,12 @@ describe('getOptions/setOptions', () => {
     const options = useStore((state) => state.options);
     const { taskTitle } = useStore((state) => state.template);
     const { dispatch, ...themeValues } = useTheme((theme) => theme);
-    const { defaultView, useCreationPopup } = options;
+    const { defaultView, useFormPopup } = options;
 
     return (
       <div>
         <div data-testid="defaultView">{defaultView}</div>
-        <div data-testid="useCreationPopup">{String(useCreationPopup)}</div>
+        <div data-testid="useFormPopup">{String(useFormPopup)}</div>
         <div data-testid="theme">{JSON.stringify(themeValues)}</div>
         <div data-testid="template">{taskTitle()}</div>
       </div>
@@ -758,18 +758,18 @@ describe('getOptions/setOptions', () => {
   it('should change options', () => {
     // Given
     const defaultView = 'month';
-    const useCreationPopup = true;
+    const useFormPopup = true;
     const previousThemeValue = screen.getByTestId('theme').textContent;
 
     expect(screen.getByTestId('defaultView')).toHaveTextContent('week');
-    expect(screen.getByTestId('useCreationPopup')).toHaveTextContent('false');
+    expect(screen.getByTestId('useFormPopup')).toHaveTextContent('false');
     expect(screen.getByTestId('template')).toHaveTextContent('Task');
 
     // When
     act(() => {
       mockCalendarOptions.setOptions({
         defaultView,
-        useCreationPopup,
+        useFormPopup,
         theme: {
           common: {
             backgroundColor: '#ff0000',
@@ -783,7 +783,7 @@ describe('getOptions/setOptions', () => {
 
     // Then
     expect(screen.getByTestId('defaultView')).toHaveTextContent(defaultView);
-    expect(screen.getByTestId('useCreationPopup')).toHaveTextContent(String(useCreationPopup));
+    expect(screen.getByTestId('useFormPopup')).toHaveTextContent(String(useFormPopup));
     expect(screen.getByTestId('theme').textContent).not.toEqual(previousThemeValue);
     expect(screen.getByTestId('template')).toHaveTextContent('Super Task');
   });

@@ -27,12 +27,12 @@ calendar.createEvents([
     backgroundColor: '#ccc',
     customStyle: {
       fontStyle: 'italic',
-      fontSize: '15px'
-    }
-  } // EventObject
+      fontSize: '15px',
+    },
+  }, // EventObject
 ]);
 
-const timedEvent = calendar.getEvents('1', 'cal1'); // EventObject
+const timedEvent = calendar.getEvent('1', 'cal1'); // EventObject
 calendar.on('clickEvent', ({ event }) => {
   console.log(event); // EventObject
 });
@@ -72,34 +72,34 @@ interface EventObject {
 }
 ```
 
-| 프로퍼티 | 기본값 | 설명 |
-| --- | --- | --- |
-| id | <code>''</code> | 일정 ID |
-| [calendarId](#캘린더calendarid) | <code>''</code> | 캘린더 ID |
-| title | <code>''</code> | 일정 제목 |
-| body | <code>''</code> | 일정 내용 |
-| [isAllday](#isallday) | <code>false</code> | 종일 일정 여부 |
-| start | <code>new TZDate()</code> | 일정이 시작하는 일시. 일정을 생성할 때는 <code>Date</code>, <code>string</code>, <code>number</code>, <code>TZDate</code>로 지정할 수 있으며, 캘린더 API 파라미터 또는 반환값에서는 <code>TZDate</code> 객체이다. |
-| end | <code>new TZDate()</code> | 일정이 끝나는 일시. 일정을 생성할 때는 <code>Date</code>, <code>string</code>, <code>number</code>, <code>TZDate</code>로 지정할 수 있으며, 캘린더 API 파라미터 또는 반환값에서는 <code>TZDate</code> 객체이다. |
-| goingDuration | <code>0</code> | 일정 장소까지 이동하는 데 걸리는 시간. 분 단위의 숫자이다. |
-| comingDuration | <code>0</code> | 일정 다음 장소까지 이동하는 데 걸리는 시간. 분 단위의 숫자이다. |
-| location | <code>''</code> | 일정 장소 |
-| attendees | <code>[]</code> | 일정 참석자 목록 |
-| [category](#category) | <code>'time'</code> | 일정 카테고리. <code>milestone</code>, <code>task</code>, <code>allday</code>, <code>time</code> 중 하나이다. |
-| dueDateClass | <code>''</code> | task 일정 카테고리. 어떤 문자열도 가능하다. |
-| recurrenceRule | <code>''</code> | 일정 반복 규칙 |
-| state | <code>'Busy'</code> | 일정 상태. 바쁨(<code>Busy</code>), 한가함(<code>Free</code>) 중 하나이다. |
-| isVisible | <code>true</code> | 일정 표시 여부 |
-| [isPending](#ispending-isfocused-isprivate) | <code>false</code> | 미정인 일정 여부 |
-| [isFocused](#ispending-isfocused-isprivate) | <code>false</code> | 일정 강조 여부 |
-| [isReadOnly](#isreadonly) | <code>false</code> | 수정 가능한 일정 여부 |
-| [isPrivate](#ispending-isfocused-isprivate) | <code>false</code> | 개인적인 일정 여부 |
-| [color](#스타일-관련-속성) | <code>'#000'</code> | 일정 요소의 텍스트 색상 |
-| [backgroundColor](#스타일-관련-속성) | <code>'#a1b56c'</code> | 일정 요소의 배경 색상 |
-| [dragBackgroundColor](#스타일-관련-속성) | <code>'#a1b56c'</code> | 일정 요소를 드래그했을 때 배경 색상 |
-| [borderColor](#스타일-관련-속성) | <code>'#000'</code> | 일정 요소의 좌측 테두리 색상 |
-| [customStyle](#스타일-관련-속성) | <code>{}</code> | 일정 요소에 적용할 스타일. [CSS 카멜케이스 프로퍼티를 가진 자바스크립트 객체](https://ko.reactjs.org/docs/dom-elements.html#style)이다.  |
-| raw | <code>null</code> | 실제 일정 데이터 |
+| 프로퍼티                                    | 기본값                    | 설명                                                                                                                                                                                                              |
+| ------------------------------------------- | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| id                                          | <code>''</code>           | 일정 ID                                                                                                                                                                                                           |
+| [calendarId](#캘린더calendarid)             | <code>''</code>           | 캘린더 ID                                                                                                                                                                                                         |
+| title                                       | <code>''</code>           | 일정 제목                                                                                                                                                                                                         |
+| body                                        | <code>''</code>           | 일정 내용                                                                                                                                                                                                         |
+| [isAllday](#isallday)                       | <code>false</code>        | 종일 일정 여부                                                                                                                                                                                                    |
+| start                                       | <code>new TZDate()</code> | 일정이 시작하는 일시. 일정을 생성할 때는 <code>Date</code>, <code>string</code>, <code>number</code>, <code>TZDate</code>로 지정할 수 있으며, 캘린더 API 파라미터 또는 반환값에서는 <code>TZDate</code> 객체이다. |
+| end                                         | <code>new TZDate()</code> | 일정이 끝나는 일시. 일정을 생성할 때는 <code>Date</code>, <code>string</code>, <code>number</code>, <code>TZDate</code>로 지정할 수 있으며, 캘린더 API 파라미터 또는 반환값에서는 <code>TZDate</code> 객체이다.   |
+| goingDuration                               | <code>0</code>            | 일정 장소까지 이동하는 데 걸리는 시간. 분 단위의 숫자이다.                                                                                                                                                        |
+| comingDuration                              | <code>0</code>            | 일정 다음 장소까지 이동하는 데 걸리는 시간. 분 단위의 숫자이다.                                                                                                                                                   |
+| location                                    | <code>''</code>           | 일정 장소                                                                                                                                                                                                         |
+| attendees                                   | <code>[]</code>           | 일정 참석자 목록                                                                                                                                                                                                  |
+| [category](#category)                       | <code>'time'</code>       | 일정 카테고리. <code>milestone</code>, <code>task</code>, <code>allday</code>, <code>time</code> 중 하나이다.                                                                                                     |
+| dueDateClass                                | <code>''</code>           | task 일정 카테고리. 어떤 문자열도 가능하다.                                                                                                                                                                       |
+| recurrenceRule                              | <code>''</code>           | 일정 반복 규칙                                                                                                                                                                                                    |
+| state                                       | <code>'Busy'</code>       | 일정 상태. 바쁨(<code>Busy</code>), 한가함(<code>Free</code>) 중 하나이다.                                                                                                                                        |
+| isVisible                                   | <code>true</code>         | 일정 표시 여부                                                                                                                                                                                                    |
+| [isPending](#ispending-isfocused-isprivate) | <code>false</code>        | 미정인 일정 여부                                                                                                                                                                                                  |
+| [isFocused](#ispending-isfocused-isprivate) | <code>false</code>        | 일정 강조 여부                                                                                                                                                                                                    |
+| [isReadOnly](#isreadonly)                   | <code>false</code>        | 수정 가능한 일정 여부                                                                                                                                                                                             |
+| [isPrivate](#ispending-isfocused-isprivate) | <code>false</code>        | 개인적인 일정 여부                                                                                                                                                                                                |
+| [color](#스타일-관련-속성)                  | <code>'#000'</code>       | 일정 요소의 텍스트 색상                                                                                                                                                                                           |
+| [backgroundColor](#스타일-관련-속성)        | <code>'#a1b56c'</code>    | 일정 요소의 배경 색상                                                                                                                                                                                             |
+| [dragBackgroundColor](#스타일-관련-속성)    | <code>'#a1b56c'</code>    | 일정 요소를 드래그했을 때 배경 색상                                                                                                                                                                               |
+| [borderColor](#스타일-관련-속성)            | <code>'#000'</code>       | 일정 요소의 좌측 테두리 색상                                                                                                                                                                                      |
+| [customStyle](#스타일-관련-속성)            | <code>{}</code>           | 일정 요소에 적용할 스타일. [CSS 카멜케이스 프로퍼티를 가진 자바스크립트 객체](https://ko.reactjs.org/docs/dom-elements.html#style)이다.                                                                           |
+| raw                                         | <code>null</code>         | 실제 일정 데이터                                                                                                                                                                                                  |
 
 ## 추가 설명
 
@@ -126,25 +126,25 @@ const calendar = new Calendar('#container', {
   calendars: [
     {
       id: 'cal1',
-      name: 'My Calendar'
+      name: 'My Calendar',
     },
     {
       id: 'cal2',
-      name: 'Another Calendar'
-    }
-  ]
+      name: 'Another Calendar',
+    },
+  ],
 });
 
 // 인스턴스 생성 후
 calendar.setCalendars([
   {
     id: 'cal1',
-    name: 'My Calendar'
+    name: 'My Calendar',
   },
   {
     id: 'cal2',
-    name: 'Another Calendar'
-  }
+    name: 'Another Calendar',
+  },
 ]);
 ```
 
@@ -162,12 +162,12 @@ calendar.setCalendars([
     color: '#000',
     backgroundColor: '#a1b56c',
     dragBackgroundColor: '#a1b56c',
-    borderColor: '#000'
+    borderColor: '#000',
   },
   {
     id: 'cal2',
-    name: 'Another Calendar'
-  }
+    name: 'Another Calendar',
+  },
 ]);
 
 calendar.createEvents([
@@ -191,8 +191,8 @@ calendar.createEvents([
     title: 'Event 2',
     isAllDay: true,
     start: new Date('2018-08-01'),
-    end: new Date('2018-08-02')
-  }
+    end: new Date('2018-08-02'),
+  },
 ]);
 ```
 
@@ -203,6 +203,7 @@ calendar.createEvents([
 종일 일정 여부를 나타낸다.
 
 종일 일정은 `isAllday` 외에도 여러 방법으로 적용할 수 있다. 아래의 경우 중 하나라도 해당하면 종일 일정 패널에 나타난다.
+
 - `isAllday`가 `true`인 경우
 - `category`가 `allday`인 경우
 - 일정 기간이 24시간 이상인 경우
@@ -240,12 +241,12 @@ const calendar = new Calendar('#container', {
       }
 
       return title;
-    }
-  }
-})
+    },
+  },
+});
 ```
 
-자세한 예시는 [여기 (TODO 템플릿 예시 문서 상대 경로 추가)]()를 참고한다.
+자세한 예시는 [여기](/story/documentation-한국어-api-템플릿--page#time)를 참고한다.
 
 ### 스타일 관련 속성
 

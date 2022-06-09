@@ -37,7 +37,7 @@ describe('useGridSelection', () => {
   function setup<DateCollection>({
     type = 'timeGrid',
     gridSelection = { enableDblClick: true, enableClick: true },
-    useCreationPopup = false,
+    useFormPopup = false,
     selectionSorter = jest.fn((init, current) => ({
       startColumnIndex: current.columnIndex,
       startRowIndex: current.rowIndex,
@@ -49,7 +49,7 @@ describe('useGridSelection', () => {
   }: {
     type?: GridSelectionType;
     gridSelection?: GridSelectionOptions;
-    useCreationPopup?: boolean;
+    useFormPopup?: boolean;
     dateCollection?: DateCollection;
     selectionSorter?: (
       initPosition: GridPosition,
@@ -76,7 +76,7 @@ describe('useGridSelection', () => {
     });
 
     store.getState().dispatch.options.setOptions({
-      useCreationPopup,
+      useFormPopup,
       gridSelection,
     });
 
@@ -337,11 +337,11 @@ describe('useGridSelection', () => {
     const initPosition = { clientX: 0, clientY: 0 };
     const targetPosition = { clientX: 50, clientY: 50 };
 
-    it('should not add grid selection in dayGridMonth when useCreationPopup is true', () => {
+    it('should not add grid selection in dayGridMonth when useFormPopup is true', () => {
       // Given
       setup({
         type: 'dayGridMonth',
-        useCreationPopup: true,
+        useFormPopup: true,
       });
       const container = screen.getByTestId('container');
 
@@ -352,7 +352,7 @@ describe('useGridSelection', () => {
       expect(store.getState().gridSelection.accumulated.dayGridMonth).toEqual([]);
     });
 
-    it('should add grid selection in dayGridMonth when useCreationPopup is false', () => {
+    it('should add grid selection in dayGridMonth when useFormPopup is false', () => {
       // Given
       setup({
         type: 'dayGridMonth',
@@ -377,11 +377,11 @@ describe('useGridSelection', () => {
   const timeGridData = createTimeGridData(weekDates, { hourStart: 0, hourEnd: 24 });
 
   describe('Opening popup', () => {
-    it('should open event form popup after dragging when the `useCreationPopup` option is enabled', () => {
+    it('should open event form popup after dragging when the `useFormPopup` option is enabled', () => {
       // Given
       const showFormPopupAction = store.getState().dispatch.popup.showFormPopup;
       setup({
-        useCreationPopup: true,
+        useFormPopup: true,
         selectionSorter: timeGridSelectionHelper.sortSelection,
         dateCollection: timeGridData,
         dateGetter: timeGridSelectionHelper.getDateFromCollection,
@@ -404,12 +404,12 @@ describe('useGridSelection', () => {
       );
     });
 
-    it('should open event form popup after clicking when the `useCreationPopup` option is enabled', () => {
+    it('should open event form popup after clicking when the `useFormPopup` option is enabled', () => {
       // Given
       jest.useFakeTimers(); // Test for debounced click handler.
       const showFormPopupAction = store.getState().dispatch.popup.showFormPopup;
       setup({
-        useCreationPopup: true,
+        useFormPopup: true,
         selectionSorter: timeGridSelectionHelper.sortSelection,
         dateCollection: timeGridData,
         dateGetter: timeGridSelectionHelper.getDateFromCollection,
@@ -439,7 +439,7 @@ describe('useGridSelection', () => {
     beforeEach(() => {
       eventBus.on('selectDateTime', wrapMockHandler(mockHandler));
       setup({
-        useCreationPopup: true,
+        useFormPopup: true,
         selectionSorter: timeGridSelectionHelper.sortSelection,
         dateCollection: timeGridData,
         dateGetter: timeGridSelectionHelper.getDateFromCollection,

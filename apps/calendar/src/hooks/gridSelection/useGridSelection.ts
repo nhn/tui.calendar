@@ -37,7 +37,7 @@ export function useGridSelection<DateCollection>({
   dateCollection: DateCollection;
   gridPositionFinder: GridPositionFinder;
 }) {
-  const { useCreationPopup, gridSelection: gridSelectionOptions } = useStore(optionsSelector);
+  const { useFormPopup, gridSelection: gridSelectionOptions } = useStore(optionsSelector);
   const { enableDblClick, enableClick } = gridSelectionOptions;
 
   const { setGridSelection, addGridSelection } = useDispatch('gridSelection');
@@ -116,11 +116,11 @@ export function useGridSelection<DateCollection>({
         ...dateGetter(dateCollection, gridSelectionRef.current)
       );
 
-      if (!useCreationPopup) {
+      if (!useFormPopup) {
         addGridSelection(type, gridSelectionRef.current);
       }
 
-      if (useCreationPopup && isPresent(initMousePosition)) {
+      if (useFormPopup && isPresent(initMousePosition)) {
         const popupArrowPointPosition = {
           top: (e.clientY + initMousePosition.y) / 2,
           left: (e.clientX + initMousePosition.x) / 2,
@@ -155,7 +155,7 @@ export function useGridSelection<DateCollection>({
 
   const onMouseDown = useDrag(currentGridSelectionType, {
     onInit: (e) => {
-      if (useCreationPopup) {
+      if (useFormPopup) {
         setInitMousePosition({
           x: e.clientX,
           y: e.clientY,

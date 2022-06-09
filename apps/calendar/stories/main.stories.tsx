@@ -53,5 +53,5 @@ const Template: Story = (args) => (
 export const Default = Template.bind({});
 Default.args = {
   events,
-  options: { useCreationPopup: true, useDetailPopup: true },
+  options: { useFormPopup: true, useDetailPopup: true },
 };

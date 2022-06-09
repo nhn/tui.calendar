@@ -78,10 +78,12 @@ TOAST UI Calendar는 생성자 함수를 통해 인스턴스를 생성할 수 �
 /* Node.js 환경에서 ES6 모듈 */
 import Calendar from '@toast-ui/calendar';
 ```
+
 ```js
 /* Node.js 환경에서 CommonJS */
 const Calendar = require('@toast-ui/calendar');
 ```
+
 ```js
 /* 브라우저 환경에서 namespace */
 const Calendar = toastui.Calendar;
@@ -97,10 +99,12 @@ IE11의 번들 크기는 기본 번들보다 30%가량 크기 때문에 반드�
 /* Node.js 환경에서 ES6 모듈 */
 import Calendar from '@toast-ui/calendar/ie11';
 ```
+
 ```js
 /* Node.js 환경에서 CommonJS */
 const Calendar = require('@toast-ui/calendar/ie11');
 ```
+
 ```html
 <!-- CDN과 브라우저 환경에서 namespace -->
 <script src="https://uicdn.toast.com/calendar/latest/toastui-calendar.ie11.min.js"></script>
@@ -117,10 +121,12 @@ Calendar를 사용하기 위해서는 CSS 파일을 추가해야 한다. import,
 /* Node.js 환경에서 ES6 모듈 */
 import '@toast-ui/calendar/toastui-calendar.min.css'; // Calendar 스타일
 ```
+
 ```js
 /* Node.js 환경에서 CommonJS */
 require('@toast-ui/calendar/toastui-calendar.min.css');
 ```
+
 ```html
 <!-- CDN -->
 <link rel="stylesheet" href="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.css" />
@@ -128,7 +134,7 @@ require('@toast-ui/calendar/toastui-calendar.min.css');
 
 ### 인스턴스 만들기
 
-생성자 함수는 `container`, `options` 두 개를 인자로 갖는다. 
+생성자 함수는 `container`, `options` 두 개를 인자로 갖는다.
 
 - `container`: TOAST UI Calendar를 자식 요소로 갖는 HTML 요소 또는 HTML 요소를 가져오기 위한 CSS 선택자 문자열
 - `options`: 기본 뷰 타입, 타임존, 테마, 템플릿 등 TOAST UI Calendar를 커스터마이징할 수 있는 옵션 객체. 자세한 정보는 [옵션 문서](/story/documentation-한국어-api-옵션--page)를 참고한다.
@@ -147,24 +153,25 @@ const options = {
         timezoneName: 'Europe/London',
         displayLabel: 'London',
       },
-    ]
+    ],
   },
   calendars: [
     {
       id: 'cal1',
       name: '개인',
-      backgroundColor: '#03bd9e'
+      backgroundColor: '#03bd9e',
     },
     {
       id: 'cal2',
       name: '직장',
       backgroundColor: '#00a9ff',
-    }
-  ]
+    },
+  ],
 };
 
 const calendar = new Calendar(container, options);
 ```
+
 ![image](/gettingStarted_calendar.png)
 
 ## 기본적인 사용 방법
@@ -182,14 +189,14 @@ calendar.createEvents([
     calendarId: 'cal2',
     title: '주간 회의',
     start: '2022-06-07T09:00:00',
-    end: '2022-06-07T10:00:00'
+    end: '2022-06-07T10:00:00',
   },
   {
     id: 'event2',
     calendarId: 'cal1',
     title: '점심 약속',
     start: '2022-06-08T12:00:00',
-    end: '2022-06-08T13:00:00'
+    end: '2022-06-08T13:00:00',
   },
   {
     id: 'event3',
@@ -207,7 +214,7 @@ calendar.createEvents([
 
 ### 팝업 사용하기
 
-TOAST UI Calendar는 일정 생성 팝업과 일정 상세 팝업을 기본으로 제공한다. 이를 사용하려면 [`useCreationPopup`](/story/documentation-한국어-api-옵션--page#usecreationpopup)과 [`useDetailPopup`](/story/documentation-한국어-api-옵션--page#usedetailpopup) 옵션을 `true`로 설정해야 한다. 옵션은 인스턴스 생성 시 설정하거나, 인스턴스 생성 후 [`setOptions`](/story/documentation-한국어-api-calendar--page#setoptions) 메서드를 사용해서 변경할 수 있다.
+TOAST UI Calendar는 일정 생성 팝업과 일정 상세 팝업을 기본으로 제공한다. 이를 사용하려면 [`useFormPopup`](/story/documentation-한국어-api-옵션--page#useformpopup)과 [`useDetailPopup`](/story/documentation-한국어-api-옵션--page#usedetailpopup) 옵션을 `true`로 설정해야 한다. 옵션은 인스턴스 생성 시 설정하거나, 인스턴스 생성 후 [`setOptions`](/story/documentation-한국어-api-calendar--page#setoptions) 메서드를 사용해서 변경할 수 있다.
 
 일정 생성 팝업을 사용할 때는 [`tui-date-picker`](https://github.com/nhn/tui.date-picker)와 [`tui-time-picker`](https://github.com/nhn/tui.time-picker)의 css 파일을 가져와야 스타일이 제대로 적용된다.
 
@@ -221,14 +228,14 @@ import 'tui-date-picker/dist/tui-date-picker.css';
 import 'tui-time-picker/dist/tui-time-picker.css';
 
 calendar.setOptions({
-  useCreationPopup: true,
+  useFormPopup: true,
   useDetailPopup: true,
 });
 ```
 
-| 일정 생성 팝업 | 일정 상세 팝업 |
-| --- | --- |
-| ![useCreationPopup](/gettingStarted_useCreationPopup.png) | ![useDetailPopup](/gettingStarted_useDetailPopup.png) |
+| 일정 생성 팝업                                    | 일정 상세 팝업                                        |
+| ------------------------------------------------- | ----------------------------------------------------- |
+| ![useFormPopup](/gettingStarted_useFormPopup.png) | ![useDetailPopup](/gettingStarted_useDetailPopup.png) |
 
 ### 테마 적용하기
 
@@ -267,7 +274,7 @@ calendar.setOptions({
       return `<span style="color: white;">${formatTime(start)}~${formatTime(end)} ${title}</span>`;
     },
     allday(event) {
-      return `<span style="color: gray;">${event.title}</span>`
+      return `<span style="color: gray;">${event.title}</span>`;
     },
   },
 });

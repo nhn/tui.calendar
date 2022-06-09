@@ -10,7 +10,7 @@ import { Meta } from '@storybook/addon-docs';
 
 ```js
 // 인스턴스를 생성하며 테마 설정하기
-const cal = new Calendar('#container', {
+const calendar = new Calendar('#container', {
   theme: {
     week: {
       today: {
@@ -21,7 +21,7 @@ const cal = new Calendar('#container', {
 });
 
 // 생성된 인스턴스의 테마를 setTheme 메서드로 변경하기
-cal.setTheme({
+calendar.setTheme({
   week: {
     today: {
       color: 'red',

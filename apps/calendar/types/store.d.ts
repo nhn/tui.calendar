@@ -17,7 +17,7 @@ type CalendarMonthOptions = Required<MonthOptions>;
 type CalendarWeekOptions = Required<WeekOptions>;
 
 interface OptionsData {
-  useCreationPopup: boolean;
+  useFormPopup: boolean;
   useDetailPopup: boolean;
   month: CalendarMonthOptions;
   week: CalendarWeekOptions;
