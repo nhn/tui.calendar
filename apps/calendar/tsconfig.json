@@ -14,9 +14,9 @@
     "outDir": "./types",
     "baseUrl": ".",
     "paths": {
-      "@src/*": ["src/*"],
-      "@t/*": ["src/types/*"],
-      "@stories/*": ["stories/*"]
+      "@src/*": ["./src/*"],
+      "@t/*": ["./src/types/*"],
+      "@stories/*": ["./stories/*"]
     },
     "sourceMap": true,
     "lib": ["esnext", "dom"],
