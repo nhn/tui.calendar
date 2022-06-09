@@ -11,7 +11,7 @@
     "resolveJsonModule": true,
     "moduleResolution": "node",
     "strict": true,
-    "outDir": "dist/",
+    "outDir": "/types",
     "baseUrl": ".",
     "paths": {
       "@src/*": ["./src/*"],
