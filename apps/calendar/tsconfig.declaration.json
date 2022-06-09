@@ -2,17 +2,24 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "paths": {
-      "@src/*": ["./src/*"],
-      "@t/*": ["./types/*"],
+      "@src/*": [
+        "./src/*"
+      ],
+      "@t/*": [
+        "./src/types/*"
+      ]
     },
     "declaration": true,
     "emitDeclarationOnly": true,
-    "outDir": "./types-test"
+    "plugins": [
+      {
+        "transform": "typescript-transform-paths",
+        "afterDeclarations": true
+      }
+    ]
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "types/**/*"
+    "src/**/*"
   ],
   "exclude": [
     "node_modules",
