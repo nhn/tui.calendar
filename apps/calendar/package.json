@@ -7,16 +7,14 @@
   "sideEffects": [
     "*.css"
   ],
-  "module": "./dist/esm/index.mjs",
+  "module": "./dist/toastui-calendar.mjs",
   "exports": {
     ".": {
-      "import": "./dist/esm/index.mjs",
+      "import": "./dist/toastui-calendar.mjs",
       "require": "./dist/toastui-calendar.js"
     },
-    "./ie11": {
-      "import": "./dist/toastui-calendar.ie11.js",
-      "require": "./dist/toastui-calendar.ie11.js"
-    },
+    "./ie11": "./dist/toastui-calendar.ie11.js",
+    "./esm": "./dist/toastui-calendar.mjs",
     "./toastui-calendar.css": "./dist/toastui-calendar.css",
     "./toastui-calendar.min.css": "./dist/toastui-calendar.min.css"
   },

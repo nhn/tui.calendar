@@ -20,7 +20,7 @@ const banner = `
     await build({
       entryPoints: [path.resolve(__dirname, '../src/index.ts')],
       bundle: true,
-      outfile: path.resolve(__dirname, '../dist/esm/index.mjs'),
+      outfile: path.resolve(__dirname, '../dist/toastui-calendar.mjs'),
       format: 'esm',
       target: 'es2015',
       loader: {
