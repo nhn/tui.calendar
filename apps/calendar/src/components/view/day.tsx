@@ -7,6 +7,7 @@ import { OtherGridRow } from '@src/components/dayGridWeek/otherGridRow';
 import { Layout } from '@src/components/layout';
 import { Panel } from '@src/components/panel';
 import { TimeGrid } from '@src/components/timeGrid/timeGrid';
+import { TimezoneLabels } from '@src/components/timeGrid/timezoneLabels';
 import { WEEK_DAYNAME_BORDER, WEEK_DAYNAME_HEIGHT } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
 import { useTheme } from '@src/contexts/themeStore';
@@ -17,6 +18,7 @@ import { getActivePanels } from '@src/helpers/view';
 import { useCalendarData } from '@src/hooks/calendar/useCalendarData';
 import { useDOMNode } from '@src/hooks/common/useDOMNode';
 import { useTimeGridScrollSync } from '@src/hooks/timeGrid/useTimeGridScrollSync';
+import { useTimezoneLabelsTop } from '@src/hooks/timeGrid/useTimezoneLabelsTop';
 import {
   calendarSelector,
   optionsSelector,
@@ -111,6 +113,8 @@ export function Day() {
 
   useTimeGridScrollSync(timePanel, timeGridData.rows.length);
 
+  const stickyTop = useTimezoneLabelsTop(timePanel);
+
   return (
     <Layout className={cls('day-view')} autoAdjustPanels={true}>
       <Panel name="day-view-daynames" initialHeight={WEEK_DAYNAME_HEIGHT + WEEK_DAYNAME_BORDER}>
@@ -125,6 +129,7 @@ export function Day() {
       {activePanels.includes('time') ? (
         <Panel name="time" autoSize={1} ref={setTimePanelRef}>
           <TimeGrid events={dayGridEvents.time} timeGridData={timeGridData} />
+          <TimezoneLabels top={stickyTop} />
         </Panel>
       ) : null}
     </Layout>
