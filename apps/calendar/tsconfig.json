@@ -11,23 +11,19 @@
     "resolveJsonModule": true,
     "moduleResolution": "node",
     "strict": true,
-    "outDir": "/types",
+    "outDir": "./types",
     "baseUrl": ".",
     "paths": {
-      "@src/*": ["./src/*"],
-      "@t/*": ["./types/*"],
-      "@stories/*": ["./stories/*"]
+      "@src/*": ["src/*"],
+      "@t/*": ["src/types/*"],
+      "@stories/*": ["stories/*"]
     },
     "sourceMap": true,
     "lib": ["esnext", "dom"],
     "types": ["webpack-env", "node", "jest"]
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "stories/**/*.ts",
-    "stories/**/*.tsx",
-    "types/**/*",
-    "types-test/**/*"
+    "src/**/*",
+    "stories/**/*"
   ]
 }

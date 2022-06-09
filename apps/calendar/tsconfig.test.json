@@ -8,8 +8,6 @@
     "noEmit": true,
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "types/**/*",
+    "src/**/*"
   ]
 }

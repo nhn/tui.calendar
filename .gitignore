@@ -45,6 +45,8 @@ Desktop.ini
 # build
 build/
 storybook-static/
+dist/
+types/
 
 # etc
 *.swp
@@ -59,7 +61,5 @@ karma.conf.local.js
 *.vim
 .\#*
 .vscode/
-dist/
 test-results/
 stats.json
-types/
