@@ -10,14 +10,14 @@ import { Meta } from '@storybook/addon-docs';
 
 ```js
 // 인스턴스를 생성하며 옵션 설정하기
-const cal = new Calendar('#container', {
+const calendar = new Calendar('#container', {
   defaultView: 'month',
   isReadOnly: true,
   // ...
 });
 
 // 생성된 인스턴스의 옵션을 setOptions 메서드로 변경하기
-cal.setOptions({
+calendar.setOptions({
   defaultView: 'week',
   isReadOnly: false,
   // ...
@@ -40,8 +40,8 @@ cal.setOptions({
 | [month](#month)                       | <code>DEFAULT_MONTH_OPTIONS</code>        | 월간뷰 관련 옵션                                                                                   |
 | [gridSelection](#gridselection)       | <code>true</code>                         | 날짜/시간 선택의 클릭/더블 클릭 가능 여부                                                          |
 | [timezone](#timezone)                 | <code>{ zones: [] }</code>                | 캘린더에서 사용하는 타임존 정보                                                                    |
-| [theme](#theme)                       | <code>DEFAULT_THEME</code>                | [테마](/story/documentation-한국어-api-테마--page)                                                     |
-| [template](#template)                 | <code>DEFAULT_TEMPLATE</code>             | [템플릿](/story/documentation-한국어-api-템플릿--page)                                                 |
+| [theme](#theme)                       | <code>DEFAULT_THEME</code>                | [테마](/story/documentation-한국어-api-테마--page)                                                 |
+| [template](#template)                 | <code>DEFAULT_TEMPLATE</code>             | [템플릿](/story/documentation-한국어-api-템플릿--page)                                             |
 | [calendars](#calendars)               | <code>[]</code>                           | 캘린더에서 사용하는 캘린더 목록                                                                    |
 
 ## 사용 예시
@@ -739,7 +739,7 @@ const calendar = new Calendar('#container', {
 - 타입: `CalendarInfo[]`
 - 기본값: `[]`
 
-캘린더에서 사용되는 캘린더 목록을 지정한다. 캘린더 목록의 각 캘린더 정보는 해당 캘린더의 `id`와 캘린더명, 색상 정보를 가지고 있다. 기본값은 `[]`이다.
+캘린더에서 사용되는 캘린더 목록을 지정한다. 캘린더 목록의 각 캘린더 정보는 해당 캘린더의 `id`와 캘린더명, 색상 정보를 가지고 있다. 기본값은 `[]`이다. 캘린더 정보에 대한 자세한 설명은 [EventObject 문서](/story/documentation-한국어-api-eventobject--page#캘린더calendarid)를 참고한다.
 
 ```ts
 interface CalendarInfo {
