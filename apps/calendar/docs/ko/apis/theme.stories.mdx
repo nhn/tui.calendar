@@ -186,22 +186,29 @@ interface MonthTheme {
     backgroundColor: string;
     border: string;
     boxShadow: string;
+    width: number | null,
+    height: number | null,
   };
   moreViewTitle: {
     backgroundColor: string;
   };
   weekend: { backgroundColor: string };
+  gridCell: {
+    headerHeight: number | null;
+    footerHeight: number | null;
+  };
 }
 ```
 
-| 테마                                                    | 기본값                                           | 설명                             |
-| ------------------------------------------------------- | ------------------------------------------------ | -------------------------------- |
-| [dayExceptThisMonth](#month-dayexceptthismonth)         | <code>{ color: 'rgba(51, 51, 51, 0.4)' }</code>  | 다른 달인 날짜                   |
-| [holidayExceptThisMonth](#month-holidayexceptthismonth) | <code>{ color: 'rgba(255, 64, 64, 0.4)' }</code> | 다른 달인 휴일                   |
-| [dayname](#month-dayname)                               | <code>DEFAULT_MONTH_DAYNAME</code>               | 요일                             |
-| [moreView](#month-moreview)                             | <code>DEFAULT_MORE_VIEW</code>                   | 월간뷰의 더보기 팝업             |
-| [moreViewTitle](#month-moreviewtitle)                   | <code>{ backgroundColor: 'inherit' }</code>      | 월간뷰의 더보기 팝업의 헤더 영역 |
-| [weekend](#month-weekend)                               | <code>{ backgroundColor: 'inherit' }</code>      | 월간뷰의 주말 셀                 |
+| 테마                                                      | 기본값                                                   | 설명                   |
+|---------------------------------------------------------|-------------------------------------------------------|----------------------|
+| [dayExceptThisMonth](#month-dayexceptthismonth)         | <code>{ color: 'rgba(51, 51, 51, 0.4)' }</code>       | 다른 달인 날짜             |
+| [holidayExceptThisMonth](#month-holidayexceptthismonth) | <code>{ color: 'rgba(255, 64, 64, 0.4)' }</code>      | 다른 달인 휴일             |
+| [dayname](#month-dayname)                               | <code>DEFAULT_MONTH_DAYNAME</code>                    | 요일                   |
+| [moreView](#month-moreview)                             | <code>DEFAULT_MORE_VIEW</code>                        | 월간뷰의 더보기 팝업          |
+| [moreViewTitle](#month-moreviewtitle)                   | <code>{ backgroundColor: 'inherit' }</code>           | 월간뷰의 더보기 팝업의 헤더 영역   |
+| [weekend](#month-weekend)                               | <code>{ backgroundColor: 'inherit' }</code>           | 월간뷰의 주말 셀            |
+| [gridCell](#month-gridcell)                             | <code>{ headerHeight: 31, footerHeight: null }</code> | 월간뷰의 모든 셀의 헤더와 푸터 높이 |
 
 ```ts
 const DEFAULT_MONTH_DAYNAME = {
@@ -213,6 +220,8 @@ const DEFAULT_MORE_VIEW = {
   border: '1px solid #d5d5d5',
   boxShadow: '0 2px 6px 0 rgba(0, 0, 0, 0.1)',
   backgroundColor: 'white',
+  width: null,
+  height: null,
 };
 ```
 
@@ -826,6 +835,8 @@ calendar.setTheme({
 
 월간뷰의 더보기 팝업을 지정한다. `border`, `boxShadow`, `backgroundColor`로 테두리, 그림자, 배경색을 지정할 수 있으며 각 기본 값은 `'1px solid #d5e5e5'`, `'0 2px 6px 0 rgba(0, 0, 0, 0.1)'`, `'white'`다.
 
+또한 `width`, `height` 값을 지정하여 팝업의 크기를 지정할 수 있다. 팝업의 크기는 픽셀 값으로만 입력 가능하며, `number` 타입으로 입력되어야 한다.
+
 | 기본값 적용                                           | 예제 적용                                            |
 | ----------------------------------------------------- | ---------------------------------------------------- |
 | ![month-moreView-default](/month-moreView-before.png) | ![month-moreView-example](/month-moreView-after.png) |
@@ -837,6 +848,8 @@ calendar.setTheme({
       border: '1px solid grey',
       boxShadow: '0 2px 6px 0 grey',
       backgroundColor: 'white',
+      width: 320,
+      height: 200,
     },
   },
 });
@@ -877,6 +890,28 @@ calendar.setTheme({
   month: {
     weekend: {
       backgroundColor: 'rgba(255, 64, 64, 0.4)',
+    },
+  },
+});
+```
+
+#### month-gridCell
+
+월간뷰의 각 셀의 헤더와 푸터 높이를 지정한다. 기본적으로 푸터는 비활성화 상태이며, 푸터를 사용하기 위해서 임의의 `number` 타입의 값을 전달해야 한다.
+
+`headerHeight` 의 기본 값은 `31`이고, `footerHeight` 의 기본 값은 `null`이다.
+
+⚠️ 속성 값이 `null` 인 경우 헤더나 푸터가 표시되지 않는다.
+
+| 기본값 적용                                         | 예제 적용                                          |
+| --------------------------------------------------- | -------------------------------------------------- |
+| ![month-gridCell-before](/month-gridCell-before.png) | ![month-gridCell-after](/month-gridCell-after.png) |
+
+```js
+calendar.setTheme({
+  month: {
+    gridCell: {
+      footerHeight: 31,
     },
   },
 });

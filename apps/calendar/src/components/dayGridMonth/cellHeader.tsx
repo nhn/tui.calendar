@@ -13,6 +13,7 @@ import type { TemplateName } from '@src/template/default';
 import type TZDate from '@src/time/date';
 import { isSameDate, isSaturday, isSunday, toFormat } from '@src/time/datetime';
 import { capitalize } from '@src/utils/string';
+import { isNil } from '@src/utils/type';
 
 import type { CommonTheme, MonthTheme } from '@t/theme';
 
@@ -78,6 +79,7 @@ export function CellHeader({
 
   const [, getNow] = usePrimaryTimezone();
   const theme = useCellHeaderTheme();
+  const height = theme.month.gridCell[`${type}Height`];
 
   const ymd = toFormat(date, 'YYYYMMDD');
   const todayYmd = toFormat(getNow(), 'YYYYMMDD');
@@ -93,8 +95,12 @@ export function CellHeader({
   const gridCellDateStyle = { color: getDateColor({ date, theme, renderDate }) };
   const monthGridTemplate = `monthGrid${capitalize(type)}` as TemplateName;
 
+  if (isNil(height)) {
+    return null;
+  }
+
   return (
-    <div className={cls(`grid-cell-${type}`)}>
+    <div className={cls(`grid-cell-${type}`)} style={{ height }}>
       <span className={cls('grid-cell-date')} style={gridCellDateStyle}>
         <Template template={monthGridTemplate} param={model} />
       </span>

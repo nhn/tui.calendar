@@ -2,37 +2,38 @@ import { h } from 'preact';
 import { memo } from 'preact/compat';
 
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
+import { MONTH_CELL_BAR_HEIGHT, MONTH_EVENT_MARGIN_TOP } from '@src/constants/style';
+import { useTheme } from '@src/contexts/themeStore';
 import { EVENT_HEIGHT, isWithinHeight } from '@src/helpers/grid';
 import type EventUIModel from '@src/model/eventUIModel';
+import { monthGridCellSelector } from '@src/selectors/theme';
 
 interface Props {
   name: string;
-  height: number;
+  contentAreaHeight: number;
   eventHeight?: number;
   events: EventUIModel[];
   narrowWeekend: boolean;
   className: string;
-  headerHeight: number;
-  eventTopMargin: number;
 }
 
 export const MonthEvents = memo(function MonthEvents({
-  height,
+  contentAreaHeight,
   eventHeight = EVENT_HEIGHT,
   events,
   name,
   className,
-  headerHeight,
-  eventTopMargin,
 }: Props) {
+  const { headerHeight } = useTheme(monthGridCellSelector);
+
   const dayEvents = events
-    .filter(isWithinHeight(height - headerHeight, eventHeight + eventTopMargin))
+    .filter(isWithinHeight(contentAreaHeight, eventHeight + MONTH_EVENT_MARGIN_TOP))
     .map((uiModel) => (
       <HorizontalEvent
         key={`${name}-DayEvent-${uiModel.cid()}`}
         uiModel={uiModel}
         eventHeight={eventHeight}
-        headerHeight={headerHeight}
+        headerHeight={headerHeight ?? MONTH_CELL_BAR_HEIGHT}
       />
     ));
 

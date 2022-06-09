@@ -40,6 +40,12 @@
   text-align: center;
 }
 
+.grid-cell-footer {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+}
+
 .grid-cell-more-events {
   float: right;
   height: 27px;

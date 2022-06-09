@@ -51,11 +51,6 @@ function initializeMonthOptions(monthOptions: Options['month'] = {}): CalendarMo
     narrowWeekend: false,
     startDayOfWeek: Day.SUN,
     isAlways6Week: true,
-    moreLayerSize: { width: null, height: null },
-    grid: {
-      header: { height: 31 },
-      footer: { height: 31 },
-    },
     visibleEventCount: 6,
     ...monthOptions,
   };

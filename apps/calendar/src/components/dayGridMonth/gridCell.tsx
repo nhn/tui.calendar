@@ -18,55 +18,58 @@ import { cls, toPercent } from '@src/helpers/css';
 import { getExceedCount } from '@src/helpers/grid';
 import { useDOMNode } from '@src/hooks/common/useDOMNode';
 import type EventUIModel from '@src/model/eventUIModel';
+import { monthMoreViewSelector } from '@src/selectors/theme';
 import type TZDate from '@src/time/date';
 import { isWeekend } from '@src/time/datetime';
 import { getPosition, getRelativePosition, getSize } from '@src/utils/dom';
 import { ratio } from '@src/utils/math';
 
+import type { StyleProp } from '@t/components/common';
 import type { PopupPosition } from '@t/store';
 import type { ThemeState } from '@t/theme';
-
-interface Props {
-  date: TZDate;
-  style?: {
-    width?: CSSValue;
-    left?: CSSValue;
-    backgroundColor?: string;
-    height?: CSSValue;
-    top?: CSSValue;
-  };
-  parentContainer?: HTMLDivElement | null;
-  events?: EventUIModel[];
-  height: number;
-}
 
 interface RectSize {
   width: number;
   height: number;
 }
 
-function getSeeMorePopupSize(
-  grid: HTMLDivElement,
-  offsetWidth: number,
-  eventLength: number,
-  options: SeeMoreOptions
-): RectSize {
+type SeeMoreRectParam = {
+  cell: HTMLDivElement;
+  grid: HTMLDivElement;
+  layoutContainer: HTMLDivElement;
+  popupSize: { width: number; height: number };
+};
+
+function getSeeMorePopupSize({
+  grid,
+  offsetWidth,
+  eventLength,
+  layerSize,
+}: {
+  grid: HTMLDivElement;
+  offsetWidth: number;
+  eventLength: number;
+  layerSize: {
+    width: number | null;
+    height: number | null;
+  };
+}): RectSize {
   const minHeight = getSize(grid).height + MONTH_MORE_VIEW_PADDING * 2;
   let width = offsetWidth + MONTH_MORE_VIEW_PADDING * 2;
 
-  const { moreLayerSize, eventHeight, eventMarginTop } = options;
-  const { width: moreViewWidth, height: moreViewHeight } = moreLayerSize;
+  const { width: moreViewWidth, height: moreViewHeight } = layerSize;
 
-  const maxDisplayEventCount = 10;
+  const MAX_DISPLAY_EVENT_COUNT = 10;
 
   width = Math.max(width, MONTH_MORE_VIEW_MIN_WIDTH);
   let height =
     MONTH_MORE_VIEW_HEADER_HEIGHT + MONTH_MORE_VIEW_HEADER_MARGIN_BOTTOM + MONTH_MORE_VIEW_PADDING;
+  const eventHeight = MONTH_EVENT_HEIGHT + MONTH_EVENT_MARGIN_TOP;
 
-  if (eventLength <= maxDisplayEventCount) {
-    height += (eventHeight + eventMarginTop) * eventLength;
+  if (eventLength <= MAX_DISPLAY_EVENT_COUNT) {
+    height += eventHeight * eventLength;
   } else {
-    height += (eventHeight + eventMarginTop) * maxDisplayEventCount;
+    height += eventHeight * MAX_DISPLAY_EVENT_COUNT;
   }
 
   if (moreViewWidth) {
@@ -140,15 +143,21 @@ function usePopupPosition(
   parentContainer?: HTMLDivElement | null,
   layoutContainer?: HTMLDivElement | null
 ) {
+  const { width: moreViewWidth, height: moreViewHeight } = useTheme(monthMoreViewSelector);
+
   const [container, containerRefCallback] = useDOMNode<HTMLDivElement>();
   const [popupPosition, setPopupPosition] = useState<PopupPosition | null>(null);
 
   useEffect(() => {
     if (layoutContainer && parentContainer && container) {
-      const popupSize = getSeeMorePopupSize(parentContainer, container.offsetWidth, eventLength, {
-        moreLayerSize: { width: null, height: null },
-        eventHeight: MONTH_EVENT_HEIGHT,
-        eventMarginTop: MONTH_EVENT_MARGIN_TOP,
+      const popupSize = getSeeMorePopupSize({
+        grid: parentContainer,
+        offsetWidth: container.offsetWidth,
+        eventLength,
+        layerSize: {
+          width: moreViewWidth,
+          height: moreViewHeight,
+        },
       });
 
       const rect = getSeeMorePopupRect({
@@ -160,7 +169,7 @@ function usePopupPosition(
 
       setPopupPosition(rect);
     }
-  }, [layoutContainer, container, eventLength, parentContainer]);
+  }, [layoutContainer, container, eventLength, parentContainer, moreViewWidth, moreViewHeight]);
 
   return { popupPosition, containerRefCallback };
 }
@@ -169,7 +178,15 @@ function weekendBackgroundColorSelector(theme: ThemeState) {
   return theme.month.weekend.backgroundColor;
 }
 
-export function GridCell({ date, events = [], style, parentContainer, height }: Props) {
+interface Props {
+  date: TZDate;
+  style?: StyleProp;
+  parentContainer?: HTMLDivElement | null;
+  events?: EventUIModel[];
+  contentAreaHeight: number;
+}
+
+export function GridCell({ date, events = [], style, parentContainer, contentAreaHeight }: Props) {
   const layoutContainer = useLayoutContainer();
   const { showSeeMorePopup } = useDispatch('popup');
   const backgroundColor = useTheme(weekendBackgroundColorSelector);
@@ -190,7 +207,11 @@ export function GridCell({ date, events = [], style, parentContainer, height }: 
     }
   }, [date, events, popupPosition, showSeeMorePopup]);
 
-  const exceedCount = getExceedCount(events, height, MONTH_EVENT_HEIGHT);
+  const exceedCount = getExceedCount(
+    events,
+    contentAreaHeight,
+    MONTH_EVENT_HEIGHT + MONTH_EVENT_MARGIN_TOP
+  );
 
   return (
     <div

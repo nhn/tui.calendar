@@ -30,18 +30,6 @@ export interface MonthOptions {
   isAlways6Week?: boolean;
   workweek?: boolean;
   visibleEventCount?: number;
-  moreLayerSize?: {
-    width?: string | null;
-    height?: string | null;
-  };
-  grid?: {
-    header?: {
-      height?: number;
-    };
-    footer?: {
-      height?: number;
-    };
-  };
 }
 
 export interface GridSelectionOptions {

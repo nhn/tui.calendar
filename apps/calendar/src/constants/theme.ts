@@ -113,6 +113,12 @@ export const DEFAULT_MONTH_THEME: DeepRequired<MonthTheme> = {
     border: '1px solid #d5d5d5',
     boxShadow: '0 2px 6px 0 rgba(0, 0, 0, 0.1)',
     backgroundColor: 'white',
+    width: null,
+    height: null,
+  },
+  gridCell: {
+    headerHeight: 31,
+    footerHeight: null,
   },
   moreViewTitle: {
     backgroundColor: 'inherit',

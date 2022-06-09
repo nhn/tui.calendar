@@ -428,18 +428,6 @@ interface MonthOptions {
   isAlways6Week?: boolean;
   workweek?: boolean;
   visibleEventCount?: number;
-  moreLayerSize?: {
-    width?: string | null;
-    height?: string | null;
-  };
-  grid?: {
-    header?: {
-      height?: number;
-    };
-    footer?: {
-      height?: number;
-    };
-  };
 }
 ```
 
@@ -451,11 +439,6 @@ const DEFAULT_MONTH_OPTIONS = {
   narrowWeekend: false,
   startDayOfWeek: 0,
   isAlways6Week: true,
-  moreLayerSize: { width: null, height: null },
-  grid: {
-    header: { height: 31 },
-    footer: { height: 31 },
-  },
   visibleEventCount: 6,
 };
 ```
@@ -606,43 +589,6 @@ calendar.setOptions({
 - 기본값: `6`
 
 월간뷰에서 각 날짜별 최대로 보여지는 일정의 갯수를 지정한다. 기본값은 `6`이지만 6개가 전부 표시되지 않는 높이라면 가능한 최대의 일정이 보여진다.
-
-| 기본값 적용  | 예제 적용    |
-| ------------ | ------------ |
-| 구현 후 추가 | 구현 후 추가 |
-
-[⬆ 목록으로 돌아가기](#month)
-
-#### month.moreLayerSize
-
-- 타입: `{ width?: string | null; height?: string | null }`
-- 기본값: `{ width: null, height: null }`
-
-월간뷰에서 일정 더보기 팝업창의 크기를 지정한다. 기본값은 `{ width: null, height: null }`이며, `null`을 지정하면 기본값으로 설정된다. CSS 문자열 값을 지정할 수 있다.
-
-```js
-caches.setOptions({
-  month: {
-    moreLayerSize: {
-      width: '200px',
-      height: '200px',
-    },
-  },
-});
-```
-
-| 기본값 적용  | 예제 적용    |
-| ------------ | ------------ |
-| 구현 후 추가 | 구현 후 추가 |
-
-[⬆ 목록으로 돌아가기](#month)
-
-#### month.grid
-
-- 타입: `{ header?: { height?: number; }; footer?: { height?: number; }; }`
-- 기본값: `{ header: { height: 31 }, footer: { height: 31 } }`
-
-월간뷰에서 각 날짜 셀의 헤더와 푸터의 높이를 지정한다. 기본값은 `{ header: { height: 31 }, footer: { height: 31 } }`이며, 해당 `숫자px` 값으로 지정된다.
 
 | 기본값 적용  | 예제 적용    |
 | ------------ | ------------ |

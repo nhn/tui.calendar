@@ -19,19 +19,7 @@ Object {
       "fri",
       "sat",
     ],
-    "grid": Object {
-      "footer": Object {
-        "height": 31,
-      },
-      "header": Object {
-        "height": 31,
-      },
-    },
     "isAlways6Week": true,
-    "moreLayerSize": Object {
-      "height": null,
-      "width": null,
-    },
     "narrowWeekend": false,
     "startDayOfWeek": 0,
     "visibleEventCount": 6,
@@ -110,6 +98,10 @@ Object {
         "backgroundColor": "inherit",
         "borderLeft": "none",
       },
+      "gridCell": Object {
+        "footerHeight": null,
+        "headerHeight": 31,
+      },
       "holidayExceptThisMonth": Object {
         "color": "rgba(255, 64, 64, 0.4)",
       },
@@ -117,6 +109,8 @@ Object {
         "backgroundColor": "white",
         "border": "1px solid #d5d5d5",
         "boxShadow": "0 2px 6px 0 rgba(0, 0, 0, 0.1)",
+        "height": null,
+        "width": null,
       },
       "moreViewTitle": Object {
         "backgroundColor": "inherit",
