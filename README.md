@@ -11,7 +11,7 @@
 You're now looking at the `main` branch of the latest version of TOAST UI Calendar. You can try [the alpha version](https://github.com/nhn/tui.calendar/releases/tag/v2.0.0-alpha.0) of the new calendar.
 
 ```sh
-npm install @toast-ui/calendar@2.0.0-alpha
+npm install --save @toast-ui/calendar@2.0.0-alpha.0
 ```
 
 For the current(and legacy) version, Please check out the [`v1` branch](https://github.com/nhn/tui.calendar/tree/v1).

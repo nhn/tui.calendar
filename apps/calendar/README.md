@@ -23,7 +23,7 @@
 You're now looking at the `main` branch of the latest version of TOAST UI Calendar. You can try [the alpha version](https://github.com/nhn/tui.calendar/releases/tag/v2.0.0-alpha.0) of the new calendar.
 
 ```sh
-npm install @toast-ui/calendar@2.0.0-alpha
+npm install --save @toast-ui/calendar@2.0.0-alpha.0
 ```
 
 For the current(and legacy) version, Please check out the [`v1` branch](https://github.com/nhn/tui.calendar/tree/v1).
@@ -35,7 +35,7 @@ TOAST UI Calendar applies Google Analytics (GA) to collect statistics on the use
 To disable GA use the [options](https://nhn.github.io/tui.calendar/2.0.0-alpha/?path=/story/documentation-%ED%95%9C%EA%B5%AD%EC%96%B4-api-%EC%98%B5%EC%85%98--page#usagestatistics):
 
 ```js
-var calendar = new Calendar('#calendar', {
+const calendar = new Calendar('#calendar', {
   usageStatistics: false
 });
 ```
