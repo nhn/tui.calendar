@@ -32,7 +32,7 @@ For the current(and legacy) version, Please check out the [`v1` branch](https://
 
 TOAST UI Calendar applies Google Analytics (GA) to collect statistics on the use of open source, in order to identify how widely TOAST UI Calendar is used throughout the world. It also serves as important index to determine the future course of projects. location.hostname (e.g. > “ui.toast.com") is to be collected and the sole purpose is nothing but to measure statistics on the usage. To disable GA, use the following `usageStatistics` option when creating a calendar.
 
-To disable GA use the [options](https://nhn.github.io/tui.calendar/latest/global.html#Options):
+To disable GA use the [options](https://nhn.github.io/tui.calendar/2.0.0-alpha/?path=/story/documentation-%ED%95%9C%EA%B5%AD%EC%96%B4-api-%EC%98%B5%EC%85%98--page#usagestatistics):
 
 ```js
 var calendar = new Calendar('#calendar', {
@@ -121,13 +121,13 @@ Place a `<div></div>` where you want TOAST UI Calendar rendered.
 #### Using namespace in browser environment
 
 ```javascript
-var Calendar = tui.Calendar;
+const Calendar = tui.Calendar;
 ```
 
 #### Using module format in node environment
 
 ```javascript
-var Calendar = require('tui-calendar'); /* CommonJS */
+const Calendar = require('tui-calendar'); /* CommonJS */
 require("tui-calendar/dist/tui-calendar.css");
 
 // If you use the default popups, use this.
@@ -144,14 +144,14 @@ import 'tui-date-picker/dist/tui-date-picker.css';
 import 'tui-time-picker/dist/tui-time-picker.css';
 ```
 
-Then you can create a calendar instance with [options](https://nhn.github.io/tui.calendar/latest/Options) to set configuration.
+Then you can create a calendar instance with [options](https://nhn.github.io/tui.calendar/2.0.0-alpha/?path=/story/documentation-%ED%95%9C%EA%B5%AD%EC%96%B4-api-%EC%98%B5%EC%85%98--page) to set configuration.
 
 ```javascript
-var calendar = new Calendar('#calendar', {
+const calendar = new Calendar('#calendar', {
   defaultView: 'month',
   taskView: true,
   template: {
-    monthDayname: function(dayname) {
+    monthDayname: (dayname) => {
       return '<span class="calendar-week-dayname-name">' + dayname.label + '</span>';
     }
     ...

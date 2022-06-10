@@ -27,10 +27,10 @@ The functionality of TOAST UI Calendar is available when using the Plain JavaScr
 
 🚧 Documents are written in Korean at this moment, but we will add english version soon.
 
-- [Getting Started](https://github.com/nhn/tui.calendar/blob/main/docs/getting-started.md)
-- [APIs](https://nhn.github.io/tui.calendar/2.0.0-alpha)
+- [Getting Started (Korean)](https://nhn.github.io/tui.calendar/2.0.0-alpha/?path=/story/documentation-%ED%95%9C%EA%B5%AD%EC%96%B4-%EA%B0%80%EC%9D%B4%EB%93%9C-%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0--page)
+- [APIs (Korean)](https://nhn.github.io/tui.calendar/2.0.0-alpha)
 - v2.0 Migration Guide
-  - [한국어](https://github.com/nhn/tui.calendar/blob/main/docs/v2.0-migration-guide-ko.md)
+  - [한국어](https://nhn.github.io/tui.calendar/2.0.0-alpha/?path=/story/documentation-%ED%95%9C%EA%B5%AD%EC%96%B4-%EA%B0%80%EC%9D%B4%EB%93%9C-v2-%EB%A7%88%EC%9D%B4%EA%B7%B8%EB%A0%88%EC%9D%B4%EC%85%98-%EA%B0%80%EC%9D%B4%EB%93%9C--page)
 
 ## 📅 Features
 
