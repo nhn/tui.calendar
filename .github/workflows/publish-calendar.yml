@@ -21,11 +21,11 @@ jobs:
       - name: Cancel workflow
         if: steps.cpv.outputs.is-new-version == 'false'
         uses: andymckay/cancel-action@0.2
-  test:
-    needs: check-version
-    uses: ./.github/workflows/test.yml
+  # test:
+  #   needs: check-version
+  #   uses: ./.github/workflows/test.yml
   publish-npm:
-    needs: test
+    # needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
