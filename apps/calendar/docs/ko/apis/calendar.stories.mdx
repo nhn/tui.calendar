@@ -763,8 +763,8 @@ interface SelectDateTimeInfo {
 
 이 때 `selectDateTime` 이벤트를 통해 선택된 시간의 정보를 얻을 수 있다.
 
-![월간 뷰에서 날짜 선택](/select-date-time-1.gif)
-![주간 / 일간 뷰에서 시간 선택](/select-date-time-2.gif)
+![월간 뷰에서 날짜 선택](./select-date-time-1.gif)
+![주간 / 일간 뷰에서 시간 선택](./select-date-time-2.gif)
 
 [⬆️ 목록으로 돌아가기](#인스턴스-이벤트-목록)
 
@@ -806,9 +806,9 @@ interface UpdatedEventInfo {
 다음의 경우 `beforeUpdateEvent` 가 실행된다.
 
 - 캘린더 인스턴스 옵션 중 `useFormPopup` 와 `useDetailPopup` 가 모두 `true` 이고, 이벤트 상세 팝업을 통해 이벤트를 수정 후 Update 버튼을 누를 때
-  - ![팝업을 통한 이벤트 실행](/before-update-event-1.gif)
+  - ![팝업을 통한 이벤트 실행](./before-update-event-1.gif)
 - 캘린더 인스턴스 옵션 중 `isReadOnly` 가 `true` 가 아니며, 개별 이벤트의 속성에 `isReadOnly` 가 `true` 가 아닌 상태에서 드래그 앤 드랍으로 일정을 이동하거나 리사이징할 때
-  - ![드래그 앤 드랍을 통한 이벤트 실행](/before-update-event-2.gif)
+  - ![드래그 앤 드랍을 통한 이벤트 실행](./before-update-event-2.gif)
 
 ```js
 // 이벤트를 수정하는 기본적인 예
@@ -827,7 +827,7 @@ calendar.on('beforeUpdateEvent', ({ event, change }) => {
 
 이 때 Delete 버튼을 누르면 `beforeDeleteEvent` 가 실행된다.
 
-![팝업을 통해 beforeDeleteEvent 이벤트 실행](/before-delete-event.gif)
+![팝업을 통해 beforeDeleteEvent 이벤트 실행](./before-delete-event.gif)
 
 ```js
 // 일정을 삭제하는 아주 기본적인 예
@@ -854,7 +854,7 @@ calendar.on('beforeDeleteEvent', (eventObj) => {
 
 **월간 뷰에서는 이 이벤트가 발생하지 않는다.**
 
-![날짜를 클릭할 때 clickDayname 이벤트 실행](/click-dayname.gif)
+![날짜를 클릭할 때 clickDayname 이벤트 실행](./click-dayname.gif)
 
 ### clickEvent
 
@@ -888,7 +888,7 @@ interface MoreEventsBtnInfo {
 
 월간 뷰에서 한 날짜에 해당되는 이벤트 많아 더 이상 화면에 표시할 수 없는 상태일 때 'more' 버튼이 표시된다. 이 버튼을 클릭하면 `clickMoreEventsBtn` 이벤트가 실행된다.
 
-![월간 뷰의 more 이벤트 버튼](/click-more-events-btn.png)
+![월간 뷰의 more 이벤트 버튼](./click-more-events-btn.png)
 
 [⬆️ 목록으로 돌아가기](#인스턴스-이벤트-목록)
 
@@ -899,7 +899,7 @@ interface MoreEventsBtnInfo {
 캘린더 인스턴스 옵션에서 [타임존](/story/documentation-한국어-api-옵션--page#timezone)을 두 개 이상 사용하고, `week.showTimezoneCollapsedButton` 이 `true` 인 경우
 주간 / 일간 뷰에서 타임존을 접거나 펼칠 수 있는 버튼이 표시된다. 이 버튼을 클릭하면 `clickTimezonesCollapseBtn` 이벤트가 실행된다.
 
-![타임존 접기 버튼](/click-timezones-collapse-btn.png)
+![타임존 접기 버튼](./click-timezones-collapse-btn.png)
 
 ```js
 // 버튼을 누를 때 주간 / 일간 뷰의 왼쪽 영역을 조절하는 예제
