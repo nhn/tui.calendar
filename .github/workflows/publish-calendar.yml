@@ -1,0 +1,72 @@
+name: Publish calendar
+on: [workflow_dispatch]
+env:
+  WORKING_DIRECTORY: ./apps/calendar
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v3
+      - name: Check the package version
+        id: cpv
+        uses: PostHog/check-package-version@v2
+        with:
+          path: ${{ env.WORKING_DIRECTORY }}
+      - name: Log when unchanged
+        if: steps.cpv.outputs.is-new-version == 'false'
+        run: 'echo "No version change"'
+      - name: Cancel workflow
+        if: steps.cpv.outputs.is-new-version == 'false'
+        uses: andymckay/cancel-action@0.2
+  test:
+    needs: check-version
+    uses: ./.github/workflows/test.yml
+  publish-npm:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        uses: ./.github/composite-actions/install-dependencies
+      - name: Build calendar
+        run: |
+          npm run build:calendar
+      - name: Check package version
+        id: cpv
+        uses: PostHog/check-package-version@v2
+        with:
+          path: ${{ env.WORKING_DIRECTORY }}
+      - name: Create new version tag
+        run: |
+          git tag v${{ steps.cpv.outputs.committed-version }}
+      - name: Push new version tag
+        run: |
+          git push origin v${{ steps.cpv.outputs.committed-version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish the package to npm (Calendar)
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: |
+          npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+  # publish-cdn:
+  #   needs: publish-npm
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout branch
+  #       uses: actions/checkout@v3
+  #     - uses: ./.github/actions/install-dependencies
+  #     - name: Upload files to CDN
+  #       run: |
+  #         npm run publish:cdn
+  #       env:
+  #         TOAST_CLOUD_TENENTID: ${{ secrets.TOAST_CLOUD_TENENTID }}
+  #         TOAST_CLOUD_STORAGEID: ${{ secrets.TOAST_CLOUD_STORAGEID }}
+  #         TOAST_CLOUD_USERNAME: ${{ secrets.TOAST_CLOUD_USERNAME }}
+  #         TOAST_CLOUD_PASSWORD: ${{ secrets.TOAST_CLOUD_PASSWORD }}
+  # publish-docs:
+  #   needs: publish-npm
+  #   runs-on: ubuntu-latest
+  #   steps:
