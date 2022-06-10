@@ -16,6 +16,7 @@ import { EventBusImpl } from '@src/utils/eventBus';
 import { noop } from '@src/utils/noop';
 
 import type { PropsWithChildren } from '@t/components/common';
+import type { GridSelectionData } from '@t/components/gridSelection';
 import type { ExternalEventTypes } from '@t/eventBus';
 import type { GridPosition } from '@t/grid';
 import type { GridSelectionOptions } from '@t/options';

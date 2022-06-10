@@ -2,8 +2,8 @@ import type { Locator, Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 
 import type TZDate from '../src/time/date';
-import type { EventObject } from '../types/events';
-import type { FormattedTimeString } from '../types/time/datetime';
+import type { EventObject } from '../src/types/events';
+import type { FormattedTimeString } from '../src/types/time/datetime';
 import type { BoundingBox } from './types';
 
 export function getPrefixedClassName(className: string) {

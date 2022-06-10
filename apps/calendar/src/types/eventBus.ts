@@ -1,34 +1,34 @@
 import type { EventObject, EventObjectWithDefaultValues } from '@t/events';
 
-type AnyFunc = (...args: any[]) => any;
+export type AnyFunc = (...args: any[]) => any;
 
-interface SelectDateTimeInfo {
+export interface SelectDateTimeInfo {
   start: Date;
   end: Date;
   isAllday: boolean;
   nativeEvent?: MouseEvent;
 }
 
-interface UpdatedEventInfo {
+export interface UpdatedEventInfo {
   event: EventObjectWithDefaultValues;
   changes: EventObject;
 }
 
-interface DaynameInfo {
+export interface DaynameInfo {
   date: string;
 }
 
-interface EventInfo {
+export interface EventInfo {
   event: EventObjectWithDefaultValues;
   nativeEvent: MouseEvent;
 }
 
-interface MoreEventsButton {
+export interface MoreEventsButton {
   date: Date;
   target: HTMLDivElement; // NOTE: More events popup element
 }
 
-type ExternalEventTypes = {
+export type ExternalEventTypes = {
   selectDateTime: (info: SelectDateTimeInfo) => void;
   beforeCreateEvent: (event: EventObject) => void;
   beforeUpdateEvent: (updatedEventInfo: UpdatedEventInfo) => void;

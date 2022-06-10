@@ -1,8 +1,8 @@
 import type { Page } from '@playwright/test';
 import { expect, test } from '@playwright/test';
 
+import type { EventObject } from '../../src/types/events';
 import { mockMonthViewEventsFixed } from '../../stories/mocks/mockMonthViewEvents';
-import type { EventObject } from '../../types/events';
 import { MONTH_VIEW_PAGE_URL } from '../configs';
 import { Direction } from '../types';
 import {

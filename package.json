@@ -91,7 +91,7 @@
     "test:playwright": "playwright test",
     "test:playwright:inspect": "playwright test --debug",
     "test:playwright:watch": "chokidar apps/calendar/playwright/**/*.spec.ts -c 'npm run test:playwright'",
-    "prepare": "husky install && ts-patch install -s && npm run build:date"
+    "prepare": "ts-patch install -s && husky install && ts-patch install -s && npm run build:date"
   },
   "workspaces": [
     "apps/*",

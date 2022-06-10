@@ -11,11 +11,11 @@
     "resolveJsonModule": true,
     "moduleResolution": "node",
     "strict": true,
-    "outDir": "dist/",
+    "outDir": "./types",
     "baseUrl": ".",
     "paths": {
       "@src/*": ["./src/*"],
-      "@t/*": ["./types/*"],
+      "@t/*": ["./src/types/*"],
       "@stories/*": ["./stories/*"]
     },
     "sourceMap": true,
@@ -23,10 +23,7 @@
     "types": ["webpack-env", "node", "jest"]
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "stories/**/*.ts",
-    "stories/**/*.tsx",
-    "types/**/*"
+    "src/**/*",
+    "stories/**/*"
   ]
 }

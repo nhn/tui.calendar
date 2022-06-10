@@ -39,17 +39,13 @@
     "task",
     "allday"
   ],
-  "files": [
-    "dist",
-    "index.d.ts",
-    "types"
-  ],
+  "files": ["dist", "types"],
   "dependencies": {
     "tui-date-picker": "^4.0.1",
     "tui-time-picker": "^2.0.1"
   },
   "scripts": {
-    "check-types": "tsc --project ./tsconfig.json --noEmit",
+    "check-types": "tsc -p ./tsconfig.json --noEmit",
     "validate": "npm run check-types && npm run lint",
     "lint": "eslint .",
     "cpy-dist2doc": "mkdir -p doc/dist && cp -f -r dist doc",
@@ -58,6 +54,7 @@
     "build:modern": "webpack --config webpack.config.js && webpack --config webpack.config.js --env minify",
     "build:ie11": "webpack --config webpack.config.js --env ie11 && webpack --config webpack.config.js --env minify ie11",
     "build:esm": "node scripts/build-esm.js",
+    "emit-declaration": "tsc -p ./tsconfig.declaration.json",
     "analyze": "webpack --config webpack.config.js --env --profile --json > stats.json && webpack-bundle-analyzer stats.json ./dist",
     "storybook": "start-storybook -p 6006",
     "storybook:build": "build-storybook",

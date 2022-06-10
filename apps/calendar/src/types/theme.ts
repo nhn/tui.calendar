@@ -1,6 +1,6 @@
 import type { DeepPartial } from 'ts-essentials';
 
-type CommonTheme = {
+export type CommonTheme = {
   backgroundColor: string;
   border: string;
   gridSelection: {
@@ -13,36 +13,36 @@ type CommonTheme = {
   today: { color: string };
 };
 
-type WeekDayNameTheme = {
+export type WeekDayNameTheme = {
   borderLeft: string;
   borderTop: string;
   borderBottom: string;
   backgroundColor: string;
 };
 
-type MonthDayNameTheme = {
+export type MonthDayNameTheme = {
   borderLeft: string;
   backgroundColor: string;
 };
 
-type DayGridTheme = {
+export type DayGridTheme = {
   borderRight: string;
   backgroundColor: string;
 };
 
-type DayGridLeftTheme = {
-  borderRight: string;
-  backgroundColor: string;
-  width: string;
-};
-
-type TimeGridLeftTheme = {
+export type DayGridLeftTheme = {
   borderRight: string;
   backgroundColor: string;
   width: string;
 };
 
-type WeekTheme = {
+export type TimeGridLeftTheme = {
+  borderRight: string;
+  backgroundColor: string;
+  width: string;
+};
+
+export type WeekTheme = {
   dayname: WeekDayNameTheme;
   dayGrid: DayGridTheme;
   dayGridLeft: DayGridLeftTheme;
@@ -65,7 +65,7 @@ type WeekTheme = {
   gridSelection: { color: string };
 };
 
-type MonthTheme = {
+export type MonthTheme = {
   dayExceptThisMonth: { color: string };
   dayname: MonthDayNameTheme;
   holidayExceptThisMonth: { color: string };
@@ -86,19 +86,19 @@ type MonthTheme = {
   weekend: { backgroundColor: string };
 };
 
-type ThemeState = {
+export type ThemeState = {
   common: CommonTheme;
   week: WeekTheme;
   month: MonthTheme;
 };
 
-type ThemeDispatchers = {
+export type ThemeDispatchers = {
   setTheme: (theme: DeepPartial<ThemeState>) => void;
   setCommonTheme: (commonTheme: DeepPartial<CommonTheme>) => void;
   setWeekTheme: (weekTheme: DeepPartial<WeekTheme>) => void;
   setMonthTheme: (monthTheme: DeepPartial<MonthTheme>) => void;
 };
 
-type ThemeStore = ThemeState & {
+export type ThemeStore = ThemeState & {
   dispatch: ThemeDispatchers;
 };

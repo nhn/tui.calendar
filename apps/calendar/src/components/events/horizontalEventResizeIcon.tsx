@@ -2,6 +2,8 @@ import { h } from 'preact';
 
 import { cls } from '@src/helpers/css';
 
+import type { MouseEventListener } from '@t/util';
+
 interface Props {
   onMouseDown?: MouseEventListener;
 }

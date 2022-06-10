@@ -1,16 +1,16 @@
-interface GridSelectionData {
+export interface GridSelectionData {
   startRowIndex: number;
   startColumnIndex: number;
   endRowIndex: number;
   endColumnIndex: number;
 }
 
-interface GridSelectionDataByRow {
+export interface GridSelectionDataByRow {
   startCellIndex: number;
   endCellIndex: number;
 }
 
-interface TimeGridSelectionDataByCol {
+export interface TimeGridSelectionDataByCol {
   startRowIndex: number;
   endRowIndex: number;
   isStartingColumn: boolean;

@@ -1,6 +1,6 @@
 import type TZDate from '@src/time/date';
 
-type RawDate = {
+export type RawDate = {
   y: number;
   M: number;
   d: number;
@@ -10,14 +10,16 @@ type RawDate = {
   ms: number;
 };
 
-interface CellStyle {
+export interface CellStyle {
   width: number;
   left: number;
 }
 
-interface CellInfo extends CellStyle {
+export interface CellInfo extends CellStyle {
   date: TZDate;
 }
 
-type HoursString = `${2}${0 | 1 | 2 | 3 | 4}` | `${0 | 1}${0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9}`;
+export type HoursString =
+  | `${2}${0 | 1 | 2 | 3 | 4}`
+  | `${0 | 1}${0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9}`;
 export type FormattedTimeString = `${HoursString}:${0 | 3}0`;

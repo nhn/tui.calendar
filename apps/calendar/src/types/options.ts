@@ -6,8 +6,8 @@ import type { EventObject } from '@t/events';
 import type { TemplateConfig } from '@t/template';
 import type { ThemeState } from '@t/theme';
 
-type EventView = 'allday' | 'time';
-type TaskView = 'milestone' | 'task';
+export type EventView = 'allday' | 'time';
+export type TaskView = 'milestone' | 'task';
 
 export interface WeekOptions {
   startDayOfWeek?: number;
@@ -79,13 +79,13 @@ export interface Options {
   timezone?: TimezoneOptions;
 }
 
-interface ViewInfoUserInput {
+export interface ViewInfoUserInput {
   component: ComponentType<any>;
   router?: {
     linkTitle: string;
   };
 }
 
-type ViewListMap = {
+export type ViewListMap = {
   [key: string]: ViewInfoUserInput;
 };

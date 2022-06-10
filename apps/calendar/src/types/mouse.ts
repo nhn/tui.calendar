@@ -3,9 +3,9 @@
  *
  * Can be `clientX` & `clientY` or `pageX`, `pageY`.
  */
-interface Coordinates {
+export interface Coordinates {
   x: number;
   y: number;
 }
 
-type ClientMousePosition = Pick<MouseEvent, 'clientX' | 'clientY'>;
+export type ClientMousePosition = Pick<MouseEvent, 'clientX' | 'clientY'>;

@@ -13,8 +13,8 @@ import type TZDate from '@src/time/date';
 import type { EventState } from '@t/events';
 import type { GridSelectionOptions, MonthOptions, WeekOptions } from '@t/options';
 
-type CalendarMonthOptions = Required<MonthOptions>;
-type CalendarWeekOptions = Required<WeekOptions>;
+export type CalendarMonthOptions = Required<MonthOptions>;
+export type CalendarWeekOptions = Required<WeekOptions>;
 
 interface OptionsData {
   useFormPopup: boolean;
@@ -24,7 +24,7 @@ interface OptionsData {
   gridSelection: GridSelectionOptions;
 }
 
-interface Rect {
+export interface Rect {
   top: number;
   left: number;
   width: number;
@@ -38,18 +38,18 @@ interface BasePopupParam {
   close?: () => void;
 }
 
-type PopupParamMap = {
+export type PopupParamMap = {
   seeMore: SeeMorePopupParam;
   form: EventFormPopupParam;
   detail: EventDetailPopupParam;
 };
 
-interface SeeMorePopupParam extends BasePopupParam {
+export interface SeeMorePopupParam extends BasePopupParam {
   date: TZDate;
   events: EventUIModel[];
 }
 
-interface EventFormPopupParam extends BasePopupParam {
+export interface EventFormPopupParam extends BasePopupParam {
   isCreationPopup: boolean;
   event?: EventModel;
   title: string;
@@ -61,18 +61,18 @@ interface EventFormPopupParam extends BasePopupParam {
   eventState?: EventState;
 }
 
-interface EventDetailPopupParam extends BasePopupParam {
+export interface EventDetailPopupParam extends BasePopupParam {
   event: EventModel;
 }
 
-type PopupPosition = {
+export type PopupPosition = {
   top?: number | string;
   bottom?: number | string;
   left?: number | string;
   right?: number | string;
 };
 
-type PopupArrowPointPosition = {
+export type PopupArrowPointPosition = {
   top: number;
   left: number;
 };

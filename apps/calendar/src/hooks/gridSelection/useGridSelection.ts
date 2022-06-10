@@ -12,7 +12,9 @@ import type { GridSelectionType } from '@src/slices/gridSelection';
 import type TZDate from '@src/time/date';
 import { isPresent } from '@src/utils/type';
 
+import type { GridSelectionData } from '@t/components/gridSelection';
 import type { GridPosition, GridPositionFinder } from '@t/grid';
+import type { Coordinates } from '@t/mouse';
 import type { CalendarState } from '@t/store';
 
 function sortDates(a: TZDate, b: TZDate) {

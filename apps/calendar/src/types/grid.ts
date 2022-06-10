@@ -1,5 +1,7 @@
 import type TZDate from '@src/time/date';
 
+import type { ClientMousePosition } from '@t/mouse';
+
 import type { FormattedTimeString } from './time/datetime';
 
 export interface GridUIModel {
