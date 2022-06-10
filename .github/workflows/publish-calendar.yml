@@ -1,5 +1,4 @@
 name: Publish calendar
-description: Publish @toast-ui/calendar except wrappers.
 on: [workflow_dispatch]
 env:
   WORKING_DIRECTORY: ./apps/calendar
@@ -9,8 +8,6 @@ jobs:
     steps:
       - name: Checkout branch
         uses: actions/checkout@v3
-        with:       # for alpha release
-          ref: next # for alpha release
       - name: Check the package version
         id: cpv
         uses: PostHog/check-package-version@v2
@@ -23,15 +20,13 @@ jobs:
         if: steps.cpv.outputs.is-new-version == 'false'
         uses: andymckay/cancel-action@0.2
   test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: ./.github/workflows/test.yml
+    needs: check-version
+    uses: ./.github/workflows/test.yml
   publish-npm:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        with:       # for alpha release
-          ref: next # for alpha release
       - name: Install dependencies
         uses: ./.github/composite-actions/install-dependencies
       - name: Build calendar
@@ -47,16 +42,17 @@ jobs:
           git tag v${{ steps.cpv.outputs.committed-version }}
       - name: Push new version tag
         run: |
-          git push origin v${{ steps.tgv.outputs.target-version }}
+          git push origin v${{ steps.cpv.outputs.committed-version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish the package to npm (Calendar)
+        working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
           npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
   # publish-cdn:
-  #   needs: publish-package
+  #   needs: publish-npm
   #   runs-on: ubuntu-latest
   #   steps:
   #     - name: Checkout branch
@@ -70,4 +66,7 @@ jobs:
   #         TOAST_CLOUD_STORAGEID: ${{ secrets.TOAST_CLOUD_STORAGEID }}
   #         TOAST_CLOUD_USERNAME: ${{ secrets.TOAST_CLOUD_USERNAME }}
   #         TOAST_CLOUD_PASSWORD: ${{ secrets.TOAST_CLOUD_PASSWORD }}
-  # publish-docs
+  # publish-docs:
+  #   needs: publish-npm
+  #   runs-on: ubuntu-latest
+  #   steps:
