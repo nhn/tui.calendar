@@ -46,9 +46,7 @@
   },
   "scripts": {
     "check-types": "tsc -p ./tsconfig.json --noEmit",
-    "validate": "npm run check-types && npm run lint",
-    "lint": "eslint .",
-    "cpy-dist2doc": "mkdir -p doc/dist && cp -f -r dist doc",
+    "lint": "npm run check-types && eslint .",
     "release-note": "tuie",
     "build": "rm -rf dist && concurrently 'npm:build:*'",
     "build:modern": "webpack --config webpack.config.js && webpack --config webpack.config.js --env minify",
@@ -56,11 +54,9 @@
     "build:esm": "node scripts/build-esm.js",
     "emit-declaration": "tsc -p ./tsconfig.declaration.json",
     "analyze": "webpack --config webpack.config.js --env --profile --json > stats.json && webpack-bundle-analyzer stats.json ./dist",
+    "develop": "npm run storybook",
     "storybook": "start-storybook -p 6006",
     "storybook:build": "build-storybook",
-    "storybook:build:docs": "STORYBOOK_ENV=docs build-storybook",
-    "ts2js": "tsc --outDir tmpdoc --sourceMap false --target ES2015 --noEmit false",
-    "doc:dev": "npm run build:prod && npm run ts2js && tuidoc --serv",
-    "doc": "npm run ts2js && tuidoc"
+    "storybook:build:docs": "STORYBOOK_ENV=docs build-storybook -o ../../_docs"
   }
 }
