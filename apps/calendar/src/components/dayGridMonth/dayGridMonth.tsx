@@ -11,6 +11,7 @@ import {
   MONTH_CELL_BAR_HEIGHT,
   MONTH_CELL_PADDING_TOP,
   MONTH_EVENT_HEIGHT,
+  MONTH_EVENT_MARGIN_TOP,
 } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
 import { useTheme } from '@src/contexts/themeStore';
@@ -21,6 +22,7 @@ import { useCalendarData } from '@src/hooks/calendar/useCalendarData';
 import { useDOMNode } from '@src/hooks/common/useDOMNode';
 import { useGridSelection } from '@src/hooks/gridSelection/useGridSelection';
 import { calendarSelector, optionsSelector } from '@src/selectors';
+import { monthVisibleEventCountSelector } from '@src/selectors/options';
 import { monthGridCellSelector } from '@src/selectors/theme';
 import type TZDate from '@src/time/date';
 import { getSize } from '@src/utils/dom';
@@ -37,7 +39,8 @@ interface Props {
   cellWidthMap: string[][];
 }
 
-function useCellContentAreaHeight() {
+function useCellContentAreaHeight(eventHeight: number) {
+  const visibleEventCount = useStore(monthVisibleEventCountSelector);
   const { headerHeight: themeHeaderHeight, footerHeight: themeFooterHeight } =
     useTheme(monthGridCellSelector);
 
@@ -50,9 +53,12 @@ function useCellContentAreaHeight() {
       const headerHeight = MONTH_CELL_PADDING_TOP + (themeHeaderHeight ?? MONTH_CELL_BAR_HEIGHT);
       const footerHeight = themeFooterHeight ?? 0;
 
-      setCellContentAreaHeight(rowHeight - headerHeight - footerHeight);
+      const baseContentAreaHeight = rowHeight - headerHeight - footerHeight;
+      const visibleEventCountHeight = visibleEventCount * (eventHeight + MONTH_EVENT_MARGIN_TOP);
+
+      setCellContentAreaHeight(Math.min(baseContentAreaHeight, visibleEventCountHeight));
     }
-  }, [themeFooterHeight, themeHeaderHeight]);
+  }, [themeFooterHeight, themeHeaderHeight, eventHeight, visibleEventCount]);
 
   return { ref, cellContentAreaHeight };
 }
@@ -60,7 +66,8 @@ function useCellContentAreaHeight() {
 export function DayGridMonth({ dateMatrix = [], rowInfo = [], cellWidthMap = [] }: Props) {
   const [gridContainer, setGridContainerRef] = useDOMNode<HTMLDivElement>();
   const calendar = useStore(calendarSelector);
-  const { ref, cellContentAreaHeight } = useCellContentAreaHeight();
+  // TODO: event height need to be dynamic
+  const { ref, cellContentAreaHeight } = useCellContentAreaHeight(MONTH_EVENT_HEIGHT);
 
   const { eventFilter, month: monthOptions, isReadOnly } = useStore(optionsSelector);
   const { visibleWeeksCount, narrowWeekend } = monthOptions as CalendarMonthOptions;
