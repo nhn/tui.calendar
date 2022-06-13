@@ -7,9 +7,8 @@ export const getDayName = (dayIndex: number) => {
   return ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][dayIndex];
 };
 
-export function getDayNames(row: TZDate[]) {
-  // @TODO: apply template daynames
-  return row.map<TemplateWeekDayName>((day) => {
+export function getDayNames(days: TZDate[]) {
+  return days.map<TemplateWeekDayName>((day) => {
     const dayIndex = day.getDay();
     const dayName = capitalize(getDayName(dayIndex));
 

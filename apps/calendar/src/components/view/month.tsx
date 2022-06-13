@@ -17,10 +17,14 @@ import type { TemplateMonthDayName } from '@t/template';
 import type { CellInfo } from '@t/time/datetime';
 
 function getDayNames(options: CalendarStore['options']) {
-  const { daynames, workweek } = options.month as Required<MonthOptions>;
+  const { daynames, startDayOfWeek, workweek } = options.month as Required<MonthOptions>;
   const dayNames: TemplateMonthDayName[] = [];
+  const arrangedDaynames = [
+    ...daynames.slice(startDayOfWeek),
+    ...daynames.slice(0, startDayOfWeek),
+  ];
 
-  daynames.forEach((name, index) => {
+  arrangedDaynames.forEach((name, index) => {
     if (!workweek || (workweek && !isWeekend(index))) {
       dayNames.push({
         label: capitalize(name),

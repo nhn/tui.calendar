@@ -80,6 +80,7 @@ export function GridHeader({
 
   return (
     <div
+      data-testid={`grid-header-${type}`}
       className={cls('daynames', type)}
       style={{
         backgroundColor,

@@ -82,3 +82,52 @@ describe('eventFilter option', () => {
     expect(screen.queryByText(invisibleEvent.title)).not.toBeInTheDocument();
   });
 });
+
+describe('daynames Option', () => {
+  it('should show the default daynames if the daynames option is not specified.', () => {
+    // Given
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+    // When
+    setup({});
+
+    // Then
+    const header = screen.getByTestId('grid-header-month');
+
+    expect(header).toHaveTextContent(dayNames.join(''));
+  });
+
+  it('should show the daynames specified by the daynames option.', () => {
+    // Given
+    const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
+
+    // When
+    setup({
+      month: {
+        daynames: dayNames,
+      },
+    });
+
+    // Then
+    const header = screen.getByTestId('grid-header-month');
+    expect(header).toHaveTextContent(dayNames.join(''));
+  });
+
+  it('should change daynames following startDayOfWeek option.', () => {
+    // Given
+    const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
+    const startDayOfWeek = 1; // Monday
+
+    // When
+    setup({
+      month: {
+        daynames: dayNames,
+        startDayOfWeek,
+      },
+    });
+
+    // Then
+    const header = screen.getByTestId('grid-header-month');
+    expect(header).toHaveTextContent(dayNames.slice(1).concat('日').join(''));
+  });
+});
