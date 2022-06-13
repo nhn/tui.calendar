@@ -321,7 +321,7 @@ describe('Base.Core', () => {
 
     it('fill renderStarts, renderEnds to each ui model in collection.', () => {
       // 5/1 10:20 ~ 5/1 10:40
-      uiModelCollection.add(EventUIModel.create(eventList[0]));
+      uiModelCollection.add(new EventUIModel(eventList[0]));
 
       const limit1 = new TZDate('2015-05-01T10:30:00');
       const limit2 = new TZDate('2015-05-01T10:40:00');
@@ -366,7 +366,7 @@ describe('Base.Core', () => {
       // L ownStart ----------------------------------------------- ownEnd
 
       // 10:20 ~ 10:40
-      uiModelCollection.add(EventUIModel.create(eventList[0]));
+      uiModelCollection.add(new EventUIModel(eventList[0]));
 
       // A: 09:30 ~ 10:10
       d1 = new TZDate('2015-05-01T09:30:00');

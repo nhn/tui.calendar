@@ -247,7 +247,7 @@ export function convertToUIModel(eventCollection: Collection<EventModel>) {
   });
 
   eventCollection.each(function (event) {
-    uiModelColl.add(EventUIModel.create(event));
+    uiModelColl.add(new EventUIModel(event));
   });
 
   return uiModelColl;

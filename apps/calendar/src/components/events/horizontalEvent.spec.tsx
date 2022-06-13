@@ -14,7 +14,7 @@ describe(`Firing 'afterRenderEvent'`, () => {
     const eventBus = new EventBusImpl<ExternalEventTypes>();
     const handler = jest.fn();
     eventBus.on('afterRenderEvent', handler);
-    const uiModel = EventUIModel.create(
+    const uiModel = new EventUIModel(
       new EventModel({
         id: '1',
         start: new Date(2020, 0, 1, 10, 0),

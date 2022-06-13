@@ -111,7 +111,7 @@ describe('useTimeGridEventMove', () => {
       start: setTimeStrToDate(timeGridData.columns[DEFAULT_COLUMN_INDEX].date, startTime),
       end: setTimeStrToDate(timeGridData.columns[DEFAULT_COLUMN_INDEX].date, endTime),
     });
-    eventUIModel = EventUIModel.create(eventModel);
+    eventUIModel = new EventUIModel(eventModel);
     eventUIModel.setUIProps({
       top: startRowTop,
       left: timeGridData.columns[DEFAULT_COLUMN_INDEX].left,
