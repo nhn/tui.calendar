@@ -45,7 +45,7 @@ function initializeMonthOptions(monthOptions: Options['month'] = {}): CalendarMo
     workweek: false,
     narrowWeekend: false,
     startDayOfWeek: Day.SUN,
-    isAlways6Week: true,
+    isAlways6Weeks: true,
     visibleEventCount: 6,
     ...monthOptions,
   };

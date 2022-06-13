@@ -425,7 +425,7 @@ interface MonthOptions {
   startDayOfWeek?: number;
   narrowWeekend?: boolean;
   visibleWeeksCount?: number;
-  isAlways6Week?: boolean;
+  isAlways6Weeks?: boolean;
   workweek?: boolean;
   visibleEventCount?: number;
 }
@@ -438,7 +438,7 @@ const DEFAULT_MONTH_OPTIONS = {
   workweek: false,
   narrowWeekend: false,
   startDayOfWeek: 0,
-  isAlways6Week: true,
+  isAlways6Weeks: true,
   visibleEventCount: 6,
 };
 ```
@@ -541,17 +541,19 @@ calendar.setOptions({
 
 [⬆ 목록으로 돌아가기](#month)
 
-#### month.isAlways6Week
+#### month.isAlways6Weeks
 
 - 타입: `boolean`
 - 기본값: `true`
 
-월간뷰에서 항상 6주로 보일지 여부를 지정한다. 기본값은 `true`이며 항상 6주를 표시한다. `false`로 지정하면 월의 주 수에 따라 5주나 6주로 표시된다.
+월간 뷰에서 항상 6주 단위로 캘린더를 표시할지 여부를 결정한다. 기본값은 `true`이며 표시하고 있는 월의 전체 주 수와 관계 없이 6주를 표시한다.
+
+`false`로 지정하면 해당 월의 표시 가능한 주 수에 따라 5주나 6주로 표시된다.
 
 ```js
 calendar.setOptions({
   month: {
-    isAlways6Week: false,
+    isAlways6Weeks: false,
   },
 });
 ```

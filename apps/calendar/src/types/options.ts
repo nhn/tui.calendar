@@ -27,7 +27,7 @@ export interface MonthOptions {
   startDayOfWeek?: number;
   narrowWeekend?: boolean;
   visibleWeeksCount?: number;
-  isAlways6Week?: boolean;
+  isAlways6Weeks?: boolean;
   workweek?: boolean;
   visibleEventCount?: number;
 }

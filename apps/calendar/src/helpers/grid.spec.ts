@@ -328,7 +328,7 @@ describe('createDateMatrixOfMonth', () => {
     expect(result).toEqual(expected);
   });
 
-  it('should ignore isAlways6Week option when visibleWeeksCount option is enabled', () => {
+  it('should ignore isAlways6Weeks option when visibleWeeksCount option is enabled', () => {
     const targetMonth = new TZDate('2021-12-01T00:00:00');
     const expectedStartDateOfMonth = new TZDate('2021-11-28T00:00:00');
 
@@ -341,13 +341,13 @@ describe('createDateMatrixOfMonth', () => {
 
     const result = createDateMatrixOfMonth(targetMonth, {
       visibleWeeksCount: 4,
-      isAlways6Week: true,
+      isAlways6Weeks: true,
     });
 
     expect(result).toEqual(expected);
   });
 
-  it('should create 5 weeks for month has only 5 weeks when isAlways6Week option is disabled', () => {
+  it('should create 5 weeks for month has only 5 weeks when isAlways6Weeks option is disabled', () => {
     const targetMonth = new TZDate('2021-08-01T00:00:00');
     const expectedStartDateOfMonth = new TZDate('2021-08-01T00:00:00');
 
@@ -359,13 +359,13 @@ describe('createDateMatrixOfMonth', () => {
     });
 
     const result = createDateMatrixOfMonth(targetMonth, {
-      isAlways6Week: false,
+      isAlways6Weeks: false,
     });
 
     expect(result).toEqual(expected);
   });
 
-  it('should create 6 weeks even though target month has only 5 weeks when isAlways6Week option is enabled', () => {
+  it('should create 6 weeks even though target month has only 5 weeks when isAlways6Weeks option is enabled', () => {
     const targetMonth = new TZDate('2021-08-01T00:00:00');
     const expectedStartDateOfMonth = new TZDate('2021-08-01T00:00:00');
 
@@ -377,7 +377,7 @@ describe('createDateMatrixOfMonth', () => {
     });
 
     const result = createDateMatrixOfMonth(targetMonth, {
-      isAlways6Week: true,
+      isAlways6Weeks: true,
     });
 
     expect(result).toEqual(expected);
