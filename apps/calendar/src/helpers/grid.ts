@@ -322,9 +322,9 @@ export function createDateMatrixOfMonth(
   );
   const dayOfFirstDateOfMatrix = firstDateOfMatrix.getDay();
 
-  const totalDatsCountOfMonth = toEndOfMonth(targetDate).getDate();
+  const totalDatesCountOfMonth = toEndOfMonth(targetDate).getDate();
   const initialDifference = getDateDifference(firstDateOfMatrix, baseDate);
-  const totalDatesOfMatrix = totalDatsCountOfMonth + initialDifference;
+  const totalDatesOfMatrix = totalDatesCountOfMonth + Math.abs(initialDifference);
 
   let totalWeeksOfMatrix = DEFAULT_VISIBLE_WEEKS;
   if (shouldApplyVisibleWeeksCount) {
