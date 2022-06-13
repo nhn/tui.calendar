@@ -454,6 +454,18 @@ const DEFAULT_MONTH_OPTIONS = {
 
 월간뷰에서 주의 요일명을 변경할 수 있다. 기본값은 `['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']`이며, [startDayOfWeek](#month.startDayOfWeek)로 설정한 요일부터 시작한다.
 
+이 옵션을 부여할 때는 반드시 일요일부터 월요일까지 모든 요일이 입력된 배열을 입력해야 한다. 각 요일의 인덱스는 `Date.prototype.getDay` 의 결과와 같다. ([참고](https://tc39.es/ecma262/multipage/numbers-and-dates.html#sec-week-day))
+
+| 값  | 요일   |
+| --- | ------ |
+| 0   | 일요일 |
+| 1   | 월요일 |
+| 2   | 화요일 |
+| 3   | 수요일 |
+| 4   | 목요일 |
+| 5   | 금요일 |
+| 6   | 토요일 |
+
 ```js
 calendar.setOptions({
   month: {
@@ -464,7 +476,7 @@ calendar.setOptions({
 
 | 기본값 적용  | 예제 적용    |
 | ------------ | ------------ |
-| 구현 후 추가 | 구현 후 추가 |
+| ![month-daynames-default](./options_month-daynames-before.png) | ![month-daynames-example](./options_month-daynames-after.png) |
 
 [⬆ 목록으로 돌아가기](#month)
 
@@ -474,6 +486,8 @@ calendar.setOptions({
 - 기본값: `0`
 
 월간뷰에서 주의 시작 요일을 지정한다. 기본값은 `0`으로 일요일부터 시작한다. `0`(일요일)부터 `6`(토요일)까지의 값을 지정할 수 있다.
+
+각 요일의 인덱스는 `Date.prototype.getDay` 의 결과와 같다. ([참고](https://tc39.es/ecma262/multipage/numbers-and-dates.html#sec-week-day))
 
 | 값  | 요일   |
 | --- | ------ |
@@ -527,6 +541,8 @@ calendar.setOptions({
 
 월간뷰에서 보여지는 주의 개수를 지정한다. 기본값은 `0`이며 6주를 표시한다. 다른 주의 개수를 지정하려면 `1`부터 `6`까지의 값을 지정할 수 있다.
 
+⚠️ 이 옵션을 설정하면 현재 날짜는 무조건 첫 주에 위치하게 된다.
+
 ```js
 calendar.setOptions({
   month: {
@@ -560,7 +576,7 @@ calendar.setOptions({
 
 | 기본값 적용  | 예제 적용    |
 | ------------ | ------------ |
-| 구현 후 추가 | 구현 후 추가 |
+| ![month-isAlways6Weeks-default](./options_month-isAlways6Weeks-before.png) | ![month-isAlways6Weeks-example](./options_month-isAlways6Weeks-after.png) |
 
 [⬆ 목록으로 돌아가기](#month)
 
@@ -573,7 +589,7 @@ calendar.setOptions({
 
 ```js
 calendar.setOptions({
-  week: {
+  month: {
     workweek: true,
   },
 });
@@ -590,11 +606,23 @@ calendar.setOptions({
 - 타입: `number`
 - 기본값: `6`
 
-월간뷰에서 각 날짜별 최대로 보여지는 일정의 갯수를 지정한다. 기본값은 `6`이지만 6개가 전부 표시되지 않는 높이라면 가능한 최대의 일정이 보여진다.
+월간뷰에서 각 날짜별 최대로 보여지는 일정의 갯수를 지정한다. 기본값은 `6` 이다.
+
+이 옵션에서 지정한 갯수만큼 일정을 표시하려 하지만 높이가 충분하지 못할 경우 자동으로 옵션이 무시된다.
+
+캘린더 전체 영역과 [month 테마의 gridCell 속성](/story/documentation-한국어-api-테마--page#month-gridcell)의 영향을 받는다.
+
+```js
+calendar.setOptions({
+  month: {
+    visibleEventCount: 2,
+  },
+});
+```
 
 | 기본값 적용  | 예제 적용    |
 | ------------ | ------------ |
-| 구현 후 추가 | 구현 후 추가 |
+| ![month-visibleEventCount-default](./options_month-visibleEventCount-before.png) | ![month-visibleEventCount-example](./options_month-visibleEventCount-after.png) |
 
 [⬆ 목록으로 돌아가기](#month)
 
