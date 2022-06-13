@@ -99,6 +99,7 @@ export function DayName({ dayname, style, type, theme }: Props) {
         className={cls({ [`holiday-${getDayName(day)}`]: isWeekend(day) })}
         style={{ color }}
         onClick={handleClick}
+        data-testid={`dayname-${type}-${getDayName(day)}`}
       >
         <Template template={templateType} param={dayname} />
       </span>

@@ -1,7 +1,6 @@
 import produce from 'immer';
-import range from 'tui-code-snippet/array/range';
 
-import { getDayName } from '@src/helpers/dayName';
+import { DEFAULT_DAY_NAMES } from '@src/helpers/dayName';
 import { Day } from '@src/time/datetime';
 import { mergeObject } from '@src/utils/object';
 import { isBoolean } from '@src/utils/type';
@@ -15,10 +14,6 @@ import type {
   CalendarWeekOptions,
   SetState,
 } from '@t/store';
-
-function initializeDayNames(startDayOfWeek = 0) {
-  return [...range(startDayOfWeek, 7), ...range(startDayOfWeek)].map((day) => getDayName(day));
-}
 
 function initializeWeekOptions(weekOptions: Options['week'] = {}): CalendarWeekOptions {
   return {
@@ -55,8 +50,8 @@ function initializeMonthOptions(monthOptions: Options['month'] = {}): CalendarMo
     ...monthOptions,
   };
 
-  if (!month.daynames.length) {
-    month.daynames = initializeDayNames(month.startDayOfWeek);
+  if (month.daynames.length === 0) {
+    month.daynames = DEFAULT_DAY_NAMES.slice();
   }
 
   return month;

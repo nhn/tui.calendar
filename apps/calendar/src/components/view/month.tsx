@@ -13,34 +13,24 @@ import { capitalize } from '@src/utils/string';
 
 import type { MonthOptions } from '@t/options';
 import type { CalendarStore } from '@t/store';
-import type { TemplateMonthDayName } from '@t/template';
 import type { CellInfo } from '@t/time/datetime';
 
-function getDayNames(options: CalendarStore['options']) {
+function getMonthDayNames(options: CalendarStore['options']) {
   const { daynames, startDayOfWeek, workweek } = options.month as Required<MonthOptions>;
-  const dayNames: TemplateMonthDayName[] = [];
-  const arrangedDaynames = [
-    ...daynames.slice(startDayOfWeek),
-    ...daynames.slice(0, startDayOfWeek),
-  ];
+  const dayIndices = [...Array(7)].map((_, i) => (startDayOfWeek + i) % 7);
+  const dayNames = dayIndices.map((i) => ({
+    day: i,
+    label: capitalize(daynames[i]),
+  }));
 
-  arrangedDaynames.forEach((name, index) => {
-    if (!workweek || (workweek && !isWeekend(index))) {
-      dayNames.push({
-        label: capitalize(name),
-        day: index,
-      });
-    }
-  });
-
-  return dayNames;
+  return dayNames.filter((dayNameInfo) => (workweek ? !isWeekend(dayNameInfo.day) : true));
 }
 
 export function Month() {
   const options = useStore(optionsSelector);
   const { renderDate } = useStore(viewSelector);
 
-  const dayNames = getDayNames(options);
+  const dayNames = getMonthDayNames(options);
   const monthOptions = options.month as Required<MonthOptions>;
   const { narrowWeekend, startDayOfWeek, workweek } = monthOptions;
 
