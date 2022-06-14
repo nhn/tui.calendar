@@ -1,7 +1,7 @@
 import TZDate from '@src/time/date';
 import { addDate, setTimeStrToDate } from '@src/time/datetime';
 
-import type { MockedWeekViewEvents } from './types';
+import type { MockedWeekViewEvents } from '@stories/mocks/types';
 
 const today = new TZDate();
 const yesterday = addDate(today, -1);

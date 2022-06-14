@@ -131,12 +131,12 @@ describe('daynames Option', () => {
 
     // Then
     const header = screen.getByTestId('grid-header-month');
-    expect(header).toHaveTextContent(dayNames.slice(1).concat('日').join(''));
+    expect(header).toHaveTextContent(dayNames.slice(startDayOfWeek).concat('日').join(''));
   });
 });
 
 describe('startDayOfWeek Option', () => {
-  it('shouldj change the start day of week with default daynames', () => {
+  it('should change the start day of week with default daynames', () => {
     // Given
     const startDayOfWeek = 1; // Monday
     const normalDaynameColor = 'white';
@@ -194,7 +194,7 @@ describe('startDayOfWeek Option', () => {
     // Then
     const header = screen.getByTestId('grid-header-month');
     expect(header).toHaveTextContent(
-      givenDaynames.slice(2).concat(givenDaynames.slice(0, 2)).join('')
+      givenDaynames.slice(startDayOfWeek).concat(givenDaynames.slice(0, startDayOfWeek)).join('')
     );
     const { 0: tuesday, length, [length - 2]: sunday } = screen.getAllByTestId(/dayname-month-/);
 
