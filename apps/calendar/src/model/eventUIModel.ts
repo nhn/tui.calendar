@@ -134,13 +134,6 @@ export default class EventUIModel implements EventUIProps {
     this.model = event;
   }
 
-  /**
-   * EventUIModel factory method.
-   */
-  static create(event: EventModel): EventUIModel {
-    return new EventUIModel(event);
-  }
-
   getUIProps(): EventUIProps {
     return pick(this, ...eventUIPropsKey);
   }
@@ -213,7 +206,7 @@ export default class EventUIModel implements EventUIProps {
 
   clone() {
     const eventUIModelProps = this.getUIProps();
-    const clonedEventUIModel = EventUIModel.create(this.model);
+    const clonedEventUIModel = new EventUIModel(this.model);
     clonedEventUIModel.setUIProps(eventUIModelProps);
 
     if (this.renderStarts) {

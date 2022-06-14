@@ -1085,7 +1085,7 @@ describe('setCalendarVisibility', () => {
             key={event.id}
             eventHeight={20}
             headerHeight={0}
-            uiModel={EventUIModel.create(event)}
+            uiModel={new EventUIModel(event)}
           />
         ))}
       </div>

@@ -14,7 +14,7 @@ export const timeEvent = () => {
     title: 'Time Event 2',
     backgroundColor: 'green',
   });
-  const uiModel = EventUIModel.create(event);
+  const uiModel = new EventUIModel(event);
 
   return (
     <ProviderWrapper>
@@ -24,7 +24,7 @@ export const timeEvent = () => {
 };
 
 export const backgroundEvent = () => {
-  const uiModel = EventUIModel.create(
+  const uiModel = new EventUIModel(
     new EventModel({
       backgroundColor: 'rgba(100, 100, 100, .3)',
     })

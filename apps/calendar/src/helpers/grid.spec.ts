@@ -250,7 +250,7 @@ describe('getExceedCount', () => {
       const event = new EventModel(e);
       event.isAllday = true;
 
-      return EventUIModel.create(event);
+      return new EventUIModel(event);
     });
 
     expect(getExceedCount(uiModels, 200, 30)).toBe(0);
