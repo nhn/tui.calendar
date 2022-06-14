@@ -5,12 +5,15 @@ import { useEventBus } from '@src/contexts/eventBus';
 import { useWhen } from '@src/hooks/common/useWhen';
 import { useCurrentPointerPositionInGrid } from '@src/hooks/event/useCurrentPointerPositionInGrid';
 import { useDraggingEvent } from '@src/hooks/event/useDraggingEvent';
+import type EventUIModel from '@src/model/eventUIModel';
 import type TZDate from '@src/time/date';
 import { addMilliseconds, MS_PER_DAY, MS_PER_THIRTY_MINUTES } from '@src/time/datetime';
 import { isNil, isPresent } from '@src/utils/type';
 
 import type { GridPosition, GridPositionFinder, TimeGridData } from '@t/grid';
 import type { CalendarState } from '@t/store';
+
+const THIRTY_MINUTES = 30;
 
 const initXSelector = (state: CalendarState) => state.dnd.initX;
 const initYSelector = (state: CalendarState) => state.dnd.initY;
@@ -19,6 +22,45 @@ function useDragInitCoords() {
   const initY = useStore(initYSelector);
 
   return useMemo(() => ({ initX, initY }), [initX, initY]);
+}
+
+function getCurrentIndexByTime(time: TZDate) {
+  const hour = time.getHours();
+  const minutes = time.getMinutes();
+
+  return hour * 2 + Math.floor(minutes / THIRTY_MINUTES);
+}
+
+function getMovingEventPosition({
+  draggingEvent,
+  columnDiff,
+  rowDiff,
+  timeGridDataRows,
+  currentDate,
+}: {
+  draggingEvent: EventUIModel;
+  columnDiff: number;
+  rowDiff: number;
+  timeGridDataRows: TimeGridData['rows'];
+  currentDate: TZDate;
+}) {
+  const rowHeight = timeGridDataRows[0].height;
+  const maxHeight = rowHeight * timeGridDataRows.length;
+  const millisecondsDiff = rowDiff * MS_PER_THIRTY_MINUTES + columnDiff * MS_PER_DAY;
+
+  const nextStart = addMilliseconds(draggingEvent.getStarts(), millisecondsDiff);
+  const nextEnd = addMilliseconds(draggingEvent.getEnds(), millisecondsDiff);
+  const startIndex = getCurrentIndexByTime(nextStart);
+  const endIndex = getCurrentIndexByTime(nextEnd);
+
+  const isStartAtPrevDate = nextStart.getDate() < currentDate.getDate();
+  const isEndAtNextDate = nextEnd.getDate() > currentDate.getDate();
+  const indexDiff = endIndex - (isStartAtPrevDate ? 0 : startIndex);
+
+  const top = isStartAtPrevDate ? 0 : timeGridDataRows[startIndex].top;
+  const height = isEndAtNextDate ? maxHeight : indexDiff * rowHeight;
+
+  return { top, height };
 }
 
 export function useTimeGridEventMove({
@@ -88,21 +130,29 @@ export function useTimeGridEventMove({
     );
   }, [gridDiff, startDateTime]);
 
-  const rowHeight = timeGridData.rows[0].height;
   const movingEvent = useMemo(() => {
-    if (isNil(draggingEvent) || isNil(gridDiff) || isNil(currentGridPos)) {
+    if (isNil(draggingEvent) || isNil(currentGridPos) || isNil(initGridPosition)) {
       return null;
     }
 
     const clonedEvent = draggingEvent.clone();
+    const { top, height } = getMovingEventPosition({
+      draggingEvent: clonedEvent,
+      columnDiff: currentGridPos.columnIndex - initGridPosition.columnIndex,
+      rowDiff: currentGridPos.rowIndex - initGridPosition.rowIndex,
+      timeGridDataRows: timeGridData.rows,
+      currentDate: timeGridData.columns[currentGridPos.columnIndex].date,
+    });
+
     clonedEvent.setUIProps({
-      top: clonedEvent.top + gridDiff.rowIndex * rowHeight,
       left: timeGridData.columns[currentGridPos.columnIndex].left,
       width: timeGridData.columns[currentGridPos.columnIndex].width,
+      top,
+      height,
     });
 
     return clonedEvent;
-  }, [currentGridPos, draggingEvent, gridDiff, rowHeight, timeGridData.columns]);
+  }, [currentGridPos, draggingEvent, initGridPosition, timeGridData.columns, timeGridData.rows]);
 
   useWhen(() => {
     const shouldUpdate =
