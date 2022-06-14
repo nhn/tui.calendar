@@ -6,24 +6,22 @@
 
 ## 🚩 Table of Contents
 
-- [TOAST UI Calendar](#)
-  - [🚩 Table of Contents](#-table-of-contents)
-  - [Collect statistics on the use of open source](#collect-statistics-on-the-use-of-open-source)
-  - [💾 Install](#-install)
-    - [Via Package Manager](#via-package-manager)
-      - [npm](#npm)
-    - [Download Source Files](#download-source-files)
-  - [🔨 Usage](#-usage)
-    - [HTML](#html)
-    - [JavaScript](#javascript)
-      - [Load](#load)
+- [Collect statistics on the use of open source](#collect-statistics-on-the-use-of-open-source)
+- [💾 Install](#-install)
+  - [Via Package Manager](#via-package-manager)
+    - [npm](#npm)
+  - [Download Source Files](#download-source-files)
+- [🔨 Usage](#-usage)
+  - [HTML](#html)
+  - [JavaScript](#javascript)
+    - [Load](#load)
 
 ## 🚧 The new version is coming out
 
 You're now looking at the `main` branch of the latest version of TOAST UI Calendar. You can try [the alpha version](https://github.com/nhn/tui.calendar/releases/tag/v2.0.0-alpha.0) of the new calendar.
 
 ```sh
-npm install --save @toast-ui/calendar@2.0.0-alpha.1
+npm install --save @toast-ui/calendar
 ```
 
 For the current(and legacy) version, Please check out the [`v1` branch](https://github.com/nhn/tui.calendar/tree/v1).
