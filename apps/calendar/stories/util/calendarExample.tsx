@@ -23,6 +23,11 @@ export function CalendarExample({ options, containerHeight = 600, onInit }: Prop
     if (containerRef.current) {
       calendarRef.current = new Calendar(containerRef.current, options);
 
+      // For handling instance after initialization.
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      window.$cal = calendarRef.current;
+
       onInit?.(calendarRef.current);
     }
   }, [onInit, options]);

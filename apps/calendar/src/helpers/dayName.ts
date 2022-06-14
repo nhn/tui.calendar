@@ -3,13 +3,14 @@ import { capitalize } from '@src/utils/string';
 
 import type { TemplateWeekDayName } from '@t/template';
 
+export const DEFAULT_DAY_NAMES = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+
 export const getDayName = (dayIndex: number) => {
-  return ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][dayIndex];
+  return DEFAULT_DAY_NAMES[dayIndex];
 };
 
-export function getDayNames(row: TZDate[]) {
-  // @TODO: apply template daynames
-  return row.map<TemplateWeekDayName>((day) => {
+export function getDayNames(days: TZDate[]) {
+  return days.map<TemplateWeekDayName>((day) => {
     const dayIndex = day.getDay();
     const dayName = capitalize(getDayName(dayIndex));
 

@@ -1,13 +1,13 @@
 import TZDate from '@src/time/date';
 import { addDate, setTimeStrToDate } from '@src/time/datetime';
 
-import type { EventObject } from '@t/events';
+import type { MockedWeekViewEvents } from '@stories/mocks/types';
 
 const today = new TZDate();
 const yesterday = addDate(today, -1);
 const tomorrow = addDate(today, 1);
 
-export const mockDayViewEvents: EventObject[] = [
+export const mockDayViewEvents: MockedWeekViewEvents[] = [
   {
     id: '1',
     calendarId: 'cal1',

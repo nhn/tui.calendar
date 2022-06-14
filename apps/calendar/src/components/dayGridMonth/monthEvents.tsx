@@ -13,7 +13,6 @@ interface Props {
   contentAreaHeight: number;
   eventHeight?: number;
   events: EventUIModel[];
-  narrowWeekend: boolean;
   className: string;
 }
 

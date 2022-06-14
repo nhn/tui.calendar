@@ -4,6 +4,7 @@ import { screen } from '@testing-library/preact';
 
 import { Month } from '@src/components/view/month';
 import { initCalendarStore } from '@src/contexts/calendarStore';
+import { initThemeStore } from '@src/contexts/themeStore';
 import EventModel from '@src/model/eventModel';
 import { render } from '@src/test/utils';
 import TZDate from '@src/time/date';
@@ -14,11 +15,13 @@ import type { Options } from '@t/options';
 
 function setup(options: Options, events?: EventModel[]) {
   const store = initCalendarStore(options);
+  const theme = initThemeStore(options.theme);
+
   if (events) {
     store.getState().dispatch.calendar.createEvents(events);
   }
 
-  return render(<Month />, { store });
+  return render(<Month />, { store, theme });
 }
 
 describe('eventFilter option', () => {
@@ -80,5 +83,122 @@ describe('eventFilter option', () => {
     const invisibleEvent = events.find((event) => !eventFilter(event)) as EventModel;
     expect(screen.queryByText(visibleEvent.title)).toBeInTheDocument();
     expect(screen.queryByText(invisibleEvent.title)).not.toBeInTheDocument();
+  });
+});
+
+describe('daynames Option', () => {
+  it('should show the default daynames if the daynames option is not specified.', () => {
+    // Given
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+    // When
+    setup({});
+
+    // Then
+    const header = screen.getByTestId('grid-header-month');
+
+    expect(header).toHaveTextContent(dayNames.join(''));
+  });
+
+  it('should show the daynames specified by the daynames option.', () => {
+    // Given
+    const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
+
+    // When
+    setup({
+      month: {
+        daynames: dayNames,
+      },
+    });
+
+    // Then
+    const header = screen.getByTestId('grid-header-month');
+    expect(header).toHaveTextContent(dayNames.join(''));
+  });
+
+  it('should change daynames following startDayOfWeek option.', () => {
+    // Given
+    const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
+    const startDayOfWeek = 1; // Monday
+
+    // When
+    setup({
+      month: {
+        daynames: dayNames,
+        startDayOfWeek,
+      },
+    });
+
+    // Then
+    const header = screen.getByTestId('grid-header-month');
+    expect(header).toHaveTextContent(dayNames.slice(startDayOfWeek).concat('日').join(''));
+  });
+});
+
+describe('startDayOfWeek Option', () => {
+  it('should change the start day of week with default daynames', () => {
+    // Given
+    const startDayOfWeek = 1; // Monday
+    const normalDaynameColor = 'white';
+    const sundayDaynameColor = 'red';
+
+    // When
+    setup({
+      month: {
+        startDayOfWeek,
+      },
+      theme: {
+        common: {
+          dayname: {
+            color: normalDaynameColor,
+          },
+          holiday: {
+            color: sundayDaynameColor,
+          },
+        },
+      },
+    });
+
+    // Then
+    const { 0: monday, length, [length - 1]: sunday } = screen.getAllByTestId(/dayname-month-/);
+
+    expect(monday).toHaveStyle({ color: normalDaynameColor });
+    expect(sunday).toHaveStyle({ color: sundayDaynameColor });
+  });
+
+  it('should change start day of week with custom daynames', () => {
+    // Given
+    const startDayOfWeek = 2; // Tuesday
+    const givenDaynames = ['日', '月', '火', '水', '木', '金', '土'];
+    const normalDaynameColor = 'white';
+    const sundayDaynameColor = 'red';
+
+    // When
+    setup({
+      month: {
+        startDayOfWeek,
+        daynames: givenDaynames,
+      },
+      theme: {
+        common: {
+          dayname: {
+            color: normalDaynameColor,
+          },
+          holiday: {
+            color: sundayDaynameColor,
+          },
+        },
+      },
+    });
+
+    // Then
+    const header = screen.getByTestId('grid-header-month');
+    expect(header).toHaveTextContent(
+      givenDaynames.slice(startDayOfWeek).concat(givenDaynames.slice(0, startDayOfWeek)).join('')
+    );
+    const { 0: tuesday, length, [length - 2]: sunday } = screen.getAllByTestId(/dayname-month-/);
+
+    expect(tuesday).toHaveStyle({ color: normalDaynameColor });
+    expect(sunday).toHaveStyle({ color: sundayDaynameColor });
   });
 });

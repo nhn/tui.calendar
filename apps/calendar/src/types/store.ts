@@ -11,18 +11,10 @@ import type { ViewDispatchers, ViewSlice } from '@src/slices/view';
 import type TZDate from '@src/time/date';
 
 import type { EventState } from '@t/events';
-import type { GridSelectionOptions, MonthOptions, WeekOptions } from '@t/options';
+import type { MonthOptions, WeekOptions } from '@t/options';
 
 export type CalendarMonthOptions = Required<MonthOptions>;
 export type CalendarWeekOptions = Required<WeekOptions>;
-
-interface OptionsData {
-  useFormPopup: boolean;
-  useDetailPopup: boolean;
-  month: CalendarMonthOptions;
-  week: CalendarWeekOptions;
-  gridSelection: GridSelectionOptions;
-}
 
 export interface Rect {
   top: number;

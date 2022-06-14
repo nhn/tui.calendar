@@ -310,7 +310,7 @@ export function createDateMatrixOfMonth(
     workweek = false,
     visibleWeeksCount = 0,
     startDayOfWeek = 0,
-    isAlways6Week = true,
+    isAlways6Weeks = true,
   }: MonthOptions
 ) {
   const targetDate = new TZDate(renderTargetDate);
@@ -322,14 +322,14 @@ export function createDateMatrixOfMonth(
   );
   const dayOfFirstDateOfMatrix = firstDateOfMatrix.getDay();
 
-  const totalDatsCountOfMonth = toEndOfMonth(targetDate).getDate();
+  const totalDatesCountOfMonth = toEndOfMonth(targetDate).getDate();
   const initialDifference = getDateDifference(firstDateOfMatrix, baseDate);
-  const totalDatesOfMatrix = totalDatsCountOfMonth + initialDifference;
+  const totalDatesOfMatrix = totalDatesCountOfMonth + Math.abs(initialDifference);
 
   let totalWeeksOfMatrix = DEFAULT_VISIBLE_WEEKS;
   if (shouldApplyVisibleWeeksCount) {
     totalWeeksOfMatrix = visibleWeeksCount;
-  } else if (isAlways6Week === false) {
+  } else if (isAlways6Weeks === false) {
     totalWeeksOfMatrix = Math.ceil(totalDatesOfMatrix / WEEK_DAYS);
   }
 

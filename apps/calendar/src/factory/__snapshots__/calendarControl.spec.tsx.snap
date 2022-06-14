@@ -19,7 +19,7 @@ Object {
       "fri",
       "sat",
     ],
-    "isAlways6Week": true,
+    "isAlways6Weeks": true,
     "narrowWeekend": false,
     "startDayOfWeek": 0,
     "visibleEventCount": 6,
