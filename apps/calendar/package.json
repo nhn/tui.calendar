@@ -44,7 +44,7 @@
     "types/index.d.ts",
     "types/factory",
     "types/time/date.d.ts",
-    "types/types/@(event|options|template|theme|eventBus).d.ts"
+    "types/types/@(events|options|template|theme|eventBus).d.ts"
   ],
   "dependencies": {
     "tui-date-picker": "^4.0.1",
