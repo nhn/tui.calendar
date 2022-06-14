@@ -39,7 +39,13 @@
     "task",
     "allday"
   ],
-  "files": ["dist", "types"],
+  "files": [
+    "dist",
+    "types/index.d.ts",
+    "types/factory",
+    "types/time/date.d.ts",
+    "types/types/@(event|options|template|theme|eventBus).d.ts"
+  ],
   "dependencies": {
     "tui-date-picker": "^4.0.1",
     "tui-time-picker": "^2.0.1"
