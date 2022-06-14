@@ -10,13 +10,6 @@
       }
     ]
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "stories",
-    "playwright",
-    "src/**/*.spec.*"
-  ]
+  "files": ["src/index.ts", "src/tui-code-snippet.d.ts"],
+  "include": []
 }
