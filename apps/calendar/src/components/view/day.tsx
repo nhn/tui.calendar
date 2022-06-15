@@ -73,10 +73,11 @@ export function Day() {
   const timeGridData = useMemo(
     () =>
       createTimeGridData(days, {
-        hourStart: weekOptions.hourStart,
-        hourEnd: weekOptions.hourEnd,
+        hourStart,
+        hourEnd,
+        narrowWeekend,
       }),
-    [days, weekOptions.hourEnd, weekOptions.hourStart]
+    [days, hourEnd, hourStart, narrowWeekend]
   );
   const activePanels = getActivePanels(taskView, eventView);
   const gridRows = activePanels.map((key) => {

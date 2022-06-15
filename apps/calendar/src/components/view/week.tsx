@@ -78,10 +78,11 @@ export function Week() {
   const timeGridData = useMemo(
     () =>
       createTimeGridData(weekDates, {
-        hourStart: weekOptions.hourStart,
-        hourEnd: weekOptions.hourEnd,
+        hourStart,
+        hourEnd,
+        narrowWeekend,
       }),
-    [weekDates, weekOptions.hourEnd, weekOptions.hourStart]
+    [hourEnd, hourStart, narrowWeekend, weekDates]
   );
 
   const activePanels = getActivePanels(taskView, eventView);

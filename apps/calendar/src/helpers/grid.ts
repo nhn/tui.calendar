@@ -407,9 +407,10 @@ export function createTimeGridData(
   options: {
     hourStart: number;
     hourEnd: number;
+    narrowWeekend?: boolean;
   }
 ): TimeGridData {
-  const columns = getColumnsData(datesOfWeek);
+  const columns = getColumnsData(datesOfWeek, options.narrowWeekend ?? false);
 
   const steps = (options.hourEnd - options.hourStart) * 2;
   const baseHeight = 100 / steps;

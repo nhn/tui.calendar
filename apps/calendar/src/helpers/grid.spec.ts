@@ -565,6 +565,21 @@ describe('createTimeGridData', () => {
     expect(result.columns).toEqual(getColumnsData(rows));
     assertTimeGridDataRows(result.rows, options);
   });
+
+  it('should create narrow weekends with option', () => {
+    // Given
+    const narrowWeekend = true;
+    const rows = getWeekDates(new TZDate('2021-01-28T00:00:00'), {
+      startDayOfWeek: Day.SUN,
+    });
+    const options = { hourStart: 0, hourEnd: 24, narrowWeekend };
+
+    // When
+    const result = createTimeGridData(rows, options);
+
+    // Then
+    expect(result.columns).toEqual(getColumnsData(rows, narrowWeekend));
+  });
 });
 
 describe('createGridPositionFinder', () => {
