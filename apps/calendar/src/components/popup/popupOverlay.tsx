@@ -2,14 +2,17 @@ import { h } from 'preact';
 
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { cls } from '@src/helpers/css';
-import { popupSelector } from '@src/selectors';
+import type { CalendarState } from '@src/types/store';
 import { isFunction, isPresent } from '@src/utils/type';
 
+function shownPopupParamSelector(state: CalendarState) {
+  return Object.values(state.popup).find((popup) => isPresent(popup));
+}
+
 export function PopupOverlay() {
-  const popups = useStore(popupSelector);
+  const shownPopupParam = useStore(shownPopupParamSelector);
   const { hideAllPopup } = useDispatch('popup');
 
-  const shownPopupParam = Object.values(popups).find((popup) => isPresent(popup));
   const isPopupShown = isPresent(shownPopupParam);
 
   const onClick = (ev: MouseEvent) => {
