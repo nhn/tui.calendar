@@ -58,7 +58,7 @@ export function Week() {
   const { narrowWeekend, startDayOfWeek, workweek, hourStart, hourEnd, eventView, taskView } =
     weekOptions;
   const weekDates = useMemo(() => getWeekDates(renderDate, weekOptions), [renderDate, weekOptions]);
-  const dayNames = getDayNames(weekDates);
+  const dayNames = getDayNames(weekDates, options.week?.daynames ?? []);
   const { rowStyleInfo, cellWidthMap } = getRowStyleInfo(
     weekDates.length,
     narrowWeekend,
