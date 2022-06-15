@@ -3,9 +3,9 @@ import { useCallback, useLayoutEffect, useMemo, useState } from 'preact/hooks';
 
 import { addTimeGridPrefix, className as timegridClassName } from '@src/components/timeGrid';
 import { Column } from '@src/components/timeGrid/column';
-import { CurrentTimeIndicator } from '@src/components/timeGrid/currentTimeIndicator';
 import { GridLines } from '@src/components/timeGrid/gridLines';
 import { MovingEventShadow } from '@src/components/timeGrid/movingEventShadow';
+import { NowIndicator } from '@src/components/timeGrid/nowIndicator';
 import { TimeColumn } from '@src/components/timeGrid/timeColumn';
 import { useStore } from '@src/contexts/calendarStore';
 import { useTheme } from '@src/contexts/themeStore';
@@ -53,7 +53,7 @@ export function TimeGrid({ timeGridData, events }: Props) {
   const isMounted = useIsMounted();
   const { width: timeGridLeftWidth } = useTheme(weekTimeGridLeftSelector);
 
-  const [currentTimeIndicatorState, setCurrentTimeIndicatorState] = useState<{
+  const [nowIndicatorState, setNowIndicatorState] = useState<{
     top: number;
     now: TZDate;
   } | null>(null);
@@ -127,7 +127,7 @@ export function TimeGrid({ timeGridData, events }: Props) {
       const now = getNow();
 
       if (startTime <= now && now <= endTime) {
-        setCurrentTimeIndicatorState({
+        setNowIndicatorState({
           top: getTopPercentByTime(now, startTime, endTime),
           now,
         });
@@ -141,7 +141,7 @@ export function TimeGrid({ timeGridData, events }: Props) {
       if ((currentDateData?.currentDateIndex ?? -1) >= 0) {
         updateTimeGridIndicator();
       } else {
-        setCurrentTimeIndicatorState(null);
+        setNowIndicatorState(null);
       }
     }
   }, [currentDateData, isMounted, updateTimeGridIndicator]);
@@ -152,7 +152,7 @@ export function TimeGrid({ timeGridData, events }: Props) {
   return (
     <div className={classNames.timegrid}>
       <div className={classNames.scrollArea}>
-        <TimeColumn timeGridRows={rows} currentTimeIndicatorState={currentTimeIndicatorState} />
+        <TimeColumn timeGridRows={rows} nowIndicatorState={nowIndicatorState} />
         <div
           className={cls('columns')}
           style={{ left: timeGridLeftWidth }}
@@ -173,9 +173,9 @@ export function TimeGrid({ timeGridData, events }: Props) {
               isLastColumn={index === lastColumnIndex}
             />
           ))}
-          {isPresent(currentDateData) && isPresent(currentTimeIndicatorState) ? (
-            <CurrentTimeIndicator
-              top={currentTimeIndicatorState.top}
+          {isPresent(currentDateData) && isPresent(nowIndicatorState) ? (
+            <NowIndicator
+              top={nowIndicatorState.top}
               columnWidth={columns[0].width}
               columnCount={columns.length}
               columnIndex={currentDateData.currentDateIndex}

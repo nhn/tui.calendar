@@ -4,7 +4,7 @@ import { useCallback, useMemo } from 'preact/hooks';
 
 import { Template } from '@src/components/template';
 import { addTimeGridPrefix } from '@src/components/timeGrid';
-import { CurrentTimeLabel } from '@src/components/timeGrid/currentTimeLabel';
+import { NowIndicatorLabel } from '@src/components/timeGrid/nowIndicatorLabel';
 import { useStore } from '@src/contexts/calendarStore';
 import { useTheme } from '@src/contexts/themeStore';
 import { cls, toPercent } from '@src/helpers/css';
@@ -39,7 +39,7 @@ interface HourRowsProps {
   isPrimary: boolean;
   borderRight?: string;
   width: number;
-  currentTimeIndicatorState: {
+  nowIndicatorState: {
     top: number;
     now: TZDate;
   } | null;
@@ -59,18 +59,12 @@ function timeColorSelector(theme: ThemeState) {
   };
 }
 
-function HourRows({
-  rowsInfo,
-  isPrimary,
-  borderRight,
-  width,
-  currentTimeIndicatorState,
-}: HourRowsProps) {
+function HourRows({ rowsInfo, isPrimary, borderRight, width, nowIndicatorState }: HourRowsProps) {
   const { primaryTimezoneBackgroundColor, subTimezoneBackgroundColor } =
     useTheme(backgroundColorSelector);
   const { pastTimeColor, futureTimeColor } = useTheme(timeColorSelector);
-  const zonedCurrentTime = isPresent(currentTimeIndicatorState)
-    ? addMinutes(currentTimeIndicatorState.now, rowsInfo[0].diffFromPrimaryTimezone ?? 0)
+  const zonedNow = isPresent(nowIndicatorState)
+    ? addMinutes(nowIndicatorState.now, rowsInfo[0].diffFromPrimaryTimezone ?? 0)
     : null;
 
   const backgroundColor = isPrimary ? primaryTimezoneBackgroundColor : subTimezoneBackgroundColor;
@@ -82,7 +76,7 @@ function HourRows({
       style={{ width: toPercent(width), borderRight, backgroundColor }}
     >
       {rowsInfo.map(({ date, top, className }) => {
-        const isPast = isPresent(zonedCurrentTime) && date < zonedCurrentTime;
+        const isPast = isPresent(zonedNow) && date < zonedNow;
         const color = isPast ? pastTimeColor : futureTimeColor;
 
         return (
@@ -103,12 +97,12 @@ function HourRows({
           </div>
         );
       })}
-      {isPresent(currentTimeIndicatorState) && isPresent(zonedCurrentTime) && (
-        <CurrentTimeLabel
+      {isPresent(nowIndicatorState) && isPresent(zonedNow) && (
+        <NowIndicatorLabel
           unit="hour"
-          top={currentTimeIndicatorState.top}
-          currentTime={currentTimeIndicatorState.now}
-          zonedCurrentTime={zonedCurrentTime}
+          top={nowIndicatorState.top}
+          now={nowIndicatorState.now}
+          zonedNow={zonedNow}
         />
       )}
     </div>
@@ -117,13 +111,10 @@ function HourRows({
 
 interface Props {
   timeGridRows: TimeGridRow[];
-  currentTimeIndicatorState: { top: number; now: TZDate } | null;
+  nowIndicatorState: { top: number; now: TZDate } | null;
 }
 
-export const TimeColumn = memo(function TimeColumn({
-  timeGridRows,
-  currentTimeIndicatorState,
-}: Props) {
+export const TimeColumn = memo(function TimeColumn({ timeGridRows, nowIndicatorState }: Props) {
   const timezones = useStore(timezonesSelector);
   const timezonesCollapsed = useStore(timezonesCollapsedOptionSelector);
 
@@ -137,11 +128,11 @@ export const TimeColumn = memo(function TimeColumn({
   const hourRowsPropsMapper = useCallback(
     (row: TimeGridRow, index: number, diffFromPrimaryTimezone?: number) => {
       const shouldHideRow = ({ top: rowTop, height: rowHeight }: TimeGridRow) => {
-        if (isNil(currentTimeIndicatorState)) {
+        if (isNil(nowIndicatorState)) {
           return false;
         }
 
-        const indicatorTop = currentTimeIndicatorState.top;
+        const indicatorTop = nowIndicatorState.top;
 
         return rowTop - rowHeight <= indicatorTop && indicatorTop <= rowTop + rowHeight;
       };
@@ -165,7 +156,7 @@ export const TimeColumn = memo(function TimeColumn({
         diffFromPrimaryTimezone,
       };
     },
-    [rowsByHour, currentTimeIndicatorState]
+    [rowsByHour, nowIndicatorState]
   );
 
   const [primaryTimezone, ...otherTimezones] = timezones;
@@ -204,7 +195,7 @@ export const TimeColumn = memo(function TimeColumn({
             isPrimary={false}
             borderRight={borderRight}
             width={hourRowsWidth}
-            currentTimeIndicatorState={currentTimeIndicatorState}
+            nowIndicatorState={nowIndicatorState}
           />
         ))}
       <HourRows
@@ -212,7 +203,7 @@ export const TimeColumn = memo(function TimeColumn({
         isPrimary={true}
         borderRight={borderRight}
         width={timezonesCollapsed ? 100 : hourRowsWidth}
-        currentTimeIndicatorState={currentTimeIndicatorState}
+        nowIndicatorState={nowIndicatorState}
       />
     </div>
   );

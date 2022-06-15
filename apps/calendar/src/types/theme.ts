@@ -51,11 +51,11 @@ export type WeekTheme = {
   timeGridLeftAdditionalTimezone: { backgroundColor: string };
   timeGridHalfHourLine: { borderBottom: string };
   timeGridHourLine: { borderBottom: string };
-  currentTime: { color: string };
-  currentTimeLinePast: { border: string };
-  currentTimeLineBullet: { backgroundColor: string };
-  currentTimeLineToday: { border: string };
-  currentTimeLineFuture: { border: string };
+  nowIndicatorLabel: { color: string };
+  nowIndicatorPast: { border: string };
+  nowIndicatorBullet: { backgroundColor: string };
+  nowIndicatorToday: { border: string };
+  nowIndicatorFuture: { border: string };
   pastTime: { color: string };
   futureTime: { color: string };
   weekend: { backgroundColor: string };
