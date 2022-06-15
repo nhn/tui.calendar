@@ -39,7 +39,7 @@ function initializeTimezoneOptions(timezoneOptions: Options['timezone'] = {}): T
 }
 
 function initializeMonthOptions(monthOptions: Options['month'] = {}): CalendarMonthOptions {
-  const month = {
+  const month: CalendarMonthOptions = {
     daynames: [],
     visibleWeeksCount: 0,
     workweek: false,
@@ -51,7 +51,7 @@ function initializeMonthOptions(monthOptions: Options['month'] = {}): CalendarMo
   };
 
   if (month.daynames.length === 0) {
-    month.daynames = DEFAULT_DAY_NAMES.slice();
+    month.daynames = DEFAULT_DAY_NAMES.slice() as Exclude<CalendarMonthOptions['daynames'], []>;
   }
 
   return month;

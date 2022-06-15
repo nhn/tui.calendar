@@ -11,7 +11,7 @@ import TZDate from '@src/time/date';
 import { noop } from '@src/utils/noop';
 
 import type { EventObject } from '@t/events';
-import type { Options } from '@t/options';
+import type { MonthOptions, Options } from '@t/options';
 
 function setup(options: Options, events?: EventModel[]) {
   const store = initCalendarStore(options);
@@ -89,7 +89,7 @@ describe('eventFilter option', () => {
 describe('daynames Option', () => {
   it('should show the default daynames if the daynames option is not specified.', () => {
     // Given
-    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const dayNames: MonthOptions['daynames'] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
     // When
     setup({});
@@ -102,7 +102,7 @@ describe('daynames Option', () => {
 
   it('should show the daynames specified by the daynames option.', () => {
     // Given
-    const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
+    const dayNames: MonthOptions['daynames'] = ['日', '月', '火', '水', '木', '金', '土'];
 
     // When
     setup({
@@ -118,7 +118,7 @@ describe('daynames Option', () => {
 
   it('should change daynames following startDayOfWeek option.', () => {
     // Given
-    const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
+    const dayNames: MonthOptions['daynames'] = ['日', '月', '火', '水', '木', '金', '土'];
     const startDayOfWeek = 1; // Monday
 
     // When
@@ -169,7 +169,7 @@ describe('startDayOfWeek Option', () => {
   it('should change start day of week with custom daynames', () => {
     // Given
     const startDayOfWeek = 2; // Tuesday
-    const givenDaynames = ['日', '月', '火', '水', '木', '金', '土'];
+    const givenDaynames: MonthOptions['daynames'] = ['日', '月', '火', '水', '木', '金', '土'];
     const normalDaynameColor = 'white';
     const sundayDaynameColor = 'red';
 

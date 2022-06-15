@@ -163,7 +163,7 @@ type TaskView = 'milestone' | 'task';
 
 interface WeekOptions {
   startDayOfWeek?: number;
-  daynames?: string[];
+  daynames?: [string, string, string, string, string, string, string];
   narrowWeekend?: boolean;
   workweek?: boolean;
   showTimezoneCollapseButton?: boolean;
@@ -227,10 +227,12 @@ calendar.setOptions({
 
 #### week.daynames
 
-- 타입: `string[]`
+- 타입: `[string, string, string, string, string, string, string]`
 - 기본값: `[]`
 
 일간/주간뷰에서 주의 요일명을 변경할 수 있다. 기본값은 `[]`이며, [startDayOfWeek](#week.startDayOfWeek)로 설정한 요일부터 시작한다.
+
+이 옵션을 부여할 때는 반드시 일요일부터 월요일까지 모든 요일이 입력된 배열을 입력해야 한다. 각 요일의 인덱스는 `Date.prototype.getDay` 의 결과와 같다. ([참고](https://tc39.es/ecma262/multipage/numbers-and-dates.html#sec-week-day))
 
 ```js
 calendar.setOptions({
@@ -421,7 +423,7 @@ calendar.setOptions({
 
 ```ts
 interface MonthOptions {
-  daynames?: string[];
+  daynames?: [string, string, string, string, string, string, string];
   startDayOfWeek?: number;
   narrowWeekend?: boolean;
   visibleWeeksCount?: number;
@@ -449,7 +451,7 @@ const DEFAULT_MONTH_OPTIONS = {
 
 #### month.daynames
 
-- 타입: `string[]`
+- 타입: `[string, string, string, string, string, string, string]`
 - 기본값: `['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']`
 
 월간뷰에서 주의 요일명을 변경할 수 있다. 기본값은 `['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']`이며, [startDayOfWeek](#month.startDayOfWeek)로 설정한 요일부터 시작한다.
