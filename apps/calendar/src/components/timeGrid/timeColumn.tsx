@@ -211,7 +211,7 @@ export const TimeColumn = memo(function TimeColumn({
         rowsInfo={primaryTimezoneHourRowsProps}
         isPrimary={true}
         borderRight={borderRight}
-        width={hourRowsWidth}
+        width={timezonesCollapsed ? 100 : hourRowsWidth}
         currentTimeIndicatorState={currentTimeIndicatorState}
       />
     </div>

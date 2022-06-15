@@ -81,7 +81,7 @@ export function TimezoneLabels({ top }: { top: number | null }) {
   const [primaryTimezone, ...restTimezones] = timezoneLabelProps;
   const subTimezones = restTimezones.reverse();
 
-  const timezonesCount = timezones.length;
+  const timezonesCount = timezonesCollapsed ? 1 : timezones.length;
   const timezoneLabelWidth = 100 / timezonesCount;
 
   return (

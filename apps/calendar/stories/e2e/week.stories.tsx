@@ -82,6 +82,19 @@ MultipleTimezones.args = {
       ],
     },
   },
+  onInit: (cal) => {
+    cal.createEvents(mockWeekViewEvents);
+    cal.on('beforeUpdateEvent', ({ event, changes }) => {
+      cal.updateEvent(event.id, event.calendarId, changes);
+    });
+    cal.on('clickTimezonesCollapseBtn', (prevState) => {
+      cal.setOptions({
+        week: {
+          timezonesCollapsed: !prevState,
+        },
+      });
+    });
+  },
 };
 
 export const CustomTemplate = Template.bind({});
