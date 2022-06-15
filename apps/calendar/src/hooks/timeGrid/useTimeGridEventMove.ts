@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
+import { useCallback, useEffect, useMemo, useRef } from 'preact/hooks';
 
 import { useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
@@ -14,15 +14,6 @@ import type { GridPosition, GridPositionFinder, TimeGridData } from '@t/grid';
 import type { CalendarState } from '@t/store';
 
 const THIRTY_MINUTES = 30;
-
-const initXSelector = (state: CalendarState) => state.dnd.initX;
-const initYSelector = (state: CalendarState) => state.dnd.initY;
-function useDragInitCoords() {
-  const initX = useStore(initXSelector);
-  const initY = useStore(initYSelector);
-
-  return useMemo(() => ({ initX, initY }), [initX, initY]);
-}
 
 function getCurrentIndexByTime(time: TZDate) {
   const hour = time.getHours();
@@ -63,6 +54,9 @@ function getMovingEventPosition({
   return { top, height };
 }
 
+const initXSelector = (state: CalendarState) => state.dnd.initX;
+const initYSelector = (state: CalendarState) => state.dnd.initY;
+
 export function useTimeGridEventMove({
   gridPositionFinder,
   timeGridData,
@@ -70,6 +64,9 @@ export function useTimeGridEventMove({
   gridPositionFinder: GridPositionFinder;
   timeGridData: TimeGridData;
 }) {
+  const initX = useStore(initXSelector);
+  const initY = useStore(initYSelector);
+
   const eventBus = useEventBus();
   const { isDraggingEnd, isDraggingCanceled, draggingEvent, clearDraggingEvent } = useDraggingEvent(
     'timeGrid',
@@ -77,47 +74,40 @@ export function useTimeGridEventMove({
   );
 
   const [currentGridPos, clearCurrentGridPos] = useCurrentPointerPositionInGrid(gridPositionFinder);
-  const { initX, initY } = useDragInitCoords();
+  const initGridPosRef = useRef<GridPosition | null>(null);
 
-  const [gridDiff, setGridDiff] = useState<GridPosition | null>(null);
-  const [initGridPosition, setInitGridPosition] = useState<GridPosition | null>(null);
-  const [startDateTime, setStartDateTime] = useState<TZDate | null>(null);
+  useEffect(() => {
+    if (isPresent(initX) && isPresent(initY)) {
+      initGridPosRef.current = gridPositionFinder({
+        clientX: initX,
+        clientY: initY,
+      });
+    }
+  }, [gridPositionFinder, initX, initY]);
+
+  const gridDiff = useMemo(() => {
+    if (isNil(initGridPosRef.current) || isNil(currentGridPos)) {
+      return null;
+    }
+
+    return {
+      columnDiff: currentGridPos.columnIndex - initGridPosRef.current.columnIndex,
+      rowDiff: currentGridPos.rowIndex - initGridPosRef.current.rowIndex,
+    };
+  }, [currentGridPos]);
+  const startDateTime = useMemo(() => {
+    if (isNil(draggingEvent)) {
+      return null;
+    }
+
+    return draggingEvent.getStarts();
+  }, [draggingEvent]);
 
   const clearState = useCallback(() => {
     clearCurrentGridPos();
     clearDraggingEvent();
-    setGridDiff(null);
-    setStartDateTime(null);
-    setInitGridPosition(null);
+    initGridPosRef.current = null;
   }, [clearCurrentGridPos, clearDraggingEvent]);
-
-  // Setting up initial grid position & start date time
-  useEffect(() => {
-    if (isPresent(initX) && isPresent(initY)) {
-      setInitGridPosition(
-        gridPositionFinder({
-          clientX: initX as number,
-          clientY: initY as number,
-        })
-      );
-    }
-  }, [initX, initY, gridPositionFinder]);
-
-  useEffect(() => {
-    if (isPresent(draggingEvent) && isNil(startDateTime)) {
-      setStartDateTime(draggingEvent.getStarts());
-    }
-  }, [draggingEvent, startDateTime]);
-
-  // Calculate and update grid diff
-  useEffect(() => {
-    if (isPresent(currentGridPos) && isPresent(initGridPosition)) {
-      setGridDiff({
-        columnIndex: currentGridPos.columnIndex - initGridPosition.columnIndex,
-        rowIndex: currentGridPos.rowIndex - initGridPosition.rowIndex,
-      });
-    }
-  }, [currentGridPos, initGridPosition]);
 
   const nextStartTime = useMemo(() => {
     if (isNil(gridDiff) || isNil(startDateTime)) {
@@ -126,20 +116,20 @@ export function useTimeGridEventMove({
 
     return addMilliseconds(
       startDateTime,
-      gridDiff.rowIndex * MS_PER_THIRTY_MINUTES + gridDiff.columnIndex * MS_PER_DAY
+      gridDiff.rowDiff * MS_PER_THIRTY_MINUTES + gridDiff.columnDiff * MS_PER_DAY
     );
   }, [gridDiff, startDateTime]);
 
   const movingEvent = useMemo(() => {
-    if (isNil(draggingEvent) || isNil(currentGridPos) || isNil(initGridPosition)) {
+    if (isNil(draggingEvent) || isNil(currentGridPos) || isNil(gridDiff)) {
       return null;
     }
 
     const clonedEvent = draggingEvent.clone();
     const { top, height } = getMovingEventPosition({
       draggingEvent: clonedEvent,
-      columnDiff: currentGridPos.columnIndex - initGridPosition.columnIndex,
-      rowDiff: currentGridPos.rowIndex - initGridPosition.rowIndex,
+      columnDiff: gridDiff.columnDiff,
+      rowDiff: gridDiff.rowDiff,
       timeGridDataRows: timeGridData.rows,
       currentDate: timeGridData.columns[currentGridPos.columnIndex].date,
     });
@@ -152,7 +142,7 @@ export function useTimeGridEventMove({
     });
 
     return clonedEvent;
-  }, [currentGridPos, draggingEvent, initGridPosition, timeGridData.columns, timeGridData.rows]);
+  }, [currentGridPos, draggingEvent, gridDiff, timeGridData.columns, timeGridData.rows]);
 
   useWhen(() => {
     const shouldUpdate =
@@ -161,7 +151,7 @@ export function useTimeGridEventMove({
       isPresent(currentGridPos) &&
       isPresent(gridDiff) &&
       isPresent(nextStartTime) &&
-      (gridDiff.rowIndex !== 0 || gridDiff.columnIndex !== 0);
+      (gridDiff.rowDiff !== 0 || gridDiff.columnDiff !== 0);
     if (shouldUpdate) {
       const duration = draggingEvent.duration();
       const nextEndTime = addMilliseconds(nextStartTime, duration);
