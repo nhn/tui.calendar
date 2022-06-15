@@ -415,6 +415,33 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
     // console.log('scrollToNow');
   }
 
+  private calculateRenderRange(renderDate: TZDate) {
+    const { currentView } = this.getStoreState().view;
+    const { options } = this.getStoreState();
+
+    const newRenderDate = new TZDate(renderDate);
+
+    let newRenderRange = { start: new TZDate(newRenderDate), end: new TZDate(newRenderDate) };
+
+    if (currentView === 'month') {
+      newRenderRange = this.calculateMonthRenderDate({
+        renderDate,
+        offset: 0,
+        monthOptions: options.month as CalendarMonthOptions,
+      }).renderRange;
+    } else if (currentView === 'week') {
+      newRenderRange = this.calculateWeekRenderDate({
+        renderDate,
+        offset: 0,
+        weekOptions: options.week as CalendarWeekOptions,
+      }).renderRange;
+    } else if (currentView === 'day') {
+      newRenderRange = this.calculateDayRenderDate({ renderDate, offset: 0 }).renderRange;
+    }
+
+    return newRenderRange;
+  }
+
   /**
    * Move to today.
    *
@@ -425,8 +452,10 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    */
   today() {
     const { setRenderDate } = this.getStoreDispatchers().view;
+    const today = new TZDate();
 
-    setRenderDate(new TZDate());
+    setRenderDate(today);
+    this.renderRange = this.calculateRenderRange(today);
   }
 
   /**
@@ -445,9 +474,10 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    */
   setDate(date: DateType) {
     const { setRenderDate } = this.getStoreDispatchers('view');
+    const dateToChange = new TZDate(date);
 
-    setRenderDate(new TZDate(date));
-    // TODO: should update `this.renderRange`. Perhaps this method have to call `move` method?
+    setRenderDate(dateToChange);
+    this.renderRange = this.calculateRenderRange(dateToChange);
   }
 
   /**
