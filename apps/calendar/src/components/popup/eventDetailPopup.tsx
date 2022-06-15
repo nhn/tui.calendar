@@ -12,9 +12,10 @@ import { useFloatingLayer } from '@src/contexts/floatingLayer';
 import { useLayoutContainer } from '@src/contexts/layoutContainer';
 import { cls } from '@src/helpers/css';
 import { isLeftOutOfLayout, isTopOutOfLayout } from '@src/helpers/popup';
+import { useOnMouseDownOutside } from '@src/hooks/common/useOnMouseDownOutside';
 import { eventDetailPopupParamSelector } from '@src/selectors/popup';
 import TZDate from '@src/time/date';
-import { isNil } from '@src/utils/type';
+import { isFunction, isNil } from '@src/utils/type';
 
 import type { StyleProp } from '@t/components/common';
 import type { Rect } from '@t/store';
@@ -63,8 +64,8 @@ function calculatePopupArrowPosition(eventRect: Rect, layoutRect: Rect, popupRec
 
 export function EventDetailPopup() {
   const popupParams = useStore(eventDetailPopupParamSelector);
-  const { event, eventRect } = popupParams ?? {};
-  const { showFormPopup } = useDispatch('popup');
+  const { event, eventRect, close } = popupParams ?? {};
+  const { showFormPopup, hideAllPopup } = useDispatch('popup');
 
   const layoutContainer = useLayoutContainer();
   const detailPopupSlot = useFloatingLayer('detailPopupSlot');
@@ -101,6 +102,16 @@ export function EventDetailPopup() {
       setArrowDirection(direction);
     }
   }, [eventRect, layoutContainer]);
+
+  useOnMouseDownOutside(popupContainerRef, (ev) => {
+    ev.stopPropagation();
+
+    hideAllPopup();
+
+    if (isFunction(close)) {
+      close();
+    }
+  });
 
   if (isNil(event) || isNil(eventRect) || isNil(detailPopupSlot)) {
     return null;

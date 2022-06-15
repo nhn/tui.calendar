@@ -24,13 +24,14 @@ import { useFloatingLayer } from '@src/contexts/floatingLayer';
 import { useLayoutContainer } from '@src/contexts/layoutContainer';
 import { cls } from '@src/helpers/css';
 import { isLeftOutOfLayout, isTopOutOfLayout } from '@src/helpers/popup';
+import { useOnMouseDownOutside } from '@src/hooks/common/useOnMouseDownOutside';
 import { useFormState } from '@src/hooks/popup/useFormState';
 import type EventModel from '@src/model/eventModel';
 import { calendarSelector } from '@src/selectors';
 import { eventFormPopupParamSelector } from '@src/selectors/popup';
 import TZDate from '@src/time/date';
 import { compare } from '@src/time/datetime';
-import { isNil } from '@src/utils/type';
+import { isFunction, isNil } from '@src/utils/type';
 
 import type { FormEvent, StyleProp } from '@t/components/common';
 import type { BooleanKeyOfEventObject, EventObject } from '@t/events';
@@ -151,6 +152,16 @@ export function EventFormPopup() {
       setArrowDirection(direction);
     }
   }, [layoutContainer, popupArrowPointPosition]);
+
+  useOnMouseDownOutside(popupContainerRef, (ev: MouseEvent) => {
+    ev.stopPropagation();
+
+    hideAllPopup();
+
+    if (isFunction(close)) {
+      close();
+    }
+  });
 
   if (isNil(start) || isNil(end) || isNil(formPopupSlot)) {
     return null;

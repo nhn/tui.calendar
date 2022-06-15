@@ -12,14 +12,15 @@ import {
   MONTH_MORE_VIEW_HEADER_PADDING,
   MONTH_MORE_VIEW_HEADER_PADDING_TOP,
 } from '@src/constants/style';
-import { useStore } from '@src/contexts/calendarStore';
+import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
 import { useFloatingLayer } from '@src/contexts/floatingLayer';
 import { useMonthTheme } from '@src/contexts/themeStore';
 import { cls } from '@src/helpers/css';
+import { useOnMouseDownOutside } from '@src/hooks/common/useOnMouseDownOutside';
 import { seeMorePopupParamSelector } from '@src/selectors/popup';
 import { toFormat } from '@src/time/datetime';
-import { isNil } from '@src/utils/type';
+import { isFunction, isNil } from '@src/utils/type';
 
 const classNames = {
   container: cls('see-more-container'),
@@ -30,7 +31,8 @@ const classNames = {
 
 export function SeeMoreEventsPopup() {
   const popupParams = useStore(seeMorePopupParamSelector);
-  const { date, events = [], popupPosition } = popupParams ?? {};
+  const { date, events = [], popupPosition, close } = popupParams ?? {};
+  const { hideAllPopup } = useDispatch('popup');
   const { moreView, moreViewTitle } = useMonthTheme();
   const seeMorePopupSlot = useFloatingLayer('seeMorePopupSlot');
   const eventBus = useEventBus();
@@ -45,6 +47,16 @@ export function SeeMoreEventsPopup() {
       });
     }
   }, [date, eventBus, isHidden]);
+
+  useOnMouseDownOutside(moreEventsPopupContainerRef, (ev) => {
+    ev.stopPropagation();
+
+    hideAllPopup();
+
+    if (isFunction(close)) {
+      close();
+    }
+  });
 
   if (isHidden) {
     return null;
