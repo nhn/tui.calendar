@@ -5,6 +5,7 @@ import { useLayoutEffect, useMemo } from 'preact/hooks';
 import type { Panel } from '@src/components/panel';
 import { EventDetailPopup } from '@src/components/popup/eventDetailPopup';
 import { EventFormPopup } from '@src/components/popup/eventFormPopup';
+import { PopupOverlay } from '@src/components/popup/popupOverlay';
 import { SeeMoreEventsPopup } from '@src/components/popup/seeMoreEventsPopup';
 import { useDispatch } from '@src/contexts/calendarStore';
 import { LayoutContainerProvider } from '@src/contexts/layoutContainer';
@@ -85,6 +86,7 @@ export function Layout({
       <EventFormPopup />
       <EventDetailPopup />
       <SeeMoreEventsPopup />
+      <PopupOverlay />
     </LayoutContainerProvider>
   );
 }
