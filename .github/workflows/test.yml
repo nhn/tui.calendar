@@ -1,7 +1,7 @@
-name: Test
+name: Lint and test
 on:
   pull_request:
-    branches: [next]
+    branches: [main]
   workflow_call:
 jobs:
   lint:
