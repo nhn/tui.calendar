@@ -17,7 +17,7 @@ import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import { act, screen } from '@src/test/utils';
 import TZDate from '@src/time/date';
-import { addDate, subtractDate } from '@src/time/datetime';
+import { addDate, addMonths, subtractDate } from '@src/time/datetime';
 
 import type { CalendarInfo } from '@t/options';
 
@@ -1195,5 +1195,185 @@ describe('usageStatistics option', () => {
 
     // Then
     expect(sendHostname).not.toHaveBeenCalled();
+  });
+});
+
+describe('getDateRangeStart/getDateRangeEnd', () => {
+  beforeEach(() => {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+    mockCalendar = new MockCalendar(container);
+    act(() => {
+      mockCalendar.render();
+    });
+  });
+
+  afterEach(() => {
+    cleanup();
+  });
+
+  describe('when setDate is called', () => {
+    it('should set renderRange on day view', () => {
+      // Given
+      const targetDate = new Date('2022-06-15'); // Wed
+      const expectedStartDate = new TZDate(targetDate);
+      const expectedEndDate = new TZDate(targetDate);
+
+      // When
+      act(() => {
+        mockCalendar.changeView('day');
+        mockCalendar.setDate(targetDate);
+      });
+
+      // Then
+      expect(mockCalendar.getDateRangeStart()).toBeSameDate(expectedStartDate);
+      expect(mockCalendar.getDateRangeEnd()).toBeSameDate(expectedEndDate);
+    });
+
+    it('should set renderRange on week view', () => {
+      // Given
+      const targetDate = new Date('2022-06-15'); // Wed
+      const expectedStartDate = new TZDate('2022-06-12');
+      const expectedEndDate = new TZDate('2022-06-18');
+
+      // When
+      act(() => {
+        mockCalendar.changeView('week');
+        mockCalendar.setDate(targetDate);
+      });
+
+      // Then
+      expect(mockCalendar.getDateRangeStart()).toBeSameDate(expectedStartDate);
+      expect(mockCalendar.getDateRangeEnd()).toBeSameDate(expectedEndDate);
+    });
+
+    it('should set renderRange on month when isAlways6Weeks is true', () => {
+      // Given
+      const targetDate = new Date('2022-06-15'); // Wed
+      const expectedStartDate = new TZDate('2022-05-29');
+      const expectedEndDate = new TZDate('2022-07-09');
+
+      // When
+      act(() => {
+        mockCalendar.changeView('month');
+        mockCalendar.setDate(targetDate);
+      });
+
+      // Then
+      expect(mockCalendar.getDateRangeStart()).toBeSameDate(expectedStartDate);
+      expect(mockCalendar.getDateRangeEnd()).toBeSameDate(expectedEndDate);
+    });
+
+    it('should set renderRange on month when isAlways6Weeks is false)', () => {
+      // Given
+      const targetDate = new Date('2022-06-15'); // Wed
+      const expectedStartDate = new TZDate('2022-05-29');
+      const expectedEndDate = new TZDate('2022-07-02'); // 5 weeks
+
+      // When
+      act(() => {
+        mockCalendar.changeView('month');
+        mockCalendar.setOptions({ month: { isAlways6Weeks: false } });
+        mockCalendar.setDate(targetDate);
+      });
+
+      // Then
+      expect(mockCalendar.getDateRangeStart()).toBeSameDate(expectedStartDate);
+      expect(mockCalendar.getDateRangeEnd()).toBeSameDate(expectedEndDate);
+    });
+  });
+
+  describe('when today is called', () => {
+    function getMonthDateRange(renderDate: TZDate, isAlways6Weeks: boolean) {
+      const newDate = new TZDate(renderDate);
+      const nextMonthDate = addMonths(newDate, 1);
+      const endDateOfMonth = addDate(nextMonthDate, nextMonthDate.getDate() * -1);
+      let startDate = addDate(newDate, newDate.getDay() * -1);
+      let endDate = addDate(startDate, 6);
+
+      while (startDate.getMonth() === newDate.getMonth() && startDate.getDate() > 1) {
+        startDate = addDate(startDate, -7);
+      }
+
+      if (isAlways6Weeks) {
+        endDate = addDate(startDate, 7 * 6 - 1);
+      } else {
+        // NOTE: calculate endDate
+        while (
+          endDate.getMonth() === newDate.getMonth() &&
+          endDate.getDate() < endDateOfMonth.getDate()
+        ) {
+          endDate = addDate(endDate, 7);
+        }
+      }
+
+      return [startDate, endDate];
+    }
+
+    it('should set renderRange on day view', () => {
+      // Given
+      const today = new TZDate();
+
+      // When
+      act(() => {
+        mockCalendar.changeView('day');
+        mockCalendar.today();
+      });
+
+      // Then
+      expect(mockCalendar.getDateRangeStart()).toBeSameDate(today);
+      expect(mockCalendar.getDateRangeEnd()).toBeSameDate(today);
+    });
+
+    it('should set renderRange on week', () => {
+      // Given
+      const today = new TZDate();
+      const expectedStartDate = addDate(today, today.getDay() * -1);
+      const expectedEndDate = addDate(expectedStartDate, 6);
+
+      // When
+      act(() => {
+        mockCalendar.changeView('week');
+        mockCalendar.today();
+      });
+
+      // Then
+      expect(mockCalendar.getDateRangeStart()).toBeSameDate(expectedStartDate);
+      expect(mockCalendar.getDateRangeEnd()).toBeSameDate(expectedEndDate);
+    });
+
+    it('should set renderRange on month when isAlways6Weeks is true', () => {
+      // Given
+      const today = new TZDate();
+      const [expectedStartDate, expectedEndDate] = getMonthDateRange(today, true);
+
+      // When
+      act(() => {
+        mockCalendar.changeView('month');
+        mockCalendar.today();
+      });
+
+      // Then
+      expect(mockCalendar.getDateRangeStart()).toBeSameDate(expectedStartDate);
+      expect(mockCalendar.getDateRangeEnd()).toBeSameDate(expectedEndDate);
+    });
+
+    it('should set renderRange on month when isAlways6Weeks is false', () => {
+      // Given
+      const isAlways6Weeks = false;
+      const today = new TZDate();
+      const [expectedStartDate, expectedEndDate] = getMonthDateRange(today, isAlways6Weeks);
+
+      // When
+      act(() => {
+        mockCalendar.changeView('month');
+        mockCalendar.setOptions({ month: { isAlways6Weeks } });
+        mockCalendar.today();
+      });
+
+      // Then
+      expect(mockCalendar.getDateRangeStart()).toBeSameDate(expectedStartDate);
+      expect(mockCalendar.getDateRangeEnd()).toBeSameDate(expectedEndDate);
+    });
   });
 });
