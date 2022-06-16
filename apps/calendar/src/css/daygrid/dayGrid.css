@@ -2,14 +2,14 @@
   height: 100%;
 }
 
-.month .daynames {
+.month .day-names {
   /* from constant MONTH_DAY_NAME_HEIGHT */
   height: 31px;
 }
 
 .month .month-daygrid {
   position: relative;
-  /* modify this if you want to change height of daynames */
+  /* modify this if you want to change height of day names */
   height: calc(100% - 31px);
 }
 

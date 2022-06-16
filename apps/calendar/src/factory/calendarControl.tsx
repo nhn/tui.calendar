@@ -607,7 +607,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    *     },
    *   },
    *   month: {
-   *     dayname: {
+   *     dayName: {
    *       borderLeft: '1px solid #e5e5e5',
    *     },
    *   },

@@ -133,8 +133,8 @@ export const templates: Template = {
   },
 
   weekDayname(model: TemplateWeekDayName) {
-    const classDate = cls('dayname-date');
-    const className = cls('dayname-name');
+    const classDate = cls('dayname__date');
+    const className = cls('dayname__name');
 
     return (
       <Fragment>
