@@ -40,3 +40,7 @@ export type ExternalEventTypes = {
   clickTimezonesCollapseBtn: (prevCollapsedState: boolean) => void;
   [eventName: string]: AnyFunc;
 };
+
+export type InternalEventTypes = {
+  scrollToNow: () => void;
+};

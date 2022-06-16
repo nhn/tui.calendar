@@ -20,7 +20,7 @@ import { EventBusImpl } from '@src/utils/eventBus';
 import { addAttributeHooks, removeAttributeHooks } from '@src/utils/sanitizer';
 import { isNil, isPresent, isString } from '@src/utils/type';
 
-import type { ExternalEventTypes } from '@t/eventBus';
+import type { ExternalEventTypes, InternalEventTypes } from '@t/eventBus';
 import type { DateType, EventObject } from '@t/events';
 import type { CalendarColor, CalendarInfo, Options, ViewType } from '@t/options';
 import type {
@@ -33,7 +33,9 @@ import type {
 } from '@t/store';
 import type { ThemeState, ThemeStore } from '@t/theme';
 
-export default abstract class CalendarControl implements EventBus<ExternalEventTypes> {
+export default abstract class CalendarControl
+  implements EventBus<ExternalEventTypes & InternalEventTypes>
+{
   protected container: Element | null;
 
   /**
@@ -46,7 +48,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
     end: TZDate;
   };
 
-  protected eventBus: EventBus<ExternalEventTypes>;
+  protected eventBus: EventBus<ExternalEventTypes & InternalEventTypes>;
 
   protected theme: InternalStoreAPI<ThemeStore>;
 
@@ -62,7 +64,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
     };
 
     this.theme = initThemeStore(options.theme);
-    this.eventBus = new EventBusImpl<ExternalEventTypes>();
+    this.eventBus = new EventBusImpl<ExternalEventTypes & InternalEventTypes>();
     this.store = initCalendarStore(options);
 
     addAttributeHooks();
@@ -400,19 +402,18 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * TODO: implement this
    * Scroll to current time on today in case of daily, weekly view.
    *
    * @example
    * function onNewEvents(events) {
-   *     calendar.createEvents(events);
-   *     if (calendar.getViewName() !== 'month') {
-   *         calendar.scrollToNow();
-   *     }
+   *   calendar.createEvents(events);
+   *   if (calendar.getViewName() !== 'month') {
+   *     calendar.scrollToNow();
+   *   }
    * }
    */
   scrollToNow() {
-    // console.log('scrollToNow');
+    this.eventBus.fire('scrollToNow');
   }
 
   private calculateRenderRange(renderDate: TZDate) {
