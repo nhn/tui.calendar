@@ -51,6 +51,35 @@ jobs:
           npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+  publish-docs:
+    needs: publish-npm
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        uses: ./.github/composite-actions/install-dependencies
+      - name: Build docs
+        run: |
+          npm run build:calendar:docs
+      - name: Commit new doc files
+        # for alpha version docs
+        # TODO: need to change the target folder when beta/public release
+        run: |
+          git switch gh-pages
+          git config --local user.email "dohyung.ahn@nhn.com"
+          git config --local user.name "Dohyung Ahn"
+          rm -rf 2.0.0-alpha
+          mv _docs 2.0.0-alpha
+          git add -A
+          git commit -m ${{ steps.cpv.outputs.committed-version }}
+      - name: Publish new docs
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages
+      - name: Restore branch
+        run: |
+          git switch main
   # publish-cdn:
   #   needs: publish-npm
   #   runs-on: ubuntu-latest
@@ -66,7 +95,3 @@ jobs:
   #         TOAST_CLOUD_STORAGEID: ${{ secrets.TOAST_CLOUD_STORAGEID }}
   #         TOAST_CLOUD_USERNAME: ${{ secrets.TOAST_CLOUD_USERNAME }}
   #         TOAST_CLOUD_PASSWORD: ${{ secrets.TOAST_CLOUD_PASSWORD }}
-  # publish-docs:
-  #   needs: publish-npm
-  #   runs-on: ubuntu-latest
-  #   steps:
