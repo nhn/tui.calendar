@@ -320,11 +320,17 @@ describe('Multiple Timezone', () => {
     // Then
     const hourColumns = screen.getAllByRole('rowgroup');
     expect(hourColumns.length).toBe(2);
+    hourColumns.forEach((col) => {
+      expect(col).toHaveStyle({ width: '50%' });
+    });
 
-    const hourRowsByColumn = hourColumns.map((hourCol) =>
+    const hourRowsTextByColumn = hourColumns.map((hourCol) =>
       Array.from(hourCol.children).map((hourRow) => hourRow.textContent)
     );
-    expect(hourRowsByColumn).toEqual([expectedSecondaryHoursColumn, expectedPrimaryHoursColumn]);
+    expect(hourRowsTextByColumn).toEqual([
+      expectedSecondaryHoursColumn,
+      expectedPrimaryHoursColumn,
+    ]);
   });
 
   it('should render current time of each timezones including date differences (minus 1)', () => {
@@ -408,6 +414,7 @@ describe('Multiple Timezone', () => {
 
     expect(labelContainer.children).toHaveLength(1);
     expect(hourColumns).toHaveLength(1);
+    expect(hourColumns[0]).toHaveStyle({ width: '100%' });
   });
 });
 

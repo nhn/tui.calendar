@@ -57,7 +57,7 @@ export function Day() {
   const { narrowWeekend, startDayOfWeek, workweek, hourStart, hourEnd, eventView, taskView } =
     weekOptions;
   const days = useMemo(() => [renderDate], [renderDate]);
-  const dayNames = getDayNames(days);
+  const dayNames = getDayNames(days, options.week?.daynames ?? []);
   const { rowStyleInfo, cellWidthMap } = getRowStyleInfo(
     days.length,
     narrowWeekend,
@@ -73,10 +73,11 @@ export function Day() {
   const timeGridData = useMemo(
     () =>
       createTimeGridData(days, {
-        hourStart: weekOptions.hourStart,
-        hourEnd: weekOptions.hourEnd,
+        hourStart,
+        hourEnd,
+        narrowWeekend,
       }),
-    [days, weekOptions.hourEnd, weekOptions.hourStart]
+    [days, hourEnd, hourStart, narrowWeekend]
   );
   const activePanels = getActivePanels(taskView, eventView);
   const gridRows = activePanels.map((key) => {
