@@ -1,3 +1,4 @@
+import type { Locator } from '@playwright/test';
 import { expect, test } from '@playwright/test';
 
 import type TZDate from '../../src/time/date';
@@ -237,5 +238,106 @@ test.describe('CSS class for a move event', () => {
 
     // Then
     expect(await moveEventClassLocator.count()).toBe(0);
+  });
+});
+
+test.describe(`Calibrate event's height while dragging`, () => {
+  let eventLocator: Locator;
+  let lowerLongTimeEventLocator: Locator;
+  let upperLongTimeEventLocator: Locator;
+
+  test.beforeEach(({ page }) => {
+    const targetEventSelector = getTimeEventSelector(LONG_TIME_EVENT.title);
+
+    lowerLongTimeEventLocator = page.locator(targetEventSelector).first();
+    upperLongTimeEventLocator = page.locator(targetEventSelector).last();
+    eventLocator = page.locator(targetEventSelector);
+  });
+
+  test('lower long time event become longer while drag to upper side', async ({ page }) => {
+    // Given
+    const eventBoundingBox = await getBoundingBox(lowerLongTimeEventLocator);
+
+    // When
+    await dragAndDrop({
+      page,
+      sourceLocator: lowerLongTimeEventLocator,
+      targetLocator: lowerLongTimeEventLocator,
+      options: {
+        sourcePosition: { x: 10, y: 10 },
+        targetPosition: { x: 10, y: -10 },
+      },
+      hold: true,
+    });
+
+    // Then
+    const shadowEventBoundingBox = await getBoundingBox(eventLocator.first());
+    expect(shadowEventBoundingBox.y).toBeLessThan(eventBoundingBox.y);
+    expect(shadowEventBoundingBox.height).toBeGreaterThan(eventBoundingBox.height);
+  });
+
+  test('lower long time event become shorter while drag to lower side', async ({ page }) => {
+    // Given
+    const eventBoundingBox = await getBoundingBox(lowerLongTimeEventLocator);
+
+    // When
+    await dragAndDrop({
+      page,
+      sourceLocator: lowerLongTimeEventLocator,
+      targetLocator: lowerLongTimeEventLocator,
+      options: {
+        sourcePosition: { x: 10, y: 10 },
+        targetPosition: { x: 10, y: 30 },
+      },
+      hold: true,
+    });
+
+    // Then
+    const shadowEventBoundingBox = await getBoundingBox(eventLocator.first());
+    // NOTE: shadow event's height is greater than event's height, but it looks like it isn't.
+    //       height is truncated because of stacking context.
+    expect(shadowEventBoundingBox.y).toBeGreaterThan(eventBoundingBox.y);
+  });
+
+  test('upper long time event become longer while drag to lower side', async ({ page }) => {
+    // Given
+    const eventBoundingBox = await getBoundingBox(upperLongTimeEventLocator);
+
+    // When
+    await dragAndDrop({
+      page,
+      sourceLocator: upperLongTimeEventLocator,
+      targetLocator: upperLongTimeEventLocator,
+      options: {
+        sourcePosition: { x: 10, y: 10 },
+        targetPosition: { x: 10, y: 30 },
+      },
+      hold: true,
+    });
+
+    // Then
+    const shadowEventBoundingBox = await getBoundingBox(eventLocator.first());
+    expect(shadowEventBoundingBox.height).toBeGreaterThan(eventBoundingBox.height);
+  });
+
+  test('upper long time event become shorter while drag to upper side', async ({ page }) => {
+    // Given
+    const eventBoundingBox = await getBoundingBox(upperLongTimeEventLocator);
+
+    // When
+    await dragAndDrop({
+      page,
+      sourceLocator: upperLongTimeEventLocator,
+      targetLocator: upperLongTimeEventLocator,
+      options: {
+        sourcePosition: { x: 10, y: 100 },
+        targetPosition: { x: 10, y: 50 },
+      },
+      hold: true,
+    });
+
+    // Then
+    const shadowEventBoundingBox = await getBoundingBox(eventLocator.first());
+    expect(shadowEventBoundingBox.height).toBeLessThan(eventBoundingBox.height);
   });
 });
