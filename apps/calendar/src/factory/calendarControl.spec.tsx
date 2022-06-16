@@ -12,12 +12,12 @@ import { useAllTheme, useTheme } from '@src/contexts/themeStore';
 import CalendarControl from '@src/factory/calendarControl';
 import Month from '@src/factory/month';
 import { isVisibleEvent } from '@src/helpers/events';
-import { getWeekDates } from '@src/helpers/grid';
+import { createDateMatrixOfMonth, getWeekDates } from '@src/helpers/grid';
 import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import { act, screen } from '@src/test/utils';
 import TZDate from '@src/time/date';
-import { addDate, addMonths, subtractDate } from '@src/time/datetime';
+import { addDate, subtractDate } from '@src/time/datetime';
 
 import type { CalendarInfo } from '@t/options';
 
@@ -1285,27 +1285,9 @@ describe('getDateRangeStart/getDateRangeEnd', () => {
 
   describe('when today is called', () => {
     function getMonthDateRange(renderDate: TZDate, isAlways6Weeks: boolean) {
-      const newDate = new TZDate(renderDate);
-      const nextMonthDate = addMonths(newDate, 1);
-      const endDateOfMonth = addDate(nextMonthDate, nextMonthDate.getDate() * -1);
-      let startDate = addDate(newDate, newDate.getDay() * -1);
-      let endDate = addDate(startDate, 6);
-
-      while (startDate.getMonth() === newDate.getMonth() && startDate.getDate() > 1) {
-        startDate = addDate(startDate, -7);
-      }
-
-      if (isAlways6Weeks) {
-        endDate = addDate(startDate, 7 * 6 - 1);
-      } else {
-        // NOTE: calculate endDate
-        while (
-          endDate.getMonth() === newDate.getMonth() &&
-          endDate.getDate() < endDateOfMonth.getDate()
-        ) {
-          endDate = addDate(endDate, 7);
-        }
-      }
+      const matrix = createDateMatrixOfMonth(renderDate, { isAlways6Weeks });
+      const [[startDate]] = matrix;
+      const endDate = matrix[matrix.length - 1][matrix[0].length - 1];
 
       return [startDate, endDate];
     }
