@@ -56,6 +56,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Install dependencies
         uses: ./.github/composite-actions/install-dependencies
       - name: Build docs
