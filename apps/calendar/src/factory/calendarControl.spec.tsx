@@ -1292,6 +1292,16 @@ describe('getDateRangeStart/getDateRangeEnd', () => {
       return [startDate, endDate];
     }
 
+    beforeEach(() => {
+      jest.useFakeTimers();
+      jest.setSystemTime(new Date('2022-06-15T20:00:00'));
+    });
+
+    afterEach(() => {
+      jest.clearAllTimers();
+      jest.useRealTimers();
+    });
+
     it('should set renderRange on day view', () => {
       // Given
       const today = new TZDate();
