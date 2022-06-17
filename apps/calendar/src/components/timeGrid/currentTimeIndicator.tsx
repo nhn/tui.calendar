@@ -7,6 +7,7 @@ import { useLayoutContainer } from '@src/contexts/layoutContainer';
 import { useTheme } from '@src/contexts/themeStore';
 import { cls, toPercent } from '@src/helpers/css';
 
+import type { ScrollBehaviorOptions } from '@t/eventBus';
 import type { ThemeState } from '@t/theme';
 
 const classNames = {
@@ -51,13 +52,20 @@ export function CurrentTimeIndicator({ top, columnWidth, columnCount, columnInde
   };
 
   useEffect(() => {
-    const scrollToNow = () => {
+    const scrollToNow = (behavior: ScrollBehaviorOptions) => {
       const scrollArea = layoutContainer?.querySelector(`.${cls('panel')}.${cls('time')}`) ?? null;
-      if (scrollArea && indicatorRef.current) {
-        const { offsetHeight } = scrollArea as HTMLDivElement;
-        const { offsetTop } = indicatorRef.current;
 
-        scrollArea.scrollTop = offsetTop - offsetHeight / 2;
+      if (scrollArea && indicatorRef.current) {
+        const { offsetHeight: scrollAreaOffsetHeight } = scrollArea as HTMLDivElement;
+        const { offsetTop: targetOffsetTop } = indicatorRef.current;
+        const newScrollTop = targetOffsetTop - scrollAreaOffsetHeight / 2;
+
+        // NOTE: IE11 doesn't support `scrollTo`
+        if (scrollArea.scrollTo) {
+          scrollArea.scrollTo({ top: newScrollTop, behavior });
+        } else {
+          scrollArea.scrollTop = newScrollTop;
+        }
       }
     };
     eventBus.on('scrollToNow', scrollToNow);
@@ -66,7 +74,7 @@ export function CurrentTimeIndicator({ top, columnWidth, columnCount, columnInde
   }, [eventBus, layoutContainer]);
 
   useEffect(() => {
-    eventBus.fire('scrollToNow');
+    eventBus.fire('scrollToNow', 'smooth');
   }, [eventBus]);
 
   return (

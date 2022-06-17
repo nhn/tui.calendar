@@ -20,7 +20,7 @@ import { EventBusImpl } from '@src/utils/eventBus';
 import { addAttributeHooks, removeAttributeHooks } from '@src/utils/sanitizer';
 import { isNil, isPresent, isString } from '@src/utils/type';
 
-import type { ExternalEventTypes, InternalEventTypes } from '@t/eventBus';
+import type { ExternalEventTypes, InternalEventTypes, ScrollBehaviorOptions } from '@t/eventBus';
 import type { DateType, EventObject } from '@t/events';
 import type { CalendarColor, CalendarInfo, Options, ViewType } from '@t/options';
 import type {
@@ -412,8 +412,8 @@ export default abstract class CalendarControl
    *   }
    * }
    */
-  scrollToNow() {
-    this.eventBus.fire('scrollToNow');
+  scrollToNow(scrollBehavior: ScrollBehaviorOptions = 'auto') {
+    this.eventBus.fire('scrollToNow', scrollBehavior);
   }
 
   private calculateRenderRange(renderDate: TZDate) {
