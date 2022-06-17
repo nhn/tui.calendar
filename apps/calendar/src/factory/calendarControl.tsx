@@ -403,13 +403,12 @@ export default abstract class CalendarControl
 
   /**
    * Scroll to current time on today in case of daily, weekly view.
+   * Nothing happens in the monthly view.
    *
    * @example
    * function onNewEvents(events) {
    *   calendar.createEvents(events);
-   *   if (calendar.getViewName() !== 'month') {
-   *     calendar.scrollToNow();
-   *   }
+   *   calendar.scrollToNow('smooth');
    * }
    */
   scrollToNow(scrollBehavior: ScrollBehaviorOptions = 'auto') {
