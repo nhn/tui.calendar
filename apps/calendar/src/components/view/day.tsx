@@ -8,7 +8,7 @@ import { Layout } from '@src/components/layout';
 import { Panel } from '@src/components/panel';
 import { TimeGrid } from '@src/components/timeGrid/timeGrid';
 import { TimezoneLabels } from '@src/components/timeGrid/timezoneLabels';
-import { WEEK_DAYNAME_BORDER, WEEK_DAYNAME_HEIGHT } from '@src/constants/style';
+import { WEEK_DAY_NAME_BORDER, WEEK_DAY_NAME_HEIGHT } from '@src/constants/style';
 import { useStore } from '@src/contexts/calendarStore';
 import { useTheme } from '@src/contexts/themeStore';
 import { cls } from '@src/helpers/css';
@@ -57,7 +57,7 @@ export function Day() {
   const { narrowWeekend, startDayOfWeek, workweek, hourStart, hourEnd, eventView, taskView } =
     weekOptions;
   const days = useMemo(() => [renderDate], [renderDate]);
-  const dayNames = getDayNames(days, options.week?.daynames ?? []);
+  const dayNames = getDayNames(days, options.week?.dayNames ?? []);
   const { rowStyleInfo, cellWidthMap } = getRowStyleInfo(
     days.length,
     narrowWeekend,
@@ -118,7 +118,7 @@ export function Day() {
 
   return (
     <Layout className={cls('day-view')} autoAdjustPanels={true}>
-      <Panel name="day-view-daynames" initialHeight={WEEK_DAYNAME_HEIGHT + WEEK_DAYNAME_BORDER}>
+      <Panel name="day-view-day-names" initialHeight={WEEK_DAY_NAME_HEIGHT + WEEK_DAY_NAME_BORDER}>
         <GridHeader
           type="week"
           dayNames={dayNames}

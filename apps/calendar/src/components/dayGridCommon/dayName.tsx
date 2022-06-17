@@ -1,6 +1,6 @@
 import { h } from 'preact';
 
-import type { Dayname } from '@src/components/dayGridCommon/gridHeader';
+import type { DayNameThemes } from '@src/components/dayGridCommon/gridHeader';
 import { Template } from '@src/components/template';
 import { useEventBus } from '@src/contexts/eventBus';
 import { cls } from '@src/helpers/css';
@@ -15,28 +15,28 @@ import type { TemplateMonthDayName, TemplateWeekDayName } from '@t/template';
 
 interface Props {
   type: CalendarViewType;
-  dayname: TemplateWeekDayName | TemplateMonthDayName;
+  dayName: TemplateWeekDayName | TemplateMonthDayName;
   style: StyleProp;
-  theme: Dayname;
+  theme: DayNameThemes;
 }
 
 function isWeekDayName(
   type: 'week' | 'month',
-  dayname: Props['dayname']
-): dayname is TemplateWeekDayName {
+  dayName: Props['dayName']
+): dayName is TemplateWeekDayName {
   return type === 'week';
 }
 
-function getWeekDaynameColor({
-  dayname,
+function getWeekDayNameColor({
+  dayName,
   theme,
   today,
 }: {
-  dayname: TemplateWeekDayName;
+  dayName: TemplateWeekDayName;
   theme: Props['theme'];
   today: TZDate;
 }) {
-  const { day, dateInstance } = dayname;
+  const { day, dateInstance } = dayName;
   const isToday = isSameDate(today, dateInstance);
   const isPastDay = !isToday && dateInstance < today;
 
@@ -53,17 +53,17 @@ function getWeekDaynameColor({
     return theme.week?.today.color;
   }
 
-  return theme.common.dayname.color;
+  return theme.common.dayName.color;
 }
 
-function getMonthDaynameColor({
-  dayname,
+function getMonthDayNameColor({
+  dayName,
   theme,
 }: {
-  dayname: TemplateMonthDayName;
+  dayName: TemplateMonthDayName;
   theme: Props['theme'];
 }) {
-  const { day } = dayname;
+  const { day } = dayName;
 
   if (isSunday(day)) {
     return theme.common.holiday.color;
@@ -72,36 +72,36 @@ function getMonthDaynameColor({
     return theme.common.saturday.color;
   }
 
-  return theme.common.dayname.color;
+  return theme.common.dayName.color;
 }
 
-export function DayName({ dayname, style, type, theme }: Props) {
+export function DayName({ dayName, style, type, theme }: Props) {
   const eventBus = useEventBus();
   const [, getNow] = usePrimaryTimezone();
   const today = getNow();
-  const { day } = dayname;
+  const { day } = dayName;
   const color =
     type === 'week'
-      ? getWeekDaynameColor({ dayname: dayname as TemplateWeekDayName, theme, today })
-      : getMonthDaynameColor({ dayname: dayname as TemplateMonthDayName, theme });
+      ? getWeekDayNameColor({ dayName: dayName as TemplateWeekDayName, theme, today })
+      : getMonthDayNameColor({ dayName: dayName as TemplateMonthDayName, theme });
 
-  const templateType = `${type}Dayname` as TemplateName;
+  const templateType = `${type}DayName` as TemplateName;
 
   const handleClick = () => {
-    if (isWeekDayName(type, dayname)) {
-      eventBus.fire('clickDayname', { date: toFormat(dayname.dateInstance, 'YYYY-MM-DD') });
+    if (isWeekDayName(type, dayName)) {
+      eventBus.fire('clickDayName', { date: toFormat(dayName.dateInstance, 'YYYY-MM-DD') });
     }
   };
 
   return (
-    <div className={cls('dayname-item', type)} style={style}>
+    <div className={cls('day-name-item', type)} style={style}>
       <span
         className={cls({ [`holiday-${getDayName(day)}`]: isWeekend(day) })}
         style={{ color }}
         onClick={handleClick}
-        data-testid={`dayname-${type}-${getDayName(day)}`}
+        data-testid={`dayName-${type}-${getDayName(day)}`}
       >
-        <Template template={templateType} param={dayname} />
+        <Template template={templateType} param={dayName} />
       </span>
     </div>
   );

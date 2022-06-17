@@ -47,8 +47,8 @@ calendar.setOptions({
 | [monthGridHeaderExceed](#monthgridheaderexceed)           | <code>number</code>                                              | 월간뷰의 셀의 헤더 영역의 초과되는 이벤트 갯수를 표시하는 컴포넌트 |
 | [monthGridFooter](#monthgridfooter)                       | TemplateMonthGrid                                                | 월간뷰의 셀의 푸터 영역                                            |
 | [monthGridFooterExceed](#monthgridfooterexceed)           | <code>number</code>                                              | 월간뷰의 셀의 푸터 영역의 초과되는 이벤트 갯수를 표시하는 컴포넌트 |
-| [monthDayname](#monthdayname)                             | TemplateMonthDayName                                             | 월간뷰의 요일                                                      |
-| [weekDayname](#weekdayname)                               | TemplateWeekDayName                                              | 주간/일간뷰의 요일                                                 |
+| [monthDayName](#monthdayname)                             | TemplateMonthDayName                                             | 월간뷰의 요일                                                      |
+| [weekDayName](#weekdayname)                               | TemplateWeekDayName                                              | 주간/일간뷰의 요일                                                 |
 | [weekGridFooterExceed](#weekgridfooterexceed)             | <code>number</code>                                              | 주간/일간뷰의 allday 패널의 초과된 이벤트 표시 컴포넌트            |
 | [collapseBtnTitle](#collapsebtntitle)                     | 없음                                                             | 주간/일간뷰의 allday 패널의 접기 버튼 컴포넌트                     |
 | [timezoneDisplayLabel](#timezonedisplaylabel)             | TemplateTimezone                                                 | 주간/일간뷰의 타임존 표시 컴포넌트                                 |
@@ -368,7 +368,7 @@ calendar.setOptions({
 
 ### 요일 표시
 
-#### monthDayname
+#### monthDayName
 
 ![month-dayname](./template_monthDayname.png)
 
@@ -384,7 +384,7 @@ interface TemplateMonthDayName {
 ```js
 calendar.setOptions({
   template: {
-    monthDayname(model) {
+    monthDayName(model) {
       return model.label;
     },
   },
@@ -393,7 +393,7 @@ calendar.setOptions({
 
 [⬆ 목록으로 돌아가기](#템플릿-목록)
 
-#### weekDayname
+#### weekDayName
 
 ![week-dayname](./template_weekDayname.png)
 
@@ -413,7 +413,7 @@ interface TemplateWeekDayName {
 ```js
 calendar.setOptions({
   template: {
-    weekDayname(model) {
+    weekDayName(model) {
       return `<span>${model.date}</span>&nbsp;&nbsp;<span>${model.dayName}</span>`;
     },
   },

@@ -72,8 +72,8 @@ export interface Template {
   monthGridHeaderExceed: (hiddenEventsCount: number) => TemplateReturnType;
   monthGridFooter: (cellData: TemplateMonthGrid) => TemplateReturnType;
   monthGridFooterExceed: (hiddenEventsCount: number) => TemplateReturnType;
-  monthDayname: (monthDaynameData: TemplateMonthDayName) => TemplateReturnType;
-  weekDayname: (weekDaynameData: TemplateWeekDayName) => TemplateReturnType;
+  monthDayName: (monthDayNameData: TemplateMonthDayName) => TemplateReturnType;
+  weekDayName: (weekDayNameData: TemplateWeekDayName) => TemplateReturnType;
   weekGridFooterExceed: (hiddenEventsCount: number) => TemplateReturnType;
   collapseBtnTitle: () => TemplateReturnType;
   timezoneDisplayLabel: (props: TemplateTimezone) => TemplateReturnType;

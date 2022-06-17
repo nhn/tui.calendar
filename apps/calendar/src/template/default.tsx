@@ -128,13 +128,13 @@ export const templates: Template = {
     return '';
   },
 
-  monthDayname(model: TemplateMonthDayName) {
+  monthDayName(model: TemplateMonthDayName) {
     return model.label;
   },
 
-  weekDayname(model: TemplateWeekDayName) {
-    const classDate = cls('dayname__date');
-    const className = cls('dayname__name');
+  weekDayName(model: TemplateWeekDayName) {
+    const classDate = cls('day-name__date');
+    const className = cls('day-name__name');
 
     return (
       <Fragment>

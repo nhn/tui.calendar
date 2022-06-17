@@ -39,7 +39,7 @@ function getDateColor({
   const isToday = isSameDate(date, renderDate);
 
   const {
-    common: { holiday, saturday, today, dayname },
+    common: { holiday, saturday, today, dayName },
     month: { dayExceptThisMonth, holidayExceptThisMonth },
   } = theme;
 
@@ -59,7 +59,7 @@ function getDateColor({
     return dayExceptThisMonth.color;
   }
 
-  return dayname.color;
+  return dayName.color;
 }
 
 function useCellHeaderTheme() {

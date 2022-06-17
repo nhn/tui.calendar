@@ -18,7 +18,7 @@ import type {
 function initializeWeekOptions(weekOptions: Options['week'] = {}): CalendarWeekOptions {
   return {
     startDayOfWeek: Day.SUN,
-    daynames: [],
+    dayNames: [],
     narrowWeekend: false,
     workweek: false,
     showTimezoneCollapseButton: false,
@@ -40,7 +40,7 @@ function initializeTimezoneOptions(timezoneOptions: Options['timezone'] = {}): T
 
 function initializeMonthOptions(monthOptions: Options['month'] = {}): CalendarMonthOptions {
   const month: CalendarMonthOptions = {
-    daynames: [],
+    dayNames: [],
     visibleWeeksCount: 0,
     workweek: false,
     narrowWeekend: false,
@@ -50,8 +50,8 @@ function initializeMonthOptions(monthOptions: Options['month'] = {}): CalendarMo
     ...monthOptions,
   };
 
-  if (month.daynames.length === 0) {
-    month.daynames = DEFAULT_DAY_NAMES.slice() as Exclude<CalendarMonthOptions['daynames'], []>;
+  if (month.dayNames.length === 0) {
+    month.dayNames = DEFAULT_DAY_NAMES.slice() as Exclude<CalendarMonthOptions['dayNames'], []>;
   }
 
   return month;
