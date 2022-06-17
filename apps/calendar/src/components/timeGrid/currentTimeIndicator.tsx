@@ -65,6 +65,10 @@ export function CurrentTimeIndicator({ top, columnWidth, columnCount, columnInde
     return () => eventBus.off('scrollToNow', scrollToNow);
   }, [eventBus, layoutContainer]);
 
+  useEffect(() => {
+    eventBus.fire('scrollToNow');
+  }, [eventBus]);
+
   return (
     <div
       ref={indicatorRef}
