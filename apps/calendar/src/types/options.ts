@@ -14,6 +14,7 @@ export interface WeekOptions {
   dayNames?: [string, string, string, string, string, string, string] | [];
   narrowWeekend?: boolean;
   workweek?: boolean;
+  showNowIndicator?: boolean;
   showTimezoneCollapseButton?: boolean;
   timezonesCollapsed?: boolean;
   hourStart?: number;

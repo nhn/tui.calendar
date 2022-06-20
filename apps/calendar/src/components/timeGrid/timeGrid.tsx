@@ -21,6 +21,7 @@ import { useGridSelection } from '@src/hooks/gridSelection/useGridSelection';
 import { usePrimaryTimezone } from '@src/hooks/timezone/usePrimaryTimezone';
 import type EventUIModel from '@src/model/eventUIModel';
 import { optionsSelector } from '@src/selectors';
+import { showNowIndicatorOptionSelector } from '@src/selectors/options';
 import { weekTimeGridLeftSelector } from '@src/selectors/theme';
 import type TZDate from '@src/time/date';
 import {
@@ -48,6 +49,7 @@ interface Props {
 
 export function TimeGrid({ timeGridData, events }: Props) {
   const { isReadOnly } = useStore(optionsSelector);
+  const showNowIndicator = useStore(showNowIndicatorOptionSelector);
   const [, getNow] = usePrimaryTimezone();
 
   const isMounted = useIsMounted();
@@ -173,7 +175,7 @@ export function TimeGrid({ timeGridData, events }: Props) {
               isLastColumn={index === lastColumnIndex}
             />
           ))}
-          {isPresent(currentDateData) && isPresent(nowIndicatorState) ? (
+          {showNowIndicator && isPresent(currentDateData) && isPresent(nowIndicatorState) ? (
             <NowIndicator
               top={nowIndicatorState.top}
               columnWidth={columns[0].width}

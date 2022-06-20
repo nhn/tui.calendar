@@ -203,6 +203,7 @@ Object {
     "hourEnd": 24,
     "hourStart": 0,
     "narrowWeekend": false,
+    "showNowIndicator": true,
     "showTimezoneCollapseButton": false,
     "startDayOfWeek": 0,
     "taskView": true,

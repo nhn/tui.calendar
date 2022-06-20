@@ -9,7 +9,10 @@ import { useStore } from '@src/contexts/calendarStore';
 import { useTheme } from '@src/contexts/themeStore';
 import { cls, toPercent } from '@src/helpers/css';
 import { useTZConverter } from '@src/hooks/timezone/useTZConverter';
-import { timezonesCollapsedOptionSelector } from '@src/selectors/options';
+import {
+  showNowIndicatorOptionSelector,
+  timezonesCollapsedOptionSelector,
+} from '@src/selectors/options';
 import { weekTimeGridLeftSelector } from '@src/selectors/theme';
 import { timezonesSelector } from '@src/selectors/timezone';
 import TZDate from '@src/time/date';
@@ -60,6 +63,7 @@ function timeColorSelector(theme: ThemeState) {
 }
 
 function HourRows({ rowsInfo, isPrimary, borderRight, width, nowIndicatorState }: HourRowsProps) {
+  const showNowIndicator = useStore(showNowIndicatorOptionSelector);
   const { primaryTimezoneBackgroundColor, subTimezoneBackgroundColor } =
     useTheme(backgroundColorSelector);
   const { pastTimeColor, futureTimeColor } = useTheme(timeColorSelector);
@@ -97,7 +101,7 @@ function HourRows({ rowsInfo, isPrimary, borderRight, width, nowIndicatorState }
           </div>
         );
       })}
-      {isPresent(nowIndicatorState) && isPresent(zonedNow) && (
+      {showNowIndicator && isPresent(nowIndicatorState) && isPresent(zonedNow) && (
         <NowIndicatorLabel
           unit="hour"
           top={nowIndicatorState.top}
@@ -115,6 +119,7 @@ interface Props {
 }
 
 export const TimeColumn = memo(function TimeColumn({ timeGridRows, nowIndicatorState }: Props) {
+  const showNowIndicator = useStore(showNowIndicatorOptionSelector);
   const timezones = useStore(timezonesSelector);
   const timezonesCollapsed = useStore(timezonesCollapsedOptionSelector);
 
@@ -128,7 +133,7 @@ export const TimeColumn = memo(function TimeColumn({ timeGridRows, nowIndicatorS
   const hourRowsPropsMapper = useCallback(
     (row: TimeGridRow, index: number, diffFromPrimaryTimezone?: number) => {
       const shouldHideRow = ({ top: rowTop, height: rowHeight }: TimeGridRow) => {
-        if (isNil(nowIndicatorState)) {
+        if (!showNowIndicator || isNil(nowIndicatorState)) {
           return false;
         }
 
@@ -156,7 +161,7 @@ export const TimeColumn = memo(function TimeColumn({ timeGridRows, nowIndicatorS
         diffFromPrimaryTimezone,
       };
     },
-    [rowsByHour, nowIndicatorState]
+    [rowsByHour, nowIndicatorState, showNowIndicator]
   );
 
   const [primaryTimezone, ...otherTimezones] = timezones;

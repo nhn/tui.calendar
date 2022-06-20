@@ -12,10 +12,8 @@ Template.args = {
     defaultView: 'week',
     useFormPopup: true,
     useDetailPopup: true,
-    template: {
-      timegridNowIndicatorLabel({ time }) {
-        return `current time:<br>${time.getHours()}:${time.getMinutes()}`;
-      },
+    week: {
+      showNowIndicator: true,
     },
   },
   containerHeight: '100vh',

@@ -422,6 +422,32 @@ describe('Multiple Timezone', () => {
   });
 });
 
+describe('Now Indicator', () => {
+  it('should show a now indicator when the showNowIndicator option is true', () => {
+    // Given
+    const options = { week: { showNowIndicator: true } };
+
+    // When
+    setup(options);
+
+    // Then
+    expect(screen.getByTestId(TEST_IDS.NOW_INDICATOR)).not.toBeNull();
+    expect(screen.getByTestId(TEST_IDS.NOW_INDICATOR_LABEL)).not.toBeNull();
+  });
+
+  it('should hide a now indicator when the showNowIndicator option is false', () => {
+    // Given
+    const options = { week: { showNowIndicator: false } };
+
+    // When
+    setup(options);
+
+    // Then
+    expect(screen.queryByTestId(TEST_IDS.NOW_INDICATOR)).toBeNull();
+    expect(screen.queryByTestId(TEST_IDS.NOW_INDICATOR_LABEL)).toBeNull();
+  });
+});
+
 describe('Timezone Collapse Button', () => {
   it('should show timezone collapse button when the showTimezoneCollapseButton option is enabled', () => {
     // Given
