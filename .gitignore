@@ -47,6 +47,7 @@ build/
 storybook-static/
 dist/
 apps/calendar/types/
+tmpdoc/
 
 # etc
 *.swp

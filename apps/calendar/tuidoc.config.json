@@ -23,7 +23,9 @@
   },
   "api": {
     "filePath": [
-      "tmpdoc/src/factory/calendarControl.jsx"
+      "tmpdoc/src/factory/calendarCore.js",
+      "tmpdoc/src/factory/calendar.js",
+      "tmpdoc/src/time/date.js"
     ],
     "permalink": false
   },
