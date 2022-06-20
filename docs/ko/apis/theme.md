@@ -99,11 +99,11 @@ interface WeekTheme {
   };
   timeGridLeftAdditionalTimezone: { backgroundColor: string };
   timeGridHalfHour: { borderBottom: string };
-  currentTime: { color: string };
-  currentTimeLinePast: { border: string };
-  currentTimeLineBullet: { backgroundColor: string };
-  currentTimeLineToday: { border: string };
-  currentTimeLineFuture: { border: string };
+  nowIndicatorLabel: { color: string };
+  nowIndicatorPast: { border: string };
+  nowIndicatorBullet: { backgroundColor: string };
+  nowIndicatorToday: { border: string };
+  nowIndicatorFuture: { border: string };
   pastTime: { color: string };
   futureTime: { color: string };
   weekend: { backgroundColor: string };
@@ -124,11 +124,11 @@ interface WeekTheme {
 | [timeGridLeftAdditionalTimezone](#week-timegridleftadditionaltimezone) | <code>{ backgroundColor: 'white' }</code>          | 주간/일간뷰에서 timed 이벤트 영역의 왼쪽 영역에 표시되는 서브 타임존                   |
 | [timeGridHalfHourLine](#week-timegridhalfhourline)                     | <code>{ borderBottom: '1px solid #e5e5e5' }</code> | 주간/일간뷰에서 timed 이벤트 영역에서 매 시간의 30분 선                                |
 | [timeGridHourLine](#week-timegridhourline)                             | <code>{ borderBottom: '1px solid #e5e5e5' }</code> | 주간/일간뷰에서 timed 이벤트 영역에서 매 시간의 정각 선                                |
-| [currentTime](#week-currenttime)                                       | <code>{ color: '#515ce6' }</code>                  | 현재 시간선                                                                            |
-| [currentTimeLinePast](#week-currenttimelinepast)                       | <code>{ border: '1px dashed #515ce6' }</code>      | 현재 시간선에서 지난 날짜선                                                            |
-| [currentTimeLineBullet](#week-currenttimelinebullet)                   | <code>{ backgroundColor: '#515ce6' }</code>        | 현재 시간선에서 오늘 날짜                                                              |
-| [currentTimeLineToday](#week-currenttimelinetoday)                     | <code>{ border: '1px solid #515ce6' }</code>       | 현재 시간선에서 오늘 날짜선                                                            |
-| [currentTimeLineFuture](#week-currenttimelinefuture)                   | <code>{ border: 'none' }</code>                    | 현재 시간선에서 미래 날짜선                                                            |
+| [nowIndicatorLabel](#week-nowindicatorlabel)                                       | <code>{ color: '#515ce6' }</code>                  | 현재 시간선에 표시되는 현재 시각 텍스트                                                                            |
+| [nowIndicatorPast](#week-nowindicatorpast)                       | <code>{ border: '1px dashed #515ce6' }</code>      | 현재 시간선에서 지난 날짜선                                                            |
+| [nowIndicatorBullet](#week-nowindicatorbullet)                   | <code>{ backgroundColor: '#515ce6' }</code>        | 현재 시간선에서 오늘 날짜                                                              |
+| [nowIndicatorToday](#week-nowindicatortoday)                     | <code>{ border: '1px solid #515ce6' }</code>       | 현재 시간선에서 오늘 날짜선                                                            |
+| [nowIndicatorFuture](#week-nowindicatorfuture)                   | <code>{ border: 'none' }</code>                    | 현재 시간선에서 미래 날짜선                                                            |
 | [pastTime](#week-pasttime)                                             | <code>{ color: '#bbb' }</code>                     | 주간/일간뷰에서 timed 이벤트 영역의 왼쪽 영역에 표시되는 지난 시간                     |
 | [futureTime](#week-futuretime)                                         | <code>{ color: '#333' }</code>                     | 주간/일간뷰에서 timed 이벤트 영역의 왼쪽 영역에 표시되는 미래 시간                     |
 | [weekend](#week-weekend)                                               | <code>{ backgroundColor: 'inherit' }</code>        | 주간/일간뷰에서 timed 이벤트 영역의 주말 컬럼                                          |
@@ -522,18 +522,18 @@ calendar.setTheme({
 
 [⬆ 목록으로 돌아가기](#week-테마)
 
-#### week-currentTime
+#### week-nowIndicatorLabel
 
-현재 시간선을 지정한다. `color`로 글자색을 지정할 수 있으며 기본 값은 `'#515ce6'`이다.
+현재 시간선에 표시되는 현재 시각 텍스트를 지정한다. `color`로 글자색을 지정할 수 있으며 기본 값은 `'#515ce6'`이다.
 
 | 기본값 적용                                               | 예제 적용                                                |
 | --------------------------------------------------------- | -------------------------------------------------------- |
-| ![week-currentTime-default](../../assets/week-currentTime-before.png) | ![week-currentTime-example](../../assets/week-currentTime-after.png) |
+| ![week-nowIndicatorLabel-default](../../assets/week-nowIndicatorlabel-before.png) | ![week-nowIndicatorLabel-example](../../assets/week-nowIndicatorlabel-after.png) |
 
 ```js
 calendar.setTheme({
   week: {
-    currentTime: {
+    nowIndicatorLabel: {
       color: 'red',
     },
   },
@@ -542,18 +542,18 @@ calendar.setTheme({
 
 [⬆ 목록으로 돌아가기](#week-테마)
 
-#### week-currentTimeLinePast
+#### week-nowIndicatorPast
 
 현재 시간선에서 지난 날짜선을 지정한다. `border`로 선의 테두리를 지정할 수 있으며 기본 값은 `'1px dashed #515ce6'`이다.
 
 | 기본값 적용                                                               | 예제 적용                                                                |
 | ------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| ![week-currentTimeLinePast-default](../../assets/week-currentTimeLinePast-before.png) | ![week-currentTimeLinePast-example](../../assets/week-currentTimeLinePast-after.png) |
+| ![week-nowIndicatorPast-default](../../assets/week-nowIndicatorPast-before.png) | ![week-nowIndicatorPast-example](../../assets/week-nowIndicatorPast-after.png) |
 
 ```js
 calendar.setTheme({
   week: {
-    currentTimeLinePast: {
+    nowIndicatorPast: {
       border: '1px dashed red',
     },
   },
@@ -562,18 +562,18 @@ calendar.setTheme({
 
 [⬆ 목록으로 돌아가기](#week-테마)
 
-#### week-currentTimeLineBullet
+#### week-nowIndicatorBullet
 
-현재 시간선에서 오늘 날짜를 지정한다. `backgroundColor`로 배경색을 지정할 수 있으며 기본 값은 `'#515ce6'`이다.
+현재 시간선에서 오늘 날짜에 표시되는 점을 지정한다. `backgroundColor`로 배경색을 지정할 수 있으며 기본 값은 `'#515ce6'`이다.
 
 | 기본값 적용                                                                   | 예제 적용                                                                    |
 | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| ![week-currentTimeLineBullet-default](../../assets/week-currentTimeLineBullet-before.png) | ![week-currentTimeLineBullet-example](../../assets/week-currentTimeLineBullet-after.png) |
+| ![week-nowIndicatorBullet-default](../../assets/week-nowIndicatorBullet-before.png) | ![week-nowIndicatorBullet-example](../../assets/week-nowIndicatorBullet-after.png) |
 
 ```js
 calendar.setTheme({
   week: {
-    currentTimeLineBullet: {
+    nowIndicatorBullet: {
       backgroundColor: '#515ce6',
     },
   },
@@ -582,18 +582,18 @@ calendar.setTheme({
 
 [⬆ 목록으로 돌아가기](#week-테마)
 
-#### week-currentTimeLineToday
+#### week-nowIndicatorToday
 
 현재 시간선에서 오늘 날짜선을 지정한다. `border`로 선의 테두리를 지정할 수 있으며 기본 값은 `'1px solid #515ce6'`이다.
 
 | 기본값 적용                                                                 | 예제 적용                                                                  |
 | --------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| ![week-currentTimeLineToday-default](../../assets/week-currentTimeLineToday-before.png) | ![week-currentTimeLineToday-example](../../assets/week-currentTimeLineToday-after.png) |
+| ![week-nowIndicatorToday-default](../../assets/week-nowIndicatorToday-before.png) | ![week-nowIndicatorToday-example](../../assets/week-nowIndicatorToday-after.png) |
 
 ```js
 calendar.setTheme({
   week: {
-    currentTimeLineToday: {
+    nowIndicatorToday: {
       border: '1px solid red',
     },
   },
@@ -602,18 +602,18 @@ calendar.setTheme({
 
 [⬆ 목록으로 돌아가기](#week-테마)
 
-#### week-currentTimeLineFuture
+#### week-nowIndicatorFuture
 
 현재 시간선에서 미래 날짜선을 지정한다. `border`로 선의 테두리를 지정할 수 있으며 기본 값은 `'none'`이다.
 
 | 기본값 적용                                                                   | 예제 적용                                                                    |
 | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| ![week-currentTimeLineFuture-default](../../assets/week-currentTimeLineFuture-before.png) | ![week-currentTimeLineFuture-example](../../assets/week-currentTimeLineFuture-after.png) |
+| ![week-nowIndicatorFuture-default](../../assets/week-nowIndicatorFuture-before.png) | ![week-nowIndicatorFuture-example](../../assets/week-nowIndicatorFuture-after.png) |
 
 ```js
 calendar.setTheme({
   week: {
-    currentTimeLineFuture: {
+    nowIndicatorFuture: {
       border: '1px solid red',
     },
   },

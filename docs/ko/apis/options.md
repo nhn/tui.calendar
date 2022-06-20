@@ -162,6 +162,7 @@ interface WeekOptions {
   dayNames?: [string, string, string, string, string, string, string];
   narrowWeekend?: boolean;
   workweek?: boolean;
+  showNowIndicator?: boolean;
   showTimezoneCollapseButton?: boolean;
   timezonesCollapsed?: boolean;
   hourStart?: number;
@@ -177,6 +178,7 @@ const DEFAULT_WEEK_OPTIONS = {
   dayNames: [],
   narrowWeekend: false,
   workweek: false,
+  showNowIndicator: true,
   showTimezoneCollapseButton: false,
   timezonesCollapsed: false,
   hourStart: 0,
@@ -285,6 +287,26 @@ calendar.setOptions({
 | ![week-workweek-default](../../assets/options_week-workweek-before.png) | ![week-workweek-example](../../assets/options_week-workweek-after.png) |
 
 [⬆ 목록으로 돌아가기](#week)
+
+#### week.showNowIndicator
+
+- 타입: `boolean`
+- 기본값: `true`
+
+주간/일간뷰에서 현재 시간선을 표시할지 여부를 지정할 수 있다. 기본값은 `true`이며, 현재 시간선을 표시하지 않으려면 `false`로 지정한다.
+
+```js
+calendar.setOptions({
+  week: {
+    showNowIndicator: false,
+  },
+});
+```
+
+| 기본값 적용                                                                                     | 예제 적용                                                                                      |
+| ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| ![week-showNowIndicator-default](./options_week-showNowIndicator-before.png) | ![week-showNowIndicator-example](./options_week-showNowIndicator-after.png) |
+
 
 #### week.showTimezoneCollapseButton
 

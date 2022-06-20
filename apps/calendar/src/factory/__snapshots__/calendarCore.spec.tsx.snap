@@ -61,9 +61,9 @@ Object {
     "task": [Function],
     "taskTitle": [Function],
     "time": [Function],
-    "timegridCurrentTime": [Function],
     "timegridDisplayPrimaryTime": [Function],
     "timegridDisplayTime": [Function],
+    "timegridNowIndicatorLabel": [Function],
     "timezoneDisplayLabel": [Function],
     "titlePlaceholder": [Function],
     "weekDayName": [Function],
@@ -120,21 +120,6 @@ Object {
       },
     },
     "week": Object {
-      "currentTime": Object {
-        "color": "#515ce6",
-      },
-      "currentTimeLineBullet": Object {
-        "backgroundColor": "#515ce6",
-      },
-      "currentTimeLineFuture": Object {
-        "border": "none",
-      },
-      "currentTimeLinePast": Object {
-        "border": "1px dashed #515ce6",
-      },
-      "currentTimeLineToday": Object {
-        "border": "1px solid #515ce6",
-      },
       "dayGrid": Object {
         "backgroundColor": "inherit",
         "borderRight": "1px solid #e5e5e5",
@@ -155,6 +140,21 @@ Object {
       },
       "gridSelection": Object {
         "color": "#515ce6",
+      },
+      "nowIndicatorBullet": Object {
+        "backgroundColor": "#515ce6",
+      },
+      "nowIndicatorFuture": Object {
+        "border": "none",
+      },
+      "nowIndicatorLabel": Object {
+        "color": "#515ce6",
+      },
+      "nowIndicatorPast": Object {
+        "border": "1px dashed #515ce6",
+      },
+      "nowIndicatorToday": Object {
+        "border": "1px solid #515ce6",
       },
       "panelResizer": Object {
         "border": "1px solid #e5e5e5",
@@ -203,6 +203,7 @@ Object {
     "hourEnd": 24,
     "hourStart": 0,
     "narrowWeekend": false,
+    "showNowIndicator": true,
     "showTimezoneCollapseButton": false,
     "startDayOfWeek": 0,
     "taskView": true,

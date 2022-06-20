@@ -21,6 +21,7 @@ function initializeWeekOptions(weekOptions: Options['week'] = {}): CalendarWeekO
     dayNames: [],
     narrowWeekend: false,
     workweek: false,
+    showNowIndicator: true,
     showTimezoneCollapseButton: false,
     timezonesCollapsed: false,
     hourStart: 0,

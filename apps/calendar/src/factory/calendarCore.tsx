@@ -733,7 +733,7 @@ export default abstract class CalendarCore implements EventBus<ExternalEventType
    *     },
    *   },
    *   week: {
-   *     currentTime: {
+   *     nowIndicatorLabel: {
    *       color: '#00FF00',
    *     },
    *   },

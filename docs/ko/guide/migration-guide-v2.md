@@ -34,6 +34,9 @@ v2에서는 날짜나 시간을 선택할 때의 영역을 나타내는 `creatio
 
 v2에서는 일정이라는 의미에 맞게 기존 `schedule`에서 `event`로 네이밍이 변경되었다. 단순한 변수명 뿐만 아니라 `schedule`이 포함된 인스턴스 메서드, 인스턴스 이벤트 등의 관련된 API 모두가 `event`로 변경되었다.
 
+### `currentTimeIndicator`, `currentTimeLine`에서 `nowIndicator`로 용어 변경
+v1에서는 현재 시간선을 나타내는 용어로 `currentTimeIndicator`과 `currentTimeLine`이 혼용되었다. v2에서는 이를 `nowIndicator`로 통일했다.
+
 ### 기능 개선
 
 #### 렌더링 최적화
@@ -94,8 +97,13 @@ v1에서 사용하던 다음 프로퍼티들이 테마에서 제거되거나 이
 - `week.timegridHorizontalLine.borderBottom` -> `week.timeGridHourLine.borderBottom`
 - `week.timegrid.paddingRight`
 - `week.timegridSchedule` 전체
+- `week.currentTime` -> `week.nowIndicatorLabel`
 - `week.currentTime.fontSize`
 - `week.currentTime.fontWeight`
+- `week.currentTimeLinePast` -> `week.nowIndicatorPast`
+- `week.currentTimeLineBullet` -> `week.nowIndicatorBullet`
+- `week.currentTimeLineToday` -> `week.nowIndicatorToday`
+- `week.currentTimeLineFuture` -> `week.nowIndicatorFuture`
 - `week.pastTime.fontWeight`
 - `week.futureTime.fontWeight`
 - `week.creationGuide.fontSize`
@@ -215,6 +223,10 @@ calendar.on('clickMoreEventsBtn', (event) => {
   console.log(event.date, event.target);
 });
 ```
+
+#### 템플릿 변경사항
+
+v1의 `timegridCurrentTime`이 `timegridNowIndicatorLabel`로 이름이 변경되었다.
 
 ### 제거
 

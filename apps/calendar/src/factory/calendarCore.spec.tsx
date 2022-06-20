@@ -637,7 +637,7 @@ describe('setTheme', () => {
       gridSelection: { backgroundColor },
     } = common;
     const {
-      currentTime: { color },
+      nowIndicatorLabel: { color },
     } = week;
     const {
       moreView: { boxShadow },
@@ -646,7 +646,7 @@ describe('setTheme', () => {
     return (
       <div>
         <div>gridSelection: {backgroundColor}</div>
-        <div>currentTime: {color}</div>
+        <div>nowIndicatorLabel: {color}</div>
         <div>moreView: {boxShadow}</div>
       </div>
     );
@@ -676,13 +676,15 @@ describe('setTheme', () => {
   it('should change theme and rerender components', () => {
     // Given
     const gridSelectionBackgroundColor = '#ff0000';
-    const currentTimeColor = '#00ff00';
+    const nowIndicatorLabelColor = '#00ff00';
     const moreViewBoxShadow = '0 0 10px #0000ff';
 
     expect(
       screen.queryByText(`gridSelection: ${gridSelectionBackgroundColor}`)
     ).not.toBeInTheDocument();
-    expect(screen.queryByText(`currentTime: ${currentTimeColor}`)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(`nowIndicatorLabel: ${nowIndicatorLabelColor}`)
+    ).not.toBeInTheDocument();
     expect(screen.queryByText(`moreView: ${moreViewBoxShadow}`)).not.toBeInTheDocument();
 
     // When
@@ -692,7 +694,7 @@ describe('setTheme', () => {
           gridSelection: { backgroundColor: gridSelectionBackgroundColor },
         },
         week: {
-          currentTime: { color: currentTimeColor },
+          nowIndicatorLabel: { color: nowIndicatorLabelColor },
         },
         month: {
           moreView: { boxShadow: moreViewBoxShadow },
@@ -704,7 +706,7 @@ describe('setTheme', () => {
     expect(
       screen.queryByText(`gridSelection: ${gridSelectionBackgroundColor}`)
     ).toBeInTheDocument();
-    expect(screen.queryByText(`currentTime: ${currentTimeColor}`)).toBeInTheDocument();
+    expect(screen.queryByText(`nowIndicatorLabel: ${nowIndicatorLabelColor}`)).toBeInTheDocument();
     expect(screen.queryByText(`moreView: ${moreViewBoxShadow}`)).toBeInTheDocument();
   });
 });

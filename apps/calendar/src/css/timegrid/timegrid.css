@@ -32,17 +32,17 @@
   height: 100%;
 }
 
-.timegrid .timegrid-current-time-line {
+.timegrid .timegrid-now-indicator {
   position: absolute;
   left: 0;
   right: 0;
 }
 
-.timegrid .timegrid-current-time-line .timegrid-current-time-line-left {
+.timegrid .timegrid-now-indicator .timegrid-now-indicator-left {
   position: absolute;
 }
 
-.timegrid .timegrid-current-time-line .timegrid-current-time-line-marker {
+.timegrid .timegrid-now-indicator .timegrid-now-indicator-marker {
   position: absolute;
   width: 9px;
   height: 9px;
@@ -50,11 +50,11 @@
   margin: -4px 0 0 -5px;
 }
 
-.timegrid .timegrid-current-time-line .timegrid-current-time-line-today {
+.timegrid .timegrid-now-indicator .timegrid-now-indicator-today {
   position: absolute;
 }
 
-.timegrid .timegrid-current-time-line .timegrid-current-time-line-right {
+.timegrid .timegrid-now-indicator .timegrid-now-indicator-right {
   position: absolute;
   right: 0;
 }

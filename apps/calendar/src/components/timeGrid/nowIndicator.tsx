@@ -3,15 +3,16 @@ import { h } from 'preact';
 import { addTimeGridPrefix } from '@src/components/timeGrid';
 import { useTheme } from '@src/contexts/themeStore';
 import { cls, toPercent } from '@src/helpers/css';
+import { TEST_IDS } from '@src/test/testIds';
 
 import type { ThemeState } from '@t/theme';
 
 const classNames = {
-  line: cls(addTimeGridPrefix('current-time-line')),
-  left: cls(addTimeGridPrefix('current-time-line-left')),
-  marker: cls(addTimeGridPrefix('current-time-line-marker')),
-  today: cls(addTimeGridPrefix('current-time-line-today')),
-  right: cls(addTimeGridPrefix('current-time-line-right')),
+  line: cls(addTimeGridPrefix('now-indicator')),
+  left: cls(addTimeGridPrefix('now-indicator-left')),
+  marker: cls(addTimeGridPrefix('now-indicator-marker')),
+  today: cls(addTimeGridPrefix('now-indicator-today')),
+  right: cls(addTimeGridPrefix('now-indicator-right')),
 };
 
 interface Props {
@@ -21,18 +22,18 @@ interface Props {
   columnIndex: number;
 }
 
-function currentTimeIndicatorTheme(theme: ThemeState) {
+function nowIndicatorTheme(theme: ThemeState) {
   return {
-    pastBorder: theme.week.currentTimeLinePast.border,
-    todayBorder: theme.week.currentTimeLineToday.border,
-    futureBorder: theme.week.currentTimeLineFuture.border,
-    bulletBackgroundColor: theme.week.currentTimeLineBullet.backgroundColor,
+    pastBorder: theme.week.nowIndicatorPast.border,
+    todayBorder: theme.week.nowIndicatorToday.border,
+    futureBorder: theme.week.nowIndicatorFuture.border,
+    bulletBackgroundColor: theme.week.nowIndicatorBullet.backgroundColor,
   };
 }
 
-export function CurrentTimeIndicator({ top, columnWidth, columnCount, columnIndex }: Props) {
+export function NowIndicator({ top, columnWidth, columnCount, columnIndex }: Props) {
   const { pastBorder, todayBorder, futureBorder, bulletBackgroundColor } =
-    useTheme(currentTimeIndicatorTheme);
+    useTheme(nowIndicatorTheme);
 
   const leftLine = {
     left: toPercent(columnWidth * columnIndex),
@@ -47,7 +48,7 @@ export function CurrentTimeIndicator({ top, columnWidth, columnCount, columnInde
     <div
       className={classNames.line}
       style={{ top: toPercent(top) }}
-      data-testid="timegrid-current-time-indicator"
+      data-testid={TEST_IDS.NOW_INDICATOR}
     >
       <div className={classNames.left} style={{ width: leftLine.width, borderTop: pastBorder }} />
       <div
