@@ -53,7 +53,7 @@ import type { ThemeState, ThemeStore } from '@t/theme';
 /**
  * Timezone options of the calendar instance.
  *
- * For more information, see {@link TODO-GitHub-Options|Timezone options} in guide.
+ * For more information, see {@link https://github.com/nhn/tui.calendar/blob/main/docs/ko/apis/options.md#timezone|Timezone options} in guide.
  *
  * @typedef {object} TimezoneOptions
  * @example
@@ -158,9 +158,9 @@ import type { ThemeState, ThemeStore } from '@t/theme';
  *   @param {boolean|object} [options.gridSelection=true] - Whether to enable grid selection. or it's option. it's enabled when the value is `true` and object and will be disabled when `isReadOnly` is true.
  *     @param {boolean} options.gridSelection.enableDbClick - Whether to enable double click to select area.
  *     @param {boolean} options.gridSelection.enableClick - Whether to enable click to select area.
- *   @param {TimezoneOptions} options.timezone - Timezone option of the calendar instance. For more information about timezone, check out the {@link TODO-GitHub-Options|Options} in guide.
- *   @param {Theme} options.theme - Theme option of the calendar instance. For more information, see {@link TODO-GitHub-Theme|Theme} in guide.
- *   @param {TemplateConfig} options.template - Template option of the calendar instance. For more information, see {@link TODO-GitHub-Template|Template} in guide.
+ *   @param {TimezoneOptions} options.timezone - Timezone option of the calendar instance. For more information about timezone, check out the {https://github.com/nhn/tui.calendar/blob/main/docs/ko/apis/options.md|Options} in guide.
+ *   @param {Theme} options.theme - Theme option of the calendar instance. For more information, see {@link https://github.com/nhn/tui.calendar/blob/main/docs/ko/apis/theme.md|Theme} in guide.
+ *   @param {TemplateConfig} options.template - Template option of the calendar instance. For more information, see {@link https://github.com/nhn/tui.calendar/blob/main/docs/ko/apis/template.md|Template} in guide.
  */
 export default abstract class CalendarCore implements EventBus<ExternalEventTypes> {
   protected container: Element | null;
@@ -767,7 +767,7 @@ export default abstract class CalendarCore implements EventBus<ExternalEventType
   }
 
   /**
-   * Set options of calendar. For more information, see {@link TODO-GitHub-Options|Options} in guide.
+   * Set options of calendar. For more information, see {@link https://github.com/nhn/tui.calendar/blob/main/docs/ko/apis/options.md|Options} in guide.
    *
    * @param {Options} options - The options to set
    */

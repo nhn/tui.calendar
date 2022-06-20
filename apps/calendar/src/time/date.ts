@@ -15,7 +15,7 @@ function getTZOffsetMSDifference(offset: number) {
 /**
  * Custom Date Class to handle timezone offset.
  *
- * For more information, see {@link TODO-GitHub-TZDate|TZDate} in guide.
+ * For more information, see {@link https://github.com/nhn/tui.calendar/blob/main/docs/ko/apis/tzdate.md|TZDate} in guide.
  *
  * @class TZDate
  * @param {number|TZDate|Date|string} date - date value to be converted. If date is number or string, it should be eligible to parse by Date constructor.
