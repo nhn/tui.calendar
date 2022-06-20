@@ -11,7 +11,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 const WEEK_GRID_CELL_SELECTOR = getPrefixedClassName('panel-grid');
-const DAY_GRID_SELECTION_SELECTOR = getPrefixedClassName('daygrid-grid-selection');
+const DAY_GRID_SELECTION_SELECTOR = getPrefixedClassName('grid-selection');
 
 function selectWeekGridCells(page: Page, startCellIndex: number, endCellIndex: number) {
   return selectGridCells(page, startCellIndex, endCellIndex, WEEK_GRID_CELL_SELECTOR);

@@ -37,5 +37,5 @@ export function GridSelection({ gridSelectionData, weekDates, narrowWeekend }: P
     border,
   };
 
-  return width > 0 ? <div className={cls('daygrid-grid-selection')} style={style} /> : null;
+  return width > 0 ? <div className={cls('grid-selection')} style={style} /> : null;
 }
