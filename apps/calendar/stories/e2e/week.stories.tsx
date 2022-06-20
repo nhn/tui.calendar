@@ -12,9 +12,6 @@ Template.args = {
     defaultView: 'week',
     useFormPopup: true,
     useDetailPopup: true,
-    week: {
-      showNowIndicator: true,
-    },
   },
   containerHeight: '100vh',
   onInit: (cal) => {
