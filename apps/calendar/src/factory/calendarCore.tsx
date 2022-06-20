@@ -33,7 +33,7 @@ import type {
 } from '@t/store';
 import type { ThemeState, ThemeStore } from '@t/theme';
 
-export default abstract class CalendarControl implements EventBus<ExternalEventTypes> {
+export default abstract class CalendarCore implements EventBus<ExternalEventTypes> {
   protected container: Element | null;
 
   /**
