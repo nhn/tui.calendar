@@ -1,7 +1,3 @@
-import { Meta } from '@storybook/addon-docs';
-
-<Meta title="Documentation/한국어/API/옵션" />
-
 # 옵션
 
 ## 설명
@@ -40,8 +36,8 @@ calendar.setOptions({
 | [month](#month)                     | <code>DEFAULT_MONTH_OPTIONS</code>        | 월간뷰 관련 옵션                                                                                   |
 | [gridSelection](#gridselection)     | <code>true</code>                         | 날짜/시간 선택의 클릭/더블 클릭 가능 여부                                                          |
 | [timezone](#timezone)               | <code>{ zones: [] }</code>                | 캘린더에서 사용하는 타임존 정보                                                                    |
-| [theme](#theme)                     | <code>DEFAULT_THEME</code>                | [테마](/story/documentation-한국어-api-테마--page)                                                 |
-| [template](#template)               | <code>DEFAULT_TEMPLATE</code>             | [템플릿](/story/documentation-한국어-api-템플릿--page)                                             |
+| [theme](#theme)                     | <code>DEFAULT_THEME</code>                | [테마](./theme.md)                                                 |
+| [template](#template)               | <code>DEFAULT_TEMPLATE</code>             | [템플릿](./template.md)                                             |
 | [calendars](#calendars)             | <code>[]</code>                           | 캘린더에서 사용하는 캘린더 목록                                                                    |
 
 ## 사용 예시
@@ -221,7 +217,7 @@ calendar.setOptions({
 
 | 기본값 적용                                                             | 예제 적용                                                              |
 | ----------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| ![week-startDayOfWeek-default](./options_week-startDayOfWeek-before.png) | ![week-startDayOfWeek-example](./options_week-startDayOfWeek-after.png) |
+| ![week-startDayOfWeek-default](../../assets/options_week-startDayOfWeek-before.png) | ![week-startDayOfWeek-example](../../assets/options_week-startDayOfWeek-after.png) |
 
 [⬆ 목록으로 돌아가기](#week)
 
@@ -244,7 +240,7 @@ calendar.setOptions({
 
 | 기본값 적용  | 예제 적용    |
 | ------------ | ------------ |
-| ![week-daynames-default](./options_week-dayNames-before.png) | ![week-daynames-example](./options_week-dayNames-after.png) |
+| ![week-daynames-default](../../assets/options_week-dayNames-before.png) | ![week-daynames-example](../../assets/options_week-dayNames-after.png) |
 
 [⬆ 목록으로 돌아가기](#week)
 
@@ -265,7 +261,7 @@ calendar.setOptions({
 
 | 기본값 적용                                                           | 예제 적용                                                            |
 | --------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| ![week-narrowWeekend-default](./options_week-narrowWeekend-before.png) | ![week-narrowWeekend-example](./options_week-narrowWeekend-after.png) |
+| ![week-narrowWeekend-default](../../assets/options_week-narrowWeekend-before.png) | ![week-narrowWeekend-example](../../assets/options_week-narrowWeekend-after.png) |
 
 [⬆ 목록으로 돌아가기](#week)
 
@@ -286,7 +282,7 @@ calendar.setOptions({
 
 | 기본값 적용                                                 | 예제 적용                                                  |
 | ----------------------------------------------------------- | ---------------------------------------------------------- |
-| ![week-workweek-default](./options_week-workweek-before.png) | ![week-workweek-example](./options_week-workweek-after.png) |
+| ![week-workweek-default](../../assets/options_week-workweek-before.png) | ![week-workweek-example](../../assets/options_week-workweek-after.png) |
 
 [⬆ 목록으로 돌아가기](#week)
 
@@ -307,7 +303,7 @@ calendar.setOptions({
 
 | 기본값 적용                                                                                     | 예제 적용                                                                                      |
 | ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| ![week-showTimezoneCollapseButton-default](./options_week-showTimezoneCollapseButton-before.png) | ![week-showTimezoneCollapseButton-example](./options_week-showTimezoneCollapseButton-after.png) |
+| ![week-showTimezoneCollapseButton-default](../../assets/options_week-showTimezoneCollapseButton-before.png) | ![week-showTimezoneCollapseButton-example](../../assets/options_week-showTimezoneCollapseButton-after.png) |
 
 [⬆ 목록으로 돌아가기](#week)
 
@@ -328,7 +324,7 @@ calendar.setOptions({
 
 | 기본값 적용                                                                     | 예제 적용                                                                      |
 | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| ![week-timezonesCollapsed-default](./options_week-timezonesCollapsed-before.png) | ![week-timezonesCollapsed-example](./options_week-timezonesCollapsed-after.png) |
+| ![week-timezonesCollapsed-default](../../assets/options_week-timezonesCollapsed-before.png) | ![week-timezonesCollapsed-example](../../assets/options_week-timezonesCollapsed-after.png) |
 
 [⬆ 목록으로 돌아가기](#week)
 
@@ -349,7 +345,7 @@ calendar.setOptions({
 
 | 기본값 적용                                                   | 예제 적용                                                    |
 | ------------------------------------------------------------- | ------------------------------------------------------------ |
-| ![week-hourStart-default](./options_week-hourStart-before.png) | ![week-hourStart-example](./options_week-hourStart-after.png) |
+| ![week-hourStart-default](../../assets/options_week-hourStart-before.png) | ![week-hourStart-example](../../assets/options_week-hourStart-after.png) |
 
 [⬆ 목록으로 돌아가기](#week)
 
@@ -370,7 +366,7 @@ calendar.setOptions({
 
 | 기본값 적용                                               | 예제 적용                                                |
 | --------------------------------------------------------- | -------------------------------------------------------- |
-| ![week-hourEnd-default](./options_week-hourEnd-before.png) | ![week-hourEnd-example](./options_week-hourEnd-after.png) |
+| ![week-hourEnd-default](../../assets/options_week-hourEnd-before.png) | ![week-hourEnd-example](../../assets/options_week-hourEnd-after.png) |
 
 [⬆ 목록으로 돌아가기](#week)
 
@@ -391,7 +387,7 @@ calendar.setOptions({
 
 | 기본값 적용                                                   | 예제 적용                                                    |
 | ------------------------------------------------------------- | ------------------------------------------------------------ |
-| ![week-eventView-default](./options_week-eventView-before.png) | ![week-eventView-example](./options_week-eventView-after.png) |
+| ![week-eventView-default](../../assets/options_week-eventView-before.png) | ![week-eventView-example](../../assets/options_week-eventView-after.png) |
 
 [⬆ 목록으로 돌아가기](#week)
 
@@ -412,7 +408,7 @@ calendar.setOptions({
 
 | 기본값 적용                                                 | 예제 적용                                                  |
 | ----------------------------------------------------------- | ---------------------------------------------------------- |
-| ![week-taskView-default](./options_week-taskView-before.png) | ![week-taskView-example](./options_week-taskView-after.png) |
+| ![week-taskView-default](../../assets/options_week-taskView-before.png) | ![week-taskView-example](../../assets/options_week-taskView-after.png) |
 
 [⬆ 목록으로 돌아가기](#week)
 
@@ -478,7 +474,7 @@ calendar.setOptions({
 
 | 기본값 적용  | 예제 적용    |
 | ------------ | ------------ |
-| ![month-daynames-default](./options_month-dayNames-before.png) | ![month-daynames-example](./options_month-dayNames-after.png) |
+| ![month-daynames-default](../../assets/options_month-dayNames-before.png) | ![month-daynames-example](../../assets/options_month-dayNames-after.png) |
 
 [⬆ 목록으로 돌아가기](#month)
 
@@ -511,7 +507,7 @@ calendar.setOptions({
 
 | 기본값 적용                                                               | 예제 적용                                                                |
 | ------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| ![month-startDayOfWeek-default](./options_month-startDayOfWeek-before.png) | ![month-startDayOfWeek-example](./options_month-startDayOfWeek-after.png) |
+| ![month-startDayOfWeek-default](../../assets/options_month-startDayOfWeek-before.png) | ![month-startDayOfWeek-example](../../assets/options_month-startDayOfWeek-after.png) |
 
 [⬆ 목록으로 돌아가기](#month)
 
@@ -532,7 +528,7 @@ calendar.setOptions({
 
 | 기본값 적용                                                             | 예제 적용                                                              |
 | ----------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| ![month-narrowWeekend-default](./options_month-narrowWeekend-before.png) | ![month-narrowWeekend-example](./options_month-narrowWeekend-after.png) |
+| ![month-narrowWeekend-default](../../assets/options_month-narrowWeekend-before.png) | ![month-narrowWeekend-example](../../assets/options_month-narrowWeekend-after.png) |
 
 [⬆ 목록으로 돌아가기](#month)
 
@@ -555,7 +551,7 @@ calendar.setOptions({
 
 | 기본값 적용                                                                     | 예제 적용                                                                      |
 | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
-| ![month-visibleWeeksCount-default](./options_month-visibleWeeksCount-before.png) | ![month-visibleWeeksCount-example](./options_month-visibleWeeksCount-after.png) |
+| ![month-visibleWeeksCount-default](../../assets/options_month-visibleWeeksCount-before.png) | ![month-visibleWeeksCount-example](../../assets/options_month-visibleWeeksCount-after.png) |
 
 [⬆ 목록으로 돌아가기](#month)
 
@@ -578,7 +574,7 @@ calendar.setOptions({
 
 | 기본값 적용  | 예제 적용    |
 | ------------ | ------------ |
-| ![month-isAlways6Weeks-default](./options_month-isAlways6Weeks-before.png) | ![month-isAlways6Weeks-example](./options_month-isAlways6Weeks-after.png) |
+| ![month-isAlways6Weeks-default](../../assets/options_month-isAlways6Weeks-before.png) | ![month-isAlways6Weeks-example](../../assets/options_month-isAlways6Weeks-after.png) |
 
 [⬆ 목록으로 돌아가기](#month)
 
@@ -599,7 +595,7 @@ calendar.setOptions({
 
 | 기본값 적용                                                   | 예제 적용                                                    |
 | ------------------------------------------------------------- | ------------------------------------------------------------ |
-| ![month-workweek-default](./options_month-workweek-before.png) | ![month-workweek-example](./options_month-workweek-after.png) |
+| ![month-workweek-default](../../assets/options_month-workweek-before.png) | ![month-workweek-example](../../assets/options_month-workweek-after.png) |
 
 [⬆ 목록으로 돌아가기](#month)
 
@@ -612,7 +608,7 @@ calendar.setOptions({
 
 이 옵션에서 지정한 갯수만큼 일정을 표시하려 하지만 높이가 충분하지 못할 경우 자동으로 옵션이 무시된다.
 
-캘린더 전체 영역과 [month 테마의 gridCell 속성](/story/documentation-한국어-api-테마--page#month-gridcell)의 영향을 받는다.
+캘린더 전체 영역과 [month 테마의 gridCell 속성](./theme.md#month-gridcell)의 영향을 받는다.
 
 ```js
 calendar.setOptions({
@@ -624,7 +620,7 @@ calendar.setOptions({
 
 | 기본값 적용  | 예제 적용    |
 | ------------ | ------------ |
-| ![month-visibleEventCount-default](./options_month-visibleEventCount-before.png) | ![month-visibleEventCount-example](./options_month-visibleEventCount-after.png) |
+| ![month-visibleEventCount-default](../../assets/options_month-visibleEventCount-before.png) | ![month-visibleEventCount-example](../../assets/options_month-visibleEventCount-after.png) |
 
 [⬆ 목록으로 돌아가기](#month)
 
@@ -753,7 +749,7 @@ const calendar = new Calendar('#container', {
 - 타입: `ThemeObject`
 - 기본값: `DEFAULT_THEME`
 
-캘린더의 테마를 지정한다. 캘린더 인스턴스 생성 시에만 적용할 수 있으며 `setOptions` 메서드로는 변경이 불가능하다. 대신 `setTheme` 메서드로 변경 가능하며 자세한 내용은 [테마 문서](/story/documentation-한국어-api-테마--page)에서 확인할 수 있다.
+캘린더의 테마를 지정한다. 캘린더 인스턴스 생성 시에만 적용할 수 있으며 `setOptions` 메서드로는 변경이 불가능하다. 대신 `setTheme` 메서드로 변경 가능하며 자세한 내용은 [테마 문서](./theme.md)에서 확인할 수 있다.
 
 [⬆ 목록으로 돌아가기](#옵션-객체)
 
@@ -762,7 +758,7 @@ const calendar = new Calendar('#container', {
 - 타입: `TemplateObject`
 - 기본값: `DEFAULT_TEMPLATE`
 
-캘린더의 템플릿을 지정한다. 자세한 내용은 [템플릿 문서](/story/documentation-한국어-api-템플릿--page)에서 확인할 수 있다.
+캘린더의 템플릿을 지정한다. 자세한 내용은 [템플릿 문서](./template.md)에서 확인할 수 있다.
 
 [⬆ 목록으로 돌아가기](#옵션-객체)
 
@@ -771,7 +767,7 @@ const calendar = new Calendar('#container', {
 - 타입: `CalendarInfo[]`
 - 기본값: `[]`
 
-캘린더에서 사용되는 캘린더 목록을 지정한다. 캘린더 목록의 각 캘린더 정보는 해당 캘린더의 `id`와 캘린더명, 색상 정보를 가지고 있다. 기본값은 `[]`이다. 캘린더 정보에 대한 자세한 설명은 [EventObject 문서](/story/documentation-한국어-api-eventobject--page#캘린더calendarid)를 참고한다.
+캘린더에서 사용되는 캘린더 목록을 지정한다. 캘린더 목록의 각 캘린더 정보는 해당 캘린더의 `id`와 캘린더명, 색상 정보를 가지고 있다. 기본값은 `[]`이다. 캘린더 정보에 대한 자세한 설명은 [EventObject 문서](./event-object.md#캘린더calendarid)를 참고한다.
 
 ```ts
 interface CalendarInfo {
