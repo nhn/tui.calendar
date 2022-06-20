@@ -86,10 +86,10 @@ describe('eventFilter option', () => {
   });
 });
 
-describe('daynames Option', () => {
-  it('should show the default daynames if the daynames option is not specified.', () => {
+describe('dayNames Option', () => {
+  it('should show the default day names if the day names option is not specified.', () => {
     // Given
-    const dayNames: MonthOptions['daynames'] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const dayNames: MonthOptions['dayNames'] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
     // When
     setup({});
@@ -100,14 +100,14 @@ describe('daynames Option', () => {
     expect(header).toHaveTextContent(dayNames.join(''));
   });
 
-  it('should show the daynames specified by the daynames option.', () => {
+  it('should show the day names specified by the day names option.', () => {
     // Given
-    const dayNames: MonthOptions['daynames'] = ['日', '月', '火', '水', '木', '金', '土'];
+    const dayNames: MonthOptions['dayNames'] = ['日', '月', '火', '水', '木', '金', '土'];
 
     // When
     setup({
       month: {
-        daynames: dayNames,
+        dayNames,
       },
     });
 
@@ -116,15 +116,15 @@ describe('daynames Option', () => {
     expect(header).toHaveTextContent(dayNames.join(''));
   });
 
-  it('should change daynames following startDayOfWeek option.', () => {
+  it('should change day names following startDayOfWeek option.', () => {
     // Given
-    const dayNames: MonthOptions['daynames'] = ['日', '月', '火', '水', '木', '金', '土'];
+    const dayNames: MonthOptions['dayNames'] = ['日', '月', '火', '水', '木', '金', '土'];
     const startDayOfWeek = 1; // Monday
 
     // When
     setup({
       month: {
-        daynames: dayNames,
+        dayNames,
         startDayOfWeek,
       },
     });
@@ -136,11 +136,11 @@ describe('daynames Option', () => {
 });
 
 describe('startDayOfWeek Option', () => {
-  it('should change the start day of week with default daynames', () => {
+  it('should change the start day of week with default day names', () => {
     // Given
     const startDayOfWeek = 1; // Monday
-    const normalDaynameColor = 'white';
-    const sundayDaynameColor = 'red';
+    const normalDayNameColor = 'white';
+    const sundayDayNameColor = 'red';
 
     // When
     setup({
@@ -149,43 +149,43 @@ describe('startDayOfWeek Option', () => {
       },
       theme: {
         common: {
-          dayname: {
-            color: normalDaynameColor,
+          dayName: {
+            color: normalDayNameColor,
           },
           holiday: {
-            color: sundayDaynameColor,
+            color: sundayDayNameColor,
           },
         },
       },
     });
 
     // Then
-    const { 0: monday, length, [length - 1]: sunday } = screen.getAllByTestId(/dayname-month-/);
+    const { 0: monday, length, [length - 1]: sunday } = screen.getAllByTestId(/dayName-month-/);
 
-    expect(monday).toHaveStyle({ color: normalDaynameColor });
-    expect(sunday).toHaveStyle({ color: sundayDaynameColor });
+    expect(monday).toHaveStyle({ color: normalDayNameColor });
+    expect(sunday).toHaveStyle({ color: sundayDayNameColor });
   });
 
-  it('should change start day of week with custom daynames', () => {
+  it('should change start day of week with custom day names', () => {
     // Given
     const startDayOfWeek = 2; // Tuesday
-    const givenDaynames: MonthOptions['daynames'] = ['日', '月', '火', '水', '木', '金', '土'];
-    const normalDaynameColor = 'white';
-    const sundayDaynameColor = 'red';
+    const givenDayNames: MonthOptions['dayNames'] = ['日', '月', '火', '水', '木', '金', '土'];
+    const normalDayNameColor = 'white';
+    const sundayDayNameColor = 'red';
 
     // When
     setup({
       month: {
         startDayOfWeek,
-        daynames: givenDaynames,
+        dayNames: givenDayNames,
       },
       theme: {
         common: {
-          dayname: {
-            color: normalDaynameColor,
+          dayName: {
+            color: normalDayNameColor,
           },
           holiday: {
-            color: sundayDaynameColor,
+            color: sundayDayNameColor,
           },
         },
       },
@@ -194,11 +194,11 @@ describe('startDayOfWeek Option', () => {
     // Then
     const header = screen.getByTestId('grid-header-month');
     expect(header).toHaveTextContent(
-      givenDaynames.slice(startDayOfWeek).concat(givenDaynames.slice(0, startDayOfWeek)).join('')
+      givenDayNames.slice(startDayOfWeek).concat(givenDayNames.slice(0, startDayOfWeek)).join('')
     );
-    const { 0: tuesday, length, [length - 2]: sunday } = screen.getAllByTestId(/dayname-month-/);
+    const { 0: tuesday, length, [length - 2]: sunday } = screen.getAllByTestId(/dayName-month-/);
 
-    expect(tuesday).toHaveStyle({ color: normalDaynameColor });
-    expect(sunday).toHaveStyle({ color: sundayDaynameColor });
+    expect(tuesday).toHaveStyle({ color: normalDayNameColor });
+    expect(sunday).toHaveStyle({ color: sundayDayNameColor });
   });
 });

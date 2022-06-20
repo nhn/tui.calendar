@@ -10,7 +10,7 @@ Object {
   },
   "isReadOnly": false,
   "month": Object {
-    "daynames": Array [
+    "dayNames": Array [
       "sun",
       "mon",
       "tue",
@@ -36,7 +36,7 @@ Object {
     "locationPlaceholder": [Function],
     "milestone": [Function],
     "milestoneTitle": [Function],
-    "monthDayname": [Function],
+    "monthDayName": [Function],
     "monthGridFooter": [Function],
     "monthGridFooterExceed": [Function],
     "monthGridHeader": [Function],
@@ -66,14 +66,14 @@ Object {
     "timegridDisplayTime": [Function],
     "timezoneDisplayLabel": [Function],
     "titlePlaceholder": [Function],
-    "weekDayname": [Function],
+    "weekDayName": [Function],
     "weekGridFooterExceed": [Function],
   },
   "theme": Object {
     "common": Object {
       "backgroundColor": "white",
       "border": "1px solid #e5e5e5",
-      "dayname": Object {
+      "dayName": Object {
         "color": "#333",
       },
       "gridSelection": Object {
@@ -94,7 +94,7 @@ Object {
       "dayExceptThisMonth": Object {
         "color": "rgba(51, 51, 51, 0.4)",
       },
-      "dayname": Object {
+      "dayName": Object {
         "backgroundColor": "inherit",
         "borderLeft": "none",
       },
@@ -144,7 +144,7 @@ Object {
         "borderRight": "1px solid #e5e5e5",
         "width": "72px",
       },
-      "dayname": Object {
+      "dayName": Object {
         "backgroundColor": "inherit",
         "borderBottom": "1px solid #e5e5e5",
         "borderLeft": "none",
@@ -198,7 +198,7 @@ Object {
   "useDetailPopup": false,
   "useFormPopup": false,
   "week": Object {
-    "daynames": Array [],
+    "dayNames": Array [],
     "eventView": true,
     "hourEnd": 24,
     "hourStart": 0,

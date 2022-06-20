@@ -163,7 +163,7 @@ type TaskView = 'milestone' | 'task';
 
 interface WeekOptions {
   startDayOfWeek?: number;
-  daynames?: [string, string, string, string, string, string, string];
+  dayNames?: [string, string, string, string, string, string, string];
   narrowWeekend?: boolean;
   workweek?: boolean;
   showTimezoneCollapseButton?: boolean;
@@ -178,7 +178,7 @@ interface WeekOptions {
 ```js
 const DEFAULT_WEEK_OPTIONS = {
   startDayOfWeek: 0,
-  daynames: [],
+  dayNames: [],
   narrowWeekend: false,
   workweek: false,
   showTimezoneCollapseButton: false,
@@ -225,7 +225,7 @@ calendar.setOptions({
 
 [⬆ 목록으로 돌아가기](#week)
 
-#### week.daynames
+#### week.dayNames
 
 - 타입: `[string, string, string, string, string, string, string]`
 - 기본값: `[]`
@@ -237,14 +237,14 @@ calendar.setOptions({
 ```js
 calendar.setOptions({
   week: {
-    daynames: ['월', '화', '수', '목', '금', '토', '일'],
+    dayNames: ['월', '화', '수', '목', '금', '토', '일'],
   },
 });
 ```
 
 | 기본값 적용  | 예제 적용    |
 | ------------ | ------------ |
-| ![week-daynames-default](./options_week-daynames-before.png) | ![week-daynames-example](./options_week-daynames-after.png) |
+| ![week-daynames-default](./options_week-dayNames-before.png) | ![week-daynames-example](./options_week-dayNames-after.png) |
 
 [⬆ 목록으로 돌아가기](#week)
 
@@ -423,7 +423,7 @@ calendar.setOptions({
 
 ```ts
 interface MonthOptions {
-  daynames?: [string, string, string, string, string, string, string];
+  dayNames?: [string, string, string, string, string, string, string];
   startDayOfWeek?: number;
   narrowWeekend?: boolean;
   visibleWeeksCount?: number;
@@ -435,7 +435,7 @@ interface MonthOptions {
 
 ```js
 const DEFAULT_MONTH_OPTIONS = {
-  daynames: ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'],
+  dayNames: ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'],
   visibleWeeksCount: 0,
   workweek: false,
   narrowWeekend: false,
@@ -449,7 +449,7 @@ const DEFAULT_MONTH_OPTIONS = {
 
 [⬆ 목록으로 돌아가기](#옵션-객체)
 
-#### month.daynames
+#### month.dayNames
 
 - 타입: `[string, string, string, string, string, string, string]`
 - 기본값: `['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']`
@@ -471,14 +471,14 @@ const DEFAULT_MONTH_OPTIONS = {
 ```js
 calendar.setOptions({
   month: {
-    daynames: ['일', '월', '화', '수', '목', '금', '토'],
+    dayNames: ['일', '월', '화', '수', '목', '금', '토'],
   },
 });
 ```
 
 | 기본값 적용  | 예제 적용    |
 | ------------ | ------------ |
-| ![month-daynames-default](./options_month-daynames-before.png) | ![month-daynames-example](./options_month-daynames-after.png) |
+| ![month-daynames-default](./options_month-dayNames-before.png) | ![month-daynames-example](./options_month-dayNames-after.png) |
 
 [⬆ 목록으로 돌아가기](#month)
 

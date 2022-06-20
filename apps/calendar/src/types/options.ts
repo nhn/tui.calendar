@@ -11,7 +11,7 @@ export type TaskView = 'milestone' | 'task';
 
 export interface WeekOptions {
   startDayOfWeek?: number;
-  daynames?: [string, string, string, string, string, string, string] | [];
+  dayNames?: [string, string, string, string, string, string, string] | [];
   narrowWeekend?: boolean;
   workweek?: boolean;
   showTimezoneCollapseButton?: boolean;
@@ -23,7 +23,7 @@ export interface WeekOptions {
 }
 
 export interface MonthOptions {
-  daynames?: [string, string, string, string, string, string, string] | [];
+  dayNames?: [string, string, string, string, string, string, string] | [];
   startDayOfWeek?: number;
   narrowWeekend?: boolean;
   visibleWeeksCount?: number;

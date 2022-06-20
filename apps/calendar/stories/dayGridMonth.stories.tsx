@@ -48,7 +48,7 @@ export const Month = () => {
     narrowWeekend: false,
     startDayOfWeek: 0,
     isAlways6Weeks: true,
-    daynames: [],
+    dayNames: [],
     visibleEventCount: 6,
   };
 

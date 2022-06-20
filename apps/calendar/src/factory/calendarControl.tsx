@@ -463,7 +463,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    *
    * @param {DateType} date - The date to move
    * @example
-   * calendar.on('clickDayname', (event) => {
+   * calendar.on('clickDayName', (event) => {
    *   if (calendar.getViewName() === 'week') {
    *     const dateToMove = new Date(event.date);
    *
@@ -607,7 +607,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    *     },
    *   },
    *   month: {
-   *     dayname: {
+   *     dayName: {
    *       borderLeft: '1px solid #e5e5e5',
    *     },
    *   },

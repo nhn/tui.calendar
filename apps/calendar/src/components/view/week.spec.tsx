@@ -117,7 +117,7 @@ describe('dayNames option', () => {
   // Week view has including date with day name, so let exclude them.
   const extractDayNamesOnly = (text: string | null) => text?.replace(/\d{2}\s+/g, '');
 
-  it('should show the default daynames if the daynames option is not specified', () => {
+  it('should show the default day names if the day names option is not specified', () => {
     // Given
     const expectedTextContent = DEFAULT_DAY_NAMES.map((day) => capitalize(day)).join('');
 
@@ -129,15 +129,15 @@ describe('dayNames option', () => {
     expect(extractDayNamesOnly(header.textContent)).toBe(expectedTextContent);
   });
 
-  it('should show the daynames specified by the dayNames option', () => {
+  it('should show the day names specified by the dayNames option', () => {
     // Given
-    const dayNames: WeekOptions['daynames'] = ['日', '月', '火', '水', '木', '金', '土'];
+    const dayNames: WeekOptions['dayNames'] = ['日', '月', '火', '水', '木', '金', '土'];
     const expectedTextContent = dayNames.map((day) => capitalize(day)).join('');
 
     // When
     setup({
       week: {
-        daynames: dayNames,
+        dayNames,
       },
     });
 
@@ -146,9 +146,9 @@ describe('dayNames option', () => {
     expect(extractDayNamesOnly(header.textContent)).toBe(expectedTextContent);
   });
 
-  it('should change the order of daynames following startDayOfWeek option', () => {
+  it('should change the order of day names following startDayOfWeek option', () => {
     // Given
-    const dayNames: WeekOptions['daynames'] = ['日', '月', '火', '水', '木', '金', '土'];
+    const dayNames: WeekOptions['dayNames'] = ['日', '月', '火', '水', '木', '金', '土'];
     const startDayOfWeek = 1; // Monday
     const expectedTextContent = [
       ...dayNames.slice(startDayOfWeek),
@@ -160,7 +160,7 @@ describe('dayNames option', () => {
     // When
     setup({
       week: {
-        daynames: dayNames,
+        dayNames,
         startDayOfWeek: 1,
       },
     });
