@@ -52,9 +52,9 @@ calendar.setOptions({
 | [weekGridFooterExceed](#weekgridfooterexceed)             | <code>number</code>                                              | 주간/일간뷰의 allday 패널의 초과된 이벤트 표시 컴포넌트            |
 | [collapseBtnTitle](#collapsebtntitle)                     | 없음                                                             | 주간/일간뷰의 allday 패널의 접기 버튼 컴포넌트                     |
 | [timezoneDisplayLabel](#timezonedisplaylabel)             | TemplateTimezone                                                 | 주간/일간뷰의 타임존 표시 컴포넌트                                 |
-| [timegridDisplayPrimaryTime](#timegriddisplayprimarytime) | TemplateCurrentTime                                              | 주간/일간뷰의 primary 타임존 시간 표시                             |
-| [timegridDisplayTime](#timegriddisplaytime)               | TemplateCurrentTime                                              | 주간/일간뷰의 primary 타임존 외의 타임존 시간 표시                 |
-| [timegridCurrentTime](#timegridcurrenttime)               | TemplateCurrentTime                                              | 주간/일간뷰의 현재 시간 표시                                       |
+| [timegridDisplayPrimaryTime](#timegriddisplayprimarytime) | TemplateNow                                              | 주간/일간뷰의 primary 타임존 시간 표시                             |
+| [timegridDisplayTime](#timegriddisplaytime)               | TemplateNow                                              | 주간/일간뷰의 primary 타임존 외의 타임존 시간 표시                 |
+| [timegridNowIndicatorLabel](#timegridnowindicatorlabel)               | TemplateNow                                              | 주간/일간뷰의 현재 시간 표시                                       |
 | [popupIsAllday](#popupisallday)                           | 없음                                                             | 이벤트 생성 팝업에서 all day 텍스트                                |
 | [popupStateFree](#popupstatefree)                         | 없음                                                             | 이벤트 생성 팝업에서 이벤트 한가함(free) 상태 텍스트               |
 | [popupStateBusy](#popupstatebusy)                         | 없음                                                             | 이벤트 생성 팝업에서 이벤트 바쁨(busy) 상태 텍스트                 |
@@ -487,7 +487,7 @@ calendar.setOptions({
 ```ts
 type TimeUnit = 'second' | 'minute' | 'hour' | 'date' | 'month' | 'year';
 
-interface TemplateCurrentTime {
+interface TemplateNow {
   unit: TimeUnit; // 시간의 단위
   time: TZDate; // 해당 시간
   format: string; // 해당 시간의 포맷
@@ -528,14 +528,14 @@ calendar.setOptions({
 
 [⬆ 목록으로 돌아가기](#템플릿-목록)
 
-#### timegridCurrentTime
+#### timegridNowIndicatorLabel
 
-현재 가리키는 시간 표시를 커스터마이징할 수 있다.
+현재 시간선에 표시되는 현재 시각 텍스트를 커스터마이징할 수 있다.
 
 ```js
 calendar.setOptions({
   template: {
-    timegridCurrentTime({ time }) {
+    timegridNowIndicatorLabel({ time }) {
       return `current time: ${time}`;
     },
   },

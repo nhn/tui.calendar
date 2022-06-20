@@ -602,7 +602,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    *     },
    *   },
    *   week: {
-   *     currentTime: {
+   *     nowIndicatorLabel: {
    *       color: '#00FF00',
    *     },
    *   },

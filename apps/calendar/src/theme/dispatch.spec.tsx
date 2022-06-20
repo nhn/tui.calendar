@@ -93,24 +93,26 @@ describe('setWeekTheme', () => {
   const theme = initThemeStore();
   const { setWeekTheme } = theme.getState().dispatch;
   let beforePastTimeColor: string;
-  let beforeCurrentTimeColor: string;
+  let beforeNowIndicatorLabelColor: string;
 
   function WeekThemeComponent() {
     const {
       pastTime: { color: pastTimeColor },
-      currentTime: { color: currentTimeColor },
+      nowIndicatorLabel: { color: nowIndicatorLabelColor },
     } = useWeekTheme();
 
     return (
       <div>
-        <div style={{ backgroundColor: pastTimeColor, color: currentTimeColor }}>week theme</div>
+        <div style={{ backgroundColor: pastTimeColor, color: nowIndicatorLabelColor }}>
+          week theme
+        </div>
       </div>
     );
   }
 
   beforeEach(() => {
     beforePastTimeColor = theme.getState().week.pastTime.color ?? '';
-    beforeCurrentTimeColor = theme.getState().week.currentTime.color ?? '';
+    beforeNowIndicatorLabelColor = theme.getState().week.nowIndicatorLabel.color ?? '';
     render(<WeekThemeComponent />, { theme });
   });
 
@@ -129,7 +131,7 @@ describe('setWeekTheme', () => {
 
     // Then
     expect(theme.getState().week.pastTime.color).toBe(color);
-    expect(theme.getState().week.currentTime.color).toBe(beforeCurrentTimeColor);
+    expect(theme.getState().week.nowIndicatorLabel.color).toBe(beforeNowIndicatorLabelColor);
   });
 
   it('should rerender component that use useTheme when theme is changed', () => {
@@ -148,7 +150,7 @@ describe('setWeekTheme', () => {
     // Then
     expect(screen.getByText('week theme')).toHaveStyle({
       backgroundColor: color,
-      color: beforeCurrentTimeColor,
+      color: beforeNowIndicatorLabelColor,
     });
   });
 
@@ -168,7 +170,7 @@ describe('setWeekTheme', () => {
     // Then
     expect(screen.getByText('week theme')).toHaveStyle({
       backgroundColor: beforePastTimeColor,
-      color: beforeCurrentTimeColor,
+      color: beforeNowIndicatorLabelColor,
     });
   });
 });
