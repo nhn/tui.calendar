@@ -127,13 +127,13 @@ import type { ThemeState, ThemeStore } from '@t/theme';
  * @class CalendarCore
  * @mixes CustomEvents
  * @param {string|Element} container - container element or selector.
- * @param {object} options - calendar options. For more information, see {@link TODO-GitHub-Options|Calendar options} in guide.
+ * @param {object} options - calendar options. For more information, see {@link https://github.com/nhn/tui.calendar/blob/main/docs/ko/apis/calendar.md|Calendar options} in guide.
  *   @param {string} [options.defaultView="week"] - Initial view type. Available values are: 'day', 'week', 'month'.
  *   @param {boolean} [options.useFormPopup=false] - Whether to use the default form popup when creating/modifying events.
  *   @param {boolean} [options.useDetailPopup=false] - Whether to use the default detail popup when clicking events.
  *   @param {boolean} [options.isReadOnly=false] - Whether the calendar is read-only.
  *   @param {boolean} [options.usageStatistics=true] - Whether to allow collect hostname and send the information to google analytics.
- *                                              For more information, check out the {@link https://github.com/nhn/tui.calendar/tree/main/apps/calendar#collect-statistics-on-the-use-of-open-source|documentation}.
+ *                                              For more information, check out the {@link https://github.com/nhn/tui.calendar/blob/main/apps/calendar/README.md#collect-statistics-on-the-use-of-open-source|documentation}.
  *   @param {function} [options.eventFilter] - A function that returns true if the event should be displayed. the default filter checks if the event's `isVisible` property is true.
  *   @param {object} [options.week] - Week option of the calendar instance.
  *     @param {number} [options.week.startDayOfWeek=0] - Start day of the week. Available values are 0 (Sunday) to 6 (Saturday).
@@ -158,7 +158,7 @@ import type { ThemeState, ThemeStore } from '@t/theme';
  *   @param {boolean|object} [options.gridSelection=true] - Whether to enable grid selection. or it's option. it's enabled when the value is `true` and object and will be disabled when `isReadOnly` is true.
  *     @param {boolean} options.gridSelection.enableDbClick - Whether to enable double click to select area.
  *     @param {boolean} options.gridSelection.enableClick - Whether to enable click to select area.
- *   @param {TimezoneOptions} options.timezone - Timezone option of the calendar instance. For more information about timezone, check out the {https://github.com/nhn/tui.calendar/blob/main/docs/ko/apis/options.md|Options} in guide.
+ *   @param {TimezoneOptions} options.timezone - Timezone option of the calendar instance. For more information about timezone, check out the {@link https://github.com/nhn/tui.calendar/blob/main/docs/ko/apis/options.md|Options} in guide.
  *   @param {Theme} options.theme - Theme option of the calendar instance. For more information, see {@link https://github.com/nhn/tui.calendar/blob/main/docs/ko/apis/theme.md|Theme} in guide.
  *   @param {TemplateConfig} options.template - Template option of the calendar instance. For more information, see {@link https://github.com/nhn/tui.calendar/blob/main/docs/ko/apis/template.md|Template} in guide.
  */
@@ -724,7 +724,7 @@ export default abstract class CalendarCore
   /**
    * Set the theme of the calendar.
    *
-   * @param {Theme} theme - The theme object to apply. For more information, see {@link TODO-GitHub-Theme|Theme} in guide.
+   * @param {Theme} theme - The theme object to apply. For more information, see {@link https://github.com/nhn/tui.calendar/blob/main/docs/ko/apis/theme.md|Theme} in guide.
    *
    * @example
    * calendar.setTheme({
