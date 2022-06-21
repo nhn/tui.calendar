@@ -560,9 +560,9 @@ calendar.setCalendars([
 
 ### scrollToNow
 
-- 타입: `scrollToNow(): void`
+- 타입: `scrollToNow(scrollBehavior?: 'auto' | 'smooth'): void`
 
-주간 뷰 혹은 일간 뷰인 상태에서 현재 시간이 포함된 시간 범위를 표시하고 있을 때, 현재 시간이 있는 위치로 스크롤을 이동한다.
+주간 뷰 혹은 일간 뷰인 상태에서 현재 시간이 포함된 시간 범위를 표시하고 있을 때, 현재 시간이 있는 위치로 스크롤을 이동한다. IE11에서는 `'smooth'`를 넣어도 동작하지 않는다.
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 

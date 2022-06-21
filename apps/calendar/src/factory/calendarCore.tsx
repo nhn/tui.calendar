@@ -20,7 +20,7 @@ import { EventBusImpl } from '@src/utils/eventBus';
 import { addAttributeHooks, removeAttributeHooks } from '@src/utils/sanitizer';
 import { isNil, isPresent, isString } from '@src/utils/type';
 
-import type { ExternalEventTypes } from '@t/eventBus';
+import type { ExternalEventTypes, InternalEventTypes, ScrollBehaviorOptions } from '@t/eventBus';
 import type { DateType, EventObject } from '@t/events';
 import type { CalendarColor, CalendarInfo, Options, ViewType } from '@t/options';
 import type {
@@ -162,7 +162,9 @@ import type { ThemeState, ThemeStore } from '@t/theme';
  *   @param {Theme} options.theme - Theme option of the calendar instance. For more information, see {@link https://github.com/nhn/tui.calendar/blob/main/docs/ko/apis/theme.md|Theme} in guide.
  *   @param {TemplateConfig} options.template - Template option of the calendar instance. For more information, see {@link https://github.com/nhn/tui.calendar/blob/main/docs/ko/apis/template.md|Template} in guide.
  */
-export default abstract class CalendarCore implements EventBus<ExternalEventTypes> {
+export default abstract class CalendarCore
+  implements EventBus<ExternalEventTypes & InternalEventTypes>
+{
   protected container: Element | null;
 
   /**
@@ -174,7 +176,7 @@ export default abstract class CalendarCore implements EventBus<ExternalEventType
     end: TZDate;
   };
 
-  protected eventBus: EventBus<ExternalEventTypes>;
+  protected eventBus: EventBus<ExternalEventTypes & InternalEventTypes>;
 
   protected theme: InternalStoreAPI<ThemeStore>;
 
@@ -190,7 +192,7 @@ export default abstract class CalendarCore implements EventBus<ExternalEventType
     };
 
     this.theme = initThemeStore(options.theme);
-    this.eventBus = new EventBusImpl<ExternalEventTypes>();
+    this.eventBus = new EventBusImpl<ExternalEventTypes & InternalEventTypes>();
     this.store = initCalendarStore(options);
 
     addAttributeHooks();
@@ -529,17 +531,16 @@ export default abstract class CalendarCore implements EventBus<ExternalEventType
 
   /**
    * Scroll to current time on today in case of daily, weekly view.
+   * Nothing happens in the monthly view.
    *
    * @example
    * function onNewEvents(events) {
-   *     calendar.createEvents(events);
-   *     if (calendar.getViewName() !== 'month') {
-   *         calendar.scrollToNow();
-   *     }
+   *   calendar.createEvents(events);
+   *   calendar.scrollToNow('smooth');
    * }
    */
-  scrollToNow() {
-    // console.log('scrollToNow');
+  scrollToNow(scrollBehavior: ScrollBehaviorOptions = 'auto') {
+    this.eventBus.fire('scrollToNow', scrollBehavior);
   }
 
   private calculateRenderRange(renderDate: TZDate) {
