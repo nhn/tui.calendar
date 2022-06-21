@@ -100,8 +100,8 @@ import type { ThemeState, ThemeStore } from '@t/theme';
  * @property {string} [isAllday] - Whether the event is all day or not.
  * @property {string|number|Date|TZDate} [start] - Start time of the event.
  * @property {string|number|Date|TZDate} [end] - End time of the event.
- * @property {number} [goingDuration] - Travel time which is taken to go.
- * @property {number} [comingDuration] - Travel time which is taken to come back.
+ * @property {number} [goingDuration] - Travel time which is taken to go in minutes.
+ * @property {number} [comingDuration] - Travel time which is taken to come back in minutes.
  * @property {string} [location] - Location of the event.
  * @property {Array.<string>} [attendees] - Attendees of the event.
  * @property {string} [category] - Category of the event. Available categories are 'milestone', 'task', 'time' and 'allday'.
@@ -117,7 +117,7 @@ import type { ThemeState, ThemeStore } from '@t/theme';
  * @property {string} [backgroundColor] - Background color of the event.
  * @property {string} [dragBackgroundColor] - Background color of the event during dragging.
  * @property {string} [borderColor] - Left border color of the event.
- * @property {object} [customStyle] - Custom style of the event. the key of CSS property should be camelCase (e.g. {'fontSize': '12px'})
+ * @property {object} [customStyle] - Custom style of the event. The key of CSS property should be camelCase (e.g. {'fontSize': '12px'})
  * @property {*} [raw] - Raw data of the event. it's an arbitrary property for anything.
  */
 
@@ -134,7 +134,7 @@ import type { ThemeState, ThemeStore } from '@t/theme';
  *   @param {boolean} [options.isReadOnly=false] - Whether the calendar is read-only.
  *   @param {boolean} [options.usageStatistics=true] - Whether to allow collect hostname and send the information to google analytics.
  *                                              For more information, check out the {@link https://github.com/nhn/tui.calendar/blob/main/apps/calendar/README.md#collect-statistics-on-the-use-of-open-source|documentation}.
- *   @param {function} [options.eventFilter] - A function that returns true if the event should be displayed. the default filter checks if the event's `isVisible` property is true.
+ *   @param {function} [options.eventFilter] - A function that returns true if the event should be displayed. The default filter checks if the event's `isVisible` property is true.
  *   @param {object} [options.week] - Week option of the calendar instance.
  *     @param {number} [options.week.startDayOfWeek=0] - Start day of the week. Available values are 0 (Sunday) to 6 (Saturday).
  *     @param {Array.<string>} [options.week.dayNames] - Names of days of the week. Should be 7 items starting from Sunday to Saturday. If not specified, the default names are used.

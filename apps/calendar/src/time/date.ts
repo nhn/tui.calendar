@@ -77,6 +77,7 @@ export default class TZDate {
   /**
    * Add hours to the instance.
    * @param {number} h - number of hours to be added.
+   * @returns {TZDate} - returns the instance itself.
    */
   addHours(h: number): TZDate {
     this.setHours(this.getHours() + h);
@@ -98,6 +99,7 @@ export default class TZDate {
   /**
    * Add seconds to the instance.
    * @param {number} s - number of seconds to be added.
+   * @returns {TZDate} - returns the instance itself.
    */
   addSeconds(s: number): TZDate {
     this.setSeconds(this.getSeconds() + s);
