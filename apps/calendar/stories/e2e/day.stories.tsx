@@ -12,6 +12,9 @@ Template.args = {
     defaultView: 'day',
     useFormPopup: true,
     useDetailPopup: true,
+    week: {
+      showNowIndicator: false,
+    },
   },
   containerHeight: '100vh',
 };
