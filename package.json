@@ -83,7 +83,7 @@
     "build:vue": "npm run build --workspace=@toast-ui/vue-calendar",
     "build:date": "npm run build --workspace=@toast-ui/date",
     "build:calendar-storybook": "npm run storybook:build --workspace=@toast-ui/calendar",
-    "build:calendar:docs": "npm run storybook:build:docs --workspace=@toast-ui/calendar",
+    "build:calendar:docs": "npm run docs:build --workspace=@toast-ui/calendar",
     "serve:storybook": "http-server ./apps/calendar/storybook-static",
     "install:date": "cd libs/date && npm install",
     "setup:date": "npm run install:date && npm run build:date",

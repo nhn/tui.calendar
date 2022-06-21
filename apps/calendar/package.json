@@ -63,6 +63,8 @@
     "develop": "npm run storybook",
     "storybook": "start-storybook -p 6006",
     "storybook:build": "build-storybook",
-    "storybook:build:docs": "STORYBOOK_ENV=docs build-storybook -o ../../_docs"
+    "docs:prebuild": "tsc --outDir tmpdoc --sourceMap false",
+    "docs:dev": "npm run docs:prebuild && tuidoc --serv",
+    "docs:build": "npm run docs:prebuild && tuidoc"
   }
 }

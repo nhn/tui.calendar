@@ -1,7 +1,3 @@
-import { Meta } from '@storybook/addon-docs';
-
-<Meta title="Documentation/한국어/가이드/시작하기" />
-
 # 시작하기
 
 ## 설치하기
@@ -137,7 +133,7 @@ require('@toast-ui/calendar/toastui-calendar.min.css');
 생성자 함수는 `container`, `options` 두 개를 인자로 갖는다.
 
 - `container`: TOAST UI Calendar를 자식 요소로 갖는 HTML 요소 또는 HTML 요소를 가져오기 위한 CSS 선택자 문자열
-- `options`: 기본 뷰 타입, 타임존, 테마, 템플릿 등 TOAST UI Calendar를 커스터마이징할 수 있는 옵션 객체. 자세한 정보는 [옵션 문서](/story/documentation-한국어-api-옵션--page)를 참고한다.
+- `options`: 기본 뷰 타입, 타임존, 테마, 템플릿 등 TOAST UI Calendar를 커스터마이징할 수 있는 옵션 객체. 자세한 정보는 [옵션 문서](../apis/options.md)를 참고한다.
 
 ```js
 const container = document.getElementById('calendar');
@@ -172,15 +168,15 @@ const options = {
 const calendar = new Calendar(container, options);
 ```
 
-![image](./gettingStarted_calendar.png)
+![image](../../assets/gettingStarted_calendar.png)
 
 ## 기본적인 사용 방법
 
 ### 일정 생성하기
 
-일정을 생성할 때는 Calendar 인스턴스의 [`createEvents` 메서드](/story/documentation-한국어-api-calendar--page#createevents)를 사용한다.
+일정을 생성할 때는 Calendar 인스턴스의 [`createEvents` 메서드](../apis/calendar.md#createevents)를 사용한다.
 
-일정 정보는 [EventObject](/story/documentation-한국어-api-eventobject) 형태로 넘긴다.
+일정 정보는 [EventObject](../apis/event-object.md) 형태로 넘긴다.
 
 ```js
 calendar.createEvents([
@@ -210,11 +206,11 @@ calendar.createEvents([
 ]);
 ```
 
-![createEvents](./gettingStarted_createEvents.png)
+![createEvents](../../assets/gettingStarted_createEvents.png)
 
 ### 팝업 사용하기
 
-TOAST UI Calendar는 일정 생성 팝업과 일정 상세 팝업을 기본으로 제공한다. 이를 사용하려면 [`useFormPopup`](/story/documentation-한국어-api-옵션--page#useformpopup)과 [`useDetailPopup`](/story/documentation-한국어-api-옵션--page#usedetailpopup) 옵션을 `true`로 설정해야 한다. 옵션은 인스턴스 생성 시 설정하거나, 인스턴스 생성 후 [`setOptions`](/story/documentation-한국어-api-calendar--page#setoptions) 메서드를 사용해서 변경할 수 있다.
+TOAST UI Calendar는 일정 생성 팝업과 일정 상세 팝업을 기본으로 제공한다. 이를 사용하려면 [`useFormPopup`](../apis/options.md#useformpopup)과 [`useDetailPopup`](../apis/options.md#usedetailpopup) 옵션을 `true`로 설정해야 한다. 옵션은 인스턴스 생성 시 설정하거나, 인스턴스 생성 후 [`setOptions`](../apis/calendar.md#setoptions) 메서드를 사용해서 변경할 수 있다.
 
 일정 생성 팝업을 사용할 때는 [`tui-date-picker`](https://github.com/nhn/tui.date-picker)와 [`tui-time-picker`](https://github.com/nhn/tui.time-picker)의 css 파일을 가져와야 스타일이 제대로 적용된다.
 
@@ -234,12 +230,12 @@ calendar.setOptions({
 ```
 
 | 일정 생성 팝업                                    | 일정 상세 팝업                                        |
-| ------------------------------------------------- | ----------------------------------------------------- |
-| ![useFormPopup](./gettingStarted_useFormPopup.png) | ![useDetailPopup](./gettingStarted_useDetailPopup.png) |
+| ------------------------------------------------ | ----------------------------------------------------- |
+| ![useFormPopup](../../assets/gettingStarted_useFormPopup.png) | ![useDetailPopup](../../assets/gettingStarted_useDetailPopup.png) |
 
 ### 테마 적용하기
 
-색상, 배경색과 같은 스타일을 변경하고 싶을 때는 테마를 사용한다. 테마는 인스턴스 생성 시 [옵션 객체의 `theme` 프로퍼티](/story/documentation-한국어-api-옵션--page#theme)에 명시하거나, 인스턴스 생성 후 [`setTheme`](/story/documentation-한국어-api-calendar--page#settheme) 메서드를 사용해서 변경할 수 있다. 적용 가능한 테마는 [테마 문서](/story/documentation-한국어-api-테마--page)를 참고한다.
+색상, 배경색과 같은 스타일을 변경하고 싶을 때는 테마를 사용한다. 테마는 인스턴스 생성 시 [옵션 객체의 `theme` 프로퍼티](../apis/options.md#theme)에 명시하거나, 인스턴스 생성 후 [`setTheme`](../apis/calendar.md#settheme) 메서드를 사용해서 변경할 수 있다. 적용 가능한 테마는 [테마 문서](../apis/theme.md)를 참고한다.
 
 ```js
 calendar.setTheme({
@@ -252,11 +248,11 @@ calendar.setTheme({
 });
 ```
 
-![theme](./gettingStarted_theme.png)
+![theme](../../assets/gettingStarted_theme.png)
 
 ### 템플릿 적용하기
 
-템플릿은 커스텀 렌더링을 지원하는 기능이다. 인스턴스 생성 시 [옵션 객체의 `template` 프로퍼티](/story/documentation-한국어-api-옵션--page#template)에 명시하거나, 인스턴스 생성 후 [`setOptions`](/story/documentation-한국어-api-calendar--page#setoptions) 메서드를 사용해서 변경할 수 있다. 적용 가능한 템플릿은 [템플릿 문서](/story/documentation-한국어-api-템플릿--page)를 참고한다.
+템플릿은 커스텀 렌더링을 지원하는 기능이다. 인스턴스 생성 시 [옵션 객체의 `template` 프로퍼티](../apis/options.md#template)에 명시하거나, 인스턴스 생성 후 [`setOptions`](../apis/calendar.md#setoptions) 메서드를 사용해서 변경할 수 있다. 적용 가능한 템플릿은 [템플릿 문서](../apis/template.md)를 참고한다.
 
 ```js
 function formatTime(time) {
@@ -280,7 +276,7 @@ calendar.setOptions({
 });
 ```
 
-![template](./gettingStarted_template.png)
+![template](../../assets/gettingStarted_template.png)
 
 ### 인스턴스 이벤트 적용하기
 
@@ -288,7 +284,7 @@ TOAST UI Calendar는 인스턴스 이벤트를 제공한다. 필요에 따라 �
 
 `on` 메서드를 사용하여 인스턴스 이벤트를 수신할 수 있다.
 
-자세한 내용은 [인스턴스 이벤트 문서](/story/documentation-한국어-api-calendar--page#인스턴스-이벤트)를 참고한다.
+자세한 내용은 [인스턴스 이벤트 문서](../apis/calendar.md#인스턴스-이벤트)를 참고한다.
 
 ```js
 calendar.on('clickEvent', ({ event }) => {
@@ -297,4 +293,4 @@ calendar.on('clickEvent', ({ event }) => {
 });
 ```
 
-![instance event](./gettingStarted_instanceEvent.gif)
+![instance event](../../assets/gettingStarted_instanceEvent.gif)
