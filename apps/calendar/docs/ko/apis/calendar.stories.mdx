@@ -89,7 +89,8 @@ calendar.on('beforeCreateEvent', (eventObj) => {
 | [setCalendarVisibility](#setcalendarvisibility) | 지정된 이벤트 그룹에 포함되는 모든 이벤트를 숨기거나 표시한다.                                                             |
 | [setCalendarColor](#setcalendarcolor)           | 지정된 이벤트 그룹에 포함된 모든 이벤트의 컬러 값을 변경한다.                                                              |
 | [scrollToNow](#scrolltonow)                     | 일간 뷰 혹은 주간 뷰에서 현재 시간이 포함된 범위를 표시하고 있는 경우, 즉시 현재 시간 영역으로 스크롤을 이동한다.          |
-| [openFormPopup](#openformpopup)                 | 이벤트를 생성하는데 사용하는 팝업을 표시한다. 전달한 객체의 정보에 따라 팝업의 값이 j워져 있다.                            |
+| [openFormPopup](#openformpopup)                 | 이벤트를 생성하는데 사용하는 팝업을 표시한다. 전달한 객체의 정보에 따라 팝업의 값이 채워져 있다.                           |
+| [clearGridSelections](#cleargridselections)     | 현재 캘린더에 표시되고 있는 날짜/시간 선택 엘리먼트를 제거한다.                                                            |
 | [fire](#fire)                                   | 임의의 인스턴스 이벤트를 실행한다. 자세한 설명은 [인스턴스 이벤트](#인스턴스-이벤트) 단락에서 설명한다.                    |
 | [off](#off)                                     | 임의의 인스턴스 이벤트를 해제한다. 자세한 설명은 [인스턴스 이벤트](#인스턴스-이벤트) 단락에서 설명한다.                    |
 | [on](#on)                                       | 임의의 인스턴스 이벤트를 할당한다. 자세한 설명은 [인스턴스 이벤트](#인스턴스-이벤트) 단락에서 설명한다.                    |
@@ -589,6 +590,18 @@ calendar.openFormPopup({
   end: '2022-05-31T12:00:00',
   category: 'time',
 });
+```
+
+[⬆️ 목록으로 돌아가기](#인스턴스-메서드)
+
+### clearGridSelections
+
+- 타입: `clearGridSelections(): void`
+
+현재 캘린더에 표시되고 있는 날짜/시간 선택 엘리먼트를 제거한다.
+
+```js
+calendar.clearGridSelections();
 ```
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
