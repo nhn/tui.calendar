@@ -65,11 +65,11 @@ export function useGridSelection<DateCollection>({
 
   const currentGridSelectionType = DRAGGING_TYPE_CREATORS.gridSelection(type);
 
-  const setGridSelectionByPosition = (e: MouseEvent, initGridPos: GridPosition) => {
+  const setGridSelectionByPosition = (e: MouseEvent) => {
     const gridPosition = gridPositionFinder(e);
 
-    if (isPresent(gridPosition)) {
-      setGridSelection(type, selectionSorter(initGridPos, gridPosition));
+    if (isPresent(initGridPosition) && isPresent(gridPosition)) {
+      setGridSelection(type, selectionSorter(initGridPosition, gridPosition));
     }
   };
 
@@ -109,18 +109,14 @@ export function useGridSelection<DateCollection>({
 
   const onMouseUp = (e: MouseEvent, isClickEvent: boolean) => {
     // The grid selection is created on mouseup in case of the click event.
-    if (isClickEvent && isPresent(initGridPosition)) {
-      setGridSelectionByPosition(e, initGridPosition);
+    if (isClickEvent) {
+      setGridSelectionByPosition(e);
     }
 
     if (isPresent(gridSelectionRef.current)) {
       const [startDate, endDate] = sortDates(
         ...dateGetter(dateCollection, gridSelectionRef.current)
       );
-
-      if (!useFormPopup) {
-        addGridSelection(type, gridSelectionRef.current);
-      }
 
       if (useFormPopup && isPresent(initMousePosition)) {
         const popupArrowPointPosition = {
@@ -170,16 +166,18 @@ export function useGridSelection<DateCollection>({
       if (isPresent(gridPosition)) {
         setInitGridPosition(gridPosition);
       }
+
+      if (!useFormPopup) {
+        addGridSelection(type, gridSelectionRef.current);
+      }
     },
     onDragStart: (e) => {
       // The grid selection is created on mousemove in case of the drag event.
-      if (isPresent(initGridPosition)) {
-        setGridSelectionByPosition(e, initGridPosition);
-      }
+      setGridSelectionByPosition(e);
     },
     onDrag: (e) => {
-      if (isSelectingGridRef.current && isPresent(initGridPosition)) {
-        setGridSelectionByPosition(e, initGridPosition);
+      if (isSelectingGridRef.current) {
+        setGridSelectionByPosition(e);
       }
     },
     onMouseUp: (e, { draggingState }) => {

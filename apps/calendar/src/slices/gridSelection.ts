@@ -1,7 +1,5 @@
 import produce from 'immer';
 
-import { isFunction } from '@src/utils/type';
-
 import type { GridSelectionData } from '@t/components/gridSelection';
 import type { CalendarState, CalendarStore, SetState } from '@t/store';
 
@@ -19,13 +17,7 @@ export type GridSelectionSlice = {
 export type GridSelectionType = Exclude<keyof GridSelectionSlice['gridSelection'], 'accumulated'>;
 
 export type GridSelectionDispatchers = {
-  setGridSelection: (
-    type: GridSelectionType,
-    gridSelection:
-      | GridSelectionData
-      | null
-      | ((prev: GridSelectionData | null) => GridSelectionData | null)
-  ) => void;
+  setGridSelection: (type: GridSelectionType, gridSelection: GridSelectionData | null) => void;
   addGridSelection: (type: GridSelectionType, gridSelection: GridSelectionData | null) => void;
   clearAll: () => void;
 };
@@ -50,9 +42,7 @@ export function createGridSelectionDispatchers(
     setGridSelection: (type, gridSelection) => {
       set(
         produce((state: CalendarState) => {
-          state.gridSelection[type] = isFunction(gridSelection)
-            ? gridSelection(state.gridSelection[type])
-            : gridSelection;
+          state.gridSelection[type] = gridSelection;
         })
       );
     },
