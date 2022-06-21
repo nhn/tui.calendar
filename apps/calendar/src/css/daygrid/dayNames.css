@@ -1,12 +1,12 @@
-.daynames {
+.day-names {
   position: relative;
 }
 
-.dayname-container {
+.day-name-container {
   position: relative;
 }
 
-.dayname-item {
+.day-name-item {
   position: absolute;
   font-size: 12px;
   font-weight: normal;
@@ -14,28 +14,28 @@
   padding: 0 10px;
 }
 
-.dayname-item.week {
+.day-name-item.week {
   line-height: 38px;
   height: 42px;
 }
 
-.dayname-item.month {
+.day-name-item.month {
   line-height: 31px;
   height: 31px;
 }
 
-.day-view-daynames,
-.week-view-daynames {
+.day-view-day-names,
+.week-view-day-names {
   border-bottom: 1px solid #e5e5e5;
 }
 
-.daynames.week {
+.day-names.week {
   height: 42px;
   padding-left: 0;
   text-align: left;
 }
 
-.daynames.month {
+.day-names.month {
   height: 31px;
   padding: 0 10px;
   font-size: 12px;
@@ -43,10 +43,10 @@
   text-align: left;
 }
 
-.dayname-date {
+.day-name__date {
   font-size: 26px;
 }
 
-.dayname-name {
+.day-name__name {
   font-size: 12px;
 }

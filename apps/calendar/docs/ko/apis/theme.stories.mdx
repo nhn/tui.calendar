@@ -52,7 +52,7 @@ interface CommonTheme {
     backgroundColor: string;
     border: string;
   };
-  dayname: { color: string };
+  dayName: { color: string };
   holiday: { color: string };
   saturday: { color: string };
   today: { color: string };
@@ -64,7 +64,7 @@ interface CommonTheme {
 | [backgroundColor](#common-backgroundcolor) | <code>'white'</code>                | 캘린더의 배경색 |
 | [border](#common-border)                   | <code>'1px solid #e5e5e5'</code>    | 캘린더의 테두리 |
 | [gridSelection](#common-gridselection)     | <code>DEFAULT_GRID_SELECTION</code> | 날짜/시간 선택  |
-| [dayname](#common-dayname)                 | <code>{ color: '#333' }</code>      | 요일            |
+| [dayName](#common-dayname)                 | <code>{ color: '#333' }</code>      | 요일            |
 | [holiday](#common-holiday)                 | <code>{ color: '#ff4040' }</code>   | 휴일            |
 | [saturday](#common-saturday)               | <code>{ color: '#333' }</code>      | 토요일          |
 | [today](#common-today)                     | <code>{ color: '#fff' }</code>      | 오늘            |
@@ -80,7 +80,7 @@ const DEFAULT_GRID_SELECTION = {
 
 ```ts
 interface WeekTheme {
-  dayname: {
+  dayName: {
     borderLeft: string;
     borderTop: string;
     borderBottom: string;
@@ -103,11 +103,11 @@ interface WeekTheme {
   };
   timeGridLeftAdditionalTimezone: { backgroundColor: string };
   timeGridHalfHour: { borderBottom: string };
-  currentTime: { color: string };
-  currentTimeLinePast: { border: string };
-  currentTimeLineBullet: { backgroundColor: string };
-  currentTimeLineToday: { border: string };
-  currentTimeLineFuture: { border: string };
+  nowIndicatorLabel: { color: string };
+  nowIndicatorPast: { border: string };
+  nowIndicatorBullet: { backgroundColor: string };
+  nowIndicatorToday: { border: string };
+  nowIndicatorFuture: { border: string };
   pastTime: { color: string };
   futureTime: { color: string };
   weekend: { backgroundColor: string };
@@ -120,7 +120,7 @@ interface WeekTheme {
 
 | 테마                                                                   | 기본값                                             | 설명                                                                                   |
 | ---------------------------------------------------------------------- | -------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| [dayname](#week-dayname)                                               | <code>DEFAULT_WEEK_DAYNAME</code>                  | 요일                                                                                   |
+| [dayName](#week-dayname)                                               | <code>DEFAULT_WEEK_DAYNAME</code>                  | 요일                                                                                   |
 | [dayGrid](#week-daygrid)                                               | <code>DEFAULT_DAY_GRID</code>                      | 주간/일간뷰에서 패널의 각 셀                                                           |
 | [dayGridLeft](#week-daygridleft)                                       | <code>DEFAULT_DAY_GRID_LEFT</code>                 | 주간/일간뷰에서 패널 왼쪽 영역                                                         |
 | [timeGrid](#week-timegrid)                                             | <code>{ borderRight: '1px solid #e5e5e5' }</code>  | 주간/일간뷰에서 timed 이벤트 영역                                                      |
@@ -128,15 +128,15 @@ interface WeekTheme {
 | [timeGridLeftAdditionalTimezone](#week-timegridleftadditionaltimezone) | <code>{ backgroundColor: 'white' }</code>          | 주간/일간뷰에서 timed 이벤트 영역의 왼쪽 영역에 표시되는 서브 타임존                   |
 | [timeGridHalfHourLine](#week-timegridhalfhourline)                     | <code>{ borderBottom: '1px solid #e5e5e5' }</code> | 주간/일간뷰에서 timed 이벤트 영역에서 매 시간의 30분 선                                |
 | [timeGridHourLine](#week-timegridhourline)                             | <code>{ borderBottom: '1px solid #e5e5e5' }</code> | 주간/일간뷰에서 timed 이벤트 영역에서 매 시간의 정각 선                                |
-| [currentTime](#week-currenttime)                                       | <code>{ color: '#515ce6' }</code>                  | 현재 시간선                                                                            |
-| [currentTimeLinePast](#week-currenttimelinepast)                       | <code>{ border: '1px dashed #515ce6' }</code>      | 현재 시간선에서 지난 날짜선                                                            |
-| [currentTimeLineBullet](#week-currenttimelinebullet)                   | <code>{ backgroundColor: '#515ce6' }</code>        | 현재 시간선에서 오늘 날짜                                                              |
-| [currentTimeLineToday](#week-currenttimelinetoday)                     | <code>{ border: '1px solid #515ce6' }</code>       | 현재 시간선에서 오늘 날짜선                                                            |
-| [currentTimeLineFuture](#week-currenttimelinefuture)                   | <code>{ border: 'none' }</code>                    | 현재 시간선에서 미래 날짜선                                                            |
+| [nowIndicatorLabel](#week-nowindicatorlabel)                                       | <code>{ color: '#515ce6' }</code>                  | 현재 시간선에 표시되는 현재 시각 텍스트                                                                            |
+| [nowIndicatorPast](#week-nowindicatorpast)                       | <code>{ border: '1px dashed #515ce6' }</code>      | 현재 시간선에서 지난 날짜선                                                            |
+| [nowIndicatorBullet](#week-nowindicatorbullet)                   | <code>{ backgroundColor: '#515ce6' }</code>        | 현재 시간선에서 오늘 날짜                                                              |
+| [nowIndicatorToday](#week-nowindicatortoday)                     | <code>{ border: '1px solid #515ce6' }</code>       | 현재 시간선에서 오늘 날짜선                                                            |
+| [nowIndicatorFuture](#week-nowindicatorfuture)                   | <code>{ border: 'none' }</code>                    | 현재 시간선에서 미래 날짜선                                                            |
 | [pastTime](#week-pasttime)                                             | <code>{ color: '#bbb' }</code>                     | 주간/일간뷰에서 timed 이벤트 영역의 왼쪽 영역에 표시되는 지난 시간                     |
 | [futureTime](#week-futuretime)                                         | <code>{ color: '#333' }</code>                     | 주간/일간뷰에서 timed 이벤트 영역의 왼쪽 영역에 표시되는 미래 시간                     |
 | [weekend](#week-weekend)                                               | <code>{ backgroundColor: 'inherit' }</code>        | 주간/일간뷰에서 timed 이벤트 영역의 주말 컬럼                                          |
-| [today](#week-today)                                                   | <code>DEFAULT_TODAY</code>                         | 주간/일간뷰에서 timed 이벤트 영역의 오늘 컬럼(color는 dayname, backgroundColor는 컬럼) |
+| [today](#week-today)                                                   | <code>DEFAULT_TODAY</code>                         | 주간/일간뷰에서 timed 이벤트 영역의 오늘 컬럼(color는 dayName, backgroundColor는 컬럼) |
 | [pastDay](#week-pastday)                                               | <code>{ color: '#bbb' }</code>                     | 주간/일간뷰에서 과거 요일                                                              |
 | [panelResizer](#week-panelresizer)                                     | <code>{ border: '1px solid #e5e5e5' }</code>       | 패널 크기 조절 컴포넌트                                                                |
 | [gridSelection](#week-gridselection)                                   | <code>{ color: '#515ce6' }</code>                  | 주간/일간뷰에서 날짜/시간 선택                                                         |
@@ -177,7 +177,7 @@ const DEFAULT_TODAY = {
 ```ts
 interface MonthTheme {
   dayExceptThisMonth: { color: string };
-  dayname: {
+  dayName: {
     borderLeft: string;
     backgroundColor: string;
   };
@@ -204,7 +204,7 @@ interface MonthTheme {
 |---------------------------------------------------------|-------------------------------------------------------|----------------------|
 | [dayExceptThisMonth](#month-dayexceptthismonth)         | <code>{ color: 'rgba(51, 51, 51, 0.4)' }</code>       | 다른 달인 날짜             |
 | [holidayExceptThisMonth](#month-holidayexceptthismonth) | <code>{ color: 'rgba(255, 64, 64, 0.4)' }</code>      | 다른 달인 휴일             |
-| [dayname](#month-dayname)                               | <code>DEFAULT_MONTH_DAYNAME</code>                    | 요일                   |
+| [dayName](#month-dayname)                               | <code>DEFAULT_MONTH_DAYNAME</code>                    | 요일                   |
 | [moreView](#month-moreview)                             | <code>DEFAULT_MORE_VIEW</code>                        | 월간뷰의 더보기 팝업          |
 | [moreViewTitle](#month-moreviewtitle)                   | <code>{ backgroundColor: 'inherit' }</code>           | 월간뷰의 더보기 팝업의 헤더 영역   |
 | [weekend](#month-weekend)                               | <code>{ backgroundColor: 'inherit' }</code>           | 월간뷰의 주말 셀            |
@@ -278,18 +278,18 @@ calendar.setTheme({
 
 [⬆ 목록으로 돌아가기](#common-테마)
 
-#### common-dayname
+#### common-dayName
 
 요일 색상을 지정한다. 기본 값은 `'#333'`이다.
 
 | 기본값 적용                                           | 예제 적용                                            |
 | ----------------------------------------------------- | ---------------------------------------------------- |
-| ![common-dayname-default](./common-dayname-before.png) | ![common-dayname-example](./common-dayname-after.png) |
+| ![common-dayname-default](./common-dayName-before.png) | ![common-dayname-example](./common-dayName-after.png) |
 
 ```js
 calendar.setTheme({
   common: {
-    dayname: {
+    dayName: {
       color: '#515ce6',
     },
   },
@@ -360,18 +360,18 @@ calendar.setTheme({
 
 ### week
 
-#### week-dayname
+#### week-dayName
 
 주간/일간뷰의 요일을 지정한다. `borderLeft`, `borderTop`, `borderBottom`, `backgroundColor`로 왼쪽, 위, 아래 테두리와 배경색을 지정할 수 있으며 각 기본 값은 `'none'`, `'1px solid #e5e5e5'`, `'1px solid #e5e5e5'`, `'inherit'`이다.
 
 | 기본값 적용                                       | 예제 적용                                        |
 | ------------------------------------------------- | ------------------------------------------------ |
-| ![week-dayname-default](./week-dayname-before.png) | ![week-dayname-example](./week-dayname-after.png) |
+| ![week-dayname-default](./week-dayName-before.png) | ![week-dayname-example](./week-dayName-after.png) |
 
 ```js
 calendar.setTheme({
   week: {
-    dayname: {
+    dayName: {
       borderLeft: 'none',
       borderTop: '1px dotted red',
       borderBottom: '1px dotted red',
@@ -526,18 +526,18 @@ calendar.setTheme({
 
 [⬆ 목록으로 돌아가기](#week-테마)
 
-#### week-currentTime
+#### week-nowIndicatorLabel
 
-현재 시간선을 지정한다. `color`로 글자색을 지정할 수 있으며 기본 값은 `'#515ce6'`이다.
+현재 시간선에 표시되는 현재 시각 텍스트를 지정한다. `color`로 글자색을 지정할 수 있으며 기본 값은 `'#515ce6'`이다.
 
 | 기본값 적용                                               | 예제 적용                                                |
 | --------------------------------------------------------- | -------------------------------------------------------- |
-| ![week-currentTime-default](./week-currentTime-before.png) | ![week-currentTime-example](./week-currentTime-after.png) |
+| ![week-nowIndicatorLabel-default](./week-nowIndicatorlabel-before.png) | ![week-nowIndicatorLabel-example](./week-nowIndicatorlabel-after.png) |
 
 ```js
 calendar.setTheme({
   week: {
-    currentTime: {
+    nowIndicatorLabel: {
       color: 'red',
     },
   },
@@ -546,18 +546,18 @@ calendar.setTheme({
 
 [⬆ 목록으로 돌아가기](#week-테마)
 
-#### week-currentTimeLinePast
+#### week-nowIndicatorPast
 
 현재 시간선에서 지난 날짜선을 지정한다. `border`로 선의 테두리를 지정할 수 있으며 기본 값은 `'1px dashed #515ce6'`이다.
 
 | 기본값 적용                                                               | 예제 적용                                                                |
 | ------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| ![week-currentTimeLinePast-default](./week-currentTimeLinePast-before.png) | ![week-currentTimeLinePast-example](./week-currentTimeLinePast-after.png) |
+| ![week-nowIndicatorPast-default](./week-nowIndicatorPast-before.png) | ![week-nowIndicatorPast-example](./week-nowIndicatorPast-after.png) |
 
 ```js
 calendar.setTheme({
   week: {
-    currentTimeLinePast: {
+    nowIndicatorPast: {
       border: '1px dashed red',
     },
   },
@@ -566,18 +566,18 @@ calendar.setTheme({
 
 [⬆ 목록으로 돌아가기](#week-테마)
 
-#### week-currentTimeLineBullet
+#### week-nowIndicatorBullet
 
-현재 시간선에서 오늘 날짜를 지정한다. `backgroundColor`로 배경색을 지정할 수 있으며 기본 값은 `'#515ce6'`이다.
+현재 시간선에서 오늘 날짜에 표시되는 점을 지정한다. `backgroundColor`로 배경색을 지정할 수 있으며 기본 값은 `'#515ce6'`이다.
 
 | 기본값 적용                                                                   | 예제 적용                                                                    |
 | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| ![week-currentTimeLineBullet-default](./week-currentTimeLineBullet-before.png) | ![week-currentTimeLineBullet-example](./week-currentTimeLineBullet-after.png) |
+| ![week-nowIndicatorBullet-default](./week-nowIndicatorBullet-before.png) | ![week-nowIndicatorBullet-example](./week-nowIndicatorBullet-after.png) |
 
 ```js
 calendar.setTheme({
   week: {
-    currentTimeLineBullet: {
+    nowIndicatorBullet: {
       backgroundColor: '#515ce6',
     },
   },
@@ -586,18 +586,18 @@ calendar.setTheme({
 
 [⬆ 목록으로 돌아가기](#week-테마)
 
-#### week-currentTimeLineToday
+#### week-nowIndicatorToday
 
 현재 시간선에서 오늘 날짜선을 지정한다. `border`로 선의 테두리를 지정할 수 있으며 기본 값은 `'1px solid #515ce6'`이다.
 
 | 기본값 적용                                                                 | 예제 적용                                                                  |
 | --------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| ![week-currentTimeLineToday-default](./week-currentTimeLineToday-before.png) | ![week-currentTimeLineToday-example](./week-currentTimeLineToday-after.png) |
+| ![week-nowIndicatorToday-default](./week-nowIndicatorToday-before.png) | ![week-nowIndicatorToday-example](./week-nowIndicatorToday-after.png) |
 
 ```js
 calendar.setTheme({
   week: {
-    currentTimeLineToday: {
+    nowIndicatorToday: {
       border: '1px solid red',
     },
   },
@@ -606,18 +606,18 @@ calendar.setTheme({
 
 [⬆ 목록으로 돌아가기](#week-테마)
 
-#### week-currentTimeLineFuture
+#### week-nowIndicatorFuture
 
 현재 시간선에서 미래 날짜선을 지정한다. `border`로 선의 테두리를 지정할 수 있으며 기본 값은 `'none'`이다.
 
 | 기본값 적용                                                                   | 예제 적용                                                                    |
 | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| ![week-currentTimeLineFuture-default](./week-currentTimeLineFuture-before.png) | ![week-currentTimeLineFuture-example](./week-currentTimeLineFuture-after.png) |
+| ![week-nowIndicatorFuture-default](./week-nowIndicatorFuture-before.png) | ![week-nowIndicatorFuture-example](./week-nowIndicatorFuture-after.png) |
 
 ```js
 calendar.setTheme({
   week: {
-    currentTimeLineFuture: {
+    nowIndicatorFuture: {
       border: '1px solid red',
     },
   },
@@ -810,18 +810,18 @@ calendar.setTheme({
 
 [⬆ 목록으로 돌아가기](#month-테마)
 
-#### month-dayname
+#### month-dayName
 
 요일을 지정한다. `borderLeft`, `backgroundColor`로 왼쪽 테두리와 배경색을 지정할 수 있으며 각 기본 값은 `'none'`, `'inherit'`이다.
 
 | 기본값 적용                                         | 예제 적용                                          |
 | --------------------------------------------------- | -------------------------------------------------- |
-| ![month-dayname-default](./month-dayname-before.png) | ![month-dayname-example](./month-dayname-after.png) |
+| ![month-dayname-default](./month-dayName-before.png) | ![month-dayname-example](./month-dayName-after.png) |
 
 ```js
 calendar.setTheme({
   month: {
-    dayname: {
+    dayName: {
       borderLeft: 'none',
       backgroundColor: 'rgba(51, 51, 51, 0.4)',
     },

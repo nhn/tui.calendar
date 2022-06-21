@@ -463,7 +463,7 @@ export default abstract class CalendarControl
    *
    * @param {DateType} date - The date to move
    * @example
-   * calendar.on('clickDayname', (event) => {
+   * calendar.on('clickDayName', (event) => {
    *   if (calendar.getViewName() === 'week') {
    *     const dateToMove = new Date(event.date);
    *
@@ -602,12 +602,12 @@ export default abstract class CalendarControl
    *     },
    *   },
    *   week: {
-   *     currentTime: {
+   *     nowIndicatorLabel: {
    *       color: '#00FF00',
    *     },
    *   },
    *   month: {
-   *     dayname: {
+   *     dayName: {
    *       borderLeft: '1px solid #e5e5e5',
    *     },
    *   },

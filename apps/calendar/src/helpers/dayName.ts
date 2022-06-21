@@ -12,7 +12,7 @@ export const getDayName = (dayIndex: number) => {
 
 export function getDayNames(
   days: TZDate[],
-  weekDayNamesOption: Required<WeekOptions>['daynames'] | []
+  weekDayNamesOption: Required<WeekOptions>['dayNames'] | []
 ) {
   return days.map<TemplateWeekDayName>((day) => {
     const dayIndex = day.getDay();

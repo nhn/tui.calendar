@@ -31,7 +31,7 @@ export const dayNames = Template.bind({});
 dayNames.args = {
   options: {
     month: {
-      daynames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+      dayNames: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
     },
   },
 };

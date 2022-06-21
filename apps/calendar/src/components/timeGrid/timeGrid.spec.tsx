@@ -4,6 +4,7 @@ import { TimeGrid } from '@src/components/timeGrid/timeGrid';
 import { toPercent } from '@src/helpers/css';
 import { createTimeGridData, getWeekDates } from '@src/helpers/grid';
 import { createDate } from '@src/test/helpers';
+import { TEST_IDS } from '@src/test/testIds';
 import { act, cleanup, render, screen, within } from '@src/test/utils';
 import { MS_PER_HOUR, subtractDate } from '@src/time/datetime';
 
@@ -11,7 +12,6 @@ describe('Showing Current Time Indicator', () => {
   const originalTimezone = process.env.TZ;
   const baseDate = createDate(2022, 3, 22); // Tuesday
   baseDate.setHours(12); // 12:00
-  const indicatorTestId = 'timegrid-current-time-indicator';
   const timeColumnTestId = 'timegrid-time-column';
 
   beforeEach(() => {
@@ -40,7 +40,7 @@ describe('Showing Current Time Indicator', () => {
     render(<TimeGrid timeGridData={timeGridData} events={[]} />);
 
     // Then
-    const indicator = screen.getByTestId(indicatorTestId);
+    const indicator = screen.getByTestId(TEST_IDS.NOW_INDICATOR);
     expect(indicator).toBeInTheDocument();
   });
 
@@ -56,7 +56,7 @@ describe('Showing Current Time Indicator', () => {
     render(<TimeGrid timeGridData={timeGridData} events={[]} />);
 
     // Then
-    const indicator = screen.queryByTestId(indicatorTestId);
+    const indicator = screen.queryByTestId(TEST_IDS.NOW_INDICATOR);
     expect(indicator).not.toBeInTheDocument();
   });
 
@@ -75,7 +75,7 @@ describe('Showing Current Time Indicator', () => {
     render(<TimeGrid timeGridData={timeGridData} events={[]} />);
 
     // Then
-    const indicator = screen.getByTestId(indicatorTestId);
+    const indicator = screen.getByTestId(TEST_IDS.NOW_INDICATOR);
     expect(indicator).toHaveStyle({ top: '50%' });
   });
 
@@ -118,7 +118,7 @@ describe('Showing Current Time Indicator', () => {
     const initialTop = 50;
     render(<TimeGrid timeGridData={timeGridData} events={[]} />);
 
-    const indicator = screen.getByTestId(indicatorTestId);
+    const indicator = screen.getByTestId(TEST_IDS.NOW_INDICATOR);
     expect(indicator).toHaveStyle({ top: toPercent(initialTop) });
 
     // When

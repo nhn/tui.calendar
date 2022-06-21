@@ -10,7 +10,7 @@ export interface TemplateTimeGridHourLabel {
   minutes: number;
 }
 
-export interface TemplateCurrentTime {
+export interface TemplateNow {
   unit: TimeUnit;
   time: TZDate;
   format: string;
@@ -72,14 +72,14 @@ export interface Template {
   monthGridHeaderExceed: (hiddenEventsCount: number) => TemplateReturnType;
   monthGridFooter: (cellData: TemplateMonthGrid) => TemplateReturnType;
   monthGridFooterExceed: (hiddenEventsCount: number) => TemplateReturnType;
-  monthDayname: (monthDaynameData: TemplateMonthDayName) => TemplateReturnType;
-  weekDayname: (weekDaynameData: TemplateWeekDayName) => TemplateReturnType;
+  monthDayName: (monthDayNameData: TemplateMonthDayName) => TemplateReturnType;
+  weekDayName: (weekDayNameData: TemplateWeekDayName) => TemplateReturnType;
   weekGridFooterExceed: (hiddenEventsCount: number) => TemplateReturnType;
   collapseBtnTitle: () => TemplateReturnType;
   timezoneDisplayLabel: (props: TemplateTimezone) => TemplateReturnType;
-  timegridDisplayPrimaryTime: (props: TemplateCurrentTime) => TemplateReturnType;
-  timegridDisplayTime: (props: TemplateCurrentTime) => TemplateReturnType;
-  timegridCurrentTime: (props: TemplateCurrentTime) => TemplateReturnType;
+  timegridDisplayPrimaryTime: (props: TemplateNow) => TemplateReturnType;
+  timegridDisplayTime: (props: TemplateNow) => TemplateReturnType;
+  timegridNowIndicatorLabel: (props: TemplateNow) => TemplateReturnType;
   popupIsAllday: () => TemplateReturnType;
   popupStateFree: () => TemplateReturnType;
   popupStateBusy: () => TemplateReturnType;

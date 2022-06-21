@@ -10,10 +10,10 @@ import { isNil, isPresent } from '@src/utils/type';
 import type { EventObjectWithDefaultValues } from '@t/events';
 import type {
   Template,
-  TemplateCurrentTime,
   TemplateMonthDayName,
   TemplateMonthGrid,
   TemplateMoreTitleDate,
+  TemplateNow,
   TemplateTimezone,
   TemplateWeekDayName,
 } from '@t/template';
@@ -128,13 +128,13 @@ export const templates: Template = {
     return '';
   },
 
-  monthDayname(model: TemplateMonthDayName) {
+  monthDayName(model: TemplateMonthDayName) {
     return model.label;
   },
 
-  weekDayname(model: TemplateWeekDayName) {
-    const classDate = cls('dayname-date');
-    const className = cls('dayname-name');
+  weekDayName(model: TemplateWeekDayName) {
+    const classDate = cls('day-name__date');
+    const className = cls('day-name__name');
 
     return (
       <Fragment>
@@ -166,19 +166,19 @@ export const templates: Template = {
     return displayLabel as string;
   },
 
-  timegridDisplayPrimaryTime(props: TemplateCurrentTime) {
+  timegridDisplayPrimaryTime(props: TemplateNow) {
     const { time } = props;
 
     return toFormat(time, 'hh tt');
   },
 
-  timegridDisplayTime(props: TemplateCurrentTime) {
+  timegridDisplayTime(props: TemplateNow) {
     const { time } = props;
 
     return toFormat(time, 'HH:mm');
   },
 
-  timegridCurrentTime(timezone: TemplateCurrentTime) {
+  timegridNowIndicatorLabel(timezone: TemplateNow) {
     const { time, format = 'HH:mm' } = timezone;
 
     return toFormat(time, format);

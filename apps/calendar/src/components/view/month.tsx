@@ -16,14 +16,14 @@ import type { CalendarStore } from '@t/store';
 import type { CellInfo } from '@t/time/datetime';
 
 function getMonthDayNames(options: CalendarStore['options']) {
-  const { daynames, startDayOfWeek, workweek } = options.month as Required<MonthOptions>;
+  const { dayNames, startDayOfWeek, workweek } = options.month as Required<MonthOptions>;
   const dayIndices = [...Array(7)].map((_, i) => (startDayOfWeek + i) % 7);
-  const dayNames = dayIndices.map((i) => ({
+  const monthDayNames = dayIndices.map((i) => ({
     day: i,
-    label: capitalize(daynames[i]),
+    label: capitalize(dayNames[i]),
   }));
 
-  return dayNames.filter((dayNameInfo) => (workweek ? !isWeekend(dayNameInfo.day) : true));
+  return monthDayNames.filter((dayNameInfo) => (workweek ? !isWeekend(dayNameInfo.day) : true));
 }
 
 export function Month() {

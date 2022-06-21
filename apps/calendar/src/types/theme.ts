@@ -7,7 +7,7 @@ export type CommonTheme = {
     backgroundColor: string;
     border: string;
   };
-  dayname: { color: string };
+  dayName: { color: string };
   holiday: { color: string };
   saturday: { color: string };
   today: { color: string };
@@ -43,7 +43,7 @@ export type TimeGridLeftTheme = {
 };
 
 export type WeekTheme = {
-  dayname: WeekDayNameTheme;
+  dayName: WeekDayNameTheme;
   dayGrid: DayGridTheme;
   dayGridLeft: DayGridLeftTheme;
   timeGrid: { borderRight: string };
@@ -51,11 +51,11 @@ export type WeekTheme = {
   timeGridLeftAdditionalTimezone: { backgroundColor: string };
   timeGridHalfHourLine: { borderBottom: string };
   timeGridHourLine: { borderBottom: string };
-  currentTime: { color: string };
-  currentTimeLinePast: { border: string };
-  currentTimeLineBullet: { backgroundColor: string };
-  currentTimeLineToday: { border: string };
-  currentTimeLineFuture: { border: string };
+  nowIndicatorLabel: { color: string };
+  nowIndicatorPast: { border: string };
+  nowIndicatorBullet: { backgroundColor: string };
+  nowIndicatorToday: { border: string };
+  nowIndicatorFuture: { border: string };
   pastTime: { color: string };
   futureTime: { color: string };
   weekend: { backgroundColor: string };
@@ -67,7 +67,7 @@ export type WeekTheme = {
 
 export type MonthTheme = {
   dayExceptThisMonth: { color: string };
-  dayname: MonthDayNameTheme;
+  dayName: MonthDayNameTheme;
   holidayExceptThisMonth: { color: string };
   moreView: {
     backgroundColor: string;

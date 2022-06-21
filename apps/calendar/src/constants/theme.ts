@@ -11,7 +11,7 @@ export const DEFAULT_COMMON_THEME: DeepRequired<CommonTheme> = {
   saturday: {
     color: '#333',
   },
-  dayname: {
+  dayName: {
     color: '#333',
   },
   today: {
@@ -24,7 +24,7 @@ export const DEFAULT_COMMON_THEME: DeepRequired<CommonTheme> = {
 };
 
 export const DEFAULT_WEEK_THEME: DeepRequired<WeekTheme> = {
-  dayname: {
+  dayName: {
     borderLeft: 'none',
     borderTop: '1px solid #e5e5e5',
     borderBottom: '1px solid #e5e5e5',
@@ -69,19 +69,19 @@ export const DEFAULT_WEEK_THEME: DeepRequired<WeekTheme> = {
   timeGridHourLine: {
     borderBottom: '1px solid #e5e5e5',
   },
-  currentTime: {
+  nowIndicatorLabel: {
     color: '#515ce6',
   },
-  currentTimeLinePast: {
+  nowIndicatorPast: {
     border: '1px dashed #515ce6',
   },
-  currentTimeLineBullet: {
+  nowIndicatorBullet: {
     backgroundColor: '#515ce6',
   },
-  currentTimeLineToday: {
+  nowIndicatorToday: {
     border: '1px solid #515ce6',
   },
-  currentTimeLineFuture: {
+  nowIndicatorFuture: {
     border: 'none',
   },
   pastTime: {
@@ -96,7 +96,7 @@ export const DEFAULT_WEEK_THEME: DeepRequired<WeekTheme> = {
 };
 
 export const DEFAULT_MONTH_THEME: DeepRequired<MonthTheme> = {
-  dayname: {
+  dayName: {
     borderLeft: 'none',
     backgroundColor: 'inherit',
   },

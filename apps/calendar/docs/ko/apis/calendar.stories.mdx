@@ -739,7 +739,7 @@ calendar.fire('myCustomEvent', calendar.getViewName());
 | [beforeUpdateEvent](#beforeupdateevent)               | 기본 일정 생성/수정 팝업에서 저장(Save) 버튼을 누르거나 이벤트를 드래그 앤 드랍했을 때 발생 |
 | [beforeDeleteEvent](#beforedeleteevent)               | 기본 일정 상세 팝업에서 삭제(Delete) 버튼을 눌렀을 때 발생                                  |
 | [afterRenderEvent](#afterrenderevent)                 | 모든 이벤트가 렌더링 될 때 한 번씩 발생                                                     |
-| [clickDayname](#clickdayname)                         | 캘린더 상단의 요일을 클릭할 때 발생                                                         |
+| [clickDayName](#clickdayname)                         | 캘린더 상단의 요일을 클릭할 때 발생                                                         |
 | [clickEvent](#clickevent)                             | 이벤트를 클릭할 때 발생                                                                     |
 | [clickMoreEventsBtn](#clickmoreeventsbtn)             | 월간 뷰의 각 셀마다 이벤트 갯수가 초과되어 나타난 'More' 버튼을 클릭할 때 발생              |
 | [clickTimezoneCollapseBtn](#clicktimezonecollapsebtn) | 주간 뷰 혹은 일간 뷰에서 여러 개의 타임존을 표시한 경우 나타나는 접기 버튼을 클릭할 때 발생 |
@@ -846,15 +846,15 @@ calendar.on('beforeDeleteEvent', (eventObj) => {
 
 이벤트의 생성, 수정, 삭제 등으로 인해 이벤트가 렌더링 될 때마다 **화면에 보이는 모든 이벤트가** `afterRenderEvent` 를 실행한다.
 
-### clickDayname
+### clickDayName
 
-- 파라미터: `daynameInfo: DaynameInfo` - 클릭한 날짜의 정보가 `YYYY-MM-DD` 포맷의 문자열로 나타난다.
+- 파라미터: `dayNameInfo: DayNameInfo` - 클릭한 날짜의 정보가 `YYYY-MM-DD` 포맷의 문자열로 나타난다.
 
-주간 / 일간 뷰의 헤더 영역은 현재 보고 있는 시간 범위의 요일과 날짜를 표시한다. 이 때 이 헤더의 특정 요일을 클릭할 때 `clickDayname` 이벤트가 실행된다.
+주간 / 일간 뷰의 헤더 영역은 현재 보고 있는 시간 범위의 요일과 날짜를 표시한다. 이 때 이 헤더의 특정 요일을 클릭할 때 `clickDayName` 이벤트가 실행된다.
 
 **월간 뷰에서는 이 이벤트가 발생하지 않는다.**
 
-![날짜를 클릭할 때 clickDayname 이벤트 실행](./click-dayname.gif)
+![날짜를 클릭할 때 clickDayName 이벤트 실행](./click-dayName.gif)
 
 ### clickEvent
 

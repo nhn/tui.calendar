@@ -14,7 +14,7 @@ export interface UpdatedEventInfo {
   changes: EventObject;
 }
 
-export interface DaynameInfo {
+export interface DayNameInfo {
   date: string;
 }
 
@@ -36,7 +36,7 @@ export type ExternalEventTypes = {
   beforeUpdateEvent: (updatedEventInfo: UpdatedEventInfo) => void;
   beforeDeleteEvent: (event: EventObjectWithDefaultValues) => void;
   afterRenderEvent: (event: EventObjectWithDefaultValues) => void;
-  clickDayname: (daynameInfo: DaynameInfo) => void;
+  clickDayName: (dayNameInfo: DayNameInfo) => void;
   clickEvent: (eventInfo: EventInfo) => void;
   clickMoreEventsBtn: (moreEventsBtnInfo: MoreEventsButton) => void;
   clickTimezonesCollapseBtn: (prevCollapsedState: boolean) => void;

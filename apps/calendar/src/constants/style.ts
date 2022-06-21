@@ -1,7 +1,7 @@
-// common dayname
-export const DEFAULT_DAYNAME_MARGIN_LEFT = '0';
+// common day name
+export const DEFAULT_DAY_NAME_MARGIN_LEFT = '0';
 
-// month dayname
+// month day name
 export const MONTH_DAY_NAME_HEIGHT = 31;
 
 // month event
@@ -23,9 +23,9 @@ export const MONTH_MORE_VIEW_HEADER_MARGIN_BOTTOM = 12;
 export const MONTH_MORE_VIEW_HEADER_PADDING_TOP = 12;
 export const MONTH_MORE_VIEW_HEADER_PADDING = '12px 17px 0';
 
-// week dayname
-export const WEEK_DAYNAME_HEIGHT = 42;
-export const WEEK_DAYNAME_BORDER = 1;
+// week day name
+export const WEEK_DAY_NAME_HEIGHT = 42;
+export const WEEK_DAY_NAME_BORDER = 1;
 
 // week panel resizer
 export const WEEK_PANEL_RESIZER_HEIGHT = 3;
