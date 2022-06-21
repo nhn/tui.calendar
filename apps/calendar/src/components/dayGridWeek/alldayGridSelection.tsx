@@ -26,6 +26,7 @@ export function AlldayGridSelection({ weekDates, narrowWeekend }: Props) {
 
   return (
     <GridSelection
+      type="allday"
       gridSelectionData={calculatedGridSelection}
       weekDates={weekDates}
       narrowWeekend={narrowWeekend}

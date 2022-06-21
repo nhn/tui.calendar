@@ -9,6 +9,7 @@ import type { GridSelectionDataByRow } from '@t/components/gridSelection';
 import type { ThemeState } from '@t/theme';
 
 interface Props {
+  type: 'allday' | 'month' | 'accumulated';
   gridSelectionData: GridSelectionDataByRow;
   weekDates: TZDate[];
   narrowWeekend: boolean;
@@ -18,7 +19,7 @@ function commonGridSelectionSelector(theme: ThemeState) {
   return theme.common.gridSelection;
 }
 
-export function GridSelection({ gridSelectionData, weekDates, narrowWeekend }: Props) {
+export function GridSelection({ type, gridSelectionData, weekDates, narrowWeekend }: Props) {
   const { backgroundColor, border } = useTheme(commonGridSelectionSelector);
   const { startCellIndex, endCellIndex } = gridSelectionData;
 
@@ -37,5 +38,5 @@ export function GridSelection({ gridSelectionData, weekDates, narrowWeekend }: P
     border,
   };
 
-  return width > 0 ? <div className={cls('grid-selection')} style={style} /> : null;
+  return width > 0 ? <div className={cls(type, 'grid-selection')} style={style} /> : null;
 }

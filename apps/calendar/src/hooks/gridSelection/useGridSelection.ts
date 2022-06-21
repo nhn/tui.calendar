@@ -2,6 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
+import { useLayoutContainer } from '@src/contexts/layoutContainer';
+import { cls } from '@src/helpers/css';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { useClickPrevention } from '@src/hooks/common/useClickPrevention';
 import { useDrag } from '@src/hooks/common/useDrag';
@@ -16,6 +18,12 @@ import type { GridSelectionData } from '@t/components/gridSelection';
 import type { GridPosition, GridPositionFinder } from '@t/grid';
 import type { Coordinates } from '@t/mouse';
 import type { CalendarState } from '@t/store';
+
+const GRID_SELECTION_TYPE_MAP = {
+  dayGridMonth: 'month',
+  dayGridWeek: 'allday',
+  timeGrid: 'time',
+};
 
 function sortDates(a: TZDate, b: TZDate) {
   const isIncreased = a < b;
@@ -45,6 +53,7 @@ export function useGridSelection<DateCollection>({
   const { setGridSelection, addGridSelection } = useDispatch('gridSelection');
   const { hideAllPopup, showFormPopup } = useDispatch('popup');
   const eventBus = useEventBus();
+  const layoutContainer = useLayoutContainer();
 
   const [initMousePosition, setInitMousePosition] = useState<Coordinates | null>(null);
   const [initGridPosition, setInitGridPosition] = useState<GridPosition | null>(null);
@@ -136,11 +145,18 @@ export function useGridSelection<DateCollection>({
         });
       }
 
+      const gridSelectionSelector = `.${cls(GRID_SELECTION_TYPE_MAP[type])}.${cls(
+        'grid-selection'
+      )}`;
+      const gridSelectionElements =
+        layoutContainer?.querySelectorAll(gridSelectionSelector) ?? ([] as unknown as NodeList);
+
       eventBus.fire('selectDateTime', {
         start: startDate.toDate(),
         end: endDate.toDate(),
         isAllday: type !== 'timeGrid',
         nativeEvent: e,
+        gridSelectionElements,
       });
     }
   };
