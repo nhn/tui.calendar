@@ -15,6 +15,7 @@ import { isVisibleEvent } from '@src/helpers/events';
 import { createDateMatrixOfMonth, getWeekDates } from '@src/helpers/grid';
 import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
+import type { GridSelectionType } from '@src/slices/gridSelection';
 import { act, screen } from '@src/test/utils';
 import TZDate from '@src/time/date';
 import { addDate, subtractDate } from '@src/time/datetime';
@@ -1368,6 +1369,159 @@ describe('getDateRangeStart/getDateRangeEnd', () => {
       // Then
       expect(mockCalendar.getDateRangeStart()).toBeSameDate(expectedStartDate);
       expect(mockCalendar.getDateRangeEnd()).toBeSameDate(expectedEndDate);
+    });
+  });
+});
+
+describe('clearGridSelections', () => {
+  const gridSelectionsTypes: GridSelectionType[] = ['dayGridMonth', 'dayGridWeek', 'timeGrid'];
+
+  describe.each(gridSelectionsTypes)('when %s grid selection', (gridSelectionType) => {
+    function MockGridSelectionComponent() {
+      const {
+        startColumnIndex = 0,
+        startRowIndex = 0,
+        endColumnIndex = 0,
+        endRowIndex = 0,
+      } = useStore((state) => state.gridSelection[gridSelectionType]) ?? {};
+      const { setGridSelection } = useDispatch('gridSelection');
+
+      useEffect(() => {
+        setGridSelection(gridSelectionType, {
+          startColumnIndex: 1,
+          startRowIndex: 2,
+          endColumnIndex: 3,
+          endRowIndex: 4,
+        });
+      }, [setGridSelection]);
+
+      return (
+        <div>
+          <span data-testid="startColumn">{startColumnIndex}</span>
+          <span data-testid="startRow">{startRowIndex}</span>
+          <span data-testid="endColumn">{endColumnIndex}</span>
+          <span data-testid="endRow">{endRowIndex}</span>
+        </div>
+      );
+    }
+
+    class MockGridSelectionCalendar extends CalendarCore {
+      protected getComponent() {
+        return <MockGridSelectionComponent />;
+      }
+    }
+    let mockGridSelectionCalendar: MockGridSelectionCalendar;
+
+    beforeEach(() => {
+      const container = document.createElement('div');
+      document.body.appendChild(container);
+      mockGridSelectionCalendar = new MockGridSelectionCalendar(container);
+      act(() => {
+        mockGridSelectionCalendar.render();
+      });
+    });
+
+    afterEach(() => {
+      cleanup();
+    });
+
+    it(`should clear ${gridSelectionType} grid selections`, () => {
+      // Given
+      const startColumn = screen.getByTestId('startColumn');
+      const startRow = screen.getByTestId('startRow');
+      const endColumn = screen.getByTestId('endColumn');
+      const endRow = screen.getByTestId('endRow');
+      expect(startColumn).toHaveTextContent('1');
+      expect(startRow).toHaveTextContent('2');
+      expect(endColumn).toHaveTextContent('3');
+      expect(endRow).toHaveTextContent('4');
+
+      // When
+      act(() => {
+        mockGridSelectionCalendar.clearGridSelections();
+      });
+
+      // Then
+      expect(startColumn).toHaveTextContent('0');
+      expect(startRow).toHaveTextContent('0');
+      expect(endColumn).toHaveTextContent('0');
+      expect(endRow).toHaveTextContent('0');
+    });
+  });
+
+  describe('when accumulated grid selections', () => {
+    function MockGridSelectionComponent() {
+      const gridSelections = useStore((state) => state.gridSelection.accumulated.dayGridMonth);
+      const { addGridSelection } = useDispatch('gridSelection');
+
+      useEffect(() => {
+        addGridSelection('dayGridMonth', {
+          startColumnIndex: 1,
+          startRowIndex: 2,
+          endColumnIndex: 3,
+          endRowIndex: 4,
+        });
+      }, [addGridSelection]);
+
+      const [gridSelection] = gridSelections;
+      const {
+        startColumnIndex = 0,
+        startRowIndex = 0,
+        endColumnIndex = 0,
+        endRowIndex = 0,
+      } = gridSelection ?? {};
+
+      return (
+        <div>
+          <span data-testid="startColumn">{startColumnIndex}</span>
+          <span data-testid="startRow">{startRowIndex}</span>
+          <span data-testid="endColumn">{endColumnIndex}</span>
+          <span data-testid="endRow">{endRowIndex}</span>
+        </div>
+      );
+    }
+
+    class MockGridSelectionCalendar extends CalendarCore {
+      protected getComponent() {
+        return <MockGridSelectionComponent />;
+      }
+    }
+    let mockGridSelectionCalendar: MockGridSelectionCalendar;
+
+    beforeEach(() => {
+      const container = document.createElement('div');
+      document.body.appendChild(container);
+      mockGridSelectionCalendar = new MockGridSelectionCalendar(container);
+      act(() => {
+        mockGridSelectionCalendar.render();
+      });
+    });
+
+    afterEach(() => {
+      cleanup();
+    });
+
+    it(`should clear accumulated grid selections`, () => {
+      // Given
+      const startColumn = screen.getByTestId('startColumn');
+      const startRow = screen.getByTestId('startRow');
+      const endColumn = screen.getByTestId('endColumn');
+      const endRow = screen.getByTestId('endRow');
+      expect(startColumn).toHaveTextContent('1');
+      expect(startRow).toHaveTextContent('2');
+      expect(endColumn).toHaveTextContent('3');
+      expect(endRow).toHaveTextContent('4');
+
+      // When
+      act(() => {
+        mockGridSelectionCalendar.clearGridSelections();
+      });
+
+      // Then
+      expect(startColumn).toHaveTextContent('0');
+      expect(startRow).toHaveTextContent('0');
+      expect(endColumn).toHaveTextContent('0');
+      expect(endRow).toHaveTextContent('0');
     });
   });
 });

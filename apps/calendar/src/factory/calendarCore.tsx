@@ -868,6 +868,12 @@ export default abstract class CalendarCore
     });
   }
 
+  clearGridSelections() {
+    const { clearAll } = this.getStoreDispatchers().gridSelection;
+
+    clearAll();
+  }
+
   fire<EventName extends keyof ExternalEventTypes>(
     eventName: EventName,
     ...args: Parameters<ExternalEventTypes[EventName]>
