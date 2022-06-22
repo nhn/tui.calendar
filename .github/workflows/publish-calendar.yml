@@ -60,18 +60,32 @@ jobs:
           fetch-depth: 0
       - name: Install dependencies
         uses: ./.github/composite-actions/install-dependencies
-      - name: Build docs
+      - name: Prebuild docs
+        working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
-          npm run build:calendar:docs
+          npm run docs:prebuild
+      - name: Change node version to 10
+        uses: actions/setup-node@v3
+        with:
+          node-version: '10'
+          registry-url: https://registry.npmjs.org/
+      - name: Install tuidoc
+        run: |
+          npm install -g @toast-ui/doc
+        shell: bash
+      - name: Build docs
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: |
+          tuidoc
+        shell: bash
       - name: Commit new doc files
-        # for alpha version docs
-        # TODO: need to change the target folder when beta/public release
         run: |
           git switch gh-pages
           git config --local user.email "dohyung.ahn@nhn.com"
           git config --local user.name "Dohyung Ahn"
+          rm -rf ${{ steps.cpv.outputs.committed-version }}
           rm -rf 2.0.0-alpha
-          mv _docs 2.0.0-alpha
+          mv _latest 2.0.0-alpha
           git add -A
           git commit -m ${{ steps.cpv.outputs.committed-version }}
       - name: Publish new docs

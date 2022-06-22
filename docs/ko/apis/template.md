@@ -1,7 +1,3 @@
-import { Meta } from '@storybook/addon-docs';
-
-<Meta title="Documentation/한국어/API/템플릿" />
-
 # 템플릿
 
 ## 설명
@@ -32,15 +28,15 @@ calendar.setOptions({
 
 | 템플릿명                                                  | 파라미터                                                         | 설명                                                               |
 | --------------------------------------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------ |
-| [milestone](#milestone)                                   | [EventObject](/story/documentation-한국어-api-eventobject--page) | 주간/일간뷰의 milestone 이벤트                                     |
+| [milestone](#milestone)                                   | [EventObject](./event-object.md) | 주간/일간뷰의 milestone 이벤트                                     |
 | [milestoneTitle](#milestonetitle)                         | 없음                                                             | 주간/일간뷰의 milestone 패널의 왼쪽 영역                           |
-| [task](#task)                                             | [EventObject](/story/documentation-한국어-api-eventobject--page) | 주간/일간뷰의 task 이벤트                                          |
+| [task](#task)                                             | [EventObject](./event-object.md) | 주간/일간뷰의 task 이벤트                                          |
 | [taskTitle](#tasktitle)                                   | 없음                                                             | 주간/일간뷰의 task 패널의 왼쪽 영역                                |
-| [allday](#allday)                                         | [EventObject](/story/documentation-한국어-api-eventobject--page) | 주간/일간뷰의 allday 이벤트                                        |
+| [allday](#allday)                                         | [EventObject](./event-object.md) | 주간/일간뷰의 allday 이벤트                                        |
 | [alldayTitle](#alldaytitle)                               | 없음                                                             | 주간/일간뷰의 allday 패널의 왼쪽 영역                              |
-| [time](#time)                                             | [EventObject](/story/documentation-한국어-api-eventobject--page) | 주간/일간뷰의 timed 이벤트                                         |
-| [goingDuration](#goingduration)                           | [EventObject](/story/documentation-한국어-api-eventobject--page) | 주간/일간뷰의 timed 이벤트의 일정 장소까지 이동 시간               |
-| [comingDuration](#comingduration)                         | [EventObject](/story/documentation-한국어-api-eventobject--page) | 주간/일간뷰의 timed 이벤트의 복귀 시간                             |
+| [time](#time)                                             | [EventObject](./event-object.md) | 주간/일간뷰의 timed 이벤트                                         |
+| [goingDuration](#goingduration)                           | [EventObject](./event-object.md) | 주간/일간뷰의 timed 이벤트의 일정 장소까지 이동 시간               |
+| [comingDuration](#comingduration)                         | [EventObject](./event-object.md) | 주간/일간뷰의 timed 이벤트의 복귀 시간                             |
 | [monthMoreTitleDate](#monthmoretitledate)                 | TemplateMoreTitleDate                                            | 월간뷰의 더 보기 팝업의 날짜                                       |
 | [monthMoreClose](#monthmoreclose)                         | 없음                                                             | 월간뷰의 더 보기 팝업의 닫기 버튼                                  |
 | [monthGridHeader](#monthgridheader)                       | TemplateMonthGrid                                                | 월간뷰의 셀의 헤더 영역                                            |
@@ -66,23 +62,23 @@ calendar.setOptions({
 | [popupUpdate](#popupupdate)                               | 없음                                                             | 이벤트 수정 팝업에서 수정 버튼 텍스트                              |
 | [popupEdit](#popupedit)                                   | 없음                                                             | 이벤트 상세 팝업에서 편집 버튼 텍스트                              |
 | [popupDelete](#popupdelete)                               | 없음                                                             | 이벤트 상세 팝업에서 삭제 버튼 텍스트                              |
-| [popupDetailTitle](#popupdetailtitle)                     | [EventObject](/story/documentation-한국어-api-eventobject--page) | 이벤트 상세 팝업에서 이벤트명                                      |
-| [popupDetailDate](#popupdetaildate)                       | [EventObject](/story/documentation-한국어-api-eventobject--page) | 이벤트 상세 팝업에서 이벤트의 기간                                 |
-| [popupDetailLocation](#popupdetaillocation)               | [EventObject](/story/documentation-한국어-api-eventobject--page) | 이벤트 상세 팝업에서 이벤트의 장소                                 |
-| [popupDetailAttendees](#popupdetailattendees)             | [EventObject](/story/documentation-한국어-api-eventobject--page) | 이벤트 상세 팝업에서 이벤트의 참석자                               |
-| [popupDetailState](#popupdetailstate)                     | [EventObject](/story/documentation-한국어-api-eventobject--page) | 이벤트 상세 팝업에서 이벤트의 상태                                 |
-| [popupDetailRecurrenceRule](#popupdetailrecurrencerule)   | [EventObject](/story/documentation-한국어-api-eventobject--page) | 이벤트 상세 팝업에서 이벤트의 반복 룰                              |
-| [popupDetailBody](#popupdetailbody)                       | [EventObject](/story/documentation-한국어-api-eventobject--page) | 이벤트 상세 팝업에서 이벤트의 내용                                 |
+| [popupDetailTitle](#popupdetailtitle)                     | [EventObject](./event-object.md) | 이벤트 상세 팝업에서 이벤트명                                      |
+| [popupDetailDate](#popupdetaildate)                       | [EventObject](./event-object.md) | 이벤트 상세 팝업에서 이벤트의 기간                                 |
+| [popupDetailLocation](#popupdetaillocation)               | [EventObject](./event-object.md) | 이벤트 상세 팝업에서 이벤트의 장소                                 |
+| [popupDetailAttendees](#popupdetailattendees)             | [EventObject](./event-object.md) | 이벤트 상세 팝업에서 이벤트의 참석자                               |
+| [popupDetailState](#popupdetailstate)                     | [EventObject](./event-object.md) | 이벤트 상세 팝업에서 이벤트의 상태                                 |
+| [popupDetailRecurrenceRule](#popupdetailrecurrencerule)   | [EventObject](./event-object.md) | 이벤트 상세 팝업에서 이벤트의 반복 룰                              |
+| [popupDetailBody](#popupdetailbody)                       | [EventObject](./event-object.md) | 이벤트 상세 팝업에서 이벤트의 내용                                 |
 
 ## 사용 예시
 
 ### milestone 패널
 
-![milestone](./template_milestone.png)
+![milestone](../../assets/template_milestone.png)
 
 #### milestone
 
-[`EventObject`](/story/documentation-한국어-api-eventobject--page) 파라미터를 이용해 주간/일간뷰의 milestone 이벤트를 커스터마이징할 수 있다.
+[`EventObject`](./event-object.md) 파라미터를 이용해 주간/일간뷰의 milestone 이벤트를 커스터마이징할 수 있다.
 
 ```js
 calendar.setOptions({
@@ -114,11 +110,11 @@ calendar.setOptions({
 
 ### task 패널
 
-![task](./template_task.png)
+![task](../../assets/template_task.png)
 
 #### task
 
-[`EventObject`](/story/documentation-한국어-api-eventobject--page) 파라미터를 이용해 주간/일간뷰의 task 이벤트를 커스터마이징할 수 있다.
+[`EventObject`](./event-object.md) 파라미터를 이용해 주간/일간뷰의 task 이벤트를 커스터마이징할 수 있다.
 
 ```js
 calendar.setOptions({
@@ -150,11 +146,11 @@ calendar.setOptions({
 
 ### allday 패널
 
-![allday](./template_allday.png)
+![allday](../../assets/template_allday.png)
 
 #### allday
 
-[`EventObject`](/story/documentation-한국어-api-eventobject--page) 파라미터를 이용해 주간/일간뷰의 allday 이벤트를 커스터마이징할 수 있다.
+[`EventObject`](./event-object.md) 파라미터를 이용해 주간/일간뷰의 allday 이벤트를 커스터마이징할 수 있다.
 
 ```js
 calendar.setOptions({
@@ -186,11 +182,11 @@ calendar.setOptions({
 
 ### timed 이벤트
 
-![time](./template_timed.png)
+![time](../../assets/template_timed.png)
 
 #### time
 
-[`EventObject`](/story/documentation-한국어-api-eventobject--page) 파라미터를 이용해 주간/일간뷰의 timed 이벤트를 커스터마이징할 수 있다. 이동 시간 및 복귀 시간을 제외한 부분이다.
+[`EventObject`](./event-object.md) 파라미터를 이용해 주간/일간뷰의 timed 이벤트를 커스터마이징할 수 있다. 이동 시간 및 복귀 시간을 제외한 부분이다.
 
 ```js
 calendar.setOptions({
@@ -206,7 +202,7 @@ calendar.setOptions({
 
 #### goingDuration
 
-[`EventObject`](/story/documentation-한국어-api-eventobject--page) 파라미터를 이용해 주간/일간뷰에서 timed 이벤트의 일정 장소까지 이동 시간을 커스터마이징할 수 있다.
+[`EventObject`](./event-object.md) 파라미터를 이용해 주간/일간뷰에서 timed 이벤트의 일정 장소까지 이동 시간을 커스터마이징할 수 있다.
 
 ```js
 calendar.setOptions({
@@ -222,7 +218,7 @@ calendar.setOptions({
 
 #### comingDuration
 
-[`EventObject`](/story/documentation-한국어-api-eventobject--page) 파라미터를 이용해 주간/일간뷰에서 timed 이벤트의 복귀 시간을 커스터마이징할 수 있다.
+[`EventObject`](./event-object.md) 파라미터를 이용해 주간/일간뷰에서 timed 이벤트의 복귀 시간을 커스터마이징할 수 있다.
 
 ```js
 calendar.setOptions({
@@ -238,7 +234,7 @@ calendar.setOptions({
 
 ### 월간뷰의 더보기 팝업
 
-![more-events-popup](./template_moreEventsPopup.png)
+![more-events-popup](../../assets/template_moreEventsPopup.png)
 
 #### monthMoreTitleDate
 
@@ -284,7 +280,7 @@ calendar.setOptions({
 
 ### 월간뷰의 헤더와 푸터
 
-![grid-header-footer](./template_gridHeaderFooter.png)
+![grid-header-footer](../../assets/template_gridHeaderFooter.png)
 
 ```ts
 interface TemplateMonthGrid {
@@ -370,7 +366,7 @@ calendar.setOptions({
 
 #### monthDayName
 
-![month-dayname](./template_monthDayname.png)
+![month-dayname](../../assets/template_monthDayname.png)
 
 ```ts
 interface TemplateMonthDayName {
@@ -395,7 +391,7 @@ calendar.setOptions({
 
 #### weekDayName
 
-![week-dayname](./template_weekDayname.png)
+![week-dayname](../../assets/template_weekDayname.png)
 
 ```ts
 interface TemplateWeekDayName {
@@ -424,7 +420,7 @@ calendar.setOptions({
 
 ### weekGridFooterExceed
 
-![week-exceed](./template_weekExceed.png)
+![week-exceed](../../assets/template_weekExceed.png)
 
 주간/일간뷰의 allday 패널의 초과된 이벤트 표시 컴포넌트를 커스터마이징할 수 있다. 초과된 이벤트의 갯수를 파라미터로 받는다.
 
@@ -442,7 +438,7 @@ calendar.setOptions({
 
 ### collapseBtnTitle
 
-![collapse-btn](./template_collapseBtn.png)
+![collapse-btn](../../assets/template_collapseBtn.png)
 
 주간/일간뷰의 접기 버튼 컴포넌트를 커스터마이징할 수 있다.
 
@@ -460,7 +456,7 @@ calendar.setOptions({
 
 ### timezoneDisplayLabel
 
-![timezone-display](./template_timezoneDisplay.png)
+![timezone-display](../../assets/template_timezoneDisplay.png)
 
 2개 이상의 타임존을 사용하는 주간/일간뷰에서 타임존을 표시하는 컴포넌트를 커스터마이징할 수 있다.
 
@@ -482,7 +478,7 @@ calendar.setOptions({
 
 ### 시간 표시
 
-![timegrid-time](./template_timegridTime.png)
+![timegrid-time](../../assets/template_timegridTime.png)
 
 ```ts
 type TimeUnit = 'second' | 'minute' | 'hour' | 'date' | 'month' | 'year';
@@ -546,7 +542,7 @@ calendar.setOptions({
 
 ### 이벤트 생성 팝업
 
-![popup-create](./template_popupCreate.png)
+![popup-create](../../assets/template_popupCreate.png)
 
 #### popupIsAllday
 
@@ -678,7 +674,7 @@ calendar.setOptions({
 
 ### 이벤트 수정 팝업
 
-![popup-edit](./template_popupEdit.png)
+![popup-edit](../../assets/template_popupEdit.png)
 
 #### popupUpdate
 
@@ -698,7 +694,7 @@ calendar.setOptions({
 
 ### 이벤트 상세 팝업
 
-![popup-detail](./template_popupDetail.png)
+![popup-detail](../../assets/template_popupDetail.png)
 
 #### popupEdit
 

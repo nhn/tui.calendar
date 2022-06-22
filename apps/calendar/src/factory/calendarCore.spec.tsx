@@ -9,7 +9,7 @@ import { Layout } from '@src/components/layout';
 import { GA_TRACKING_ID } from '@src/constants/statistics';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useAllTheme, useTheme } from '@src/contexts/themeStore';
-import CalendarControl from '@src/factory/calendarControl';
+import CalendarCore from '@src/factory/calendarCore';
 import Month from '@src/factory/month';
 import { isVisibleEvent } from '@src/helpers/events';
 import { createDateMatrixOfMonth, getWeekDates } from '@src/helpers/grid';
@@ -42,7 +42,7 @@ function MockComponent() {
   );
 }
 
-class MockCalendar extends CalendarControl {
+class MockCalendar extends CalendarCore {
   protected getComponent() {
     return <MockComponent />;
   }
@@ -206,7 +206,7 @@ describe('destroy', () => {
 });
 
 describe('openFormPopup', () => {
-  class MockPopupCalendar extends CalendarControl {
+  class MockPopupCalendar extends CalendarCore {
     protected getComponent() {
       return <Layout>mock</Layout>; // popup component is rendered in Layout component
     }
@@ -337,7 +337,7 @@ describe('prev/next/today', () => {
 
       return <div>month: {month}</div>;
     }
-    class MockCalendarMonth extends CalendarControl {
+    class MockCalendarMonth extends CalendarCore {
       protected getComponent() {
         return <MockMonthView />;
       }
@@ -432,7 +432,7 @@ describe('prev/next/today', () => {
         </div>
       );
     }
-    class MockCalendarWeek extends CalendarControl {
+    class MockCalendarWeek extends CalendarCore {
       protected getComponent() {
         return <MockWeekView />;
       }
@@ -551,7 +551,7 @@ describe('prev/next/today', () => {
         </div>
       );
     }
-    class MockCalendarDay extends CalendarControl {
+    class MockCalendarDay extends CalendarCore {
       protected getComponent() {
         return <MockDayView />;
       }
@@ -652,7 +652,7 @@ describe('setTheme', () => {
       </div>
     );
   }
-  class MockCalendarTheme extends CalendarControl {
+  class MockCalendarTheme extends CalendarCore {
     protected getComponent() {
       return <MockThemeView />;
     }
@@ -728,7 +728,7 @@ describe('getOptions/setOptions', () => {
       </div>
     );
   }
-  class MockCalendarOptions extends CalendarControl {
+  class MockCalendarOptions extends CalendarCore {
     protected getComponent() {
       return <MockOptionsView />;
     }
@@ -806,7 +806,7 @@ describe('setCalendars', () => {
       </div>
     );
   }
-  class MockCalendarCalendars extends CalendarControl {
+  class MockCalendarCalendars extends CalendarCore {
     protected getComponent() {
       return <MockCalendarsView />;
     }
@@ -870,7 +870,7 @@ describe('setCalendarColor', () => {
       </div>
     );
   }
-  class MockCalendarColor extends CalendarControl {
+  class MockCalendarColor extends CalendarCore {
     protected getComponent() {
       return <MockCalendarColorView />;
     }
@@ -1021,7 +1021,7 @@ describe('hideMoreView', () => {
 describe('getElement', () => {
   const eventModel = new EventModel({ calendarId: 'mockCalendarId', id: 'mockEventId' });
   const mockEventUIModel = new EventUIModel(eventModel);
-  class MockCalenderEvent extends CalendarControl {
+  class MockCalenderEvent extends CalendarCore {
     protected getComponent() {
       return (
         <div>
@@ -1094,7 +1094,7 @@ describe('setCalendarVisibility', () => {
       </div>
     );
   }
-  class MockCalenderEvent extends CalendarControl {
+  class MockCalenderEvent extends CalendarCore {
     protected getComponent() {
       return <MockHorizontalEvents />;
     }
