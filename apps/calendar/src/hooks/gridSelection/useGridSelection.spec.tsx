@@ -362,6 +362,7 @@ describe('useGridSelection', () => {
 
       // When
       dragAndDrop({ element: container, initPosition, targetPosition });
+      dragAndDrop({ element: container, initPosition, targetPosition });
 
       // Then
       const accumulatedGridSelection = store.getState().gridSelection.accumulated.dayGridMonth;

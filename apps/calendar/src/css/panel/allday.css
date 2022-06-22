@@ -28,7 +28,7 @@
   overflow-y: hidden;
 }
 
-.allday-panel .daygrid-grid-selection {
+.allday-panel .grid-selection {
   position: absolute;
   right: 10px;
   z-index: 1;

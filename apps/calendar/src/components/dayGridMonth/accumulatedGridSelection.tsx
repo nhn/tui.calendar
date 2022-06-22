@@ -29,6 +29,7 @@ export function AccumulatedGridSelection({ rowIndex, weekDates, narrowWeekend }:
       {gridSelectionDataByRow.map((gridSelectionData) =>
         gridSelectionData ? (
           <GridSelection
+            type="accumulated"
             gridSelectionData={gridSelectionData}
             weekDates={weekDates}
             narrowWeekend={narrowWeekend}

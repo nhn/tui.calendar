@@ -2,6 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
+import { useLayoutContainer } from '@src/contexts/layoutContainer';
+import { cls } from '@src/helpers/css';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { useClickPrevention } from '@src/hooks/common/useClickPrevention';
 import { useDrag } from '@src/hooks/common/useDrag';
@@ -16,6 +18,12 @@ import type { GridSelectionData } from '@t/components/gridSelection';
 import type { GridPosition, GridPositionFinder } from '@t/grid';
 import type { Coordinates } from '@t/mouse';
 import type { CalendarState } from '@t/store';
+
+const GRID_SELECTION_TYPE_MAP = {
+  dayGridMonth: 'month',
+  dayGridWeek: 'allday',
+  timeGrid: 'time',
+};
 
 function sortDates(a: TZDate, b: TZDate) {
   const isIncreased = a < b;
@@ -45,6 +53,7 @@ export function useGridSelection<DateCollection>({
   const { setGridSelection, addGridSelection } = useDispatch('gridSelection');
   const { hideAllPopup, showFormPopup } = useDispatch('popup');
   const eventBus = useEventBus();
+  const layoutContainer = useLayoutContainer();
 
   const [initMousePosition, setInitMousePosition] = useState<Coordinates | null>(null);
   const [initGridPosition, setInitGridPosition] = useState<GridPosition | null>(null);
@@ -65,11 +74,11 @@ export function useGridSelection<DateCollection>({
 
   const currentGridSelectionType = DRAGGING_TYPE_CREATORS.gridSelection(type);
 
-  const setGridSelectionByPosition = (e: MouseEvent, initGridPos: GridPosition) => {
+  const setGridSelectionByPosition = (e: MouseEvent) => {
     const gridPosition = gridPositionFinder(e);
 
-    if (isPresent(gridPosition)) {
-      setGridSelection(type, selectionSorter(initGridPos, gridPosition));
+    if (isPresent(initGridPosition) && isPresent(gridPosition)) {
+      setGridSelection(type, selectionSorter(initGridPosition, gridPosition));
     }
   };
 
@@ -109,18 +118,14 @@ export function useGridSelection<DateCollection>({
 
   const onMouseUp = (e: MouseEvent, isClickEvent: boolean) => {
     // The grid selection is created on mouseup in case of the click event.
-    if (isClickEvent && isPresent(initGridPosition)) {
-      setGridSelectionByPosition(e, initGridPosition);
+    if (isClickEvent) {
+      setGridSelectionByPosition(e);
     }
 
     if (isPresent(gridSelectionRef.current)) {
       const [startDate, endDate] = sortDates(
         ...dateGetter(dateCollection, gridSelectionRef.current)
       );
-
-      if (!useFormPopup) {
-        addGridSelection(type, gridSelectionRef.current);
-      }
 
       if (useFormPopup && isPresent(initMousePosition)) {
         const popupArrowPointPosition = {
@@ -140,11 +145,19 @@ export function useGridSelection<DateCollection>({
         });
       }
 
+      const gridSelectionSelector = `.${cls(GRID_SELECTION_TYPE_MAP[type])}.${cls(
+        'grid-selection'
+      )}`;
+      const gridSelectionElements = Array.from(
+        layoutContainer?.querySelectorAll(gridSelectionSelector) ?? []
+      );
+
       eventBus.fire('selectDateTime', {
         start: startDate.toDate(),
         end: endDate.toDate(),
         isAllday: type !== 'timeGrid',
         nativeEvent: e,
+        gridSelectionElements,
       });
     }
   };
@@ -170,16 +183,18 @@ export function useGridSelection<DateCollection>({
       if (isPresent(gridPosition)) {
         setInitGridPosition(gridPosition);
       }
+
+      if (!useFormPopup) {
+        addGridSelection(type, gridSelectionRef.current);
+      }
     },
     onDragStart: (e) => {
       // The grid selection is created on mousemove in case of the drag event.
-      if (isPresent(initGridPosition)) {
-        setGridSelectionByPosition(e, initGridPosition);
-      }
+      setGridSelectionByPosition(e);
     },
     onDrag: (e) => {
-      if (isSelectingGridRef.current && isPresent(initGridPosition)) {
-        setGridSelectionByPosition(e, initGridPosition);
+      if (isSelectingGridRef.current) {
+        setGridSelectionByPosition(e);
       }
     },
     onMouseUp: (e, { draggingState }) => {

@@ -34,6 +34,7 @@ export function GridSelectionByRow({ weekDates, narrowWeekend, rowIndex }: Props
 
   return (
     <GridSelection
+      type="month"
       gridSelectionData={gridSelectionDataByRow}
       weekDates={weekDates}
       narrowWeekend={narrowWeekend}

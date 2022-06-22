@@ -12,7 +12,7 @@ test.beforeEach(async ({ page }) => {
 
 const MONTH_GRID_CELL_SELECTOR = getPrefixedClassName('daygrid-cell');
 const GRID_SELECTION_SELECTOR = `${getPrefixedClassName('weekday')} > ${getPrefixedClassName(
-  'daygrid-grid-selection'
+  'grid-selection'
 )}`;
 
 /**

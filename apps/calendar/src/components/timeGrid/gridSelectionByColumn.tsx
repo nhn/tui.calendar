@@ -25,7 +25,7 @@ function GridSelection({ top, height, text }: { top: number; height: number; tex
 
   return (
     <div
-      className={cls('grid-selection')}
+      className={cls('time', 'grid-selection')}
       style={style}
       data-testid={`time-grid-selection-${top}-${height}`}
     >

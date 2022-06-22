@@ -752,12 +752,13 @@ interface SelectDateTimeInfo {
   end: Date;
   isAllday: boolean;
   nativeEvent?: MouseEvent; // 마우스를 떼었을 때의 네이티브 이벤트
+  gridSelectionElements: Element[]; // 선택 영역에 해당하는 엘리먼트 목록
 }
 ```
 
 캘린더 인스턴스 옵션 중 `isReadOnly` 가 `false` 일 때, 캘린더 영역의 빈 공간을 클릭하거나 드래그 앤 드랍 했을 경우 특정 날짜 혹은 시간을 선택할 수 있다.
 
-이 때 `selectDateTime` 이벤트를 통해 선택된 시간의 정보를 얻을 수 있다.
+이 때 `selectDateTime` 이벤트를 통해 선택된 시간의 정보를 얻을 수 있다. 그리고 `gridSelectionElements`를 통해 엘리먼트를 직접 활용하여 위치 계산 등을 할 수 있다.
 
 ![월간 뷰에서 날짜 선택](../../assets/select-date-time-1.gif)
 ![주간 / 일간 뷰에서 시간 선택](../../assets/select-date-time-2.gif)

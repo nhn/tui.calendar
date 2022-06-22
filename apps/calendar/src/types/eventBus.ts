@@ -7,6 +7,7 @@ export interface SelectDateTimeInfo {
   end: Date;
   isAllday: boolean;
   nativeEvent?: MouseEvent;
+  gridSelectionElements: Element[];
 }
 
 export interface UpdatedEventInfo {
