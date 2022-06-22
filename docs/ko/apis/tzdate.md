@@ -1,7 +1,3 @@
-import { Meta } from '@storybook/addon-docs';
-
-<Meta title="Documentation/한국어/API/TZDate" />
-
 # TZDate
 
 ## 설명

@@ -29,6 +29,8 @@ export interface MoreEventsButton {
   target: HTMLDivElement; // NOTE: More events popup element
 }
 
+export type ScrollBehaviorOptions = ScrollToOptions['behavior'];
+
 export type ExternalEventTypes = {
   selectDateTime: (info: SelectDateTimeInfo) => void;
   beforeCreateEvent: (event: EventObject) => void;
@@ -40,4 +42,8 @@ export type ExternalEventTypes = {
   clickMoreEventsBtn: (moreEventsBtnInfo: MoreEventsButton) => void;
   clickTimezonesCollapseBtn: (prevCollapsedState: boolean) => void;
   [eventName: string]: AnyFunc;
+};
+
+export type InternalEventTypes = {
+  scrollToNow: (scrollBehavior?: ScrollBehaviorOptions) => void;
 };

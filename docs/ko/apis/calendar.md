@@ -1,7 +1,3 @@
-import { Meta } from '@storybook/addon-docs';
-
-<Meta title="Documentation/한국어/API/Calendar" />
-
 # Calendar 클래스
 
 ## 설명
@@ -21,7 +17,7 @@ const calendar = new Calendar(container);
 const calendar = new Calendar('#container');
 ```
 
-캘린더 인스턴스 생성 시 두 번째 인자로 옵션을 설정할 수 있다. 별도로 지정하지 않은 옵션은 기본값이 설정된다. 옵션에 대한 자세한 정보는 [옵션 문서](/story/documentation-한국어-api-옵션--page) 살펴볼 수 있다.
+캘린더 인스턴스 생성 시 두 번째 인자로 옵션을 설정할 수 있다. 별도로 지정하지 않은 옵션은 기본값이 설정된다. 옵션에 대한 자세한 정보는 [옵션 문서](./options.md) 살펴볼 수 있다.
 
 ```js
 const calendar = new Calendar(container, {
@@ -196,7 +192,7 @@ console.log(firstEvent.title); // 'Weekly Meeting'
 
 한 개 이상의 이벤트를 생성한다. 한 개의 이벤트를 생성할 때에도 배열을 전달해야 한다.
 
-이벤트를 생성할 때 필요한 정보는 [EventObject](/story/documentation-한국어-api-eventobject--page) 문서를 참고한다.
+이벤트를 생성할 때 필요한 정보는 [EventObject](./event-object.md) 문서를 참고한다.
 
 ```js
 // 한 개의 이벤트 생성
@@ -416,7 +412,7 @@ calendar.changeView('day');
 - 타입: `setTheme(theme: DeepPartial<ThemeStore>): void`
 - 파라미터: `theme` - 테마 설정이 담긴 객체
 
-캘린더 인스턴스의 테마를 변경한다. 적용 가능한 테마는 [테마 문서](/story/documentation-한국어-api-테마--page)를 참고한다.
+캘린더 인스턴스의 테마를 변경한다. 적용 가능한 테마는 [테마 문서](./theme.md)를 참고한다.
 
 ```js
 // 월간 뷰에서 표현되는 주말의 배경색을 변경하는 예
@@ -445,7 +441,7 @@ calendar.setTheme({
 - 파라미터
   - `options` - 캘린더 인스턴스가 사용하는 옵션 객체
 
-현재 캘린더 인스턴스의 옵션을 변경한다. 각 옵션과 자세한 동작은 [옵션 문서](/story/documentation-한국어-api-옵션--page)를 참고한다.
+현재 캘린더 인스턴스의 옵션을 변경한다. 각 옵션과 자세한 동작은 [옵션 문서](./options.md)를 참고한다.
 
 ```js
 // 타임존 변경 예
@@ -502,7 +498,7 @@ calendar.setOptions({
 
 - 타입: `setCalendars(calendars: CalendarInfo[]): void`
 - 파라미터
-  - `calendars` - 캘린더 정보의 배열. 캘린더 정보는 아래의 타입을 가진다. 자세한 내용은 [캘린더](/story/documentation-한국어-api-eventobject--page#캘린더calendarid) 문서에서 확인하라.
+  - `calendars` - 캘린더 정보의 배열. 캘린더 정보는 아래의 타입을 가진다. 자세한 내용은 [캘린더](./event-object.md#캘린더calendarid) 문서에서 확인하라.
 
 ```ts
 interface CalendarInfo {
@@ -556,7 +552,7 @@ calendar.setCalendars([
 - 타입: `setCalendarColor(calendarId: string, colorOptions: CalendarColor): void`
 - 파라미터
   - `calendarId` - 캘린더의 고유 아이디
-  - `colorOptions` - 적용할 컬러 설정값. 자세한 내용은 [캘린더 문서](/story/documentation-한국어-api-eventobject--page#캘린더calendarid)를 참고한다.
+  - `colorOptions` - 적용할 컬러 설정값. 자세한 내용은 [캘린더 문서](./event-object.md#캘린더calendarid)를 참고한다.
 
 특정 이벤트 그룹에 속한 모든 이벤트의 색상 값을 변경할 때 사용한다.
 
@@ -564,9 +560,9 @@ calendar.setCalendars([
 
 ### scrollToNow
 
-- 타입: `scrollToNow(): void`
+- 타입: `scrollToNow(scrollBehavior?: 'auto' | 'smooth'): void`
 
-주간 뷰 혹은 일간 뷰인 상태에서 현재 시간이 포함된 시간 범위를 표시하고 있을 때, 현재 시간이 있는 위치로 스크롤을 이동한다.
+주간 뷰 혹은 일간 뷰인 상태에서 현재 시간이 포함된 시간 범위를 표시하고 있을 때, 현재 시간이 있는 위치로 스크롤을 이동한다. IE11에서는 `'smooth'`를 넣어도 동작하지 않는다.
 
 [⬆️ 목록으로 돌아가기](#인스턴스-메서드)
 
@@ -574,7 +570,7 @@ calendar.setCalendars([
 
 - 타입: `openFormPopup(event: EventObject): void`
 - 파라미터
-  - `event` - 이벤트 정보를 가지고 있는 객체. 자세한 내용은 [EventObject 문서](/story/documentation-한국어-api-eventobject--page)를 참고한다.
+  - `event` - 이벤트 정보를 가지고 있는 객체. 자세한 내용은 [EventObject 문서](./event-object.md)를 참고한다.
 
 `useFormPopup` 옵션이 `true` 일 때, 별도의 동작을 거치지 않고 바로 일정 생성을 하는 팝업을 표시한다.
 
@@ -764,14 +760,14 @@ interface SelectDateTimeInfo {
 
 이 때 `selectDateTime` 이벤트를 통해 선택된 시간의 정보를 얻을 수 있다. `gridSelectionElements`를 통해 엘리먼트를 직접 활용하여 위치 계산 등을 할 수 있도록 돕는다.
 
-![월간 뷰에서 날짜 선택](./select-date-time-1.gif)
-![주간 / 일간 뷰에서 시간 선택](./select-date-time-2.gif)
+![월간 뷰에서 날짜 선택](../../assets/select-date-time-1.gif)
+![주간 / 일간 뷰에서 시간 선택](../../assets/select-date-time-2.gif)
 
 [⬆️ 목록으로 돌아가기](#인스턴스-이벤트-목록)
 
 ### beforeCreateEvent
 
-- 파라미터: `event: EventObject` - 이벤트 생성 팝업에서 입력된 정보가 전달된다. 전달되는 객체의 자세한 정보는 [EventObject 문서](/story/documentation-한국어-api-eventobject--page)를 참고한다.
+- 파라미터: `event: EventObject` - 이벤트 생성 팝업에서 입력된 정보가 전달된다. 전달되는 객체의 자세한 정보는 [EventObject 문서](./event-object.md)를 참고한다.
 
 캘린더 인스턴스 옵션 중 `useFormPopup` 가 `true` 일 때, 기본 이벤트 생성 팝업을 사용할 수 있다.
 
@@ -793,7 +789,7 @@ calendar.on('beforeCreateEvent', (eventObj) => {
 
 ### beforeUpdateEvent
 
-- 파라미터: `updatedEventInfo: UpdatedEventInfo` - 기존 이벤트 정보와 수정된 이벤트 정보를 가지고 있다. 전달되는 객체의 자세한 정보는 [EventObject 문서](/story/documentation-한국어-api-eventobject--page)를 참고한다.
+- 파라미터: `updatedEventInfo: UpdatedEventInfo` - 기존 이벤트 정보와 수정된 이벤트 정보를 가지고 있다. 전달되는 객체의 자세한 정보는 [EventObject 문서](./event-object.md)를 참고한다.
 
 ```ts
 interface UpdatedEventInfo {
@@ -807,9 +803,9 @@ interface UpdatedEventInfo {
 다음의 경우 `beforeUpdateEvent` 가 실행된다.
 
 - 캘린더 인스턴스 옵션 중 `useFormPopup` 와 `useDetailPopup` 가 모두 `true` 이고, 이벤트 상세 팝업을 통해 이벤트를 수정 후 Update 버튼을 누를 때
-  - ![팝업을 통한 이벤트 실행](./before-update-event-1.gif)
+  - ![팝업을 통한 이벤트 실행](../../assets/before-update-event-1.gif)
 - 캘린더 인스턴스 옵션 중 `isReadOnly` 가 `true` 가 아니며, 개별 이벤트의 속성에 `isReadOnly` 가 `true` 가 아닌 상태에서 드래그 앤 드랍으로 일정을 이동하거나 리사이징할 때
-  - ![드래그 앤 드랍을 통한 이벤트 실행](./before-update-event-2.gif)
+  - ![드래그 앤 드랍을 통한 이벤트 실행](../../assets/before-update-event-2.gif)
 
 ```js
 // 이벤트를 수정하는 기본적인 예
@@ -822,13 +818,13 @@ calendar.on('beforeUpdateEvent', ({ event, change }) => {
 
 ### beforeDeleteEvent
 
-- 파라미터: `event: EventObject` - 삭제할 이벤트의 정보가 전달된다. 전달되는 객체의 자세한 정보는 [EventObject 문서](/story/documentation-한국어-api-eventobject--page)를 참고한다.
+- 파라미터: `event: EventObject` - 삭제할 이벤트의 정보가 전달된다. 전달되는 객체의 자세한 정보는 [EventObject 문서](./event-object.md)를 참고한다.
 
 캘린더 인스턴스 옵션 중 `isReadOnly` 와 개별 이벤트 속성에 `isReadOnly` 모두 `true` 가 아니며, `useDetailPopup` 옵션이 `true` 일 때, 이벤트 상세 팝업을 통해 이벤트를 선택 후 Delete 버튼을 누를 수 있다.
 
 이 때 Delete 버튼을 누르면 `beforeDeleteEvent` 가 실행된다.
 
-![팝업을 통해 beforeDeleteEvent 이벤트 실행](./before-delete-event.gif)
+![팝업을 통해 beforeDeleteEvent 이벤트 실행](../../assets/before-delete-event.gif)
 
 ```js
 // 일정을 삭제하는 아주 기본적인 예
@@ -841,7 +837,7 @@ calendar.on('beforeDeleteEvent', (eventObj) => {
 
 ### afterRenderEvent
 
-- 파라미터: `event: EventObject` - 이벤트 정보가 전달된다. 전달되는 객체의 자세한 정보는 [EventObject 문서](/story/documentation-한국어-api-eventobject--page)를 참고한다.
+- 파라미터: `event: EventObject` - 이벤트 정보가 전달된다. 전달되는 객체의 자세한 정보는 [EventObject 문서](./event-object.md)를 참고한다.
 
 각각의 이벤트가 캘린더 안에서 렌더링 될 때마다 실행된다.
 
@@ -855,7 +851,7 @@ calendar.on('beforeDeleteEvent', (eventObj) => {
 
 **월간 뷰에서는 이 이벤트가 발생하지 않는다.**
 
-![날짜를 클릭할 때 clickDayName 이벤트 실행](./click-dayName.gif)
+![날짜를 클릭할 때 clickDayName 이벤트 실행](../../assets/click-dayName.gif)
 
 ### clickEvent
 
@@ -868,7 +864,7 @@ interface EventInfo {
 }
 ```
 
-이벤트 정보의 자세한 내용은 [EventObject 문서](/story/documentation-한국어-api-eventobject--page)를 참고한다.
+이벤트 정보의 자세한 내용은 [EventObject 문서](./event-object.md)를 참고한다.
 
 캘린더에 렌더링 된 각각의 이벤트를 클릭할 때마다 `clickEvent` 이벤트가 실행된다.
 
@@ -889,7 +885,7 @@ interface MoreEventsBtnInfo {
 
 월간 뷰에서 한 날짜에 해당되는 이벤트 많아 더 이상 화면에 표시할 수 없는 상태일 때 'more' 버튼이 표시된다. 이 버튼을 클릭하면 `clickMoreEventsBtn` 이벤트가 실행된다.
 
-![월간 뷰의 more 이벤트 버튼](./click-more-events-btn.png)
+![월간 뷰의 more 이벤트 버튼](../../assets/click-more-events-btn.png)
 
 [⬆️ 목록으로 돌아가기](#인스턴스-이벤트-목록)
 
@@ -897,10 +893,10 @@ interface MoreEventsBtnInfo {
 
 - 파라미터: `prevCollapsedState` - 클릭한 버튼의 이전 접힘 상태가 `true` 또는 `false` 가 전달된다.
 
-캘린더 인스턴스 옵션에서 [타임존](/story/documentation-한국어-api-옵션--page#timezone)을 두 개 이상 사용하고, `week.showTimezoneCollapsedButton` 이 `true` 인 경우
+캘린더 인스턴스 옵션에서 [타임존](./options.md#timezone)을 두 개 이상 사용하고, `week.showTimezoneCollapsedButton` 이 `true` 인 경우
 주간 / 일간 뷰에서 타임존을 접거나 펼칠 수 있는 버튼이 표시된다. 이 버튼을 클릭하면 `clickTimezonesCollapseBtn` 이벤트가 실행된다.
 
-![타임존 접기 버튼](./click-timezones-collapse-btn.png)
+![타임존 접기 버튼](../../assets/click-timezones-collapse-btn.png)
 
 ```js
 // 버튼을 누를 때 주간 / 일간 뷰의 왼쪽 영역을 조절하는 예제

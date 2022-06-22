@@ -1,14 +1,11 @@
 const path = require('path');
 
-const isBuildingDocs = process.env.STORYBOOK_ENV === 'docs';
-
 module.exports = {
   core: {
     builder: 'webpack5',
   },
-  stories: isBuildingDocs ? ['../**/*.stories.mdx'] : ['../**/*.stories.@(ts|tsx|mdx)'],
+  stories: ['../**/*.stories.@(ts|tsx)'],
   addons: ['@storybook/addon-docs'],
-  staticDirs: ['../docs/assets/'],
   babel: async (config) => {
     // Replace storybook babel preset & plugins with custom ones
     config.presets.splice(config.presets.length - 1, 1, [

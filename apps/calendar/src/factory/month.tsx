@@ -1,11 +1,11 @@
 import { h } from 'preact';
 
 import { Month as MonthComponent } from '@src/components/view/month';
-import CalendarControl from '@src/factory/calendarControl';
+import CalendarCore from '@src/factory/calendarCore';
 
 import type { Options } from '@t/options';
 
-export default class Month extends CalendarControl {
+export default class Month extends CalendarCore {
   constructor(container: Element, options: Options = {}) {
     super(container, options);
 

@@ -1,7 +1,3 @@
-import { Meta } from '@storybook/addon-docs';
-
-<Meta title="Documentation/한국어/가이드/v2 마이그레이션 가이드" />
-
 # v2 마이그레이션 가이드
 
 ## 목차
@@ -18,10 +14,10 @@ import { Meta } from '@storybook/addon-docs';
 
 v2를 사용하기 위해 API 마이그레이션이 필요한 API는 다음과 같다.
 
-- [옵션](/story/documentation-한국어-api-옵션--page)
-- [테마](/story/documentation-한국어-api-테마--page)
-- [인스턴스 이벤트](/story/documentation-한국어-api-Calendar--page#인스턴스-이벤트)
-- [인스턴스 메서드](/story/documentation-한국어-api-Calendar--page#인스턴스-메서드)
+- [옵션](../apis/options.md)
+- [테마](../apis/theme.md)
+- [인스턴스 이벤트](../apis/calendar.md#인스턴스-이벤트)
+- [인스턴스 메서드](../apis/calendar.md#인스턴스-메서드)
 
 마이그레이션 진행 단위는 크게 _기능 개선_, _변경_, *제거*로 구분된다.
 
@@ -38,6 +34,9 @@ v2에서는 날짜나 시간을 선택할 때의 영역을 나타내는 `creatio
 
 v2에서는 일정이라는 의미에 맞게 기존 `schedule`에서 `event`로 네이밍이 변경되었다. 단순한 변수명 뿐만 아니라 `schedule`이 포함된 인스턴스 메서드, 인스턴스 이벤트 등의 관련된 API 모두가 `event`로 변경되었다.
 
+### `currentTimeIndicator`, `currentTimeLine`에서 `nowIndicator`로 용어 변경
+v1에서는 현재 시간선을 나타내는 용어로 `currentTimeIndicator`과 `currentTimeLine`이 혼용되었다. v2에서는 이를 `nowIndicator`로 통일했다.
+
 ### 기능 개선
 
 #### 렌더링 최적화
@@ -48,7 +47,7 @@ v2에서는 가상 DOM을 이용해 불필요한 렌더링을 줄여 렌더링 �
 
 #### 테마 개선
 
-[테마](/story/documentation-한국어-api-테마--page)가 개선되었다. `.`으로 연결된 문자열 키 값으로 테마를 지정하는 방식에서 중첩 객체를 이용한 방식으로 개선되었다. 이에 따라 `setTheme` 메서드도 중첩 객체를 파라미터로 받아 처리하는 방식으로 개선되었다. 자세한 사항은 [테마](/story/documentation-한국어-api-테마--page)에서 확인할 수 있다.
+[테마](../apis/theme.md)가 개선되었다. `.`으로 연결된 문자열 키 값으로 테마를 지정하는 방식에서 중첩 객체를 이용한 방식으로 개선되었다. 이에 따라 `setTheme` 메서드도 중첩 객체를 파라미터로 받아 처리하는 방식으로 개선되었다. 자세한 사항은 [테마](../apis/theme.md)에서 확인할 수 있다.
 
 ```ts
 // v1
@@ -98,8 +97,13 @@ v1에서 사용하던 다음 프로퍼티들이 테마에서 제거되거나 이
 - `week.timegridHorizontalLine.borderBottom` -> `week.timeGridHourLine.borderBottom`
 - `week.timegrid.paddingRight`
 - `week.timegridSchedule` 전체
+- `week.currentTime` -> `week.nowIndicatorLabel`
 - `week.currentTime.fontSize`
 - `week.currentTime.fontWeight`
+- `week.currentTimeLinePast` -> `week.nowIndicatorPast`
+- `week.currentTimeLineBullet` -> `week.nowIndicatorBullet`
+- `week.currentTimeLineToday` -> `week.nowIndicatorToday`
+- `week.currentTimeLineFuture` -> `week.nowIndicatorFuture`
 - `week.pastTime.fontWeight`
 - `week.futureTime.fontWeight`
 - `week.creationGuide.fontSize`
@@ -163,18 +167,18 @@ import Calendar from '@toast-ui/calendar/ie11';
 
 아래의 옵션이 옵션 객체 내에서 위치가 이동하거나 테마로 이동되었다.
 
-| 옵션                                | 변경사항                                            | 추가 설명                                            |
-|-----------------------------------|-------------------------------------------------|--------------------------------------------------|
-| options.taskView                  | options.week.taskView                           |                                                  |
-| options.eventView                 | options.week.eventView                          |                                                  |
-| options.disableDblClick           | options.gridSelection.enableDblClick            | 기본값이 <code>false</code>에서 <code>true</code>로 변경됨 |
-| options.disableClick              | options.gridSelection.enableClick               | 기본값이 <code>false</code>에서 <code>true</code>로 변경됨 |
-| options.timezone.offsetCalculator | options.timezone.customOffsetCalculator         |                                                  |
-| options.month.grid                | [테마](/story/documentation-한국어-api-테마--page)로 이동 |                                                  |
-| options.month.moreLayerSize       | [테마](/story/documentation-한국어-api-테마--page)로 이동 |                                                  |
-| options.month.isAlways6Week       | <code>options.month.isAlways6Weeks</code>로 변경   |                                                  |
-| options.month.daynames            | <code>options.month.dayNames</code>로 변경         |                                                  |
-| options.week.daynames             | <code>options.week.dayNames</code>로 변경          |                                                  |
+| 옵션                                | 변경사항                                          | 추가 설명                                            |
+|-----------------------------------|-----------------------------------------------|--------------------------------------------------|
+| options.taskView                  | options.week.taskView                         |                                                  |
+| options.eventView                 | options.week.eventView                        |                                                  |
+| options.disableDblClick           | options.gridSelection.enableDblClick          | 기본값이 <code>false</code>에서 <code>true</code>로 변경됨 |
+| options.disableClick              | options.gridSelection.enableClick             | 기본값이 <code>false</code>에서 <code>true</code>로 변경됨 |
+| options.timezone.offsetCalculator | options.timezone.customOffsetCalculator       |                                                  |
+| options.month.grid                | [테마](../apis/theme.md)로 이동                    |                                                  |
+| options.month.moreLayerSize       | [테마](../apis/theme.md)로 이동                    |                                                  |
+| options.month.isAlways6Week       | <code>options.month.isAlways6Weeks</code>로 변경 |                                                  |
+| options.month.daynames            | <code>options.month.dayNames</code>로 변경       |                                                  |
+| options.week.daynames             | <code>options.week.dayNames</code>로 변경        |                                                  |
 
 #### 인스턴스 메서드 변경사항
 
@@ -219,6 +223,10 @@ calendar.on('clickMoreEventsBtn', (event) => {
   console.log(event.date, event.target);
 });
 ```
+
+#### 템플릿 변경사항
+
+v1의 `timegridCurrentTime`이 `timegridNowIndicatorLabel`로 이름이 변경되었다.
 
 ### 제거
 

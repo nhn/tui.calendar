@@ -10,7 +10,7 @@ export interface TemplateTimeGridHourLabel {
   minutes: number;
 }
 
-export interface TemplateCurrentTime {
+export interface TemplateNow {
   unit: TimeUnit;
   time: TZDate;
   format: string;
@@ -77,9 +77,9 @@ export interface Template {
   weekGridFooterExceed: (hiddenEventsCount: number) => TemplateReturnType;
   collapseBtnTitle: () => TemplateReturnType;
   timezoneDisplayLabel: (props: TemplateTimezone) => TemplateReturnType;
-  timegridDisplayPrimaryTime: (props: TemplateCurrentTime) => TemplateReturnType;
-  timegridDisplayTime: (props: TemplateCurrentTime) => TemplateReturnType;
-  timegridCurrentTime: (props: TemplateCurrentTime) => TemplateReturnType;
+  timegridDisplayPrimaryTime: (props: TemplateNow) => TemplateReturnType;
+  timegridDisplayTime: (props: TemplateNow) => TemplateReturnType;
+  timegridNowIndicatorLabel: (props: TemplateNow) => TemplateReturnType;
   popupIsAllday: () => TemplateReturnType;
   popupStateFree: () => TemplateReturnType;
   popupStateBusy: () => TemplateReturnType;

@@ -1,7 +1,7 @@
 import range from 'tui-code-snippet/array/range';
 
 import Week from '@src/factory/week';
-import { currentTimeLabelTestId } from '@src/test/testIds';
+import { TEST_IDS } from '@src/test/testIds';
 import { act, hasDesiredStartTime, screen, within } from '@src/test/utils';
 import TZDate from '@src/time/date';
 import { toFormat } from '@src/time/datetime';
@@ -350,14 +350,16 @@ describe('Multiple Timezone', () => {
         ],
       },
     };
-    const expectedCurrentTimeLabels = ['[-1]21:00', '04:00'];
+    const expectedNowIndicatorLabels = ['[-1]21:00', '04:00'];
 
     // When
     setup(timezoneOptions);
 
     // Then
-    const currentTimeLabels = screen.getAllByTestId(currentTimeLabelTestId);
-    expect(currentTimeLabels.map((label) => label.textContent)).toEqual(expectedCurrentTimeLabels);
+    const nowIndicatorLabels = screen.getAllByTestId(TEST_IDS.NOW_INDICATOR_LABEL);
+    expect(nowIndicatorLabels.map((label) => label.textContent)).toEqual(
+      expectedNowIndicatorLabels
+    );
   });
 
   it('should render current time of each timezones including date differences (plus 1)', () => {
@@ -377,14 +379,16 @@ describe('Multiple Timezone', () => {
         ],
       },
     };
-    const expectedCurrentTimeLabels = ['[+1]05:00', '20:00'];
+    const expectedNowIndicatorLabels = ['[+1]05:00', '20:00'];
 
     // When
     setup(timezoneOptions);
 
     // Then
-    const currentTimeLabels = screen.getAllByTestId(currentTimeLabelTestId);
-    expect(currentTimeLabels.map((label) => label.textContent)).toEqual(expectedCurrentTimeLabels);
+    const nowIndicatorLabels = screen.getAllByTestId(TEST_IDS.NOW_INDICATOR_LABEL);
+    expect(nowIndicatorLabels.map((label) => label.textContent)).toEqual(
+      expectedNowIndicatorLabels
+    );
   });
 
   it('should show only primary timezone when the timezonesCollapsed option is enabled', () => {
@@ -415,6 +419,32 @@ describe('Multiple Timezone', () => {
     expect(labelContainer.children).toHaveLength(1);
     expect(hourColumns).toHaveLength(1);
     expect(hourColumns[0]).toHaveStyle({ width: '100%' });
+  });
+});
+
+describe('Now Indicator', () => {
+  it('should show a now indicator when the showNowIndicator option is true', () => {
+    // Given
+    const options = { week: { showNowIndicator: true } };
+
+    // When
+    setup(options);
+
+    // Then
+    expect(screen.getByTestId(TEST_IDS.NOW_INDICATOR)).not.toBeNull();
+    expect(screen.getByTestId(TEST_IDS.NOW_INDICATOR_LABEL)).not.toBeNull();
+  });
+
+  it('should hide a now indicator when the showNowIndicator option is false', () => {
+    // Given
+    const options = { week: { showNowIndicator: false } };
+
+    // When
+    setup(options);
+
+    // Then
+    expect(screen.queryByTestId(TEST_IDS.NOW_INDICATOR)).toBeNull();
+    expect(screen.queryByTestId(TEST_IDS.NOW_INDICATOR_LABEL)).toBeNull();
   });
 });
 

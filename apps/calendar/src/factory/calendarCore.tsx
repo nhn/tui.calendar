@@ -20,7 +20,7 @@ import { EventBusImpl } from '@src/utils/eventBus';
 import { addAttributeHooks, removeAttributeHooks } from '@src/utils/sanitizer';
 import { isNil, isPresent, isString } from '@src/utils/type';
 
-import type { ExternalEventTypes } from '@t/eventBus';
+import type { ExternalEventTypes, InternalEventTypes, ScrollBehaviorOptions } from '@t/eventBus';
 import type { DateType, EventObject } from '@t/events';
 import type { CalendarColor, CalendarInfo, Options, ViewType } from '@t/options';
 import type {
@@ -33,12 +33,142 @@ import type {
 } from '@t/store';
 import type { ThemeState, ThemeStore } from '@t/theme';
 
-export default abstract class CalendarControl implements EventBus<ExternalEventTypes> {
+/**
+ * {@link https://nhn.github.io/tui.code-snippet/latest/CustomEvents CustomEvents} document at {@link https://github.com/nhn/tui.code-snippet tui-code-snippet}
+ * @typedef {CustomEvents} CustomEvents
+ */
+
+/**
+ * Define Calendars to group events.
+ *
+ * @typedef {object} CalendarInfo
+ * @property {string} id - Calendar id.
+ * @property {string} name - Calendar name.
+ * @property {string} color - Text color of events.
+ * @property {string} borderColor - Left border color of events.
+ * @property {string} backgroundColor - Background color of events.
+ * @property {string} dragBackgroundColor - Background color of events during dragging.
+ */
+
+/**
+ * Timezone options of the calendar instance.
+ *
+ * For more information, see {@link https://github.com/nhn/tui.calendar/blob/main/docs/ko/apis/options.md#timezone|Timezone options} in guide.
+ *
+ * @typedef {object} TimezoneOptions
+ * @example
+ * const calendar = new Calendar('#container', {
+ *   timezone: {
+ *     // @property {string} zones[].timezoneName - Timezone name. it should be one of IANA timezone names.
+ *     // @property {string} [zones[].displayLabel] - Display label of timezone.
+ *     // @property {string} [zones[].tooltip] - Tooltip of the element of the display label.
+ *     zones: [
+ *       {
+ *         timezoneName: 'Asia/Seoul',
+ *         displayLabel: 'UTC+9:00',
+ *         tooltip: 'Seoul'
+ *       },
+ *       {
+ *         timezoneName: 'Europe/London',
+ *         displayLabel: 'UTC+1:00',
+ *         tooltip: 'BST'
+ *       }
+ *     ],
+ *     // This function will be called for rendering components for each timezone.
+ *     // You don't have to use it if you're able to `Intl.DateTimeFormat` API with `timeZone` option.
+ *     // this function should return timezone offset from UTC.
+ *     // for instance, using moment-timezone:
+ *     customOffsetCalculator: (timezoneName, timestamp) => {
+ *       return moment.tz(timezoneName).utcOffset(timestamp);
+ *     }
+ *   }
+ * });
+ * @property {Array.<object>} zones - Timezone data.
+ * @property {string} zones[].timezoneName - Timezone name. it should be one of IANA timezone names.
+ * @property {string} [zones[].displayLabel] - Display label of timezone.
+ * @property {string} [zones[].tooltip] - Tooltip of the element of the display label.
+ * @property {function} customOffsetCalculator - Custom offset calculator when you're not able to leverage `Intl.DateTimeFormat` API.
+ */
+
+/**
+ * Object to create/modify events.
+ * @typedef {object} EventObject
+ * @property {string} [id] - Event id.
+ * @property {string} [calendarId] - Calendar id.
+ * @property {string} [title] - Event title.
+ * @property {string} [body] - Body content of the event.
+ * @property {string} [isAllday] - Whether the event is all day or not.
+ * @property {string|number|Date|TZDate} [start] - Start time of the event.
+ * @property {string|number|Date|TZDate} [end] - End time of the event.
+ * @property {number} [goingDuration] - Travel time which is taken to go in minutes.
+ * @property {number} [comingDuration] - Travel time which is taken to come back in minutes.
+ * @property {string} [location] - Location of the event.
+ * @property {Array.<string>} [attendees] - Attendees of the event.
+ * @property {string} [category] - Category of the event. Available categories are 'milestone', 'task', 'time' and 'allday'.
+ * @property {string} [dueDateClass] - Classification of work events. (before work, before lunch, before work)
+ * @property {string} [recurrenceRule] - Recurrence rule of the event.
+ * @property {string} [state] - State of the event. Available states are 'Busy', 'Free'.
+ * @property {boolean} [isVisible] - Whether the event is visible or not.
+ * @property {boolean} [isPending] - Whether the event is pending or not.
+ * @property {boolean} [isFocused] - Whether the event is focused or not.
+ * @property {boolean} [isReadOnly] - Whether the event is read only or not.
+ * @property {boolean} [isPrivate] - Whether the event is private or not.
+ * @property {string} [color] - Text color of the event.
+ * @property {string} [backgroundColor] - Background color of the event.
+ * @property {string} [dragBackgroundColor] - Background color of the event during dragging.
+ * @property {string} [borderColor] - Left border color of the event.
+ * @property {object} [customStyle] - Custom style of the event. The key of CSS property should be camelCase (e.g. {'fontSize': '12px'})
+ * @property {*} [raw] - Raw data of the event. it's an arbitrary property for anything.
+ */
+
+/**
+ * CalendarCore class
+ *
+ * @class CalendarCore
+ * @mixes CustomEvents
+ * @param {string|Element} container - container element or selector.
+ * @param {object} options - calendar options. For more information, see {@link https://github.com/nhn/tui.calendar/blob/main/docs/ko/apis/calendar.md|Calendar options} in guide.
+ *   @param {string} [options.defaultView="week"] - Initial view type. Available values are: 'day', 'week', 'month'.
+ *   @param {boolean} [options.useFormPopup=false] - Whether to use the default form popup when creating/modifying events.
+ *   @param {boolean} [options.useDetailPopup=false] - Whether to use the default detail popup when clicking events.
+ *   @param {boolean} [options.isReadOnly=false] - Whether the calendar is read-only.
+ *   @param {boolean} [options.usageStatistics=true] - Whether to allow collect hostname and send the information to google analytics.
+ *                                              For more information, check out the {@link https://github.com/nhn/tui.calendar/blob/main/apps/calendar/README.md#collect-statistics-on-the-use-of-open-source|documentation}.
+ *   @param {function} [options.eventFilter] - A function that returns true if the event should be displayed. The default filter checks if the event's `isVisible` property is true.
+ *   @param {object} [options.week] - Week option of the calendar instance.
+ *     @param {number} [options.week.startDayOfWeek=0] - Start day of the week. Available values are 0 (Sunday) to 6 (Saturday).
+ *     @param {Array.<string>} [options.week.dayNames] - Names of days of the week. Should be 7 items starting from Sunday to Saturday. If not specified, the default names are used.
+ *                                               Default values are ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].
+ *     @param {boolean} [options.week.workweek=false] - Whether to exclude Saturday and Sunday.
+ *     @param {boolean} [options.week.showTimezoneCollapseButton=true] - Whether to show the timezone collapse button.
+ *     @param {boolean} [options.week.timezonesCollapsed=false] - Whether to collapse the timezones.
+ *     @param {number} [options.week.hourStart=0] - Start hour of the day. Available values are 0 to 24.
+ *     @param {number} [options.week.hourEnd=24] - End hour of the day. Available values are 0 to 24. Must be greater than `hourStart`.
+ *     @param {boolean} [options.week.narrowWeekend=false] - Whether to narrow down width of weekends to half.
+ *     @param {boolean|Array.<string>} [options.week.eventView=true] - Determine which view to display events. Available values are 'allday' and 'time'. set to `false` to disable event view.
+ *     @param {boolean|Array.<string>} [options.week.taskView=true] - Determine which view to display tasks. Available values are 'milestone' and 'task'. set to `false` to disable task view.
+ *   @param {object} options.month - Month option of the calendar instance.
+ *     @param {number} [options.month.startDayOfWeek=0] - Start day of the week. Available values are 0 (Sunday) to 6 (Saturday).
+ *     @param {Array.<string>} [options.month.dayNames] - Names of days of the week. Should be 7 items starting from Sunday to Saturday. If not specified, the default names are used.
+ *                                                Default values are ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].
+ *     @param {boolean} [options.month.workweek=false] - Whether to exclude Saturday and Sunday.
+ *     @param {boolean} [options.month.narrowWeekend=false] - Whether to narrow down width of weekends to half.
+ *     @param {number} [options.month.visibleWeeksCount=0] - Number of weeks to display. 0 means display all weeks.
+ *   @param {Array.<CalendarInfo>} [options.calendars] - Calendars to group events.
+ *   @param {boolean|object} [options.gridSelection=true] - Whether to enable grid selection. or it's option. it's enabled when the value is `true` and object and will be disabled when `isReadOnly` is true.
+ *     @param {boolean} options.gridSelection.enableDbClick - Whether to enable double click to select area.
+ *     @param {boolean} options.gridSelection.enableClick - Whether to enable click to select area.
+ *   @param {TimezoneOptions} options.timezone - Timezone option of the calendar instance. For more information about timezone, check out the {@link https://github.com/nhn/tui.calendar/blob/main/docs/ko/apis/options.md|Options} in guide.
+ *   @param {Theme} options.theme - Theme option of the calendar instance. For more information, see {@link https://github.com/nhn/tui.calendar/blob/main/docs/ko/apis/theme.md|Theme} in guide.
+ *   @param {TemplateConfig} options.template - Template option of the calendar instance. For more information, see {@link https://github.com/nhn/tui.calendar/blob/main/docs/ko/apis/template.md|Template} in guide.
+ */
+export default abstract class CalendarCore
+  implements EventBus<ExternalEventTypes & InternalEventTypes>
+{
   protected container: Element | null;
 
   /**
    * start and end date of weekly, monthly
-   * @type {object}
    * @private
    */
   protected renderRange: {
@@ -46,7 +176,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
     end: TZDate;
   };
 
-  protected eventBus: EventBus<ExternalEventTypes>;
+  protected eventBus: EventBus<ExternalEventTypes & InternalEventTypes>;
 
   protected theme: InternalStoreAPI<ThemeStore>;
 
@@ -62,7 +192,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
     };
 
     this.theme = initThemeStore(options.theme);
-    this.eventBus = new EventBusImpl<ExternalEventTypes>();
+    this.eventBus = new EventBusImpl<ExternalEventTypes & InternalEventTypes>();
     this.store = initCalendarStore(options);
 
     addAttributeHooks();
@@ -241,7 +371,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
 
   /**
    * Create events and render calendar.
-   * @param {EventObject[]} events - list of {@link EventObject}
+   * @param {Array.<EventObject>} events - list of {@link EventObject}
    * @example
    * calendar.createEvents([
    *   {
@@ -283,7 +413,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    *
    * @param {string} eventId - event's id
    * @param {string} calendarId - calendar's id of the event
-   * @returns {EventObject | null} event. If the event can't be found, it returns null.
+   * @returns {EventObject|null} event. If the event can't be found, it returns null.
    *
    * @example
    * const event = calendar.getEvent(eventId, calendarId);
@@ -339,7 +469,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   /**
    * Set events' visibility by calendar ID
    *
-   * @param {string|string[]} calendarId - The calendar id or ids to change visibility
+   * @param {string|Array.<string>} calendarId - The calendar id or ids to change visibility
    * @param {boolean} isVisible - If set to true, show the events. If set to false, hide the events.
    */
   setCalendarVisibility(calendarId: string | string[], isVisible: boolean) {
@@ -400,19 +530,17 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * TODO: implement this
    * Scroll to current time on today in case of daily, weekly view.
+   * Nothing happens in the monthly view.
    *
    * @example
    * function onNewEvents(events) {
-   *     calendar.createEvents(events);
-   *     if (calendar.getViewName() !== 'month') {
-   *         calendar.scrollToNow();
-   *     }
+   *   calendar.createEvents(events);
+   *   calendar.scrollToNow('smooth');
    * }
    */
-  scrollToNow() {
-    // console.log('scrollToNow');
+  scrollToNow(scrollBehavior: ScrollBehaviorOptions = 'auto') {
+    this.eventBus.fire('scrollToNow', scrollBehavior);
   }
 
   private calculateRenderRange(renderDate: TZDate) {
@@ -461,7 +589,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   /**
    * Move to specific date.
    *
-   * @param {DateType} date - The date to move
+   * @param {Date|string|number|TZDate} date - The date to move. it should be eligible parameter to create a `Date` instance if `date` is string or number.
    * @example
    * calendar.on('clickDayName', (event) => {
    *   if (calendar.getViewName() === 'week') {
@@ -516,7 +644,11 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    * Change color values of events belong to a certain calendar.
    *
    * @param {string} calendarId - The calendar ID
-   * @param {CalendarColor} colorOptions - The {@link CalendarColor} object
+   * @param {object} colorOptions - The color values of the calendar
+   *   @param {string} colorOptions.color - The text color of the events
+   *   @param {string} colorOptions.borderColor - Left border color of events
+   *   @param {string} colorOptions.backgroundColor - Background color of events
+   *   @param {string} colorOptions.dragBackgroundColor - Background color of events during dragging
    *
    * @example
    * calendar.setCalendarColor('1', {
@@ -547,7 +679,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   /**
    * Change current view type.
    *
-   * @param {ViewType} viewName - The new view name to change
+   * @param {string} viewName - The new view name to change to. Available values are 'month', 'week', 'day'.
    *
    * @example
    * // change to daily view
@@ -592,7 +724,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   /**
    * Set the theme of the calendar.
    *
-   * @param {DeepPartial<ThemeState>} theme - theme object
+   * @param {Theme} theme - The theme object to apply. For more information, see {@link https://github.com/nhn/tui.calendar/blob/main/docs/ko/apis/theme.md|Theme} in guide.
    *
    * @example
    * calendar.setTheme({
@@ -602,7 +734,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
    *     },
    *   },
    *   week: {
-   *     currentTime: {
+   *     nowIndicatorLabel: {
    *       color: '#00FF00',
    *     },
    *   },
@@ -620,9 +752,9 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * Get current {@link Options}.
+   * Get current options.
    *
-   * @returns {Options} options
+   * @returns {Options} - The current options of the instance
    */
   getOptions() {
     const { options, template } = this.getStoreState();
@@ -636,11 +768,13 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * Set options of calendar.
+   * Set options of calendar. For more information, see {@link https://github.com/nhn/tui.calendar/blob/main/docs/ko/apis/options.md|Options} in guide.
    *
-   * @param {Options} options - set {@link Options}
+   * @param {Options} options - The options to set
    */
-  setOptions({ theme, template, ...restOptions }: Options) {
+  setOptions(options: Options) {
+    // destructure options here for tui.doc to generate docs correctly
+    const { theme, template, ...restOptions } = options;
     const { setTheme } = this.theme.getState().dispatch;
     const {
       options: { setOptions },
@@ -659,7 +793,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * Get current rendered date.
+   * Get current rendered date. (see {@link TZDate} for further information)
    *
    * @returns {TZDate}
    */
@@ -670,7 +804,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * Start time of rendered date range. ({@link TZDate} for further information)
+   * Start time of rendered date range. (see {@link TZDate} for further information)
    *
    * @returns {TZDate}
    */
@@ -679,7 +813,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   }
 
   /**
-   * End time of rendered date range. ({@link TZDate} for further information)
+   * End time of rendered date range. (see {@link TZDate} for further information)
    *
    * @returns {TZDate}
    */
@@ -690,7 +824,7 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
   /**
    * Get current view name('day', 'week', 'month').
    *
-   * @returns {ViewType} current view name
+   * @returns {string} current view name ('day', 'week', 'month')
    */
   getViewName(): ViewType {
     const { currentView } = this.getStoreState('view');
@@ -709,12 +843,11 @@ export default abstract class CalendarControl implements EventBus<ExternalEventT
     setCalendars(calendars);
   }
 
+  // TODO: specify position of popup
   /**
-   * TODO: specify position of popup
-   *
    * Open event form popup with predefined form values.
    *
-   * @param {EventObject} event - The preset {@link EventObject} data
+   * @param {EventObject} event - The predefined {@link EventObject} data to show in form.
    */
   openFormPopup(event: EventObject) {
     const { showFormPopup } = this.getStoreDispatchers().popup;

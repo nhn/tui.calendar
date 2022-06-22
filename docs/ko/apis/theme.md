@@ -1,7 +1,3 @@
-import { Meta } from '@storybook/addon-docs';
-
-<Meta title="Documentation/한국어/API/테마" />
-
 # 테마
 
 ## 설명
@@ -103,11 +99,11 @@ interface WeekTheme {
   };
   timeGridLeftAdditionalTimezone: { backgroundColor: string };
   timeGridHalfHour: { borderBottom: string };
-  currentTime: { color: string };
-  currentTimeLinePast: { border: string };
-  currentTimeLineBullet: { backgroundColor: string };
-  currentTimeLineToday: { border: string };
-  currentTimeLineFuture: { border: string };
+  nowIndicatorLabel: { color: string };
+  nowIndicatorPast: { border: string };
+  nowIndicatorBullet: { backgroundColor: string };
+  nowIndicatorToday: { border: string };
+  nowIndicatorFuture: { border: string };
   pastTime: { color: string };
   futureTime: { color: string };
   weekend: { backgroundColor: string };
@@ -128,11 +124,11 @@ interface WeekTheme {
 | [timeGridLeftAdditionalTimezone](#week-timegridleftadditionaltimezone) | <code>{ backgroundColor: 'white' }</code>          | 주간/일간뷰에서 timed 이벤트 영역의 왼쪽 영역에 표시되는 서브 타임존                   |
 | [timeGridHalfHourLine](#week-timegridhalfhourline)                     | <code>{ borderBottom: '1px solid #e5e5e5' }</code> | 주간/일간뷰에서 timed 이벤트 영역에서 매 시간의 30분 선                                |
 | [timeGridHourLine](#week-timegridhourline)                             | <code>{ borderBottom: '1px solid #e5e5e5' }</code> | 주간/일간뷰에서 timed 이벤트 영역에서 매 시간의 정각 선                                |
-| [currentTime](#week-currenttime)                                       | <code>{ color: '#515ce6' }</code>                  | 현재 시간선                                                                            |
-| [currentTimeLinePast](#week-currenttimelinepast)                       | <code>{ border: '1px dashed #515ce6' }</code>      | 현재 시간선에서 지난 날짜선                                                            |
-| [currentTimeLineBullet](#week-currenttimelinebullet)                   | <code>{ backgroundColor: '#515ce6' }</code>        | 현재 시간선에서 오늘 날짜                                                              |
-| [currentTimeLineToday](#week-currenttimelinetoday)                     | <code>{ border: '1px solid #515ce6' }</code>       | 현재 시간선에서 오늘 날짜선                                                            |
-| [currentTimeLineFuture](#week-currenttimelinefuture)                   | <code>{ border: 'none' }</code>                    | 현재 시간선에서 미래 날짜선                                                            |
+| [nowIndicatorLabel](#week-nowindicatorlabel)                                       | <code>{ color: '#515ce6' }</code>                  | 현재 시간선에 표시되는 현재 시각 텍스트                                                                            |
+| [nowIndicatorPast](#week-nowindicatorpast)                       | <code>{ border: '1px dashed #515ce6' }</code>      | 현재 시간선에서 지난 날짜선                                                            |
+| [nowIndicatorBullet](#week-nowindicatorbullet)                   | <code>{ backgroundColor: '#515ce6' }</code>        | 현재 시간선에서 오늘 날짜                                                              |
+| [nowIndicatorToday](#week-nowindicatortoday)                     | <code>{ border: '1px solid #515ce6' }</code>       | 현재 시간선에서 오늘 날짜선                                                            |
+| [nowIndicatorFuture](#week-nowindicatorfuture)                   | <code>{ border: 'none' }</code>                    | 현재 시간선에서 미래 날짜선                                                            |
 | [pastTime](#week-pasttime)                                             | <code>{ color: '#bbb' }</code>                     | 주간/일간뷰에서 timed 이벤트 영역의 왼쪽 영역에 표시되는 지난 시간                     |
 | [futureTime](#week-futuretime)                                         | <code>{ color: '#333' }</code>                     | 주간/일간뷰에서 timed 이벤트 영역의 왼쪽 영역에 표시되는 미래 시간                     |
 | [weekend](#week-weekend)                                               | <code>{ backgroundColor: 'inherit' }</code>        | 주간/일간뷰에서 timed 이벤트 영역의 주말 컬럼                                          |
@@ -263,7 +259,7 @@ calendar.setTheme({
 
 | 기본값 적용                                                       | 예제 적용                                                        |
 | ----------------------------------------------------------------- | ---------------------------------------------------------------- |
-| ![common-gridSelection-default](./common-gridSelection-before.png) | ![common-gridSelection-example](./common-gridSelection-after.png) |
+| ![common-gridSelection-default](../../assets/common-gridSelection-before.png) | ![common-gridSelection-example](../../assets/common-gridSelection-after.png) |
 
 ```js
 calendar.setTheme({
@@ -284,7 +280,7 @@ calendar.setTheme({
 
 | 기본값 적용                                           | 예제 적용                                            |
 | ----------------------------------------------------- | ---------------------------------------------------- |
-| ![common-dayname-default](./common-dayName-before.png) | ![common-dayname-example](./common-dayName-after.png) |
+| ![common-dayname-default](../../assets/common-dayName-before.png) | ![common-dayname-example](../../assets/common-dayName-after.png) |
 
 ```js
 calendar.setTheme({
@@ -304,7 +300,7 @@ calendar.setTheme({
 
 | 기본값 적용                                           | 예제 적용                                            |
 | ----------------------------------------------------- | ---------------------------------------------------- |
-| ![common-holiday-default](./common-holiday-before.png) | ![common-holiday-example](./common-holiday-after.png) |
+| ![common-holiday-default](../../assets/common-holiday-before.png) | ![common-holiday-example](../../assets/common-holiday-after.png) |
 
 ```js
 calendar.setTheme({
@@ -324,7 +320,7 @@ calendar.setTheme({
 
 | 기본값 적용                                             | 예제 적용                                              |
 | ------------------------------------------------------- | ------------------------------------------------------ |
-| ![common-saturday-default](./common-saturday-before.png) | ![common-saturday-example](./common-saturday-after.png) |
+| ![common-saturday-default](../../assets/common-saturday-before.png) | ![common-saturday-example](../../assets/common-saturday-after.png) |
 
 ```js
 calendar.setTheme({
@@ -344,7 +340,7 @@ calendar.setTheme({
 
 | 기본값 적용                                       | 예제 적용                                        |
 | ------------------------------------------------- | ------------------------------------------------ |
-| ![common-today-default](./common-today-before.png) | ![common-today-example](./common-today-after.png) |
+| ![common-today-default](../../assets/common-today-before.png) | ![common-today-example](../../assets/common-today-after.png) |
 
 ```js
 calendar.setTheme({
@@ -366,7 +362,7 @@ calendar.setTheme({
 
 | 기본값 적용                                       | 예제 적용                                        |
 | ------------------------------------------------- | ------------------------------------------------ |
-| ![week-dayname-default](./week-dayName-before.png) | ![week-dayname-example](./week-dayName-after.png) |
+| ![week-dayname-default](../../assets/week-dayName-before.png) | ![week-dayname-example](../../assets/week-dayName-after.png) |
 
 ```js
 calendar.setTheme({
@@ -389,7 +385,7 @@ calendar.setTheme({
 
 | 기본값 적용                                       | 예제 적용                                        |
 | ------------------------------------------------- | ------------------------------------------------ |
-| ![week-dayGrid-default](./week-dayGrid-before.png) | ![week-dayGrid-example](./week-dayGrid-after.png) |
+| ![week-dayGrid-default](../../assets/week-dayGrid-before.png) | ![week-dayGrid-example](../../assets/week-dayGrid-after.png) |
 
 ```js
 calendar.setTheme({
@@ -410,7 +406,7 @@ calendar.setTheme({
 
 | 기본값 적용                                               | 예제 적용                                                |
 | --------------------------------------------------------- | -------------------------------------------------------- |
-| ![week-dayGridLeft-default](./week-dayGridLeft-before.png) | ![week-dayGridLeft-example](./week-dayGridLeft-after.png) |
+| ![week-dayGridLeft-default](../../assets/week-dayGridLeft-before.png) | ![week-dayGridLeft-example](../../assets/week-dayGridLeft-after.png) |
 
 ```js
 calendar.setTheme({
@@ -432,7 +428,7 @@ calendar.setTheme({
 
 | 기본값 적용                                         | 예제 적용                                          |
 | --------------------------------------------------- | -------------------------------------------------- |
-| ![week-timeGrid-default](./week-timeGrid-before.png) | ![week-timeGrid-example](./week-timeGrid-after.png) |
+| ![week-timeGrid-default](../../assets/week-timeGrid-before.png) | ![week-timeGrid-example](../../assets/week-timeGrid-after.png) |
 
 ```js
 calendar.setTheme({
@@ -452,7 +448,7 @@ calendar.setTheme({
 
 | 기본값 적용                                                 | 예제 적용                                                  |
 | ----------------------------------------------------------- | ---------------------------------------------------------- |
-| ![week-timeGridLeft-default](./week-timeGridLeft-before.png) | ![week-timeGridLeft-example](./week-timeGridLeft-after.png) |
+| ![week-timeGridLeft-default](../../assets/week-timeGridLeft-before.png) | ![week-timeGridLeft-example](../../assets/week-timeGridLeft-after.png) |
 
 ```js
 calendar.setTheme({
@@ -474,7 +470,7 @@ calendar.setTheme({
 
 | 기본값 적용                                                                                     | 예제 적용                                                                                      |
 | ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| ![week-timeGridLeftAdditionalTimezone-default](./week-timeGridLeftAdditionalTimezone-before.png) | ![week-timeGridLeftAdditionalTimezone-example](./week-timeGridLeftAdditionalTimezone-after.png) |
+| ![week-timeGridLeftAdditionalTimezone-default](../../assets/week-timeGridLeftAdditionalTimezone-before.png) | ![week-timeGridLeftAdditionalTimezone-example](../../assets/week-timeGridLeftAdditionalTimezone-after.png) |
 
 ```js
 calendar.setTheme({
@@ -494,7 +490,7 @@ calendar.setTheme({
 
 | 기본값 적용                                                                 | 예제 적용                                                                  |
 | --------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| ![week-timeGridHalfHourLine-default](./week-timeGridHalfHourLine-before.png) | ![week-timeGridHalfHourLine-example](./week-timeGridHalfHourLine-after.png) |
+| ![week-timeGridHalfHourLine-default](../../assets/week-timeGridHalfHourLine-before.png) | ![week-timeGridHalfHourLine-example](../../assets/week-timeGridHalfHourLine-after.png) |
 
 ```js
 calendar.setTheme({
@@ -512,7 +508,7 @@ calendar.setTheme({
 
 | 기본값 적용                                                         | 예제 적용                                                          |
 | ------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| ![week-timeGridHourLine-default](./week-timeGridHourLine-before.png) | ![week-timeGridHourLine-example](./week-timeGridHourLine-after.png) |
+| ![week-timeGridHourLine-default](../../assets/week-timeGridHourLine-before.png) | ![week-timeGridHourLine-example](../../assets/week-timeGridHourLine-after.png) |
 
 ```js
 calendar.setTheme({
@@ -526,18 +522,18 @@ calendar.setTheme({
 
 [⬆ 목록으로 돌아가기](#week-테마)
 
-#### week-currentTime
+#### week-nowIndicatorLabel
 
-현재 시간선을 지정한다. `color`로 글자색을 지정할 수 있으며 기본 값은 `'#515ce6'`이다.
+현재 시간선에 표시되는 현재 시각 텍스트를 지정한다. `color`로 글자색을 지정할 수 있으며 기본 값은 `'#515ce6'`이다.
 
 | 기본값 적용                                               | 예제 적용                                                |
 | --------------------------------------------------------- | -------------------------------------------------------- |
-| ![week-currentTime-default](./week-currentTime-before.png) | ![week-currentTime-example](./week-currentTime-after.png) |
+| ![week-nowIndicatorLabel-default](../../assets/week-nowIndicatorlabel-before.png) | ![week-nowIndicatorLabel-example](../../assets/week-nowIndicatorlabel-after.png) |
 
 ```js
 calendar.setTheme({
   week: {
-    currentTime: {
+    nowIndicatorLabel: {
       color: 'red',
     },
   },
@@ -546,18 +542,18 @@ calendar.setTheme({
 
 [⬆ 목록으로 돌아가기](#week-테마)
 
-#### week-currentTimeLinePast
+#### week-nowIndicatorPast
 
 현재 시간선에서 지난 날짜선을 지정한다. `border`로 선의 테두리를 지정할 수 있으며 기본 값은 `'1px dashed #515ce6'`이다.
 
 | 기본값 적용                                                               | 예제 적용                                                                |
 | ------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| ![week-currentTimeLinePast-default](./week-currentTimeLinePast-before.png) | ![week-currentTimeLinePast-example](./week-currentTimeLinePast-after.png) |
+| ![week-nowIndicatorPast-default](../../assets/week-nowIndicatorPast-before.png) | ![week-nowIndicatorPast-example](../../assets/week-nowIndicatorPast-after.png) |
 
 ```js
 calendar.setTheme({
   week: {
-    currentTimeLinePast: {
+    nowIndicatorPast: {
       border: '1px dashed red',
     },
   },
@@ -566,18 +562,18 @@ calendar.setTheme({
 
 [⬆ 목록으로 돌아가기](#week-테마)
 
-#### week-currentTimeLineBullet
+#### week-nowIndicatorBullet
 
-현재 시간선에서 오늘 날짜를 지정한다. `backgroundColor`로 배경색을 지정할 수 있으며 기본 값은 `'#515ce6'`이다.
+현재 시간선에서 오늘 날짜에 표시되는 점을 지정한다. `backgroundColor`로 배경색을 지정할 수 있으며 기본 값은 `'#515ce6'`이다.
 
 | 기본값 적용                                                                   | 예제 적용                                                                    |
 | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| ![week-currentTimeLineBullet-default](./week-currentTimeLineBullet-before.png) | ![week-currentTimeLineBullet-example](./week-currentTimeLineBullet-after.png) |
+| ![week-nowIndicatorBullet-default](../../assets/week-nowIndicatorBullet-before.png) | ![week-nowIndicatorBullet-example](../../assets/week-nowIndicatorBullet-after.png) |
 
 ```js
 calendar.setTheme({
   week: {
-    currentTimeLineBullet: {
+    nowIndicatorBullet: {
       backgroundColor: '#515ce6',
     },
   },
@@ -586,18 +582,18 @@ calendar.setTheme({
 
 [⬆ 목록으로 돌아가기](#week-테마)
 
-#### week-currentTimeLineToday
+#### week-nowIndicatorToday
 
 현재 시간선에서 오늘 날짜선을 지정한다. `border`로 선의 테두리를 지정할 수 있으며 기본 값은 `'1px solid #515ce6'`이다.
 
 | 기본값 적용                                                                 | 예제 적용                                                                  |
 | --------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| ![week-currentTimeLineToday-default](./week-currentTimeLineToday-before.png) | ![week-currentTimeLineToday-example](./week-currentTimeLineToday-after.png) |
+| ![week-nowIndicatorToday-default](../../assets/week-nowIndicatorToday-before.png) | ![week-nowIndicatorToday-example](../../assets/week-nowIndicatorToday-after.png) |
 
 ```js
 calendar.setTheme({
   week: {
-    currentTimeLineToday: {
+    nowIndicatorToday: {
       border: '1px solid red',
     },
   },
@@ -606,18 +602,18 @@ calendar.setTheme({
 
 [⬆ 목록으로 돌아가기](#week-테마)
 
-#### week-currentTimeLineFuture
+#### week-nowIndicatorFuture
 
 현재 시간선에서 미래 날짜선을 지정한다. `border`로 선의 테두리를 지정할 수 있으며 기본 값은 `'none'`이다.
 
 | 기본값 적용                                                                   | 예제 적용                                                                    |
 | ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| ![week-currentTimeLineFuture-default](./week-currentTimeLineFuture-before.png) | ![week-currentTimeLineFuture-example](./week-currentTimeLineFuture-after.png) |
+| ![week-nowIndicatorFuture-default](../../assets/week-nowIndicatorFuture-before.png) | ![week-nowIndicatorFuture-example](../../assets/week-nowIndicatorFuture-after.png) |
 
 ```js
 calendar.setTheme({
   week: {
-    currentTimeLineFuture: {
+    nowIndicatorFuture: {
       border: '1px solid red',
     },
   },
@@ -632,7 +628,7 @@ calendar.setTheme({
 
 | 기본값 적용                                         | 예제 적용                                          |
 | --------------------------------------------------- | -------------------------------------------------- |
-| ![week-pastTime-default](./week-pastTime-before.png) | ![week-pastTime-example](./week-pastTime-after.png) |
+| ![week-pastTime-default](../../assets/week-pastTime-before.png) | ![week-pastTime-example](../../assets/week-pastTime-after.png) |
 
 ```js
 calendar.setTheme({
@@ -652,7 +648,7 @@ calendar.setTheme({
 
 | 기본값 적용                                             | 예제 적용                                              |
 | ------------------------------------------------------- | ------------------------------------------------------ |
-| ![week-futureTime-default](./week-futureTime-before.png) | ![week-futureTime-example](./week-futureTime-after.png) |
+| ![week-futureTime-default](../../assets/week-futureTime-before.png) | ![week-futureTime-example](../../assets/week-futureTime-after.png) |
 
 ```js
 calendar.setTheme({
@@ -672,7 +668,7 @@ calendar.setTheme({
 
 | 기본값 적용                                       | 예제 적용                                        |
 | ------------------------------------------------- | ------------------------------------------------ |
-| ![week-weekend-default](./week-weekend-before.png) | ![week-weekend-example](./week-weekend-after.png) |
+| ![week-weekend-default](../../assets/week-weekend-before.png) | ![week-weekend-example](../../assets/week-weekend-after.png) |
 
 ```js
 calendar.setTheme({
@@ -693,7 +689,7 @@ color는 요일에 적용되고 backgroundColor는 컬럼에 적용된다.
 
 | 기본값 적용                                   | 예제 적용                                    |
 | --------------------------------------------- | -------------------------------------------- |
-| ![week-today-default](./week-today-before.png) | ![week-today-example](./week-today-after.png) |
+| ![week-today-default](../../assets/week-today-before.png) | ![week-today-example](../../assets/week-today-after.png) |
 
 ```js
 calendar.setTheme({
@@ -714,7 +710,7 @@ calendar.setTheme({
 
 | 기본값 적용                                       | 예제 적용                                        |
 | ------------------------------------------------- | ------------------------------------------------ |
-| ![week-pastDay-default](./week-pastDay-before.png) | ![week-pastDay-example](./week-pastDay-after.png) |
+| ![week-pastDay-default](../../assets/week-pastDay-before.png) | ![week-pastDay-example](../../assets/week-pastDay-after.png) |
 
 ```js
 calendar.setTheme({
@@ -734,7 +730,7 @@ calendar.setTheme({
 
 | 기본값 적용                                                 | 예제 적용                                                  |
 | ----------------------------------------------------------- | ---------------------------------------------------------- |
-| ![week-panelResizer-default](./week-panelResizer-before.png) | ![week-panelResizer-example](./week-panelResizer-after.png) |
+| ![week-panelResizer-default](../../assets/week-panelResizer-before.png) | ![week-panelResizer-example](../../assets/week-panelResizer-after.png) |
 
 ```js
 calendar.setTheme({
@@ -754,7 +750,7 @@ calendar.setTheme({
 
 | 기본값 적용                                                   | 예제 적용                                                    |
 | ------------------------------------------------------------- | ------------------------------------------------------------ |
-| ![week-gridSelection-default](./week-gridSelection-before.png) | ![week-gridSelection-example](./week-gridSelection-after.png) |
+| ![week-gridSelection-default](../../assets/week-gridSelection-before.png) | ![week-gridSelection-example](../../assets/week-gridSelection-after.png) |
 
 ```js
 calendar.setTheme({
@@ -776,7 +772,7 @@ calendar.setTheme({
 
 | 기본값 적용                                                               | 예제 적용                                                                |
 | ------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| ![month-dayExceptThisMonth-default](./month-dayExceptThisMonth-before.png) | ![month-dayExceptThisMonth-example](./month-dayExceptThisMonth-after.png) |
+| ![month-dayExceptThisMonth-default](../../assets/month-dayExceptThisMonth-before.png) | ![month-dayExceptThisMonth-example](../../assets/month-dayExceptThisMonth-after.png) |
 
 ```js
 calendar.setTheme({
@@ -796,7 +792,7 @@ calendar.setTheme({
 
 | 기본값 적용                                                                       | 예제 적용                                                                        |
 | --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| ![month-holidayExceptThisMonth-default](./month-holidayExceptThisMonth-before.png) | ![month-holidayExceptThisMonth-example](./month-holidayExceptThisMonth-after.png) |
+| ![month-holidayExceptThisMonth-default](../../assets/month-holidayExceptThisMonth-before.png) | ![month-holidayExceptThisMonth-example](../../assets/month-holidayExceptThisMonth-after.png) |
 
 ```js
 calendar.setTheme({
@@ -816,7 +812,7 @@ calendar.setTheme({
 
 | 기본값 적용                                         | 예제 적용                                          |
 | --------------------------------------------------- | -------------------------------------------------- |
-| ![month-dayname-default](./month-dayName-before.png) | ![month-dayname-example](./month-dayName-after.png) |
+| ![month-dayname-default](../../assets/month-dayName-before.png) | ![month-dayname-example](../../assets/month-dayName-after.png) |
 
 ```js
 calendar.setTheme({
@@ -839,7 +835,7 @@ calendar.setTheme({
 
 | 기본값 적용                                           | 예제 적용                                            |
 | ----------------------------------------------------- | ---------------------------------------------------- |
-| ![month-moreView-default](./month-moreView-before.png) | ![month-moreView-example](./month-moreView-after.png) |
+| ![month-moreView-default](../../assets/month-moreView-before.png) | ![month-moreView-example](../../assets/month-moreView-after.png) |
 
 ```js
 calendar.setTheme({
@@ -863,7 +859,7 @@ calendar.setTheme({
 
 | 기본값 적용                                                     | 예제 적용                                                      |
 | --------------------------------------------------------------- | -------------------------------------------------------------- |
-| ![month-moreViewTitle-default](./month-moreViewTitle-before.png) | ![month-moreViewTitle-example](./month-moreViewTitle-after.png) |
+| ![month-moreViewTitle-default](../../assets/month-moreViewTitle-before.png) | ![month-moreViewTitle-example](../../assets/month-moreViewTitle-after.png) |
 
 ```js
 calendar.setTheme({
@@ -883,7 +879,7 @@ calendar.setTheme({
 
 | 기본값 적용                                         | 예제 적용                                          |
 | --------------------------------------------------- | -------------------------------------------------- |
-| ![month-weekend-default](./month-weekend-before.png) | ![month-weekend-example](./month-weekend-after.png) |
+| ![month-weekend-default](../../assets/month-weekend-before.png) | ![month-weekend-example](../../assets/month-weekend-after.png) |
 
 ```js
 calendar.setTheme({
@@ -905,7 +901,7 @@ calendar.setTheme({
 
 | 기본값 적용                                         | 예제 적용                                          |
 | --------------------------------------------------- | -------------------------------------------------- |
-| ![month-gridCell-before](./month-gridCell-before.png) | ![month-gridCell-after](./month-gridCell-after.png) |
+| ![month-gridCell-before](../../assets/month-gridCell-before.png) | ![month-gridCell-after](../../assets/month-gridCell-after.png) |
 
 ```js
 calendar.setTheme({
