@@ -5,7 +5,6 @@
   "version": "2.0.0-beta.0",
   "main": "./dist/toastui-vue-calendar.js",
   "module": "./dist/toastui-vue-calendar.mjs",
-  "types": "./types/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/toastui-calendar.mjs",
@@ -17,8 +16,7 @@
     "./toastui-calendar.min.css": "./dist/toastui-calendar.min.css"
   },
   "files": [
-    "dist",
-    "types/index.d.ts"
+    "dist"
   ],
   "repository": {
     "type": "git",
@@ -41,8 +39,7 @@
     "allday"
   ],
   "scripts": {
-    "check-types": "tsc -p ./tsconfig.json --noEmit",
-    "lint": "npm run check-types && eslint .",
+    "lint": "eslint .",
     "dev": "vite",
     "serve": "vite build"
   },
@@ -55,8 +52,7 @@
     "eslint-plugin-vue": "^9.1.1",
     "vite": "^2.9.12",
     "vite-plugin-vue2": "^2.0.1",
-    "vue": "^2.6.14",
-    "vue-loader": "^17.0.0"
+    "vue": "^2.6.14"
   },
   "peerDependencies": {
     "vue": "^2.6.14"
