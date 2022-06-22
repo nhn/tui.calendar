@@ -148,8 +148,9 @@ export function useGridSelection<DateCollection>({
       const gridSelectionSelector = `.${cls(GRID_SELECTION_TYPE_MAP[type])}.${cls(
         'grid-selection'
       )}`;
-      const gridSelectionElements =
-        layoutContainer?.querySelectorAll(gridSelectionSelector) ?? ([] as unknown as NodeList);
+      const gridSelectionElements = Array.from(
+        layoutContainer?.querySelectorAll(gridSelectionSelector) ?? []
+      );
 
       eventBus.fire('selectDateTime', {
         start: startDate.toDate(),
