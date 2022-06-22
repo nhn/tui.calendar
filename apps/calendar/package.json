@@ -22,7 +22,8 @@
   "description": "TOAST UI Calendar",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nhn/tui.calendar.git"
+    "url": "https://github.com/nhn/tui.calendar.git",
+    "directory": "apps/calendar"
   },
   "keywords": [
     "nhn",

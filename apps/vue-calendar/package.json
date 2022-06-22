@@ -1,0 +1,64 @@
+{
+  "name": "@toast-ui/vue-calendar",
+  "description": "TOAST UI Calendar for Vue",
+  "author": "NHN Cloud FE Development Lab <dl_javascript@nhn.com>",
+  "version": "2.0.0-beta.0",
+  "main": "./dist/toastui-vue-calendar.js",
+  "module": "./dist/toastui-vue-calendar.mjs",
+  "types": "./types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/toastui-calendar.mjs",
+      "require": "./dist/toastui-calendar.js"
+    },
+    "./ie11": "./dist/toastui-calendar.ie11.js",
+    "./esm": "./dist/toastui-calendar.mjs",
+    "./toastui-calendar.css": "./dist/toastui-calendar.css",
+    "./toastui-calendar.min.css": "./dist/toastui-calendar.min.css"
+  },
+  "files": [
+    "dist",
+    "types/index.d.ts"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nhn/tui.calendar.git",
+    "directory": "apps/vue-calendar"
+  },
+  "keywords": [
+    "nhn",
+    "toast",
+    "toastui",
+    "toast-ui",
+    "calendar",
+    "fullcalendar",
+    "daily",
+    "weekly",
+    "monthly",
+    "business week",
+    "milestone",
+    "task",
+    "allday"
+  ],
+  "scripts": {
+    "check-types": "tsc -p ./tsconfig.json --noEmit",
+    "lint": "npm run check-types && eslint .",
+    "dev": "vite",
+    "serve": "vite build"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@toast-ui/calendar": "^2.0.0-alpha.3"
+  },
+  "devDependencies": {
+    "@vue/cli": "^5.0.6",
+    "eslint-plugin-vue": "^9.1.1",
+    "vite": "^2.9.12",
+    "vite-plugin-vue2": "^2.0.1",
+    "vue": "^2.6.14",
+    "vue-loader": "^17.0.0"
+  },
+  "peerDependencies": {
+    "vue": "^2.6.14"
+  }
+}
