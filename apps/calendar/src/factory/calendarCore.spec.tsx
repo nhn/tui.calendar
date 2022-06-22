@@ -1405,7 +1405,7 @@ describe('clearGridSelections', () => {
       );
     }
 
-    class MockGridSelectionCalendar extends CalendarControl {
+    class MockGridSelectionCalendar extends CalendarCore {
       protected getComponent() {
         return <MockGridSelectionComponent />;
       }
@@ -1481,7 +1481,7 @@ describe('clearGridSelections', () => {
       );
     }
 
-    class MockGridSelectionCalendar extends CalendarControl {
+    class MockGridSelectionCalendar extends CalendarCore {
       protected getComponent() {
         return <MockGridSelectionComponent />;
       }
