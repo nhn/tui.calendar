@@ -303,9 +303,9 @@ calendar.setOptions({
 });
 ```
 
-| 기본값 적용                                                                                     | 예제 적용                                                                                      |
-| ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| ![week-showNowIndicator-default](./options_week-showNowIndicator-before.png) | ![week-showNowIndicator-example](./options_week-showNowIndicator-after.png) |
+| 기본값 적용                                                                                  | 예제 적용                                                                                  |
+|-----------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|
+| ![week-showNowIndicator-default](../../assets/options_week-showNowIndicator-before.png) | ![week-showNowIndicator-example](../../assets/options_week-showNowIndicator-after.png) |
 
 
 #### week.showTimezoneCollapseButton
@@ -717,7 +717,7 @@ const calendar = new Calendar('#container', {
 
 타임존이 두 개 이상 설정되었고, 주간/일간 뷰를 표시하는 상태라면 좌측 시간 라인에 표시 라벨과 툴팁이 표시된다. 그 외에는 영향을 미치지 않는다.
 
-![타임존을 여러개 설정](./options_timezone-multiple-timezone.png)
+![타임존을 여러개 설정](../../assets/options_timezone-multiple-timezone.png)
 
 #### 사용자 정의 오프셋 계산
 
