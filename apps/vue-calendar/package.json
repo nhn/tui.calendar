@@ -41,7 +41,7 @@
   "scripts": {
     "lint": "eslint .",
     "dev": "vite",
-    "serve": "vite build"
+    "build": "vite build"
   },
   "license": "MIT",
   "dependencies": {
