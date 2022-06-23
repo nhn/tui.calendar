@@ -1,3 +1,5 @@
+import '@toast-ui/calendar/toastui-calendar.css';
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
