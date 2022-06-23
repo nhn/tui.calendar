@@ -1,5 +1,5 @@
 import Calendar from '@toast-ui/calendar';
-import Vue from 'vue/dist/vue'; // TODO: check before build
+import Vue from 'vue';
 
 export default Vue.component('ToastUICalendar', {
   props: {
