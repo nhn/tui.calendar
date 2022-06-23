@@ -44,8 +44,8 @@
     "allday"
   ],
   "scripts": {
-    "dev": "vite",
-    "serve": "vite build"
+    "develop": "vite",
+    "build": "vite build --emptyOutDir"
   },
   "dependencies": {
     "@toast-ui/calendar": "^2.0.0-alpha.4"

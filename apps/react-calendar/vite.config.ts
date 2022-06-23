@@ -7,4 +7,9 @@ export default defineConfig({
       include: '**/*.tsx',
     }),
   ],
+  root: 'src',
+  mode: 'development',
+  build: {
+    outDir: '../dist',
+  },
 });
