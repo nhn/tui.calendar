@@ -45,7 +45,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@toast-ui/calendar": "^2.0.0-alpha.3"
+    "@toast-ui/calendar": "^2.0.0-alpha.4"
   },
   "devDependencies": {
     "@vue/cli": "^5.0.6",

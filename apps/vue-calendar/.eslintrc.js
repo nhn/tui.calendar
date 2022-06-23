@@ -20,4 +20,7 @@ module.exports = {
     'plugin:vue/recommended',
   ],
   ignorePatterns: ['**/*.d.ts'],
+  rules: {
+    'vue/require-default-prop': 0,
+  },
 };

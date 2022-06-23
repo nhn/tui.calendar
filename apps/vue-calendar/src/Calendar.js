@@ -1,0 +1,105 @@
+import Calendar from '@toast-ui/calendar';
+import Vue from 'vue/dist/vue'; // TODO: check before build
+
+export default Vue.component('ToastUICalendar', {
+  props: {
+    view: String,
+    useFormPopup: Boolean,
+    useDetailPopup: Boolean,
+    isReadOnly: Boolean,
+    usageStatistics: Boolean,
+    eventFilter: Function,
+    week: Object,
+    month: Object,
+    gridSelection: [Object, Boolean],
+    timezone: Object,
+    theme: Object,
+    template: Object,
+    calendars: Array,
+    events: Array,
+  },
+  data() {
+    return {
+      calendarInstance: null,
+    };
+  },
+  watch: {
+    view(value) {
+      this.calendarInstance.changeView(value);
+    },
+    useFormPopup(value) {
+      this.calendarInstance.setOptions({ useFormPopup: value });
+    },
+    useDetailPopup(value) {
+      this.calendarInstance.setOptions({ useDetailPopup: value });
+    },
+    isReadOnly(value) {
+      this.calendarInstance.setOptions({ isReadOnly: value });
+    },
+    eventFilter(value) {
+      this.calendarInstance.setOptions({ eventFilter: value });
+    },
+    week(value) {
+      this.calendarInstance.setOptions({ week: value });
+    },
+    month(value) {
+      this.calendarInstance.setOptions({ month: value });
+    },
+    gridSelection(value) {
+      this.calendarInstance.setOptions({ gridSelection: value });
+    },
+    timezone(value) {
+      this.calendarInstance.setOptions({ timezone: value });
+    },
+    theme(value) {
+      this.calendarInstance.setTheme(value);
+    },
+    template(value) {
+      this.calendarInstance.setOptions({ template: value });
+    },
+    calendars(value) {
+      this.calendarInstance.setCalendars(value);
+    },
+    events(value) {
+      this.calendarInstance.clear();
+      this.calendarInstance.createEvents(value);
+    },
+  },
+  mounted() {
+    this.calendarInstance = new Calendar(this.$refs.container, {
+      defaultView: this.view,
+      useFormPopup: this.useFormPopup,
+      useDetailPopup: this.useDetailPopup,
+      isReadOnly: this.isReadOnly,
+      usageStatistics: this.usageStatistics,
+      eventFilter: this.eventFilter,
+      week: this.week,
+      month: this.month,
+      gridSelection: this.gridSelection,
+      timezone: this.timezone,
+      theme: this.theme,
+      template: this.template,
+      calendars: this.calendars,
+    });
+    this.addEventListeners();
+    this.calendarInstance.createEvents(this.events);
+  },
+  beforeDestroy() {
+    this.calendarInstance.off();
+    this.calendarInstance.destroy();
+  },
+  methods: {
+    addEventListeners() {
+      for (const eventName of Object.keys(this.$listeners)) {
+        this.calendarInstance.on(eventName, (...args) => this.$emit(eventName, ...args));
+      }
+    },
+    getRootElement() {
+      return this.$refs.container;
+    },
+    getInstance() {
+      return this.calendarInstance;
+    },
+  },
+  template: '<div ref="container" />',
+});
