@@ -39,6 +39,18 @@ const optionsProps: (keyof Options)[] = [
   'template',
 ];
 
+const reactCalendarEventNames: ReactCalendarEventNames[] = [
+  'onSelectDateTime',
+  'onBeforeCreateEvent',
+  'onBeforeUpdateEvent',
+  'onBeforeDeleteEvent',
+  'onAfterRenderEvent',
+  'onClickDayName',
+  'onClickEvent',
+  'onClickMoreEventsBtn',
+  'onClickTimezonesCollapseBtn',
+];
+
 export function createComponent(CalendarConstructor: ToastUICalendarConstructor) {
   return class Calendar extends React.Component<Props> {
     containerElementRef = React.createRef<HTMLDivElement>();
@@ -127,7 +139,9 @@ export function createComponent(CalendarConstructor: ToastUICalendarConstructor)
     }
 
     bindEventHandlers(externalEvents: ReactCalendarExternalEvents) {
-      const eventNames = Object.keys(externalEvents).filter((key) => /^on[A-Z][a-zA-Z]+/.test(key));
+      const eventNames = Object.keys(externalEvents).filter((key) =>
+        reactCalendarEventNames.includes(key as ReactCalendarEventNames)
+      );
 
       eventNames.forEach((key) => {
         const eventName = key[2].toLowerCase() + key.slice(3);
