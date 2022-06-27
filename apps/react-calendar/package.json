@@ -45,7 +45,9 @@
   ],
   "scripts": {
     "develop": "vite",
-    "build": "vite build"
+    "build": "rimraf dist/ && concurrently 'npm:build:*'",
+    "build:modern": "vite build",
+    "build:ie11": "vite build --mode ie11"
   },
   "dependencies": {
     "@toast-ui/calendar": "^2.0.0-alpha.4"
@@ -53,7 +55,6 @@
   "devDependencies": {
     "@types/react": "^18.0.14",
     "@types/react-dom": "^18.0.5",
-    "@vitejs/plugin-react": "^1.3.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "vite": "^2.9.12"
