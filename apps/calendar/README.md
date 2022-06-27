@@ -2,7 +2,7 @@
 
 > A JavaScript schedule calendar that is full featured. Now your service just got the customizable calendar.
 
-[![npm](https://img.shields.io/npm/v/tui-calendar.svg)](https://www.npmjs.com/package/@toast-ui/calendar)
+[![npm](https://img.shields.io/npm/v/@toast-ui/calendar.svg)](https://www.npmjs.com/package/@toast-ui/calendar)
 
 ## 🚩 Table of Contents
 
@@ -18,13 +18,13 @@
 
 ## 🚧 The new version is coming out
 
-You're now looking at the `main` branch of the latest version of TOAST UI Calendar. You can try [the alpha version](https://github.com/nhn/tui.calendar/releases/tag/v2.0.0-alpha.0) of the new calendar.
+You're now looking at the `main` branch of the latest version of TOAST UI Calendar. You can try [the alpha version](https://github.com/nhn/tui.calendar/releases/tag/v2.0.0-alpha.4) of the new calendar.
 
 ```sh
 npm install --save @toast-ui/calendar
 ```
 
-For the current(and legacy) version, Please check out the [`v1` branch](https://github.com/nhn/tui.calendar/tree/v1).
+For the previous version, Please check out the [`v1` branch](https://github.com/nhn/tui.calendar/tree/v1).
 
 ## Collect statistics on the use of open source
 
@@ -37,6 +37,11 @@ const calendar = new Calendar('#calendar', {
   usageStatistics: false
 });
 ```
+
+## 📙 Documents
+
+- [English](../../docs/README.md)
+- [Korean](../../docs/ko/README.md)
 
 ## 💾 Install
 
