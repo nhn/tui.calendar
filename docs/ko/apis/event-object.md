@@ -248,4 +248,4 @@ const calendar = new Calendar('#container', {
 
 ![style](../../assets/EventObject_style.png)
 
-`color`, `backgroundColor`, `dragBackgroundColor`, `borderColor`, `customStyle`으로 일정 요소의 스타일을 커스터마이징 할 수 있다. `color`, `backgroundColor`, `dragBackgroundColor`, `borderColor`는 [CSS color 자료형](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value)으로 지정할 수 있으며, `customStyle`은 [CSS 카멜케이스 프로퍼티를 가진 자바스크립트 객체](https://reactjs.org/docs/dom-elements.html#style)로 지정할 수 있다.
+`color`, `backgroundColor`, `dragBackgroundColor`, `borderColor`, `customStyle`으로 일정 요소의 스타일을 커스터마이징 할 수 있다. `color`, `backgroundColor`, `dragBackgroundColor`, `borderColor`는 [CSS color 자료형](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value)으로 지정할 수 있으며, `customStyle`은 [CSS 카멜케이스 프로퍼티를 가진 자바스크립트 객체](https://ko.reactjs.org/docs/dom-elements.html#style)로 지정할 수 있다.
