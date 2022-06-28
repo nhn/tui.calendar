@@ -186,14 +186,11 @@ export default abstract class CalendarCore
     // NOTE: Handling server side rendering. When container is not specified,
     this.container = isString(container) ? document?.querySelector(container) ?? null : container;
 
-    this.renderRange = {
-      start: toStartOfDay(),
-      end: toStartOfDay(),
-    };
-
     this.theme = initThemeStore(options.theme);
     this.eventBus = new EventBusImpl<ExternalEventTypes & InternalEventTypes>();
     this.store = initCalendarStore(options);
+
+    this.renderRange = this.calculateRenderRange(toStartOfDay());
 
     addAttributeHooks();
 
@@ -695,6 +692,7 @@ export default abstract class CalendarCore
     const { changeView } = this.getStoreDispatchers('view');
 
     changeView(viewName);
+    this.renderRange = this.calculateRenderRange(this.getDate());
   }
 
   /**
