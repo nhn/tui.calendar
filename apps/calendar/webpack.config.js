@@ -53,7 +53,7 @@ module.exports = ({ minify, ie11 }) => {
     mode: 'production',
     output: {
       library: {
-        name: ['toastui', 'Calendar'],
+        name: ['tui', 'Calendar'],
         type: 'umd',
         export: 'default',
       },
@@ -66,12 +66,14 @@ module.exports = ({ minify, ie11 }) => {
       'tui-date-picker': {
         commonjs: 'tui-date-picker',
         commonjs2: 'tui-date-picker',
+        import: 'tui-date-picker',
         amd: 'tui-date-picker',
         root: ['tui', 'DatePicker'],
       },
       'tui-time-picker': {
         commonjs: 'tui-time-picker',
         commonjs2: 'tui-time-picker',
+        import: 'tui-time-picker',
         amd: 'tui-time-picker',
         root: ['tui', 'TimePicker'],
       },
