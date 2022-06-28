@@ -771,7 +771,7 @@ const calendar = new Calendar('#container', {
 - 타입: `ThemeObject`
 - 기본값: `DEFAULT_THEME`
 
-캘린더의 테마를 지정한다. 캘린더 인스턴스 생성 시에만 적용할 수 있으며 `setOptions` 메서드로는 변경이 불가능하다. 대신 `setTheme` 메서드로 변경 가능하며 자세한 내용은 [테마 문서](./theme.md)에서 확인할 수 있다.
+캘린더의 테마를 지정한다. 캘린더 인스턴스 생성 시에 지정하거나, `setOptions` 메서드 혹은 `setTheme` 메서드로 변경 가능하며 자세한 내용은 [테마 문서](./theme.md)에서 확인할 수 있다.
 
 [⬆ 목록으로 돌아가기](#옵션-객체)
 

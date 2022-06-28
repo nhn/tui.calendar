@@ -51,14 +51,14 @@ calendar.setOptions({
 | [timegridDisplayPrimaryTime](#timegriddisplayprimarytime) | TemplateNow                                              | 주간/일간뷰의 primary 타임존 시간 표시                             |
 | [timegridDisplayTime](#timegriddisplaytime)               | TemplateNow                                              | 주간/일간뷰의 primary 타임존 외의 타임존 시간 표시                 |
 | [timegridNowIndicatorLabel](#timegridnowindicatorlabel)               | TemplateNow                                              | 주간/일간뷰의 현재 시간 표시                                       |
-| [popupIsAllday](#popupisallday)                           | 없음                                                             | 이벤트 생성 팝업에서 all day 텍스트                                |
-| [popupStateFree](#popupstatefree)                         | 없음                                                             | 이벤트 생성 팝업에서 이벤트 한가함(free) 상태 텍스트               |
-| [popupStateBusy](#popupstatebusy)                         | 없음                                                             | 이벤트 생성 팝업에서 이벤트 바쁨(busy) 상태 텍스트                 |
-| [titlePlaceholder](#titleplaceholder)                     | 없음                                                             | 이벤트 생성 팝업에서 이벤트명 placeholder                          |
-| [locationPlaceholder](#locationplaceholder)               | 없음                                                             | 이벤트 생성 팝업에서 이벤트 장소 placeholder                       |
-| [startDatePlaceholder](#startdateplaceholder)             | 없음                                                             | 이벤트 생성 팝업에서 이벤트 시작 날짜 placeholder                  |
-| [endDatePlaceholder](#enddateplaceholder)                 | 없음                                                             | 이벤트 생성 팝업에서 이벤트 종료 날짜 placeholder                  |
-| [popupSave](#popupsave)                                   | 없음                                                             | 이벤트 생성 팝업에서 저장 버튼 텍스트                              |
+| [popupIsAllday](#popupisallday)                           | 없음                                                             | 이벤트 폼 팝업에서 all day 텍스트                                |
+| [popupStateFree](#popupstatefree)                         | 없음                                                             | 이벤트 폼 팝업에서 이벤트 한가함(free) 상태 텍스트               |
+| [popupStateBusy](#popupstatebusy)                         | 없음                                                             | 이벤트 폼 팝업에서 이벤트 바쁨(busy) 상태 텍스트                 |
+| [titlePlaceholder](#titleplaceholder)                     | 없음                                                             | 이벤트 폼 팝업에서 이벤트명 placeholder                          |
+| [locationPlaceholder](#locationplaceholder)               | 없음                                                             | 이벤트 폼 팝업에서 이벤트 장소 placeholder                       |
+| [startDatePlaceholder](#startdateplaceholder)             | 없음                                                             | 이벤트 폼 팝업에서 이벤트 시작 날짜 placeholder                  |
+| [endDatePlaceholder](#enddateplaceholder)                 | 없음                                                             | 이벤트 폼 팝업에서 이벤트 종료 날짜 placeholder                  |
+| [popupSave](#popupsave)                                   | 없음                                                             | 이벤트 폼 팝업에서 저장 버튼 텍스트                              |
 | [popupUpdate](#popupupdate)                               | 없음                                                             | 이벤트 수정 팝업에서 수정 버튼 텍스트                              |
 | [popupEdit](#popupedit)                                   | 없음                                                             | 이벤트 상세 팝업에서 편집 버튼 텍스트                              |
 | [popupDelete](#popupdelete)                               | 없음                                                             | 이벤트 상세 팝업에서 삭제 버튼 텍스트                              |
@@ -540,13 +540,13 @@ calendar.setOptions({
 
 [⬆ 목록으로 돌아가기](#템플릿-목록)
 
-### 이벤트 생성 팝업
+### 이벤트 폼 팝업
 
 ![popup-create](../../assets/template_popupCreate.png)
 
 #### popupIsAllday
 
-이벤트 생성 팝업에서 all day 텍스트를 커스터마이징할 수 있다.
+이벤트 폼 팝업에서 all day 텍스트를 커스터마이징할 수 있다.
 
 ```js
 calendar.setOptions({
@@ -562,7 +562,7 @@ calendar.setOptions({
 
 #### popupStateFree
 
-이벤트 생성 팝업에서 이벤트의 한가함(free) 상태를 커스터마이징할 수 있다.
+이벤트 폼 팝업에서 이벤트의 한가함(free) 상태를 커스터마이징할 수 있다.
 
 ```js
 calendar.setOptions({
@@ -578,7 +578,7 @@ calendar.setOptions({
 
 #### popupStateBusy
 
-이벤트 생성 팝업에서 이벤트의 바쁨(busy) 상태를 커스터마이징할 수 있다.
+이벤트 폼 팝업에서 이벤트의 바쁨(busy) 상태를 커스터마이징할 수 있다.
 
 ```js
 calendar.setOptions({
@@ -594,7 +594,7 @@ calendar.setOptions({
 
 #### titlePlaceholder
 
-이벤트 생성 팝업에서 이벤트명의 placeholder를 커스터마이징할 수 있다. 무조건 문자열을 반환해야한다.
+이벤트 폼 팝업에서 이벤트명의 placeholder를 커스터마이징할 수 있다. 무조건 문자열을 반환해야한다.
 
 ```js
 calendar.setOptions({
@@ -610,7 +610,7 @@ calendar.setOptions({
 
 #### locationPlaceholder
 
-이벤트 생성 팝업에서 이벤트 장소의 placeholder를 커스터마이징할 수 있다. 무조건 문자열을 반환해야한다.
+이벤트 폼 팝업에서 이벤트 장소의 placeholder를 커스터마이징할 수 있다. 무조건 문자열을 반환해야한다.
 
 ```js
 calendar.setOptions({
@@ -626,7 +626,7 @@ calendar.setOptions({
 
 #### startDatePlaceholder
 
-이벤트 생성 팝업에서 이벤트의 시작 날짜 placeholder를 커스터마이징할 수 있다. 무조건 문자열을 반환해야한다.
+이벤트 폼 팝업에서 이벤트의 시작 날짜 placeholder를 커스터마이징할 수 있다. 무조건 문자열을 반환해야한다.
 
 ```js
 calendar.setOptions({
@@ -642,7 +642,7 @@ calendar.setOptions({
 
 #### endDatePlaceholder
 
-이벤트 생성 팝업에서 이벤트의 종료 날짜 placeholder를 커스터마이징할 수 있다. 무조건 문자열을 반환해야한다.
+이벤트 폼 팝업에서 이벤트의 종료 날짜 placeholder를 커스터마이징할 수 있다. 무조건 문자열을 반환해야한다.
 
 ```js
 calendar.setOptions({
@@ -658,7 +658,7 @@ calendar.setOptions({
 
 #### popupSave
 
-이벤트 생성 팝업에서 저장 버튼의 텍스트를 커스터마이징할 수 있다.
+이벤트 폼 팝업에서 저장 버튼의 텍스트를 커스터마이징할 수 있다.
 
 ```js
 calendar.setOptions({
