@@ -4,14 +4,11 @@ import path from 'path';
 
 const commonConfig = {
   plugins: [createVuePlugin()],
-  server: {
-    open: '/example/index.html',
-  },
 };
 
-export default defineConfig(({ command }) => {
+export default defineConfig(({ command, mode }) => {
+  // dev config
   if (command === 'serve') {
-    // dev config
     return {
       ...commonConfig,
       resolve: {
@@ -19,20 +16,29 @@ export default defineConfig(({ command }) => {
           vue: 'vue/dist/vue',
         },
       },
+      server: {
+        open: '/example/index.html',
+      },
     };
   }
 
   // build config
-  return {
+  const shouldMinify = mode.includes('minify');
+  const isESM = mode.includes('esm');
+  const isIE11 = mode.includes('ie11');
+
+  const filenameBase = `toastui-vue-calendar${isIE11 ? '.ie11' : ''}${shouldMinify ? '.min' : ''}`;
+
+  const buildConfig = {
     ...commonConfig,
     build: {
+      emptyOutDir: false,
       lib: {
         entry: path.resolve(__dirname, 'src/Calendar.js'),
         name: 'toastui.VueCalendar',
-        type: ['es', 'umd'],
-        fileName: (format) => `toastui-vue-calendar.${format === 'es' ? 'm' : ''}js`,
+        formats: isESM ? ['es'] : ['umd'],
+        fileName: (format) => `${filenameBase}${format === 'es' ? '.m' : '.'}js`,
       },
-      // TODO: minify, ie11
       rollupOptions: {
         external: ['vue'],
         output: {
@@ -41,6 +47,19 @@ export default defineConfig(({ command }) => {
           },
         },
       },
+      minify: shouldMinify,
     },
   };
+
+  if (isIE11) {
+    Object.assign(buildConfig, {
+      resolve: {
+        alias: {
+          '@toast-ui/calendar': '@toast-ui/calendar/ie11',
+        },
+      },
+    });
+  }
+
+  return buildConfig;
 });

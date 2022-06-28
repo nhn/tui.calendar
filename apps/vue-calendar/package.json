@@ -7,13 +7,11 @@
   "module": "./dist/toastui-vue-calendar.mjs",
   "exports": {
     ".": {
-      "import": "./dist/toastui-calendar.mjs",
-      "require": "./dist/toastui-calendar.js"
+      "import": "./dist/toastui-vue-calendar.mjs",
+      "require": "./dist/toastui-vue-calendar.js"
     },
-    "./ie11": "./dist/toastui-calendar.ie11.js",
-    "./esm": "./dist/toastui-calendar.mjs",
-    "./toastui-calendar.css": "./dist/toastui-calendar.css",
-    "./toastui-calendar.min.css": "./dist/toastui-calendar.min.css"
+    "./ie11": "./dist/toastui-vue-calendar.ie11.js",
+    "./esm": "./dist/toastui-vue-calendar.mjs"
   },
   "files": [
     "dist"
@@ -41,7 +39,10 @@
   "scripts": {
     "lint": "eslint .",
     "dev": "vite",
-    "build": "vite build"
+    "build": "rimraf dist/ && concurrently 'npm:build:*'",
+    "build:modern": "vite build && vite build --mode minify",
+    "build:ie11": "vite build --mode ie11 && vite build --mode ie11_minify",
+    "build:esm": "vite build --mode esm"
   },
   "license": "MIT",
   "dependencies": {

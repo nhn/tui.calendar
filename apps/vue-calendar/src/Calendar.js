@@ -2,6 +2,7 @@ import Calendar from '@toast-ui/calendar';
 import Vue from 'vue';
 
 export default Vue.component('ToastUICalendar', {
+  name: 'ToastUICalendar',
   props: {
     view: String,
     useFormPopup: Boolean,
@@ -90,9 +91,9 @@ export default Vue.component('ToastUICalendar', {
   },
   methods: {
     addEventListeners() {
-      for (const eventName of Object.keys(this.$listeners)) {
+      Object.keys(this.$listeners).forEach((eventName) => {
         this.calendarInstance.on(eventName, (...args) => this.$emit(eventName, ...args));
-      }
+      });
     },
     getRootElement() {
       return this.$refs.container;
