@@ -115,7 +115,7 @@ describe('eventFilter option', () => {
 
 describe('dayNames option', () => {
   // Week view has including date with day name, so let exclude them.
-  const extractDayNamesOnly = (text: string | null) => text?.replace(/\d{2}\s+/g, '');
+  const extractDayNamesOnly = (text: string | null) => text?.replace(/\d+\s+/g, '');
 
   it('should show the default day names if the day names option is not specified', () => {
     // Given
