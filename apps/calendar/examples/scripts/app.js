@@ -4,10 +4,6 @@
   var cal;
   // Constants
   var CALENDAR_CSS_PREFIX = 'toastui-calendar-';
-
-  var $ = function (selector) {
-    return document.querySelector(selector);
-  };
   var cls = function (className) {
     return CALENDAR_CSS_PREFIX + className;
   };
@@ -55,40 +51,6 @@
       default:
         throw new Error('no view type');
     }
-  }
-
-  function getFormattedDate(tzDate, viewType) {
-    var month = tzDate.getMonth() + 1;
-    var date = tzDate.getDate();
-
-    month = month < 10 ? '0' + String(month) : String(month);
-    date = date < 10 ? '0' + String(date) : String(date);
-
-    switch (viewType) {
-      case 'month':
-        return String(tzDate.getFullYear()) + '-' + month;
-      case 'week':
-      case 'day':
-        return String(tzDate.getFullYear()) + '-' + month + '-' + date;
-      default:
-        throw new Error('no view type');
-    }
-  }
-
-  function getNavbarRange(start, end, viewType) {
-    var middle;
-    if (viewType === 'month') {
-      middle = new Date(start.getTime() + (end.getTime() - start.getTime()) / 2);
-
-      return getFormattedDate(middle, viewType);
-    }
-    if (viewType === 'day') {
-      return getFormattedDate(start, viewType);
-    }
-    if (viewType === 'week') {
-      return getFormattedDate(start, viewType) + '~' + getFormattedDate(end, viewType);
-    }
-    throw new Error('no view type');
   }
 
   function displayRenderRange() {
@@ -240,12 +202,11 @@
   }
 
   function initCheckbox() {
-    var i;
-    var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    var checkboxes = $$('input[type="checkbox"]');
 
-    for (i = 0; i < checkboxes.length; i += 1) {
-      setCheckboxBackgroundColor(checkboxes[i]);
-    }
+    checkboxes.forEach(function (checkbox) {
+      setCheckboxBackgroundColor(checkbox);
+    });
   }
 
   function getEventTemplate(event, isAllday) {
