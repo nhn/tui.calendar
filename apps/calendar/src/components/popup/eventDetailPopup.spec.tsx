@@ -13,9 +13,12 @@ import { EventBusImpl } from '@src/utils/eventBus';
 import type { PropsWithChildren } from '@t/components/common';
 
 describe('event detail popup', () => {
+  const mockCalendarId = 'calendarId';
+  const mockCalendarName = 'mock calendar';
+
   const event = new EventModel({
     id: 'id',
-    calendarId: 'calendar id',
+    calendarId: mockCalendarId,
     title: 'title',
     body: 'body',
     start: new TZDate(),
@@ -48,7 +51,14 @@ describe('event detail popup', () => {
 
   beforeEach(() => {
     const eventBus = new EventBusImpl();
-    const store = initCalendarStore();
+    const store = initCalendarStore({
+      calendars: [
+        {
+          id: mockCalendarId,
+          name: mockCalendarName,
+        },
+      ],
+    });
 
     render(
       <EventBusProvider value={eventBus}>
@@ -90,11 +100,10 @@ describe('event detail popup', () => {
     expect(stateText).toBe(state);
   });
 
-  it('should display calendar id when `event.calendarId` is exists', () => {
-    const { calendarId } = event;
-    const calendarIdText = screen.getByText(calendarId).textContent;
+  it('should display calendar name when `event.calendarId` and corresponding calendar is exists', () => {
+    const calendarName = screen.getByText(mockCalendarName);
 
-    expect(calendarIdText).toBe(calendarId);
+    expect(calendarName).toBeInTheDocument();
   });
 
   it('should display body when `event.body` is exists', () => {

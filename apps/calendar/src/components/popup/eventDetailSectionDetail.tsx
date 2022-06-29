@@ -2,6 +2,7 @@ import { h } from 'preact';
 
 import { Template } from '@src/components/template';
 import { cls } from '@src/helpers/css';
+import { useCalendarById } from '@src/hooks/calendar/useCalendarById';
 import type EventModel from '@src/model/eventModel';
 
 interface Props {
@@ -21,8 +22,11 @@ const classNames = {
   calendarDotIcon: cls('icon', 'calendar-dot'),
 };
 
+// eslint-disable-next-line complexity
 export function EventDetailSectionDetail({ event }: Props) {
   const { location, recurrenceRule, attendees, state, calendarId, body } = event;
+  const calendar = useCalendarById(calendarId);
+
   return (
     <div className={classNames.sectionDetail}>
       {location && (
@@ -57,10 +61,15 @@ export function EventDetailSectionDetail({ event }: Props) {
           </span>
         </div>
       )}
-      {calendarId && (
+      {calendar && (
         <div className={classNames.detailItem}>
-          <span className={classNames.calendarDotIcon} />
-          <span className={classNames.content}>{calendarId}</span>
+          <span
+            className={classNames.calendarDotIcon}
+            style={{
+              backgroundColor: calendar?.backgroundColor ?? '',
+            }}
+          />
+          <span className={classNames.content}>{calendar?.name ?? ''}</span>
         </div>
       )}
       {body && (

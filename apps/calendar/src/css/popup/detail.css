@@ -35,6 +35,14 @@
   margin-right: 8px;
 }
 
+.detail-container .calendar-dot {
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  top: -4px;
+  margin-right: 10px;
+}
+
 .event-title {
   font-size: 15px;
   font-weight: bold;
