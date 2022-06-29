@@ -66,7 +66,7 @@ export function EventDetailPopup() {
   const popupParams = useStore(eventDetailPopupParamSelector);
   const { event, eventRect } = popupParams ?? {};
 
-  const { showFormPopup } = useDispatch('popup');
+  const { showFormPopup, hideDetailPopup } = useDispatch('popup');
 
   const calendarColor = useCalendarColor(event);
   const layoutContainer = useLayoutContainer();
@@ -139,7 +139,10 @@ export function EventDetailPopup() {
       popupArrowPointPosition,
     });
 
-  const onClickDeleteButton = () => eventBus.fire('beforeDeleteEvent', event.toEventObject());
+  const onClickDeleteButton = () => {
+    eventBus.fire('beforeDeleteEvent', event.toEventObject());
+    hideDetailPopup();
+  };
 
   return createPortal(
     <div role="dialog" className={classNames.popupContainer} ref={popupContainerRef} style={style}>
