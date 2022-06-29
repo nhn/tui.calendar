@@ -4,23 +4,25 @@
 
 [![vue2](https://img.shields.io/badge/vue-2.x-brightgreen.svg)](https://vuejs.org/)
 [![npm version](https://img.shields.io/npm/v/@toast-ui/vue-calendar.svg)](https://www.npmjs.com/package/@toast-ui/vue-calendar)
-[![license](https://img.shields.io/github/license/nhn/toast-ui.vue-calendar.svg)](https://github.com/nhn/toast-ui.vue-calendar/blob/master/LICENSE)
-[![PRs welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg)](https://github.com/nhn/toast-ui.vue-calendar/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
+[![license](https://img.shields.io/github/license/nhn/tui.calendar.svg)](https://github.com/nhn/tui.calendar/blob/master/LICENSE)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg)](https://github.com/nhn/tui.calendar/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
 [![code with hearth by NHN Cloud](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-NHN_Cloud-ff1414.svg)](https://github.com/nhn)
 
 ## 🚩 Table of Contents
 
-* [Documents](#-documents)
-* [Collect statistics on the use of open source](#collect-statistics-on-the-use-of-open-source)
-* [Install](#-install)
-    * [Using npm](#using-npm)
-* [Usage](#-usage)
-    * [Load](#load)
-    * [Implement](#implement)
-* [Pull Request Steps](#-pull-request-steps)
-* [Contributing](#-contributing)
-* [License](#-license)
-
+- [📙 Documents](#-documents)
+- [Collect statistics on the use of open source](#collect-statistics-on-the-use-of-open-source)
+- [💾 Install](#-install)
+  - [Using npm](#using-npm)
+- [📅 Usage](#-usage)
+  - [Load](#load)
+  - [Implement](#implement)
+- [🔧 Pull Request Steps](#-pull-request-steps)
+  - [Setup](#setup)
+  - [Develop](#develop)
+  - [Pull Request](#pull-request)
+- [💬 Contributing](#-contributing)
+- [📜 License](#-license)
 
 ## 📙 Documents
 
