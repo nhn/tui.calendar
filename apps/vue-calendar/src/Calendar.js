@@ -118,5 +118,5 @@ export default Vue.component('ToastUICalendar', {
       return this.calendarInstance;
     },
   },
-  template: '<div ref="container" />',
+  template: '<div ref="container" class="toastui-vue-calendar" />',
 });
