@@ -109,6 +109,7 @@ export function EventFormPopup() {
   const eventBus = useEventBus();
   const formPopupSlot = useFloatingLayer('formPopupSlot');
   const [formState, formStateDispatch] = useFormState({
+    calendarId: calendars?.[0]?.id ?? '',
     title,
     location,
     start,
@@ -184,7 +185,11 @@ export function EventFormPopup() {
       <form onSubmit={onSubmit}>
         <div className={classNames.formContainer}>
           {calendars?.length ? (
-            <CalendarSelector calendars={calendars} formStateDispatch={formStateDispatch} />
+            <CalendarSelector
+              selectedCalendarId={formState.calendarId as string}
+              calendars={calendars}
+              formStateDispatch={formStateDispatch}
+            />
           ) : (
             <PopupSection />
           )}

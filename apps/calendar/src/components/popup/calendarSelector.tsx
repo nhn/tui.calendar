@@ -11,6 +11,7 @@ import type { CalendarInfo } from '@t/options';
 
 interface Props {
   calendars: CalendarInfo[];
+  selectedCalendarId: string;
   formStateDispatch: FormStateDispatcher;
 }
 
@@ -21,9 +22,11 @@ const classNames = {
   content: cls('content', 'event-calendar'),
 };
 
-export function CalendarSelector({ calendars, formStateDispatch }: Props) {
+export function CalendarSelector({ calendars, selectedCalendarId, formStateDispatch }: Props) {
   const { isOpened, setOpened, toggleDropdown } = useDropdownState();
-  const [{ backgroundColor, name }] = calendars;
+
+  const selectedCalendar = calendars.find((calendar) => calendar.id === selectedCalendarId);
+  const { backgroundColor = '', name = '' } = selectedCalendar ?? {};
 
   const changeIndex = (index: number) =>
     formStateDispatch({ type: FormStateActionType.setCalendarId, calendarId: calendars[index].id });
