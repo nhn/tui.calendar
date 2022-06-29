@@ -155,7 +155,6 @@ describe('event form popup', () => {
 
     expect(mockFn).toBeCalled();
     expect(mockFn).toHaveBeenCalledWith({
-      calendarId: '',
       start,
       end,
       isAllday,
@@ -179,7 +178,6 @@ describe('event form popup', () => {
     fireEvent.click(screen.getByRole('button', { name: /Save/i }));
 
     expect(mockFn).toHaveBeenCalledWith({
-      calendarId: '',
       start,
       end,
       isAllday,

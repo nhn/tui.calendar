@@ -11,7 +11,7 @@ import type { CalendarInfo } from '@t/options';
 
 interface Props {
   calendars: CalendarInfo[];
-  selectedCalendarId: string;
+  selectedCalendarId?: string;
   formStateDispatch: FormStateDispatcher;
 }
 
