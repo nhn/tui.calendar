@@ -3,6 +3,10 @@
 ## Table of Contents
 
 - [Overview](#overview)
+  - [Installation](#installation)
+    - [Change the package name](#change-the-package-name)
+    - [Change the structure of CDN directories](#change-the-structure-of-cdn-directories)
+    - [Browser Compatibility Range (IE >= 11)](#browser-compatibility-range-ie--11)
 - [API migration](#api-migration)
   - [Change term from `schedule` to `event`](#change-term-from-schedule-to-event)
   - [Terms like `currentTimeIndicator` and `currentTimeLine` are changed to `nowIndicator`.](#terms-like-currenttimeindicator-and-currenttimeline-are-changed-to-nowindicator)
@@ -13,7 +17,6 @@
     - [Improved taskView and eventView types](#improved-taskview-and-eventview-types)
     - [SSR support](#ssr-support)
   - [Changes](#changes)
-    - [Browser Compatibility Range (IE >= 11)](#browser-compatibility-range-ie--11)
     - [Option changes](#option-changes)
     - [Instance methods](#instance-methods)
     - [Instance events](#instance-events)
@@ -24,6 +27,59 @@
 ## Overview
 
 TOAST UI Calendar v2.0, which uses [preact](https://preactjs.com/) to render calendars more efficiently, has been released. In v2, we have improved the bundle size and upgraded to a modern development environment, laying the groundwork for making it easy to add other features. Migration is provided as a guide for users who use Calendar to better understand this.
+
+### Installation
+
+#### Change the package name
+
+The package name has been changed from `tui-calendar` to `@toast-ui/calendar`.
+
+```sh
+$ npm install @toast-ui/calendar # latest version
+$ npm install @toast-ui/calendar@<version> # specific version since 2.0
+$ npm install tui-calendar@<version> # 1.x legacy version
+```
+
+#### Change the structure of CDN directories
+
+The directory structure and bundle file names of the CDN have been changed. In v1, the files named `tui-calendar` were in the `tui-calendar` folder like `https://uicdn.toast.com/tui-calendar/latest/tui-calendar.js`. However, from v2, the files named `toastui-calendar` are in the `calendar` folder like `https://uicdn.toast.com/calendar/latest/toastui-calendar.js`.
+
+The CDN address used in v1 is maintained, but the files inside `/tui-calendar/latest/` are the latest version of v1, not the latest version of TOAST UI Calendar. If you need to use the latest version, you should use the files in the `/calendar/latest/`.
+
+```sh
+- uicdn.toast.com/
+  ├─ tui-calendar/ # v1
+  │  ├─ latest     # the latest version of v1
+  │  │  ├─ tui-calendar.css
+  │  │  ├─ tui-calendar.js
+  │  │  ├─ tui-calendar.min.css
+  │  │  ├─ tui-calendar.min.js
+  │  ├─ v1.0.0/    # specific version of v1
+  │  │  ├─ ...
+  ├─ calendar/     # since v2
+  │  ├─ latest     # the latest version
+  │  │  ├─ toastui-calendar.css
+  │  │  ├─ toastui-calendar.js
+  │  │  ├─ toastui-calendar.min.css
+  │  │  ├─ toastui-calendar.min.js
+  │  │  ├─ toastui-calendar.ie11.js
+  │  │  ├─ toastui-calendar.ie11.min.js
+  │  │  │  toastui-calendar.mjs
+  │  ├─ v2.0.0/    # specific version since v2
+  │  │  ├─ ...
+```
+
+#### Browser Compatibility Range (IE >= 11)
+
+From v2, the supported browser range is changed to *Internet Explorer 11 or* later. In v1, Internet Explorer 9 or higher browsers were supported, but the scope of support was changed for the use of the latest development environment and [preact](https://preactjs.com/) X (version 10).
+
+TOAST UI Calendar provides a separate bundle file for legacy browsers. The basic bundle provides stable support for the latest two versions of the modern browser. However, the basic bundle does not include a polyfill for IE11, so to support IE11 or similar level of legacy browsers, you need to add the IE11 bundle that includes a polyfill as follows.
+
+```ts
+import Calendar from '@toast-ui/calendar/ie11';
+```
+
+## API migration
 
 The APIs that require migration to use v2 are as follows.
 
@@ -37,8 +93,6 @@ The migration scope is largely divided into _functional improvement_, _change_, 
 - [Improved](#feature-improvements) : APIs with improved or newly added features
 - [Changed](#changes) : API whose functionality is maintained but whose name, type, etc. have been changed
 - [Removed](#removals) : APIs removed as unnecessary or spec out
-
-## API migration
 
 In v2, the `creationGuide` representing the area when selecting a date or time has been changed to `gridSelection`. The term `vpanelSplitter` that controls each panel has been changed to `panelResizer`. Terms that are not unified like `daygrid` or `dayGridSchedule` are unified like `dayGrid` or `timeGrid`.
 
@@ -164,16 +218,6 @@ const calendar = new Calendar('#calendar', {
 (TODO implementation and documentation planned)
 
 ### Changes
-
-#### Browser Compatibility Range (IE >= 11)
-
-From v2, the supported browser range is changed to *Internet Explorer 11 or* later. In v1, Internet Explorer 9 or higher browsers were supported, but the scope of support was changed for the use of the latest development environment and [preact](https://preactjs.com/) X (version 10).
-
-TOAST UI Calendar provides a separate bundle file for legacy browsers. The basic bundle provides stable support for the latest two versions of the modern browser. However, the basic bundle does not include a polyfill for IE11, so to support IE11 or similar level of legacy browsers, you need to add the IE11 bundle that includes a polyfill as follows.
-
-```ts
-import Calendar from '@toast-ui/calendar/ie11';
-```
 
 #### Option changes
 

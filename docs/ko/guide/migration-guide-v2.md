@@ -3,6 +3,10 @@
 ## 목차
 
 - [개요](#개요)
+  - [설치](#설치)
+    - [패키지명 변경](#패키지명-변경)
+    - [CDN 디렉토리 구조 변경](#cdn-디렉토리-구조-변경)
+    - [브라우저 지원 범위(IE >= 11)](#브라우저-지원-범위ie--11)
 - [API 마이그레이션](#api-마이그레이션)
   - [`schedule`에서 `event`로 용어 변경](#schedule에서-event로-용어-변경)
   - [`currentTimeIndicator`, `currentTimeLine`에서 `nowIndicator`로 용어 변경](#currenttimeindicator-currenttimeline에서-nowindicator로-용어-변경)
@@ -13,7 +17,6 @@
     - [taskView, eventView 타입 개선](#taskview-eventview-타입-개선)
     - [SSR 지원](#ssr-지원)
   - [변경](#변경)
-    - [브라우저 지원 범위(IE >= 11)](#브라우저-지원-범위ie--11)
     - [옵션 변경사항](#옵션-변경사항)
     - [인스턴스 메서드 변경사항](#인스턴스-메서드-변경사항)
     - [인스턴스 이벤트 변경사항](#인스턴스-이벤트-변경사항)
@@ -24,6 +27,61 @@
 ## 개요
 
 [preact](https://preactjs.com/)를 이용해 더 효율적으로 캘린더를 렌더링하는 TOAST UI Calendar v2.0이 출시되었다. v2에서는 번들 크기 개선 및 모던 개발 환경으로 업그레이드하여 다른 기능들을 추가하기 용이하게 만들기 위한 기반을 마련했다. 이를 이용해 캘린더를 사용하는 사용자들의 이해를 높일 수 있도록 마이그레이션을 가이드로 제공하고 있다.
+
+### 설치
+
+
+#### 패키지명 변경
+
+패키지 명이 `tui-calendar`에서 `@toast-ui/calendar`로 변경되었다.
+
+```sh
+$ npm install @toast-ui/calendar # 최신 버전
+$ npm install @toast-ui/calendar@<version> # 2.0 이후 특정 버전
+$ npm install tui-calendar@<version> # 1.x 특정 버전
+```
+
+#### CDN 디렉토리 구조 변경
+
+CDN의 디렉토리 구조와 번들 파일 이름이 변경되었다. v1에서는 `https://uicdn.toast.com/tui-calendar/latest/tui-calendar.js`와 같이 `tui-calendar` 라는 폴더 내에 `tui-calendar`라는 파일이 존재했다. 하지만 v2에서는 `https://uicdn.toast.com/calendar/latest/toastui-calendar.js`처럼 `calendar` 폴더 내에 `toastui-calendar`라는 파일이 존재한다.
+
+v1에서 사용하던 CDN 주소는 유지되지만, `/tui-calendar/latest/` 내부 파일은 TOAST UI Calendar의 최신버전이 아니라 v1의 최신 버전이다. 최신 버전을 사용하고 싶다면 `/calendar/latest/` 내부 파일을 사용해야 한다.
+
+```sh
+- uicdn.toast.com/
+  ├─ tui-calendar/ # v1
+  │  ├─ latest     # v1의 최신 버전
+  │  │  ├─ tui-calendar.css
+  │  │  ├─ tui-calendar.js
+  │  │  ├─ tui-calendar.min.css
+  │  │  ├─ tui-calendar.min.js
+  │  ├─ v1.0.0/    # v1의 특정 버전
+  │  │  ├─ ...
+  ├─ calendar/     # v2 이상
+  │  ├─ latest     # 최신 버전
+  │  │  ├─ toastui-calendar.css
+  │  │  ├─ toastui-calendar.js
+  │  │  ├─ toastui-calendar.min.css
+  │  │  ├─ toastui-calendar.min.js
+  │  │  ├─ toastui-calendar.ie11.js
+  │  │  ├─ toastui-calendar.ie11.min.js
+  │  │  │  toastui-calendar.mjs
+  │  ├─ v2.0.0/    # v2 이상 특정 버전
+  │  │  ├─ ...
+```
+
+#### 브라우저 지원 범위(IE >= 11)
+
+v2부터 지원하는 브라우저 범위가 *인터넷 익스플로러 11 이상*으로 변경된다. v1에서는 인터넷 익스플로러 9 이상의 브라우저를 지원했지만 최신 개발 환경 및 [preact](https://preactjs.com/) X(10 버전)의 사용을 위해 지원 범위를 변경하게 되었다.
+
+기본 번들은 모던 브라우저의 최신 2개 버전을 안정적으로 지원한다. 하지만 기본 번들은 IE 11을 위한 폴리필이 포함되어있지 않으므로 IE 11 혹은 일정 수준 이하의 레거시 브라우저를 지원하기 위해서는 다음과 같이 폴리필이 포함된 IE 11 번들을 추가해야 한다.
+IE 11의 번들 크기는 기본 번들보다 30% 가량 크기 때문에 반드시 지원 범위를 잘 고려하여 불필요하게 번들 크기를 늘리지 않도록 유의해야 한다.
+
+```ts
+import Calendar from '@toast-ui/calendar/ie11';
+```
+
+## API 마이그레이션
 
 v2를 사용하기 위해 API 마이그레이션이 필요한 API는 다음과 같다.
 
@@ -37,8 +95,6 @@ v2를 사용하기 위해 API 마이그레이션이 필요한 API는 다음과 �
 - [기능 개선](#기능-개선): 기능이 개선되거나 새로 추가된 API
 - [변경](#변경): 기능은 유지되나 이름, 타입 등이 변경된 API
 - [제거](#제거): 불필요하거나 스펙 아웃으로 제거된 API
-
-## API 마이그레이션
 
 v2에서는 날짜나 시간을 선택할 때의 영역을 나타내는 `creationGuide`는 `gridSelection`으로 변경되었다. 각 패널을 조절하던 `vpanelSplitter`는 `panelResizer`로 용어가 변경되었다.
 `daygrid`나 `dayGridSchedule`처럼 통일되지 않은 용어들은 `dayGrid`나 `timeGrid`처럼 통일되었다.
@@ -165,17 +221,6 @@ const calendar = new Calendar('#calendar', {
 (TODO 구현 및 문서 작성 예정)
 
 ### 변경
-
-#### 브라우저 지원 범위(IE >= 11)
-
-v2부터 지원하는 브라우저 범위가 *인터넷 익스플로러 11 이상*으로 변경된다. v1에서는 인터넷 익스플로러 9 이상의 브라우저를 지원했지만 최신 개발 환경 및 [preact](https://preactjs.com/) X(10 버전)의 사용을 위해 지원 범위를 변경하게 되었다.
-
-기본 번들은 모던 브라우저의 최신 2개 버전을 안정적으로 지원한다. 하지만 기본 번들은 IE 11을 위한 폴리필이 포함되어있지 않으므로 IE 11 혹은 일정 수준 이하의 레거시 브라우저를 지원하기 위해서는 다음과 같이 폴리필이 포함된 IE 11 번들을 추가해야 한다.
-IE 11의 번들 크기는 기본 번들보다 30% 가량 크기 때문에 반드시 지원 범위를 잘 고려하여 불필요하게 번들 크기를 늘리지 않도록 유의해야 한다.
-
-```ts
-import Calendar from '@toast-ui/calendar/ie11';
-```
 
 #### 옵션 변경사항
 
