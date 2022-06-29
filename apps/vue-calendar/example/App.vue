@@ -19,7 +19,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import ToastUICalendar from '../src/Calendar';
 import '@toast-ui/calendar/toastui-calendar.css';
 
