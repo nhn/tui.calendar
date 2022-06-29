@@ -6,6 +6,7 @@
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-typescript": "^7.16.7",
     "@playwright/test": "^1.21.0",
+    "@rollup/plugin-commonjs": "^22.0.1",
     "@storybook/addon-docs": "^6.4.21",
     "@storybook/addons": "^6.4.21",
     "@storybook/builder-webpack5": "^6.4.21",

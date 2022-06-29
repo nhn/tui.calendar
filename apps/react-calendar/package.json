@@ -13,20 +13,18 @@
   },
   "main": "./dist/toastui-react-calendar.js",
   "module": "./dist/toastui-react-calendar.mjs",
-  "types": "./types/index.d.ts",
+  "types": "./index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/toastui-calendar.mjs",
-      "require": "./dist/toastui-calendar.js"
+      "import": "./dist/toastui-react-calendar.mjs",
+      "require": "./dist/toastui-react-calendar.js"
     },
-    "./ie11": "./dist/toastui-calendar.ie11.js",
-    "./esm": "./dist/toastui-calendar.mjs",
-    "./toastui-calendar.css": "./dist/toastui-calendar.css",
-    "./toastui-calendar.min.css": "./dist/toastui-calendar.min.css"
+    "./ie11": "./dist/toastui-react-calendar.ie11.js",
+    "./esm": "./dist/toastui-react-calendar.mjs"
   },
   "files": [
     "dist",
-    "types/index.d.ts"
+    "index.d.ts"
   ],
   "keywords": [
     "nhn",
@@ -46,8 +44,9 @@
   "scripts": {
     "develop": "vite",
     "build": "rimraf dist/ && concurrently 'npm:build:*'",
-    "build:modern": "vite build",
-    "build:ie11": "vite build --mode ie11"
+    "build:modern": "vite build && vite build --mode minify",
+    "build:ie11": "vite build --mode ie11 && vite build --mode ie11_minify",
+    "build:esm": "vite build --mode esm"
   },
   "dependencies": {
     "@toast-ui/calendar": "^2.0.0-alpha.4"

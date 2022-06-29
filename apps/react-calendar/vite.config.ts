@@ -1,7 +1,7 @@
-import legacy from '@vitejs/plugin-legacy';
+import commonjs from '@rollup/plugin-commonjs';
 import react from '@vitejs/plugin-react';
 import * as path from 'path';
-import type { UserConfigExport } from 'vite';
+import type { UserConfig, UserConfigExport } from 'vite';
 import { defineConfig } from 'vite';
 
 const commonConfig: UserConfigExport = {
@@ -10,54 +10,57 @@ const commonConfig: UserConfigExport = {
       include: '**/*.tsx',
     }),
   ],
-  server: {
-    open: '/example/index.html',
-  },
 };
 
-function getIE11Config(): UserConfigExport {
-  return {
-    build: {
-      rollupOptions: {
-        input: 'src/ie11.ts',
-        output: {
-          entryFileNames: 'toastui-react-calendar.ie11.js',
-        },
-      },
-      emptyOutDir: false,
-      minify: 'terser',
-      terserOptions: {
-        ecma: 5,
-      },
-    },
-    plugins: [
-      legacy({
-        targets: ['ie >= 11'],
-        // additionalLegacyPolyfills: ['regenerator-runtime/runtime'],
-      }),
-    ],
-  };
-}
-
 export default defineConfig(({ command, mode }) => {
-  const isIE11 = mode === 'ie11';
-
   // for dev config
   if (command === 'serve') {
-    return commonConfig;
+    return {
+      ...commonConfig,
+      server: {
+        open: '/example/index.html',
+      },
+    };
   }
 
   // for build config
-  return {
+  const shouldMinify = mode.includes('minify');
+  const isESM = mode.includes('esm');
+  const isIE11 = mode.includes('ie11');
+
+  const filenameBase = `toastui-react-calendar${isIE11 ? '.ie11' : ''}${
+    shouldMinify ? '.min' : ''
+  }`;
+
+  const buildConfig: UserConfig = {
     ...commonConfig,
     build: {
       emptyOutDir: false,
       lib: {
-        entry: path.resolve(__dirname, 'src/index.ts'),
+        entry: path.resolve(__dirname, 'src/index.tsx'),
         name: 'toastui.ReactCalendar',
-        fileName: (format) => `toastui-react-calendar.${format === 'es' ? 'm' : ''}js`,
+        // 'umd' doesn't work in IE11
+        formats: isESM || isIE11 ? ['es'] : ['umd'],
+        fileName: (format) => `${filenameBase}${format === 'es' && !isIE11 ? '.m' : '.'}js`,
       },
+      minify: shouldMinify ? 'esbuild' : false,
     },
-    ...(isIE11 ? getIE11Config() : {}),
   };
+
+  if (isIE11) {
+    Object.assign(buildConfig, {
+      resolve: {
+        alias: {
+          '@toast-ui/calendar': '@toast-ui/calendar/ie11',
+        },
+      },
+    });
+    buildConfig.plugins.push(
+      commonjs({
+        transformMixedEsModules: true,
+      })
+    );
+  }
+
+  return buildConfig;
 });
