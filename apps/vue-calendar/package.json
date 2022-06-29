@@ -14,6 +14,11 @@
     "./ie11": "./dist/toastui-vue-calendar.ie11.js",
     "./esm": "./dist/toastui-vue-calendar.mjs"
   },
+  "typesVersions": {
+    "*": {
+      "*": ["./index.d.ts"]
+    }
+  },
   "files": [
     "dist",
     "index.d.ts"
