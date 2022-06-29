@@ -222,10 +222,19 @@
         cal.clearGridSelections();
       },
       beforeUpdateEvent: function (eventInfo) {
+        var event, changes;
+
         console.log('beforeUpdateEvent', eventInfo);
+
+        event = eventInfo.event;
+        changes = eventInfo.changes;
+
+        cal.updateEvent(event.id, event.calendarId, changes);
       },
       beforeDeleteEvent: function (eventInfo) {
         console.log('beforeDeleteEvent', eventInfo);
+
+        cal.deleteEvent(eventInfo.id, eventInfo.calendarId);
       },
     });
   }
@@ -246,7 +255,6 @@
       html.push('<strong>' + start.format('HH:mm') + '</strong> ');
     }
 
-    console.log(event.attendees, event.location);
     if (event.isPrivate) {
       html.push('<span class="calendar-font-icon ic-lock-b"></span>');
       html.push(' Private');
