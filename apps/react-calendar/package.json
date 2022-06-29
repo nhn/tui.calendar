@@ -13,7 +13,7 @@
   },
   "main": "./dist/toastui-react-calendar.js",
   "module": "./dist/toastui-react-calendar.mjs",
-  "types": "./index.d.ts",
+  "types": ".types/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/toastui-react-calendar.mjs",
@@ -24,7 +24,7 @@
   },
   "files": [
     "dist",
-    "index.d.ts"
+    "types/index.d.ts"
   ],
   "keywords": [
     "nhn",
@@ -46,7 +46,8 @@
     "build": "rimraf dist/ && concurrently 'npm:build:*'",
     "build:modern": "vite build && vite build --mode minify",
     "build:ie11": "vite build --mode ie11 && vite build --mode ie11_minify",
-    "build:esm": "vite build --mode esm"
+    "build:esm": "vite build --mode esm",
+    "build:types": "rimraf types/ && tsc -p ./tsconfig.declaration.json"
   },
   "dependencies": {
     "@toast-ui/calendar": "^2.0.0-alpha.4"
