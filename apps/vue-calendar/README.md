@@ -10,7 +10,7 @@
 
 ## 🚩 Table of Contents
 
-* [Documents](#documents)
+* [Documents](#-documents)
 * [Collect statistics on the use of open source](#collect-statistics-on-the-use-of-open-source)
 * [Install](#-install)
     * [Using npm](#using-npm)
@@ -67,7 +67,7 @@ require('@toast-ui/calendar/toastui-calendar.css');
 
 ```js
 // browser environment namespace
-const Calendar = toastui.Calendar;
+const Calendar = tui.VueCalendar;
 ```
 
 ### Implement
@@ -133,7 +133,7 @@ For more information on PR's step, please see links of Contributing section.
 ## 💬 Contributing
 * [Code of Conduct](/CODE_OF_CONDUCT.md)
 * [Contributing guideline](/CONTRIBUTING.md)
-* [Commit convention](/COMMIT_MESSAGE_CONVENTION.md)
+* [Commit convention](/docs/COMMIT_MESSAGE_CONVENTION.md)
 
 ## 📜 License
 

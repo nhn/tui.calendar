@@ -1,8 +1,15 @@
 # v2 마이그레이션 가이드
 
+## 목차
+
+- [개요](#개요)
+- [변경](#변경)
+  - [`schedule`에서 `event`로 용어 변경](#schedule에서-event로-용어-변경)
+  - [`invoke` 대신 `getInstance` 메서드 사용](#invoke-대신-getinstance-메서드-사용)
+
 ## 개요
 
-TOAST UI Calendar v2.0에서 변경된 점이 Vue Wrapper에 그대로 반영되었다. TOAST UI Calendar의 변경점은 [TOAST UI Caledar v2 마이그레이션 가이드](/apps/calendar/docs/ko/guide/migration-guide-v2.md)를 참고한다.
+TOAST UI Calendar v2.0에서 변경된 점이 Vue Wrapper에 그대로 반영되었다. TOAST UI Calendar의 변경점은 [TOAST UI Caledar v2 마이그레이션 가이드](/docs/ko/guide/migration-guide-v2.md)를 참고한다.
 
 해당 문서에서는 Vue Wrapper에서만 변경된 점을 정리한다.
 
