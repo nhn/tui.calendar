@@ -128,7 +128,7 @@ function isDraggableEvent({
 
 export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: Props) {
   const { useDetailPopup, isReadOnly: isReadOnlyCalendar } = useStore(optionsSelector);
-  const calendarColor = useCalendarColor(uiModel);
+  const calendarColor = useCalendarColor(uiModel.model);
 
   const layoutContainer = useLayoutContainer();
   const { showDetailPopup } = useDispatch('popup');

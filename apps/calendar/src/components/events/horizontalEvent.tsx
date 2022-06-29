@@ -126,7 +126,7 @@ export function HorizontalEvent({
 
   const layoutContainer = useLayoutContainer();
   const eventBus = useEventBus();
-  const calendarColor = useCalendarColor(uiModel);
+  const calendarColor = useCalendarColor(uiModel.model);
 
   const [isDraggingTarget, setIsDraggingTarget] = useState<boolean>(false);
   const eventContainerRef = useRef<HTMLDivElement>(null);

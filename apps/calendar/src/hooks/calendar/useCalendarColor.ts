@@ -1,15 +1,15 @@
 import { useCallback, useMemo } from 'preact/hooks';
 
 import { useStore } from '@src/contexts/calendarStore';
-import type EventUIModel from '@src/model/eventUIModel';
+import type EventModel from '@src/model/eventModel';
 
 import type { CalendarColor } from '@t/options';
 
-export function useCalendarColor(uiModel: EventUIModel): CalendarColor {
+export function useCalendarColor(model?: EventModel): CalendarColor {
   const calendar = useStore(
     useCallback(
-      (state) => state.calendar.calendars.find((cal) => cal.id === uiModel.model.calendarId),
-      [uiModel.model.calendarId]
+      (state) => state.calendar.calendars.find((cal) => cal.id === model?.calendarId),
+      [model?.calendarId]
     )
   );
 

@@ -12,6 +12,7 @@ import { useFloatingLayer } from '@src/contexts/floatingLayer';
 import { useLayoutContainer } from '@src/contexts/layoutContainer';
 import { cls } from '@src/helpers/css';
 import { isLeftOutOfLayout, isTopOutOfLayout } from '@src/helpers/popup';
+import { useCalendarColor } from '@src/hooks/calendar/useCalendarColor';
 import { eventDetailPopupParamSelector } from '@src/selectors/popup';
 import TZDate from '@src/time/date';
 import { isNil } from '@src/utils/type';
@@ -64,8 +65,10 @@ function calculatePopupArrowPosition(eventRect: Rect, layoutRect: Rect, popupRec
 export function EventDetailPopup() {
   const popupParams = useStore(eventDetailPopupParamSelector);
   const { event, eventRect } = popupParams ?? {};
+
   const { showFormPopup } = useDispatch('popup');
 
+  const calendarColor = useCalendarColor(event);
   const layoutContainer = useLayoutContainer();
   const detailPopupSlot = useFloatingLayer('detailPopupSlot');
   const eventBus = useEventBus();
@@ -113,7 +116,6 @@ export function EventDetailPopup() {
     end = new TZDate(),
     location,
     state,
-    backgroundColor,
     isReadOnly,
     isPrivate,
   } = event;
@@ -162,7 +164,10 @@ export function EventDetailPopup() {
           </div>
         )}
       </div>
-      <div className={classNames.topLine} style={{ backgroundColor }} />
+      <div
+        className={classNames.topLine}
+        style={{ backgroundColor: calendarColor.backgroundColor }}
+      />
       <div className={popupArrowClassName}>
         <div className={classNames.border} style={{ top: arrowTop }}>
           <div className={classNames.fill} />
