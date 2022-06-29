@@ -1,5 +1,27 @@
 # 시작하기
 
+## 목차
+
+- [설치하기](#설치하기)
+  - [패키지 매니저 사용하기](#패키지-매니저-사용하기)
+    - [npm](#npm)
+  - [Contents Delivery Network (CDN) 사용하기](#contents-delivery-network-cdn-사용하기)
+  - [소스 파일 다운로드](#소스-파일-다운로드)
+- [사용하기](#사용하기)
+  - [HTML](#html)
+  - [자바스크립트](#자바스크립트)
+    - [불러오기](#불러오기)
+    - [레거시 브라우저용 번들 파일 불러오기](#레거시-브라우저용-번들-파일-불러오기)
+  - [CSS](#css)
+  - [인스턴스 만들기](#인스턴스-만들기)
+- [기본적인 사용 방법](#기본적인-사용-방법)
+  - [Google Analytics(GA)를 위한 hostname 수집 거부하기](#google-analyticsga를-위한-hostname-수집-거부하기)
+  - [일정 생성하기](#일정-생성하기)
+  - [팝업 사용하기](#팝업-사용하기)
+  - [테마 적용하기](#테마-적용하기)
+  - [템플릿 적용하기](#템플릿-적용하기)
+  - [인스턴스 이벤트 적용하기](#인스턴스-이벤트-적용하기)
+
 ## 설치하기
 
 TOAST UI 제품들은 패키지 매니저를 이용하거나, 직접 소스 코드를 다운받아 사용할 수 있다. 하지만 패키지 매니저 사용을 권장한다.
@@ -171,6 +193,20 @@ const calendar = new Calendar(container, options);
 ![image](../../assets/gettingStarted_calendar.png)
 
 ## 기본적인 사용 방법
+
+### Google Analytics(GA)를 위한 hostname 수집 거부하기
+
+[TOAST UI 캘린더](https://github.com/nhn/tui.calendar)는 [GA](https://analytics.google.com/analytics/web/)를 적용하여 오픈 소스 사용에 대한 통계를 수집하여 전 세계에서 얼마나 널리 사용되는지 확인한다.
+이는 프로젝트의 향후 진행을 결정하는 중요한 지표 역할을 한다.
+`location.hostname`(예를 들어 "ui.toast.com")을 수집하며 사용량에 대한 통계를 측정하기 위해서만 사용된다.
+
+만약 이를 거부하려면 [`usageStatistics` 옵션](/docs/ko/apis/options.md#usagestatistics)을 `false`로 설정한다.
+
+```js
+const calendar = new Calendar('#calendar', {
+  usageStatistics: false
+});
+```
 
 ### 일정 생성하기
 

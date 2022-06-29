@@ -15,6 +15,7 @@
   - [CSS](#css)
   - [Creating an instance](#creating-an-instance)
 - [Basic usage](#basic-usage)
+  - [Disable to collect hostname for Google Analytics(GA)](#disable-to-collect-hostname-for-google-analyticsga)
   - [Creating events](#creating-events)
   - [Using pop-ups](#using-pop-ups)
   - [Applying the theme](#applying-the-theme)
@@ -191,6 +192,18 @@ const calendar = new Calendar(container, options);
 ![image](../../assets/gettingStarted_calendar.png)
 
 ## Basic usage
+
+### Disable to collect hostname for Google Analytics(GA)
+
+[TOAST UI Calendar](https://github.com/nhn/tui.calendar) applies [GA](https://analytics.google.com/analytics/web/) to collect statistics on open source usage to see how widespread it is around the world. This serves as an important indicator to determine the future progress of the project. It collects `location.hostname` (e.g. "ui.toast.com") and is only used to measure usage statistics.
+
+To disable GA, set the [`usageStatistics` option](/docs/en/apis/options.md#usagestatistics) to `false`:
+
+```js
+const calendar = new Calendar('#calendar', {
+  usageStatistics: false
+});
+```
 
 ### Creating events
 

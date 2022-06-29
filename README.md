@@ -3,7 +3,7 @@
 > 🍞📅 A JavaScript schedule calendar that is full featured. Now your service just got the customizable calendar.
 [![npm](https://img.shields.io/npm/v/@toast-ui/calendar.svg)](https://www.npmjs.com/package/@toast-ui/calendar)
 [![GitHub license](https://img.shields.io/github/license/nhn/tui.calendar.svg)](https://github.com/nhn/tui.calendar/blob/main/LICENSE)
-[![PRs welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg)](https://github.com/nhn/tui.project-name/labels/help%20wanted)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg)](https://github.com/nhn/tui.calendar/labels/help%20wanted)
 [![code with hearth by NHN Cloud](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-NHN_Cloud-ff1414.svg)](https://github.com/nhn)
 
 ## 🚧 The new version is coming out
@@ -27,6 +27,16 @@ The functionality of TOAST UI Calendar is available when using the Plain JavaScr
 
 - [English](./docs/README.md)
 - [Korean](./docs/ko/README.md)
+
+## Collect statistics on the use of open source
+
+TOAST UI Calendar applies Google Analytics (GA) to collect statistics on the use of open source, in order to identify how widely TOAST UI Calendar is used throughout the world. It also serves as important index to determine the future course of projects. location.hostname (e.g. > “ui.toast.com") is to be collected and the sole purpose is nothing but to measure statistics on the usage.
+
+To disable GA, refer to the docs below.
+
+- [TOAST UI Calendar](/docs/en/guide/getting-started.md#disable-to-collect-hostname-for-google-analyticsga)
+- [TOAST UI Calendar for Vue](/apps/vue-calendar/docs/en/guide/getting-started.md#disable-to-collect-hostname-for-google-analyticsga)
+- [TOAST UI Calendar for React](/apps/react-calendar/docs/en/guide/getting-started.md#disable-to-collect-hostname-for-google-analyticsga)
 
 ## 📅 Features
 
