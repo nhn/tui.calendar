@@ -1,3 +1,4 @@
+/* eslint-disable no-undefined */
 import Calendar from '@toast-ui/calendar';
 import Vue from 'vue';
 
@@ -5,14 +6,29 @@ export default Vue.component('ToastUICalendar', {
   name: 'ToastUICalendar',
   props: {
     view: String,
-    useFormPopup: Boolean,
-    useDetailPopup: Boolean,
-    isReadOnly: Boolean,
-    usageStatistics: Boolean,
+    useFormPopup: {
+      type: Boolean,
+      default: () => undefined,
+    },
+    useDetailPopup: {
+      type: Boolean,
+      default: () => undefined,
+    },
+    isReadOnly: {
+      type: Boolean,
+      default: () => undefined,
+    },
+    usageStatistics: {
+      type: Boolean,
+      default: () => undefined,
+    },
     eventFilter: Function,
     week: Object,
     month: Object,
-    gridSelection: [Object, Boolean],
+    gridSelection: {
+      type: [Object, Boolean],
+      default: () => undefined,
+    },
     timezone: Object,
     theme: Object,
     template: Object,
