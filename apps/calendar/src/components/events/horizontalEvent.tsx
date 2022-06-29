@@ -12,8 +12,9 @@ import { useCalendarColor } from '@src/hooks/calendar/useCalendarColor';
 import { useDrag } from '@src/hooks/common/useDrag';
 import { useTransientUpdate } from '@src/hooks/common/useTransientUpdate';
 import type EventUIModel from '@src/model/eventUIModel';
-import { dndSelector, optionsSelector } from '@src/selectors';
+import { dndSelector, optionsSelector, viewSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
+import { isSameDate } from '@src/time/datetime';
 import { passConditionalProp } from '@src/utils/preact';
 import { isNil } from '@src/utils/type';
 
@@ -108,10 +109,12 @@ function getTestId({ model }: EventUIModel) {
 const classNames = {
   eventBody: cls('weekday-event'),
   eventTitle: cls('weekday-event-title'),
+  eventDot: cls('weekday-event-dot'),
   moveEvent: cls('dragging--move-event'),
   resizeEvent: cls('dragging--resize-horizontal-event'),
 };
 
+// eslint-disable-next-line complexity
 export function HorizontalEvent({
   flat = false,
   uiModel,
@@ -120,7 +123,9 @@ export function HorizontalEvent({
   resizingWidth = null,
   movingLeft = null,
 }: Props) {
+  const { currentView } = useStore(viewSelector);
   const { useDetailPopup, isReadOnly: isReadOnlyCalendar } = useStore(optionsSelector);
+
   const { setDraggingEventUIModel } = useDispatch('dnd');
   const { showDetailPopup } = useDispatch('popup');
 
@@ -200,6 +205,12 @@ export function HorizontalEvent({
     e.stopPropagation();
     onMoveStart(e);
   };
+
+  const isDotEvent =
+    !isDraggingTarget &&
+    currentView === 'month' &&
+    uiModel.model.category === 'time' &&
+    isSameDate(uiModel.model.start, uiModel.model.end);
   const shouldHideResizeHandler =
     !isDraggableEvent || flat || isDraggingTarget || uiModel.exceedRight;
   const containerStyle = getContainerStyle({
@@ -232,17 +243,27 @@ export function HorizontalEvent({
     >
       <div
         className={classNames.eventBody}
-        style={eventItemStyle}
+        style={{
+          ...eventItemStyle,
+          backgroundColor: isDotEvent ? null : eventItemStyle.backgroundColor,
+          borderLeft: isDotEvent ? null : eventItemStyle.borderLeft,
+        }}
         onMouseDown={passConditionalProp(isDraggableEvent, handleMoveStart)}
       >
+        {isDotEvent ? (
+          <span
+            className={classNames.eventDot}
+            style={{ backgroundColor: eventItemStyle.backgroundColor }}
+          />
+        ) : null}
         <span className={classNames.eventTitle}>
           <Template template={uiModel.model.category} param={uiModel.model} />
         </span>
-        {shouldHideResizeHandler ? null : (
+        {!shouldHideResizeHandler ? (
           <HorizontalEventResizeIcon
             onMouseDown={passConditionalProp(isDraggableEvent, handleResizeStart)}
           />
-        )}
+        ) : null}
       </div>
     </div>
   );
