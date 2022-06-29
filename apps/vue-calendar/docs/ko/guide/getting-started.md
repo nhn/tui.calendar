@@ -75,7 +75,6 @@ const Calendar = require('@toast-ui/vue-calendar/ie11');
 
 ### CSS
 
-
 Calendar를 사용하기 위해서는 TOAST UI 캘린더의 CSS 파일을 추가해야 한다. import, require를 통해 CSS 파일을 불러오거나, CDN을 통해 불러올 수 있다.
 
 ```js
@@ -287,7 +286,7 @@ export default {
 이는 프로젝트의 향후 진행을 결정하는 중요한 지표 역할을 한다.
 `location.hostname`(예를 들어 "ui.toast.com")을 수집하며 사용량에 대한 통계를 측정하기 위해서만 사용된다.
 
-만약 이를 거부하려면 `usageStatistics` Prop을 `false`로 설정한다.
+만약 이를 거부하려면 [`usageStatistics` prop](/docs/ko/apis/options.md#usagestatistics)을 `false`로 설정한다.
 
 ```html
 <template>
