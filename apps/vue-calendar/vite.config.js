@@ -35,7 +35,7 @@ export default defineConfig(({ command, mode }) => {
       emptyOutDir: false,
       lib: {
         entry: path.resolve(__dirname, 'src/Calendar.js'),
-        name: 'toastui.VueCalendar',
+        name: 'tui.VueCalendar',
         formats: isESM ? ['es'] : ['umd'],
         fileName: (format) => `${filenameBase}${format === 'es' ? '.m' : '.'}js`,
       },

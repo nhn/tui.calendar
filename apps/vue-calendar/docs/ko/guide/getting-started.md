@@ -53,7 +53,7 @@ const Calendar = require('@toast-ui/vue-calendar');
 
 ```js
 /* 브라우저 환경에서 namespace */
-const Calendar = toastui.VueCalendar;
+const Calendar = tui.VueCalendar;
 ```
 
 #### 레거시 브라우저용 번들 파일 불러오기

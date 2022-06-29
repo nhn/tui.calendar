@@ -52,7 +52,7 @@ const Calendar = require('@toast-ui/vue-calendar');
 
 ```js
 /* in the browser environment namespace */
-const Calendar = toastui.VueCalendar;
+const Calendar = tui.VueCalendar;
 ```
 
 #### Loading bundle files for legacy browsers
