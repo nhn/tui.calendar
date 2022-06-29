@@ -33,16 +33,16 @@
 }
 
 .icon.ic-user-b {
-  background-image: url('./image/ic-user-b.png');
+  background: url('./image/ic-user-b.png') no-repeat;
   top: -4px;
 }
 
 .icon.ic-edit {
-  background-image: url('./image/ic-edit.png');
+  background: url('./image/ic-edit.png') no-repeat;
 }
 
 .icon.ic-delete {
-  background-image: url('./image/ic-delete.png');
+  background: url('./image/ic-delete.png') no-repeat;
 }
 
 .icon.ic-arrow-solid-top {
@@ -82,16 +82,16 @@
 }
 
 .ic-location-b {
-  background: url('./image/ic-location-b.png');
+  background: url('./image/ic-location-b.png') no-repeat;
   top: -4px;
 }
 
 .ic-state-b {
-  background: url('./image/ic-state-b.png');
+  background: url('./image/ic-state-b.png') no-repeat;
   top: -4px;
 }
 
 .ic-repeat-b {
-  background: url('./image/ic-repeat-b.png');
+  background: url('./image/ic-repeat-b.png') no-repeat;
   top: -4px;
 }
