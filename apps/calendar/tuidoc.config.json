@@ -29,5 +29,11 @@
     ],
     "permalink": false
   },
+  "examples": {
+    "filePath": "examples",
+    "titles": {
+      "00-calendar-app": "Calendar App"
+    }
+  },
   "pathPrefix": "tui.calendar"
 }
