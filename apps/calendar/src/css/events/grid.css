@@ -9,8 +9,9 @@
 }
 
 .weekday-event-dot {
-  position: absolute;
+  position: relative;
   top: 8px;
+  float: left;
   display: inline-block;
   width: 8px;
   height: 8px;
@@ -18,7 +19,6 @@
 }
 
 .weekday-event-dot + .weekday-event-title {
-  padding-left: 11px;
   color: #333;
 }
 
