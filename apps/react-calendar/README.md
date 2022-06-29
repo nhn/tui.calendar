@@ -7,13 +7,15 @@
 ## 🚩 Table of Contents
 
 - [Collect statistics on the use of open source](#collect-statistics-on-the-use-of-open-source)
-- [Install](#-install)
-  - [Using npm](#using-npm)
+- [Migration to v2](#migration-to-v2)
+- [Installation](#-installation)
+  - [npm](#npm)
 - [Usage](#-usage)
-  - [Import](#Import)
+  - [Import](#import)
   - [Props](#props)
-  - [Instance Methods](#Instance-Methods)
-  - [Getting the root element](#Getting-the-root-element)
+  - [Theme](#theme)
+  - [Instance Methods](#instance-Methods)
+  - [Getting the root element](#getting-the-root-element)
   - [Event](#event)
 - [Pull Request Steps](#-pull-request-steps)
 - [Contributing](#-contributing)
@@ -33,9 +35,13 @@ Or, include `tui-code-snippet.js` (**v1.4.0** or **later**) and then immediately
 tui.usageStatistics = false;
 ```
 
-## 💾 Install
+## Migration to v2
 
-### Using npm
+The React wrapper of TOAST UI calendar is almost identical to v1, and you can follow the [v2 migration guide](https://github.com/nhn/tui.calendar/blob/main/docs/en/guide/migration-guide-v2.md) of the calendar.
+
+## 💾 Installation
+
+### npm
 
 ```sh
 npm install --save @toast-ui/react-calendar
