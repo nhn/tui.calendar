@@ -53,7 +53,7 @@ const Calendar = require('@toast-ui/react-calendar');
 
 ```js
 /* in the browser environment namespace */
-const Calendar = toastui.ReactCalendar;
+const Calendar = tui.ReactCalendar;
 ```
 
 #### Loading bundle files for legacy browsers
