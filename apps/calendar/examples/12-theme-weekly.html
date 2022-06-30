@@ -19,7 +19,7 @@
     </style>
   </head>
   <body>
-    <div class="app-container">
+    <div class="app-container code-html">
       <header class="header">
         <nav class="navbar">
           <button class="button is-rounded today">Today</button>
@@ -51,12 +51,8 @@
     <script src="../dist/toastui-calendar.js"></script>
     <script src="./scripts/mock-data.js"></script>
     <script src="./scripts/utils.js"></script>
-    <script>
+    <script type="text/javascript" class="code-js">
       var Calendar = window.tui.Calendar;
-      var todayButton = $('.today');
-      var prevButton = $('.prev');
-      var nextButton = $('.next');
-      var range = $('.navbar--range');
 
       var cal = new Calendar('#app', {
         defaultView: 'week',
@@ -112,6 +108,12 @@
           },
         },
       });
+    </script>
+    <script type="text/javascript">
+      var todayButton = $('.today');
+      var prevButton = $('.prev');
+      var nextButton = $('.next');
+      var range = $('.navbar--range');
 
       function displayEvents() {
         var events = generateRandomEvents(

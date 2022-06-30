@@ -73,15 +73,12 @@
   }
 
   function setAllCheckboxes(checked) {
-    var i;
-    var checkbox;
-    var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    var checkboxes = $$('input[type="checkbox"]');
 
-    for (i = 0; i < checkboxes.length; i += 1) {
-      checkbox = checkboxes[i];
+    checkboxes.forEach(function (checkbox) {
       checkbox.checked = checked;
       setCheckboxBackgroundColor(checkbox);
-    }
+    });
   }
 
   function setCheckboxBackgroundColor(checkbox) {
