@@ -226,11 +226,11 @@ export function MyComponent() {
 
 ### 테마
 
-theme 객체를 사용해서 자신만의 테마를 적용할 수 있다. 더 자세한 정보는 [`theme`](/docs/en/apis/theme.md) 문서를 참고한다.
+theme 객체를 사용해서 자신만의 테마를 적용할 수 있다. 더 자세한 정보는 [`theme`](/docs/ko/apis/theme.md) 문서를 참고한다.
 
 ### 인스턴스 메소드
 
-[TOAST UI Calendar의 인스턴스 메소드](/docs/en/apis/calendar.md#instance-methods)를 사용하기 위해선, 먼저 [`createRef()`](https://reactjs.org/docs/refs-and-the-dom.html#creating-refs)를 이용해서 wrapper 컴포넌트에 대한 ref를 만들어야한다.
+[TOAST UI Calendar의 인스턴스 메소드](/docs/ko/apis/calendar.md#instance-methods)를 사용하기 위해선, 먼저 [`createRef()`](https://reactjs.org/docs/refs-and-the-dom.html#creating-refs)를 이용해서 wrapper 컴포넌트에 대한 ref를 만들어야한다.
 하지만 wrapper 컴포넌트에서 인스턴스 메소드를 직접 호출할 수 없다. 대신 `getInstance()` 메서드를 호출해서 인스턴스를 얻은 후에 인스턴스 메서드를 호출할 수 있다.
 
 ### 메서드
