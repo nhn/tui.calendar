@@ -6,6 +6,11 @@ module.exports = {
     node: true,
   },
   parser: '@typescript-eslint/parser',
+  parserOptions: {
+    parser: 'typescript-eslint-parser',
+    ecmaVersion: 2018,
+    sourceType: 'module',
+  },
   plugins: [
     'unused-imports',
     'simple-import-sort',
@@ -23,11 +28,6 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:prettier/recommended',
   ],
-  parserOptions: {
-    parser: 'typescript-eslint-parser',
-    ecmaVersion: 2018,
-    sourceType: 'module',
-  },
   settings: {
     react: {
       pragma: 'h',
