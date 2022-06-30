@@ -1,4 +1,4 @@
-# TOAST UI Calendar for Vue
+# TOAST UI Calendar for Vue 2
 
 > This is Vue component wrapping [TOAST UI Calendar](/apps/calendar/).
 
