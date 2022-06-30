@@ -22,7 +22,7 @@ function getBabelConfig(isIE11) {
         {
           useBuiltIns: 'usage',
           corejs: '3.22',
-          targets: `defaults${isIE11 ? '' : ', not ie 11'}`,
+          targets: `defaults${isIE11 ? ', ie 11' : ''}`,
         },
       ],
       ['@babel/preset-typescript', { jsxPragma: 'h' }],
