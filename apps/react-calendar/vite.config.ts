@@ -60,6 +60,15 @@ export default defineConfig(({ command, mode }) => {
         transformMixedEsModules: true,
       })
     );
+    buildConfig.build.rollupOptions = {
+      external: ['react', 'react-dom'],
+      output: {
+        globals: {
+          react: 'React',
+          'react-dom': 'ReactDOM',
+        },
+      },
+    };
   }
 
   return buildConfig;
