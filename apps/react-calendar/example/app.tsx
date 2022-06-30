@@ -2,10 +2,9 @@
 import './app.css';
 
 import { TZDate } from '@toast-ui/calendar';
-import type { CalendarViewType } from '@toast-ui/calendar/types/types/components/common';
 import type { ExternalEventTypes } from '@toast-ui/calendar/types/types/eventBus';
 import type { EventObject } from '@toast-ui/calendar/types/types/events';
-import type { CalendarInfo } from '@toast-ui/calendar/types/types/options';
+import type { CalendarInfo, ViewType } from '@toast-ui/calendar/types/types/options';
 import type { ChangeEvent, MouseEvent } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -29,7 +28,7 @@ const viewModeOptions = [
   },
 ];
 
-export function App({ view }: { view: CalendarViewType }) {
+export function App({ view }: { view: ViewType }) {
   const calendarRef = useRef<typeof Calendar>(null);
   const [selectedDateRangeText, setSelectedDateRangeText] = useState('');
   const [selectedView, setSelectedView] = useState(view);
@@ -157,7 +156,7 @@ export function App({ view }: { view: CalendarViewType }) {
   };
 
   const onChangeSelect = (ev: ChangeEvent<HTMLSelectElement>) => {
-    setSelectedView(ev.target.value as CalendarViewType);
+    setSelectedView(ev.target.value as ViewType);
   };
 
   const onClickDayName: ExternalEventTypes['clickDayName'] = (res) => {
