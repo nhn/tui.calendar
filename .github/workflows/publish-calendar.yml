@@ -86,9 +86,10 @@ jobs:
           git switch gh-pages
           git config --local user.email "dohyung.ahn@nhn.com"
           git config --local user.name "Dohyung Ahn"
+          rm -rf latest
           rm -rf ${{ steps.cpv.outputs.committed-version }}
-          rm -rf 2.0.0-alpha
-          mv _latest 2.0.0-alpha
+          mv -i _latest latest
+          mv _${{ steps.cpv.outputs.committed-version }} ${{ steps.cpv.outputs.committed-version }}
           git add -A
           git commit -m ${{ steps.cpv.outputs.committed-version }}
       - name: Publish new docs
