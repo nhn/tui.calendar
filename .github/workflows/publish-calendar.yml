@@ -107,7 +107,7 @@ jobs:
     steps:
       - name: Checkout branch
         uses: actions/checkout@v3
-      - uses: ./.github/actions/install-dependencies
+      - uses: ./.github/composite-actions/install-dependencies
       - name: Upload files to CDN
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
