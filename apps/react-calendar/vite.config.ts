@@ -38,10 +38,18 @@ export default defineConfig(({ command, mode }) => {
       emptyOutDir: false,
       lib: {
         entry: path.resolve(__dirname, 'src/index.tsx'),
-        name: 'toastui.ReactCalendar',
-        // 'umd' doesn't work in IE11
-        formats: isESM || isIE11 ? ['es'] : ['umd'],
-        fileName: (format) => `${filenameBase}${format === 'es' && !isIE11 ? '.m' : '.'}js`,
+        name: 'tui.ReactCalendar',
+        formats: isESM ? ['es'] : ['umd'],
+        fileName: (format) => `${filenameBase}${format === 'es' ? '.m' : '.'}js`,
+      },
+      rollupOptions: {
+        external: ['react', 'react-dom'],
+        output: {
+          globals: {
+            react: 'React',
+            'react-dom': 'ReactDOM',
+          },
+        },
       },
       minify: shouldMinify ? 'esbuild' : false,
     },
@@ -60,15 +68,6 @@ export default defineConfig(({ command, mode }) => {
         transformMixedEsModules: true,
       })
     );
-    buildConfig.build.rollupOptions = {
-      external: ['react', 'react-dom'],
-      output: {
-        globals: {
-          react: 'React',
-          'react-dom': 'ReactDOM',
-        },
-      },
-    };
   }
 
   return buildConfig;
