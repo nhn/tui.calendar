@@ -57,7 +57,7 @@
     "build:types": "rimraf types/ && tsc -p ./tsconfig.declaration.json"
   },
   "dependencies": {
-    "@toast-ui/calendar": "^2.0.0"
+    "@toast-ui/calendar": "^2.0.1"
   },
   "devDependencies": {
     "@types/react": "^18.0.14",
