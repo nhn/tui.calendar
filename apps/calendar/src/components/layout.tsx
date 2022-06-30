@@ -9,8 +9,10 @@ import { PopupOverlay } from '@src/components/popup/popupOverlay';
 import { SeeMoreEventsPopup } from '@src/components/popup/seeMoreEventsPopup';
 import { useDispatch } from '@src/contexts/calendarStore';
 import { LayoutContainerProvider } from '@src/contexts/layoutContainer';
+import { useTheme } from '@src/contexts/themeStore';
 import { cls, toPercent } from '@src/helpers/css';
 import { useDOMNode } from '@src/hooks/common/useDOMNode';
+import { commonThemeSelector } from '@src/selectors/theme';
 import { noop } from '@src/utils/noop';
 import { isNil, isNumber, isString } from '@src/utils/type';
 
@@ -37,7 +39,7 @@ function getLayoutStylesFromInfo(width?: number, height?: number) {
   return styles;
 }
 
-// @TODO: consider `direction` and `resizeMode`
+// TODO: consider `direction` and `resizeMode`
 export function Layout({
   children,
   width,
@@ -45,6 +47,8 @@ export function Layout({
   className = '',
   autoAdjustPanels = false,
 }: PropsWithChildren<Props>) {
+  const { backgroundColor } = useTheme(commonThemeSelector);
+
   const [container, containerRefCallback] = useDOMNode<HTMLDivElement>();
   const { setLastPanelType, updateLayoutHeight } = useDispatch('weekViewLayout');
 
@@ -79,7 +83,7 @@ export function Layout({
       <div
         ref={containerRefCallback}
         className={layoutClassName}
-        style={getLayoutStylesFromInfo(width, height)}
+        style={{ ...getLayoutStylesFromInfo(width, height), backgroundColor }}
       >
         {container ? children : null}
       </div>
