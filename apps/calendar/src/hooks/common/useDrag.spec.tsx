@@ -1,7 +1,6 @@
 import { h } from 'preact';
 
 import { fireEvent, render, screen } from '@testing-library/preact';
-import userEvent from '@testing-library/user-event';
 
 import { MINIMUM_DRAG_MOUSE_DISTANCE } from '@src/constants/mouse';
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
@@ -141,7 +140,8 @@ describe('drag hook', () => {
     const button = screen.getByRole('button');
 
     // When
-    userEvent.click(button);
+    fireEvent.mouseDown(button);
+    fireEvent.mouseUp(button);
 
     // Then
     expect(listeners.onMouseUp).toBeCalled();

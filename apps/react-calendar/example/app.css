@@ -1,0 +1,56 @@
+body {
+  font-family: 'Noto Sans', sans-serif;
+  color: #333;
+  font-size: 12px;
+}
+
+/**  custom bootstrap - start */
+.btn {
+  border-radius: 25px;
+  border-color: #ddd;
+}
+
+.btn:hover {
+  border: solid 1px #bbb;
+  background-color: #fff;
+}
+
+.btn:active {
+  background-color: #f9f9f9;
+  border: solid 1px #bbb;
+  outline: none;
+}
+
+.btn:disabled {
+  background-color: #f9f9f9;
+  border: solid 1px #ddd;
+  color: #bbb;
+}
+
+.btn:focus:active,
+.btn:focus,
+.btn:active {
+  outline: none;
+}
+
+.move-today {
+  padding: 0 16px;
+  line-height: 30px;
+}
+
+.move-day {
+  padding: 8px;
+}
+
+.render-range {
+  padding-left: 12px;
+  font-size: 19px;
+  vertical-align: middle;
+}
+
+/** custom fontawesome */
+.fa {
+  width: 12px;
+  height: 12px;
+  margin-right: 2px;
+}
