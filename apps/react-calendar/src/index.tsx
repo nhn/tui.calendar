@@ -6,7 +6,7 @@ import React from 'react';
 
 import { isEqual } from './isEqual';
 
-type CalendarOptions = ConstructorParameters<typeof ToastUICalendar>[1];
+type ReactCalendarOptions = Omit<Options, 'defaultView'>;
 type CalendarView = Required<Options>['defaultView'];
 
 type CalendarExternalEventNames = Extract<keyof ExternalEventTypes, string>;
@@ -16,13 +16,13 @@ type ReactCalendarExternalEvents = {
   [events in ReactCalendarEventNames]: ReactCalendarEventHandler;
 };
 
-type Props = CalendarOptions & {
+type Props = ReactCalendarOptions & {
   height: string;
   events?: EventObject[];
   view?: CalendarView;
 } & ReactCalendarExternalEvents;
 
-const optionsProps: (keyof Options)[] = [
+const optionsProps: (keyof ReactCalendarOptions)[] = [
   'useFormPopup',
   'useDetailPopup',
   'isReadOnly',
