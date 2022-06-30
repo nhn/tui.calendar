@@ -6,7 +6,6 @@
 
 ## 🚩 Table of Contents
 
-- [Collect statistics on the use of open source](#collect-statistics-on-the-use-of-open-source)
 - [Migration to v2](#migration-to-v2)
 - [Installation](#-installation)
   - [npm](#npm)
@@ -21,23 +20,9 @@
 - [Contributing](#-contributing)
 - [License](#-license)
 
-## Collect statistics on the use of open source
-
-React Wrapper of TOAST UI Calendar applies Google Analytics (GA) to collect statistics on the use of open source, in order to identify how widely TOAST UI Calendar is used throughout the world. It also serves as important index to determine the future course of projects. location.hostname (e.g. > “ui.toast.com") is to be collected and the sole purpose is nothing but to measure statistics on the usage. To disable GA, use the `usageStatistics` props like the example below.
-
-```js
-<Calendar usageStatistics={false} />
-```
-
-Or, include `tui-code-snippet.js` (**v1.4.0** or **later**) and then immediately write the options as follows:
-
-```js
-tui.usageStatistics = false;
-```
-
 ## Migration to v2
 
-The React wrapper of TOAST UI calendar is almost identical to v1, and you can follow the [v2 migration guide](https://github.com/nhn/tui.calendar/blob/main/docs/en/guide/migration-guide-v2.md) of the calendar.
+The React wrapper of TOAST UI calendar is almost identical to v1, and you can follow the [v2 migration guide](/docs/en/guide/migration-guide-v2.md) of the calendar.
 
 ## 💾 Installation
 
@@ -77,7 +62,7 @@ require('tui-time-picker/dist/tui-time-picker.css');
 
 ### Props
 
-We are supported in the form of props for [Options of TOAST UI Calendar](https://nhn.github.io/tui.calendar/latest/Options). Each name of props is same options of Toast UI Calendar except `view` is for `defaultView` of option. Additionally, you can set events using `events` of prop.
+This wrapper component support props in the form of [Options of TOAST UI Calendar](/docs/en/apis/options.md). Each name of props matches the same option property of Toast UI Calendar except `view` is for `defaultView` of option. Additionally, you can set events using the `events` of prop.
 
 ```js
 const myTheme = {
@@ -91,18 +76,20 @@ const MyComponent = () => (
       {
         id: '0',
         name: 'Private',
-        bgColor: '#9e5fff',
+        backgroundColor: '#9e5fff',
         borderColor: '#9e5fff',
       },
       {
         id: '1',
         name: 'Company',
-        bgColor: '#00a9ff',
+        backgroundColor: '#00a9ff',
         borderColor: '#00a9ff',
       },
     ]}
-    disableDblClick={true}
-    disableClick={false}
+    gridSelection={{
+      enableDblClick: true,
+      enableClick: false,
+    }}
     isReadOnly={false}
     month={{ startDayOfWeek: 0 }}
     events={[
@@ -187,7 +174,7 @@ const MyComponent = () => (
 
 #### Theme
 
-You can write your own theme object. [Link - See "theme"](https://github.com/nhn/tui.calendar/blob/main/docs/en/apis/theme.md)
+You can write your own theme object. [See "theme"](/docs/en/apis/theme.md)
 
 #### ⚠️ Note for passing props
 
@@ -198,13 +185,13 @@ const calendars = [
   {
     id: '0',
     name: 'Private',
-    bgColor: '#9e5fff',
+    backgroundColor: '#9e5fff',
     borderColor: '#9e5fff',
   },
   {
     id: '1',
     name: 'Company',
-    bgColor: '#00a9ff',
+    backgroundColor: '#00a9ff',
     borderColor: '#00a9ff',
   },
 ];
