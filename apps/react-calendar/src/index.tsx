@@ -58,11 +58,11 @@ export default class ToastUIReactCalendar extends React.Component<Props> {
   };
 
   componentDidMount() {
-    const { height, events = [], ...options } = this.props;
+    const { height, events = [], view, ...options } = this.props;
     const container = this.containerElementRef.current;
 
     if (container) {
-      this.calendarInstance = new ToastUICalendar(container, options);
+      this.calendarInstance = new ToastUICalendar(container, { ...options, defaultView: view });
 
       container.style.height = height;
     }
