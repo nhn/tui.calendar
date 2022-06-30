@@ -20,7 +20,6 @@ import type EventUIModel from '@src/model/eventUIModel';
 import { optionsSelector } from '@src/selectors';
 import { weekDayGridLeftSelector } from '@src/selectors/theme';
 import type TZDate from '@src/time/date';
-import { passConditionalProp } from '@src/utils/preact';
 
 import type { WeekOptions } from '@t/options';
 import type { CellStyle } from '@t/time/datetime';
@@ -82,7 +81,7 @@ export function AlldayGridRow({
     [events, height]
   );
 
-  const onMouseDown = useGridSelection({
+  const startGridSelection = useGridSelection({
     type: 'dayGridWeek',
     gridPositionFinder,
     dateCollection: weekDates,
@@ -90,16 +89,22 @@ export function AlldayGridRow({
     dateGetter: alldayGridRowSelectionHelper.getDateFromCollection,
   });
 
+  const onMouseDown = (e: MouseEvent) => {
+    const target = e.target as HTMLElement;
+
+    if (isReadOnly || !target.classList.contains(cls('panel-grid'))) {
+      return;
+    }
+
+    startGridSelection(e);
+  };
+
   return (
     <Fragment>
       <div className={cls('panel-title')} style={dayGridLeftTheme}>
         <Template template={rowTitleTemplate} param="alldayTitle" />
       </div>
-      <div
-        className={cls('allday-panel')}
-        ref={setPanelContainerRef}
-        onMouseDown={passConditionalProp(!isReadOnly, onMouseDown)}
-      >
+      <div className={cls('allday-panel')} ref={setPanelContainerRef} onMouseDown={onMouseDown}>
         <div className={cls('panel-grid-wrapper')}>
           <GridCells
             uiModels={events}

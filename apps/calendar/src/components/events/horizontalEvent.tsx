@@ -198,12 +198,18 @@ export function HorizontalEvent({
 
   const handleResizeStart = (e: MouseEvent) => {
     e.stopPropagation();
-    onResizeStart(e);
+
+    if (isDraggableEvent) {
+      onResizeStart(e);
+    }
   };
 
   const handleMoveStart = (e: MouseEvent) => {
     e.stopPropagation();
-    onMoveStart(e);
+
+    if (isDraggableEvent) {
+      onMoveStart(e);
+    }
   };
 
   const isDotEvent =
@@ -248,7 +254,7 @@ export function HorizontalEvent({
           backgroundColor: isDotEvent ? null : eventItemStyle.backgroundColor,
           borderLeft: isDotEvent ? null : eventItemStyle.borderLeft,
         }}
-        onMouseDown={passConditionalProp(isDraggableEvent, handleMoveStart)}
+        onMouseDown={handleMoveStart}
       >
         {isDotEvent ? (
           <span
@@ -260,9 +266,7 @@ export function HorizontalEvent({
           <Template template={uiModel.model.category} param={uiModel.model} />
         </span>
         {!shouldHideResizeHandler ? (
-          <HorizontalEventResizeIcon
-            onMouseDown={passConditionalProp(isDraggableEvent, handleResizeStart)}
-          />
+          <HorizontalEventResizeIcon onMouseDown={handleResizeStart} />
         ) : null}
       </div>
     </div>

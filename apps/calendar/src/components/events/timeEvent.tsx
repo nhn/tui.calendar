@@ -14,7 +14,6 @@ import type EventUIModel from '@src/model/eventUIModel';
 import { dndSelector, optionsSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import type TZDate from '@src/time/date';
-import { passConditionalProp } from '@src/utils/preact';
 import { isPresent } from '@src/utils/type';
 
 import type { StyleProp } from '@t/components/common';
@@ -200,7 +199,10 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
   });
   const handleMoveStart = (e: MouseEvent) => {
     e.stopPropagation();
-    onMoveStart(e);
+
+    if (isDraggable) {
+      onMoveStart(e);
+    }
   };
 
   const onResizeStart = useDrag(
@@ -231,7 +233,7 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
       data-event-id={id}
       className={classNames.time}
       style={{ ...containerStyle, ...customStyle }}
-      onMouseDown={passConditionalProp(isDraggable, handleMoveStart)}
+      onMouseDown={handleMoveStart}
       ref={eventContainerRef}
     >
       {goingDurationHeight ? (
