@@ -28,8 +28,8 @@ TOAST UI products are registered in the [npm](https://www.npmjs.com/) package re
 #### npm
 
 ```sh
-$ npm install @toast-ui/vue-calendar # latest version
-$ npm install @toast-ui/vue-calendar@<version> # specific version
+npm install @toast-ui/vue-calendar # latest version
+npm install @toast-ui/vue-calendar@<version> # specific version
 ```
 
 ## How to use the calendar

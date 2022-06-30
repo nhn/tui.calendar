@@ -26,6 +26,7 @@
 -->
 
 ### Please check if the PR fulfills these requirements
+
 - [ ] It's the right issue type on the title
 - [ ] When resolving a specific issue, it's referenced in the PR's title (e.g. `fix #xxx[,#xxx]`, where "xxx" is the issue number)
 - [ ] The commit message follows our guidelines

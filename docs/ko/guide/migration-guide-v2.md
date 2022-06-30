@@ -3,10 +3,10 @@
 ## 목차
 
 - [개요](#개요)
-  - [설치](#설치)
-    - [패키지명 변경](#패키지명-변경)
-    - [CDN 디렉토리 구조 변경](#cdn-디렉토리-구조-변경)
-    - [브라우저 지원 범위(IE >= 11)](#브라우저-지원-범위ie--11)
+- [설치](#설치)
+  - [패키지명 변경](#패키지명-변경)
+  - [CDN 디렉토리 구조 변경](#cdn-디렉토리-구조-변경)
+- [브라우저 지원 범위(IE >= 11)](#브라우저-지원-범위ie--11)
 - [API 마이그레이션](#api-마이그레이션)
   - [`schedule`에서 `event`로 용어 변경](#schedule에서-event로-용어-변경)
   - [`currentTimeIndicator`, `currentTimeLine`에서 `nowIndicator`로 용어 변경](#currenttimeindicator-currenttimeline에서-nowindicator로-용어-변경)
@@ -28,20 +28,19 @@
 
 [preact](https://preactjs.com/)를 이용해 더 효율적으로 캘린더를 렌더링하는 TOAST UI Calendar v2.0이 출시되었다. v2에서는 번들 크기 개선 및 모던 개발 환경으로 업그레이드하여 다른 기능들을 추가하기 용이하게 만들기 위한 기반을 마련했다. 이를 이용해 캘린더를 사용하는 사용자들의 이해를 높일 수 있도록 마이그레이션을 가이드로 제공하고 있다.
 
-### 설치
+## 설치
 
-
-#### 패키지명 변경
+### 패키지명 변경
 
 패키지 명이 `tui-calendar`에서 `@toast-ui/calendar`로 변경되었다.
 
 ```sh
-$ npm install @toast-ui/calendar # 최신 버전
-$ npm install @toast-ui/calendar@<version> # 2.0 이후 특정 버전
-$ npm install tui-calendar@<version> # 1.x 특정 버전
+npm install @toast-ui/calendar # 최신 버전
+npm install @toast-ui/calendar@<version> # 2.0 이후 특정 버전
+npm install tui-calendar@<version> # 1.x 특정 버전
 ```
 
-#### CDN 디렉토리 구조 변경
+### CDN 디렉토리 구조 변경
 
 CDN의 디렉토리 구조와 번들 파일 이름이 변경되었다. v1에서는 `https://uicdn.toast.com/tui-calendar/latest/tui-calendar.js`와 같이 `tui-calendar` 라는 폴더 내에 `tui-calendar`라는 파일이 존재했다. 하지만 v2에서는 `https://uicdn.toast.com/calendar/latest/toastui-calendar.js`처럼 `calendar` 폴더 내에 `toastui-calendar`라는 파일이 존재한다.
 
@@ -70,7 +69,7 @@ v1에서 사용하던 CDN 주소는 유지되지만, `/tui-calendar/latest/` 내
   │  │  ├─ ...
 ```
 
-#### 브라우저 지원 범위(IE >= 11)
+## 브라우저 지원 범위(IE >= 11)
 
 v2부터 지원하는 브라우저 범위가 *인터넷 익스플로러 11 이상*으로 변경된다. v1에서는 인터넷 익스플로러 9 이상의 브라우저를 지원했지만 최신 개발 환경 및 [preact](https://preactjs.com/) X(10 버전)의 사용을 위해 지원 범위를 변경하게 되었다.
 

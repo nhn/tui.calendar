@@ -1,27 +1,36 @@
 # ![TOAST UI Calendar](https://user-images.githubusercontent.com/26706716/39230183-7f8ff186-48a0-11e8-8d9c-9699d2d0e471.png)
 
-> 🍞📅 A JavaScript schedule calendar that is full featured. Now your service just got the customizable calendar.
+> 🍞📅 A JavaScript calendar that is full featured. Now your service just got the customizable calendar.
+
 [![npm](https://img.shields.io/npm/v/@toast-ui/calendar.svg)](https://www.npmjs.com/package/@toast-ui/calendar)
 [![GitHub license](https://img.shields.io/github/license/nhn/tui.calendar.svg)](https://github.com/nhn/tui.calendar/blob/main/LICENSE)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg)](https://github.com/nhn/tui.calendar/labels/help%20wanted)
 [![code with hearth by NHN Cloud](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-NHN_Cloud-ff1414.svg)](https://github.com/nhn)
 
-## 🚧 The new version is coming out
+## 🚩 Table of Contents
 
-You're now looking at the `main` branch of the latest version of TOAST UI Calendar. You can try [the alpha version](https://github.com/nhn/tui.calendar/releases/tag/v2.0.0-alpha.4) of the new calendar.
-
-```sh
-npm install --save @toast-ui/calendar
-```
-
-For the previous version, Please check out the [`v1` branch](https://github.com/nhn/tui.calendar/tree/v1).
+- [📦 Packages](#-packages)
+- [📙 Documents](#-documents)
+- [Collect statistics on the use of open source](#collect-statistics-on-the-use-of-open-source)
+- [📅 Features](#-features)
+  - [✨ Monthly, Weekly, Daily and Various View Types](#-monthly-weekly-daily-and-various-view-types)
+  - [Easy to Use: Dragging and Resizing a Schedule](#easy-to-use-dragging-and-resizing-a-schedule)
+- [Ready to Use: Default Popups](#ready-to-use-default-popups)
+- [🎨 Other Features](#-other-features)
+- [💬 Contributing](#-contributing)
+- [🌏 Browser Support](#-browser-support)
+- [🔩 Dependencies](#-dependencies)
+- [🍞 TOAST UI Family](#-toast-ui-family)
+- [🚀 Used By](#-used-by)
+- [📜 License](#-license)
 
 ## 📦 Packages
 
 The functionality of TOAST UI Calendar is available when using the Plain JavaScript, React, Vue Component.
 
-- [@toast-ui/calendar](https://github.com/nhn/tui.calendar/tree/main/apps/calendar) - Plain JavaScript component implemented by NHN Cloud.
-- 🚧 React & Vue wrappers are coming with the public release.
+- [@toast-ui/calendar](/apps/calendar) - Plain JavaScript component implemented by [NHN Cloud](https://github.com/nhn).
+- [@toast-ui/react-calendar](/apps/react-calendar) - React wrapper component implemented by [NHN Cloud](https://github.com/nhn).
+- [@toast-ui/vue-calendar](/apps/vue-calendar) - Vue wrapper component implemented by [NHN Cloud](https://github.com/nhn).
 
 ## 📙 Documents
 
@@ -35,8 +44,8 @@ TOAST UI Calendar applies Google Analytics (GA) to collect statistics on the use
 To disable GA, refer to the docs below.
 
 - [TOAST UI Calendar](/docs/en/guide/getting-started.md#disable-to-collect-hostname-for-google-analyticsga)
-- [TOAST UI Calendar for Vue](/apps/vue-calendar/docs/en/guide/getting-started.md#disable-to-collect-hostname-for-google-analyticsga)
 - [TOAST UI Calendar for React](/apps/react-calendar/docs/en/guide/getting-started.md#disable-to-collect-hostname-for-google-analyticsga)
+- [TOAST UI Calendar for Vue](/apps/vue-calendar/docs/en/guide/getting-started.md#disable-to-collect-hostname-for-google-analyticsga)
 
 ## 📅 Features
 

@@ -116,9 +116,9 @@ Clone it to local computer. Install node modules.
 Before starting development, you should check to have any errors.
 
 ``` sh
-$ git clone https://github.com/{your-personal-repo}/[[repo name]].git
-$ cd [[repo name]]
-$ npm install
+git clone https://github.com/{your-personal-repo}/[[repo name]].git
+cd [[repo name]]
+npm install
 ```
 
 ### Develop
@@ -133,6 +133,7 @@ If it has no error, commit and then push it!
 For more information on PR's step, please see links of Contributing section.
 
 ## 💬 Contributing
+
 * [Code of Conduct](/CODE_OF_CONDUCT.md)
 * [Contributing guideline](/CONTRIBUTING.md)
 * [Commit convention](/docs/COMMIT_MESSAGE_CONVENTION.md)

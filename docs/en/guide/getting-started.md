@@ -33,9 +33,9 @@ TOAST UI products are registered in the [npm](https://www.npmjs.com/) package re
 #### npm
 
 ```sh
-$ npm install @toast-ui/calendar # latest version
-$ npm install @toast-ui/calendar@<version> # specific version since 2.0
-$ npm install tui-calendar@<version> # 1.x legacy version
+npm install @toast-ui/calendar # latest version
+npm install @toast-ui/calendar@<version> # specific version since 2.0
+npm install tui-calendar@<version> # 1.x legacy version
 ```
 
 ### Using Contents Delivery Network
@@ -248,7 +248,7 @@ TOAST UI Calendar provides an event creation popup and an event detail popup by 
 When using the event creation popup, you must import CSS files of [`tui-date-picker`](https://github.com/nhn/tui.date-picker) and [`tui-time-picker`](https://github.com/nhn/tui.time-picker) for the style to be applied properly.
 
 ```sh
-$ npm install tui-date-picker tui-time-picker
+npm install tui-date-picker tui-time-picker
 ```
 
 ```js

@@ -67,7 +67,7 @@ Specifies whether to use the event form popup provided by default in the calenda
 When using the event form popup, you must import CSS files of [`tui-date-picker`](https://github.com/nhn/tui.date-picker) and [`tui-time-picker`](https://github.com/nhn/tui.time-picker) for the style to be applied properly.
 
 ```sh
-$ npm install tui-date-picker tui-time-picker
+npm install tui-date-picker tui-time-picker
 ```
 
 ```js

@@ -1,6 +1,6 @@
 # ![TOAST UI Calendar](https://user-images.githubusercontent.com/26706716/39230183-7f8ff186-48a0-11e8-8d9c-9699d2d0e471.png)
 
-> A JavaScript schedule calendar that is full featured. Now your service just got the customizable calendar.
+> A JavaScript calendar that is full featured. Now your service just got the customizable calendar.
 
 [![npm](https://img.shields.io/npm/v/@toast-ui/calendar.svg)](https://www.npmjs.com/package/@toast-ui/calendar)
 [![license](https://img.shields.io/github/license/nhn/tui.calendar.svg)](https://github.com/nhn/tui.calendar/blob/master/LICENSE)
@@ -9,12 +9,10 @@
 
 ## 🚩 Table of Contents
 
-- [🚧 The new version is coming out](#-the-new-version-is-coming-out)
 - [📙 Documents](#-documents)
 - [Collect statistics on the use of open source](#collect-statistics-on-the-use-of-open-source)
-- [📙 Documents](#-documents-1)
 - [💾 Install](#-install)
-    - [Using npm](#using-npm)
+  - [Using npm](#using-npm)
   - [Via Contents Delivery Network (CDN)](#via-contents-delivery-network-cdn)
   - [Download Source Files](#download-source-files)
 - [📅 Usage](#-usage)
@@ -26,16 +24,6 @@
   - [Pull Request](#pull-request)
 - [💬 Contributing](#-contributing)
 - [📜 License](#-license)
-
-## 🚧 The new version is coming out
-
-You're now looking at the `main` branch of the latest version of TOAST UI Calendar. You can try [the alpha version](https://github.com/nhn/tui.calendar/releases/tag/v2.0.0-alpha.4) of the new calendar.
-
-```sh
-npm install --save @toast-ui/calendar
-```
-
-For the previous version, Please check out the [`v1` branch](https://github.com/nhn/tui.calendar/tree/v1).
 
 ## 📙 Documents
 
@@ -54,22 +42,15 @@ const calendar = new Calendar('#calendar', {
 });
 ```
 
-## 📙 Documents
-
-- [English](../../docs/README.md)
-- [Korean](../../docs/ko/README.md)
-
 ## 💾 Install
 
-#### Using npm
+### Using npm
 
-``` sh
-$ npm install --save @toast-ui/calendar@v2.0.0-alpha.4
+```sh
+npm install --save @toast-ui/calendar
 ```
 
 ### Via Contents Delivery Network (CDN)
-
-🚧 **CDN assets are not provided in alpha.** 🚧
 
 TOAST UI products are available over the CDN powered by [NHN Cloud](https://www.toast.com).
 
@@ -175,9 +156,9 @@ Clone it to local computer. Install node modules.
 Before starting development, you should check to have any errors.
 
 ``` sh
-$ git clone https://github.com/{your-personal-repo}/[[repo name]].git
-$ cd [[repo name]]
-$ npm install
+git clone https://github.com/{your-personal-repo}/[[repo name]].git
+cd [[repo name]]
+npm install
 ```
 
 ### Develop
@@ -192,6 +173,7 @@ If it has no error, commit and then push it!
 For more information on PR's step, please see links of Contributing section.
 
 ## 💬 Contributing
+
 * [Code of Conduct](/CODE_OF_CONDUCT.md)
 * [Contributing guideline](/CONTRIBUTING.md)
 * [Commit convention](/docs/COMMIT_MESSAGE_CONVENTION.md)

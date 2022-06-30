@@ -67,7 +67,7 @@ const calendar = new Calendar('#container', {
 일정 생성 팝업을 사용할 때는 [`tui-date-picker`](https://github.com/nhn/tui.date-picker)와 [`tui-time-picker`](https://github.com/nhn/tui.time-picker)의 css 파일을 가져와야 스타일이 제대로 적용된다.
 
 ```sh
-$ npm install tui-date-picker tui-time-picker
+npm install tui-date-picker tui-time-picker
 ```
 
 ```js
@@ -306,7 +306,6 @@ calendar.setOptions({
 | 기본값 적용                                                                                  | 예제 적용                                                                                  |
 |-----------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|
 | ![week-showNowIndicator-default](../../assets/options_week-showNowIndicator-before.png) | ![week-showNowIndicator-example](../../assets/options_week-showNowIndicator-after.png) |
-
 
 #### week.showTimezoneCollapseButton
 
