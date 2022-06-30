@@ -30,17 +30,20 @@ jobs:
         run: |
           tuidoc
         shell: bash
-      - name: Commit new doc files
+      - name: Switch branch
         run: |
           git switch gh-pages
+      - name: Commit docs
+        run: |
           git config --local user.email "dohyung.ahn@nhn.com"
           git config --local user.name "Dohyung Ahn"
-          rm -rf latest
-          rm -rf ${{ steps.cpv.outputs.committed-version }}
-          mv -i _latest latest
-          mv _${{ steps.cpv.outputs.committed-version }} ${{ steps.cpv.outputs.committed-version }}
+          rm -rf ../../latest
+          rm -rf ../../${{ steps.cpv.outputs.committed-version }}
+          mv -i _latest ../../latest
+          mv _${{ steps.cpv.outputs.committed-version }} ../../${{ steps.cpv.outputs.committed-version }}
           git add -A
           git commit -m ${{ steps.cpv.outputs.committed-version }}
+        working-directory: ${{ env.WORKING_DIRECTORY }}
       - name: Publish new docs
         uses: ad-m/github-push-action@master
         with:
