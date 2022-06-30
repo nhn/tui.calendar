@@ -528,7 +528,7 @@ Specifies the current time text displayed on the current time indicator. You can
 
 | Default                                               | Example                                                |
 | --------------------------------------------------------- | -------------------------------------------------------- |
-| ![week-nowIndicatorLabel-default](../../assets/week-nowIndicatorlabel-before.png) | ![week-nowIndicatorLabel-example](../../assets/week-nowIndicatorlabel-after.png) |
+| ![week-nowIndicatorLabel-default](../../assets/week-nowIndicatorLabel-before.png) | ![week-nowIndicatorLabel-example](../../assets/week-nowIndicatorLabel-after.png) |
 
 ```js
 calendar.setTheme({
