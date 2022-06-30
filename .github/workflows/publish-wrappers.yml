@@ -1,0 +1,71 @@
+name: Publish wrapper
+on: [workflow_dispatch]
+
+env:
+  WORKING_DIRECTORY: ./apps/calendar
+  REACT_WRAPPER_DIRECTORY: ./apps/react-calendar
+  VUE_WRAPPER_DIRECTORY: ./apps/vue-calendar
+
+jobs:
+  publish-wrapper:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v3
+      - name: Install root dependencies
+        uses: ./.github/composite-actions/install-dependencies
+      - name: Use Node.js 15.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: '16.x'
+          registry-url: https://registry.npmjs.org/
+      - name: Get package version
+        id: version
+        uses: PostHog/check-package-version@v2
+        with:
+          path: ${{ env.WORKING_DIRECTORY }}/
+      - name: Update version of wrappers in package.json
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: |
+          npm run update:wrapper
+      - name: Update lock file of react wrapper
+        working-directory: ${{ env.REACT_WRAPPER_DIRECTORY }}
+        run: |
+          npm install
+      - name: Build react wrapper
+        working-directory: ${{ env.REACT_WRAPPER_DIRECTORY }}
+        run: |
+          npm run build
+      - name: Update lock file of Vue wrapper
+        working-directory: ${{ env.VUE_WRAPPER_DIRECTORY }}
+        run: |
+          npm install
+      - name: Build vue wrapper
+        working-directory: ${{ env.VUE_WRAPPER_DIRECTORY }}
+        run: |
+          npm run build
+      - name: Commit files
+        run: |
+          rm -rf ./apps/react-calendar/package-lock.json
+          rm -rf ./apps/vue-calendar/package-lock.json
+          git config --local user.name "lja1018"
+          git config --local user.email "jaeeon.lim@nhn.com"
+          git add .
+          git commit -m "chore: update version of wrappers to v${{ steps.version.outputs.committed-version }}"
+      - name: Publish version update
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
+      - name: Publish react wrapper
+        working-directory: ${{ env.REACT_WRAPPER_DIRECTORY }}
+        run: |
+          npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+      - name: Publish vue wrapper
+        working-directory: ${{ env.VUE_WRAPPER_DIRECTORY }}
+        run: |
+          npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
