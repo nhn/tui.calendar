@@ -15,6 +15,7 @@
 - [💾 Install](#-install)
   - [Using npm](#using-npm)
 - [📅 Usage](#-usage)
+  - [Install Vue 2](#install-vue-2)
   - [Load](#load)
   - [Implement](#implement)
 - [🔧 Pull Request Steps](#-pull-request-steps)
@@ -50,6 +51,10 @@ npm install --save @toast-ui/vue-calendar
 ```
 
 ## 📅 Usage
+
+### Install Vue 2
+
+To use TOAST UI Calendar for Vue, [Vue 2](https://v2.vuejs.org/) should be installed. Vue 3 is not supported.
 
 ### Load
 

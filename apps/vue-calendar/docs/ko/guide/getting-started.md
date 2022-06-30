@@ -2,6 +2,7 @@
 
 ## 목차
 
+- [Vue 2 설치하기](#vue-2-설치하기)
 - [설치하기](#설치하기)
   - [패키지 매니저 사용하기](#패키지-매니저-사용하기)
     - [npm](#npm)
@@ -14,8 +15,14 @@
   - [Props](#props)
   - [이벤트](#이벤트)
   - [메서드](#메서드)
+    - [getRootElement](#getrootelement)
+    - [getInstance](#getinstance)
 - [기본적인 사용 방법](#기본적인-사용-방법)
   - [Google Analytics(GA)를 위한 hostname 수집 거부하기](#google-analyticsga를-위한-hostname-수집-거부하기)
+
+## Vue 2 설치하기
+
+TOAST UI 캘린더 Vue Wrapper를 사용하려면 [Vue 2](https://v2.vuejs.org/)를 설치해야 한다. Vue 3는 지원하지 않는다.
 
 ## 설치하기
 
