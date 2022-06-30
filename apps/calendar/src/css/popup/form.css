@@ -41,6 +41,10 @@
   padding-left: 8px;
 }
 
+.popup-date-picker .content {
+  max-width: 125px;
+}
+
 .dropdown-section {
   position: relative;
 }

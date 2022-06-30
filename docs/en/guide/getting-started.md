@@ -1,5 +1,26 @@
 # Getting Started
 
+## Table of Contents
+
+- [Installation](#installation)
+  - [Using the package manager](#using-the-package-manager)
+    - [npm](#npm)
+  - [Using Contents Delivery Network](#using-contents-delivery-network)
+  - [Downloading source files](#downloading-source-files)
+- [How to use the calendar](#how-to-use-the-calendar)
+  - [HTML](#html)
+  - [JavaScript](#javascript)
+    - [Importing modules](#importing-modules)
+    - [Loading bundle files for legacy browsers](#loading-bundle-files-for-legacy-browsers)
+  - [CSS](#css)
+  - [Creating an instance](#creating-an-instance)
+- [Basic usage](#basic-usage)
+  - [Creating events](#creating-events)
+  - [Using pop-ups](#using-pop-ups)
+  - [Applying the theme](#applying-the-theme)
+  - [Applying the template](#applying-the-template)
+  - [Applying instance events](#applying-instance-events)
+
 ## Installation
 
 TOAST UI products can be used by using the package manager or by directly downloading the source code. However, it is recommended to use a package manager.

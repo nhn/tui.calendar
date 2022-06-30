@@ -1,0 +1,73 @@
+{
+  "name": "@toast-ui/react-calendar",
+  "version": "2.0.0-beta.0",
+  "license": "MIT",
+  "description": "TOAST UI Calendar for React",
+  "author": "NHN Cloud FE Development Lab <dl_javascript@nhn.com>",
+  "homepage": "https://github.com/nhn/tui.calendar",
+  "bugs": "https://github.com/nhn/tui.calendar/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nhn/tui.calendar.git",
+    "directory": "apps/react-calendar"
+  },
+  "main": "./dist/toastui-react-calendar.js",
+  "module": "./dist/toastui-react-calendar.mjs",
+  "types": "./types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/toastui-react-calendar.mjs",
+      "require": "./dist/toastui-react-calendar.js"
+    },
+    "./ie11": "./dist/toastui-react-calendar.ie11.js",
+    "./esm": "./dist/toastui-react-calendar.mjs"
+  },
+  "files": [
+    "dist",
+    "types/index.d.ts"
+  ],
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./types/index.d.ts"
+      ]
+    }
+  },
+  "keywords": [
+    "nhn",
+    "toast",
+    "toastui",
+    "toast-ui",
+    "calendar",
+    "fullcalendar",
+    "daily",
+    "weekly",
+    "monthly",
+    "business week",
+    "milestone",
+    "task",
+    "allday"
+  ],
+  "scripts": {
+    "develop": "vite",
+    "build": "rimraf dist/ && concurrently 'npm:build:*'",
+    "build:modern": "vite build && vite build --mode minify",
+    "build:ie11": "vite build --mode ie11 && vite build --mode ie11_minify",
+    "build:esm": "vite build --mode esm",
+    "build:types": "rimraf types/ && tsc -p ./tsconfig.declaration.json"
+  },
+  "dependencies": {
+    "@toast-ui/calendar": "^2.0.0-alpha.4"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.14",
+    "@types/react-dom": "^18.0.5",
+    "@vitejs/plugin-react": "^1.3.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "vite": "^2.9.12"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0"
+  }
+}

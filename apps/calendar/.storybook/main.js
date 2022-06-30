@@ -5,7 +5,6 @@ module.exports = {
     builder: 'webpack5',
   },
   stories: ['../**/*.stories.@(ts|tsx)'],
-  addons: ['@storybook/addon-docs'],
   babel: async (config) => {
     // Replace storybook babel preset & plugins with custom ones
     config.presets.splice(config.presets.length - 1, 1, [
@@ -26,7 +25,7 @@ module.exports = {
       .concat([
         {
           test: /\.css$/,
-          include: /(node_modules|storybook-styles)/,
+          include: /node_modules/,
           use: [
             require.resolve('style-loader'),
             {
@@ -39,7 +38,7 @@ module.exports = {
         },
         {
           test: /\.css$/,
-          exclude: /(node_modules|storybook-styles)/,
+          exclude: /node_modules/,
           sideEffects: true,
           use: [
             require.resolve('style-loader'),

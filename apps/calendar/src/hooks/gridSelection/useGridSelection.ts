@@ -50,7 +50,7 @@ export function useGridSelection<DateCollection>({
   const { useFormPopup, gridSelection: gridSelectionOptions } = useStore(optionsSelector);
   const { enableDblClick, enableClick } = gridSelectionOptions;
 
-  const { setGridSelection, addGridSelection } = useDispatch('gridSelection');
+  const { setGridSelection, addGridSelection, clearAll } = useDispatch('gridSelection');
   const { hideAllPopup, showFormPopup } = useDispatch('popup');
   const eventBus = useEventBus();
   const layoutContainer = useLayoutContainer();
@@ -142,6 +142,7 @@ export function useGridSelection<DateCollection>({
           isAllday: type !== 'timeGrid',
           isPrivate: false,
           popupArrowPointPosition,
+          close: clearAll,
         });
       }
 
