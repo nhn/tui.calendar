@@ -26,7 +26,7 @@ const DRAG_START_TIME = '04:00';
 const cases: {
   title: string;
   step: number;
-  matcherToCompare: Extract<keyof jest.Matchers<number>, 'toBeGreaterThan' | 'toBeLessThan'>;
+  matcherToCompare: 'toBeGreaterThan' | 'toBeLessThan';
 }[] = [
   {
     title: 'to the top',

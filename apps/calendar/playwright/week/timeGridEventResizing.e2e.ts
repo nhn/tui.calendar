@@ -63,7 +63,7 @@ const cases: {
   title: string;
   targetEndTime: FormattedTimeString;
   targetColumnIndex?: number;
-  matcherToCompare: Extract<keyof jest.Matchers<number>, 'toBeGreaterThan' | 'toBeLessThan'>;
+  matcherToCompare: 'toBeGreaterThan' | 'toBeLessThan';
 }[] = [
   {
     title: 'to the bottom',

@@ -25,7 +25,7 @@ const RESIZE_EVENT_SELECTOR = '[class*="dragging--resize-vertical-event"]';
 const cases: {
   title: string;
   step: number;
-  matcherToCompare: Extract<keyof jest.Matchers<number>, 'toBeGreaterThan' | 'toBeLessThan'>;
+  matcherToCompare: 'toBeGreaterThan' | 'toBeLessThan';
 }[] = [
   {
     title: 'to the top',
