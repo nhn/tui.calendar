@@ -174,9 +174,9 @@ For more information on PR's step, please see links of Contributing section.
 
 ## 💬 Contributing
 
-* [Code of Conduct](/CODE_OF_CONDUCT.md)
-* [Contributing guideline](/CONTRIBUTING.md)
-* [Commit convention](/docs/COMMIT_MESSAGE_CONVENTION.md)
+- [Code of Conduct](/CODE_OF_CONDUCT.md)
+- [Contributing Guidelines](/CONTRIBUTING.md)
+- [Commit Message Convention](/docs/COMMIT_MESSAGE_CONVENTION.md)
 
 ## 📜 License
 

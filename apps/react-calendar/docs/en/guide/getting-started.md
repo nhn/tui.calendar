@@ -225,11 +225,11 @@ export function MyComponent() {
 
 #### Theme
 
-You can write your own theme object. [Link - See "theme"](https://github.com/nhn/tui.calendar/blob/main/docs/en/apis/theme.md)
+You can write your own theme object. For more information, refer to [`theme`](/docs/en/apis/theme.md).
 
 ### Instance Methods
 
-For using [instance methods of TOAST UI Calendar](https://github.com/nhn/tui.calendar/blob/main/docs/en/apis/calendar.md#instance-methods), first thing to do is creating Refs of wrapper component using [`createRef()`](https://reactjs.org/docs/refs-and-the-dom.html#creating-refs). But the wrapper component does not provide a way to call instance methods of TOAST UI Calendar directly. Instead, you can call `getInstance()` method of the wrapper component to get the instance, and call the methods on it.
+For using [instance methods of TOAST UI Calendar](/docs/en/apis/calendar.md#instance-methods), first thing to do is creating Refs of wrapper component using [`createRef()`](https://reactjs.org/docs/refs-and-the-dom.html#creating-refs). But the wrapper component does not provide a way to call instance methods of TOAST UI Calendar directly. Instead, you can call `getInstance()` method of the wrapper component to get the instance, and call the methods on it.
 
 ```js
 const calendarOptions = {

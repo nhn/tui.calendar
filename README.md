@@ -83,10 +83,10 @@ To disable GA, refer to the docs below.
 
 ## 💬 Contributing
 
-- [Code of Conduct](https://github.com/nhn/tui.calendar/blob/main/CODE_OF_CONDUCT.md)
-- [Contributing guideline](https://github.com/nhn/tui.calendar/blob/main/CONTRIBUTING.md)
-- [Issue guideline](https://github.com/nhn/tui.calendar/blob/main/docs/ISSUE_TEMPLATE.md)
-- [Commit convention](https://github.com/nhn/tui.calendar/blob/main/docs/COMMIT_MESSAGE_CONVENTION.md)
+- [Code of Conduct](/CODE_OF_CONDUCT.md)
+- [Contributing Guidelines](/CONTRIBUTING.md)
+- [Commit Message Convention](/docs/COMMIT_MESSAGE_CONVENTION.md)
+- [Issue guideline](/docs/ISSUE_TEMPLATE.md)
 
 ## 🌏 Browser Support
 
@@ -121,4 +121,4 @@ To disable GA, refer to the docs below.
 
 ## 📜 License
 
-This software is licensed under the [MIT](https://github.com/nhn/tui.calendar/blob/main/LICENSE) © [NHN Cloud](https://github.com/nhn).
+This software is licensed under the [MIT](/LICENSE) © [NHN Cloud](https://github.com/nhn).

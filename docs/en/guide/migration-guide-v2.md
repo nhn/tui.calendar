@@ -181,15 +181,15 @@ The removed theme value can be applied using CSS instead. The following is the C
 
 | Removed theme values                                           | Associated file location                                                                                                |
 | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| Related to <code>month.dayname</code>                          | [dayNames.css](https://github.com/nhn/tui.calendar/blob/main/apps/calendar/src/css/daygrid/dayNames.css)      |
-| Related to <code>month.schedule</code>                          | [dayGrid.css](https://github.com/nhn/tui.calendar/blob/main/apps/calendar/src/css/daygrid/dayGrid.css)        |
-| Related to <code>month.moreView</code>                         | [seeMore.css](https://github.com/nhn/tui.calendar/blob/main/apps/calendar/src/css/popup/seeMore.css)          |
-| Related to <code>week.dayname</code>                           | [dayNames.css](https://github.com/nhn/tui.calendar/blob/main/apps/calendar/src/css/daygrid/dayNames.css)      |
-| Related to <code>week.dayGridLeft</code>                       | [allday.css](https://github.com/nhn/tui.calendar/blob/main/apps/calendar/src/css/panel/allday.css)            |
-| Related to <code>week.timeGridLeft</code>                      | [timeColumn.css](https://github.com/nhn/tui.calendar/blob/main/apps/calendar/src/css/timegrid/timeColumn.css) |
-| Related to <code>week.timegridSchedule</code>                  | [time.css](https://github.com/nhn/tui.calendar/blob/main/apps/calendar/src/css/events/time.css)               |
-| Related to <code>week.gridSelection</code> (creationGuide in v1) | [column.css](https://github.com/nhn/tui.calendar/blob/main/apps/calendar/src/css/timegrid/column.css)         |
-| Related to <code>week.dayGridSchedule</code>                   | [dayGrid.css](https://github.com/nhn/tui.calendar/blob/main/apps/calendar/src/css/daygrid/dayGrid.css)        |
+| Related to <code>month.dayname</code>                          | [dayNames.css](/apps/calendar/src/css/daygrid/dayNames.css)      |
+| Related to <code>month.schedule</code>                          | [dayGrid.css](/apps/calendar/src/css/daygrid/dayGrid.css)        |
+| Related to <code>month.moreView</code>                         | [seeMore.css](/apps/calendar/src/css/popup/seeMore.css)          |
+| Related to <code>week.dayname</code>                           | [dayNames.css](/apps/calendar/src/css/daygrid/dayNames.css)      |
+| Related to <code>week.dayGridLeft</code>                       | [allday.css](/apps/calendar/src/css/panel/allday.css)            |
+| Related to <code>week.timeGridLeft</code>                      | [timeColumn.css](/apps/calendar/src/css/timegrid/timeColumn.css) |
+| Related to <code>week.timegridSchedule</code>                  | [time.css](/apps/calendar/src/css/events/time.css)               |
+| Related to <code>week.gridSelection</code> (creationGuide in v1) | [column.css](/apps/calendar/src/css/timegrid/column.css)         |
+| Related to <code>week.dayGridSchedule</code>                   | [dayGrid.css](/apps/calendar/src/css/daygrid/dayGrid.css)        |
 
 #### View related type improvement
 

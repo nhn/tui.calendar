@@ -183,15 +183,15 @@ v1에서 사용하던 다음 프로퍼티들이 테마에서 제거되거나 이
 
 | 제거된 테마 값                                           | 연관 파일 위치                                                                                                |
 | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| <code>month.dayname</code> 관련                          | [dayNames.css](https://github.com/nhn/tui.calendar/blob/main/apps/calendar/src/css/daygrid/dayNames.css)      |
-| <code>month.shedule</code> 관련                          | [dayGrid.css](https://github.com/nhn/tui.calendar/blob/main/apps/calendar/src/css/daygrid/dayGrid.css)        |
-| <code>month.moreView</code> 관련                         | [seeMore.css](https://github.com/nhn/tui.calendar/blob/main/apps/calendar/src/css/popup/seeMore.css)          |
-| <code>week.dayname</code> 관련                           | [dayNames.css](https://github.com/nhn/tui.calendar/blob/main/apps/calendar/src/css/daygrid/dayNames.css)      |
-| <code>week.dayGridLeft</code> 관련                       | [allday.css](https://github.com/nhn/tui.calendar/blob/main/apps/calendar/src/css/panel/allday.css)            |
-| <code>week.timeGridLeft</code> 관련                      | [timeColumn.css](https://github.com/nhn/tui.calendar/blob/main/apps/calendar/src/css/timegrid/timeColumn.css) |
-| <code>week.timeGridSchedule</code> 관련                  | [time.css](https://github.com/nhn/tui.calendar/blob/main/apps/calendar/src/css/events/time.css)               |
-| <code>week.gridSelection</code>(v1의 creationGuide) 관련 | [column.css](https://github.com/nhn/tui.calendar/blob/main/apps/calendar/src/css/timegrid/column.css)         |
-| <code>week.dayGridSchedule</code> 관련                   | [dayGrid.css](https://github.com/nhn/tui.calendar/blob/main/apps/calendar/src/css/daygrid/dayGrid.css)        |
+| <code>month.dayname</code> 관련                          | [dayNames.css](/apps/calendar/src/css/daygrid/dayNames.css)      |
+| <code>month.shedule</code> 관련                          | [dayGrid.css](/apps/calendar/src/css/daygrid/dayGrid.css)        |
+| <code>month.moreView</code> 관련                         | [seeMore.css](/apps/calendar/src/css/popup/seeMore.css)          |
+| <code>week.dayname</code> 관련                           | [dayNames.css](/apps/calendar/src/css/daygrid/dayNames.css)      |
+| <code>week.dayGridLeft</code> 관련                       | [allday.css](/apps/calendar/src/css/panel/allday.css)            |
+| <code>week.timeGridLeft</code> 관련                      | [timeColumn.css](/apps/calendar/src/css/timegrid/timeColumn.css) |
+| <code>week.timeGridSchedule</code> 관련                  | [time.css](/apps/calendar/src/css/events/time.css)               |
+| <code>week.gridSelection</code>(v1의 creationGuide) 관련 | [column.css](/apps/calendar/src/css/timegrid/column.css)         |
+| <code>week.dayGridSchedule</code> 관련                   | [dayGrid.css](/apps/calendar/src/css/daygrid/dayGrid.css)        |
 
 #### view 관련 타입 개선
 
