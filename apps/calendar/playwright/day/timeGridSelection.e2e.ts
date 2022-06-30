@@ -65,7 +65,7 @@ test.describe('TimeGrid Selection', () => {
     });
   });
 
-  test('should be able to select a time slot with double clicking', async ({ page }) => {
+  test.fixme('should be able to select a time slot with double clicking', async ({ page }) => {
     // Given
     const startGridLineLocator = page.locator(getTimeGridLineSelector(SELECT_START_TIME));
     const timeGridSelectionLocator = page.locator(GRID_SELECTION_SELECTOR);
