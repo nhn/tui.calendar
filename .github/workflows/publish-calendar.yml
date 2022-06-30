@@ -19,9 +19,11 @@ jobs:
       - name: Cancel workflow
         if: steps.cpv.outputs.is-new-version == 'false'
         uses: andymckay/cancel-action@0.2
+
   test:
     needs: check-version
     uses: ./.github/workflows/test.yml
+
   publish-npm:
     needs: test
     runs-on: ubuntu-latest
@@ -51,6 +53,7 @@ jobs:
           npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
   publish-docs:
     needs: publish-npm
     runs-on: ubuntu-latest
@@ -96,18 +99,19 @@ jobs:
       - name: Restore branch
         run: |
           git switch main
-  # publish-cdn:
-  #   needs: publish-npm
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout branch
-  #       uses: actions/checkout@v3
-  #     - uses: ./.github/actions/install-dependencies
-  #     - name: Upload files to CDN
-  #       run: |
-  #         npm run publish:cdn
-  #       env:
-  #         TOAST_CLOUD_TENENTID: ${{ secrets.TOAST_CLOUD_TENENTID }}
-  #         TOAST_CLOUD_STORAGEID: ${{ secrets.TOAST_CLOUD_STORAGEID }}
-  #         TOAST_CLOUD_USERNAME: ${{ secrets.TOAST_CLOUD_USERNAME }}
-  #         TOAST_CLOUD_PASSWORD: ${{ secrets.TOAST_CLOUD_PASSWORD }}
+
+  publish-cdn:
+    needs: publish-npm
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v3
+      - uses: ./.github/actions/install-dependencies
+      - name: Upload files to CDN
+        run: |
+          npm run publish:cdn
+        env:
+          TOAST_CLOUD_TENANTID: ${{ secrets.TOAST_CLOUD_TENANTID }}
+          TOAST_CLOUD_STORAGEID: ${{ secrets.TOAST_CLOUD_STORAGEID }}
+          TOAST_CLOUD_USERNAME: ${{ secrets.TOAST_CLOUD_USERNAME }}
+          TOAST_CLOUD_PASSWORD: ${{ secrets.TOAST_CLOUD_PASSWORD }}
