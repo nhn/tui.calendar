@@ -13,7 +13,7 @@
   },
   "main": "./dist/toastui-react-calendar.js",
   "module": "./dist/toastui-react-calendar.mjs",
-  "types": ".types/index.d.ts",
+  "types": "./types/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/toastui-react-calendar.mjs",
@@ -26,6 +26,13 @@
     "dist",
     "types/index.d.ts"
   ],
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./types/index.d.ts"
+      ]
+    }
+  },
   "keywords": [
     "nhn",
     "toast",
