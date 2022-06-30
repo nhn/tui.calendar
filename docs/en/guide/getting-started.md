@@ -15,6 +15,7 @@
   - [CSS](#css)
   - [Creating an instance](#creating-an-instance)
 - [Basic usage](#basic-usage)
+  - [Disable to collect hostname for Google Analytics(GA)](#disable-to-collect-hostname-for-google-analyticsga)
   - [Creating events](#creating-events)
   - [Using pop-ups](#using-pop-ups)
   - [Applying the theme](#applying-the-theme)
@@ -32,9 +33,9 @@ TOAST UI products are registered in the [npm](https://www.npmjs.com/) package re
 #### npm
 
 ```sh
-$ npm install @toast-ui/calendar # latest version
-$ npm install @toast-ui/calendar@<version> # specific version since 2.0
-$ npm install tui-calendar@<version> # 1.x legacy version
+npm install @toast-ui/calendar # latest version
+npm install @toast-ui/calendar@<version> # specific version since 2.0
+npm install tui-calendar@<version> # 1.x legacy version
 ```
 
 ### Using Contents Delivery Network
@@ -102,7 +103,7 @@ const Calendar = require('@toast-ui/calendar');
 
 ```js
 /* in the browser environment namespace */
-const Calendar = toastui.Calendar;
+const Calendar = tui.Calendar;
 ```
 
 #### Loading bundle files for legacy browsers
@@ -125,7 +126,7 @@ const Calendar = require('@toast-ui/calendar/ie11');
 <!-- with CDN and browser environment namespace -->
 <script src="https://uicdn.toast.com/calendar/latest/toastui-calendar.ie11.min.js"></script>
 <script>
-  const Calendar = toastui.Calendar;
+  const Calendar = tui.Calendar;
 </script>
 ```
 
@@ -192,6 +193,18 @@ const calendar = new Calendar(container, options);
 
 ## Basic usage
 
+### Disable to collect hostname for Google Analytics(GA)
+
+[TOAST UI Calendar](https://github.com/nhn/tui.calendar) applies [GA](https://analytics.google.com/analytics/web/) to collect statistics on open source usage to see how widespread it is around the world. This serves as an important indicator to determine the future progress of the project. It collects `location.hostname` (e.g. "ui.toast.com") and is only used to measure usage statistics.
+
+To disable GA, set the [`usageStatistics` option](/docs/en/apis/options.md#usagestatistics) to `false`:
+
+```js
+const calendar = new Calendar('#calendar', {
+  usageStatistics: false
+});
+```
+
 ### Creating events
 
 When creating an event, use the [`createEvents` method](../apis/calendar.md#createevents) of the Calendar instance.
@@ -235,7 +248,7 @@ TOAST UI Calendar provides an event creation popup and an event detail popup by 
 When using the event creation popup, you must import CSS files of [`tui-date-picker`](https://github.com/nhn/tui.date-picker) and [`tui-time-picker`](https://github.com/nhn/tui.time-picker) for the style to be applied properly.
 
 ```sh
-$ npm install tui-date-picker tui-time-picker
+npm install tui-date-picker tui-time-picker
 ```
 
 ```js

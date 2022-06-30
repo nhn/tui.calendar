@@ -15,8 +15,11 @@
   - [테마](#테마)
   - [인스턴스 메소드](#인스턴스-메소드)
   - [메서드](#메서드)
+    - [getRootElement](#getrootelement)
+    - [getInstance](#getinstance)
 - [기본적인 사용 방법](#기본적인-사용-방법)
   - [Google Analytics(GA)를 위한 hostname 수집 거부하기](#google-analyticsga를-위한-hostname-수집-거부하기)
+  - [⚠️ Props를 넘길 때 주의할 점](#️-props를-넘길-때-주의할-점)
 
 ## 설치하기
 
@@ -30,8 +33,8 @@ TOAST UI 제품들은 [npm](https://www.npmjs.com/) 패키지 매니저에 등�
 #### npm
 
 ```sh
-$ npm install @toast-ui/react-calendar # 최신 버전
-$ npm install @toast-ui/react-calendar@<version> # 특정 버전
+npm install @toast-ui/react-calendar # 최신 버전
+npm install @toast-ui/react-calendar@<version> # 특정 버전
 ```
 
 ## 사용하기
@@ -107,17 +110,6 @@ export function YourComponent() {
     </div>
   );
 }
-```
-
-```js
-import Calendar from '@toast-ui/vue-calendar';
-import '@toast-ui/calendar/toastui-calendar.min.css';
-new Vue({
-  el: '#app',
-  components: {
-    Calendar,
-  },
-});
 ```
 
 ### Props
@@ -234,11 +226,11 @@ export function MyComponent() {
 
 ### 테마
 
-theme 객체를 사용해서 자신만의 테마를 적용할 수 있다. [자세히 보기 - "theme"](https://github.com/nhn/tui.calendar/blob/main/docs/en/apis/theme.md)
+theme 객체를 사용해서 자신만의 테마를 적용할 수 있다. 더 자세한 정보는 [`theme`](/docs/ko/apis/theme.md) 문서를 참고한다.
 
 ### 인스턴스 메소드
 
-[TOAST UI Calendar의 인스턴스 메소드](https://github.com/nhn/tui.calendar/blob/main/docs/en/apis/calendar.md#instance-methods)를 사용하기 위해선, 먼저 [`createRef()`](https://reactjs.org/docs/refs-and-the-dom.html#creating-refs)를 이용해서 wrapper 컴포넌트에 대한 ref를 만들어야한다.
+[TOAST UI Calendar의 인스턴스 메소드](/docs/ko/apis/calendar.md#instance-methods)를 사용하기 위해선, 먼저 [`createRef()`](https://reactjs.org/docs/refs-and-the-dom.html#creating-refs)를 이용해서 wrapper 컴포넌트에 대한 ref를 만들어야한다.
 하지만 wrapper 컴포넌트에서 인스턴스 메소드를 직접 호출할 수 없다. 대신 `getInstance()` 메서드를 호출해서 인스턴스를 얻은 후에 인스턴스 메서드를 호출할 수 있다.
 
 ### 메서드
@@ -280,6 +272,55 @@ export function MyCalendar() {
     <div>
       <Calendar usageStatistics={false} />
     </div>
+  );
+}
+```
+
+### ⚠️ Props를 넘길 때 주의할 점
+
+캘린더 React Wrapper 컴포넌트는 다시 렌더링할 때 `props`를 깊게 비교한다. 불필요한 재렌더링을 피하고 더 나은 성능을 위해서 props를 컴포넌트 밖에서 선언하거나, props가 컴포넌트 상태 변경에 영향을 받을 필요가 없는 경우 `usememo`를 사용하는 것을 추천한다.
+
+```jsx
+const calendars = [
+  {
+    id: '0',
+    name: 'Private',
+    backgroundColor: '#9e5fff',
+    borderColor: '#9e5fff',
+  },
+  {
+    id: '1',
+    name: 'Company',
+    backgroundColor: '#00a9ff',
+    borderColor: '#00a9ff',
+  },
+];
+
+// 특히 컴포넌트 내에서 `template` prop을 선언하지 않는다.
+const template = {
+  milestone(event) {
+    return `<span style="color:#fff;background-color: ${event.backgroundColor};">${event.title}</span>`;
+  },
+  milestoneTitle() {
+    return 'Milestone';
+  },
+  allday(event) {
+    return `${event.title}<i class="fa fa-refresh"></i>`;
+  },
+  alldayTitle() {
+    return 'All Day';
+  },
+};
+
+function MyCalendar() {
+  // ...
+
+  return (
+    <Calendar
+      // ...
+      calendars={calendars}
+      template={template}
+    />
   );
 }
 ```

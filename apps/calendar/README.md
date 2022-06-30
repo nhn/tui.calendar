@@ -1,36 +1,40 @@
 # ![TOAST UI Calendar](https://user-images.githubusercontent.com/26706716/39230183-7f8ff186-48a0-11e8-8d9c-9699d2d0e471.png)
 
-> A JavaScript schedule calendar that is full featured. Now your service just got the customizable calendar.
+> A JavaScript calendar that is full featured. Now your service just got the customizable calendar.
 
 [![npm](https://img.shields.io/npm/v/@toast-ui/calendar.svg)](https://www.npmjs.com/package/@toast-ui/calendar)
+[![license](https://img.shields.io/github/license/nhn/tui.calendar.svg)](https://github.com/nhn/tui.calendar/blob/master/LICENSE)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg)](https://github.com/nhn/tui.calendar/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
+[![code with hearth by NHN Cloud](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-NHN_Cloud-ff1414.svg)](https://github.com/nhn)
 
 ## 🚩 Table of Contents
 
+- [📙 Documents](#-documents)
 - [Collect statistics on the use of open source](#collect-statistics-on-the-use-of-open-source)
 - [💾 Install](#-install)
-  - [Via Package Manager](#via-package-manager)
-    - [npm](#npm)
+  - [Using npm](#using-npm)
+  - [Via Contents Delivery Network (CDN)](#via-contents-delivery-network-cdn)
   - [Download Source Files](#download-source-files)
-- [🔨 Usage](#-usage)
-  - [HTML](#html)
-  - [JavaScript](#javascript)
-    - [Load](#load)
+- [📅 Usage](#-usage)
+  - [Load](#load)
+  - [Implement](#implement)
+- [🔧 Pull Request Steps](#-pull-request-steps)
+  - [Setup](#setup)
+  - [Develop](#develop)
+  - [Pull Request](#pull-request)
+- [💬 Contributing](#-contributing)
+- [📜 License](#-license)
 
-## 🚧 The new version is coming out
+## 📙 Documents
 
-You're now looking at the `main` branch of the latest version of TOAST UI Calendar. You can try [the alpha version](https://github.com/nhn/tui.calendar/releases/tag/v2.0.0-alpha.4) of the new calendar.
-
-```sh
-npm install --save @toast-ui/calendar
-```
-
-For the previous version, Please check out the [`v1` branch](https://github.com/nhn/tui.calendar/tree/v1).
+- [English](./docs/README.md)
+- [Korean](./docs/ko/README.md)
 
 ## Collect statistics on the use of open source
 
-TOAST UI Calendar applies Google Analytics (GA) to collect statistics on the use of open source, in order to identify how widely TOAST UI Calendar is used throughout the world. It also serves as important index to determine the future course of projects. location.hostname (e.g. > “ui.toast.com") is to be collected and the sole purpose is nothing but to measure statistics on the usage. To disable GA, use the following `usageStatistics` option when creating a calendar.
+TOAST UI Calendar applies Google Analytics (GA) to collect statistics on the use of open source, in order to identify how widely TOAST UI Calendar is used throughout the world. It also serves as important index to determine the future course of projects. location.hostname (e.g. > “ui.toast.com") is to be collected and the sole purpose is nothing but to measure statistics on the usage.
 
-To disable GA use the [options](https://nhn.github.io/tui.calendar/2.0.0-alpha/?path=/story/documentation-%ED%95%9C%EA%B5%AD%EC%96%B4-api-%EC%98%B5%EC%85%98--page#usagestatistics):
+To disable GA, set the [`usageStatistics` option](/docs/en/apis/options.md#usagestatistics) to `false`:
 
 ```js
 const calendar = new Calendar('#calendar', {
@@ -38,52 +42,27 @@ const calendar = new Calendar('#calendar', {
 });
 ```
 
-## 📙 Documents
-
-- [English](../../docs/README.md)
-- [Korean](../../docs/ko/README.md)
-
 ## 💾 Install
 
-TOAST UI products can be used by using the package manager or downloading the source directly.
-However, we highly recommend using the package manager.
+### Using npm
 
-### Via Package Manager
-
-TOAST UI products are registered in [npm](https://www.npmjs.com/).
-You can conveniently install it using the commands provided by each package manager.
-When using npm, be sure to use it in the environment [Node.js](https://nodejs.org) is installed.
-
-#### npm
-
-``` sh
-$ npm install --save @toast-ui/calendar@v2.0.0-alpha.0
+```sh
+npm install --save @toast-ui/calendar
 ```
 
 ### Via Contents Delivery Network (CDN)
 
-🚧 **CDN assets are not provided in alpha.** 🚧
-
 TOAST UI products are available over the CDN powered by [NHN Cloud](https://www.toast.com).
 
-You can use the CDN as below.
-
-Insert style sheet files
-
 ```html
-<link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui-calendar/latest/toastui-calendar.min.css" />
+<link rel="stylesheet" href="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.css" />
+<script src="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.js"></script>
 
-<!-- If you use the default popups, use this. -->
-<link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
-<link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.css" />
-```
+<!-- To get bundle file for legacy browser -->
+<!-- <script src="https://uicdn.toast.com/calendar /latest/toastui-calendar.ie11.min.js"></script> -->
 
-Insert JavaScript file
-
-```html
-<script src="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.min.js"></script>
-<script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.min.js"></script>
-<script src="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.js"></script>
+<!-- Import as es module -->
+<!-- <script type="module" src="https:// uicdn.toast.com/calendar/latest/toastui-calendar.mjs"></script> -->
 ```
 
 If you want to use a specific version, use the tag name instead of `latest` in the url's path.
@@ -91,73 +70,114 @@ If you want to use a specific version, use the tag name instead of `latest` in t
 The CDN directory has the following structure.
 
 ```
-tui-calendar/
-├─ latest/
-│  ├─ tui-calendar.js
-│  └─ tui-calendar.min.js
-│  └─ tui-calendar.css
-│  └─ tui-calendar.min.css
-├─ v1.0.0/
-│  ├─ ...
+- uicdn.toast.com/
+  ├─ calendar/
+  │  ├─ latest
+  │  │  ├─ toastui-calendar.css
+  │  │  ├─ toastui-calendar.js
+  │  │  ├─ toastui-calendar.min.css
+  │  │  ├─ toastui-calendar.min.js
+  │  │  ├─ toastui-calendar.ie11.js
+  │  │  ├─ toastui-calendar.ie11.min.js
+  │  │  │  toastui-calendar.mjs
+  │  ├─ v2.0.0/
 ```
 
 ### Download Source Files
 
-* [Download all sources for each version](https://github.com/nhn/tui.calendar/releases)
+- [Download all sources for each version](https://github.com/nhn/tui.calendar/releases)
 
-## 🔨 Usage
+## 📅 Usage
 
-### HTML
+### Load
 
-Place a `<div></div>` where you want TOAST UI Calendar rendered.
+TOAST UI Calendar can be instantiated through the constructor function. There are three ways to access the constructor function depending on the environment.
 
-```html
-<body>
-...
-<div id="calendar" style="height: 800px;"></div>
-...
-</body>
+```js
+/* ES6 module in Node.js environment */
+import Calendar from '@toast-ui/calendar';
+import '@toast-ui/calendar/toastui-calendar.css';
 ```
 
-### JavaScript
+```js
+/* CommonJS in Node.js environment */
+const Calendar = require('@toast-ui/calendar');
+require('@toast-ui/calendar/toastui-calendar.css');
+```
 
-#### Using namespace in browser environment
-
-```javascript
+```js
+/* in the browser environment namespace */
 const Calendar = tui.Calendar;
 ```
 
-#### Using module format in node environment
+### Implement
 
-```javascript
-const Calendar = require('tui-calendar'); /* CommonJS */
-require("tui-calendar/dist/tui-calendar.css");
-
-// If you use the default popups, use this.
-require("tui-date-picker/dist/tui-date-picker.css");
-require("tui-time-picker/dist/tui-time-picker.css");
+```html
+<div id="calendar" style="height: 800px"></div>
 ```
-
-```javascript
-import Calendar from 'tui-calendar'; /* ES Modules */
-import "tui-calendar/dist/tui-calendar.css";
-
-// If you use the default popups, use this.
-import 'tui-date-picker/dist/tui-date-picker.css';
-import 'tui-time-picker/dist/tui-time-picker.css';
-```
-
-Then you can create a calendar instance with [options](https://nhn.github.io/tui.calendar/2.0.0-alpha/?path=/story/documentation-%ED%95%9C%EA%B5%AD%EC%96%B4-api-%EC%98%B5%EC%85%98--page) to set configuration.
 
 ```javascript
 const calendar = new Calendar('#calendar', {
-  defaultView: 'month',
-  taskView: true,
+  defaultView: 'week',
   template: {
-    monthDayName: (dayName) => {
-      return '<span class="calendar-week-day-name__name">' + dayName.label + '</span>';
-    }
-    ...
-  }
+    time(event) {
+      const { start, end, title } = event;
+
+      return `<span style="color: white;">${formatTime(start)}~${formatTime(end)} ${title}</span>`;
+    },
+    allday(event) {
+      return `<span style="color: gray;">${event.title}</span>`;
+    },
+  },
+  calendars: [
+    {
+      id: 'cal1',
+      name: 'Personal',
+      backgroundColor: '#03bd9e',
+    },
+    {
+      id: 'cal2',
+      name: 'Work',
+      backgroundColor: '#00a9ff',
+    },
+  ],
 });
 ```
+
+## 🔧 Pull Request Steps
+
+TOAST UI products are open source, so you can create a pull request(PR) after you fix issues.
+Run npm scripts and develop yourself with the following process.
+
+### Setup
+
+Fork `develop` branch into your personal repository.
+Clone it to local computer. Install node modules.
+Before starting development, you should check to have any errors.
+
+``` sh
+git clone https://github.com/{your-personal-repo}/[[repo name]].git
+cd [[repo name]]
+npm install
+```
+
+### Develop
+
+Let's start development!
+
+### Pull Request
+
+Before PR, check to test lastly and then check any errors.
+If it has no error, commit and then push it!
+
+For more information on PR's step, please see links of Contributing section.
+
+## 💬 Contributing
+
+- [Code of Conduct](/CODE_OF_CONDUCT.md)
+- [Contributing Guidelines](/CONTRIBUTING.md)
+- [Commit Message Convention](/docs/COMMIT_MESSAGE_CONVENTION.md)
+
+## 📜 License
+
+This software is licensed under the [MIT](/LICENSE) © [NHN Cloud](https://github.com/nhn).

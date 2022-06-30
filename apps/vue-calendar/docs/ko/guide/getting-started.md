@@ -2,6 +2,7 @@
 
 ## 목차
 
+- [Vue 2 설치하기](#vue-2-설치하기)
 - [설치하기](#설치하기)
   - [패키지 매니저 사용하기](#패키지-매니저-사용하기)
     - [npm](#npm)
@@ -14,8 +15,14 @@
   - [Props](#props)
   - [이벤트](#이벤트)
   - [메서드](#메서드)
+    - [getRootElement](#getrootelement)
+    - [getInstance](#getinstance)
 - [기본적인 사용 방법](#기본적인-사용-방법)
   - [Google Analytics(GA)를 위한 hostname 수집 거부하기](#google-analyticsga를-위한-hostname-수집-거부하기)
+
+## Vue 2 설치하기
+
+TOAST UI 캘린더 Vue Wrapper를 사용하려면 [Vue 2](https://v2.vuejs.org/)를 설치해야 한다. Vue 3는 지원하지 않는다.
 
 ## 설치하기
 
@@ -29,8 +36,8 @@ TOAST UI 제품들은 [npm](https://www.npmjs.com/) 패키지 매니저에 등�
 #### npm
 
 ```sh
-$ npm install @toast-ui/vue-calendar # 최신 버전
-$ npm install @toast-ui/vue-calendar@<version> # 특정 버전
+npm install @toast-ui/vue-calendar # 최신 버전
+npm install @toast-ui/vue-calendar@<version> # 특정 버전
 ```
 
 ## 사용하기
@@ -61,7 +68,6 @@ const Calendar = tui.VueCalendar;
 TOAST UI 캘린더 Vue Wrapper는 레거시 브라우저용 번들 파일을 따로 제공하고 있다. 기본 번들은 모던 브라우저의 최신 2개 버전을 안정적으로 지원한다. 하지만 기본 번들은 IE11을 위한 폴리필이 포함되어있지 않으므로 IE11 혹은 일정 수준 이하의 레거시 브라우저를 지원하기 위해서는 다음과 같이 폴리필이 포함된 IE11 번들을 추가해야 한다.
 
 IE11의 번들 크기는 기본 번들보다 2배 가량 크기 때문에 반드시 지원 범위를 잘 고려하여 불필요하게 번들 사이즈를 늘리지 않도록 유의해야 한다.
-
 
 ```js
 /* Node.js 환경에서 ES6 모듈 */
@@ -128,7 +134,7 @@ new Vue({
 
 ### Props
 
-TOAST UI 캘린더의 [옵션](/docs/ko/apis/options.md)은 Vue 컴포넌트의 Props으로 구현되어 있다. `defaultView`는 `view`라는 이름이고, 그 외는 동일한 이름이다. 
+TOAST UI 캘린더의 [옵션](/docs/ko/apis/options.md)은 Vue 컴포넌트의 Props으로 구현되어 있다. `defaultView`는 `view`라는 이름이고, 그 외는 동일한 이름이다.
 
 옵션 외에도 `events` prop을 이용해 일정 데이터를 바로 추가할 수도 있다.
 
