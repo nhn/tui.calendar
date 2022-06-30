@@ -19,7 +19,8 @@
     },
     "sourceMap": true,
     "lib": ["esnext", "dom"],
-    "types": ["webpack-env", "node", "jest"]
+    "types": ["webpack-env", "node", "jest"],
+    "skipLibCheck": true
   },
   "include": ["src/**/*", "stories/**/*", "playwright/**/*"]
 }
