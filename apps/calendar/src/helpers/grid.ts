@@ -457,6 +457,8 @@ function getIndexFromPosition(arrayLength: number, maxRange: number, currentPosi
   return limit(calculatedIndex, [0], [arrayLength - 1]);
 }
 
+// FIXME: It doesn't work when `narrowWeekend` option is on.
+// It should consider the width of the column.
 export function createGridPositionFinder({
   rowsCount,
   columnsCount,
