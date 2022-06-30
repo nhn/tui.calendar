@@ -268,7 +268,6 @@ export function App({ view }: { view: CalendarViewType }) {
       <Calendar
         usageStatistics={false}
         calendars={initialCalendars}
-        defaultView={selectedView}
         disableDblClick={true}
         height="900px"
         isReadOnly={false}
