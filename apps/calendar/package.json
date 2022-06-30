@@ -65,6 +65,7 @@
     "storybook:build": "build-storybook",
     "docs:prebuild": "tsc --outDir tmpdoc --sourceMap false",
     "docs:dev": "npm run docs:prebuild && tuidoc --serv",
-    "docs:build": "npm run docs:prebuild && tuidoc"
+    "docs:build": "npm run docs:prebuild && tuidoc",
+    "publish:cdn": "node scripts/publishToCDN.js"
   }
 }
