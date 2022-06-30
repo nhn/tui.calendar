@@ -324,16 +324,3 @@ export function App({ view }: { view: CalendarViewType }) {
     </div>
   );
 }
-
-// export const WithFunctionComponent = (args) => <FunctionComponent {...args} />;
-// WithFunctionComponent.args = {
-//   view: 'month',
-// };
-// WithFunctionComponent.argTypes = {
-//   view: {
-//     control: {
-//       type: 'select',
-//       options: ['month', 'week', 'day'],
-//     },
-//   },
-// };
