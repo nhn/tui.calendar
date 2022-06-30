@@ -22,7 +22,7 @@
 
 ## Migration to v2
 
-The React wrapper of TOAST UI calendar is almost identical to v1, and you can follow the [v2 migration guide](/docs/en/guide/migration-guide-v2.md) of the calendar.
+The TOAST UI Calendar for React is almost identical to v1, and you can follow the [v2 migration guide](/docs/en/guide/migration-guide-v2.md) of the calendar.
 
 ## 💾 Installation
 
