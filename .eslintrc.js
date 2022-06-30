@@ -104,7 +104,7 @@ module.exports = {
       },
     },
     {
-      files: ['playwright/**/*.ts'],
+      files: ['apps/calendar/playwright/**/*.ts'],
       rules: {
         'dot-notation': ['error', { allowKeywords: true }],
         'jest/expect-expect': 'off',
