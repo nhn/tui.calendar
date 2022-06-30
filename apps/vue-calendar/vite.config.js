@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import { createVuePlugin } from 'vite-plugin-vue2';
+import commonjs from '@rollup/plugin-commonjs';
 import path from 'path';
 
 const commonConfig = {
@@ -59,6 +60,11 @@ export default defineConfig(({ command, mode }) => {
         },
       },
     });
+    buildConfig.plugins.push(
+      commonjs({
+        transformMixedEsModules: true,
+      })
+    );
   }
 
   return buildConfig;
