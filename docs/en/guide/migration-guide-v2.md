@@ -1,5 +1,7 @@
 # v2 Migration Guide
 
+## Table of Contents
+
 - [Overview](#overview)
 - [API migration](#api-migration)
   - [Change term from `schedule` to `event`](#change-term-from-schedule-to-event)

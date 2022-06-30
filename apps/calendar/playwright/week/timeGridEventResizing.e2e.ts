@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 import { expect, test } from '@playwright/test';
+import type { Matchers } from '@playwright/test/types/expect-types';
 
 import type TZDate from '../../src/time/date';
 import { addHours } from '../../src/time/datetime';
@@ -63,7 +64,7 @@ const cases: {
   title: string;
   targetEndTime: FormattedTimeString;
   targetColumnIndex?: number;
-  matcherToCompare: Extract<keyof jest.Matchers<number>, 'toBeGreaterThan' | 'toBeLessThan'>;
+  matcherToCompare: Extract<keyof Matchers<number>, 'toBeGreaterThan' | 'toBeLessThan'>;
 }[] = [
   {
     title: 'to the bottom',

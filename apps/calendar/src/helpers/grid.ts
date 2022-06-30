@@ -469,7 +469,7 @@ export function createGridPositionFinder({
   container: HTMLElement | null;
 }): GridPositionFinder {
   if (isNil(container)) {
-    return () => null;
+    return (() => null) as GridPositionFinder;
   }
 
   return function gridPositionFinder(mousePosition) {
