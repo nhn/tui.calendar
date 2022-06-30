@@ -1,36 +1,32 @@
 # ![TOAST UI Calendar](https://user-images.githubusercontent.com/26706716/39230183-7f8ff186-48a0-11e8-8d9c-9699d2d0e471.png)
 
 > 🍞📅 A JavaScript schedule calendar that is full featured. Now your service just got the customizable calendar.
-<!-- [![npm](https://img.shields.io/npm/v/@toast-ui/calendar.svg)](https://www.npmjs.com/package/@toast-ui/calendar) -->
+[![npm](https://img.shields.io/npm/v/@toast-ui/calendar.svg)](https://www.npmjs.com/package/@toast-ui/calendar)
 [![GitHub license](https://img.shields.io/github/license/nhn/tui.calendar.svg)](https://github.com/nhn/tui.calendar/blob/main/LICENSE)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg)](https://github.com/nhn/tui.project-name/labels/help%20wanted)
 [![code with hearth by NHN Cloud](https://img.shields.io/badge/%3C%2F%3E%20with%20%E2%99%A5%20by-NHN_Cloud-ff1414.svg)](https://github.com/nhn)
 
 ## 🚧 The new version is coming out
 
-You're now looking at the `main` branch of the latest version of TOAST UI Calendar. You can try [the alpha version](https://github.com/nhn/tui.calendar/releases/tag/v2.0.0-alpha.0) of the new calendar.
+You're now looking at the `main` branch of the latest version of TOAST UI Calendar. You can try [the alpha version](https://github.com/nhn/tui.calendar/releases/tag/v2.0.0-alpha.4) of the new calendar.
 
 ```sh
 npm install --save @toast-ui/calendar
 ```
 
-For the current(and legacy) version, Please check out the [`v1` branch](https://github.com/nhn/tui.calendar/tree/v1).
+For the previous version, Please check out the [`v1` branch](https://github.com/nhn/tui.calendar/tree/v1).
 
 ## 📦 Packages
 
 The functionality of TOAST UI Calendar is available when using the Plain JavaScript, React, Vue Component.
 
-- [@toast-ui/calendar](https://github.com/nhn/tui.calendar/tree/main/apps/calendar) - Plain JavaScript component implemented by NHN.
+- [@toast-ui/calendar](https://github.com/nhn/tui.calendar/tree/main/apps/calendar) - Plain JavaScript component implemented by NHN Cloud.
 - 🚧 React & Vue wrappers are coming with the public release.
 
 ## 📙 Documents
 
-🚧 Documents are written in Korean at this moment, but we will add english version soon.
-
-- [Getting Started (Korean)](https://nhn.github.io/tui.calendar/2.0.0-alpha/?path=/story/documentation-%ED%95%9C%EA%B5%AD%EC%96%B4-%EA%B0%80%EC%9D%B4%EB%93%9C-%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0--page)
-- [APIs (Korean)](https://nhn.github.io/tui.calendar/2.0.0-alpha)
-- v2.0 Migration Guide
-  - [한국어](https://nhn.github.io/tui.calendar/2.0.0-alpha/?path=/story/documentation-%ED%95%9C%EA%B5%AD%EC%96%B4-%EA%B0%80%EC%9D%B4%EB%93%9C-v2-%EB%A7%88%EC%9D%B4%EA%B7%B8%EB%A0%88%EC%9D%B4%EC%85%98-%EA%B0%80%EC%9D%B4%EB%93%9C--page)
+- [English](./docs/README.md)
+- [Korean](./docs/ko/README.md)
 
 ## 📅 Features
 

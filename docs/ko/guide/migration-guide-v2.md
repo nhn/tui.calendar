@@ -4,9 +4,22 @@
 
 - [개요](#개요)
 - [API 마이그레이션](#api-마이그레이션)
+  - [`schedule`에서 `event`로 용어 변경](#schedule에서-event로-용어-변경)
+  - [`currentTimeIndicator`, `currentTimeLine`에서 `nowIndicator`로 용어 변경](#currenttimeindicator-currenttimeline에서-nowindicator로-용어-변경)
   - [기능 개선](#기능-개선)
+    - [렌더링 최적화](#렌더링-최적화)
+    - [테마 개선](#테마-개선)
+    - [view 관련 타입 개선](#view-관련-타입-개선)
+    - [taskView, eventView 타입 개선](#taskview-eventview-타입-개선)
+    - [SSR 지원](#ssr-지원)
   - [변경](#변경)
+    - [브라우저 지원 범위(IE >= 11)](#브라우저-지원-범위ie--11)
+    - [옵션 변경사항](#옵션-변경사항)
+    - [인스턴스 메서드 변경사항](#인스턴스-메서드-변경사항)
+    - [인스턴스 이벤트 변경사항](#인스턴스-이벤트-변경사항)
+    - [템플릿 변경사항](#템플릿-변경사항)
   - [제거](#제거)
+    - [렌더링 관련 파라미터 변경 사항](#렌더링-관련-파라미터-변경-사항)
 
 ## 개요
 
@@ -19,7 +32,7 @@ v2를 사용하기 위해 API 마이그레이션이 필요한 API는 다음과 �
 - [인스턴스 이벤트](../apis/calendar.md#인스턴스-이벤트)
 - [인스턴스 메서드](../apis/calendar.md#인스턴스-메서드)
 
-마이그레이션 진행 단위는 크게 _기능 개선_, _변경_, *제거*로 구분된다.
+마이그레이션 진행 단위는 크게 _기능 개선_, _변경_, _제거_ 로 구분된다.
 
 - [기능 개선](#기능-개선): 기능이 개선되거나 새로 추가된 API
 - [변경](#변경): 기능은 유지되나 이름, 타입 등이 변경된 API
@@ -35,6 +48,7 @@ v2에서는 날짜나 시간을 선택할 때의 영역을 나타내는 `creatio
 v2에서는 일정이라는 의미에 맞게 기존 `schedule`에서 `event`로 네이밍이 변경되었다. 단순한 변수명 뿐만 아니라 `schedule`이 포함된 인스턴스 메서드, 인스턴스 이벤트 등의 관련된 API 모두가 `event`로 변경되었다.
 
 ### `currentTimeIndicator`, `currentTimeLine`에서 `nowIndicator`로 용어 변경
+
 v1에서는 현재 시간선을 나타내는 용어로 `currentTimeIndicator`과 `currentTimeLine`이 혼용되었다. v2에서는 이를 `nowIndicator`로 통일했다.
 
 ### 기능 개선
