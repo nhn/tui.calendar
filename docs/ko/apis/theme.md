@@ -528,7 +528,7 @@ calendar.setTheme({
 
 | 기본값 적용                                               | 예제 적용                                                |
 | --------------------------------------------------------- | -------------------------------------------------------- |
-| ![week-nowIndicatorLabel-default](../../assets/week-nowIndicatorlabel-before.png) | ![week-nowIndicatorLabel-example](../../assets/week-nowIndicatorlabel-after.png) |
+| ![week-nowIndicatorLabel-default](../../assets/week-nowIndicatorLabel-before.png) | ![week-nowIndicatorLabel-example](../../assets/week-nowIndicatorLabel-after.png) |
 
 ```js
 calendar.setTheme({

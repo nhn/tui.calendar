@@ -18,6 +18,11 @@
     "./toastui-calendar.css": "./dist/toastui-calendar.css",
     "./toastui-calendar.min.css": "./dist/toastui-calendar.min.css"
   },
+  "typesVersions": {
+    "*": {
+      "*": ["./types/index.d.ts"]
+    }
+  },
   "license": "MIT",
   "description": "TOAST UI Calendar",
   "repository": {

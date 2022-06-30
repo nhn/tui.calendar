@@ -5,9 +5,10 @@
 ## Guides
 
 - [Getting started](./en/guide/getting-started.md)
+- [v2 Migration guide](./en/guide/migration-guide-v2.md)
 
 ## Etc
 
 - [Code of Conduct](/CODE_OF_CONDUCT.md)
-- [Contributing Guide](/CONTRIBUTING.md)
-- [Commit Message Convention](/COMMIT_MESSAGE_CONVENTION.md)
+- [Contributing Guidelines](/CONTRIBUTING.md)
+- [Commit Message Convention](/docs/COMMIT_MESSAGE_CONVENTION.md)

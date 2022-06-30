@@ -12,11 +12,14 @@
   - [CSS](#css)
 - [React](#react)
   - [Props](#props)
-  - [Theme](#theme)
-  - [Instance methods](#instance-methods)
+    - [Theme](#theme)
+  - [Instance Methods](#instance-methods)
   - [Methods](#methods)
+    - [getRootElement](#getrootelement)
+    - [getInstance](#getinstance)
 - [Basic usage](#basic-usage)
   - [Disable to collect hostname for Google Analytics(GA)](#disable-to-collect-hostname-for-google-analyticsga)
+  - [⚠️ Note for passing props](#️-note-for-passing-props)
 
 ## Installation
 
@@ -29,8 +32,8 @@ TOAST UI products are registered in the [npm](https://www.npmjs.com/) package re
 #### npm
 
 ```sh
-$ npm install @toast-ui/react-calendar # latest version
-$ npm install @toast-ui/react-calendar@<version> # specific version
+npm install @toast-ui/react-calendar # latest version
+npm install @toast-ui/react-calendar@<version> # specific version
 ```
 
 ## How to use the calendar
@@ -222,11 +225,11 @@ export function MyComponent() {
 
 #### Theme
 
-You can write your own theme object. [Link - See "theme"](https://github.com/nhn/tui.calendar/blob/main/docs/en/apis/theme.md)
+You can write your own theme object. For more information, refer to [`theme`](/docs/en/apis/theme.md).
 
 ### Instance Methods
 
-For using [instance methods of TOAST UI Calendar](https://github.com/nhn/tui.calendar/blob/main/docs/en/apis/calendar.md#instance-methods), first thing to do is creating Refs of wrapper component using [`createRef()`](https://reactjs.org/docs/refs-and-the-dom.html#creating-refs). But the wrapper component does not provide a way to call instance methods of TOAST UI Calendar directly. Instead, you can call `getInstance()` method of the wrapper component to get the instance, and call the methods on it.
+For using [instance methods of TOAST UI Calendar](/docs/en/apis/calendar.md#instance-methods), first thing to do is creating Refs of wrapper component using [`createRef()`](https://reactjs.org/docs/refs-and-the-dom.html#creating-refs). But the wrapper component does not provide a way to call instance methods of TOAST UI Calendar directly. Instead, you can call `getInstance()` method of the wrapper component to get the instance, and call the methods on it.
 
 ```js
 const calendarOptions = {
@@ -290,6 +293,55 @@ export function MyCalendar() {
     <div>
       <Calendar usageStatistics={false} />
     </div>
+  );
+}
+```
+
+### ⚠️ Note for passing props
+
+The calendar component check deep equality of `props` when re-rendered. However, for performance and to avoid unnecessary re-rendering, it's recommended to extract props to the outside of the component or memoize them with `useMemo` when props don't have to be affected by component state changes.
+
+```jsx
+const calendars = [
+  {
+    id: '0',
+    name: 'Private',
+    backgroundColor: '#9e5fff',
+    borderColor: '#9e5fff',
+  },
+  {
+    id: '1',
+    name: 'Company',
+    backgroundColor: '#00a9ff',
+    borderColor: '#00a9ff',
+  },
+];
+
+// Especially avoid to declare the `template` prop inside the component.
+const template = {
+  milestone(event) {
+    return `<span style="color:#fff;background-color: ${event.backgroundColor};">${event.title}</span>`;
+  },
+  milestoneTitle() {
+    return 'Milestone';
+  },
+  allday(event) {
+    return `${event.title}<i class="fa fa-refresh"></i>`;
+  },
+  alldayTitle() {
+    return 'All Day';
+  },
+};
+
+function MyCalendar() {
+  // ...
+
+  return (
+    <Calendar
+      // ...
+      calendars={calendars}
+      template={template}
+    />
   );
 }
 ```

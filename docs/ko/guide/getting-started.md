@@ -1,5 +1,27 @@
 # 시작하기
 
+## 목차
+
+- [설치하기](#설치하기)
+  - [패키지 매니저 사용하기](#패키지-매니저-사용하기)
+    - [npm](#npm)
+  - [Contents Delivery Network (CDN) 사용하기](#contents-delivery-network-cdn-사용하기)
+  - [소스 파일 다운로드](#소스-파일-다운로드)
+- [사용하기](#사용하기)
+  - [HTML](#html)
+  - [자바스크립트](#자바스크립트)
+    - [불러오기](#불러오기)
+    - [레거시 브라우저용 번들 파일 불러오기](#레거시-브라우저용-번들-파일-불러오기)
+  - [CSS](#css)
+  - [인스턴스 만들기](#인스턴스-만들기)
+- [기본적인 사용 방법](#기본적인-사용-방법)
+  - [Google Analytics(GA)를 위한 hostname 수집 거부하기](#google-analyticsga를-위한-hostname-수집-거부하기)
+  - [일정 생성하기](#일정-생성하기)
+  - [팝업 사용하기](#팝업-사용하기)
+  - [테마 적용하기](#테마-적용하기)
+  - [템플릿 적용하기](#템플릿-적용하기)
+  - [인스턴스 이벤트 적용하기](#인스턴스-이벤트-적용하기)
+
 ## 설치하기
 
 TOAST UI 제품들은 패키지 매니저를 이용하거나, 직접 소스 코드를 다운받아 사용할 수 있다. 하지만 패키지 매니저 사용을 권장한다.
@@ -12,9 +34,9 @@ TOAST UI 제품들은 [npm](https://www.npmjs.com/) 패키지 매니저에 등�
 #### npm
 
 ```sh
-$ npm install @toast-ui/calendar # 최신 버전
-$ npm install @toast-ui/calendar@<version> # 2.0 이후 특정 버전
-$ npm install tui-calendar@<version> # 1.x 특정 버전
+npm install @toast-ui/calendar # 최신 버전
+npm install @toast-ui/calendar@<version> # 2.0 이후 특정 버전
+npm install tui-calendar@<version> # 1.x 특정 버전
 ```
 
 ### Contents Delivery Network (CDN) 사용하기
@@ -82,7 +104,7 @@ const Calendar = require('@toast-ui/calendar');
 
 ```js
 /* 브라우저 환경에서 namespace */
-const Calendar = toastui.Calendar;
+const Calendar = tui.Calendar;
 ```
 
 #### 레거시 브라우저용 번들 파일 불러오기
@@ -105,7 +127,7 @@ const Calendar = require('@toast-ui/calendar/ie11');
 <!-- CDN과 브라우저 환경에서 namespace -->
 <script src="https://uicdn.toast.com/calendar/latest/toastui-calendar.ie11.min.js"></script>
 <script>
-  const Calendar = toastui.Calendar;
+  const Calendar = tui.Calendar;
 </script>
 ```
 
@@ -172,6 +194,20 @@ const calendar = new Calendar(container, options);
 
 ## 기본적인 사용 방법
 
+### Google Analytics(GA)를 위한 hostname 수집 거부하기
+
+[TOAST UI 캘린더](https://github.com/nhn/tui.calendar)는 [GA](https://analytics.google.com/analytics/web/)를 적용하여 오픈 소스 사용에 대한 통계를 수집하여 전 세계에서 얼마나 널리 사용되는지 확인한다.
+이는 프로젝트의 향후 진행을 결정하는 중요한 지표 역할을 한다.
+`location.hostname`(예를 들어 "ui.toast.com")을 수집하며 사용량에 대한 통계를 측정하기 위해서만 사용된다.
+
+만약 이를 거부하려면 [`usageStatistics` 옵션](/docs/ko/apis/options.md#usagestatistics)을 `false`로 설정한다.
+
+```js
+const calendar = new Calendar('#calendar', {
+  usageStatistics: false
+});
+```
+
 ### 일정 생성하기
 
 일정을 생성할 때는 Calendar 인스턴스의 [`createEvents` 메서드](../apis/calendar.md#createevents)를 사용한다.
@@ -215,7 +251,7 @@ TOAST UI Calendar는 일정 생성 팝업과 일정 상세 팝업을 기본으�
 일정 생성 팝업을 사용할 때는 [`tui-date-picker`](https://github.com/nhn/tui.date-picker)와 [`tui-time-picker`](https://github.com/nhn/tui.time-picker)의 css 파일을 가져와야 스타일이 제대로 적용된다.
 
 ```sh
-$ npm install tui-date-picker tui-time-picker
+npm install tui-date-picker tui-time-picker
 ```
 
 ```js

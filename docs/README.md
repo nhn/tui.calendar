@@ -18,6 +18,6 @@
 
 ## Etc
 
-- [Code of Conduct](../CODE_OF_CONDUCT.md)
-- [Contributing Guide](../CONTRIBUTING.md)
-- [Commit Message Convention](COMMIT_MESSAGE_CONVENTION.md)
+- [Code of Conduct](/CODE_OF_CONDUCT.md)
+- [Contributing Guidelines](/CONTRIBUTING.md)
+- [Commit Message Convention](/docs/COMMIT_MESSAGE_CONVENTION.md)

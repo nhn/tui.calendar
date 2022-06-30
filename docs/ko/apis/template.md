@@ -366,7 +366,7 @@ calendar.setOptions({
 
 #### monthDayName
 
-![month-dayname](../../assets/template_monthDayname.png)
+![month-dayname](../../assets/template_monthDayName.png)
 
 ```ts
 interface TemplateMonthDayName {
@@ -391,7 +391,7 @@ calendar.setOptions({
 
 #### weekDayName
 
-![week-dayname](../../assets/template_weekDayname.png)
+![week-dayname](../../assets/template_weekDayName.png)
 
 ```ts
 interface TemplateWeekDayName {

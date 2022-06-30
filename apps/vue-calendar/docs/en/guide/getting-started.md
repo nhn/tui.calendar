@@ -2,6 +2,7 @@
 
 ## Table of Contents
 
+- [Install Vue 2](#install-vue-2)
 - [Installation](#installation)
   - [Using the package manager](#using-the-package-manager)
     - [npm](#npm)
@@ -14,8 +15,14 @@
   - [Props](#props)
   - [Events](#events)
   - [Methods](#methods)
+    - [getRootElement](#getrootelement)
+    - [getInstance](#getinstance)
 - [Basic usage](#basic-usage)
   - [Disable to collect hostname for Google Analytics(GA)](#disable-to-collect-hostname-for-google-analyticsga)
+
+## Install Vue 2
+
+To use TOAST UI Calendar for Vue, [Vue 2](https://v2.vuejs.org/) should be installed. Vue 3 is not supported.
 
 ## Installation
 
@@ -28,8 +35,8 @@ TOAST UI products are registered in the [npm](https://www.npmjs.com/) package re
 #### npm
 
 ```sh
-$ npm install @toast-ui/vue-calendar # latest version
-$ npm install @toast-ui/vue-calendar@<version> # specific version
+npm install @toast-ui/vue-calendar # latest version
+npm install @toast-ui/vue-calendar@<version> # specific version
 ```
 
 ## How to use the calendar
