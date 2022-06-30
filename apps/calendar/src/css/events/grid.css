@@ -8,6 +8,20 @@
   font-size: 12px;
 }
 
+.weekday-event-dot {
+  position: relative;
+  top: 8px;
+  float: left;
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.weekday-event-dot + .weekday-event-title {
+  color: #333;
+}
+
 .weekday-resize-handle {
   position: absolute;
   top: 0;

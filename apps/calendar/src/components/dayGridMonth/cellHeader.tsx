@@ -11,7 +11,7 @@ import { usePrimaryTimezone } from '@src/hooks/timezone/usePrimaryTimezone';
 import { viewSelector } from '@src/selectors';
 import type { TemplateName } from '@src/template/default';
 import type TZDate from '@src/time/date';
-import { isSameDate, isSaturday, isSunday, toFormat } from '@src/time/datetime';
+import { isSaturday, isSunday, toFormat } from '@src/time/datetime';
 import { capitalize } from '@src/utils/string';
 import { isNil } from '@src/utils/type';
 
@@ -28,20 +28,25 @@ function getDateColor({
   date,
   theme,
   renderDate,
+  isToday,
 }: {
   date: TZDate;
   theme: { common: CommonTheme; month: MonthTheme };
   renderDate: TZDate;
+  isToday: boolean;
 }) {
   const dayIndex = date.getDay();
   const thisMonth = renderDate.getMonth();
   const isSameMonth = thisMonth === date.getMonth();
-  const isToday = isSameDate(date, renderDate);
 
   const {
     common: { holiday, saturday, today, dayName },
     month: { dayExceptThisMonth, holidayExceptThisMonth },
   } = theme;
+
+  if (isToday) {
+    return today.color;
+  }
 
   if (isSunday(dayIndex)) {
     return isSameMonth ? holiday.color : holidayExceptThisMonth.color;
@@ -49,10 +54,6 @@ function getDateColor({
 
   if (isSaturday(dayIndex)) {
     return isSameMonth ? saturday.color : dayExceptThisMonth.color;
-  }
-
-  if (isToday) {
-    return today.color;
   }
 
   if (!isSameMonth) {
@@ -83,7 +84,8 @@ export function CellHeader({
 
   const ymd = toFormat(date, 'YYYYMMDD');
   const todayYmd = toFormat(getNow(), 'YYYYMMDD');
-  const model = {
+  const isToday = ymd === todayYmd;
+  const templateParam = {
     date: toFormat(date, 'YYYY-MM-DD'),
     day: date.getDay(),
     hiddenEventCount: exceedCount,
@@ -92,7 +94,7 @@ export function CellHeader({
     month: date.getMonth(),
     ymd,
   };
-  const gridCellDateStyle = { color: getDateColor({ date, theme, renderDate }) };
+  const gridCellDateStyle = { color: getDateColor({ date, theme, isToday, renderDate }) };
   const monthGridTemplate = `monthGrid${capitalize(type)}` as TemplateName;
 
   if (isNil(height)) {
@@ -102,7 +104,7 @@ export function CellHeader({
   return (
     <div className={cls(`grid-cell-${type}`)} style={{ height }}>
       <span className={cls('grid-cell-date')} style={gridCellDateStyle}>
-        <Template template={monthGridTemplate} param={model} />
+        <Template template={monthGridTemplate} param={templateParam} />
       </span>
       {exceedCount ? (
         <MoreEventsButton
