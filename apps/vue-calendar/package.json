@@ -1,0 +1,68 @@
+{
+  "name": "@toast-ui/vue-calendar",
+  "description": "TOAST UI Calendar for Vue",
+  "author": "NHN Cloud FE Development Lab <dl_javascript@nhn.com>",
+  "version": "2.0.0-beta.0",
+  "main": "./dist/toastui-vue-calendar.js",
+  "types": "./index.d.ts",
+  "module": "./dist/toastui-vue-calendar.mjs",
+  "exports": {
+    ".": {
+      "import": "./dist/toastui-vue-calendar.mjs",
+      "require": "./dist/toastui-vue-calendar.js"
+    },
+    "./ie11": "./dist/toastui-vue-calendar.ie11.js",
+    "./esm": "./dist/toastui-vue-calendar.mjs"
+  },
+  "typesVersions": {
+    "*": {
+      "*": ["./index.d.ts"]
+    }
+  },
+  "files": [
+    "dist",
+    "index.d.ts"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nhn/tui.calendar.git",
+    "directory": "apps/vue-calendar"
+  },
+  "keywords": [
+    "nhn",
+    "toast",
+    "toastui",
+    "toast-ui",
+    "calendar",
+    "fullcalendar",
+    "daily",
+    "weekly",
+    "monthly",
+    "business week",
+    "milestone",
+    "task",
+    "allday"
+  ],
+  "scripts": {
+    "lint": "eslint .",
+    "dev": "vite",
+    "build": "rimraf dist/ && concurrently 'npm:build:*'",
+    "build:modern": "vite build && vite build --mode minify",
+    "build:ie11": "vite build --mode ie11 && vite build --mode ie11_minify",
+    "build:esm": "vite build --mode esm"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@toast-ui/calendar": "^2.0.0-alpha.4"
+  },
+  "devDependencies": {
+    "@vue/cli": "^5.0.6",
+    "eslint-plugin-vue": "^9.1.1",
+    "vite": "^2.9.12",
+    "vite-plugin-vue2": "^2.0.1",
+    "vue": "^2.6.14"
+  },
+  "peerDependencies": {
+    "vue": "^2.6.14"
+  }
+}
