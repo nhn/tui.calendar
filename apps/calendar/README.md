@@ -107,7 +107,7 @@ require('@toast-ui/calendar/toastui-calendar.css');
 
 ```js
 /* in the browser environment namespace */
-const Calendar = toastui.Calendar;
+const Calendar = tui.Calendar;
 ```
 
 ### Implement

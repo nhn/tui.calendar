@@ -103,7 +103,7 @@ const Calendar = require('@toast-ui/calendar');
 
 ```js
 /* in the browser environment namespace */
-const Calendar = toastui.Calendar;
+const Calendar = tui.Calendar;
 ```
 
 #### Loading bundle files for legacy browsers
@@ -126,7 +126,7 @@ const Calendar = require('@toast-ui/calendar/ie11');
 <!-- with CDN and browser environment namespace -->
 <script src="https://uicdn.toast.com/calendar/latest/toastui-calendar.ie11.min.js"></script>
 <script>
-  const Calendar = toastui.Calendar;
+  const Calendar = tui.Calendar;
 </script>
 ```
 

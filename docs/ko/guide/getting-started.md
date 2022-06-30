@@ -104,7 +104,7 @@ const Calendar = require('@toast-ui/calendar');
 
 ```js
 /* 브라우저 환경에서 namespace */
-const Calendar = toastui.Calendar;
+const Calendar = tui.Calendar;
 ```
 
 #### 레거시 브라우저용 번들 파일 불러오기
@@ -127,7 +127,7 @@ const Calendar = require('@toast-ui/calendar/ie11');
 <!-- CDN과 브라우저 환경에서 namespace -->
 <script src="https://uicdn.toast.com/calendar/latest/toastui-calendar.ie11.min.js"></script>
 <script>
-  const Calendar = toastui.Calendar;
+  const Calendar = tui.Calendar;
 </script>
 ```
 
