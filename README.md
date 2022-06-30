@@ -15,7 +15,7 @@
 - [📅 Features](#-features)
   - [✨ Monthly, Weekly, Daily and Various View Types](#-monthly-weekly-daily-and-various-view-types)
   - [Easy to Use: Dragging and Resizing a Schedule](#easy-to-use-dragging-and-resizing-a-schedule)
-- [Ready to Use: Default Popups](#ready-to-use-default-popups)
+  - [Ready to Use: Default Popups](#ready-to-use-default-popups)
 - [🎨 Other Features](#-other-features)
 - [💬 Contributing](#-contributing)
 - [🌏 Browser Support](#-browser-support)
@@ -65,7 +65,7 @@ To disable GA, refer to the docs below.
 | --- | --- |
 | ![image](https://user-images.githubusercontent.com/26706716/39230930-591031f8-48a3-11e8-8f62-e12e6c19920c.gif) | ![image](https://user-images.githubusercontent.com/26706716/39231671-c926d0da-48a5-11e8-959d-35fd32f2c522.gif) |
 
-## Ready to Use: Default Popups
+### Ready to Use: Default Popups
 
 | Creation Popup | Detail Popup |
 | --- | --- |
