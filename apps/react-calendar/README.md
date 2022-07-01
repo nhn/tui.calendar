@@ -1,6 +1,6 @@
 # TOAST UI Calendar for React
 
-> This is a React component wrapping [TOAST UI Calendar](/apps/tui.calendar).
+> This is a React component wrapping [TOAST UI Calendar](/apps/calendar).
 
 [![React](https://img.shields.io/badge/react-61dafb.svg)](https://reactjs.org/)
 [![npm version](https://img.shields.io/npm/v/@toast-ui/react-calendar.svg)](https://www.npmjs.com/package/@toast-ui/react-calendar)
