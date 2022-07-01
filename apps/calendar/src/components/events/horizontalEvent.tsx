@@ -176,7 +176,11 @@ export function HorizontalEvent({
     onPressESCKey: () => endDragEvent(classNames.resizeEvent),
   });
   const onMoveStart = useDrag(DRAGGING_TYPE_CREATORS.moveEvent('dayGrid', `${uiModel.cid()}`), {
-    onDragStart: () => startDragEvent(classNames.moveEvent),
+    onDragStart: () => {
+      if (isDraggableEvent) {
+        startDragEvent(classNames.moveEvent);
+      }
+    },
     onMouseUp: (e, { draggingState }) => {
       endDragEvent(classNames.moveEvent);
 
@@ -206,10 +210,7 @@ export function HorizontalEvent({
 
   const handleMoveStart = (e: MouseEvent) => {
     e.stopPropagation();
-
-    if (isDraggableEvent) {
-      onMoveStart(e);
-    }
+    onMoveStart(e);
   };
 
   const isDotEvent =
