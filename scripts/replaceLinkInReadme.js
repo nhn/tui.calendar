@@ -3,9 +3,20 @@
 const path = require('path');
 const fs = require('fs');
 
-const PACKAGES = ['calendar', 'react-calendar', 'vue-calendar'];
+const packages = [];
+const targets = (process.env.PACKAGES || 'all').split(',');
 
-PACKAGES.forEach((package) => {
+if (targets.includes('core') || targets.includes('all')) {
+  packages.push('calendar');
+}
+if (targets.includes('react') || targets.includes('all')) {
+  packages.push('react-calendar');
+}
+if (targets.includes('vue') || targets.includes('all')) {
+  packages.push('vue-calendar');
+}
+
+packages.forEach((package) => {
   const PACKAGE_JSON_PATH = path.join(__dirname, `../apps/${package}/package.json`);
   const { version, repository } = require(PACKAGE_JSON_PATH);
   const url = repository.url.slice(0, -4);

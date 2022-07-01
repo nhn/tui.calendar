@@ -57,6 +57,9 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: main
+      - name: Update the relative links in README
+        run: |
+          PACKAGES=react,vue npm run update:readme
       - name: Publish react wrapper
         working-directory: ${{ env.REACT_WRAPPER_DIRECTORY }}
         run: |

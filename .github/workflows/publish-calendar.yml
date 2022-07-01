@@ -47,6 +47,9 @@ jobs:
           git push origin v${{ steps.cpv.outputs.committed-version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Update the relative links in README
+        run: |
+          PACKAGES=core npm run update:readme
       - name: Publish the package to npm (Calendar)
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
