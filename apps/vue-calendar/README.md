@@ -63,13 +63,13 @@ You can use Toast UI Calendar for Vue as moudule format or namespace. Also you c
 ```js
 /* ES6 module in Node.js environment */
 import ToastUICalendar from '@toast-ui/vue-calendar';
-import '@toast-ui/calendar/toastui-calendar.css';
+import '@toast-ui/calendar/dist/toastui-calendar.css';
 ```
 
 ```js
 /* CommonJS in Node.js environment */
 const Calendar = require('@toast-ui/vue-calendar');
-require('@toast-ui/calendar/toastui-calendar.css');
+require('@toast-ui/calendar/dist/toastui-calendar.css');
 ```
 
 ```js
@@ -86,7 +86,7 @@ const Calendar = tui.VueCalendar;
 
 <script>
 import Calendar from '@toast-ui/vue-calendar';
-import '@toast-ui/calendar/toastui-calendar.min.css';
+import '@toast-ui/calendar/dist/toastui-calendar.min.css';
 
 export default {
   name: 'YourComponent',
@@ -99,7 +99,7 @@ export default {
 
 ```js
 import Calendar from '@toast-ui/vue-calendar';
-import '@toast-ui/calendar/toastui-calendar.min.css';
+import '@toast-ui/calendar/dist/toastui-calendar.min.css';
 
 new Vue({
   el: '#app',
