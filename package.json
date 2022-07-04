@@ -94,7 +94,8 @@
     "test:playwright": "playwright test",
     "test:playwright:inspect": "playwright test --debug",
     "test:playwright:watch": "chokidar apps/calendar/playwright/**/*.spec.ts -c 'npm run test:playwright'",
-    "prepare": "ts-patch install -s && husky install && ts-patch install -s && npm run build:date"
+    "prepare": "ts-patch install -s && husky install && ts-patch install -s && npm run build:date",
+    "update:readme": "node scripts/replaceLinkInReadme.js"
   },
   "workspaces": [
     "apps/*",

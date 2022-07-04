@@ -27,8 +27,8 @@
 
 ## 📙 Documents
 
-- [English](./docs/README.md)
-- [Korean](./docs/ko/README.md)
+- [English](/docs/README.md)
+- [Korean](/docs/ko/README.md)
 
 ## Collect statistics on the use of open source
 

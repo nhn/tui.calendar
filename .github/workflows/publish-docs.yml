@@ -11,6 +11,9 @@ jobs:
           fetch-depth: 0
       - name: Install dependencies
         uses: ./.github/composite-actions/install-dependencies
+      - name: Update the relative links in README
+        run: |
+          PACKAGES=core npm run update:readme
       - name: Prebuild docs
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
