@@ -57,39 +57,39 @@ calendar.on('beforeCreateEvent', (eventObj) => {
 
 💡 Click on a method to see more detailed explanations and usage examples.
 
-| Method                                          | Description                                                                      |
-| ----------------------------------------------- |-------------------------------------------------------------------------|
-| [render](#render)                               | Renders the calendar instance to the screen.                                                    |
-| [renderToString](#rendertostring)               | Returns the rendering result of the current calendar instance as an HTML string for use in server-side rendering.            |
-| [destroy](#destroy)                             | Destroys the calendar instance.                                                         |
-| [getEvent](#getevent)                           | Gets the data of the target event.                                                     |
-| [createEvents](#createevents)                   | Creates one or more calendar events.                                                   |
-| [updateEvent](#updateevent)                     | Updates the contents of the target event.                                                    |
-| [deleteEvent](#deleteevent)                     | Deletes the target event.                                                          |
-| [clear](#clear)                                 | Removes all events stored in the calendar instance.                                             |
-| [today](#today)                                 | Moves to the range containing the current date.                                                    |
-| [move](#move)                                   | According to the view, it moves the range by a given number.                                                |
-| [prev](#prev)                                   | Moves to the previous range of the current screen. The range of movement depends on the range of the view.                              |
-| [next](#next)                                   | Moves to the next range of the current screen. The range of movement depends on the range of the view.                              |
-| [setDate](#setdate)                             | Moves to the range containing the specified date.                                                   |
-| [changeView](#changeview)                       | Changes the view of the calendar instance to Monthly/Weekly/Day.                                           |
-| [getElement](#getelement)                       | Finds the HTML element where a specific event was rendered. If not found, `null` is returned.                    |
-| [setTheme](#settheme)                           | Changes the theme of the calendar instance.                                                     |
-| [getOptions](#getoptions)                       | Gets the options set in the calendar instance.                                           |
-| [setOptions](#setoptions)                       | Changes the options of the calendar instance.                                                     |
-| [getDate](#getdate)                             | Gets the base date for displaying range of the calendar instance.                                      |
-| [getDateRangeStart](#getdaterangestart)         | Gets the start date for displaying range of the calendar instance.                                |
-| [getDateRangeEnd](#getdaterangeend)             | Gets the end date for displaying range of the calendar instance.                                |
-| [getViewName](#getviewname)                     | Gets the view type of the calendar instance. (Monthly / Weekly / Daily)                               |
-| [setCalendars](#setcalendars)                   | Changes calendar information.                                                           |
-| [setCalendarVisibility](#setcalendarvisibility) | Hides or shows all events included in the specified event group.                                     |
-| [setCalendarColor](#setcalendarcolor)           | Changes the color value of all events included in the specified event group.                                     |
-| [scrollToNow](#scrolltonow)                     | If a displayed range contains the current time in the weekly/daily view, it immediately scrolls to the current time area.      |
-| [openFormPopup](#openformpopup)                 | Displays the popup for creating the event. The value of the popup is filled according to the parameter.                 |
-| [clearGridSelections](#cleargridselections)     | Removes all date/time selection elements currently displayed in the calendar.                                     |
+| Method                                          | Description                                                                                                                           |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| [render](#render)                               | Renders the calendar instance to the screen.                                                                                          |
+| [renderToString](#rendertostring)               | Returns the rendering result of the current calendar instance as an HTML string for use in server-side rendering.                     |
+| [destroy](#destroy)                             | Destroys the calendar instance.                                                                                                       |
+| [getEvent](#getevent)                           | Gets the data of the target event.                                                                                                    |
+| [createEvents](#createevents)                   | Creates one or more calendar events.                                                                                                  |
+| [updateEvent](#updateevent)                     | Updates the contents of the target event.                                                                                             |
+| [deleteEvent](#deleteevent)                     | Deletes the target event.                                                                                                             |
+| [clear](#clear)                                 | Removes all events stored in the calendar instance.                                                                                   |
+| [today](#today)                                 | Moves to the range containing the current date.                                                                                       |
+| [move](#move)                                   | According to the view, it moves the range by a given number.                                                                          |
+| [prev](#prev)                                   | Moves to the previous range of the current screen. The range of movement depends on the range of the view.                            |
+| [next](#next)                                   | Moves to the next range of the current screen. The range of movement depends on the range of the view.                                |
+| [setDate](#setdate)                             | Moves to the range containing the specified date.                                                                                     |
+| [changeView](#changeview)                       | Changes the view of the calendar instance to Monthly/Weekly/Day.                                                                      |
+| [getElement](#getelement)                       | Finds the HTML element where a specific event was rendered. If not found, `null` is returned.                                         |
+| [setTheme](#settheme)                           | Changes the theme of the calendar instance.                                                                                           |
+| [getOptions](#getoptions)                       | Gets the options set in the calendar instance.                                                                                        |
+| [setOptions](#setoptions)                       | Changes the options of the calendar instance.                                                                                         |
+| [getDate](#getdate)                             | Gets the base date for displaying range of the calendar instance.                                                                     |
+| [getDateRangeStart](#getdaterangestart)         | Gets the start date for displaying range of the calendar instance.                                                                    |
+| [getDateRangeEnd](#getdaterangeend)             | Gets the end date for displaying range of the calendar instance.                                                                      |
+| [getViewName](#getviewname)                     | Gets the view type of the calendar instance. (Monthly / Weekly / Daily)                                                               |
+| [setCalendars](#setcalendars)                   | Changes calendar information.                                                                                                         |
+| [setCalendarVisibility](#setcalendarvisibility) | Hides or shows all events included in the specified event group.                                                                      |
+| [setCalendarColor](#setcalendarcolor)           | Changes the color value of all events included in the specified event group.                                                          |
+| [scrollToNow](#scrolltonow)                     | If a displayed range contains the current time in the weekly/daily view, it immediately scrolls to the current time area.             |
+| [openFormPopup](#openformpopup)                 | Displays the popup for creating the event. The value of the popup is filled according to the parameter.                               |
+| [clearGridSelections](#cleargridselections)     | Removes all date/time selection elements currently displayed in the calendar.                                                         |
 | [fire](#fire)                                   | Executes arbitrary instance events. A detailed description is provided in the [Instance Events](#instance-events) section.            |
-| [off](#off)                                     | Unregisters an instance event. A detailed description is provided in the [Instance Events](#instance-events) section.            |
-| [on](#on)                                       | Registers an instance event. A detailed description is provided in the [Instance Events](#instance-events) section.            |
+| [off](#off)                                     | Unregisters an instance event. A detailed description is provided in the [Instance Events](#instance-events) section.                 |
+| [on](#on)                                       | Registers an instance event. A detailed description is provided in the [Instance Events](#instance-events) section.                   |
 | [once](#once)                                   | Registers an instance event to fire only once. A detailed description is provided in the [Instance Events](#instance-events) section. |
 
 ### render
@@ -735,17 +735,17 @@ calendar.fire('myCustomEvent', calendar.getViewName());
 
 The list of predefined instance events is as follows.
 
-| Event name                                           | Description                                                                                        |
-| ----------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| [selectDateTime](#selectdatetime)                     | Occurs when dragging and dropping a specific date or time then dropping                                            |
-| [beforeCreateEvent](#beforecreateevent)               | Occurs when the ‘Save’ button is pressed in the default event creation/modification popup                               |
-| [beforeUpdateEvent](#beforeupdateevent)               | Occurs when the ‘Save’ button is pressed in the default event creation/modification popup or an event is dragged and dropped |
-| [beforeDeleteEvent](#beforedeleteevent)               | Occurs when the ‘Delete’ button is pressed in the default event detail popup                                  |
-| [afterRenderEvent](#afterrenderevent)                 | Occurs when each event is rendered                                                     |
-| [clickDayName](#clickdayname)                         | Occurs when a day of the week at the top of the calendar is clicked                                                         |
-| [clickEvent](#clickevent)                             | Occurs when an event is clicked                                                                     |
-| [clickMoreEventsBtn](#clickmoreeventsbtn)             | Occurs when you click the 'More' button that appears because the number of events in each cell of the monthly view is exceeded              |
-| [clickTimezoneCollapseBtn](#clicktimezonecollapsebtn) | Occurs when you click the collapse button that appears when multiple time zones are displayed in the weekly or daily view |
+| Event name                                            | Description                                                                                                                    |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| [selectDateTime](#selectdatetime)                     | Occurs when dragging and dropping a specific date or time then dropping                                                        |
+| [beforeCreateEvent](#beforecreateevent)               | Occurs when the ‘Save’ button is pressed in the default event creation/modification popup                                      |
+| [beforeUpdateEvent](#beforeupdateevent)               | Occurs when the ‘Save’ button is pressed in the default event creation/modification popup or an event is dragged and dropped   |
+| [beforeDeleteEvent](#beforedeleteevent)               | Occurs when the ‘Delete’ button is pressed in the default event detail popup                                                   |
+| [afterRenderEvent](#afterrenderevent)                 | Occurs when each event is rendered                                                                                             |
+| [clickDayName](#clickdayname)                         | Occurs when a day of the week at the top of the calendar is clicked                                                            |
+| [clickEvent](#clickevent)                             | Occurs when an event is clicked                                                                                                |
+| [clickMoreEventsBtn](#clickmoreeventsbtn)             | Occurs when you click the 'More' button that appears because the number of events in each cell of the monthly view is exceeded |
+| [clickTimezoneCollapseBtn](#clicktimezonecollapsebtn) | Occurs when you click the collapse button that appears when multiple time zones are displayed in the weekly or daily view      |
 
 Each event passes specific parameters to the event handler function when it is executed.
 

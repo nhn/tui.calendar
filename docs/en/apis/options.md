@@ -24,21 +24,21 @@ calendar.setOptions({
 
 An option object is a nested object with the following properties. Click on the property name to go to the detailed description.
 
-| Property                            | Default value                                    | Description                                                                                               |
-| ----------------------------------- | ----------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| [defaultView](#defaultview)         | <code>'week'</code>                       | Default view type                                                                                       |
-| [useFormPopup](#useformpopup)       | <code>false</code>                        | Whether to use the built-in event creation/modification pop-up                                                         |
-| [useDetailPopup](#usedetailpopup)   | <code>false</code>                        | Whether to use the built-in event details pop-up                                                         |
-| [isReadOnly](#isreadonly)           | <code>false</code>                        | Whether the entire calendar is read-only                                                                       |
+| Property                            | Default value                             | Description                                                                                                   |
+| ----------------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| [defaultView](#defaultview)         | <code>'week'</code>                       | Default view type                                                                                             |
+| [useFormPopup](#useformpopup)       | <code>false</code>                        | Whether to use the built-in event creation/modification pop-up                                                |
+| [useDetailPopup](#usedetailpopup)   | <code>false</code>                        | Whether to use the built-in event details pop-up                                                              |
+| [isReadOnly](#isreadonly)           | <code>false</code>                        | Whether the entire calendar is read-only                                                                      |
 | [usageStatistics](#usagestatistics) | <code>true</code>                         | Whether to allow hostname collection for [Google Analytics (GA)](https://analytics.google.com/analytics/web/) |
-| [eventFilter](#eventfilter)         | <code>(event) => !!event.isVisible</code> | Event filter function across calendars                                                                   |
-| [week](#week)                       | <code>DEFAULT_WEEK_OPTIONS</code>         | Weekly/daily view related options                                                                              |
-| [month](#month)                     | <code>DEFAULT_MONTH_OPTIONS</code>        | Monthly view related options                                                                                   |
-| [gridSelection](#gridselection)     | <code>true</code>                         | Whether clicks and double-clicks are possible for date/time selection                                                          |
-| [timezone](#timezone)               | <code>{ zones: [] }</code>                | Time zone options used by the calendar                                                                    |
-| [theme](#theme)                     | <code>DEFAULT_THEME</code>                | [Theme](./theme.md)                                                 |
-| [template](#template)               | <code>DEFAULT_TEMPLATE</code>             | [Template](./template.md)                                             |
-| [calendars](#calendars)             | <code>[]</code>                           | List of calendars used by the calendar instance                                                                    |
+| [eventFilter](#eventfilter)         | <code>(event) => !!event.isVisible</code> | Event filter function across calendars                                                                        |
+| [week](#week)                       | <code>DEFAULT_WEEK_OPTIONS</code>         | Weekly/daily view related options                                                                             |
+| [month](#month)                     | <code>DEFAULT_MONTH_OPTIONS</code>        | Monthly view related options                                                                                  |
+| [gridSelection](#gridselection)     | <code>true</code>                         | Whether clicks and double-clicks are possible for date/time selection                                         |
+| [timezone](#timezone)               | <code>{ zones: [] }</code>                | Time zone options used by the calendar                                                                        |
+| [theme](#theme)                     | <code>DEFAULT_THEME</code>                | [Theme](./theme.md)                                                                                           |
+| [template](#template)               | <code>DEFAULT_TEMPLATE</code>             | [Template](./template.md)                                                                                     |
+| [calendars](#calendars)             | <code>[]</code>                           | List of calendars used by the calendar instance                                                               |
 
 ## Usage examples
 
@@ -198,15 +198,15 @@ Specifies options related to weekly/daily views.
 
 Specifies the start day of the week in the daily/weekly view. The default is `0`, starting from Sunday. You can specify a value from `0` (Sunday) to `6` (Saturday).
 
-| Value  | Day of the week   |
-| --- | ------ |
-| 0   | Sunday |
-| 1   | Monday  |
-| 2   | Tuesday |
-| 3   | Wednesday |
-| 4   | Thursday |
-| 5   | Friday |
-| 6   | Saturday |
+| Value | Day of the week |
+| ----- | --------------- |
+| 0     | Sunday          |
+| 1     | Monday          |
+| 2     | Tuesday         |
+| 3     | Wednesday       |
+| 4     | Thursday        |
+| 5     | Friday          |
+| 6     | Saturday        |
 
 ```js
 calendar.setOptions({
@@ -216,8 +216,8 @@ calendar.setOptions({
 });
 ```
 
-| Default                                                             | Example                                                              |
-| ----------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| Default                                                                             | Example                                                                            |
+| ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
 | ![week-startDayOfWeek-default](../../assets/options_week-startDayOfWeek-before.png) | ![week-startDayOfWeek-example](../../assets/options_week-startDayOfWeek-after.png) |
 
 [⬆️ Back to the list](#week)
@@ -239,8 +239,8 @@ calendar.setOptions({
 });
 ```
 
-| Default  | Example    |
-| ------------ | ------------ |
+| Default                                                                 | Example                                                                |
+| ----------------------------------------------------------------------- | ---------------------------------------------------------------------- |
 | ![week-daynames-default](../../assets/options_week-dayNames-before.png) | ![week-daynames-example](../../assets/options_week-dayNames-after.png) |
 
 [⬆️ Back to the list](#week)
@@ -260,8 +260,8 @@ calendar.setOptions({
 });
 ```
 
-| Default                                                           | Example                                                            |
-| --------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| Default                                                                           | Example                                                                          |
+| --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
 | ![week-narrowWeekend-default](../../assets/options_week-narrowWeekend-before.png) | ![week-narrowWeekend-example](../../assets/options_week-narrowWeekend-after.png) |
 
 [⬆️ Back to the list](#week)
@@ -281,8 +281,8 @@ calendar.setOptions({
 });
 ```
 
-| Default                                                 | Example                                                  |
-| ----------------------------------------------------------- | ---------------------------------------------------------- |
+| Default                                                                 | Example                                                                |
+| ----------------------------------------------------------------------- | ---------------------------------------------------------------------- |
 | ![week-workweek-default](../../assets/options_week-workweek-before.png) | ![week-workweek-example](../../assets/options_week-workweek-after.png) |
 
 [⬆️ Back to the list](#week)
@@ -302,8 +302,8 @@ calendar.setOptions({
 });
 ```
 
-| Default                                                                                  | Example                                                                                  |
-|-----------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|
+| Default                                                                                 | Example                                                                                |
+| --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
 | ![week-showNowIndicator-default](../../assets/options_week-showNowIndicator-before.png) | ![week-showNowIndicator-example](../../assets/options_week-showNowIndicator-after.png) |
 
 #### week.showTimezoneCollapseButton
@@ -321,8 +321,8 @@ calendar.setOptions({
 });
 ```
 
-| Default                                                                                     | Example                                                                                      |
-| ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Default                                                                                                     | Example                                                                                                    |
+| ----------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
 | ![week-showTimezoneCollapseButton-default](../../assets/options_week-showTimezoneCollapseButton-before.png) | ![week-showTimezoneCollapseButton-example](../../assets/options_week-showTimezoneCollapseButton-after.png) |
 
 [⬆️ Back to the list](#week)
@@ -342,8 +342,8 @@ calendar.setOptions({
 });
 ```
 
-| Default                                                                     | Example                                                                      |
-| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| Default                                                                                     | Example                                                                                    |
+| ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
 | ![week-timezonesCollapsed-default](../../assets/options_week-timezonesCollapsed-before.png) | ![week-timezonesCollapsed-example](../../assets/options_week-timezonesCollapsed-after.png) |
 
 [⬆️ Back to the list](#week)
@@ -363,8 +363,8 @@ calendar.setOptions({
 });
 ```
 
-| Default                                                   | Example                                                    |
-| ------------------------------------------------------------- | ------------------------------------------------------------ |
+| Default                                                                   | Example                                                                  |
+| ------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
 | ![week-hourStart-default](../../assets/options_week-hourStart-before.png) | ![week-hourStart-example](../../assets/options_week-hourStart-after.png) |
 
 [⬆️ Back to the list](#week)
@@ -384,8 +384,8 @@ calendar.setOptions({
 });
 ```
 
-| Default                                               | Example                                                |
-| --------------------------------------------------------- | -------------------------------------------------------- |
+| Default                                                               | Example                                                              |
+| --------------------------------------------------------------------- | -------------------------------------------------------------------- |
 | ![week-hourEnd-default](../../assets/options_week-hourEnd-before.png) | ![week-hourEnd-example](../../assets/options_week-hourEnd-after.png) |
 
 [⬆️ Back to the list](#week)
@@ -405,8 +405,8 @@ calendar.setOptions({
 });
 ```
 
-| Default                                                   | Example                                                    |
-| ------------------------------------------------------------- | ------------------------------------------------------------ |
+| Default                                                                   | Example                                                                  |
+| ------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
 | ![week-eventView-default](../../assets/options_week-eventView-before.png) | ![week-eventView-example](../../assets/options_week-eventView-after.png) |
 
 [⬆️ Back to the list](#week)
@@ -426,8 +426,8 @@ calendar.setOptions({
 });
 ```
 
-| Default                                                 | Example                                                  |
-| ----------------------------------------------------------- | ---------------------------------------------------------- |
+| Default                                                                 | Example                                                                |
+| ----------------------------------------------------------------------- | ---------------------------------------------------------------------- |
 | ![week-taskView-default](../../assets/options_week-taskView-before.png) | ![week-taskView-example](../../assets/options_week-taskView-after.png) |
 
 [⬆️ Back to the list](#week)
@@ -474,15 +474,15 @@ You can change the name of the day of the week in the monthly view. The default 
 
 When giving this option, an array with all days of the week from Sunday to Monday must be entered. The index of each day is the same as the result of `Date.prototype.getDay`. ([Reference](https://tc39.es/ecma262/multipage/numbers-and-dates.html#sec-week-day))
 
-| Value  | Day of the week   |
-| --- | ------ |
-| 0   | Sunday |
-| 1   | Monday  |
-| 2   | Tuesday |
-| 3   | Wednesday |
-| 4   | Thursday |
-| 5   | Friday |
-| 6   | Saturday |
+| Value | Day of the week |
+| ----- | --------------- |
+| 0     | Sunday          |
+| 1     | Monday          |
+| 2     | Tuesday         |
+| 3     | Wednesday       |
+| 4     | Thursday        |
+| 5     | Friday          |
+| 6     | Saturday        |
 
 ```js
 calendar.setOptions({
@@ -492,8 +492,8 @@ calendar.setOptions({
 });
 ```
 
-| Default  | Example    |
-| ------------ | ------------ |
+| Default                                                                   | Example                                                                  |
+| ------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
 | ![month-daynames-default](../../assets/options_month-dayNames-before.png) | ![month-daynames-example](../../assets/options_month-dayNames-after.png) |
 
 [⬆️ Back to the list](#month)
@@ -507,15 +507,15 @@ Specifies the start day of the week in the monthly view. The default is `0`, sta
 
 The index of each day of the week is the same as the result of `Date.prototype.getDay`. ([Reference](https://tc39.es/ecma262/multipage/numbers-and-dates.html#sec-week-day))
 
-| Value  | Day of the week   |
-| --- | ------ |
-| 0   | Sunday |
-| 1   | Monday  |
-| 2   | Tuesday |
-| 3   | Wednesday |
-| 4   | Thursday |
-| 5   | Friday |
-| 6   | Saturday |
+| Value | Day of the week |
+| ----- | --------------- |
+| 0     | Sunday          |
+| 1     | Monday          |
+| 2     | Tuesday         |
+| 3     | Wednesday       |
+| 4     | Thursday        |
+| 5     | Friday          |
+| 6     | Saturday        |
 
 ```js
 calendar.setOptions({
@@ -525,8 +525,8 @@ calendar.setOptions({
 });
 ```
 
-| Default                                                               | Example                                                                |
-| ------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| Default                                                                               | Example                                                                              |
+| ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
 | ![month-startDayOfWeek-default](../../assets/options_month-startDayOfWeek-before.png) | ![month-startDayOfWeek-example](../../assets/options_month-startDayOfWeek-after.png) |
 
 [⬆️ Back to the list](#month)
@@ -546,8 +546,8 @@ calendar.setOptions({
 });
 ```
 
-| Default                                                             | Example                                                              |
-| ----------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| Default                                                                             | Example                                                                            |
+| ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
 | ![month-narrowWeekend-default](../../assets/options_month-narrowWeekend-before.png) | ![month-narrowWeekend-example](../../assets/options_month-narrowWeekend-after.png) |
 
 [⬆️ Back to the list](#month)
@@ -569,8 +569,8 @@ calendar.setOptions({
 });
 ```
 
-| Default                                                                     | Example                                                                      |
-| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| Default                                                                                     | Example                                                                                    |
+| ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
 | ![month-visibleWeeksCount-default](../../assets/options_month-visibleWeeksCount-before.png) | ![month-visibleWeeksCount-example](../../assets/options_month-visibleWeeksCount-after.png) |
 
 [⬆️ Back to the list](#month)
@@ -592,8 +592,8 @@ calendar.setOptions({
 });
 ```
 
-| Default  | Example    |
-| ------------ | ------------ |
+| Default                                                                               | Example                                                                              |
+| ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
 | ![month-isAlways6Weeks-default](../../assets/options_month-isAlways6Weeks-before.png) | ![month-isAlways6Weeks-example](../../assets/options_month-isAlways6Weeks-after.png) |
 
 [⬆️ Back to the list](#month)
@@ -613,8 +613,8 @@ calendar.setOptions({
 });
 ```
 
-| Default                                                   | Example                                                    |
-| ------------------------------------------------------------- | ------------------------------------------------------------ |
+| Default                                                                   | Example                                                                  |
+| ------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
 | ![month-workweek-default](../../assets/options_month-workweek-before.png) | ![month-workweek-example](../../assets/options_month-workweek-after.png) |
 
 [⬆️ Back to the list](#month)
@@ -638,8 +638,8 @@ calendar.setOptions({
 });
 ```
 
-| Default  | Example    |
-| ------------ | ------------ |
+| Default                                                                                     | Example                                                                                    |
+| ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
 | ![month-visibleEventCount-default](../../assets/options_month-visibleEventCount-before.png) | ![month-visibleEventCount-example](../../assets/options_month-visibleEventCount-after.png) |
 
 [⬆️ Back to the list](#month)

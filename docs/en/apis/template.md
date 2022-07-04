@@ -26,49 +26,49 @@ calendar.setOptions({
 
 Each property of the template is a function that returns a VNode of `preact` or a string, and the parameters vary depending on the type of template. Below is the full list of templates.
 
-| Template name                                                  | Parameters                                                         | Description                                                               |
-| --------------------------------------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------ |
-| [milestone](#milestone)                                   | [EventObject](./event-object.md) | Milestone events in weekly/daily view                                     |
-| [milestoneTitle](#milestonetitle)                         | None                                                             | The left area of the milestone panel in the weekly/daily view                           |
-| [task](#task)                                             | [EventObject](./event-object.md) | Task events in weekly/daily view                                          |
-| [taskTitle](#tasktitle)                                   | None                                                             | The left area of the task panel in the weekly/daily view                                |
-| [allday](#allday)                                         | [EventObject](./event-object.md) | All day events in weekly/daily view                                        |
-| [alldayTitle](#alldaytitle)                               | None                                                             | The left area of the allday panel in the weekly/daily view                              |
-| [time](#time)                                             | [EventObject](./event-object.md) | Timed events in weekly/daily view                                         |
-| [goingDuration](#goingduration)                           | [EventObject](./event-object.md) | Travel time to a certain location of timed event in weekly/daily view               |
-| [comingDuration](#comingduration)                         | [EventObject](./event-object.md) | Return time of timed event of weekly/daily view                             |
-| [monthMoreTitleDate](#monthmoretitledate)                 | TemplateMoreTitleDate                                            | Title date of the ‘more events’ popup of monthly view                                       |
-| [monthMoreClose](#monthmoreclose)                         | None                                                             | Close button of the ‘more events’ popup of monthly view                                  |
-| [monthGridHeader](#monthgridheader)                       | TemplateMonthGrid                                                | Header area of cell in monthly view                                            |
-| [monthGridHeaderExceed](#monthgridheaderexceed)           | <code>number</code>                                              | A component that displays the number of exceeding events in the header area of a cell of the monthly view. |
-| [monthGridFooter](#monthgridfooter)                       | TemplateMonthGrid                                                | Footer area of cell in monthly view                                            |
-| [monthGridFooterExceed](#monthgridfooterexceed)           | <code>number</code>                                              | A component that displays the number of exceeding events in the footer area of a cell of the monthly view. |
-| [monthDayName](#monthdayname)                             | TemplateMonthDayName                                             | Day of the week names in the monthly view                                                      |
-| [weekDayName](#weekdayname)                               | TemplateWeekDayName                                              | Day of the week names in the weekly view                                                 |
-| [weekGridFooterExceed](#weekgridfooterexceed)             | <code>number</code>                                              | A component displaying exceeded events in allday panel in weekly/daily view            |
-| [collapseBtnTitle](#collapsebtntitle)                     | None                                                             | Collapse button component of allday panel in weekly/daily view                     |
-| [timezoneDisplayLabel](#timezonedisplaylabel)             | TemplateTimezone                                                 | Label of time zones in weekly/daily view                                 |
-| [timegridDisplayPrimaryTime](#timegriddisplayprimarytime) | TemplateNow                                              | Hours of primary time zone in weekly/daily view                             |
-| [timegridDisplayTime](#timegriddisplaytime)               | TemplateNow                                              | Hours of time zones other than the primary time zone of the weekly/daily view                 |
-| [timegridNowIndicatorLabel](#timegridnowindicatorlabel)               | TemplateNow                                              | Current time in weekly/daily view                                       |
-| [popupIsAllday](#popupisallday)                           | None                                                             | Text of ‘All day’ in event form popup                                |
-| [popupStateFree](#popupstatefree)                         | None                                                             | Text of ‘Free’ status in event form popup               |
-| [popupStateBusy](#popupstatebusy)                         | None                                                             | Text of ‘Busy’ status in event form popup                 |
-| [titlePlaceholder](#titleplaceholder)                     | None                                                             | Event name placeholder in event form popup                          |
-| [locationPlaceholder](#locationplaceholder)               | None                                                             | Event location placeholder in event form popup                       |
-| [startDatePlaceholder](#startdateplaceholder)             | None                                                             | Event start date placeholder in event form popup                  |
-| [endDatePlaceholder](#enddateplaceholder)                 | None                                                             | Event end date placeholder in event form popup                  |
-| [popupSave](#popupsave)                                   | None                                                             | Text of the save button in event form popup                              |
-| [popupUpdate](#popupupdate)                               | None                                                             | Text of the update button in event form popup                              |
-| [popupEdit](#popupedit)                                   | None                                                             | Text of the edit button in event details popup                              |
-| [popupDelete](#popupdelete)                               | None                                                             | Text of the delete button in event details popup                              |
-| [popupDetailTitle](#popupdetailtitle)                     | [EventObject](./event-object.md) | Event title in the event details popup                                      |
-| [popupDetailDate](#popupdetaildate)                       | [EventObject](./event-object.md) | Duration of the event in the event details popup                                 |
-| [popupDetailLocation](#popupdetaillocation)               | [EventObject](./event-object.md) | Location of the event in the event details popup                                 |
-| [popupDetailAttendees](#popupdetailattendees)             | [EventObject](./event-object.md) | Attendees of the event in the event details popup                               |
-| [popupDetailState](#popupdetailstate)                     | [EventObject](./event-object.md) | State of the event in the event details popup                                 |
-| [popupDetailRecurrenceRule](#popupdetailrecurrencerule)   | [EventObject](./event-object.md) | Recurrence rule of the event in the event details popup                              |
-| [popupDetailBody](#popupdetailbody)                       | [EventObject](./event-object.md) | Event details of the event in the event details popup                                 |
+| Template name                                             | Parameters                       | Description                                                                                                |
+| --------------------------------------------------------- | -------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| [milestone](#milestone)                                   | [EventObject](./event-object.md) | Milestone events in weekly/daily view                                                                      |
+| [milestoneTitle](#milestonetitle)                         | None                             | The left area of the milestone panel in the weekly/daily view                                              |
+| [task](#task)                                             | [EventObject](./event-object.md) | Task events in weekly/daily view                                                                           |
+| [taskTitle](#tasktitle)                                   | None                             | The left area of the task panel in the weekly/daily view                                                   |
+| [allday](#allday)                                         | [EventObject](./event-object.md) | All day events in weekly/daily view                                                                        |
+| [alldayTitle](#alldaytitle)                               | None                             | The left area of the allday panel in the weekly/daily view                                                 |
+| [time](#time)                                             | [EventObject](./event-object.md) | Timed events in weekly/daily view                                                                          |
+| [goingDuration](#goingduration)                           | [EventObject](./event-object.md) | Travel time to a certain location of timed event in weekly/daily view                                      |
+| [comingDuration](#comingduration)                         | [EventObject](./event-object.md) | Return time of timed event of weekly/daily view                                                            |
+| [monthMoreTitleDate](#monthmoretitledate)                 | TemplateMoreTitleDate            | Title date of the ‘more events’ popup of monthly view                                                      |
+| [monthMoreClose](#monthmoreclose)                         | None                             | Close button of the ‘more events’ popup of monthly view                                                    |
+| [monthGridHeader](#monthgridheader)                       | TemplateMonthGrid                | Header area of cell in monthly view                                                                        |
+| [monthGridHeaderExceed](#monthgridheaderexceed)           | <code>number</code>              | A component that displays the number of exceeding events in the header area of a cell of the monthly view. |
+| [monthGridFooter](#monthgridfooter)                       | TemplateMonthGrid                | Footer area of cell in monthly view                                                                        |
+| [monthGridFooterExceed](#monthgridfooterexceed)           | <code>number</code>              | A component that displays the number of exceeding events in the footer area of a cell of the monthly view. |
+| [monthDayName](#monthdayname)                             | TemplateMonthDayName             | Day of the week names in the monthly view                                                                  |
+| [weekDayName](#weekdayname)                               | TemplateWeekDayName              | Day of the week names in the weekly view                                                                   |
+| [weekGridFooterExceed](#weekgridfooterexceed)             | <code>number</code>              | A component displaying exceeded events in allday panel in weekly/daily view                                |
+| [collapseBtnTitle](#collapsebtntitle)                     | None                             | Collapse button component of allday panel in weekly/daily view                                             |
+| [timezoneDisplayLabel](#timezonedisplaylabel)             | TemplateTimezone                 | Label of time zones in weekly/daily view                                                                   |
+| [timegridDisplayPrimaryTime](#timegriddisplayprimarytime) | TemplateNow                      | Hours of primary time zone in weekly/daily view                                                            |
+| [timegridDisplayTime](#timegriddisplaytime)               | TemplateNow                      | Hours of time zones other than the primary time zone of the weekly/daily view                              |
+| [timegridNowIndicatorLabel](#timegridnowindicatorlabel)   | TemplateNow                      | Current time in weekly/daily view                                                                          |
+| [popupIsAllday](#popupisallday)                           | None                             | Text of ‘All day’ in event form popup                                                                      |
+| [popupStateFree](#popupstatefree)                         | None                             | Text of ‘Free’ status in event form popup                                                                  |
+| [popupStateBusy](#popupstatebusy)                         | None                             | Text of ‘Busy’ status in event form popup                                                                  |
+| [titlePlaceholder](#titleplaceholder)                     | None                             | Event name placeholder in event form popup                                                                 |
+| [locationPlaceholder](#locationplaceholder)               | None                             | Event location placeholder in event form popup                                                             |
+| [startDatePlaceholder](#startdateplaceholder)             | None                             | Event start date placeholder in event form popup                                                           |
+| [endDatePlaceholder](#enddateplaceholder)                 | None                             | Event end date placeholder in event form popup                                                             |
+| [popupSave](#popupsave)                                   | None                             | Text of the save button in event form popup                                                                |
+| [popupUpdate](#popupupdate)                               | None                             | Text of the update button in event form popup                                                              |
+| [popupEdit](#popupedit)                                   | None                             | Text of the edit button in event details popup                                                             |
+| [popupDelete](#popupdelete)                               | None                             | Text of the delete button in event details popup                                                           |
+| [popupDetailTitle](#popupdetailtitle)                     | [EventObject](./event-object.md) | Event title in the event details popup                                                                     |
+| [popupDetailDate](#popupdetaildate)                       | [EventObject](./event-object.md) | Duration of the event in the event details popup                                                           |
+| [popupDetailLocation](#popupdetaillocation)               | [EventObject](./event-object.md) | Location of the event in the event details popup                                                           |
+| [popupDetailAttendees](#popupdetailattendees)             | [EventObject](./event-object.md) | Attendees of the event in the event details popup                                                          |
+| [popupDetailState](#popupdetailstate)                     | [EventObject](./event-object.md) | State of the event in the event details popup                                                              |
+| [popupDetailRecurrenceRule](#popupdetailrecurrencerule)   | [EventObject](./event-object.md) | Recurrence rule of the event in the event details popup                                                    |
+| [popupDetailBody](#popupdetailbody)                       | [EventObject](./event-object.md) | Event details of the event in the event details popup                                                      |
 
 ## Usage examples
 

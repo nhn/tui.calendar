@@ -206,26 +206,26 @@ The following properties used in v1 have been removed or renamed from the theme.
 
 The removed theme value can be applied using CSS instead. The following is the CSS file associated with the removed theme value.
 
-| Removed theme values                                           | Associated file location                                                                                                |
-| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| Related to <code>month.dayname</code>                          | [dayNames.css](/apps/calendar/src/css/daygrid/dayNames.css)      |
-| Related to <code>month.schedule</code>                          | [dayGrid.css](/apps/calendar/src/css/daygrid/dayGrid.css)        |
-| Related to <code>month.moreView</code>                         | [seeMore.css](/apps/calendar/src/css/popup/seeMore.css)          |
-| Related to <code>week.dayname</code>                           | [dayNames.css](/apps/calendar/src/css/daygrid/dayNames.css)      |
-| Related to <code>week.dayGridLeft</code>                       | [allday.css](/apps/calendar/src/css/panel/allday.css)            |
-| Related to <code>week.timeGridLeft</code>                      | [timeColumn.css](/apps/calendar/src/css/timegrid/timeColumn.css) |
-| Related to <code>week.timegridSchedule</code>                  | [time.css](/apps/calendar/src/css/events/time.css)               |
+| Removed theme values                                             | Associated file location                                         |
+| ---------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Related to <code>month.dayname</code>                            | [dayNames.css](/apps/calendar/src/css/daygrid/dayNames.css)      |
+| Related to <code>month.schedule</code>                           | [dayGrid.css](/apps/calendar/src/css/daygrid/dayGrid.css)        |
+| Related to <code>month.moreView</code>                           | [seeMore.css](/apps/calendar/src/css/popup/seeMore.css)          |
+| Related to <code>week.dayname</code>                             | [dayNames.css](/apps/calendar/src/css/daygrid/dayNames.css)      |
+| Related to <code>week.dayGridLeft</code>                         | [allday.css](/apps/calendar/src/css/panel/allday.css)            |
+| Related to <code>week.timeGridLeft</code>                        | [timeColumn.css](/apps/calendar/src/css/timegrid/timeColumn.css) |
+| Related to <code>week.timegridSchedule</code>                    | [time.css](/apps/calendar/src/css/events/time.css)               |
 | Related to <code>week.gridSelection</code> (creationGuide in v1) | [column.css](/apps/calendar/src/css/timegrid/column.css)         |
-| Related to <code>week.dayGridSchedule</code>                   | [dayGrid.css](/apps/calendar/src/css/daygrid/dayGrid.css)        |
+| Related to <code>week.dayGridSchedule</code>                     | [dayGrid.css](/apps/calendar/src/css/daygrid/dayGrid.css)        |
 
 #### View related type improvement
 
 The parameters and return types of the instance methods related to the view are now clearer. The types of views used in `the` calendar are divided into three views: monthly view, `weekly` view, and `daily` view.
 
-| Method                 | Changes                                |
-| ------------------------ | --------------------------------------- |
+| Method                   | Changes                                                         |
+| ------------------------ | --------------------------------------------------------------- |
 | <code>changeView</code>  | Improved the type of the view name parameter you want to change |
-| <code>getViewName</code> | Improved type of returned view name            |
+| <code>getViewName</code> | Improved type of returned view name                             |
 
 #### Improved taskView and eventView types
 
@@ -250,18 +250,18 @@ const calendar = new Calendar('#calendar', {
 
 The options below have been moved within the options object or moved to the theme.
 
-| Option                                | Changes                                          | Additional information                                            |
-|-----------------------------------|-----------------------------------------------|--------------------------------------------------|
-| options.taskView                  | options.week.taskView                         |                                                  |
-| options.eventView                 | options.week.eventView                        |                                                  |
-| options.disableDblClick           | options.gridSelection.enableDblClick          | Default changed from <code>false</code> to <code>true</code> |
-| options.disableClick              | options.gridSelection.enableClick             | Default changed from <code>false</code> to <code>true</code> |
-| options.timezone.offsetCalculator | options.timezone.customOffsetCalculator       |                                                  |
-| options.month.grid                | Moved to [theme](../apis/theme.md)                    |                                                  |
-| options.month.moreLayerSize       | Moved to [theme](../apis/theme.md)                    |                                                  |
-| options.month.isAlways6Week       | Changed to <code>options.month.isAlways6Weeks</code> |                                                  |
-| options.month.daynames            | Changed to <code>options.month.dayNames</code>       |                                                  |
-| options.week.daynames             | Changed to <code>options.week.dayNames</code>        |                                                  |
+| Option                            | Changes                                              | Additional information                                       |
+| --------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------ |
+| options.taskView                  | options.week.taskView                                |                                                              |
+| options.eventView                 | options.week.eventView                               |                                                              |
+| options.disableDblClick           | options.gridSelection.enableDblClick                 | Default changed from <code>false</code> to <code>true</code> |
+| options.disableClick              | options.gridSelection.enableClick                    | Default changed from <code>false</code> to <code>true</code> |
+| options.timezone.offsetCalculator | options.timezone.customOffsetCalculator              |                                                              |
+| options.month.grid                | Moved to [theme](../apis/theme.md)                   |                                                              |
+| options.month.moreLayerSize       | Moved to [theme](../apis/theme.md)                   |                                                              |
+| options.month.isAlways6Week       | Changed to <code>options.month.isAlways6Weeks</code> |                                                              |
+| options.month.daynames            | Changed to <code>options.month.dayNames</code>       |                                                              |
+| options.week.daynames             | Changed to <code>options.week.dayNames</code>        |                                                              |
 
 #### Instance methods
 
