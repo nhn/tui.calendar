@@ -34,8 +34,8 @@ Each property of the template is a function that returns a VNode of `preact` or 
 | [taskTitle](#tasktitle)                                   | None                                                             | The left area of the task panel in the weekly/daily view                                |
 | [allday](#allday)                                         | [EventObject](./event-object.md) | All day events in weekly/daily view                                        |
 | [alldayTitle](#alldaytitle)                               | None                                                             | The left area of the allday panel in the weekly/daily view                              |
-| [time](#time)                                             | [EventObject](./event-object.md) | Timed events area in weekly/daily view                                         |
-| [goingDuration](#goingduration)                           | [EventObject](./event-object.md) | Travel time to a certain place of timed event in weekly/daily view               |
+| [time](#time)                                             | [EventObject](./event-object.md) | Timed events in weekly/daily view                                         |
+| [goingDuration](#goingduration)                           | [EventObject](./event-object.md) | Travel time to a certain location of timed event in weekly/daily view               |
 | [comingDuration](#comingduration)                         | [EventObject](./event-object.md) | Return time of timed event of weekly/daily view                             |
 | [monthMoreTitleDate](#monthmoretitledate)                 | TemplateMoreTitleDate                                            | Title date of the ‘more events’ popup of monthly view                                       |
 | [monthMoreClose](#monthmoreclose)                         | None                                                             | Close button of the ‘more events’ popup of monthly view                                  |
@@ -60,15 +60,15 @@ Each property of the template is a function that returns a VNode of `preact` or 
 | [endDatePlaceholder](#enddateplaceholder)                 | None                                                             | Event end date placeholder in event form popup                  |
 | [popupSave](#popupsave)                                   | None                                                             | Text of the save button in event form popup                              |
 | [popupUpdate](#popupupdate)                               | None                                                             | Text of the update button in event form popup                              |
-| [popupEdit](#popupedit)                                   | None                                                             | Text of the edit button in event detail popup                              |
-| [popupDelete](#popupdelete)                               | None                                                             | Text of the delete button in event detail popup                              |
-| [popupDetailTitle](#popupdetailtitle)                     | [EventObject](./event-object.md) | Event title in the event detail popup                                      |
-| [popupDetailDate](#popupdetaildate)                       | [EventObject](./event-object.md) | Duration of the event in the event detail popup                                 |
-| [popupDetailLocation](#popupdetaillocation)               | [EventObject](./event-object.md) | Location of the event in the event detail popup                                 |
-| [popupDetailAttendees](#popupdetailattendees)             | [EventObject](./event-object.md) | Attendees of the event in the event detail popup                               |
-| [popupDetailState](#popupdetailstate)                     | [EventObject](./event-object.md) | State of the event in the event detail popup                                 |
-| [popupDetailRecurrenceRule](#popupdetailrecurrencerule)   | [EventObject](./event-object.md) | Recurrence rule of the event in the event detail popup                              |
-| [popupDetailBody](#popupdetailbody)                       | [EventObject](./event-object.md) | Event details of the event in the event detail popup                                 |
+| [popupEdit](#popupedit)                                   | None                                                             | Text of the edit button in event details popup                              |
+| [popupDelete](#popupdelete)                               | None                                                             | Text of the delete button in event details popup                              |
+| [popupDetailTitle](#popupdetailtitle)                     | [EventObject](./event-object.md) | Event title in the event details popup                                      |
+| [popupDetailDate](#popupdetaildate)                       | [EventObject](./event-object.md) | Duration of the event in the event details popup                                 |
+| [popupDetailLocation](#popupdetaillocation)               | [EventObject](./event-object.md) | Location of the event in the event details popup                                 |
+| [popupDetailAttendees](#popupdetailattendees)             | [EventObject](./event-object.md) | Attendees of the event in the event details popup                               |
+| [popupDetailState](#popupdetailstate)                     | [EventObject](./event-object.md) | State of the event in the event details popup                                 |
+| [popupDetailRecurrenceRule](#popupdetailrecurrencerule)   | [EventObject](./event-object.md) | Recurrence rule of the event in the event details popup                              |
+| [popupDetailBody](#popupdetailbody)                       | [EventObject](./event-object.md) | Event details of the event in the event details popup                                 |
 
 ## Usage examples
 
@@ -202,7 +202,7 @@ calendar.setOptions({
 
 #### goingDuration
 
-By using the [`EventObject`](./event-object.md) parameter, you can customize the travel time from the weekly/daily view to a certain place of the timed event.
+By using the [`EventObject`](./event-object.md) parameter, you can customize the travel time from the weekly/daily view to a certain location of the timed event.
 
 ```js
 calendar.setOptions({
@@ -218,7 +218,7 @@ calendar.setOptions({
 
 #### comingDuration
 
-By using the [`EventObject`](./event-object.md) parameter, you can customize the travel time from the weekly/daily view to a certain place of the timed event.
+By using the [`EventObject`](./event-object.md) parameter, you can customize the travel time from the weekly/daily view to a certain location of the timed event.
 
 ```js
 calendar.setOptions({
@@ -330,7 +330,7 @@ calendar.setOptions({
 
 #### monthGridFooter
 
-The header area of the monthly view cell can be customized. It receives the `TemplateMonthGrid` object as a parameter.
+The footer area of the monthly view cell can be customized. It receives the `TemplateMonthGrid` object as a parameter. By default, nothing is displayed.
 
 ```js
 calendar.setOptions({
@@ -346,7 +346,7 @@ calendar.setOptions({
 
 #### monthGridFooterExceed
 
-You can customize the component that displays the number of events exceeding in the footer area of the monthly view cell. Receives the number of events exceeded as a parameter.
+You can customize the component that displays the number of events exceeding in the footer area of the monthly view cell. Receives the number of events exceeded as a parameter. By default, nothing is displayed.
 
 ```js
 calendar.setOptions({
@@ -456,7 +456,7 @@ calendar.setOptions({
 
 ![timezone-display](../../assets/template_timezoneDisplay.png)
 
-You can customize the label of the time zone in the weekly/daily view when uses two or more time zones.
+You can customize the label of the time zone in the weekly/daily view that uses two or more time zones.
 
 ```js
 calendar.setOptions({
@@ -728,7 +728,7 @@ calendar.setOptions({
 
 #### popupDetailTitle
 
-You can customize the event title in the event detail popup.
+You can customize the event title in the event details popup.
 
 ```js
 calendar.setOptions({
@@ -808,7 +808,7 @@ calendar.setOptions({
 
 #### popupDetailRecurrenceRule
 
-You can customize the event recurrence rule in the event detail popup.
+You can customize the event recurrence rule in the event details popup.
 
 ```js
 calendar.setOptions({
@@ -824,7 +824,7 @@ calendar.setOptions({
 
 #### popupDetailBody
 
-You can customize the contents of the event in the event detail popup.
+You can customize the contents of the event in the event details popup.
 
 ```js
 calendar.setOptions({
