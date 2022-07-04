@@ -4,7 +4,7 @@
 
 - [개요](#개요)
 - [설치](#설치)
-  - [패키지명 변경](#패키지명-변경)
+  - [패키지 및 파일 이름 변경](#패키지-및-파일-이름-변경)
   - [CDN 디렉토리 구조 변경](#cdn-디렉토리-구조-변경)
 - [브라우저 지원 범위(IE >= 11)](#브라우저-지원-범위ie--11)
 - [API 마이그레이션](#api-마이그레이션)
@@ -30,14 +30,41 @@
 
 ## 설치
 
-### 패키지명 변경
+### 패키지 및 파일 이름 변경
 
-패키지 명이 `tui-calendar`에서 `@toast-ui/calendar`로 변경되었다.
+패키지명이 `tui-calendar`에서 `@toast-ui/calendar`로 변경되었다.
 
 ```sh
+# v1
+npm install tui-calendar@<version> # 1.x 특정 버전
+
+# v2
 npm install @toast-ui/calendar # 최신 버전
 npm install @toast-ui/calendar@<version> # 2.0 이후 특정 버전
-npm install tui-calendar@<version> # 1.x 특정 버전
+```
+
+파일명 또한 `tui-calendar`에서 `toastui-calendar`로 변경되었다.
+
+```js
+/* Node.js 환경에서 ES6 모듈 */
+// v1
+import Calendar from 'tui-calendar';
+import "tui-calendar/dist/tui-calendar.min.css";
+
+// v2
+import Calendar from '@toast-ui/calendar';
+import '@toast-ui/calendar/toastui-calendar.min.css';
+```
+
+```html
+<!-- CDN -->
+<!-- v1 -->
+<link rel="stylesheet" href="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.min.css" />
+<script src="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.min.js"></script>
+
+<!-- v2 -->
+<link rel="stylesheet" href="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.css" />
+<script src="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.js"></script>
 ```
 
 ### CDN 디렉토리 구조 변경

@@ -4,7 +4,7 @@
 
 - [Overview](#overview)
 - [Installation](#installation)
-  - [Change the package name](#change-the-package-name)
+  - [Rename package and files](#rename-package-and-files)
   - [Change the structure of CDN directories](#change-the-structure-of-cdn-directories)
 - [Browser Compatibility Range (IE >= 11)](#browser-compatibility-range-ie--11)
 - [API migration](#api-migration)
@@ -30,14 +30,41 @@ TOAST UI Calendar v2.0, which uses [preact](https://preactjs.com/) to render cal
 
 ## Installation
 
-### Change the package name
+### Rename package and files
 
 The package name has been changed from `tui-calendar` to `@toast-ui/calendar`.
 
 ```sh
+# v1
+npm install tui-calendar@<version> # 1.x legacy version
+
+# v2
 npm install @toast-ui/calendar # latest version
 npm install @toast-ui/calendar@<version> # specific version since 2.0
-npm install tui-calendar@<version> # 1.x legacy version
+```
+
+Also, the filenames have been changed from `tui-calendar` to `toastui-calendar`.
+
+```js
+/* ES6 module in Node.js environment */
+// v1
+import Calendar from 'tui-calendar';
+import "tui-calendar/dist/tui-calendar.min.css";
+
+// v2
+import Calendar from '@toast-ui/calendar';
+import '@toast-ui/calendar/toastui-calendar.min.css';
+```
+
+```html
+<!-- CDN -->
+<!-- v1 -->
+<link rel="stylesheet" href="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.min.css" />
+<script src="https://uicdn.toast.com/tui-calendar/latest/tui-calendar.min.js"></script>
+
+<!-- v2 -->
+<link rel="stylesheet" href="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.css" />
+<script src="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.js"></script>
 ```
 
 ### Change the structure of CDN directories
