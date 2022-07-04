@@ -4,7 +4,7 @@ import { HorizontalEvent } from '@src/components/events/horizontalEvent';
 import { initCalendarStore } from '@src/contexts/calendarStore';
 import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
-import { dragAndDrop, render, screen } from '@src/test/utils';
+import { dragAndDrop, fireEvent, render, screen } from '@src/test/utils';
 import { EventBusImpl } from '@src/utils/eventBus';
 
 import type { ExternalEventTypes } from '@t/eventBus';
@@ -238,5 +238,42 @@ describe('Color values', () => {
       backgroundColor: eventColors.dragBackgroundColor,
       borderLeft: `3px solid ${eventColors.borderColor}`,
     });
+  });
+});
+
+describe('isReadOnly', () => {
+  it("should be able to show detail popup even if the model's `isReadOnly` property is `true`", () => {
+    // Given
+    const store = initCalendarStore({
+      useDetailPopup: true,
+    });
+    const eventName = 'readonly-event';
+    const uiModel = new EventUIModel(
+      new EventModel({
+        id: '1',
+        title: eventName,
+        start: new Date(2020, 0, 1, 10, 0),
+        end: new Date(2020, 0, 1, 12, 0),
+        isReadOnly: true,
+      })
+    );
+    const props = {
+      uiModel,
+      eventHeight: 30,
+      headerHeight: 0,
+    };
+    const showDetailPopupSpy = jest.fn();
+    store.getState().dispatch.popup.showDetailPopup = showDetailPopupSpy;
+
+    // When
+    render(<HorizontalEvent {...props} />, { store });
+
+    // Then
+    const event = screen.getByText(eventName);
+    // NOTE: userEvent.click is not working as expected
+    fireEvent.mouseDown(event);
+    fireEvent.mouseUp(event);
+
+    expect(showDetailPopupSpy).toHaveBeenCalled();
   });
 });
