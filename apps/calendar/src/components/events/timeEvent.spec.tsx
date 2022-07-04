@@ -4,7 +4,7 @@ import { TimeEvent } from '@src/components/events/timeEvent';
 import { initCalendarStore } from '@src/contexts/calendarStore';
 import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
-import { dragAndDrop, render, screen } from '@src/test/utils';
+import { dragAndDrop, fireEvent, render, screen } from '@src/test/utils';
 import TZDate from '@src/time/date';
 import { EventBusImpl } from '@src/utils/eventBus';
 
@@ -189,5 +189,37 @@ describe('Color values', () => {
     expect(getEventElement()).toHaveStyle({
       backgroundColor: calendarColors.dragBackgroundColor,
     });
+  });
+});
+
+describe('isReadOnly', () => {
+  it("should be able to show detail popup even if the model's `isReadOnly` property is `true`", () => {
+    // Given
+    const store = initCalendarStore({
+      useDetailPopup: true,
+    });
+    const eventName = 'readonly-event';
+    const uiModel = new EventUIModel(
+      new EventModel({
+        id: '1',
+        title: eventName,
+        start: new Date('2022-06-05T09:00:00'),
+        end: new Date('2022-06-05T1100:00'),
+        isReadOnly: true,
+      })
+    );
+    const showDetailPopupSpy = jest.fn();
+    store.getState().dispatch.popup.showDetailPopup = showDetailPopupSpy;
+
+    // When
+    render(<TimeEvent uiModel={uiModel} />, { store });
+
+    // Then
+    const event = screen.getByText(eventName);
+    // NOTE: userEvent.click is not working as expected
+    fireEvent.mouseDown(event);
+    fireEvent.mouseUp(event);
+
+    expect(showDetailPopupSpy).toHaveBeenCalled();
   });
 });
