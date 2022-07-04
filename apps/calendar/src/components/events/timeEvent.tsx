@@ -178,7 +178,11 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
   };
 
   const onMoveStart = useDrag(DRAGGING_TYPE_CREATORS.moveEvent('timeGrid', `${uiModel.cid()}`), {
-    onDragStart: () => startDragEvent(classNames.moveEvent),
+    onDragStart: () => {
+      if (isDraggable) {
+        startDragEvent(classNames.moveEvent);
+      }
+    },
     onMouseUp: (e, { draggingState }) => {
       endDragEvent(classNames.moveEvent);
 
@@ -199,10 +203,7 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
   });
   const handleMoveStart = (e: MouseEvent) => {
     e.stopPropagation();
-
-    if (isDraggable) {
-      onMoveStart(e);
-    }
+    onMoveStart(e);
   };
 
   const onResizeStart = useDrag(
