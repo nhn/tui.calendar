@@ -34,7 +34,7 @@ An option object is a nested object with the following properties. Click on the 
 | [eventFilter](#eventfilter)         | <code>(event) => !!event.isVisible</code> | Event filter function across calendars                                                                   |
 | [week](#week)                       | <code>DEFAULT_WEEK_OPTIONS</code>         | Weekly/daily view related options                                                                              |
 | [month](#month)                     | <code>DEFAULT_MONTH_OPTIONS</code>        | Monthly view related options                                                                                   |
-| [gridSelection](#gridselection)     | <code>true</code>                         | Clickable/double-clickable date/time selection                                                          |
+| [gridSelection](#gridselection)     | <code>true</code>                         | Whether clicks and double-clicks are possible for date/time selection                                                          |
 | [timezone](#timezone)               | <code>{ zones: [] }</code>                | Time zone options used by the calendar                                                                    |
 | [theme](#theme)                     | <code>DEFAULT_THEME</code>                | [Theme](./theme.md)                                                 |
 | [template](#template)               | <code>DEFAULT_TEMPLATE</code>             | [Template](./template.md)                                             |
@@ -120,7 +120,7 @@ const calendar = new Calendar('#container', {
 
 Specifies whether to allow hostname collection for [Google Analytics (GA)](https://analytics.google.com/analytics/web/). The default value is `true`. If set to `false`, statistics are not collected.
 
-[TOAST UI Calendar](https://github.com/nhn/tui.calendar) applies [GA](https://analytics.google.com/analytics/web/) to collect statistics on open source usage to see how widespread it is around the world. This serves as an important indicator to determine the future progress of the project. It collects `location.hostname` (e.g. "ui.toast.com") and is only used to measure usage statistics.
+[TOAST UI Calendar](https://github.com/nhn/tui.calendar) applies [GA](https://analytics.google.com/analytics/web/) to collect statistics on open source usage to see how widely it is used around the world. This serves as an important indicator to determine the future progress of the project. It collects `location.hostname` (e.g. "ui.toast.com") and is only used to measure usage statistics.
 
 ```js
 const calendar = new Calendar('#container', {
@@ -150,7 +150,7 @@ const calendar = new Calendar('#container', {
 ### week
 
 - Type: `WeekOptions`
-- `DEFAULT_WEEK_OPTIONS`
+- Default: `DEFAULT_WEEK_OPTIONS`
 
 ```ts
 type EventView = 'allday' | 'time';
@@ -229,7 +229,7 @@ calendar.setOptions({
 
 You can change the name of the day of the week in the daily/weekly view. The default value is `[]`, starting from the day of the week set by [startDayOfWeek](#week.startDayOfWeek).
 
-When giving this option, an array in which all days of the week from Sunday to Monday must be entered. The index of each day is the same as the result of `Date.prototype.getDay`. ([Note](https://tc39.es/ecma262/multipage/numbers-and-dates.html#sec-week-day))
+When giving this option, an array with all days of the week from Sunday to Monday must be entered. The index of each day is the same as the result of `Date.prototype.getDay`. ([Reference](https://tc39.es/ecma262/multipage/numbers-and-dates.html#sec-week-day))
 
 ```js
 calendar.setOptions({
@@ -306,13 +306,12 @@ calendar.setOptions({
 |-----------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|
 | ![week-showNowIndicator-default](../../assets/options_week-showNowIndicator-before.png) | ![week-showNowIndicator-example](../../assets/options_week-showNowIndicator-after.png) |
 
-
 #### week.showTimezoneCollapseButton
 
 - Type: `boolean`
 - Default: `false`
 
-When using multiple time zones in the weekly/daily view, you can specify whether to display the button to collapse the sub time zones. The default value is `false`, and set to `true` to display the fold button.
+When using multiple time zones in the weekly/daily view, you can specify whether to display the button to collapse the sub time zones. The default value is `false`, and set it to `true` to display the collapse button.
 
 ```js
 calendar.setOptions({
@@ -333,7 +332,7 @@ calendar.setOptions({
 - Type: `boolean`
 - Default: `false`
 
-When using multiple time zones in the weekly/daily view, specify whether to display the sub time zones in a collapsed state. The default value is `false`, and set to `true` to display in the collapsed state.
+When using multiple time zones in the weekly/daily view, you can specify whether to display the sub time zones in a collapsed state. The default value is `false`, and set it to `true` to display in the collapsed state.
 
 ```js
 calendar.setOptions({
@@ -435,7 +434,7 @@ calendar.setOptions({
 
 ### month
 
-- Type: `WeekOptions`
+- Type: `MonthOptions`
 - Default: `DEFAULT_MONTH_OPTIONS`
 
 ```ts
@@ -473,7 +472,7 @@ Specifies options related to the monthly view.
 
 You can change the name of the day of the week in the monthly view. The default value is `['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']`, starting from the day of the week set by [startDayOfWeek](#month.startDayOfWeek).
 
-When giving this option, an array in which all days of the week from Sunday to Monday must be entered. The index of each day is the same as the result of `Date.prototype.getDay`. ([Note](https://tc39.es/ecma262/multipage/numbers-and-dates.html#sec-week-day))
+When giving this option, an array with all days of the week from Sunday to Monday must be entered. The index of each day is the same as the result of `Date.prototype.getDay`. ([Reference](https://tc39.es/ecma262/multipage/numbers-and-dates.html#sec-week-day))
 
 | Value  | Day of the week   |
 | --- | ------ |
@@ -506,7 +505,7 @@ calendar.setOptions({
 
 Specifies the start day of the week in the monthly view. The default is `0`, starting from Sunday. You can specify a value from `0` (Sunday) to `6` (Saturday).
 
-The index of each day is the same as the result of `Date.prototype.getDay`. ([Note](https://tc39.es/ecma262/multipage/numbers-and-dates.html#sec-week-day))
+The index of each day of the week is the same as the result of `Date.prototype.getDay`. ([Reference](https://tc39.es/ecma262/multipage/numbers-and-dates.html#sec-week-day))
 
 | Value  | Day of the week   |
 | --- | ------ |
@@ -558,7 +557,7 @@ calendar.setOptions({
 - Type: `number`
 - Default: `0`
 
-Specifies the number of weeks shown in the monthly view. The default value is `0`, indicating 6 weeks. You can specify a value from `1` to `6` to specify a different number of states.
+Specifies the number of weeks shown in the monthly view. The default value is `0`, indicating 6 weeks. You can specify a value from `1` to `6` to specify a different number of weeks.
 
 ⚠️ If you set this option, the current date will always be in the first week.
 
@@ -694,9 +693,9 @@ interface TimezoneOptions {
 }
 ```
 
-#### Basic time zone setting
+#### Default time zone setting
 
-You can set the time zones used in the calendar. The default is `{ zones: [] }`. `zones` is an array of time zone information, and the time zone can be specified with the name of the time zone (`timezoneName`). The display label (`displayLabel`) and tooltip (`tooltip`) are used in the weekly/daily view.
+You can set the time zones used in the calendar. The default is `{ zones: [] }`. `zones` is an array of time zone information. For the time zone information, you can specify with the name of the time zone (`timezoneName`) and the display label (`displayLabel`) and tooltip (`tooltip`) used in the weekly/daily view.
 
 If there are more than one time zone information in the time zone information array, the calendar sets the first element of the array as the default time zone.
 
@@ -719,9 +718,9 @@ If two or more time zones are set and the weekly/daily view is displayed, the di
 
 #### Using user-defined time zone offset calculator
 
-The `customOffsetCalculator` should calculate the offset difference between the given time zone and UTC in a user-defined method and return it in minutes. For example, if the time zone name is `'Asia/Seoul'`, it is `UTC +9`, so `540` should be returned.
+The `customOffsetCalculator` must calculate the offset difference between the given time zone and UTC in a user-defined method and return it in minutes. For example, if the time zone name is `'Asia/Seoul'`, it is `UTC +9`, so `540` must be returned.
 
-If the `customOffsetCalculator` is defined, the calendar uses this calculator for all logic that calculates the time zone. Otherwise, there is no need to define this option except for special cases because the calendar basically uses the [`Intl.DateTimeFormat` API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat).
+If the `customOffsetCalculator` is defined, the calendar uses this calculator for all logic that calculates the time zone. Otherwise, there is no need to define this option except for special cases because the calendar uses the [`Intl.DateTimeFormat` API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat) by default.
 
 It is recommended not to use the `customOffsetCalculator` option unless there are special cases such as using a separate library to support older browsers.
 
@@ -775,7 +774,7 @@ Specifies the theme of the calendar. It can be applied when creating a calendar 
 
 ### template
 
-- Type: `ThemeObject`
+- Type: `TemplateObject`
 - Default: `DEFAULT_TEMPLATE`
 
 Specifies the calendar template. More details can be found in the [Templates documentation](./template.md).
