@@ -3,7 +3,7 @@ import produce from 'immer';
 import { DEFAULT_RESIZER_LENGTH } from '@src/constants/layout';
 import { DEFAULT_PANEL_HEIGHT } from '@src/constants/style';
 
-import type { CalendarStore, SetState } from '@t/store';
+import type { CalendarState, CalendarStore, SetState } from '@t/store';
 
 export type WeekGridRows = 'milestone' | 'task' | 'allday' | 'time' | string;
 
@@ -60,7 +60,7 @@ export function createWeekViewLayoutDispatchers(
   return {
     setLastPanelType: (type) => {
       set(
-        produce((state) => {
+        produce<CalendarState>((state) => {
           state.weekViewLayout.lastPanelType = type;
 
           if (type) {
@@ -75,7 +75,7 @@ export function createWeekViewLayoutDispatchers(
     },
     updateLayoutHeight: (height) =>
       set(
-        produce((state) => {
+        produce<CalendarState>((state) => {
           const { lastPanelType } = state.weekViewLayout;
 
           state.layout = height;
@@ -90,7 +90,7 @@ export function createWeekViewLayoutDispatchers(
       ),
     updateDayGridRowHeight: ({ rowName, height }) =>
       set(
-        produce((state) => {
+        produce<CalendarState>((state) => {
           const { lastPanelType } = state.weekViewLayout;
 
           state.weekViewLayout.dayGridRows[rowName] = { height };
@@ -105,7 +105,7 @@ export function createWeekViewLayoutDispatchers(
       ),
     updateDayGridRowHeightByDiff: ({ rowName, diff }) =>
       set(
-        produce((state) => {
+        produce<CalendarState>((state) => {
           const { lastPanelType } = state.weekViewLayout;
           const height =
             state.weekViewLayout.dayGridRows?.[rowName]?.height ?? DEFAULT_PANEL_HEIGHT;

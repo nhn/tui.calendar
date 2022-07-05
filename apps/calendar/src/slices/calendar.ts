@@ -41,37 +41,42 @@ export function createCalendarDispatchers(set: SetState<CalendarStore>): Calenda
   return {
     createEvents: (events) =>
       set(
-        produce((state: CalendarState) => {
-          createEvents(state.calendar, events);
+        produce<CalendarState>((state) => {
+          createEvents(state.calendar as Parameters<typeof createEvents>[0], events);
         })
       ),
     updateEvent: ({ event, eventData }) =>
       set(
-        produce((state: CalendarState) => {
-          updateEvent(state.calendar, event.id, event.calendarId, eventData);
+        produce<CalendarState>((state) => {
+          updateEvent(
+            state.calendar as Parameters<typeof updateEvent>[0],
+            event.id,
+            event.calendarId,
+            eventData
+          );
         })
       ),
     deleteEvent: (event) =>
       set(
-        produce((state: CalendarState) => {
-          deleteEvent(state.calendar, event);
+        produce<CalendarState>((state) => {
+          deleteEvent(state.calendar as Parameters<typeof deleteEvent>[0], event);
         })
       ),
     clearEvents: () =>
       set(
-        produce((state: CalendarState) => {
-          clearEvents(state.calendar);
+        produce<CalendarState>((state) => {
+          clearEvents(state.calendar as Parameters<typeof clearEvents>[0]);
         })
       ),
     setCalendars: (calendars) =>
       set(
-        produce((state: CalendarState) => {
+        produce<CalendarState>((state) => {
           state.calendar.calendars = calendars;
         })
       ),
     setCalendarColor: (calendarId, colorOptions) =>
       set(
-        produce((state: CalendarState) => {
+        produce<CalendarState>((state) => {
           const calendars = state.calendar.calendars.map((calendar) => {
             if (calendar.id === calendarId) {
               return {
@@ -101,7 +106,7 @@ export function createCalendarDispatchers(set: SetState<CalendarStore>): Calenda
       ),
     setCalendarVisibility: (calendarIds, isVisible) =>
       set(
-        produce((state: CalendarState) => {
+        produce<CalendarState>((state) => {
           const events = state.calendar.events.toArray();
 
           state.calendar.events = createEventCollection<EventModel>(
