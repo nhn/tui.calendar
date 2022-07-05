@@ -6,7 +6,7 @@ The following is a set of guidelines for contributing to TOAST UI. These are mos
 
 ## Reporting Bugs
 
-Bugs are tracked as GitHub issues. Search the list and try to reproduce on [demo](https://nhn.github.io/tui.calendar/latest/tutorial-example00-basic) before you create an issue. When you create an issue, please provide the following information by filling in the template.
+Bugs are tracked as [GitHub issues](https://github.com/nhn/tui.calendar/issues). Search the issue list and try to reproduce on [demo](https://nhn.github.io/tui.calendar/latest/tutorial-00-calendar-app) before you create an issue. When you create an issue, please provide the following information by filling in the template.
 
 Explain the problem and include additional details to help maintainers reproduce the problem:
 
@@ -45,7 +45,7 @@ Unsure where to begin contributing to TOAST UI? You can start by looking through
 
 - Set up your development environment
 - Make change from a right branch
-- Be sure the code passes `npm run lint`, `npm run test`
+- Be sure the code passes `npm run lint`, `npm run test`, `npm run test:playwright`
 - Make a pull request
 
 ### Development environment
@@ -54,6 +54,7 @@ Unsure where to begin contributing to TOAST UI? You can start by looking through
 - Checkout to the right branch
 - Install dependencies by `npm install`
 - Start development by `npm run develop`
+  - For wrappers, `npm run develop --workspace @toast-ui/react-calendar` or `npm run develop --workspace @toast-ui/vue-calendar`
 
 ### Make changes
 
