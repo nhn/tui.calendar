@@ -191,7 +191,7 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
         showDetailPopup(
           {
             event: uiModel.model,
-            eventRect: eventContainerRef.current.getBoundingClientRect(),
+            eventRect: eventContainerRef.current,
           },
           false
         );

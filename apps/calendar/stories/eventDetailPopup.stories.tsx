@@ -18,17 +18,12 @@ export default {
   title: 'Popups/EventDetailPopup',
 };
 
-function Wrapper({ children, event }: PropsWithChildren<EventDetailPopupParam>) {
+function Wrapper({ children, event, eventRect }: PropsWithChildren<EventDetailPopupParam>) {
   const { showDetailPopup } = useDispatch('popup');
   showDetailPopup(
     {
       event,
-      eventRect: {
-        top: 0,
-        left: 0,
-        width: 100,
-        height: 100,
-      },
+      eventRect,
     },
     false
   );
@@ -38,7 +33,17 @@ function Wrapper({ children, event }: PropsWithChildren<EventDetailPopupParam>) 
 
 const Template: Story<EventDetailPopupParam> = ({ event }) => (
   <ProviderWrapper>
-    <Wrapper event={event}>
+    <Wrapper
+      event={event}
+      eventRect={
+        {
+          top: 0,
+          left: 0,
+          width: 100,
+          height: 100,
+        } as unknown as HTMLElement
+      }
+    >
       <EventDetailPopup />
       <EventFormPopup />
     </Wrapper>

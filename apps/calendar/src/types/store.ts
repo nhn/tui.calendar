@@ -26,7 +26,6 @@ export interface Rect {
 interface BasePopupParam {
   popupPosition?: PopupPosition;
   popupArrowPointPosition?: PopupArrowPointPosition;
-  eventRect?: Rect;
   close?: () => void;
 }
 
@@ -55,6 +54,7 @@ export interface EventFormPopupParam extends BasePopupParam {
 
 export interface EventDetailPopupParam extends BasePopupParam {
   event: EventModel;
+  eventRect: HTMLElement;
 }
 
 export type PopupPosition = {

@@ -35,8 +35,12 @@ const classNames = {
   verticalLine: cls('vertical-line'),
 };
 
-function calculatePopupPosition(eventRect: Rect, layoutRect: Rect, popupRect: Rect) {
+function calculatePopupPosition(eventRect: HTMLElement, layoutRect: Rect, popupRect: Rect) {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   let top = eventRect.top + eventRect.height / 2 - popupRect.height / 2;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   let left = eventRect.left + eventRect.width;
 
   if (isTopOutOfLayout(top, layoutRect, popupRect)) {
@@ -44,14 +48,20 @@ function calculatePopupPosition(eventRect: Rect, layoutRect: Rect, popupRect: Re
   }
 
   if (isLeftOutOfLayout(left, layoutRect, popupRect)) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     left = eventRect.left - popupRect.width;
   }
 
   return [Math.max(top, layoutRect.top), Math.max(left, layoutRect.left)];
 }
 
-function calculatePopupArrowPosition(eventRect: Rect, layoutRect: Rect, popupRect: Rect) {
+function calculatePopupArrowPosition(eventRect: HTMLElement, layoutRect: Rect, popupRect: Rect) {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const top = eventRect.top + eventRect.height / 2;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const popupLeft = eventRect.left + eventRect.width;
 
   const isOutOfLayout = popupLeft + popupRect.width > layoutRect.left + layoutRect.width;
@@ -121,7 +131,11 @@ export function EventDetailPopup() {
   } = event;
 
   const popupArrowPointPosition = {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     top: eventRect.top + eventRect.height / 2,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     left: eventRect.left + eventRect.width / 2,
   };
 
