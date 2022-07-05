@@ -316,7 +316,7 @@ calendar.setTheme({
 
 #### common-saturday
 
-Specifies the color of the day of the week. The default value is `'#333'`.
+Specifies the color of Saturday. The default value is `'#333'`.
 
 | Default                                                             | Example                                                            |
 | ------------------------------------------------------------------- | ------------------------------------------------------------------ |
@@ -358,7 +358,7 @@ calendar.setTheme({
 
 #### week-dayName
 
-Specifies the day of the week/daily view. You can specify the left, top, and bottom border and `background` colors with `borderLeft`, `borderTop`, `borderBottom`, and `backgroundColor`. The default values are `'none'`, `'1px solid #e5e5e5'`, `'1px solid #e5e5e5'`, `'inherit'`.
+Specifies the day of the week/daily view. You can specify the left, top, and bottom border and `background` colors with `borderLeft`, `borderTop`, `borderBottom`, and `backgroundColor`. The default values are `'none'`, `'1px solid #e5e5e5'`, `'1px solid #e5e5e5'`, and `'inherit'`.
 
 | Default                                                       | Example                                                      |
 | ------------------------------------------------------------- | ------------------------------------------------------------ |
@@ -381,7 +381,7 @@ calendar.setTheme({
 
 #### week-dayGrid
 
-Specifies the cell of each panel of the weekly/daily view. You can specify the right border and background color with `borderRight` and `backgroundColor`, and the default values are `'1px solid #e5e5e5'` and `'inherit'`. When the background color is changed, the background color of the column except for weekends will be changed.
+Specifies the cell of each panel of the weekly/daily view. You can specify the right border and background color with `borderRight` and `backgroundColor`, and the default values are `'1px solid #e5e5e5'` and `'inherit'`. When the background color is changed, the background color of the columns except for weekends will be changed.
 
 | Default                                                       | Example                                                      |
 | ------------------------------------------------------------- | ------------------------------------------------------------ |
@@ -402,7 +402,7 @@ calendar.setTheme({
 
 #### week-dayGridLeft
 
-Specifies the cell of each panel of the weekly/daily view. You can specify the right border and background color with `borderRight` and `backgroundColor`, and the default values are `'1px solid #e5e5e5'` and `'inherit'`. When the background color is changed, the background color of the column except for weekends is also changed.
+Specifies the left area of each panel in the weekly/daily view. You can specify the right border, background color, and width with `borderRight`, and width, and the default values are `'1px solid #e5e5e5'` and `'inherit'`, and `'72px'`.
 
 | Default                                                               | Example                                                              |
 | --------------------------------------------------------------------- | -------------------------------------------------------------------- |
@@ -444,7 +444,7 @@ calendar.setTheme({
 
 #### week-timeGridLeft
 
-Specifies the left side of the timed event area in the weekly/daily view. You can specify the right border, background color, and width with `borderRight`, `backgroundColor`, and `width` properties. The default values are `'1px solid #e5e5e5'`, `'inherit'`, and `'72px'`.
+Specifies the left side of the timed event area in the weekly/daily view. You can specify the right border, background color, and width with `borderRight`, `backgroundColor`, and `width`. The default values are `'1px solid #e5e5e5'`, `'inherit'`, and `'72px'`.
 
 | Default                                                                 | Example                                                                |
 | ----------------------------------------------------------------------- | ---------------------------------------------------------------------- |
@@ -466,7 +466,7 @@ calendar.setTheme({
 
 #### week-timeGridLeftAdditionalTimezone
 
-Specifies sub-time zones displayed in the left area of the timed event area in the weekly/daily view. The background color can be specified as `backgroundColor`, and the default value is `'white'`.
+Specifies sub-time zones displayed in the left area of the timed event area in the weekly/daily view. The background color can be specified with `backgroundColor`, and the default value is `'white'`.
 
 | Default                                                                                                     | Example                                                                                                    |
 | ----------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
@@ -486,7 +486,7 @@ calendar.setTheme({
 
 #### week-timeGridHalfHourLine
 
-In the weekly/daily view, specifies the dividing line of every 30 minutes of an hour in the timed event area. You can specify the lower border with `borderBottom`, and the default value is `'none'`.
+In the weekly/daily view, specifies the dividing line of every 30 minutes of an hour in the timed event area. You can specify the bottom border with `borderBottom`, and the default value is `'none'`.
 
 | Default                                                                                 | Example                                                                                |
 | --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
@@ -504,7 +504,7 @@ calendar.setTheme({
 
 #### week-timeGridHourLine
 
-In the weekly/daily view, specifies dividing line of every hour in the timed event area. You can specify the lower border with `borderBottom`, and the default value is `'none'`.
+In the weekly/daily view, specifies dividing line of every hour in the timed event area. You can specify the bottom border with `borderBottom`, and the default value is `'none'`.
 
 | Default                                                                         | Example                                                                        |
 | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
@@ -564,7 +564,7 @@ calendar.setTheme({
 
 #### week-nowIndicatorBullet
 
-Specifies the point displayed for today's date on the current time indicator. The background color can be specified as `backgroundColor`, and the default value is `'#515ce6'`.
+Specifies the point displayed for today's date on the current time indicator. The background color can be specified with `backgroundColor`, and the default value is `'#515ce6'`.
 
 | Default                                                                             | Example                                                                            |
 | ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
@@ -664,7 +664,7 @@ calendar.setTheme({
 
 #### week-weekend
 
-Specifies weekend columns of the timed event area in the weekly/daily view. The background color can be specified as `backgroundColor`, and the default value is `'inherit'`.
+Specifies weekend columns of the timed event area in the weekly/daily view. The background color can be specified with `backgroundColor`, and the default value is `'inherit'`.
 
 | Default                                                       | Example                                                      |
 | ------------------------------------------------------------- | ------------------------------------------------------------ |
@@ -854,7 +854,7 @@ calendar.setTheme({
 
 #### month-moreViewTitle
 
-Specifies the header area of the 'more events' pop-up of the monthly view. The background color can be specified as `backgroundColor`, and the default value is `'inherit'`.
+Specifies the header area of the 'more events' pop-up of the monthly view. The background color can be specified with `backgroundColor`, and the default value is `'inherit'`.
 
 | Default                                                                     | Example                                                                    |
 | --------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
@@ -874,7 +874,7 @@ calendar.setTheme({
 
 #### month-weekend
 
-Specifies the weekend cell of the monthly view. The background color can be specified as `backgroundColor`, and the default value is `'inherit'`.
+Specifies the weekend cell of the monthly view. The background color can be specified with `backgroundColor`, and the default value is `'inherit'`.
 
 | Default                                                         | Example                                                        |
 | --------------------------------------------------------------- | -------------------------------------------------------------- |
@@ -896,7 +896,7 @@ Specifies the header and footer height of each cell of the monthly view. By defa
 
 The default value of `headerHeight` is `31`, and the default value of `footerHeight` is `null`.
 
-⚠️ If the attribute value is `null`, the header or footer is not displayed.
+⚠️ If the property value is `null`, the header or footer is not displayed.
 
 | Default                                                          | Example                                                        |
 | ---------------------------------------------------------------- | -------------------------------------------------------------- |
