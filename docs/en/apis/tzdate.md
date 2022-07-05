@@ -2,7 +2,7 @@
 
 ## Description
 
-TZDate is a custom date class created to handle timezones. When creating a schedule, the schedule start date or end date can be specified as TZDate, and the date and time-related values in the calendar API are returned as TZDate.
+TZDate is a custom date class created to handle timezones. When creating an event, the event start date or end date can be specified with TZDate, and the date and time-related values in the calendar API are returned as TZDate.
 
 ```js
 import Calendar, { TZDate } from '@toast-ui/calendar';
@@ -28,14 +28,14 @@ console.log(calendar.getEvent('1', 'cal1').start); // TZDate
   - `new TZDate(date?: number | string | Date | TZDate)`
   - `new TZDate(year: number, monthIndex: number, day?: number, hours?: number, minutes?: number, seconds?: number, milliseconds?: number)`
 - Parameters
-  - `date` or individual date and time values representing the date and time
+  - `date` or individual date and time components: values representing the date and time
 
 TZDate can be created with the following parameters.
 
 1. Without parameters: Without parameters, a TZDate instance with the date and time of creation is created.
 2. UNIX timestamp value
-3. timestamp string
-4. individual date and time components
+3. Timestamp string
+4. Individual date and time components
 5. Date instance
 6. TZDate instance
 
@@ -55,39 +55,39 @@ const now2 = new TZDate(new TZDate()); // TZDate instance
 
 💡 Click on a method to see more detailed explanations and usage examples.
 
-| Method                                  | Description                                                                                                             |
-| --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| [toString](#tostring)                   | Returns the TZDate instance date and time as a string.                                                                  |
-| [toDate](#todate)                       | Returns the date and time of the TZDate instance as a Date object.                                                      |
-| [valueOf](#valueof)                     | Returns the elapsed time (in milliseconds) from January 1, 1970 UTC to the date and time of the TZDate instance.        |
-| [addFullYear](#addfullyear)             | Adds years by a given numeric value.                                                                                    |
-| [addMonth](#addmonth)                   | Adds months by a given numeric value.                                                                                   |
-| [addDate](#adddate)                     | Adds a number of days to a given numeric value.                                                                         |
-| [addHours](#addhours)                   | Adds hours by a given numeric value.                                                                                    |
-| [addMinutes](#addminutes)               | Adds minutes to a given numeric value.                                                                                  |
-| [addSeconds](#addseconds)               | Adds seconds to the given numeric value.                                                                                |
-| [addMilliseconds](#addmilliseconds)     | Adds milliseconds to a given numeric value.                                                                             |
-| [getTime](#gettime)                     | Returns the elapsed time (in milliseconds) from January 1, 1970 UTC to the date and time of the TZDate instance.        |
-| [getFullYear](#getfullyear)             | Returns the year of the TZDate instance date and time.                                                                  |
-| [getMonth](#getmonth)                   | Returns the month of the TZDate instance date and time. Month is a zero-based value. (ex. `2` in case of March)         |
-| [getDate](#getdate)                     | Returns the date of the TZDate instance.                                                                                |
-| [getDay](#getday)                       | Returns a numeric value corresponding to the day of the week of the TZDate instance date and time. 0 represents Sunday. |
-| [getHours](#gethours)                   | Returns the hours of the TZDate instance.                                                                               |
-| [getMinutes](#getminutes)               | Returns the minutes of the TZDate instance.                                                                             |
-| [getSeconds](#getseconds)               | Returns the seconds of the TZDate instance.                                                                             |
-| [getMilliseconds](#getmilliseconds)     | Returns the milliseconds of the TZDate instance.                                                                        |
-| [getTimezoneOffset](#gettimezoneoffset) | Returns the timezone offset of the TZDate instance in minutes.                                                          |
-| [setWithRaw](#setwithraw)               | Set the date and time of the TZDate instance with individual date and time parameters.                                  |
-| [setTime](#settime)                     | Set the TZDate instance date and time in milliseconds since January 1, 1970 UTC.                                        |
-| [setFullYear](#setfullyear)             | Set the year and the date of the TZDate instance as a given numeric value.                                              |
-| [setMonth](#setmonth)                   | Set the month of the TZDate instance as a given numeric value. Month is a zero-based value. (ex. `2` in case of March)  |
-| [setDate](#setdate)                     | Set the date of the TZDate instance as a given numeric value.                                                           |
-| [setHours](#sethours)                   | Set the hours of the TZDate instance as a given numeric value.                                                          |
-| [setMinutes](#setminutes)               | Set the minutes of the TZDate instance as a given numeric value.                                                        |
-| [setSeconds](#setseconds)               | Set the seconds of the TZDate instance as a given numeric value.                                                        |
-| [setMilliseconds](#setmilliseconds)     | Set the milliseconds of the TZDate instance as a given numeric value.                                                   |
-| [tz](#tz)                               | Returns a new TZDate instance following the given timezone.                                                             |
-| [local](#local)                         | Returns a new TZDate instance following the system timezone.                                                            |
+| Method                                  | Description                                                                                                                                    |
+| --------------------------------------- |------------------------------------------------------------------------------------------------------------------------------------------------|
+| [toString](#tostring)                   | Returns the date and time of the TZDate instance as a string.                                                                                  |
+| [toDate](#todate)                       | Returns the date and time of the TZDate instance as a Date object.                                                                             |
+| [valueOf](#valueof)                     | Returns the elapsed time (in milliseconds) from January 1, 1970 UTC to the date and time of the TZDate instance.                               |
+| [addFullYear](#addfullyear)             | Adds years by a given numeric value.                                                                                                           |
+| [addMonth](#addmonth)                   | Adds months by a given numeric value.                                                                                                          |
+| [addDate](#adddate)                     | Adds a number of days to a given numeric value.                                                                                                |
+| [addHours](#addhours)                   | Adds hours by a given numeric value.                                                                                                           |
+| [addMinutes](#addminutes)               | Adds minutes to a given numeric value.                                                                                                         |
+| [addSeconds](#addseconds)               | Adds seconds to the given numeric value.                                                                                                       |
+| [addMilliseconds](#addmilliseconds)     | Adds milliseconds to a given numeric value.                                                                                                    |
+| [getTime](#gettime)                     | Returns the elapsed time (in milliseconds) from January 1, 1970 UTC to the date and time of the TZDate instance.                               |
+| [getFullYear](#getfullyear)             | Returns the year of the TZDate instance date and time.                                                                                         |
+| [getMonth](#getmonth)                   | Returns the month of the TZDate instance date and time. Month is a zero-based value. (for example, `2` in case of March)                       |
+| [getDate](#getdate)                     | Returns the day of the TZDate instance date and time.                                                                                          |
+| [getDay](#getday)                       | Returns a numeric value corresponding to the day of the week of the TZDate instance date and time. 0 represents Sunday.                        |
+| [getHours](#gethours)                   | Returns the hours of the TZDate instance date and time.                                                                                        |
+| [getMinutes](#getminutes)               | Returns the minutes of the TZDate instanc date and timee.                                                                                      |
+| [getSeconds](#getseconds)               | Returns the seconds of the TZDate instanc date and timee.                                                                                      |
+| [getMilliseconds](#getmilliseconds)     | Returns the milliseconds of the TZDate instanc date and timee.                                                                                 |
+| [getTimezoneOffset](#gettimezoneoffset) | Returns the timezone offset of the TZDate instance in minutes.                                                                                 |
+| [setWithRaw](#setwithraw)               | Sets the day and time of the TZDate instance with individual date and time components.                                                         |
+| [setTime](#settime)                     | Sets the TZDate instance date and time in milliseconds since January 1, 1970 UTC.                                                              |
+| [setFullYear](#setfullyear)             | Sets the year and the date of the TZDate instance as a given numeric value.                                                                    |
+| [setMonth](#setmonth)                   | Sets the month of the TZDate instance date and time as a given numeric value. Month is a zero-based value. (for example, `2` in case of March) |
+| [setDate](#setdate)                     | Sets the date of the TZDate instance date and time as a given numeric value.                                                                   |
+| [setHours](#sethours)                   | Sets the hours of the TZDate instance date and time as a given numeric value.                                                                  |
+| [setMinutes](#setminutes)               | Sets the minutes of the TZDate instance date and time as a given numeric value.                                                                |
+| [setSeconds](#setseconds)               | Sets the seconds of the TZDate instance date and time as a given numeric value.                                                                |
+| [setMilliseconds](#setmilliseconds)     | Sets the milliseconds of the TZDate instance as a given numeric value.                                                                         |
+| [tz](#tz)                               | Returns a new TZDate instance following the given timezone.                                                                                    |
+| [local](#local)                         | Returns a new TZDate instance following the system timezone.                                                                                   |
 
 ### toString
 
@@ -223,9 +223,9 @@ Returns the month of the TZDate instance date and time. Month is a zero-based va
 ### getDate
 
 - Type: `getDate(): number`
-- Returns: `number` - the date of the TZDate instance date and time
+- Returns: `number` - the day of the TZDate instance date and time
 
-Returns the date of the TZDate instance.
+Returns the day of the TZDate instance.
 
 [⬆️ Back to the list](#instance-methods)
 
@@ -241,9 +241,9 @@ Returns a numeric value corresponding to the day of the week of the TZDate insta
 ### getHours
 
 - Type: `getHours(): number`
-- Returns: `number` - the hours of the TZDate instance
+- Returns: `number` - the hours of the TZDate instance date and time
 
-Returns the hours of the TZDate instance.
+Returns the hours of the TZDate instance date and time.
 
 [⬆️ Back to the list](#instance-methods)
 
@@ -252,7 +252,7 @@ Returns the hours of the TZDate instance.
 - Type: `getMinutes(): number`
 - Returns: `number` - the minutes of the TZDate instance date and time
 
-Returns the minutes of the TZDate instance.
+Returns the minutes of the TZDate instance date and time.
 
 [⬆️ Back to the list](#instance-methods)
 
@@ -261,7 +261,7 @@ Returns the minutes of the TZDate instance.
 - Type: `getSeconds(): number`
 - Returns: `number` - the seconds of the date and time of the TZDate instance
 
-Returns the seconds of the TZDate instance.
+Returns the seconds of the TZDate instance date and time.
 
 [⬆️ Back to the list](#instance-methods)
 
@@ -270,7 +270,7 @@ Returns the seconds of the TZDate instance.
 - Type: `getMilliseconds(): number`
 - Returns: `number` - the milliseconds of the date and time of the TZDate instance
 
-Returns the milliseconds of the TZDate instance.
+Returns the milliseconds of the TZDate instance date and time.
 
 [⬆️ Back to the list](#instance-methods)
 
@@ -289,14 +289,14 @@ Returns the timezone offset of the TZDate instance in minutes.
 - Parameters
   - `y` : a year to specify
   - `m` : a month to specify
-  - `d` : a date to specify
+  - `d` : a day to specify
   - `h` : hours to specify
   - `M` : minutes to specify
   - `s` : seconds to specify
   - `ms` : milliseconds to specify
 - Returns: `TZDate` - changed TZDate
 
-Specifies the date and time of the TZDate instance with individual date and time parameters. Changes an existing TZDate instance and returns it.
+Specifies the date and time of the TZDate instance with individual date and time components. Changes an existing TZDate instance and returns it.
 
 [⬆️ Back to the list](#instance-methods)
 
@@ -305,9 +305,9 @@ Specifies the date and time of the TZDate instance with individual date and time
 - Type: `setTime(t: number): number`
 - Parameters
   - `t` : the number of milliseconds since January 1, 1970 UTC to specify
-- Returns the elapsed time (in milliseconds) from January 1, 1970 UTC to the date and time of the TZDate instance.
+- Returns: `number` - the elapsed time (in milliseconds) from January 1, 1970 UTC to the date and time of the changed TZDate instance.
 
-Set the TZDate instance date and time in milliseconds since January 1, 1970 UTC.
+Set the TZDate instance date and time with the elapsed time(in milliseconds) since January 1, 1970 UTC. Changes an existing TZDate instance.
 
 [⬆️ Back to the list](#instance-methods)
 
@@ -316,9 +316,9 @@ Set the TZDate instance date and time in milliseconds since January 1, 1970 UTC.
 - Type: `setFullYear(y: number, m?: number, d?: number): number`
 - Parameters
   - `y` : a year to specify
-  - `m` : The month to specify. If not, the month of the existing TZDate instance date and time is maintained.
-  - `d` : The date to specify. If not, the date of the existing TZDate instance is maintained.
-- Returns the elapsed time (in milliseconds) from January 1, 1970 UTC to the date and time of the TZDate instance.
+  - `m` : The month to specify. If not specified, the month of the existing TZDate instance date and time is maintained.
+  - `d` : The day to specify. If not specified, the day of the existing TZDate instance is maintained.
+- Returns: `number` - the elapsed time (in milliseconds) from January 1, 1970 UTC to the date and time of the changed TZDate instance.
 
 Specifies the year of the date and time of the TZDate instance as a given numeric value. You can additionally specify the month and date. Change an existing TZDate instance.
 
@@ -329,10 +329,10 @@ Specifies the year of the date and time of the TZDate instance as a given numeri
 - Type: `setMonth(m: number, d?: number): number`
 - Parameters
   - `m` : a month to specify
-  - `d` : The date to specify. If not, the date of the existing TZDate instance is maintained.
-- Returns the elapsed time (in milliseconds) from January 1, 1970 UTC to the date and time of the TZDate instance.
+  - `d` : The day to specify. If not specified, the day of the existing TZDate instance is maintained.
+- Returns: `number` - the elapsed time (in milliseconds) from January 1, 1970 UTC to the date and time of the changed TZDate instance.
 
-Specifies the month of the date and time of the TZDate instance as a given numeric value. Month is a zero-based value. (ex. `2` in case of March) The date can also be additionally specified. Change an existing TZDate instance.
+Specifies the month of the date and time of the TZDate instance as a given numeric value. Month is a zero-based value. (for example, `2` in case of March) The day can also be additionally specified. Changes an existing TZDate instance.
 
 [⬆️ Back to the list](#instance-methods)
 
@@ -340,10 +340,10 @@ Specifies the month of the date and time of the TZDate instance as a given numer
 
 - Type: `addDate(d: number): TZDate`
 - Parameters
-  - `d` : a date to specify
-- Returns the elapsed time (in milliseconds) from January 1, 1970 UTC to the date and time of the TZDate instance.
+  - `d` : a day to specify
+- Returns: `number` - the elapsed time (in milliseconds) from January 1, 1970 UTC to the date and time of the changed TZDate instance.
 
-TZDate Specifies the date of the instance as a given numeric value. Change an existing TZDate instance.
+Specifies the day of the TZDate instance as a given numeric value. Changes an existing TZDate instance.
 
 [⬆️ Back to the list](#instance-methods)
 
@@ -352,12 +352,12 @@ TZDate Specifies the date of the instance as a given numeric value. Change an ex
 - Type: `setHours(h: number, M?: number, s?: number, ms?: number): number`
 - Parameters
   - `h` : hours to specify
-  - `M` : minutes to specify. If not, the minutes of the existing TZDate instance date and time are maintained.
-  - `s` : seconds to specify. If not, the seconds of the existing TZDate instance date and time are maintained.
-  - `ms` : milliseconds to specify. If not, the milliseconds of the old TZDate instance date and time are maintained.
-- Returns the elapsed time (in milliseconds) from January 1, 1970 UTC to the date and time of the TZDate instance.
+  - `M` : minutes to specify. If not specified, the minutes of the existing TZDate instance date and time are maintained.
+  - `s` : seconds to specify. If not specified, the seconds of the existing TZDate instance date and time are maintained.
+  - `ms` : milliseconds to specify. If not specified, the milliseconds of the old TZDate instance date and time are maintained.
+- Returns: `number` - the elapsed time (in milliseconds) from January 1, 1970 UTC to the date and time of the changed TZDate instance.
 
-Specifies the hour of the TZDate instance date and time as a given numeric value. You can additionally specify minutes, seconds, and milliseconds. Change an existing TZDate instance.TZDate
+Specifies the hour of the TZDate instance date and time as a given numeric value. You can additionally specify minutes, seconds, and milliseconds. Changes an existing TZDate instance.TZDate
 
 [⬆️ Back to the list](#instance-methods)
 
@@ -366,11 +366,11 @@ Specifies the hour of the TZDate instance date and time as a given numeric value
 - Type: `setMinutes(M: number, s?: number, ms?: number): number`
 - Parameters
   - `M` : minutes to specify
-  - `s` : seconds to specify. If not, the seconds of the existing TZDate instance date and time are maintained.
-  - `ms` : milliseconds to specify. If not, the milliseconds of the old TZDate instance date and time are maintained.
-- Returns the elapsed time (in milliseconds) from January 1, 1970 UTC to the date and time of the TZDate instance.
+  - `s` : seconds to specify. If not specified, the seconds of the existing TZDate instance date and time are maintained.
+  - `ms` : milliseconds to specify. If not specified, the milliseconds of the old TZDate instance date and time are maintained.
+- Returns: `number` - the elapsed time (in milliseconds) from January 1, 1970 UTC to the date and time of the changed TZDate instance.
 
-Specifies the minute of the TZDate instance date and time as a given numeric value. Seconds and milliseconds can be additionally specified. Change an existing TZDate instance.
+Specifies the minute of the TZDate instance date and time as a given numeric value. Seconds and milliseconds can be additionally specified. Changes an existing TZDate instance.
 
 [⬆️ Back to the list](#instance-methods)
 
@@ -379,10 +379,10 @@ Specifies the minute of the TZDate instance date and time as a given numeric val
 - Type: `setSeconds(s: number, ms?: number): number`
 - Parameters
   - `s` : seconds to specify
-  - `ms` : milliseconds to specify. If not, the milliseconds of the old TZDate instance date and time are maintained.
-- Returns the elapsed time (in milliseconds) from January 1, 1970 UTC to the date and time of the TZDate instance.
+  - `ms` : milliseconds to specify. If not specified, the milliseconds of the old TZDate instance date and time are maintained.
+- Returns: `number` - the elapsed time (in milliseconds) from January 1, 1970 UTC to the date and time of the changed TZDate instance.
 
-Specifies the second of the TZDate instance date and time as a given numeric value. You can also specify additional milliseconds. Change an existing TZDate instance.
+Specifies the second of the TZDate instance date and time as a given numeric value. You can also specify additional milliseconds. Changes an existing TZDate instance.
 
 [⬆️ Back to the list](#instance-methods)
 
@@ -391,9 +391,9 @@ Specifies the second of the TZDate instance date and time as a given numeric val
 - Type: `setMilliseconds(ms: number): number`
 - Parameters
   - `ms` : milliseconds to specify
-- Returns the elapsed time (in milliseconds) from January 1, 1970 UTC to the date and time of the TZDate instance.
+- Returns: `number` - the elapsed time (in milliseconds) from January 1, 1970 UTC to the date and time of the changed TZDate instance.
 
-Specifies the number of milliseconds of the date and time of the TZDate instance as a given numeric value. Change an existing TZDate instance.
+Specifies the number of milliseconds of the date and time of the TZDate instance as a given numeric value. Changes an existing TZDate instance.
 
 [⬆️ Back to the list](#instance-methods)
 
@@ -402,7 +402,7 @@ Specifies the number of milliseconds of the date and time of the TZDate instance
 - Type: `tz(tzValue: string | 'Local' | number): TZDate`
 - Parameters
   - `tzValue` : timezone to specify
-- Returns a new TZDate instance following the given timezone.
+- Returns: `TZDate` - a new TZDate instance following the given timezone.
 
 Returns a new TZDate instance following the given timezone. `tzValue` can be specified as the timezone name of the [IANA time zone database](https://www.iana.org/time-zones), the timezone offset numeric value, and `'Local'`. If `'Local'` is specified, the system timezone is followed. It does not change the existing TZDate instance, but returns a new TZDate instance.
 
@@ -412,9 +412,9 @@ Returns a new TZDate instance following the given timezone. `tzValue` can be spe
 
 - Type: `local(tzValue?: string | number): TZDate`
 - Parameters
-  - `tzValue` : The timezone the TZDate instance follows. If not, it is calculated as the time zone of the TZDate instance.
+  - `tzValue` : The timezone the TZDate instance follows. If not specified, it is calculated based on the time zone of the TZDate instance.
 - Returns: `TZDate` - a new TZDate instance following the system timezone
 
-Returns a new TZDate instance conforming to the system timezone. `tzValue` can be used when the TZDate instance follows a timezone other than the one assigned to it. If there is no `tzValue`, it is calculated as the time zone of the TZDate instance. It does not change the existing TZDate instance, but returns a new TZDate instance.
+Returns a new TZDate instance conforming to the system timezone. `tzValue` can be used when the TZDate instance follows a timezone other than the one assigned to it. If there is no `tzValue`, it is calculated based on the time zone of the TZDate instance. It does not change the existing TZDate instance, but returns a new TZDate instance.
 
 [⬆️ Back to the list](#instance-methods)
