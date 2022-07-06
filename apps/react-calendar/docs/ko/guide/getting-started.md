@@ -82,12 +82,12 @@ Calendar를 사용하기 위해서는 TOAST UI 캘린더의 CSS 파일을 추가
 
 ```js
 /* Node.js 환경에서 ES6 모듈 */
-import '@toast-ui/calendar/toastui-calendar.min.css'; // Calendar 스타일
+import '@toast-ui/calendar/dist/toastui-calendar.min.css'; // Calendar 스타일
 ```
 
 ```js
 /* Node.js 환경에서 CommonJS */
-require('@toast-ui/calendar/toastui-calendar.min.css');
+require('@toast-ui/calendar/dist/toastui-calendar.min.css');
 ```
 
 ```html
@@ -101,7 +101,7 @@ require('@toast-ui/calendar/toastui-calendar.min.css');
 
 ```jsx
 import Calendar from '@toast-ui/react-calendar';
-import '@toast-ui/calendar/toastui-calendar.min.css';
+import '@toast-ui/calendar/dist/toastui-calendar.min.css';
 
 export function YourComponent() {
   return (

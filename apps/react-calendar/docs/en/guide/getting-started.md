@@ -81,12 +81,12 @@ To use the calendar, you need to add a CSS file of TOAST UI Calendar. You can im
 
 ```js
 /* ES6 module in Node.js environment */
-import '@toast-ui/calendar/toastui-calendar.min.css'; // Stylesheet for calendar
+import '@toast-ui/calendar/dist/toastui-calendar.min.css'; // Stylesheet for calendar
 ```
 
 ```js
 /* CommonJS in Node.js environment */
-require('@toast-ui/calendar/toastui-calendar.min.css');
+require('@toast-ui/calendar/dist/toastui-calendar.min.css');
 ```
 
 ```html
@@ -100,7 +100,7 @@ You can load a calendar component and add it to your component.
 
 ```jsx
 import Calendar from '@toast-ui/react-calendar';
-import '@toast-ui/calendar/toastui-calendar.min.css';
+import '@toast-ui/calendar/dist/toastui-calendar.min.css';
 
 export function YourComponent() {
   return (
