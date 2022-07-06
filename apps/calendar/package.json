@@ -17,8 +17,7 @@
     "./esm": "./dist/toastui-calendar.mjs",
     "./toastui-calendar.css": "./dist/toastui-calendar.css",
     "./toastui-calendar.min.css": "./dist/toastui-calendar.min.css",
-    "./dist/toastui-calendar.css": "./dist/toastui-calendar.css",
-    "./dist/toastui-calendar.min.css": "./dist/toastui-calendar.min.css"
+    "./dist/*": "./dist/*"
   },
   "typesVersions": {
     "*": {
