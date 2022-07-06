@@ -35,8 +35,10 @@
   "author": "NHN FE Development Lab <dl_javascript@nhn.com>",
   "license": "MIT",
   "devDependencies": {
-    "@toast-ui/release-notes": "^2.0.1",
-    "tui-code-snippet": "^2.3.1",
     "tui-jsdoc-template": "^1.2.2"
+  },
+  "dependencies": {
+    "moment": "^2.29.3",
+    "moment-timezone": "^0.5.34"
   }
 }
