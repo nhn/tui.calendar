@@ -61,13 +61,13 @@ You can use Toast UI Calendar for React as moudule format or namespace.
 ```js
 /* ES6 module in Node.js environment */
 import Calendar from '@toast-ui/react-calendar';
-import '@toast-ui/calendar/toastui-calendar.css';
+import '@toast-ui/calendar/dist/toastui-calendar.min.css';
 ```
 
 ```js
 /* CommonJS in Node.js environment */
 const Calendar = require('@toast-ui/react-calendar');
-require('@toast-ui/calendar/toastui-calendar.css');
+require('@toast-ui/calendar/dist/toastui-calendar.min.css');
 ```
 
 ```js

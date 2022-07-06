@@ -137,12 +137,12 @@ Calendar를 사용하기 위해서는 CSS 파일을 추가해야 한다. import,
 
 ```js
 /* Node.js 환경에서 ES6 모듈 */
-import '@toast-ui/calendar/toastui-calendar.min.css'; // Calendar 스타일
+import '@toast-ui/calendar/dist/toastui-calendar.min.css'; // Calendar 스타일
 ```
 
 ```js
 /* Node.js 환경에서 CommonJS */
-require('@toast-ui/calendar/toastui-calendar.min.css');
+require('@toast-ui/calendar/dist/toastui-calendar.min.css');
 ```
 
 ```html

@@ -136,12 +136,12 @@ To use the calendar, you need to add a CSS file. You can import the CSS file thr
 
 ```js
 /* ES6 module in Node.js environment */
-import '@toast-ui/calendar/toastui-calendar.min.css'; // Stylesheet for calendar
+import '@toast-ui/calendar/dist/toastui-calendar.min.css'; // Stylesheet for calendar
 ```
 
 ```js
 /* CommonJS in Node.js environment */
-require('@toast-ui/calendar/toastui-calendar.min.css');
+require('@toast-ui/calendar/dist/toastui-calendar.min.css');
 ```
 
 ```html

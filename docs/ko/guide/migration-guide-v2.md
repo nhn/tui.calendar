@@ -52,7 +52,7 @@ import "tui-calendar/dist/tui-calendar.min.css";
 
 // v2
 import Calendar from '@toast-ui/calendar';
-import '@toast-ui/calendar/toastui-calendar.min.css';
+import '@toast-ui/calendar/dist/toastui-calendar.min.css';
 ```
 
 ```html

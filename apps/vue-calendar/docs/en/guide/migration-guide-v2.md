@@ -33,7 +33,7 @@ In v1, the calendar instance methods were called indirectly by `invoke` method. 
 
 <script>
 import Calendar from '@toast-ui/vue-calendar';
-import '@toast-ui/calendar/toastui-calendar.min.css';
+import '@toast-ui/calendar/dist/toastui-calendar.min.css';
 
 export default {
   name: 'YourComponent',
