@@ -45,7 +45,7 @@
   ],
   "scripts": {
     "lint": "eslint .",
-    "dev": "vite",
+    "develop": "vite",
     "build": "rimraf dist/ && concurrently 'npm:build:*'",
     "build:modern": "vite build && vite build --mode minify",
     "build:ie11": "vite build --mode ie11 && vite build --mode ie11_minify",
