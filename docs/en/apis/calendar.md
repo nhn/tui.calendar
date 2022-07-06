@@ -568,7 +568,7 @@ When the current time is displayed in the weekly view or the daily view, the scr
 - Parameters
   - `event` - an object containing event information. For details, refer to the [EventObject document](./event-object.md).
 
-When the `useFormPopup` option is `true`, a popup for creating a schedule is displayed without going through an interaction.
+When the `useFormPopup` option is `true`, a popup for creating an event is displayed without going through an interaction.
 
 The event data passed as a parameter is displayed as specified in the input field in the popup.
 
@@ -740,7 +740,7 @@ The list of predefined instance events is as follows.
 | [selectDateTime](#selectdatetime)                     | Occurs when dragging and dropping a specific date or time then dropping                                                        |
 | [beforeCreateEvent](#beforecreateevent)               | Occurs when the ‘Save’ button is pressed in the default event creation/modification popup                                      |
 | [beforeUpdateEvent](#beforeupdateevent)               | Occurs when the ‘Save’ button is pressed in the default event creation/modification popup or an event is dragged and dropped   |
-| [beforeDeleteEvent](#beforedeleteevent)               | Occurs when the ‘Delete’ button is pressed in the default event detail popup                                                   |
+| [beforeDeleteEvent](#beforedeleteevent)               | Occurs when the ‘Delete’ button is pressed in the default event details popup                                                   |
 | [afterRenderEvent](#afterrenderevent)                 | Occurs when each event is rendered                                                                                             |
 | [clickDayName](#clickdayname)                         | Occurs when a day of the week at the top of the calendar is clicked                                                            |
 | [clickEvent](#clickevent)                             | Occurs when an event is clicked                                                                                                |
@@ -809,7 +809,7 @@ The `event` property is information of the existing event, and the `changes` pro
 
 In the following cases, `beforeUpdateEvent` is executed.
 
-- `When useFormPopup` and `useDetailPopup` of the calendar instance options are both `true` and the ‘Update’ button is pressed after modifying the event through the event detail popup
+- `When useFormPopup` and `useDetailPopup` of the calendar instance options are both `true` and the ‘Update’ button is pressed after modifying the event through the event details popup
   - ![Event execution through popup](../../assets/before-update-event-1.gif)
 - When moving or resizing events by drag and drop, while `isReadOnly` is not `true` among calendar instance options and also `isReadOnly` is not `true` in the properties of individual events.
   - ![Event execution via drag and drop](../../assets/before-update-event-2.gif)
@@ -827,7 +827,7 @@ calendar.on('beforeUpdateEvent', ({ event, change }) => {
 
 - Parameters: `event: EventObject` - Information of the event to be deleted. For more information on the object to be passed, refer to the [EventObject document](./event-object.md).
 
-You can select an event through the event detail popup and press the ‘Delete’ button when `isReadOnly` in the calendar instance options and `isReadOnly` for individual event properties are not `true`, and also the `useDetailPopup` option is `true`.
+You can select an event through the event details popup and press the ‘Delete’ button when `isReadOnly` in the calendar instance options and `isReadOnly` for individual event properties are not `true`, and also the `useDetailPopup` option is `true`.
 
 Given that conditions above are satisfied, when the ‘Delete’ button is pressed, `beforeDeleteEvent` is executed.
 
