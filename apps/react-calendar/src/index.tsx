@@ -1,7 +1,5 @@
+import type { EventObject, ExternalEventTypes, Options } from '@toast-ui/calendar';
 import ToastUICalendar from '@toast-ui/calendar';
-import type { ExternalEventTypes } from '@toast-ui/calendar/types/types/eventBus';
-import type { EventObject } from '@toast-ui/calendar/types/types/events';
-import type { Options } from '@toast-ui/calendar/types/types/options';
 import React from 'react';
 
 import { isEqual } from './isEqual';
