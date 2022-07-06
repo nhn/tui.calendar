@@ -214,7 +214,7 @@ Events will be rendered in the corresponding panel depending on their category. 
 
 ![isReadOnly](../../assets/EventObject_isReadOnly.png)
 
-Indicates whether the event can be modified. If `isReadOnly` is `true`, you cannot move or resize the event, and the edit button is not exposed in the event detail popup.
+Indicates whether the event can be modified. If `isReadOnly` is `true`, you cannot move or resize the event, and the edit button is not exposed in the event details popup.
 
 ### isPending, isFocused, isPrivate
 
