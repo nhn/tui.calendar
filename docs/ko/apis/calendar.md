@@ -57,39 +57,39 @@ calendar.on('beforeCreateEvent', (eventObj) => {
 
 💡 메서드를 클릭하면 더 자세한 설명과 사용 예시를 볼 수 있다.
 
-| 메서드                                          | 설명                                                                      |
-| ----------------------------------------------- |-------------------------------------------------------------------------|
-| [render](#render)                               | 캘린더 인스턴스를 화면에 렌더링한다.                                                    |
-| [renderToString](#rendertostring)               | 서버 사이드 렌더링에서 활용할 수 있도록 현재 캘린더 인스턴스의 렌더링 결과물을 HTML 문자열로 리턴한다.            |
-| [destroy](#destroy)                             | 캘린더 인스턴스를 제거한다.                                                         |
-| [getEvent](#getevent)                           | 지정된 이벤트의 데이터를 가져온다.                                                     |
-| [createEvents](#createevents)                   | 한개 이상의 캘린더 이벤트를 생성한다.                                                   |
-| [updateEvent](#updateevent)                     | 지정된 이벤트의 내용을 업데이트한다.                                                    |
-| [deleteEvent](#deleteevent)                     | 지정된 이벤트를 삭제한다.                                                          |
-| [clear](#clear)                                 | 캘린더 인스턴스에 저장된 모든 이벤트를 제거한다.                                             |
-| [today](#today)                                 | 현재 날짜가 포함된 범위로 이동한다.                                                    |
-| [move](#move)                                   | 뷰에 따라 주어진 숫자만큼 구간을 이동한다.                                                |
-| [prev](#prev)                                   | 현재 화면의 이전 구간으로 이동한다. 이동 범위는 뷰의 범위에 따라 다르다.                              |
-| [next](#next)                                   | 현재 화면의 다음 구간으로 이동한다. 이동 범위는 뷰의 범위에 따라 다르다.                              |
-| [setDate](#setdate)                             | 지정된 날짜가 포함된 범위로 이동한다.                                                   |
-| [changeView](#changeview)                       | 캘린더 인스턴스의 뷰를 월간/주간/일간으로 변경한다.                                           |
-| [getElement](#getelement)                       | 특정 이벤트가 렌더링된 HTML 엘리먼트를 찾는다. 찾지 못한 경우 `null` 을 리턴한다.                    |
-| [setTheme](#settheme)                           | 캘린더 인스턴스의 테마를 변경한다.                                                     |
-| [getOptions](#getoptions)                       | 현재 캘린더 인스턴스에 설정된 옵션 정보를 가져온다.                                           |
-| [setOptions](#setoptions)                       | 캘린더 인스턴스의 옵션을 변경한다.                                                     |
-| [getDate](#getdate)                             | 현재 캘린더 인스턴스의 화면을 표시하는 기준 날짜를 가져온다.                                      |
-| [getDateRangeStart](#getdaterangestart)         | 현재 캘린더 인스턴스의 화면을 표시하는 날짜 범위 중 시작일을 가져온다.                                |
-| [getDateRangeEnd](#getdaterangeend)             | 현재 캘린더 인스턴스의 화면을 표시하는 날짜 범위 중 종료일을 가져온다.                                |
-| [getViewName](#getviewname)                     | 현재 캘린더 인스턴스의 화면의 타입을 가져온다. (월간 / 주간 / 일간)                               |
-| [setCalendars](#setcalendars)                   | 캘린더 정보를 변경한다.                                                           |
-| [setCalendarVisibility](#setcalendarvisibility) | 지정된 이벤트 그룹에 포함되는 모든 이벤트를 숨기거나 표시한다.                                     |
-| [setCalendarColor](#setcalendarcolor)           | 지정된 이벤트 그룹에 포함된 모든 이벤트의 컬러 값을 변경한다.                                     |
-| [scrollToNow](#scrolltonow)                     | 일간 뷰 혹은 주간 뷰에서 현재 시간이 포함된 범위를 표시하고 있는 경우, 즉시 현재 시간 영역으로 스크롤을 이동한다.      |
-| [openFormPopup](#openformpopup)                 | 이벤트를 생성하는데 사용하는 팝업을 표시한다. 전달한 객체의 정보에 따라 팝업의 값이 채워져 있다.                 |
-| [clearGridSelections](#cleargridselections)     | 현재 캘린더에 표시된 모든 날짜/시간 선택 엘리먼트를 제거한다.                                     |
-| [fire](#fire)                                   | 임의의 인스턴스 이벤트를 실행한다. 자세한 설명은 [인스턴스 이벤트](#인스턴스-이벤트) 단락에서 설명한다.            |
-| [off](#off)                                     | 임의의 인스턴스 이벤트를 해제한다. 자세한 설명은 [인스턴스 이벤트](#인스턴스-이벤트) 단락에서 설명한다.            |
-| [on](#on)                                       | 임의의 인스턴스 이벤트를 할당한다. 자세한 설명은 [인스턴스 이벤트](#인스턴스-이벤트) 단락에서 설명한다.            |
+| 메서드                                          | 설명                                                                                                                       |
+| ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| [render](#render)                               | 캘린더 인스턴스를 화면에 렌더링한다.                                                                                       |
+| [renderToString](#rendertostring)               | 서버 사이드 렌더링에서 활용할 수 있도록 현재 캘린더 인스턴스의 렌더링 결과물을 HTML 문자열로 리턴한다.                     |
+| [destroy](#destroy)                             | 캘린더 인스턴스를 제거한다.                                                                                                |
+| [getEvent](#getevent)                           | 지정된 이벤트의 데이터를 가져온다.                                                                                         |
+| [createEvents](#createevents)                   | 한개 이상의 캘린더 이벤트를 생성한다.                                                                                      |
+| [updateEvent](#updateevent)                     | 지정된 이벤트의 내용을 업데이트한다.                                                                                       |
+| [deleteEvent](#deleteevent)                     | 지정된 이벤트를 삭제한다.                                                                                                  |
+| [clear](#clear)                                 | 캘린더 인스턴스에 저장된 모든 이벤트를 제거한다.                                                                           |
+| [today](#today)                                 | 현재 날짜가 포함된 범위로 이동한다.                                                                                        |
+| [move](#move)                                   | 뷰에 따라 주어진 숫자만큼 구간을 이동한다.                                                                                 |
+| [prev](#prev)                                   | 현재 화면의 이전 구간으로 이동한다. 이동 범위는 뷰의 범위에 따라 다르다.                                                   |
+| [next](#next)                                   | 현재 화면의 다음 구간으로 이동한다. 이동 범위는 뷰의 범위에 따라 다르다.                                                   |
+| [setDate](#setdate)                             | 지정된 날짜가 포함된 범위로 이동한다.                                                                                      |
+| [changeView](#changeview)                       | 캘린더 인스턴스의 뷰를 월간/주간/일간으로 변경한다.                                                                        |
+| [getElement](#getelement)                       | 특정 이벤트가 렌더링된 HTML 엘리먼트를 찾는다. 찾지 못한 경우 `null` 을 리턴한다.                                          |
+| [setTheme](#settheme)                           | 캘린더 인스턴스의 테마를 변경한다.                                                                                         |
+| [getOptions](#getoptions)                       | 현재 캘린더 인스턴스에 설정된 옵션 정보를 가져온다.                                                                        |
+| [setOptions](#setoptions)                       | 캘린더 인스턴스의 옵션을 변경한다.                                                                                         |
+| [getDate](#getdate)                             | 현재 캘린더 인스턴스의 화면을 표시하는 기준 날짜를 가져온다.                                                               |
+| [getDateRangeStart](#getdaterangestart)         | 현재 캘린더 인스턴스의 화면을 표시하는 날짜 범위 중 시작일을 가져온다.                                                     |
+| [getDateRangeEnd](#getdaterangeend)             | 현재 캘린더 인스턴스의 화면을 표시하는 날짜 범위 중 종료일을 가져온다.                                                     |
+| [getViewName](#getviewname)                     | 현재 캘린더 인스턴스의 화면의 타입을 가져온다. (월간 / 주간 / 일간)                                                        |
+| [setCalendars](#setcalendars)                   | 캘린더 정보를 변경한다.                                                                                                    |
+| [setCalendarVisibility](#setcalendarvisibility) | 지정된 이벤트 그룹에 포함되는 모든 이벤트를 숨기거나 표시한다.                                                             |
+| [setCalendarColor](#setcalendarcolor)           | 지정된 이벤트 그룹에 포함된 모든 이벤트의 컬러 값을 변경한다.                                                              |
+| [scrollToNow](#scrolltonow)                     | 일간 뷰 혹은 주간 뷰에서 현재 시간이 포함된 범위를 표시하고 있는 경우, 즉시 현재 시간 영역으로 스크롤을 이동한다.          |
+| [openFormPopup](#openformpopup)                 | 이벤트를 생성하는데 사용하는 팝업을 표시한다. 전달한 객체의 정보에 따라 팝업의 값이 채워져 있다.                           |
+| [clearGridSelections](#cleargridselections)     | 현재 캘린더에 표시된 모든 날짜/시간 선택 엘리먼트를 제거한다.                                                              |
+| [fire](#fire)                                   | 임의의 인스턴스 이벤트를 실행한다. 자세한 설명은 [인스턴스 이벤트](#인스턴스-이벤트) 단락에서 설명한다.                    |
+| [off](#off)                                     | 임의의 인스턴스 이벤트를 해제한다. 자세한 설명은 [인스턴스 이벤트](#인스턴스-이벤트) 단락에서 설명한다.                    |
+| [on](#on)                                       | 임의의 인스턴스 이벤트를 할당한다. 자세한 설명은 [인스턴스 이벤트](#인스턴스-이벤트) 단락에서 설명한다.                    |
 | [once](#once)                                   | 임의의 인스턴스 이벤트를 한 번만 실행되도록 할당한다. 자세한 설명은 [인스턴스 이벤트](#인스턴스-이벤트) 단락에서 설명한다. |
 
 ### render

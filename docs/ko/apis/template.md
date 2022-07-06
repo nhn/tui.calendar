@@ -26,42 +26,42 @@ calendar.setOptions({
 
 템플릿의 각 프로퍼티들은 문자열 또는 `preact`의 VNode를 반환하는 함수이며 파라미터는 템플릿의 종류에 따라 다르다. 아래는 전체 템플릿 목록이다.
 
-| 템플릿명                                                  | 파라미터                                                         | 설명                                                               |
-| --------------------------------------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------ |
+| 템플릿명                                                  | 파라미터                         | 설명                                                               |
+| --------------------------------------------------------- | -------------------------------- | ------------------------------------------------------------------ |
 | [milestone](#milestone)                                   | [EventObject](./event-object.md) | 주간/일간뷰의 milestone 이벤트                                     |
-| [milestoneTitle](#milestonetitle)                         | 없음                                                             | 주간/일간뷰의 milestone 패널의 왼쪽 영역                           |
+| [milestoneTitle](#milestonetitle)                         | 없음                             | 주간/일간뷰의 milestone 패널의 왼쪽 영역                           |
 | [task](#task)                                             | [EventObject](./event-object.md) | 주간/일간뷰의 task 이벤트                                          |
-| [taskTitle](#tasktitle)                                   | 없음                                                             | 주간/일간뷰의 task 패널의 왼쪽 영역                                |
+| [taskTitle](#tasktitle)                                   | 없음                             | 주간/일간뷰의 task 패널의 왼쪽 영역                                |
 | [allday](#allday)                                         | [EventObject](./event-object.md) | 주간/일간뷰의 allday 이벤트                                        |
-| [alldayTitle](#alldaytitle)                               | 없음                                                             | 주간/일간뷰의 allday 패널의 왼쪽 영역                              |
+| [alldayTitle](#alldaytitle)                               | 없음                             | 주간/일간뷰의 allday 패널의 왼쪽 영역                              |
 | [time](#time)                                             | [EventObject](./event-object.md) | 주간/일간뷰의 timed 이벤트                                         |
 | [goingDuration](#goingduration)                           | [EventObject](./event-object.md) | 주간/일간뷰의 timed 이벤트의 일정 장소까지 이동 시간               |
 | [comingDuration](#comingduration)                         | [EventObject](./event-object.md) | 주간/일간뷰의 timed 이벤트의 복귀 시간                             |
-| [monthMoreTitleDate](#monthmoretitledate)                 | TemplateMoreTitleDate                                            | 월간뷰의 더 보기 팝업의 날짜                                       |
-| [monthMoreClose](#monthmoreclose)                         | 없음                                                             | 월간뷰의 더 보기 팝업의 닫기 버튼                                  |
-| [monthGridHeader](#monthgridheader)                       | TemplateMonthGrid                                                | 월간뷰의 셀의 헤더 영역                                            |
-| [monthGridHeaderExceed](#monthgridheaderexceed)           | <code>number</code>                                              | 월간뷰의 셀의 헤더 영역의 초과되는 이벤트 갯수를 표시하는 컴포넌트 |
-| [monthGridFooter](#monthgridfooter)                       | TemplateMonthGrid                                                | 월간뷰의 셀의 푸터 영역                                            |
-| [monthGridFooterExceed](#monthgridfooterexceed)           | <code>number</code>                                              | 월간뷰의 셀의 푸터 영역의 초과되는 이벤트 갯수를 표시하는 컴포넌트 |
-| [monthDayName](#monthdayname)                             | TemplateMonthDayName                                             | 월간뷰의 요일                                                      |
-| [weekDayName](#weekdayname)                               | TemplateWeekDayName                                              | 주간/일간뷰의 요일                                                 |
-| [weekGridFooterExceed](#weekgridfooterexceed)             | <code>number</code>                                              | 주간/일간뷰의 allday 패널의 초과된 이벤트 표시 컴포넌트            |
-| [collapseBtnTitle](#collapsebtntitle)                     | 없음                                                             | 주간/일간뷰의 allday 패널의 접기 버튼 컴포넌트                     |
-| [timezoneDisplayLabel](#timezonedisplaylabel)             | TemplateTimezone                                                 | 주간/일간뷰의 타임존 표시 컴포넌트                                 |
-| [timegridDisplayPrimaryTime](#timegriddisplayprimarytime) | TemplateNow                                              | 주간/일간뷰의 primary 타임존 시간 표시                             |
-| [timegridDisplayTime](#timegriddisplaytime)               | TemplateNow                                              | 주간/일간뷰의 primary 타임존 외의 타임존 시간 표시                 |
-| [timegridNowIndicatorLabel](#timegridnowindicatorlabel)               | TemplateNow                                              | 주간/일간뷰의 현재 시간 표시                                       |
-| [popupIsAllday](#popupisallday)                           | 없음                                                             | 이벤트 폼 팝업에서 all day 텍스트                                |
-| [popupStateFree](#popupstatefree)                         | 없음                                                             | 이벤트 폼 팝업에서 이벤트 한가함(free) 상태 텍스트               |
-| [popupStateBusy](#popupstatebusy)                         | 없음                                                             | 이벤트 폼 팝업에서 이벤트 바쁨(busy) 상태 텍스트                 |
-| [titlePlaceholder](#titleplaceholder)                     | 없음                                                             | 이벤트 폼 팝업에서 이벤트명 placeholder                          |
-| [locationPlaceholder](#locationplaceholder)               | 없음                                                             | 이벤트 폼 팝업에서 이벤트 장소 placeholder                       |
-| [startDatePlaceholder](#startdateplaceholder)             | 없음                                                             | 이벤트 폼 팝업에서 이벤트 시작 날짜 placeholder                  |
-| [endDatePlaceholder](#enddateplaceholder)                 | 없음                                                             | 이벤트 폼 팝업에서 이벤트 종료 날짜 placeholder                  |
-| [popupSave](#popupsave)                                   | 없음                                                             | 이벤트 폼 팝업에서 저장 버튼 텍스트                              |
-| [popupUpdate](#popupupdate)                               | 없음                                                             | 이벤트 수정 팝업에서 수정 버튼 텍스트                              |
-| [popupEdit](#popupedit)                                   | 없음                                                             | 이벤트 상세 팝업에서 편집 버튼 텍스트                              |
-| [popupDelete](#popupdelete)                               | 없음                                                             | 이벤트 상세 팝업에서 삭제 버튼 텍스트                              |
+| [monthMoreTitleDate](#monthmoretitledate)                 | TemplateMoreTitleDate            | 월간뷰의 더 보기 팝업의 날짜                                       |
+| [monthMoreClose](#monthmoreclose)                         | 없음                             | 월간뷰의 더 보기 팝업의 닫기 버튼                                  |
+| [monthGridHeader](#monthgridheader)                       | TemplateMonthGrid                | 월간뷰의 셀의 헤더 영역                                            |
+| [monthGridHeaderExceed](#monthgridheaderexceed)           | <code>number</code>              | 월간뷰의 셀의 헤더 영역의 초과되는 이벤트 갯수를 표시하는 컴포넌트 |
+| [monthGridFooter](#monthgridfooter)                       | TemplateMonthGrid                | 월간뷰의 셀의 푸터 영역                                            |
+| [monthGridFooterExceed](#monthgridfooterexceed)           | <code>number</code>              | 월간뷰의 셀의 푸터 영역의 초과되는 이벤트 갯수를 표시하는 컴포넌트 |
+| [monthDayName](#monthdayname)                             | TemplateMonthDayName             | 월간뷰의 요일                                                      |
+| [weekDayName](#weekdayname)                               | TemplateWeekDayName              | 주간/일간뷰의 요일                                                 |
+| [weekGridFooterExceed](#weekgridfooterexceed)             | <code>number</code>              | 주간/일간뷰의 allday 패널의 초과된 이벤트 표시 컴포넌트            |
+| [collapseBtnTitle](#collapsebtntitle)                     | 없음                             | 주간/일간뷰의 allday 패널의 접기 버튼 컴포넌트                     |
+| [timezoneDisplayLabel](#timezonedisplaylabel)             | TemplateTimezone                 | 주간/일간뷰의 타임존 표시 컴포넌트                                 |
+| [timegridDisplayPrimaryTime](#timegriddisplayprimarytime) | TemplateNow                      | 주간/일간뷰의 primary 타임존 시간 표시                             |
+| [timegridDisplayTime](#timegriddisplaytime)               | TemplateNow                      | 주간/일간뷰의 primary 타임존 외의 타임존 시간 표시                 |
+| [timegridNowIndicatorLabel](#timegridnowindicatorlabel)   | TemplateNow                      | 주간/일간뷰의 현재 시간 표시                                       |
+| [popupIsAllday](#popupisallday)                           | 없음                             | 이벤트 폼 팝업에서 all day 텍스트                                  |
+| [popupStateFree](#popupstatefree)                         | 없음                             | 이벤트 폼 팝업에서 이벤트 한가함(free) 상태 텍스트                 |
+| [popupStateBusy](#popupstatebusy)                         | 없음                             | 이벤트 폼 팝업에서 이벤트 바쁨(busy) 상태 텍스트                   |
+| [titlePlaceholder](#titleplaceholder)                     | 없음                             | 이벤트 폼 팝업에서 이벤트명 placeholder                            |
+| [locationPlaceholder](#locationplaceholder)               | 없음                             | 이벤트 폼 팝업에서 이벤트 장소 placeholder                         |
+| [startDatePlaceholder](#startdateplaceholder)             | 없음                             | 이벤트 폼 팝업에서 이벤트 시작 날짜 placeholder                    |
+| [endDatePlaceholder](#enddateplaceholder)                 | 없음                             | 이벤트 폼 팝업에서 이벤트 종료 날짜 placeholder                    |
+| [popupSave](#popupsave)                                   | 없음                             | 이벤트 폼 팝업에서 저장 버튼 텍스트                                |
+| [popupUpdate](#popupupdate)                               | 없음                             | 이벤트 수정 팝업에서 수정 버튼 텍스트                              |
+| [popupEdit](#popupedit)                                   | 없음                             | 이벤트 상세 팝업에서 편집 버튼 텍스트                              |
+| [popupDelete](#popupdelete)                               | 없음                             | 이벤트 상세 팝업에서 삭제 버튼 텍스트                              |
 | [popupDetailTitle](#popupdetailtitle)                     | [EventObject](./event-object.md) | 이벤트 상세 팝업에서 이벤트명                                      |
 | [popupDetailDate](#popupdetaildate)                       | [EventObject](./event-object.md) | 이벤트 상세 팝업에서 이벤트의 기간                                 |
 | [popupDetailLocation](#popupdetaillocation)               | [EventObject](./event-object.md) | 이벤트 상세 팝업에서 이벤트의 장소                                 |

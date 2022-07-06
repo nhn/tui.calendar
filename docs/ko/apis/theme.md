@@ -124,11 +124,11 @@ interface WeekTheme {
 | [timeGridLeftAdditionalTimezone](#week-timegridleftadditionaltimezone) | <code>{ backgroundColor: 'white' }</code>          | 주간/일간뷰에서 timed 이벤트 영역의 왼쪽 영역에 표시되는 서브 타임존                   |
 | [timeGridHalfHourLine](#week-timegridhalfhourline)                     | <code>{ borderBottom: '1px solid #e5e5e5' }</code> | 주간/일간뷰에서 timed 이벤트 영역에서 매 시간의 30분 선                                |
 | [timeGridHourLine](#week-timegridhourline)                             | <code>{ borderBottom: '1px solid #e5e5e5' }</code> | 주간/일간뷰에서 timed 이벤트 영역에서 매 시간의 정각 선                                |
-| [nowIndicatorLabel](#week-nowindicatorlabel)                                       | <code>{ color: '#515ce6' }</code>                  | 현재 시간선에 표시되는 현재 시각 텍스트                                                                            |
-| [nowIndicatorPast](#week-nowindicatorpast)                       | <code>{ border: '1px dashed #515ce6' }</code>      | 현재 시간선에서 지난 날짜선                                                            |
-| [nowIndicatorBullet](#week-nowindicatorbullet)                   | <code>{ backgroundColor: '#515ce6' }</code>        | 현재 시간선에서 오늘 날짜                                                              |
-| [nowIndicatorToday](#week-nowindicatortoday)                     | <code>{ border: '1px solid #515ce6' }</code>       | 현재 시간선에서 오늘 날짜선                                                            |
-| [nowIndicatorFuture](#week-nowindicatorfuture)                   | <code>{ border: 'none' }</code>                    | 현재 시간선에서 미래 날짜선                                                            |
+| [nowIndicatorLabel](#week-nowindicatorlabel)                           | <code>{ color: '#515ce6' }</code>                  | 현재 시간선에 표시되는 현재 시각 텍스트                                                |
+| [nowIndicatorPast](#week-nowindicatorpast)                             | <code>{ border: '1px dashed #515ce6' }</code>      | 현재 시간선에서 지난 날짜선                                                            |
+| [nowIndicatorBullet](#week-nowindicatorbullet)                         | <code>{ backgroundColor: '#515ce6' }</code>        | 현재 시간선에서 오늘 날짜                                                              |
+| [nowIndicatorToday](#week-nowindicatortoday)                           | <code>{ border: '1px solid #515ce6' }</code>       | 현재 시간선에서 오늘 날짜선                                                            |
+| [nowIndicatorFuture](#week-nowindicatorfuture)                         | <code>{ border: 'none' }</code>                    | 현재 시간선에서 미래 날짜선                                                            |
 | [pastTime](#week-pasttime)                                             | <code>{ color: '#bbb' }</code>                     | 주간/일간뷰에서 timed 이벤트 영역의 왼쪽 영역에 표시되는 지난 시간                     |
 | [futureTime](#week-futuretime)                                         | <code>{ color: '#333' }</code>                     | 주간/일간뷰에서 timed 이벤트 영역의 왼쪽 영역에 표시되는 미래 시간                     |
 | [weekend](#week-weekend)                                               | <code>{ backgroundColor: 'inherit' }</code>        | 주간/일간뷰에서 timed 이벤트 영역의 주말 컬럼                                          |
@@ -196,14 +196,14 @@ interface MonthTheme {
 }
 ```
 
-| 테마                                                      | 기본값                                                   | 설명                   |
-|---------------------------------------------------------|-------------------------------------------------------|----------------------|
-| [dayExceptThisMonth](#month-dayexceptthismonth)         | <code>{ color: 'rgba(51, 51, 51, 0.4)' }</code>       | 다른 달인 날짜             |
-| [holidayExceptThisMonth](#month-holidayexceptthismonth) | <code>{ color: 'rgba(255, 64, 64, 0.4)' }</code>      | 다른 달인 휴일             |
-| [dayName](#month-dayname)                               | <code>DEFAULT_MONTH_DAYNAME</code>                    | 요일                   |
-| [moreView](#month-moreview)                             | <code>DEFAULT_MORE_VIEW</code>                        | 월간뷰의 더보기 팝업          |
-| [moreViewTitle](#month-moreviewtitle)                   | <code>{ backgroundColor: 'inherit' }</code>           | 월간뷰의 더보기 팝업의 헤더 영역   |
-| [weekend](#month-weekend)                               | <code>{ backgroundColor: 'inherit' }</code>           | 월간뷰의 주말 셀            |
+| 테마                                                    | 기본값                                                | 설명                                |
+| ------------------------------------------------------- | ----------------------------------------------------- | ----------------------------------- |
+| [dayExceptThisMonth](#month-dayexceptthismonth)         | <code>{ color: 'rgba(51, 51, 51, 0.4)' }</code>       | 다른 달인 날짜                      |
+| [holidayExceptThisMonth](#month-holidayexceptthismonth) | <code>{ color: 'rgba(255, 64, 64, 0.4)' }</code>      | 다른 달인 휴일                      |
+| [dayName](#month-dayname)                               | <code>DEFAULT_MONTH_DAYNAME</code>                    | 요일                                |
+| [moreView](#month-moreview)                             | <code>DEFAULT_MORE_VIEW</code>                        | 월간뷰의 더보기 팝업                |
+| [moreViewTitle](#month-moreviewtitle)                   | <code>{ backgroundColor: 'inherit' }</code>           | 월간뷰의 더보기 팝업의 헤더 영역    |
+| [weekend](#month-weekend)                               | <code>{ backgroundColor: 'inherit' }</code>           | 월간뷰의 주말 셀                    |
 | [gridCell](#month-gridcell)                             | <code>{ headerHeight: 31, footerHeight: null }</code> | 월간뷰의 모든 셀의 헤더와 푸터 높이 |
 
 ```ts
@@ -257,8 +257,8 @@ calendar.setTheme({
 
 날짜/시간 선택의 배경색, 테두리를 지정한다. 기본 값은 `backgroundColor`의 경우 `'rgba(81, 92, 230, 0.05)'`, `border`의 경우 `'1px solid #515ce6'`이다.
 
-| 기본값 적용                                                       | 예제 적용                                                        |
-| ----------------------------------------------------------------- | ---------------------------------------------------------------- |
+| 기본값 적용                                                                   | 예제 적용                                                                    |
+| ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | ![common-gridSelection-default](../../assets/common-gridSelection-before.png) | ![common-gridSelection-example](../../assets/common-gridSelection-after.png) |
 
 ```js
@@ -278,8 +278,8 @@ calendar.setTheme({
 
 요일 색상을 지정한다. 기본 값은 `'#333'`이다.
 
-| 기본값 적용                                           | 예제 적용                                            |
-| ----------------------------------------------------- | ---------------------------------------------------- |
+| 기본값 적용                                                       | 예제 적용                                                        |
+| ----------------------------------------------------------------- | ---------------------------------------------------------------- |
 | ![common-dayname-default](../../assets/common-dayName-before.png) | ![common-dayname-example](../../assets/common-dayName-after.png) |
 
 ```js
@@ -298,8 +298,8 @@ calendar.setTheme({
 
 휴일 색상을 지정한다. 기본 값은 `'#ff4040'`이다.
 
-| 기본값 적용                                           | 예제 적용                                            |
-| ----------------------------------------------------- | ---------------------------------------------------- |
+| 기본값 적용                                                       | 예제 적용                                                        |
+| ----------------------------------------------------------------- | ---------------------------------------------------------------- |
 | ![common-holiday-default](../../assets/common-holiday-before.png) | ![common-holiday-example](../../assets/common-holiday-after.png) |
 
 ```js
@@ -318,8 +318,8 @@ calendar.setTheme({
 
 토요일 색상을 지정한다. 기본 값은 `'#333'`이다.
 
-| 기본값 적용                                             | 예제 적용                                              |
-| ------------------------------------------------------- | ------------------------------------------------------ |
+| 기본값 적용                                                         | 예제 적용                                                          |
+| ------------------------------------------------------------------- | ------------------------------------------------------------------ |
 | ![common-saturday-default](../../assets/common-saturday-before.png) | ![common-saturday-example](../../assets/common-saturday-after.png) |
 
 ```js
@@ -338,8 +338,8 @@ calendar.setTheme({
 
 오늘 색상을 지정한다. 기본 값은 `'#fff'`이다.
 
-| 기본값 적용                                       | 예제 적용                                        |
-| ------------------------------------------------- | ------------------------------------------------ |
+| 기본값 적용                                                   | 예제 적용                                                    |
+| ------------------------------------------------------------- | ------------------------------------------------------------ |
 | ![common-today-default](../../assets/common-today-before.png) | ![common-today-example](../../assets/common-today-after.png) |
 
 ```js
@@ -360,8 +360,8 @@ calendar.setTheme({
 
 주간/일간뷰의 요일을 지정한다. `borderLeft`, `borderTop`, `borderBottom`, `backgroundColor`로 왼쪽, 위, 아래 테두리와 배경색을 지정할 수 있으며 각 기본 값은 `'none'`, `'1px solid #e5e5e5'`, `'1px solid #e5e5e5'`, `'inherit'`이다.
 
-| 기본값 적용                                       | 예제 적용                                        |
-| ------------------------------------------------- | ------------------------------------------------ |
+| 기본값 적용                                                   | 예제 적용                                                    |
+| ------------------------------------------------------------- | ------------------------------------------------------------ |
 | ![week-dayname-default](../../assets/week-dayName-before.png) | ![week-dayname-example](../../assets/week-dayName-after.png) |
 
 ```js
@@ -383,8 +383,8 @@ calendar.setTheme({
 
 주간/일간뷰의 각 패널의 셀을 지정한다. `borderRight`, `backgroundColor`로 오른쪽 테두리와 배경색을 지정할 수 있으며 각 기본 값은 `'1px solid #e5e5e5'`, `'inherit'`이다. 배경색 변경 시에 주말을 제외한 컬럼의 배경색도 변경된다.
 
-| 기본값 적용                                       | 예제 적용                                        |
-| ------------------------------------------------- | ------------------------------------------------ |
+| 기본값 적용                                                   | 예제 적용                                                    |
+| ------------------------------------------------------------- | ------------------------------------------------------------ |
 | ![week-dayGrid-default](../../assets/week-dayGrid-before.png) | ![week-dayGrid-example](../../assets/week-dayGrid-after.png) |
 
 ```js
@@ -404,8 +404,8 @@ calendar.setTheme({
 
 주간/일간뷰에서 각 패널의 왼쪽 영역을 지정한다. `borderRight`, `backgroundColor`, `width`로 오른쪽 테두리, 배경색, 너비를 지정할 수 있으며 각 기본 값은 `'1px solid #e5e5e5'`, `'inherit'`, `'72px'`이다.
 
-| 기본값 적용                                               | 예제 적용                                                |
-| --------------------------------------------------------- | -------------------------------------------------------- |
+| 기본값 적용                                                           | 예제 적용                                                            |
+| --------------------------------------------------------------------- | -------------------------------------------------------------------- |
 | ![week-dayGridLeft-default](../../assets/week-dayGridLeft-before.png) | ![week-dayGridLeft-example](../../assets/week-dayGridLeft-after.png) |
 
 ```js
@@ -426,8 +426,8 @@ calendar.setTheme({
 
 주간/일간뷰에서 timed 이벤트 영역을 지정한다. `borderRight`로 오른쪽 테두리를 지정할 수 있으며 기본 값은 `'1px solid #e5e5e5'`다.
 
-| 기본값 적용                                         | 예제 적용                                          |
-| --------------------------------------------------- | -------------------------------------------------- |
+| 기본값 적용                                                     | 예제 적용                                                      |
+| --------------------------------------------------------------- | -------------------------------------------------------------- |
 | ![week-timeGrid-default](../../assets/week-timeGrid-before.png) | ![week-timeGrid-example](../../assets/week-timeGrid-after.png) |
 
 ```js
@@ -446,8 +446,8 @@ calendar.setTheme({
 
 주간/일간뷰에서 timed 이벤트 영역의 왼쪽 영역을 지정한다. `borderRight`, `backgroundColor`, `width`로 오른쪽 테두리와 배경색, 너비를 지정할 수 있으며 각 기본 값은 `'1px solid #e5e5e5'`, `'inherit'`, `'72px'`이다.
 
-| 기본값 적용                                                 | 예제 적용                                                  |
-| ----------------------------------------------------------- | ---------------------------------------------------------- |
+| 기본값 적용                                                             | 예제 적용                                                              |
+| ----------------------------------------------------------------------- | ---------------------------------------------------------------------- |
 | ![week-timeGridLeft-default](../../assets/week-timeGridLeft-before.png) | ![week-timeGridLeft-example](../../assets/week-timeGridLeft-after.png) |
 
 ```js
@@ -468,8 +468,8 @@ calendar.setTheme({
 
 주간/일간뷰에서 timed 이벤트 영역의 왼쪽 영역에 표시되는 서브 타임존을 지정한다. `backgroundColor`로 배경색을 지정할 수 있으며 기본 값은 `'white'`이다.
 
-| 기본값 적용                                                                                     | 예제 적용                                                                                      |
-| ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| 기본값 적용                                                                                                 | 예제 적용                                                                                                  |
+| ----------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
 | ![week-timeGridLeftAdditionalTimezone-default](../../assets/week-timeGridLeftAdditionalTimezone-before.png) | ![week-timeGridLeftAdditionalTimezone-example](../../assets/week-timeGridLeftAdditionalTimezone-after.png) |
 
 ```js
@@ -488,8 +488,8 @@ calendar.setTheme({
 
 주간/일간뷰에서 timed 이벤트 영역에서 매 시간의 30분 선을 지정한다. `borderBottom`으로 아래 테두리를 지정할 수 있으며 기본 값은 `'none'`이다.
 
-| 기본값 적용                                                                 | 예제 적용                                                                  |
-| --------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| 기본값 적용                                                                             | 예제 적용                                                                              |
+| --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
 | ![week-timeGridHalfHourLine-default](../../assets/week-timeGridHalfHourLine-before.png) | ![week-timeGridHalfHourLine-example](../../assets/week-timeGridHalfHourLine-after.png) |
 
 ```js
@@ -506,8 +506,8 @@ calendar.setTheme({
 
 주간/일간뷰에서 timed 이벤트 영역에서 매 시간의 정각 선을 지정한다. `borderBottom`으로 아래 테두리를 지정할 수 있으며 기본 값은 `'none'`이다.
 
-| 기본값 적용                                                         | 예제 적용                                                          |
-| ------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| 기본값 적용                                                                     | 예제 적용                                                                      |
+| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
 | ![week-timeGridHourLine-default](../../assets/week-timeGridHourLine-before.png) | ![week-timeGridHourLine-example](../../assets/week-timeGridHourLine-after.png) |
 
 ```js
@@ -526,8 +526,8 @@ calendar.setTheme({
 
 현재 시간선에 표시되는 현재 시각 텍스트를 지정한다. `color`로 글자색을 지정할 수 있으며 기본 값은 `'#515ce6'`이다.
 
-| 기본값 적용                                               | 예제 적용                                                |
-| --------------------------------------------------------- | -------------------------------------------------------- |
+| 기본값 적용                                                                       | 예제 적용                                                                        |
+| --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
 | ![week-nowIndicatorLabel-default](../../assets/week-nowIndicatorLabel-before.png) | ![week-nowIndicatorLabel-example](../../assets/week-nowIndicatorLabel-after.png) |
 
 ```js
@@ -546,8 +546,8 @@ calendar.setTheme({
 
 현재 시간선에서 지난 날짜선을 지정한다. `border`로 선의 테두리를 지정할 수 있으며 기본 값은 `'1px dashed #515ce6'`이다.
 
-| 기본값 적용                                                               | 예제 적용                                                                |
-| ------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| 기본값 적용                                                                     | 예제 적용                                                                      |
+| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
 | ![week-nowIndicatorPast-default](../../assets/week-nowIndicatorPast-before.png) | ![week-nowIndicatorPast-example](../../assets/week-nowIndicatorPast-after.png) |
 
 ```js
@@ -566,8 +566,8 @@ calendar.setTheme({
 
 현재 시간선에서 오늘 날짜에 표시되는 점을 지정한다. `backgroundColor`로 배경색을 지정할 수 있으며 기본 값은 `'#515ce6'`이다.
 
-| 기본값 적용                                                                   | 예제 적용                                                                    |
-| ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| 기본값 적용                                                                         | 예제 적용                                                                          |
+| ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
 | ![week-nowIndicatorBullet-default](../../assets/week-nowIndicatorBullet-before.png) | ![week-nowIndicatorBullet-example](../../assets/week-nowIndicatorBullet-after.png) |
 
 ```js
@@ -586,8 +586,8 @@ calendar.setTheme({
 
 현재 시간선에서 오늘 날짜선을 지정한다. `border`로 선의 테두리를 지정할 수 있으며 기본 값은 `'1px solid #515ce6'`이다.
 
-| 기본값 적용                                                                 | 예제 적용                                                                  |
-| --------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| 기본값 적용                                                                       | 예제 적용                                                                        |
+| --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
 | ![week-nowIndicatorToday-default](../../assets/week-nowIndicatorToday-before.png) | ![week-nowIndicatorToday-example](../../assets/week-nowIndicatorToday-after.png) |
 
 ```js
@@ -606,8 +606,8 @@ calendar.setTheme({
 
 현재 시간선에서 미래 날짜선을 지정한다. `border`로 선의 테두리를 지정할 수 있으며 기본 값은 `'none'`이다.
 
-| 기본값 적용                                                                   | 예제 적용                                                                    |
-| ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| 기본값 적용                                                                         | 예제 적용                                                                          |
+| ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
 | ![week-nowIndicatorFuture-default](../../assets/week-nowIndicatorFuture-before.png) | ![week-nowIndicatorFuture-example](../../assets/week-nowIndicatorFuture-after.png) |
 
 ```js
@@ -626,8 +626,8 @@ calendar.setTheme({
 
 주간/일간뷰에서 timed 이벤트 영역의 왼쪽 영역에 표시되는 지난 시간을 지정한다. `color`로 글자색을 지정할 수 있으며 기본 값은 `'#bbb'`다.
 
-| 기본값 적용                                         | 예제 적용                                          |
-| --------------------------------------------------- | -------------------------------------------------- |
+| 기본값 적용                                                     | 예제 적용                                                      |
+| --------------------------------------------------------------- | -------------------------------------------------------------- |
 | ![week-pastTime-default](../../assets/week-pastTime-before.png) | ![week-pastTime-example](../../assets/week-pastTime-after.png) |
 
 ```js
@@ -646,8 +646,8 @@ calendar.setTheme({
 
 주간/일간뷰에서 timed 이벤트 영역의 왼쪽 영역에 표시되는 미래 시간을 지정한다. `color`로 글자색을 지정할 수 있으며 기본 값은 `'#333'`다.
 
-| 기본값 적용                                             | 예제 적용                                              |
-| ------------------------------------------------------- | ------------------------------------------------------ |
+| 기본값 적용                                                         | 예제 적용                                                          |
+| ------------------------------------------------------------------- | ------------------------------------------------------------------ |
 | ![week-futureTime-default](../../assets/week-futureTime-before.png) | ![week-futureTime-example](../../assets/week-futureTime-after.png) |
 
 ```js
@@ -666,8 +666,8 @@ calendar.setTheme({
 
 주간/일간뷰에서 timed 이벤트 영역의 주말 컬럼을 지정한다. `backgroundColor`로 배경색을 지정할 수 있으며 기본 값은 `'inherit'`이다.
 
-| 기본값 적용                                       | 예제 적용                                        |
-| ------------------------------------------------- | ------------------------------------------------ |
+| 기본값 적용                                                   | 예제 적용                                                    |
+| ------------------------------------------------------------- | ------------------------------------------------------------ |
 | ![week-weekend-default](../../assets/week-weekend-before.png) | ![week-weekend-example](../../assets/week-weekend-after.png) |
 
 ```js
@@ -687,8 +687,8 @@ calendar.setTheme({
 주간/일간뷰에서 timed 이벤트 영역의 오늘 컬럼을 지정한다. `color`로 글자색, `backgroundColor`로 배경색을 지정할 수 있으며 각 기본 값은 `'inherit'`, `'rgba(81, 92, 230, 0.05)'`이다.
 color는 요일에 적용되고 backgroundColor는 컬럼에 적용된다.
 
-| 기본값 적용                                   | 예제 적용                                    |
-| --------------------------------------------- | -------------------------------------------- |
+| 기본값 적용                                               | 예제 적용                                                |
+| --------------------------------------------------------- | -------------------------------------------------------- |
 | ![week-today-default](../../assets/week-today-before.png) | ![week-today-example](../../assets/week-today-after.png) |
 
 ```js
@@ -708,8 +708,8 @@ calendar.setTheme({
 
 주간/일간뷰에서 과거 요일을 지정한다. `color`로 글자색을 지정할 수 있으며 기본 값은 `'#bbb'`다.
 
-| 기본값 적용                                       | 예제 적용                                        |
-| ------------------------------------------------- | ------------------------------------------------ |
+| 기본값 적용                                                   | 예제 적용                                                    |
+| ------------------------------------------------------------- | ------------------------------------------------------------ |
 | ![week-pastDay-default](../../assets/week-pastDay-before.png) | ![week-pastDay-example](../../assets/week-pastDay-after.png) |
 
 ```js
@@ -728,8 +728,8 @@ calendar.setTheme({
 
 패널 크기 조절 컴포넌트을 지정한다. `border`로 테두리를 지정할 수 있으며 기본 값은 `'1px solid #e5e5e5'`이다.
 
-| 기본값 적용                                                 | 예제 적용                                                  |
-| ----------------------------------------------------------- | ---------------------------------------------------------- |
+| 기본값 적용                                                             | 예제 적용                                                              |
+| ----------------------------------------------------------------------- | ---------------------------------------------------------------------- |
 | ![week-panelResizer-default](../../assets/week-panelResizer-before.png) | ![week-panelResizer-example](../../assets/week-panelResizer-after.png) |
 
 ```js
@@ -748,8 +748,8 @@ calendar.setTheme({
 
 주간/일간뷰에서 날짜/시간 선택을 지정한다. `color`로 글자색을 지정할 수 있으며 기본 값은 `'#515ce6'`이다.
 
-| 기본값 적용                                                   | 예제 적용                                                    |
-| ------------------------------------------------------------- | ------------------------------------------------------------ |
+| 기본값 적용                                                               | 예제 적용                                                                |
+| ------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
 | ![week-gridSelection-default](../../assets/week-gridSelection-before.png) | ![week-gridSelection-example](../../assets/week-gridSelection-after.png) |
 
 ```js
@@ -770,8 +770,8 @@ calendar.setTheme({
 
 다른 달인 날짜를 지정한다. `color`로 글자색을 지정할 수 있으며 기본 값은 `'rgba(51, 51, 51, 0.4)'`이다.
 
-| 기본값 적용                                                               | 예제 적용                                                                |
-| ------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| 기본값 적용                                                                           | 예제 적용                                                                            |
+| ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
 | ![month-dayExceptThisMonth-default](../../assets/month-dayExceptThisMonth-before.png) | ![month-dayExceptThisMonth-example](../../assets/month-dayExceptThisMonth-after.png) |
 
 ```js
@@ -790,8 +790,8 @@ calendar.setTheme({
 
 다른 달인 휴일을 지정한다. `color`로 글자색을 지정할 수 있으며 기본 값은 `'rgba(255, 64, 64, 0.4)'`이다.
 
-| 기본값 적용                                                                       | 예제 적용                                                                        |
-| --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| 기본값 적용                                                                                   | 예제 적용                                                                                    |
+| --------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
 | ![month-holidayExceptThisMonth-default](../../assets/month-holidayExceptThisMonth-before.png) | ![month-holidayExceptThisMonth-example](../../assets/month-holidayExceptThisMonth-after.png) |
 
 ```js
@@ -810,8 +810,8 @@ calendar.setTheme({
 
 요일을 지정한다. `borderLeft`, `backgroundColor`로 왼쪽 테두리와 배경색을 지정할 수 있으며 각 기본 값은 `'none'`, `'inherit'`이다.
 
-| 기본값 적용                                         | 예제 적용                                          |
-| --------------------------------------------------- | -------------------------------------------------- |
+| 기본값 적용                                                     | 예제 적용                                                      |
+| --------------------------------------------------------------- | -------------------------------------------------------------- |
 | ![month-dayname-default](../../assets/month-dayName-before.png) | ![month-dayname-example](../../assets/month-dayName-after.png) |
 
 ```js
@@ -833,8 +833,8 @@ calendar.setTheme({
 
 또한 `width`, `height` 값을 지정하여 팝업의 크기를 지정할 수 있다. 팝업의 크기는 픽셀 값으로만 입력 가능하며, `number` 타입으로 입력되어야 한다.
 
-| 기본값 적용                                           | 예제 적용                                            |
-| ----------------------------------------------------- | ---------------------------------------------------- |
+| 기본값 적용                                                       | 예제 적용                                                        |
+| ----------------------------------------------------------------- | ---------------------------------------------------------------- |
 | ![month-moreView-default](../../assets/month-moreView-before.png) | ![month-moreView-example](../../assets/month-moreView-after.png) |
 
 ```js
@@ -857,8 +857,8 @@ calendar.setTheme({
 
 월간뷰의 더보기 팝업의 헤더 영역을 지정한다. `backgroundColor`로 배경색을 지정할 수 있으며 기본 값은 `'inherit'`이다.
 
-| 기본값 적용                                                     | 예제 적용                                                      |
-| --------------------------------------------------------------- | -------------------------------------------------------------- |
+| 기본값 적용                                                                 | 예제 적용                                                                  |
+| --------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
 | ![month-moreViewTitle-default](../../assets/month-moreViewTitle-before.png) | ![month-moreViewTitle-example](../../assets/month-moreViewTitle-after.png) |
 
 ```js
@@ -877,8 +877,8 @@ calendar.setTheme({
 
 월간뷰의 주말 셀을 지정한다. `backgroundColor`로 배경색을 지정할 수 있으며 기본 값은 `'inherit'`이다.
 
-| 기본값 적용                                         | 예제 적용                                          |
-| --------------------------------------------------- | -------------------------------------------------- |
+| 기본값 적용                                                     | 예제 적용                                                      |
+| --------------------------------------------------------------- | -------------------------------------------------------------- |
 | ![month-weekend-default](../../assets/month-weekend-before.png) | ![month-weekend-example](../../assets/month-weekend-after.png) |
 
 ```js
@@ -899,8 +899,8 @@ calendar.setTheme({
 
 ⚠️ 속성 값이 `null` 인 경우 헤더나 푸터가 표시되지 않는다.
 
-| 기본값 적용                                         | 예제 적용                                          |
-| --------------------------------------------------- | -------------------------------------------------- |
+| 기본값 적용                                                      | 예제 적용                                                      |
+| ---------------------------------------------------------------- | -------------------------------------------------------------- |
 | ![month-gridCell-before](../../assets/month-gridCell-before.png) | ![month-gridCell-after](../../assets/month-gridCell-after.png) |
 
 ```js

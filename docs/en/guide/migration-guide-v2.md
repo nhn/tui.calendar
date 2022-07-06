@@ -15,7 +15,6 @@
     - [Theme improvement](#theme-improvement)
     - [View related type improvement](#view-related-type-improvement)
     - [Improved taskView and eventView types](#improved-taskview-and-eventview-types)
-    - [SSR support](#ssr-support)
   - [Changes](#changes)
     - [Option changes](#option-changes)
     - [Instance methods](#instance-methods)
@@ -26,7 +25,7 @@
 
 ## Overview
 
-TOAST UI Calendar v2.0, which uses [preact](https://preactjs.com/) to render calendars more efficiently, has been released. In v2, we have improved the bundle size and upgraded to a modern development environment, laying the groundwork for making it easy to add other features. Migration is provided as a guide for users who use Calendar to better understand this.
+TOAST UI Calendar v2.0, which uses [preact](https://preactjs.com/) to render calendars more efficiently, has been released. In v2, we have improved the bundle size and upgraded to a modern development environment, laying the groundwork for making it easy to add other features. We provide a migration guide for better understanding of users who use Calendar.
 
 ## Installation
 
@@ -100,7 +99,7 @@ The CDN address used in v1 is maintained, but the files inside `/tui-calendar/la
 
 From v2, the supported browser range is changed to *Internet Explorer 11 or* later. In v1, Internet Explorer 9 or higher browsers were supported, but the scope of support was changed for the use of the latest development environment and [preact](https://preactjs.com/) X (version 10).
 
-TOAST UI Calendar provides a separate bundle file for legacy browsers. The basic bundle provides stable support for the latest two versions of the modern browser. However, the basic bundle does not include a polyfill for IE11, so to support IE11 or similar level of legacy browsers, you need to add the IE11 bundle that includes a polyfill as follows.
+The default bundle provides stable support for the latest two versions of the modern browsers. However, the default bundle does not include a polyfill for IE 11, so to support IE 11 or a legacy browser below a certain level, you need to add the IE 11 bundle that includes a polyfill as follows. Since the bundle size of IE 11 is about 30% larger than that of the default bundle, you must take care not to increase the bundle size unnecessarily by considering the range of support.
 
 ```ts
 import Calendar from '@toast-ui/calendar/ie11';
@@ -110,16 +109,16 @@ import Calendar from '@toast-ui/calendar/ie11';
 
 The APIs that require migration to use v2 are as follows.
 
-- [Option](../apis/options.md)
+- [Options](../apis/options.md)
 - [Theme](../apis/theme.md)
 - [Instance events](../apis/calendar.md#instance-events)
 - [Instance methods](../apis/calendar.md#instance-methods)
 
-The migration scope is largely divided into _functional improvement_, _change_, and _removal_.
+The migration scope is largely divided into _feature improvements_, _changes_, and _removals_.
 
-- [Improved](#feature-improvements) : APIs with improved or newly added features
-- [Changed](#changes) : API whose functionality is maintained but whose name, type, etc. have been changed
-- [Removed](#removals) : APIs removed as unnecessary or spec out
+- [Feature improvements](#feature-improvements) : APIs with improved or newly added features
+- [Changes](#changes) : APIs whose functionality is maintained but whose name, type, etc. have been changed
+- [Removals](#removals) : APIs removed as unnecessary or spec out
 
 In v2, the `creationGuide` representing the area when selecting a date or time has been changed to `gridSelection`. The term `vpanelSplitter` that controls each panel has been changed to `panelResizer`. Terms that are not unified like `daygrid` or `dayGridSchedule` are unified like `dayGrid` or `timeGrid`.
 
@@ -137,11 +136,11 @@ In v1, `currentTimeIndicator` and `currentTimeLine` are used interchangeably as 
 
 In v1, rendering of the calendar was handled as direct DOM manipulation. As a result, unnecessary rendering could occur whenever the calendar was manipulated.
 
-In v2, [preact](https://preactjs.com/) was introduced to improve rendering speed by reducing unnecessary rendering using virtual DOM and to support server-side rendering (SSR). Accordingly, parameters such as `force` and `silent` that control rendering when using the instance method have been removed, and rendering is controlled according to the internal state of the calendar, making it impossible to control rendering when using the instance method.
+In v2, [preact](https://preactjs.com/) was introduced to improve rendering speed by reducing unnecessary rendering using virtual DOM and to support server-side rendering (SSR) in future. Accordingly, parameters such as `force` and `silent` that control rendering when using the instance method have been removed, and rendering is controlled according to the internal state of the calendar, making it impossible to control rendering when using the instance method.
 
 #### Theme improvement
 
-[Theme](../apis/theme.md) feature is improved. It has been improved from the method of designating the theme with the string key value connected with `.`, to the method using the nested object. Accordingly, the `setTheme` method has also been improved in a way that receives and processes nested objects as parameters. More details can be found in [Theme](../apis/theme.md).
+[Theme](../apis/theme.md) feature is improved. It has been improved from the method of designating the theme with the string key value concatenated with `.`, to the method using the nested object. Accordingly, the `setTheme` method has also been improved in a way that receives and processes nested objects as parameters. More details can be found in [Theme](../apis/theme.md).
 
 ```ts
 // v1
@@ -170,7 +169,7 @@ The following properties used in v1 have been removed or renamed from the theme.
 - `month.dayname.fontWeight`
 - `month.dayname.textAlign`
 - `month.day.fontSize`
-- All of `month.schedule` related theme
+- All of `month.schedule` related properties
 - `month.moreView.paddingBottom`
 - `month.moreViewTitle.height`
 - `month.moreViewTitle.marginBottom`
@@ -190,7 +189,7 @@ The following properties used in v1 have been removed or renamed from the theme.
 - `week.timegridHalfHour.borderBottom` -> `week.timeGridHalfHourLine.borderBottm`
 - `week.timegridHorizontalLine.borderBottom` -> `week.timeGridHourLine.borderBottom`
 - `week.timegrid.paddingRight`
-- All of `week.timegridSchedule` related theme
+- All of `week.timegridSchedule` related properties
 - `week.currentTime` -> `week.nowIndicatorLabel`
 - `week.currentTime.fontSize`
 - `week.currentTime.fontWeight`
@@ -202,30 +201,30 @@ The following properties used in v1 have been removed or renamed from the theme.
 - `week.futureTime.fontWeight`
 - `week.creationGuide.fontSize`
 - `week.creationGuide.fontWeight`
-- All of `week.dayGridSchedule` related theme
+- All of `week.dayGridSchedule` related properties
 
 The removed theme value can be applied using CSS instead. The following is the CSS file associated with the removed theme value.
 
-| Removed theme values                                           | Associated file location                                                                                                |
-| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
-| Related to <code>month.dayname</code>                          | [dayNames.css](/apps/calendar/src/css/daygrid/dayNames.css)      |
-| Related to <code>month.schedule</code>                          | [dayGrid.css](/apps/calendar/src/css/daygrid/dayGrid.css)        |
-| Related to <code>month.moreView</code>                         | [seeMore.css](/apps/calendar/src/css/popup/seeMore.css)          |
-| Related to <code>week.dayname</code>                           | [dayNames.css](/apps/calendar/src/css/daygrid/dayNames.css)      |
-| Related to <code>week.dayGridLeft</code>                       | [allday.css](/apps/calendar/src/css/panel/allday.css)            |
-| Related to <code>week.timeGridLeft</code>                      | [timeColumn.css](/apps/calendar/src/css/timegrid/timeColumn.css) |
-| Related to <code>week.timegridSchedule</code>                  | [time.css](/apps/calendar/src/css/events/time.css)               |
+| Removed theme values                                             | Associated file location                                         |
+| ---------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Related to <code>month.dayname</code>                            | [dayNames.css](/apps/calendar/src/css/daygrid/dayNames.css)      |
+| Related to <code>month.schedule</code>                           | [dayGrid.css](/apps/calendar/src/css/daygrid/dayGrid.css)        |
+| Related to <code>month.moreView</code>                           | [seeMore.css](/apps/calendar/src/css/popup/seeMore.css)          |
+| Related to <code>week.dayname</code>                             | [dayNames.css](/apps/calendar/src/css/daygrid/dayNames.css)      |
+| Related to <code>week.dayGridLeft</code>                         | [allday.css](/apps/calendar/src/css/panel/allday.css)            |
+| Related to <code>week.timeGridLeft</code>                        | [timeColumn.css](/apps/calendar/src/css/timegrid/timeColumn.css) |
+| Related to <code>week.timegridSchedule</code>                    | [time.css](/apps/calendar/src/css/events/time.css)               |
 | Related to <code>week.gridSelection</code> (creationGuide in v1) | [column.css](/apps/calendar/src/css/timegrid/column.css)         |
-| Related to <code>week.dayGridSchedule</code>                   | [dayGrid.css](/apps/calendar/src/css/daygrid/dayGrid.css)        |
+| Related to <code>week.dayGridSchedule</code>                     | [dayGrid.css](/apps/calendar/src/css/daygrid/dayGrid.css)        |
 
 #### View related type improvement
 
-The parameters and return types of the instance methods related to the view are now clearer. The types of views used in `the` calendar are divided into three views: monthly view, `weekly` view, and `daily` view.
+The parameters and return types of the instance methods related to the view are now clearer. The types of views used in the calendar are divided into three views: monthly view(`month`), weekly view(`week`), and daily view(`day`).
 
-| Method                 | Changes                                |
-| ------------------------ | --------------------------------------- |
+| Method                   | Changes                                                         |
+| ------------------------ |-----------------------------------------------------------------|
 | <code>changeView</code>  | Improved the type of the view name parameter you want to change |
-| <code>getViewName</code> | Improved type of returned view name            |
+| <code>getViewName</code> | Improved the type of returned view name                         |
 
 #### Improved taskView and eventView types
 
@@ -240,28 +239,24 @@ const calendar = new Calendar('#calendar', {
 });
 ```
 
-#### SSR support
-
-(TODO implementation and documentation planned)
-
 ### Changes
 
 #### Option changes
 
 The options below have been moved within the options object or moved to the theme.
 
-| Option                                | Changes                                          | Additional information                                            |
-|-----------------------------------|-----------------------------------------------|--------------------------------------------------|
-| options.taskView                  | options.week.taskView                         |                                                  |
-| options.eventView                 | options.week.eventView                        |                                                  |
-| options.disableDblClick           | options.gridSelection.enableDblClick          | Default changed from <code>false</code> to <code>true</code> |
-| options.disableClick              | options.gridSelection.enableClick             | Default changed from <code>false</code> to <code>true</code> |
-| options.timezone.offsetCalculator | options.timezone.customOffsetCalculator       |                                                  |
-| options.month.grid                | Moved to [theme](../apis/theme.md)                    |                                                  |
-| options.month.moreLayerSize       | Moved to [theme](../apis/theme.md)                    |                                                  |
-| options.month.isAlways6Week       | Changed to <code>options.month.isAlways6Weeks</code> |                                                  |
-| options.month.daynames            | Changed to <code>options.month.dayNames</code>       |                                                  |
-| options.week.daynames             | Changed to <code>options.week.dayNames</code>        |                                                  |
+| Options                           | Changes                                              | Additional information                                       |
+|-----------------------------------| ---------------------------------------------------- | ------------------------------------------------------------ |
+| options.taskView                  | options.week.taskView                                |                                                              |
+| options.eventView                 | options.week.eventView                               |                                                              |
+| options.disableDblClick           | options.gridSelection.enableDblClick                 | Default changed from <code>false</code> to <code>true</code> |
+| options.disableClick              | options.gridSelection.enableClick                    | Default changed from <code>false</code> to <code>true</code> |
+| options.timezone.offsetCalculator | options.timezone.customOffsetCalculator              |                                                              |
+| options.month.grid                | Moved to [theme](../apis/theme.md)                   |                                                              |
+| options.month.moreLayerSize       | Moved to [theme](../apis/theme.md)                   |                                                              |
+| options.month.isAlways6Week       | Changed to <code>options.month.isAlways6Weeks</code> |                                                              |
+| options.month.daynames            | Changed to <code>options.month.dayNames</code>       |                                                              |
+| options.week.daynames             | Changed to <code>options.week.dayNames</code>        |                                                              |
 
 #### Instance methods
 
