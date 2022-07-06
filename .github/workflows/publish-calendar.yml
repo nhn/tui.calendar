@@ -41,10 +41,10 @@ jobs:
           path: ${{ env.WORKING_DIRECTORY }}
       - name: Create new version tag
         run: |
-          git tag v${{ steps.cpv.outputs.committed-version }}
+          git tag calendar@${{ steps.cpv.outputs.committed-version }}
       - name: Push new version tag
         run: |
-          git push origin v${{ steps.cpv.outputs.committed-version }}
+          git push origin calendar@${{ steps.cpv.outputs.committed-version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Update the relative links in README
