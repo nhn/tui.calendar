@@ -15,7 +15,6 @@
     - [Theme improvement](#theme-improvement)
     - [View related type improvement](#view-related-type-improvement)
     - [Improved taskView and eventView types](#improved-taskview-and-eventview-types)
-    - [SSR support](#ssr-support)
   - [Changes](#changes)
     - [Option changes](#option-changes)
     - [Instance methods](#instance-methods)
@@ -137,7 +136,7 @@ In v1, `currentTimeIndicator` and `currentTimeLine` are used interchangeably as 
 
 In v1, rendering of the calendar was handled as direct DOM manipulation. As a result, unnecessary rendering could occur whenever the calendar was manipulated.
 
-In v2, [preact](https://preactjs.com/) was introduced to improve rendering speed by reducing unnecessary rendering using virtual DOM and to support server-side rendering (SSR). Accordingly, parameters such as `force` and `silent` that control rendering when using the instance method have been removed, and rendering is controlled according to the internal state of the calendar, making it impossible to control rendering when using the instance method.
+In v2, [preact](https://preactjs.com/) was introduced to improve rendering speed by reducing unnecessary rendering using virtual DOM and to support server-side rendering (SSR) in future. Accordingly, parameters such as `force` and `silent` that control rendering when using the instance method have been removed, and rendering is controlled according to the internal state of the calendar, making it impossible to control rendering when using the instance method.
 
 #### Theme improvement
 
