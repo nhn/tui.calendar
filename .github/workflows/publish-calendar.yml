@@ -57,53 +57,6 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-#  publish-docs:
-#    needs: publish-npm
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v3
-#        with:
-#          fetch-depth: 0
-#      - name: Install dependencies
-#        uses: ./.github/composite-actions/install-dependencies
-#      - name: Prebuild docs
-#        working-directory: ${{ env.WORKING_DIRECTORY }}
-#        run: |
-#          npm run docs:prebuild
-#      - name: Change node version to 10
-#        uses: actions/setup-node@v3
-#        with:
-#          node-version: '10'
-#          registry-url: https://registry.npmjs.org/
-#      - name: Install tuidoc
-#        run: |
-#          npm install -g @toast-ui/doc
-#        shell: bash
-#      - name: Build docs
-#        working-directory: ${{ env.WORKING_DIRECTORY }}
-#        run: |
-#          tuidoc
-#        shell: bash
-#      - name: Commit new doc files
-#        run: |
-#          git switch gh-pages
-#          git config --local user.email "dohyung.ahn@nhn.com"
-#          git config --local user.name "Dohyung Ahn"
-#          rm -rf latest
-#          rm -rf ${{ steps.cpv.outputs.committed-version }}
-#          mv -i _latest latest
-#          mv _${{ steps.cpv.outputs.committed-version }} ${{ steps.cpv.outputs.committed-version }}
-#          git add -A
-#          git commit -m ${{ steps.cpv.outputs.committed-version }}
-#      - name: Publish new docs
-#        uses: ad-m/github-push-action@master
-#        with:
-#          github_token: ${{ secrets.GITHUB_TOKEN }}
-#          branch: gh-pages
-#      - name: Restore branch
-#        run: |
-#          git switch main
-
   publish-cdn:
     needs: publish-npm
     runs-on: ubuntu-latest
