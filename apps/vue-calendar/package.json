@@ -58,7 +58,6 @@
   "devDependencies": {
     "@vue/cli": "^5.0.6",
     "eslint-plugin-vue": "^9.1.1",
-    "vite": "^2.9.12",
     "vite-plugin-vue2": "^2.0.1",
     "vue": "^2.6.14"
   },
