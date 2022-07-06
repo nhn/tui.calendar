@@ -229,7 +229,7 @@ export function TimeEvent({ uiModel, nextStartTime, isResizingGuide = false }: P
 
   return (
     <div
-      data-testid={`time-event-${model.title}-${uiModel.cid()}`}
+      data-testid={`${hasNextStartTime ? 'moving-' : ''}time-event-${model.title}-${uiModel.cid()}`}
       data-calendar-id={calendarId}
       data-event-id={id}
       className={classNames.time}

@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import type { Matchers } from '@playwright/test/types/expect-types';
 
 import type TZDate from '../../src/time/date';
-import { addHours, setTimeStrToDate } from '../../src/time/datetime';
+import { addHours, isSameDate, setTimeStrToDate } from '../../src/time/datetime';
 import type { FormattedTimeString } from '../../src/types/time/datetime';
 import { mockDayViewEvents } from '../../stories/mocks/mockDayViewEvents';
 import { DAY_VIEW_PAGE_URL } from '../configs';
@@ -10,6 +10,7 @@ import {
   dragAndDrop,
   getBoundingBox,
   getTimeEventSelector,
+  getTimeEventShadowSelector,
   getTimeGridLineSelector,
   getTimeStrFromDate,
   waitForSingleElement,
@@ -195,5 +196,44 @@ test.describe(`Calibrate event's height while dragging`, () => {
         })
         [matcherToCompare](eventBoundingBoxBeforeMove.height);
     });
+  });
+});
+
+const ONE_DAY_TIME_EVENTS = mockDayViewEvents.filter(
+  ({ isAllday, start, end }) => !isAllday && isSameDate(start, end)
+);
+
+ONE_DAY_TIME_EVENTS.forEach(({ title }) => {
+  test(`The height of shadow element should be same as the event element. - ${title}`, async ({
+    page,
+  }) => {
+    // Given
+    const eventLocator = page.locator(getTimeEventSelector(title));
+    const eventBoundingBox = await getBoundingBox(eventLocator);
+
+    const targetRowLocator = page.locator(getTimeGridLineSelector('02:00'));
+
+    // When
+    await dragAndDrop({
+      page,
+      sourceLocator: eventLocator,
+      targetLocator: targetRowLocator,
+      options: {
+        sourcePosition: {
+          x: 5,
+          y: 5,
+        },
+        targetPosition: {
+          y: 5,
+          x: 5,
+        },
+      },
+      hold: true,
+    });
+
+    // Then
+    const shadowLocator = page.locator(getTimeEventShadowSelector(title));
+    const shadowBoundingBox = await getBoundingBox(shadowLocator);
+    expect(shadowBoundingBox.height).toBe(eventBoundingBox.height);
   });
 });

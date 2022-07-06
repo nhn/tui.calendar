@@ -7,7 +7,7 @@ import { useCurrentPointerPositionInGrid } from '@src/hooks/event/useCurrentPoin
 import { useDraggingEvent } from '@src/hooks/event/useDraggingEvent';
 import type EventUIModel from '@src/model/eventUIModel';
 import type TZDate from '@src/time/date';
-import { addMilliseconds, MS_PER_DAY, MS_PER_THIRTY_MINUTES } from '@src/time/datetime';
+import { addMilliseconds, addMinutes, MS_PER_DAY, MS_PER_THIRTY_MINUTES } from '@src/time/datetime';
 import { isNil, isPresent } from '@src/utils/type';
 
 import type { GridPosition, GridPositionFinder, TimeGridData } from '@t/grid';
@@ -39,8 +39,11 @@ function getMovingEventPosition({
   const maxHeight = rowHeight * timeGridDataRows.length;
   const millisecondsDiff = rowDiff * MS_PER_THIRTY_MINUTES + columnDiff * MS_PER_DAY;
 
-  const nextStart = addMilliseconds(draggingEvent.getStarts(), millisecondsDiff);
-  const nextEnd = addMilliseconds(draggingEvent.getEnds(), millisecondsDiff);
+  const { goingDuration = 0, comingDuration = 0 } = draggingEvent.valueOf();
+  const goingStart = addMinutes(draggingEvent.getStarts(), -goingDuration);
+  const comingEnd = addMinutes(draggingEvent.getEnds(), comingDuration);
+  const nextStart = addMilliseconds(goingStart, millisecondsDiff);
+  const nextEnd = addMilliseconds(comingEnd, millisecondsDiff);
   const startIndex = getCurrentIndexByTime(nextStart);
   const endIndex = getCurrentIndexByTime(nextEnd);
 

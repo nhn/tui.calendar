@@ -2,7 +2,7 @@ import type { Locator } from '@playwright/test';
 import { expect, test } from '@playwright/test';
 
 import type TZDate from '../../src/time/date';
-import { addHours } from '../../src/time/datetime';
+import { addHours, isSameDate } from '../../src/time/datetime';
 import type { FormattedTimeString } from '../../src/types/time/datetime';
 import { mockWeekViewEvents } from '../../stories/mocks/mockWeekViewEvents';
 import { WEEK_VIEW_PAGE_URL } from '../configs';
@@ -11,6 +11,7 @@ import {
   dragAndDrop,
   getBoundingBox,
   getTimeEventSelector,
+  getTimeEventShadowSelector,
   getTimeGridLineSelector,
   getTimeStrFromDate,
 } from '../utils';
@@ -245,6 +246,7 @@ test.describe(`Calibrate event's height while dragging`, () => {
   let eventLocator: Locator;
   let lowerLongTimeEventLocator: Locator;
   let upperLongTimeEventLocator: Locator;
+  let shadowLocator: Locator;
 
   test.beforeEach(({ page }) => {
     const targetEventSelector = getTimeEventSelector(LONG_TIME_EVENT.title);
@@ -252,6 +254,7 @@ test.describe(`Calibrate event's height while dragging`, () => {
     lowerLongTimeEventLocator = page.locator(targetEventSelector).first();
     upperLongTimeEventLocator = page.locator(targetEventSelector).last();
     eventLocator = page.locator(targetEventSelector);
+    shadowLocator = page.locator(getTimeEventShadowSelector(LONG_TIME_EVENT.title));
   });
 
   test('lower long time event become longer while drag to upper side', async ({ page }) => {
@@ -271,7 +274,7 @@ test.describe(`Calibrate event's height while dragging`, () => {
     });
 
     // Then
-    const shadowEventBoundingBox = await getBoundingBox(eventLocator.first());
+    const shadowEventBoundingBox = await getBoundingBox(shadowLocator);
     expect(shadowEventBoundingBox.y).toBeLessThan(eventBoundingBox.y);
     expect(shadowEventBoundingBox.height).toBeGreaterThan(eventBoundingBox.height);
   });
@@ -293,7 +296,7 @@ test.describe(`Calibrate event's height while dragging`, () => {
     });
 
     // Then
-    const shadowEventBoundingBox = await getBoundingBox(eventLocator.first());
+    const shadowEventBoundingBox = await getBoundingBox(shadowLocator);
     // NOTE: shadow event's height is greater than event's height, but it looks like it isn't.
     //       height is truncated because of stacking context.
     expect(shadowEventBoundingBox.y).toBeGreaterThan(eventBoundingBox.y);
@@ -316,7 +319,7 @@ test.describe(`Calibrate event's height while dragging`, () => {
     });
 
     // Then
-    const shadowEventBoundingBox = await getBoundingBox(eventLocator.first());
+    const shadowEventBoundingBox = await getBoundingBox(shadowLocator);
     expect(shadowEventBoundingBox.height).toBeGreaterThan(eventBoundingBox.height);
   });
 
@@ -337,7 +340,48 @@ test.describe(`Calibrate event's height while dragging`, () => {
     });
 
     // Then
-    const shadowEventBoundingBox = await getBoundingBox(eventLocator.first());
+    const shadowEventBoundingBox = await getBoundingBox(shadowLocator);
     expect(shadowEventBoundingBox.height).toBeLessThan(eventBoundingBox.height);
+  });
+});
+
+const ONE_DAY_TIME_EVENTS = mockWeekViewEvents.filter(
+  ({ isAllday, start, end }) => !isAllday && isSameDate(start, end)
+);
+
+ONE_DAY_TIME_EVENTS.forEach(({ title }) => {
+  test(`The height of shadow element should be same as the event element. - ${title}`, async ({
+    page,
+  }) => {
+    // Given
+    const eventLocator = page.locator(getTimeEventSelector(title));
+    const eventBoundingBox = await getBoundingBox(eventLocator);
+
+    const targetRowLocator = page.locator(getTimeGridLineSelector('02:00'));
+    const targetColumnLocator = page.locator('data-testid=timegrid-column-2');
+    const targetColumnBoundingBox = await getBoundingBox(targetColumnLocator);
+
+    // When
+    await dragAndDrop({
+      page,
+      sourceLocator: eventLocator,
+      targetLocator: targetRowLocator,
+      options: {
+        sourcePosition: {
+          x: 5,
+          y: 5,
+        },
+        targetPosition: {
+          y: 5,
+          x: targetColumnBoundingBox.x - 5,
+        },
+      },
+      hold: true,
+    });
+
+    // Then
+    const shadowLocator = page.locator(getTimeEventShadowSelector(title));
+    const shadowBoundingBox = await getBoundingBox(shadowLocator);
+    expect(shadowBoundingBox.height).toBe(eventBoundingBox.height);
   });
 });
