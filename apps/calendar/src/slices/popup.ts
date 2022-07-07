@@ -1,13 +1,6 @@
 import produce from 'immer';
-import type { WritableDraft } from 'immer/dist/types/types-external';
 
-import type {
-  CalendarState,
-  CalendarStore,
-  EventDetailPopupParam,
-  PopupParamMap,
-  SetState,
-} from '@t/store';
+import type { CalendarState, CalendarStore, PopupParamMap, SetState } from '@t/store';
 
 export enum PopupType {
   SeeMore = 'seeMore',
@@ -67,7 +60,7 @@ export function createPopupDispatchers(set: SetState<CalendarStore>): PopupDispa
     showDetailPopup: (param: PopupParamMap[PopupType.Detail], isOpenedInSeeMorePopup) =>
       set(
         produce<CalendarState>((state) => {
-          state.popup[PopupType.Detail] = param as unknown as WritableDraft<EventDetailPopupParam>;
+          state.popup[PopupType.Detail] = param;
           state.popup[PopupType.Form] = null;
           if (!isOpenedInSeeMorePopup) {
             state.popup[PopupType.SeeMore] = null;
