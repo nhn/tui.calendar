@@ -41,7 +41,7 @@ describe('event detail popup', () => {
           height: 10,
           left: 0,
           top: 0,
-        } as unknown as HTMLElement,
+        },
       },
       false
     );

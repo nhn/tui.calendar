@@ -54,7 +54,7 @@ export interface EventFormPopupParam extends BasePopupParam {
 
 export interface EventDetailPopupParam extends BasePopupParam {
   event: EventModel;
-  eventRect: HTMLElement;
+  eventRect: Rect;
 }
 
 export type PopupPosition = {

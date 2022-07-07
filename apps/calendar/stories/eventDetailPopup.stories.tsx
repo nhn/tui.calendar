@@ -35,14 +35,12 @@ const Template: Story<EventDetailPopupParam> = ({ event }) => (
   <ProviderWrapper>
     <Wrapper
       event={event}
-      eventRect={
-        {
-          top: 0,
-          left: 0,
-          width: 100,
-          height: 100,
-        } as unknown as HTMLElement
-      }
+      eventRect={{
+        top: 0,
+        left: 0,
+        width: 100,
+        height: 100,
+      }}
     >
       <EventDetailPopup />
       <EventFormPopup />

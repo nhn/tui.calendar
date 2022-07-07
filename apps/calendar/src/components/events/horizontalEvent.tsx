@@ -189,7 +189,7 @@ export function HorizontalEvent({
         showDetailPopup(
           {
             event: uiModel.model,
-            eventRect: eventContainerRef.current,
+            eventRect: eventContainerRef.current.getBoundingClientRect(),
           },
           flat
         );
