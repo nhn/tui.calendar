@@ -231,6 +231,7 @@ export default abstract class CalendarCore
     }
 
     this.store.clearListeners();
+    this.theme.clearListeners();
     this.eventBus.off();
     removeAttributeHooks();
 
