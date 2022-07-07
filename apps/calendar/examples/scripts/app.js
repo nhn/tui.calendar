@@ -1,4 +1,4 @@
-/* eslint-disable no-var,prefer-destructuring,prefer-template,no-undef,object-shorthand */
+/* eslint-disable no-var,prefer-destructuring,prefer-template,no-undef,object-shorthand,no-console */
 // for testing IE11 compatibility, this file doesn't use ES6 syntax.
 (function (Calendar) {
   var cal;
