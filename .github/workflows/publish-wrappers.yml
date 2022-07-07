@@ -23,7 +23,7 @@ jobs:
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: |
           npm run build
-      - name: Get package version
+      - name: Get the package version
         id: version
         uses: PostHog/check-package-version@v2
         with:
@@ -56,11 +56,17 @@ jobs:
           git config --local user.email "jaeeon.lim@nhn.com"
           git add .
           git commit -m "chore: update version of wrappers to v${{ steps.version.outputs.committed-version }}"
-      - name: Publish version update
+      - name: Push version update commit
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: main
+      - name: Push new version tags
+        run: |
+          git tag react-calendar@${{ steps.version.outputs.committed-version }}
+          git tag vue-calendar@${{ steps.version.outputs.committed-version }}
+          git push origin react-calendar@${{ steps.version.outputs.committed-version }}
+          git push origin vue-calendar@${{ steps.version.outputs.committed-version }}
       - name: Update the relative links in README
         run: |
           PACKAGES=react,vue npm run update:readme
