@@ -8,7 +8,7 @@ import { useCurrentPointerPositionInGrid } from '@src/hooks/event/useCurrentPoin
 import { useDraggingEvent } from '@src/hooks/event/useDraggingEvent';
 import type EventUIModel from '@src/model/eventUIModel';
 import type TZDate from '@src/time/date';
-import { setTimeStrToDate } from '@src/time/datetime';
+import { addMinutes, setTimeStrToDate } from '@src/time/datetime';
 import { findLastIndex } from '@src/utils/array';
 import { isNil, isPresent } from '@src/utils/type';
 
@@ -65,22 +65,28 @@ export function useTimeGridEventResize({
 
         return rowStartTZDate <= targetDate && targetDate < rowEndTZDate;
       };
+
     const eventStartDateColumnIndex = resizeTargetUIModelColumns.findIndex((row) => row.length > 0);
-    const startTZDate = (
-      resizeTargetUIModelColumns[eventStartDateColumnIndex][0] as EventUIModel
-    ).getStarts();
-    let eventStartDateRowIndex = rows.findIndex(
-      findRowIndexOf(startTZDate, eventStartDateColumnIndex)
+    const resizingStartEventUIModel = resizeTargetUIModelColumns[
+      eventStartDateColumnIndex
+    ][0] as EventUIModel;
+    const { goingDuration = 0 } = resizingStartEventUIModel.valueOf();
+    const renderStart = addMinutes(resizingStartEventUIModel.getStarts(), -goingDuration);
+    const eventStartDateRowIndex = Math.max(
+      rows.findIndex(findRowIndexOf(renderStart, eventStartDateColumnIndex)),
+      0
     ); // when it is -1, the event starts before the current view.
-    eventStartDateRowIndex = eventStartDateRowIndex >= 0 ? eventStartDateRowIndex : 0;
+
     const eventEndDateColumnIndex = findLastIndex(
       resizeTargetUIModelColumns,
       (row) => row.length > 0
     );
-    const endTZDate = (
-      resizeTargetUIModelColumns[eventEndDateColumnIndex][0] as EventUIModel
-    ).getEnds();
-    let eventEndDateRowIndex = rows.findIndex(findRowIndexOf(endTZDate, eventEndDateColumnIndex)); // when it is -1, the event ends after the current view.
+    const resizingEndEventUIModel = resizeTargetUIModelColumns[
+      eventEndDateColumnIndex
+    ][0] as EventUIModel;
+    const { comingDuration = 0 } = resizingEndEventUIModel.valueOf();
+    const renderEnd = addMinutes(resizingEndEventUIModel.getStarts(), comingDuration);
+    let eventEndDateRowIndex = rows.findIndex(findRowIndexOf(renderEnd, eventEndDateColumnIndex)); // when it is -1, the event ends after the current view.
     eventEndDateRowIndex = eventEndDateRowIndex >= 0 ? eventEndDateRowIndex : rows.length - 1;
 
     return {
@@ -95,7 +101,7 @@ export function useTimeGridEventResize({
   const canCalculateGuideUIModel =
     isPresent(baseResizingInfo) && isPresent(resizingStartUIModel) && isPresent(currentGridPos);
 
-  const minimumHeight = useMemo(
+  const oneRowHeight = useMemo(
     () => (baseResizingInfo ? timeGridData.rows[0].height : 0),
     [baseResizingInfo, timeGridData.rows]
   );
@@ -110,13 +116,23 @@ export function useTimeGridEventResize({
         eventStartDateColumnIndex === eventEndDateColumnIndex
       ) {
         const clonedUIModel = resizingStartUIModel.clone();
+        const { height, goingDurationHeight, comingDurationHeight } = clonedUIModel;
+        const newHeight = Math.max(
+          oneRowHeight +
+            (goingDurationHeight * height) / 100 +
+            (comingDurationHeight * height) / 100,
+          timeGridData.rows[currentGridPos.rowIndex].top -
+            timeGridData.rows[eventStartDateRowIndex].top +
+            oneRowHeight
+        );
+        const newGoingDurationHeight = (goingDurationHeight * height) / newHeight;
+        const newComingDurationHeight = (comingDurationHeight * height) / newHeight;
+
         clonedUIModel.setUIProps({
-          height: Math.max(
-            minimumHeight,
-            timeGridData.rows[currentGridPos.rowIndex].top -
-              timeGridData.rows[eventStartDateRowIndex].top +
-              minimumHeight
-          ),
+          height: newHeight,
+          goingDurationHeight: newGoingDurationHeight,
+          comingDurationHeight: newComingDurationHeight,
+          modelDurationHeight: 100 - (newGoingDurationHeight + newComingDurationHeight),
         });
         setGuideUIModel(clonedUIModel);
       }
@@ -128,7 +144,7 @@ export function useTimeGridEventResize({
     currentGridPos,
     resizingStartUIModel,
     timeGridData.rows,
-    minimumHeight,
+    oneRowHeight,
   ]);
 
   // When drag a two-day event (but less than 24 hours)
@@ -148,7 +164,7 @@ export function useTimeGridEventResize({
           // last column
           clonedUIModel = resizingStartUIModel.clone();
           clonedUIModel.setUIProps({
-            height: timeGridData.rows[currentGridPos.rowIndex].top + minimumHeight,
+            height: timeGridData.rows[currentGridPos.rowIndex].top + oneRowHeight,
           });
         }
         setGuideUIModel(clonedUIModel);
@@ -161,7 +177,7 @@ export function useTimeGridEventResize({
     currentGridPos,
     resizingStartUIModel,
     timeGridData.rows,
-    minimumHeight,
+    oneRowHeight,
   ]);
 
   useWhen(() => {
@@ -175,11 +191,13 @@ export function useTimeGridEventResize({
     if (shouldUpdate) {
       const { eventEndDateColumnIndex, eventStartDateRowIndex, eventStartDateColumnIndex } =
         baseResizingInfo;
+      const { comingDuration = 0 } = resizingStartUIModel.valueOf();
+
       const targetEndDate = setTimeStrToDate(
         timeGridData.columns[columnIndex].date,
         timeGridData.rows[
           eventStartDateColumnIndex === eventEndDateColumnIndex
-            ? Math.max(currentGridPos.rowIndex, eventStartDateRowIndex)
+            ? Math.max(currentGridPos.rowIndex, eventStartDateRowIndex) // TODO: consider start + going + coming
             : currentGridPos.rowIndex
         ].endTime
       );
@@ -187,7 +205,7 @@ export function useTimeGridEventResize({
       eventBus.fire('beforeUpdateEvent', {
         event: resizingStartUIModel.model.toEventObject(),
         changes: {
-          end: targetEndDate,
+          end: addMinutes(targetEndDate, -comingDuration),
         },
       });
     }
