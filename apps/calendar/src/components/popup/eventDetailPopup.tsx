@@ -54,7 +54,7 @@ function calculatePopupPosition(eventRect: Rect, layoutRect: Rect, popupRect: Re
 }
 
 function calculatePopupArrowPosition(eventRect: Rect, layoutRect: Rect, popupRect: Rect) {
-  const top = eventRect.top + eventRect.height / 2;
+  const top = eventRect.top + eventRect.height / 2 + window.scrollY;
   const popupLeft = eventRect.left + eventRect.width;
 
   const isOutOfLayout = popupLeft + popupRect.width > layoutRect.left + layoutRect.width;
