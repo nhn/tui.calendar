@@ -3,29 +3,17 @@ on: [workflow_dispatch]
 env:
   WORKING_DIRECTORY: ./apps/calendar
 jobs:
-  check-version:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout branch
-        uses: actions/checkout@v3
-      - name: Check the package version
-        id: cpv
-        uses: PostHog/check-package-version@v2
-        with:
-          path: ${{ env.WORKING_DIRECTORY }}
-      - name: Log when unchanged
-        if: steps.cpv.outputs.is-new-version == 'false'
-        run: 'echo "No version change"'
-      - name: Cancel workflow
-        if: steps.cpv.outputs.is-new-version == 'false'
-        uses: andymckay/cancel-action@0.2
-
   publish-docs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: Get the package version
+        id: cpv
+        uses: PostHog/check-package-version@v2
+        with:
+          path: ${{ env.WORKING_DIRECTORY }}
       - name: Install dependencies
         uses: ./.github/composite-actions/install-dependencies
       - name: Update the relative links in README
