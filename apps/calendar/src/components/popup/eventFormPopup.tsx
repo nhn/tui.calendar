@@ -89,7 +89,6 @@ function getChanges(event: EventModel, eventObject: EventObject) {
   }, {} as EventObject);
 }
 
-// eslint-disable-next-line complexity
 export function EventFormPopup() {
   const { calendars } = useStore(calendarSelector);
   const { hideAllPopup } = useDispatch('popup');
@@ -116,6 +115,7 @@ export function EventFormPopup() {
     end,
     isAllday,
     isPrivate,
+    calendarId: event?.calendarId ?? calendars[0]?.id,
     state: eventState,
   });
   const datePickerRef = useRef<DateRangePicker>(null);
@@ -180,16 +180,13 @@ export function EventFormPopup() {
     hideAllPopup();
   };
 
-  // FIXME: This increases the complexity of the function
-  const selectedCalendarId = formState.calendarId ?? event?.calendarId ?? calendars[0]?.id;
-
   return createPortal(
     <div role="dialog" className={classNames.popupContainer} ref={popupContainerRef} style={style}>
       <form onSubmit={onSubmit}>
         <div className={classNames.formContainer}>
           {calendars?.length ? (
             <CalendarSelector
-              selectedCalendarId={selectedCalendarId}
+              selectedCalendarId={formState.calendarId}
               calendars={calendars}
               formStateDispatch={formStateDispatch}
             />
