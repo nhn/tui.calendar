@@ -94,7 +94,7 @@
     "build": "rimraf dist/ && concurrently 'npm:build:*'",
     "build:modern": "webpack --config webpack.config.js && webpack --config webpack.config.js --env minify",
     "build:ie11": "webpack --config webpack.config.js --env ie11 && webpack --config webpack.config.js --env minify ie11",
-    "build:esm": "node scripts/build-esm.js",
+    "build:esm": "vite build",
     "build:types": "rimraf types/ && tsc -p ./tsconfig.declaration.json",
     "analyze": "webpack --config webpack.config.js --env --profile --json > stats.json && webpack-bundle-analyzer stats.json ./dist",
     "develop": "npm run storybook",
