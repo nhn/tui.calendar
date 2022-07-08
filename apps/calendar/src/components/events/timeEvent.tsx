@@ -128,6 +128,7 @@ function isDraggableEvent({
   return !isReadOnlyCalendar && !model.isReadOnly && !isDraggingTarget && !hasNextStartTime;
 }
 
+// eslint-disable-next-line complexity
 export function TimeEvent({
   uiModel,
   nextStartTime,
@@ -154,6 +155,7 @@ export function TimeEvent({
   const { containerStyle, goingDurationStyle, modelDurationStyle, comingDurationStyle } = getStyles(
     { uiModel, isDraggingTarget, hasNextStartTime, calendarColor, minHeight }
   );
+  const isGuide = hasNextStartTime || isResizingGuide;
 
   useTransientUpdate(dndSelector, ({ draggingEventUIModel, draggingState }) => {
     if (
@@ -237,7 +239,7 @@ export function TimeEvent({
 
   return (
     <div
-      data-testid={`${hasNextStartTime ? 'moving-' : ''}time-event-${model.title}-${uiModel.cid()}`}
+      data-testid={`${isGuide ? 'guide-' : ''}time-event-${model.title}-${uiModel.cid()}`}
       data-calendar-id={calendarId}
       data-event-id={id}
       className={classNames.time}

@@ -71,8 +71,8 @@ export function getTimeEventSelector(title: string): string {
   return `[data-testid^="time-event-${title}"]`;
 }
 
-export function getTimeEventShadowSelector(title: string): string {
-  return `[data-testid^="moving-time-event-${title}"]`;
+export function getGuideTimeEventSelector(): string {
+  return `[data-testid^="guide-time-event"]`;
 }
 
 export function getHorizontalEventSelector(event: EventObject): string {

@@ -8,7 +8,7 @@ import { useCurrentPointerPositionInGrid } from '@src/hooks/event/useCurrentPoin
 import { useDraggingEvent } from '@src/hooks/event/useDraggingEvent';
 import type EventUIModel from '@src/model/eventUIModel';
 import type TZDate from '@src/time/date';
-import { addMinutes, setTimeStrToDate } from '@src/time/datetime';
+import { addMinutes, max, setTimeStrToDate } from '@src/time/datetime';
 import { findLastIndex } from '@src/utils/array';
 import { isNil, isPresent } from '@src/utils/type';
 
@@ -189,23 +189,21 @@ export function useTimeGridEventResize({
       baseResizingInfo.eventEndDateColumnIndex === columnIndex;
 
     if (shouldUpdate) {
-      const { eventEndDateColumnIndex, eventStartDateRowIndex, eventStartDateColumnIndex } =
-        baseResizingInfo;
       const { comingDuration = 0 } = resizingStartUIModel.valueOf();
 
-      const targetEndDate = setTimeStrToDate(
-        timeGridData.columns[columnIndex].date,
-        timeGridData.rows[
-          eventStartDateColumnIndex === eventEndDateColumnIndex
-            ? Math.max(currentGridPos.rowIndex, eventStartDateRowIndex) // TODO: consider start + going + coming
-            : currentGridPos.rowIndex
-        ].endTime
+      const targetEndDate = addMinutes(
+        setTimeStrToDate(
+          timeGridData.columns[columnIndex].date,
+          timeGridData.rows[currentGridPos.rowIndex].endTime
+        ),
+        -comingDuration
       );
+      const minEndDate = addMinutes(resizingStartUIModel.getStarts(), 30);
 
       eventBus.fire('beforeUpdateEvent', {
         event: resizingStartUIModel.model.toEventObject(),
         changes: {
-          end: addMinutes(targetEndDate, -comingDuration),
+          end: max(minEndDate, targetEndDate),
         },
       });
     }

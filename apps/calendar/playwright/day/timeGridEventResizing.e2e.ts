@@ -87,14 +87,12 @@ async function setup({
   };
 }
 
-const timeEvents = mockDayViewEvents.filter(({ isAllday }) => !isAllday);
+const timeEvents = mockDayViewEvents.filter(
+  ({ isAllday, goingDuration, comingDuration }) => !isAllday && !goingDuration && !comingDuration
+);
 const [, SHORT_TIME_EVENT] = timeEvents;
 
 timeEvents.forEach(({ title: eventTitle, start, end }) => {
-  // TODO Remove L95-97 after fixing an issue related to resizing an event that has a going or coming duration.
-  if (eventTitle === 'short + duration') {
-    return;
-  }
   test.describe(`Resize the ${eventTitle} event in the time grid`, () => {
     cases.forEach(({ title, step, matcherToCompare: compareAssertion }) => {
       test(`${title}`, async ({ page }) => {

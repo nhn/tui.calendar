@@ -10,8 +10,8 @@ import { Direction } from '../types';
 import {
   dragAndDrop,
   getBoundingBox,
+  getGuideTimeEventSelector,
   getTimeEventSelector,
-  getTimeEventShadowSelector,
   getTimeGridLineSelector,
   getTimeStrFromDate,
 } from '../utils';
@@ -251,7 +251,7 @@ test.describe(`Calibrate event's height while dragging`, () => {
 
     lowerLongTimeEventLocator = page.locator(targetEventSelector).first();
     upperLongTimeEventLocator = page.locator(targetEventSelector).last();
-    shadowLocator = page.locator(getTimeEventShadowSelector(LONG_TIME_EVENT.title));
+    shadowLocator = page.locator(getGuideTimeEventSelector());
   });
 
   test('lower long time event become longer while drag to upper side', async ({ page }) => {
@@ -377,7 +377,7 @@ ONE_DAY_TIME_EVENTS.forEach(({ title }) => {
     });
 
     // Then
-    const shadowLocator = page.locator(getTimeEventShadowSelector(title));
+    const shadowLocator = page.locator(getGuideTimeEventSelector());
     const shadowBoundingBox = await getBoundingBox(shadowLocator);
     expect(shadowBoundingBox.height).toBe(eventBoundingBox.height);
   });

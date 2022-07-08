@@ -9,8 +9,8 @@ import { DAY_VIEW_PAGE_URL } from '../configs';
 import {
   dragAndDrop,
   getBoundingBox,
+  getGuideTimeEventSelector,
   getTimeEventSelector,
-  getTimeEventShadowSelector,
   getTimeGridLineSelector,
   getTimeStrFromDate,
   waitForSingleElement,
@@ -232,7 +232,7 @@ ONE_DAY_TIME_EVENTS.forEach(({ title }) => {
     });
 
     // Then
-    const shadowLocator = page.locator(getTimeEventShadowSelector(title));
+    const shadowLocator = page.locator(getGuideTimeEventSelector());
     const shadowBoundingBox = await getBoundingBox(shadowLocator);
     expect(shadowBoundingBox.height).toBe(eventBoundingBox.height);
   });
