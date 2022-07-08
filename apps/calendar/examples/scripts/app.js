@@ -239,7 +239,7 @@
     eventFilter: function (event) {
       var currentView = cal.getViewName();
       if (currentView === 'month') {
-        return ['allday', 'time'].includes(event.category);
+        return ['allday', 'time'].includes(event.category) && event.isVisible;
       }
 
       return event.isVisible;
