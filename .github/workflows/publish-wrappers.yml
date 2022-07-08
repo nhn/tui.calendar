@@ -14,11 +14,15 @@ jobs:
         uses: actions/checkout@v3
       - name: Install root dependencies
         uses: ./.github/composite-actions/install-dependencies
-      - name: Use Node.js 15.x
+      - name: Use Node.js 16.x
         uses: actions/setup-node@v1
         with:
           node-version: '16.x'
           registry-url: https://registry.npmjs.org/
+      - name: Build core
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: |
+          npm run build
       - name: Get package version
         id: version
         uses: PostHog/check-package-version@v2

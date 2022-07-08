@@ -84,12 +84,12 @@ To use the calendar, you need to add a CSS file of TOAST UI Calendar. You can im
 
 ```js
 /* ES6 module in Node.js environment */
-import '@toast-ui/calendar/toastui-calendar.min.css'; // Stylesheet for calendar
+import '@toast-ui/calendar/dist/toastui-calendar.min.css'; // Stylesheet for calendar
 ```
 
 ```js
 /* CommonJS in Node.js environment */
-require('@toast-ui/calendar/toastui-calendar.min.css');
+require('@toast-ui/calendar/dist/toastui-calendar.min.css');
 ```
 
 ```html
@@ -108,7 +108,7 @@ You can load a calendar component and add it to the `components` in your compone
 
 <script>
 import Calendar from '@toast-ui/vue-calendar';
-import '@toast-ui/calendar/toastui-calendar.min.css';
+import '@toast-ui/calendar/dist/toastui-calendar.min.css';
 
 export default {
   name: 'YourComponent',
@@ -121,7 +121,7 @@ export default {
 
 ```js
 import Calendar from '@toast-ui/vue-calendar';
-import '@toast-ui/calendar/toastui-calendar.min.css';
+import '@toast-ui/calendar/dist/toastui-calendar.min.css';
 
 new Vue({
   el: '#app',
@@ -151,7 +151,7 @@ Additionally, it provides a `events` prop to add events.
 
 <script>
 import Calendar from '@toast-ui/vue-calendar';
-import '@toast-ui/calendar/toastui-calendar.min.css';
+import '@toast-ui/calendar/dist/toastui-calendar.min.css';
 
 export default {
   name: 'YourComponent',
@@ -206,7 +206,7 @@ You can use the `v-on` directive to handle the calendar instance events. For mor
 
 <script>
 import Calendar from '@toast-ui/vue-calendar';
-import '@toast-ui/calendar/toastui-calendar.min.css';
+import '@toast-ui/calendar/dist/toastui-calendar.min.css';
 
 export default {
   name: 'YourComponent',
@@ -264,7 +264,7 @@ Return the calendar instance. You can use this to call the [calendar instance me
 
 <script>
 import Calendar from '@toast-ui/vue-calendar';
-import '@toast-ui/calendar/toastui-calendar.min.css';
+import '@toast-ui/calendar/dist/toastui-calendar.min.css';
 
 export default {
   name: 'YourComponent',

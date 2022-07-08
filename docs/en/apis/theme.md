@@ -55,15 +55,15 @@ interface CommonTheme {
 }
 ```
 
-| Theme                                       | Default value                              | Description            |
-| ------------------------------------------ | ----------------------------------- | --------------- |
+| Theme                                      | Default value                       | Description                  |
+| ------------------------------------------ | ----------------------------------- | ---------------------------- |
 | [backgroundColor](#common-backgroundcolor) | <code>'white'</code>                | Background color of calendar |
-| [border](#common-border)                   | <code>'1px solid #e5e5e5'</code>    | Border of calendar |
-| [gridSelection](#common-gridselection)     | <code>DEFAULT_GRID_SELECTION</code> | Selected date/time area  |
-| [dayName](#common-dayname)                 | <code>{ color: '#333' }</code>      | Day of the week            |
-| [holiday](#common-holiday)                 | <code>{ color: '#ff4040' }</code>   | Holiday            |
-| [saturday](#common-saturday)               | <code>{ color: '#333' }</code>      | Saturday          |
-| [today](#common-today)                     | <code>{ color: '#fff' }</code>      | The current day            |
+| [border](#common-border)                   | <code>'1px solid #e5e5e5'</code>    | Border of calendar           |
+| [gridSelection](#common-gridselection)     | <code>DEFAULT_GRID_SELECTION</code> | Selected date/time area      |
+| [dayName](#common-dayname)                 | <code>{ color: '#333' }</code>      | Day of the week              |
+| [holiday](#common-holiday)                 | <code>{ color: '#ff4040' }</code>   | Holiday                      |
+| [saturday](#common-saturday)               | <code>{ color: '#333' }</code>      | Saturday                     |
+| [today](#common-today)                     | <code>{ color: '#fff' }</code>      | The current day              |
 
 ```ts
 const DEFAULT_GRID_SELECTION = {
@@ -114,28 +114,28 @@ interface WeekTheme {
 }
 ```
 
-| Theme                                                                   | Default value                                             | Description                                                                                   |
-| ---------------------------------------------------------------------- | -------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| [dayName](#week-dayname)                                               | <code>DEFAULT_WEEK_DAYNAME</code>                  | Day of the week                                                                                   |
-| [dayGrid](#week-daygrid)                                               | <code>DEFAULT_DAY_GRID</code>                      | Each cell in the panel in weekly/daily view                                                           |
-| [dayGridLeft](#week-daygridleft)                                       | <code>DEFAULT_DAY_GRID_LEFT</code>                 | In the weekly/daily view, the area on the left side of the panel                                                         |
-| [timeGrid](#week-timegrid)                                             | <code>{ borderRight: '1px solid #e5e5e5' }</code>  | Timed event area in weekly/daily view                                                      |
-| [timeGridLeft](#week-timegridleft)                                     | <code>DEFAULT_TIME_GRID_LEFT</code>                | The left side of the timed event area in the weekly/daily view                                          |
-| [timeGridLeftAdditionalTimezone](#week-timegridleftadditionaltimezone) | <code>{ backgroundColor: 'white' }</code>          | Sub-time zone displayed on the left side of the timed event area in the weekly/daily view                   |
-| [timeGridHalfHourLine](#week-timegridhalfhourline)                     | <code>{ borderBottom: '1px solid #e5e5e5' }</code> | In the weekly/daily view, dividing line of every 30 minutes of an hour in the timed event area.                                |
-| [timeGridHourLine](#week-timegridhourline)                             | <code>{ borderBottom: '1px solid #e5e5e5' }</code> | In the weekly/daily view, dividing line of every hour in the timed event area.                                |
-| [nowIndicatorLabel](#week-nowindicatorlabel)                                       | <code>{ color: '#515ce6' }</code>                  | Current time text displayed on the current time indicator                                                                            |
-| [nowIndicatorPast](#week-nowindicatorpast)                       | <code>{ border: '1px dashed #515ce6' }</code>      | The line representing past of the current time indicator                                                            |
-| [nowIndicatorBullet](#week-nowindicatorbullet)                   | <code>{ backgroundColor: '#515ce6' }</code>        | The dot representing today’s column of the current time indicator                                                              |
-| [nowIndicatorToday](#week-nowindicatortoday)                     | <code>{ border: '1px solid #515ce6' }</code>       | The line representing today of the current time indicator                                                            |
-| [nowIndicatorFuture](#week-nowindicatorfuture)                   | <code>{ border: 'none' }</code>                    | The line representing future of the current time indicator                                                            |
-| [pastTime](#week-pasttime)                                             | <code>{ color: '#bbb' }</code>                     | The past time displayed on the left side of the timed event area in the weekly/daily view                     |
-| [futureTime](#week-futuretime)                                         | <code>{ color: '#333' }</code>                     | Future time displayed on the left side of the timed event area in the weekly/daily view                     |
-| [weekend](#week-weekend)                                               | <code>{ backgroundColor: 'inherit' }</code>        | Weekend column in timed event area in weekly/daily view                                          |
+| Theme                                                                  | Default value                                      | Description                                                                                                               |
+| ---------------------------------------------------------------------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| [dayName](#week-dayname)                                               | <code>DEFAULT_WEEK_DAYNAME</code>                  | Day of the week                                                                                                           |
+| [dayGrid](#week-daygrid)                                               | <code>DEFAULT_DAY_GRID</code>                      | Each cell in the panel in weekly/daily view                                                                               |
+| [dayGridLeft](#week-daygridleft)                                       | <code>DEFAULT_DAY_GRID_LEFT</code>                 | In the weekly/daily view, the area on the left side of the panel                                                          |
+| [timeGrid](#week-timegrid)                                             | <code>{ borderRight: '1px solid #e5e5e5' }</code>  | Timed event area in weekly/daily view                                                                                     |
+| [timeGridLeft](#week-timegridleft)                                     | <code>DEFAULT_TIME_GRID_LEFT</code>                | The left side of the timed event area in the weekly/daily view                                                            |
+| [timeGridLeftAdditionalTimezone](#week-timegridleftadditionaltimezone) | <code>{ backgroundColor: 'white' }</code>          | Sub-time zone displayed on the left side of the timed event area in the weekly/daily view                                 |
+| [timeGridHalfHourLine](#week-timegridhalfhourline)                     | <code>{ borderBottom: '1px solid #e5e5e5' }</code> | In the weekly/daily view, dividing line of every 30 minutes of an hour in the timed event area.                           |
+| [timeGridHourLine](#week-timegridhourline)                             | <code>{ borderBottom: '1px solid #e5e5e5' }</code> | In the weekly/daily view, dividing line of every hour in the timed event area.                                            |
+| [nowIndicatorLabel](#week-nowindicatorlabel)                           | <code>{ color: '#515ce6' }</code>                  | Current time text displayed on the current time indicator                                                                 |
+| [nowIndicatorPast](#week-nowindicatorpast)                             | <code>{ border: '1px dashed #515ce6' }</code>      | The line representing past of the current time indicator                                                                  |
+| [nowIndicatorBullet](#week-nowindicatorbullet)                         | <code>{ backgroundColor: '#515ce6' }</code>        | The dot representing today’s column of the current time indicator                                                         |
+| [nowIndicatorToday](#week-nowindicatortoday)                           | <code>{ border: '1px solid #515ce6' }</code>       | The line representing today of the current time indicator                                                                 |
+| [nowIndicatorFuture](#week-nowindicatorfuture)                         | <code>{ border: 'none' }</code>                    | The line representing future of the current time indicator                                                                |
+| [pastTime](#week-pasttime)                                             | <code>{ color: '#bbb' }</code>                     | The past time displayed on the left side of the timed event area in the weekly/daily view                                 |
+| [futureTime](#week-futuretime)                                         | <code>{ color: '#333' }</code>                     | Future time displayed on the left side of the timed event area in the weekly/daily view                                   |
+| [weekend](#week-weekend)                                               | <code>{ backgroundColor: 'inherit' }</code>        | Weekend column in timed event area in weekly/daily view                                                                   |
 | [today](#week-today)                                                   | <code>DEFAULT_TODAY</code>                         | Today column of timed event area in weekly/daily view (color is applied to dayName, backgroundColor is applied to column) |
-| [pastDay](#week-pastday)                                               | <code>{ color: '#bbb' }</code>                     | Past days in weekly/daily view                                                              |
-| [panelResizer](#week-panelresizer)                                     | <code>{ border: '1px solid #e5e5e5' }</code>       | Panel resizing component                                                                |
-| [gridSelection](#week-gridselection)                                   | <code>{ color: '#515ce6' }</code>                  | Selected date/time in weekly/daily view                                                         |
+| [pastDay](#week-pastday)                                               | <code>{ color: '#bbb' }</code>                     | Past days in weekly/daily view                                                                                            |
+| [panelResizer](#week-panelresizer)                                     | <code>{ border: '1px solid #e5e5e5' }</code>       | Panel resizing component                                                                                                  |
+| [gridSelection](#week-gridselection)                                   | <code>{ color: '#515ce6' }</code>                  | Selected date/time in weekly/daily view                                                                                   |
 
 ```ts
 const DEFAULT_WEEK_DAYNAME = {
@@ -196,14 +196,14 @@ interface MonthTheme {
 }
 ```
 
-| Theme                                                      | Default value                                                   | Description                   |
-|---------------------------------------------------------|-------------------------------------------------------|----------------------|
-| [dayExceptThisMonth](#month-dayexceptthismonth)         | <code>{ color: 'rgba(51, 51, 51, 0.4)' }</code>       | Days except this month             |
-| [holidayExceptThisMonth](#month-holidayexceptthismonth) | <code>{ color: 'rgba(255, 64, 64, 0.4)' }</code>      | Holidays except this month             |
-| [dayName](#month-dayname)                               | <code>DEFAULT_MONTH_DAYNAME</code>                    | Day of the week                   |
-| [moreView](#month-moreview)                             | <code>DEFAULT_MORE_VIEW</code>                        | ‘More events’ popup of monthly view          |
-| [moreViewTitle](#month-moreviewtitle)                   | <code>{ backgroundColor: 'inherit' }</code>           | Header area of ‘more events’ popup of monthly view   |
-| [weekend](#month-weekend)                               | <code>{ backgroundColor: 'inherit' }</code>           | Weekend cell in monthly view            |
+| Theme                                                   | Default value                                         | Description                                           |
+| ------------------------------------------------------- | ----------------------------------------------------- | ----------------------------------------------------- |
+| [dayExceptThisMonth](#month-dayexceptthismonth)         | <code>{ color: 'rgba(51, 51, 51, 0.4)' }</code>       | Days except this month                                |
+| [holidayExceptThisMonth](#month-holidayexceptthismonth) | <code>{ color: 'rgba(255, 64, 64, 0.4)' }</code>      | Holidays except this month                            |
+| [dayName](#month-dayname)                               | <code>DEFAULT_MONTH_DAYNAME</code>                    | Day of the week                                       |
+| [moreView](#month-moreview)                             | <code>DEFAULT_MORE_VIEW</code>                        | ‘More events’ popup of monthly view                   |
+| [moreViewTitle](#month-moreviewtitle)                   | <code>{ backgroundColor: 'inherit' }</code>           | Header area of ‘more events’ popup of monthly view    |
+| [weekend](#month-weekend)                               | <code>{ backgroundColor: 'inherit' }</code>           | Weekend cell in monthly view                          |
 | [gridCell](#month-gridcell)                             | <code>{ headerHeight: 31, footerHeight: null }</code> | Header and footer height of all cells in monthly view |
 
 ```ts
@@ -257,8 +257,8 @@ calendar.setTheme({
 
 Specifies the background color and border of the date/time selection. The default value is `'rgba(81, 92, 230, 0.05)'` for `backgroundColor` and `'1px solid #515ce6'` for `border`.
 
-| Default                                                       | Example                                                        |
-| ----------------------------------------------------------------- | ---------------------------------------------------------------- |
+| Default                                                                       | Example                                                                      |
+| ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
 | ![common-gridSelection-default](../../assets/common-gridSelection-before.png) | ![common-gridSelection-example](../../assets/common-gridSelection-after.png) |
 
 ```js
@@ -278,8 +278,8 @@ calendar.setTheme({
 
 Specifies the color of the day of the week. The default value is `'#333'`.
 
-| Default                                           | Example                                            |
-| ----------------------------------------------------- | ---------------------------------------------------- |
+| Default                                                           | Example                                                          |
+| ----------------------------------------------------------------- | ---------------------------------------------------------------- |
 | ![common-dayname-default](../../assets/common-dayName-before.png) | ![common-dayname-example](../../assets/common-dayName-after.png) |
 
 ```js
@@ -298,8 +298,8 @@ calendar.setTheme({
 
 Specifies the holiday color. The default value is `'#ff4040'`.
 
-| Default                                           | Example                                            |
-| ----------------------------------------------------- | ---------------------------------------------------- |
+| Default                                                           | Example                                                          |
+| ----------------------------------------------------------------- | ---------------------------------------------------------------- |
 | ![common-holiday-default](../../assets/common-holiday-before.png) | ![common-holiday-example](../../assets/common-holiday-after.png) |
 
 ```js
@@ -316,10 +316,10 @@ calendar.setTheme({
 
 #### common-saturday
 
-Specifies the color of the day of the week. The default value is `'#333'`.
+Specifies the color of Saturday. The default value is `'#333'`.
 
-| Default                                             | Example                                              |
-| ------------------------------------------------------- | ------------------------------------------------------ |
+| Default                                                             | Example                                                            |
+| ------------------------------------------------------------------- | ------------------------------------------------------------------ |
 | ![common-saturday-default](../../assets/common-saturday-before.png) | ![common-saturday-example](../../assets/common-saturday-after.png) |
 
 ```js
@@ -338,8 +338,8 @@ calendar.setTheme({
 
 Specifies the color of today. The default value is `'#fff'`.
 
-| Default                                       | Example                                        |
-| ------------------------------------------------- | ------------------------------------------------ |
+| Default                                                       | Example                                                      |
+| ------------------------------------------------------------- | ------------------------------------------------------------ |
 | ![common-today-default](../../assets/common-today-before.png) | ![common-today-example](../../assets/common-today-after.png) |
 
 ```js
@@ -358,10 +358,10 @@ calendar.setTheme({
 
 #### week-dayName
 
-Specifies the day of the week/daily view. You can specify the left, top, and bottom border and `background` colors with `borderLeft`, `borderTop`, `borderBottom`, and `backgroundColor`. The default values are `'none'`, `'1px solid #e5e5e5'`, `'1px solid #e5e5e5'`, `'inherit'`.
+Specifies the day of the week/daily view. You can specify the left, top, and bottom border and `background` colors with `borderLeft`, `borderTop`, `borderBottom`, and `backgroundColor`. The default values are `'none'`, `'1px solid #e5e5e5'`, `'1px solid #e5e5e5'`, and `'inherit'`.
 
-| Default                                       | Example                                        |
-| ------------------------------------------------- | ------------------------------------------------ |
+| Default                                                       | Example                                                      |
+| ------------------------------------------------------------- | ------------------------------------------------------------ |
 | ![week-dayname-default](../../assets/week-dayName-before.png) | ![week-dayname-example](../../assets/week-dayName-after.png) |
 
 ```js
@@ -381,10 +381,10 @@ calendar.setTheme({
 
 #### week-dayGrid
 
-Specifies the cell of each panel of the weekly/daily view. You can specify the right border and background color with `borderRight` and `backgroundColor`, and the default values are `'1px solid #e5e5e5'` and `'inherit'`. When the background color is changed, the background color of the column except for weekends will be changed.
+Specifies the cell of each panel of the weekly/daily view. You can specify the right border and background color with `borderRight` and `backgroundColor`, and the default values are `'1px solid #e5e5e5'` and `'inherit'`. When the background color is changed, the background color of the columns except for weekends will be changed.
 
-| Default                                       | Example                                        |
-| ------------------------------------------------- | ------------------------------------------------ |
+| Default                                                       | Example                                                      |
+| ------------------------------------------------------------- | ------------------------------------------------------------ |
 | ![week-dayGrid-default](../../assets/week-dayGrid-before.png) | ![week-dayGrid-example](../../assets/week-dayGrid-after.png) |
 
 ```js
@@ -402,10 +402,10 @@ calendar.setTheme({
 
 #### week-dayGridLeft
 
-Specifies the cell of each panel of the weekly/daily view. You can specify the right border and background color with `borderRight` and `backgroundColor`, and the default values are `'1px solid #e5e5e5'` and `'inherit'`. When the background color is changed, the background color of the column except for weekends is also changed.
+Specifies the left area of each panel in the weekly/daily view. You can specify the right border, background color, and width with `borderRight`, and width, and the default values are `'1px solid #e5e5e5'` and `'inherit'`, and `'72px'`.
 
-| Default                                               | Example                                                |
-| --------------------------------------------------------- | -------------------------------------------------------- |
+| Default                                                               | Example                                                              |
+| --------------------------------------------------------------------- | -------------------------------------------------------------------- |
 | ![week-dayGridLeft-default](../../assets/week-dayGridLeft-before.png) | ![week-dayGridLeft-example](../../assets/week-dayGridLeft-after.png) |
 
 ```js
@@ -426,8 +426,8 @@ calendar.setTheme({
 
 Specifies the timed event area in the weekly/daily view. You can specify the right border with `borderRight` and the default value is `'1px solid #e5e5e5'`.
 
-| Default                                         | Example                                          |
-| --------------------------------------------------- | -------------------------------------------------- |
+| Default                                                         | Example                                                        |
+| --------------------------------------------------------------- | -------------------------------------------------------------- |
 | ![week-timeGrid-default](../../assets/week-timeGrid-before.png) | ![week-timeGrid-example](../../assets/week-timeGrid-after.png) |
 
 ```js
@@ -444,10 +444,10 @@ calendar.setTheme({
 
 #### week-timeGridLeft
 
-Specifies the left side of the timed event area in the weekly/daily view. You can specify the right border, background color, and width with `borderRight`, `backgroundColor`, and `width` properties. The default values are `'1px solid #e5e5e5'`, `'inherit'`, and `'72px'`.
+Specifies the left side of the timed event area in the weekly/daily view. You can specify the right border, background color, and width with `borderRight`, `backgroundColor`, and `width`. The default values are `'1px solid #e5e5e5'`, `'inherit'`, and `'72px'`.
 
-| Default                                                 | Example                                                  |
-| ----------------------------------------------------------- | ---------------------------------------------------------- |
+| Default                                                                 | Example                                                                |
+| ----------------------------------------------------------------------- | ---------------------------------------------------------------------- |
 | ![week-timeGridLeft-default](../../assets/week-timeGridLeft-before.png) | ![week-timeGridLeft-example](../../assets/week-timeGridLeft-after.png) |
 
 ```js
@@ -466,10 +466,10 @@ calendar.setTheme({
 
 #### week-timeGridLeftAdditionalTimezone
 
-Specifies sub-time zones displayed in the left area of the timed event area in the weekly/daily view. The background color can be specified as `backgroundColor`, and the default value is `'white'`.
+Specifies sub-time zones displayed in the left area of the timed event area in the weekly/daily view. The background color can be specified with `backgroundColor`, and the default value is `'white'`.
 
-| Default                                                                                     | Example                                                                                      |
-| ----------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Default                                                                                                     | Example                                                                                                    |
+| ----------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
 | ![week-timeGridLeftAdditionalTimezone-default](../../assets/week-timeGridLeftAdditionalTimezone-before.png) | ![week-timeGridLeftAdditionalTimezone-example](../../assets/week-timeGridLeftAdditionalTimezone-after.png) |
 
 ```js
@@ -486,10 +486,10 @@ calendar.setTheme({
 
 #### week-timeGridHalfHourLine
 
-In the weekly/daily view, specifies the dividing line of every 30 minutes of an hour in the timed event area. You can specify the lower border with `borderBottom`, and the default value is `'none'`.
+In the weekly/daily view, specifies the dividing line of every 30 minutes of an hour in the timed event area. You can specify the bottom border with `borderBottom`, and the default value is `'none'`.
 
-| Default                                                                 | Example                                                                  |
-| --------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| Default                                                                                 | Example                                                                                |
+| --------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
 | ![week-timeGridHalfHourLine-default](../../assets/week-timeGridHalfHourLine-before.png) | ![week-timeGridHalfHourLine-example](../../assets/week-timeGridHalfHourLine-after.png) |
 
 ```js
@@ -504,10 +504,10 @@ calendar.setTheme({
 
 #### week-timeGridHourLine
 
-In the weekly/daily view, specifies dividing line of every hour in the timed event area. You can specify the lower border with `borderBottom`, and the default value is `'none'`.
+In the weekly/daily view, specifies dividing line of every hour in the timed event area. You can specify the bottom border with `borderBottom`, and the default value is `'none'`.
 
-| Default                                                         | Example                                                          |
-| ------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| Default                                                                         | Example                                                                        |
+| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
 | ![week-timeGridHourLine-default](../../assets/week-timeGridHourLine-before.png) | ![week-timeGridHourLine-example](../../assets/week-timeGridHourLine-after.png) |
 
 ```js
@@ -526,8 +526,8 @@ calendar.setTheme({
 
 Specifies the current time text displayed on the current time indicator. You can specify the text color with `color`, and the default value is `'#515ce6'`.
 
-| Default                                               | Example                                                |
-| --------------------------------------------------------- | -------------------------------------------------------- |
+| Default                                                                           | Example                                                                          |
+| --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
 | ![week-nowIndicatorLabel-default](../../assets/week-nowIndicatorLabel-before.png) | ![week-nowIndicatorLabel-example](../../assets/week-nowIndicatorLabel-after.png) |
 
 ```js
@@ -546,8 +546,8 @@ calendar.setTheme({
 
 Specifies a line representing past of the current time indicator. You can specify the border of the line with `border`, and the default value is `'1px dashed #515ce6'`.
 
-| Default                                                               | Example                                                                |
-| ------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| Default                                                                         | Example                                                                        |
+| ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
 | ![week-nowIndicatorPast-default](../../assets/week-nowIndicatorPast-before.png) | ![week-nowIndicatorPast-example](../../assets/week-nowIndicatorPast-after.png) |
 
 ```js
@@ -564,10 +564,10 @@ calendar.setTheme({
 
 #### week-nowIndicatorBullet
 
-Specifies the point displayed for today's date on the current time indicator. The background color can be specified as `backgroundColor`, and the default value is `'#515ce6'`.
+Specifies the point displayed for today's date on the current time indicator. The background color can be specified with `backgroundColor`, and the default value is `'#515ce6'`.
 
-| Default                                                                   | Example                                                                    |
-| ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| Default                                                                             | Example                                                                            |
+| ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
 | ![week-nowIndicatorBullet-default](../../assets/week-nowIndicatorBullet-before.png) | ![week-nowIndicatorBullet-example](../../assets/week-nowIndicatorBullet-after.png) |
 
 ```js
@@ -586,8 +586,8 @@ calendar.setTheme({
 
 Specifies the line representing today in the current time indicator. You can specify the border of the line with `border`, and the default value is `'1px solid #515ce6'`.
 
-| Default                                                                 | Example                                                                  |
-| --------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| Default                                                                           | Example                                                                          |
+| --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
 | ![week-nowIndicatorToday-default](../../assets/week-nowIndicatorToday-before.png) | ![week-nowIndicatorToday-example](../../assets/week-nowIndicatorToday-after.png) |
 
 ```js
@@ -606,8 +606,8 @@ calendar.setTheme({
 
 Specifies a line representing future from the current time indicator. You can specify the border of the line with `border`, and the default value is `'none'`.
 
-| Default                                                                   | Example                                                                    |
-| ----------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| Default                                                                             | Example                                                                            |
+| ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
 | ![week-nowIndicatorFuture-default](../../assets/week-nowIndicatorFuture-before.png) | ![week-nowIndicatorFuture-example](../../assets/week-nowIndicatorFuture-after.png) |
 
 ```js
@@ -626,8 +626,8 @@ calendar.setTheme({
 
 Specifies the past time displayed in the left area of the timed event area in the weekly/daily view. You can specify the text color with `color`, and the default value is `'#bbb'`.
 
-| Default                                         | Example                                          |
-| --------------------------------------------------- | -------------------------------------------------- |
+| Default                                                         | Example                                                        |
+| --------------------------------------------------------------- | -------------------------------------------------------------- |
 | ![week-pastTime-default](../../assets/week-pastTime-before.png) | ![week-pastTime-example](../../assets/week-pastTime-after.png) |
 
 ```js
@@ -646,8 +646,8 @@ calendar.setTheme({
 
 Specifies the future time displayed in the left area of the timed event area in the weekly/daily view. You can specify the text color with `color`, and the default value is `'#333'`.
 
-| Default                                             | Example                                              |
-| ------------------------------------------------------- | ------------------------------------------------------ |
+| Default                                                             | Example                                                            |
+| ------------------------------------------------------------------- | ------------------------------------------------------------------ |
 | ![week-futureTime-default](../../assets/week-futureTime-before.png) | ![week-futureTime-example](../../assets/week-futureTime-after.png) |
 
 ```js
@@ -664,10 +664,10 @@ calendar.setTheme({
 
 #### week-weekend
 
-Specifies weekend columns of the timed event area in the weekly/daily view. The background color can be specified as `backgroundColor`, and the default value is `'inherit'`.
+Specifies weekend columns of the timed event area in the weekly/daily view. The background color can be specified with `backgroundColor`, and the default value is `'inherit'`.
 
-| Default                                       | Example                                        |
-| ------------------------------------------------- | ------------------------------------------------ |
+| Default                                                       | Example                                                      |
+| ------------------------------------------------------------- | ------------------------------------------------------------ |
 | ![week-weekend-default](../../assets/week-weekend-before.png) | ![week-weekend-example](../../assets/week-weekend-after.png) |
 
 ```js
@@ -686,8 +686,8 @@ calendar.setTheme({
 
 Specifies today's column of timed event area in weekly/daily view. You can specify text color with `color` and background color with `backgroundColor`. The default values are `'inherit'` and `'rgba(81, 92, 230, 0.05)'`. `color` is applied to the day of the week and `backgroundColor` is applied to the column.
 
-| Default                                   | Example                                    |
-| --------------------------------------------- | -------------------------------------------- |
+| Default                                                   | Example                                                  |
+| --------------------------------------------------------- | -------------------------------------------------------- |
 | ![week-today-default](../../assets/week-today-before.png) | ![week-today-example](../../assets/week-today-after.png) |
 
 ```js
@@ -707,8 +707,8 @@ calendar.setTheme({
 
 Specify the past day in the weekly/daily view. You can specify the text color with `color`, and the default value is `'#bbb'`.
 
-| Default                                       | Example                                        |
-| ------------------------------------------------- | ------------------------------------------------ |
+| Default                                                       | Example                                                      |
+| ------------------------------------------------------------- | ------------------------------------------------------------ |
 | ![week-pastDay-default](../../assets/week-pastDay-before.png) | ![week-pastDay-example](../../assets/week-pastDay-after.png) |
 
 ```js
@@ -727,8 +727,8 @@ calendar.setTheme({
 
 Specifies the panel resizing component. You can specify a border with `border`, and the default value is `'1px solid #e5e5e5'`.
 
-| Default                                                 | Example                                                  |
-| ----------------------------------------------------------- | ---------------------------------------------------------- |
+| Default                                                                 | Example                                                                |
+| ----------------------------------------------------------------------- | ---------------------------------------------------------------------- |
 | ![week-panelResizer-default](../../assets/week-panelResizer-before.png) | ![week-panelResizer-example](../../assets/week-panelResizer-after.png) |
 
 ```js
@@ -747,8 +747,8 @@ calendar.setTheme({
 
 Specifies the date/time selection in the weekly/daily view. You can specify the text color with `color`, and the default value is `'#515ce6'`.
 
-| Default                                                   | Example                                                    |
-| ------------------------------------------------------------- | ------------------------------------------------------------ |
+| Default                                                                   | Example                                                                  |
+| ------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
 | ![week-gridSelection-default](../../assets/week-gridSelection-before.png) | ![week-gridSelection-example](../../assets/week-gridSelection-after.png) |
 
 ```js
@@ -769,8 +769,8 @@ calendar.setTheme({
 
 Specifies a different month from the current month. You can specify the text color with `color`, and the default value is `'rgba(51, 51, 51, 0.4)'`.
 
-| Default                                                               | Example                                                                |
-| ------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| Default                                                                               | Example                                                                              |
+| ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
 | ![month-dayExceptThisMonth-default](../../assets/month-dayExceptThisMonth-before.png) | ![month-dayExceptThisMonth-example](../../assets/month-dayExceptThisMonth-after.png) |
 
 ```js
@@ -789,8 +789,8 @@ calendar.setTheme({
 
 Specifies holiday that is in different months from the current month. You can specify the text color with `color`, and the default value is `'rgba(255, 64, 64, 0.4)'`.
 
-| Default                                                                       | Example                                                                        |
-| --------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| Default                                                                                       | Example                                                                                      |
+| --------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
 | ![month-holidayExceptThisMonth-default](../../assets/month-holidayExceptThisMonth-before.png) | ![month-holidayExceptThisMonth-example](../../assets/month-holidayExceptThisMonth-after.png) |
 
 ```js
@@ -809,8 +809,8 @@ calendar.setTheme({
 
 Specify the day of the week. You can specify the left border and background color with `borderLeft` and `backgroundColor`, and the default values are `'none'` and `'inherit'` respectively.
 
-| Default                                         | Example                                          |
-| --------------------------------------------------- | -------------------------------------------------- |
+| Default                                                         | Example                                                        |
+| --------------------------------------------------------------- | -------------------------------------------------------------- |
 | ![month-dayname-default](../../assets/month-dayName-before.png) | ![month-dayname-example](../../assets/month-dayName-after.png) |
 
 ```js
@@ -832,8 +832,8 @@ Specifies the ‘more events’ pop-up of the monthly view. You can specify bord
 
 You can also set the size of the popup by specifying `width` and `height` values. The size of the popup can be input only as a pixel value, and it must be entered as a `number` type.
 
-| Default                                           | Example                                            |
-| ----------------------------------------------------- | ---------------------------------------------------- |
+| Default                                                           | Example                                                          |
+| ----------------------------------------------------------------- | ---------------------------------------------------------------- |
 | ![month-moreView-default](../../assets/month-moreView-before.png) | ![month-moreView-example](../../assets/month-moreView-after.png) |
 
 ```js
@@ -854,10 +854,10 @@ calendar.setTheme({
 
 #### month-moreViewTitle
 
-Specifies the header area of the 'more events' pop-up of the monthly view. The background color can be specified as `backgroundColor`, and the default value is `'inherit'`.
+Specifies the header area of the 'more events' pop-up of the monthly view. The background color can be specified with `backgroundColor`, and the default value is `'inherit'`.
 
-| Default                                                     | Example                                                      |
-| --------------------------------------------------------------- | -------------------------------------------------------------- |
+| Default                                                                     | Example                                                                    |
+| --------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
 | ![month-moreViewTitle-default](../../assets/month-moreViewTitle-before.png) | ![month-moreViewTitle-example](../../assets/month-moreViewTitle-after.png) |
 
 ```js
@@ -874,10 +874,10 @@ calendar.setTheme({
 
 #### month-weekend
 
-Specifies the weekend cell of the monthly view. The background color can be specified as `backgroundColor`, and the default value is `'inherit'`.
+Specifies the weekend cell of the monthly view. The background color can be specified with `backgroundColor`, and the default value is `'inherit'`.
 
-| Default                                         | Example                                          |
-| --------------------------------------------------- | -------------------------------------------------- |
+| Default                                                         | Example                                                        |
+| --------------------------------------------------------------- | -------------------------------------------------------------- |
 | ![month-weekend-default](../../assets/month-weekend-before.png) | ![month-weekend-example](../../assets/month-weekend-after.png) |
 
 ```js
@@ -896,10 +896,10 @@ Specifies the header and footer height of each cell of the monthly view. By defa
 
 The default value of `headerHeight` is `31`, and the default value of `footerHeight` is `null`.
 
-⚠️ If the attribute value is `null`, the header or footer is not displayed.
+⚠️ If the property value is `null`, the header or footer is not displayed.
 
-| Default                                         | Example                                          |
-| --------------------------------------------------- | -------------------------------------------------- |
+| Default                                                          | Example                                                        |
+| ---------------------------------------------------------------- | -------------------------------------------------------------- |
 | ![month-gridCell-before](../../assets/month-gridCell-before.png) | ![month-gridCell-after](../../assets/month-gridCell-after.png) |
 
 ```js

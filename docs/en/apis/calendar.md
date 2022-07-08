@@ -4,7 +4,7 @@
 
 You can use the `Calendar` class to create a calendar instance. You need to specify where you want the instance to be created (the HTML element), and set the appropriate options if necessary.
 
-Add a container element where TOAST UI Calendar will be created. **This element must have an appropriate height. (recommended at least 600px)**
+Add a container element where TOAST UI Calendar will be created. **This element must have an appropriate height. (600px or higher is recommended)**
 
 ```js
 import { Calendar } from '@toast-ui/calendar';
@@ -57,40 +57,40 @@ calendar.on('beforeCreateEvent', (eventObj) => {
 
 💡 Click on a method to see more detailed explanations and usage examples.
 
-| Method                                          | Description                                                                      |
-| ----------------------------------------------- |-------------------------------------------------------------------------|
-| [render](#render)                               | Renders the calendar instance to the screen.                                                    |
-| [renderToString](#rendertostring)               | Returns the rendering result of the current calendar instance as an HTML string for use in server-side rendering.            |
-| [destroy](#destroy)                             | Destroy the calendar instance.                                                         |
-| [getEvent](#getevent)                           | Get the data of the target event.                                                     |
-| [createEvents](#createevents)                   | Create one or more calendar events.                                                   |
-| [updateEvent](#updateevent)                     | Updates the contents of the target event.                                                    |
-| [deleteEvent](#deleteevent)                     | Deletes the target event.                                                          |
-| [clear](#clear)                                 | Removes all events stored in the calendar instance.                                             |
-| [today](#today)                                 | Move to the range containing the current date.                                                    |
-| [move](#move)                                   | According to the view, it moves the range by a given number.                                                |
-| [prev](#prev)                                   | Moves to the previous range of the current screen. The range of movement depends on the range of the view.                              |
-| [next](#next)                                   | Moves to the next range of the current screen. The range of movement depends on the range of the view.                              |
-| [setDate](#setdate)                             | Move to the range containing the specified date.                                                   |
-| [changeView](#changeview)                       | Change the view of the calendar instance to Monthly/Weekly/Day.                                           |
-| [getElement](#getelement)                       | Find the HTML element where a specific event was rendered. If not found, `null` is returned.                    |
-| [setTheme](#settheme)                           | Change the theme of the calendar instance.                                                     |
-| [getOptions](#getoptions)                       | Gets the options in the calendar instance.                                           |
-| [setOptions](#setoptions)                       | Change the options of the calendar instance.                                                     |
-| [getDate](#getdate)                             | Gets the base date for displaying range of the calendar instance.                                      |
-| [getDateRangeStart](#getdaterangestart)         | Gets the start date for displaying range of the calendar instance.                                |
-| [getDateRangeEnd](#getdaterangeend)             | Gets the end date for displaying range of the calendar instance.                                |
-| [getViewName](#getviewname)                     | Gets the view type of the calendar instance. (Monthly / Weekly / Daily)                               |
-| [setCalendars](#setcalendars)                   | Change calendar information.                                                           |
-| [setCalendarVisibility](#setcalendarvisibility) | Hides or shows all events included in the specified event group.                                     |
-| [setCalendarColor](#setcalendarcolor)           | Changes the color value of all events included in the specified event group.                                     |
-| [scrollToNow](#scrolltonow)                     | If a displaying range contains the current time in the weekly/daily view, it immediately scrolls to the current time area.      |
-| [openFormPopup](#openformpopup)                 | Displays the popup for creating the event. The value of the popup is filled according to the parameter.                 |
-| [clearGridSelections](#cleargridselections)     | Removes all date/time selection elements currently displayed in the calendar.                                     |
+| Method                                          | Description                                                                                                                           |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| [render](#render)                               | Renders the calendar instance to the screen.                                                                                          |
+| [renderToString](#rendertostring)               | Returns the rendering result of the current calendar instance as an HTML string for use in server-side rendering.                     |
+| [destroy](#destroy)                             | Destroys the calendar instance.                                                                                                       |
+| [getEvent](#getevent)                           | Gets the data of the target event.                                                                                                    |
+| [createEvents](#createevents)                   | Creates one or more calendar events.                                                                                                  |
+| [updateEvent](#updateevent)                     | Updates the contents of the target event.                                                                                             |
+| [deleteEvent](#deleteevent)                     | Deletes the target event.                                                                                                             |
+| [clear](#clear)                                 | Removes all events stored in the calendar instance.                                                                                   |
+| [today](#today)                                 | Moves to the range containing the current date.                                                                                       |
+| [move](#move)                                   | According to the view, it moves the range by a given number.                                                                          |
+| [prev](#prev)                                   | Moves to the previous range of the current screen. The range of movement depends on the range of the view.                            |
+| [next](#next)                                   | Moves to the next range of the current screen. The range of movement depends on the range of the view.                                |
+| [setDate](#setdate)                             | Moves to the range containing the specified date.                                                                                     |
+| [changeView](#changeview)                       | Changes the view of the calendar instance to Monthly/Weekly/Day.                                                                      |
+| [getElement](#getelement)                       | Finds the HTML element where a specific event was rendered. If not found, `null` is returned.                                         |
+| [setTheme](#settheme)                           | Changes the theme of the calendar instance.                                                                                           |
+| [getOptions](#getoptions)                       | Gets the options set in the calendar instance.                                                                                        |
+| [setOptions](#setoptions)                       | Changes the options of the calendar instance.                                                                                         |
+| [getDate](#getdate)                             | Gets the base date for displaying range of the calendar instance.                                                                     |
+| [getDateRangeStart](#getdaterangestart)         | Gets the start date for displaying range of the calendar instance.                                                                    |
+| [getDateRangeEnd](#getdaterangeend)             | Gets the end date for displaying range of the calendar instance.                                                                      |
+| [getViewName](#getviewname)                     | Gets the view type of the calendar instance. (Monthly / Weekly / Daily)                                                               |
+| [setCalendars](#setcalendars)                   | Changes calendar information.                                                                                                         |
+| [setCalendarVisibility](#setcalendarvisibility) | Hides or shows all events included in the specified event group.                                                                      |
+| [setCalendarColor](#setcalendarcolor)           | Changes the color value of all events included in the specified event group.                                                          |
+| [scrollToNow](#scrolltonow)                     | If a displayed range contains the current time in the weekly/daily view, it immediately scrolls to the current time area.             |
+| [openFormPopup](#openformpopup)                 | Displays the popup for creating the event. The value of the popup is filled according to the parameter.                               |
+| [clearGridSelections](#cleargridselections)     | Removes all date/time selection elements currently displayed in the calendar.                                                         |
 | [fire](#fire)                                   | Executes arbitrary instance events. A detailed description is provided in the [Instance Events](#instance-events) section.            |
-| [off](#off)                                     | Unregister an instance event. A detailed description is provided in the [Instance Events](#instance-events) section.            |
-| [on](#on)                                       | Register an instance event. A detailed description is provided in the [Instance Events](#instance-events) section.            |
-| [once](#once)                                   | Register an instance event to fire only once. A detailed description is provided in the [Instance Events](#instance-events) section. |
+| [off](#off)                                     | Unregisters an instance event. A detailed description is provided in the [Instance Events](#instance-events) section.                 |
+| [on](#on)                                       | Registers an instance event. A detailed description is provided in the [Instance Events](#instance-events) section.                   |
+| [once](#once)                                   | Registers an instance event to fire only once. A detailed description is provided in the [Instance Events](#instance-events) section. |
 
 ### render
 
@@ -156,7 +156,7 @@ Destroys the element rendered via the calendar instance, making the instance an 
   - `calendarId` - the unique ID of the calendar
 - Returns: `EventObject` - an object containing event information
 
-Find events stored within the calendar instance. Event-specific `eventId` and calendar-specific `calendarId` values are required.
+Finds events stored within the calendar instance. Event-specific `eventId` and calendar-specific `calendarId` values are required.
 
 ```js
 const calendar = new Calendar('#container', {
@@ -196,6 +196,7 @@ Creates one or more events. An array must also be passed even creating a single 
 Refer to the [EventObject](./event-object.md) document for information required to create an event.
 
 ```js
+// Creating a single event
 const calendar = new Calendar('#container', {
   calendars: [
     {
@@ -205,6 +206,7 @@ const calendar = new Calendar('#container', {
   ],
 });
 
+// Creating multiple events
 calendar.createEvents([
   {
     id: 'event1',
@@ -230,18 +232,10 @@ console.log(firstEvent.title); // 'Weekly Meeting'
   - `calendarId` - the unique ID of the calendar
   - `changes` - the changes you want to apply
 
-Change the information of the generated event. To find an event, you need an event-specific `eventId`, a calendar-specific `calendarId`, and an object containing the information you want to change. The properties and values to be changed must match the properties of the `EventObject`.
+Changes the information of the generated event. To find an event, you need an event-specific `eventId`, a calendar-specific `calendarId`, and an object containing the information you want to change. The properties and values to be changed must match the properties of the `EventObject`.
 
 ```js
-const calendar = new Calendar('#container', {
-  calendars: [
-    {
-      id: 'cal1',
-      name: 'Work',
-    },
-  ],
-});
-
+// First, assume that the event is created as shown below..
 calendar.createEvents([
   {
     id: 'event1',
@@ -252,9 +246,18 @@ calendar.createEvents([
   },
 ]);
 
-const firstEvent = calendar.getEvent('event1', 'cal1');
+// When changing only one property, title
+calendar.updateEvent('event1', 'cal1', {
+  title: 'Weekly Meeting (Canceled)',
+});
 
-console.log(firstEvent.title); // 'Weekly Meeting'
+// When changing multiple properties
+calendar.updateEvent('event1', 'cal1', {
+  title: 'Going vacation',
+  state: 'Free',
+  start: '2022-05-30T00:00:00',
+  end: '2022-06-03T23:59:59',
+});
 ```
 
 [⬆️ Back to the list](#instance-methods)
@@ -269,15 +272,7 @@ console.log(firstEvent.title); // 'Weekly Meeting'
 Deletes the target event.
 
 ```js
-const calendar = new Calendar('#container', {
-  calendars: [
-    {
-      id: 'cal1',
-      name: 'Work',
-    },
-  ],
-});
-
+// First, assume that the event is created as shown below..
 calendar.createEvents([
   {
     id: 'event1',
@@ -288,9 +283,11 @@ calendar.createEvents([
   },
 ]);
 
-const firstEvent = calendar.getEvent('event1', 'cal1');
+calendar.deleteEvent('event1', 'cal1');
 
-console.log(firstEvent.title); // 'Weekly Meeting'
+// If you try to find the event, it does not exist.
+const deletedEvent = calendar.getEvent('event1', 'cal1');
+console.log(deletedEvent); // null
 ```
 
 [⬆️ Back to the list](#instance-methods)
@@ -317,7 +314,7 @@ Moves the display range of the calendar instance to the current date.
 - Parameters
   - `offset` - Enter the range to move to as an integer. Nothing happens when there is no parameter.
 
-Moves the display range of the calendar instance forward or backward. A positive number moves to the future based on the current range, and a negative number moves it to the past.
+Moves the display range of the calendar instance forward or backward. A positive number moves the display range to the future based on the current range, and a negative number moves it to the past.
 
 The moving range is different for each month/week/day depending on the monthly/weekly/daily view, and there may be detailed differences depending on the set option.
 
@@ -357,9 +354,9 @@ The moving range is different for each month/week/day depending on the monthly/w
 - Parameters
   - `date` - an object or string containing time information. You can pass a `Date` object, a string used to create a `Date` object, or a `TZDate` object.
 
-Changes the date on which the calendar instance displays the view. As a result, the display range moves based on `date`.
+Changes the date on which the calendar instance displays the view. As a result, the display range is moved based on `date`.
 
-Unlike the `move` method, which moves by range, `setDate` can move directly to a specific date.
+Unlike the `move` method, which moves the view by range, `setDate` allows you to move the view directly to a specific date.
 
 ```js
 // Going to March 2022 in the monthly view (string)
@@ -377,16 +374,16 @@ calendar.setDate(new Date(2022, 4, 1));
 - Parameters
   - `viewName` - The type of view you want to select. You can pass `'month'`, `'week'` or `'day'`.
 
-Change the view of the calendar instance to Monthly/Weekly/Day.
+Changes the view of the calendar instance to Monthly/Weekly/Day.
 
 ```js
 // Changing to monthly view
 calendar.changeView('month');
 
-// Changing to week view
+// Changing to weekly view
 calendar.changeView('week');
 
-// Changing to day view
+// Changing to daily view
 calendar.changeView('day');
 ```
 
@@ -411,7 +408,7 @@ If no event is found, `null` is returned.
 - Type: `setTheme(theme: DeepPartial<ThemeStore>): void`
 - Parameters: `theme` - object containing theme settings
 
-Change the theme of the calendar instance. For applicable themes, refer to the [theme documentation](./theme.md).
+Changes the theme of the calendar instance. For available themes, refer to the [theme documentation](./theme.md).
 
 ```js
 // Example of changing the weekend background color in the monthly view
@@ -440,7 +437,7 @@ Returns all options for the current calendar instance.
 - Parameters
   - `options` - the options object used by the calendar instance
 
-Change the options of the current calendar instance. For each option and detailed operation, refer to the [option document](./options.md).
+Changes the options of the current calendar instance. For each option and detailed operation, refer to the [option document](./options.md).
 
 ```js
 // Example of changing the primary time zone
@@ -542,7 +539,7 @@ calendar.setCalendars([
   - `calendarId` - Unique ID of the calendar to show/hide. You can pass one or several as an array.
   - `isVisible` - A value to show or hide all events belonging to this calendar. If `true`, all events are visible, and if `false`, all events are invisible.
 
-Show or hide all events included in a specific calendar.
+Shows or hides all events included in a specific calendar.
 
 [⬆️ Back to the list](#instance-methods)
 
@@ -571,7 +568,7 @@ When the current time is displayed in the weekly view or the daily view, the scr
 - Parameters
   - `event` - an object containing event information. For details, refer to the [EventObject document](./event-object.md).
 
-When the `useFormPopup` option is `true`, a popup for creating a schedule is displayed without going through an interaction.
+When the `useFormPopup` option is `true`, a popup for creating an event is displayed without going through an interaction.
 
 The event data passed as a parameter is displayed as specified in the input field in the popup.
 
@@ -590,7 +587,7 @@ calendar.openFormPopup({
 
 ### clearGridSelections
 
-- clearGridSelections
+- Type: `clearGridSelections(): void`
 
 Removes all date/time selection elements currently displayed in the calendar.
 
@@ -666,12 +663,12 @@ calendar.fire('some-event'); // Nothing happens
   - `handler` - the handler function registered for the event
 - Returns: current calendar instance
 
-Register an instance event. If the registered event name is called through the `fire` method, all handlers registered through `on` are executed.
+Registers an instance event. If the registered event name is called through the `fire` method, all handlers registered through `on` are executed.
 
 To register an instance event. A detailed description is provided in the [Instance Events](#instance-events) section.
 
 ```js
-// Event registration
+// Registering an event
 calendar.on('beforeCreateEvent', (data) => {
   console.log(`from: ${data.start.toDateString()} to ${data.end.toDateString()}`);
 });
@@ -693,7 +690,7 @@ calendar.fire('beforeCreateEvent', {
   - `handler` - the handler function registered for the event
 - Returns: current calendar instance
 
-Register an instance event. If the registered event name is called through the `fire` method, all handlers registered through `once` are executed only once.
+Registers an instance event. If the registered event name is called through the `fire` method, all handlers registered through `once` are executed only once.
 
 To register an instance event. A detailed description is provided in the [Instance Events](#instance-events) section.
 
@@ -720,9 +717,9 @@ calendar.fire('beforeCreateEvent', {
 
 ## Instance events
 
-All actions of the calendar cannot be controlled by methods only. Because you never know when a user interaction, such as a click or drag-and-drop, will occur.
+All actions of the calendar cannot be controlled by methods only. This is because you never know when a user interaction, such as a click or drag-and-drop, will occur.
 
-TOAST UI Calendar provides instance events. If necessary, you can set to receive events and execute desired actions. In addition, you can set up their own events.
+TOAST UI Calendar provides instance events. If necessary, you can set to receive events and execute desired actions. In addition, you can set up your own events.
 
 ```js
 // Registering custom events and event handlers
@@ -738,17 +735,17 @@ calendar.fire('myCustomEvent', calendar.getViewName());
 
 The list of predefined instance events is as follows.
 
-| Event name                                           | Description                                                                                        |
-| ----------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| [selectDateTime](#selectdatetime)                     | Occurs when dragging a specific date or time then dropping                                            |
-| [beforeCreateEvent](#beforecreateevent)               | Occurs when the ‘Save’ button is pressed in the default event creation/modification popup                               |
-| [beforeUpdateEvent](#beforeupdateevent)               | Occurs when the ‘Save’ button is clicked in the default event creation/modification popup or an event is dragged and dropped |
-| [beforeDeleteEvent](#beforedeleteevent)               | Occurs when the ‘Delete’ button is pressed in the default event detail popup                                  |
-| [afterRenderEvent](#afterrenderevent)                 | Occurs when each of the events are rendered                                                     |
-| [clickDayName](#clickdayname)                         | Occurs when a day of the week at the top of the calendar is clicked                                                         |
-| [clickEvent](#clickevent)                             | Occurs when an event is clicked                                                                     |
-| [clickMoreEventsBtn](#clickmoreeventsbtn)             | Occurs when you click the 'More' button that appears because the number of events in each cell of the monthly view is exceeded              |
-| [clickTimezoneCollapseBtn](#clicktimezonecollapsebtn) | Occurs when clicking the collapse button that appears when multiple time zones are displayed in the weekly or daily view |
+| Event name                                            | Description                                                                                                                    |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| [selectDateTime](#selectdatetime)                     | Occurs when dragging and dropping a specific date or time then dropping                                                        |
+| [beforeCreateEvent](#beforecreateevent)               | Occurs when the ‘Save’ button is pressed in the default event creation/modification popup                                      |
+| [beforeUpdateEvent](#beforeupdateevent)               | Occurs when the ‘Save’ button is pressed in the default event creation/modification popup or an event is dragged and dropped   |
+| [beforeDeleteEvent](#beforedeleteevent)               | Occurs when the ‘Delete’ button is pressed in the default event details popup                                                   |
+| [afterRenderEvent](#afterrenderevent)                 | Occurs when each event is rendered                                                                                             |
+| [clickDayName](#clickdayname)                         | Occurs when a day of the week at the top of the calendar is clicked                                                            |
+| [clickEvent](#clickevent)                             | Occurs when an event is clicked                                                                                                |
+| [clickMoreEventsBtn](#clickmoreeventsbtn)             | Occurs when you click the 'More' button that appears because the number of events in each cell of the monthly view is exceeded |
+| [clickTimezoneCollapseBtn](#clicktimezonecollapsebtn) | Occurs when you click the collapse button that appears when multiple time zones are displayed in the weekly or daily view      |
 
 Each event passes specific parameters to the event handler function when it is executed.
 
@@ -777,7 +774,7 @@ At this time, information of the selected time can be obtained through the `sele
 
 ### beforeCreateEvent
 
-- Parameters: `event: EventObject` - Information entered the event creation popup is passed. For more information on the object to be delivered, refer to the [EventObject document](./event-object.md).
+- Parameters: `event: EventObject` - Information entered in the event creation popup is passed. For more information on the object to be passed, refer to the [EventObject document](./event-object.md).
 
 When `useFormPopup` of calendar instance options is `true`, the default event creation popup can be used.
 
@@ -799,7 +796,7 @@ calendar.on('beforeCreateEvent', (eventObj) => {
 
 ### beforeUpdateEvent
 
-- Parameter: `updatedEventInfo: UpdatedEventInfo` - Contains existing event information and modified event information. For more information on the object to be delivered, refer to the [EventObject document](./event-object.md).
+- Parameter: `updatedEventInfo: UpdatedEventInfo` - Contains existing event information and modified event information. For more information on the object to be passed, refer to the [EventObject document](./event-object.md).
 
 ```ts
 interface UpdatedEventInfo {
@@ -812,9 +809,9 @@ The `event` property is information of the existing event, and the `changes` pro
 
 In the following cases, `beforeUpdateEvent` is executed.
 
-- `When useFormPopup` and `useDetailPopup` of the calendar instance options are both `true` and the ‘Update’ button is pressed after modifying the event through the event detail popup
+- `When useFormPopup` and `useDetailPopup` of the calendar instance options are both `true` and the ‘Update’ button is pressed after modifying the event through the event details popup
   - ![Event execution through popup](../../assets/before-update-event-1.gif)
-- When moving or resizing events by drag and drop, while `isReadOnly` is not `true among calendar instance options and also isReadOnly is not true in the properties of individual events.
+- When moving or resizing events by drag and drop, while `isReadOnly` is not `true` among calendar instance options and also `isReadOnly` is not `true` in the properties of individual events.
   - ![Event execution via drag and drop](../../assets/before-update-event-2.gif)
 
 ```js
@@ -828,11 +825,11 @@ calendar.on('beforeUpdateEvent', ({ event, change }) => {
 
 ### beforeDeleteEvent
 
-- Parameters: `event: EventObject` - Information of the event to be deleted. For more information on the object to be delivered, refer to the [EventObject document](./event-object.md).
+- Parameters: `event: EventObject` - Information of the event to be deleted. For more information on the object to be passed, refer to the [EventObject document](./event-object.md).
 
-You can select an event through the event detail popup and press the ‘Delete’ button when `isReadOnly` in the calendar instance options and `isReadOnly` for individual event properties are not `true`, and also the `useDetailPopup` option is `true`.
+You can select an event through the event details popup and press the ‘Delete’ button when `isReadOnly` in the calendar instance options and `isReadOnly` for individual event properties are not `true`, and also the `useDetailPopup` option is `true`.
 
-Satisfying the condition above, when the ‘Delete’ button is pressed, `beforeDeleteEvent` is executed.
+Given that conditions above are satisfied, when the ‘Delete’ button is pressed, `beforeDeleteEvent` is executed.
 
 ![Fire beforeDeleteEvent event via popup](../../assets/before-delete-event.gif)
 
@@ -847,7 +844,7 @@ calendar.on('beforeDeleteEvent', (eventObj) => {
 
 ### afterRenderEvent
 
-- Parameters: `event: EventObject` - Information of the rendered event. For more information on the object to be delivered, refer to the [EventObject document](./event-object.md).
+- Parameters: `event: EventObject` - Information of the rendered event. For more information on the object to be passed, refer to the [EventObject document](./event-object.md).
 
 Fired whenever each event is rendered within the calendar.
 
@@ -855,9 +852,9 @@ Whenever an event is rendered due to event creation, modification, deletion, etc
 
 ### clickDayName
 
-- Parameters: `dayNameInfo: DayNameInfo` - The information of the clicked date is displayed as a character string in `YYYY-MM-DD` format.
+- Parameters: `dayNameInfo: DayNameInfo` - The information of the clicked date is displayed as a string in `YYYY-MM-DD` format.
 
-The header area of the weekly/daily view displays the day and date of the currently viewed time range. When a specific day of the week in this header is clicked, the `clickDayName` event is executed.
+The header area of the weekly/daily view displays the day of the week and date of the currently viewed time range. When a specific day of the week in this header is clicked, the `clickDayName` event is executed.
 
 **This event does not occur in the monthly view.**
 
@@ -901,9 +898,9 @@ In the monthly view, the 'more' button is displayed when there are too many even
 
 ### clickTimezonesCollapseBtn
 
-- Parameters: `prevCollapsedState` - The previous collapsed state of the clicked button is either `true` or `false`.
+- Parameters: `prevCollapsedState` - The previous collapsed state of the clicked button is passed as either `true` or `false`.
 
-In the week/day view, If two or more [timezones](./options.md#timezone) are used in the calendar instance option and the `week.showTimezoneCollapsedButton option` is `true`, a button to collapse or expand other time zones is displayed. When this button is clicked, the `clickTimezonesCollapseBtn` event is fired.
+In the weekly/daily view, if two or more [timezones](./options.md#timezone) are used in the calendar instance option and the `week.showTimezoneCollapsedButton` option is `true`, a button to collapse or expand other time zones is displayed. When this button is clicked, the `clickTimezonesCollapseBtn` event is fired.
 
 ![time zone collapse button](../../assets/click-timezones-collapse-btn.png)
 
@@ -931,7 +928,7 @@ calendar.on('clickTimezonesCollapseBtn', (prevCollapsedState) => {
 
 Apart from predefined events, users can register separate custom instance events as needed.
 
-When your event with a name not listed above is specified through `once` or `on` and then the `fire` method is called, the event is executed.
+When you use an event name not listed above and specify the event through `once` or `on` and then the `fire` method is called, the event is executed.
 
 The methods required to set and execute the event are as follows.
 

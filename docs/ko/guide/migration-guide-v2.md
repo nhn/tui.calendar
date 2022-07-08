@@ -15,7 +15,6 @@
     - [테마 개선](#테마-개선)
     - [view 관련 타입 개선](#view-관련-타입-개선)
     - [taskView, eventView 타입 개선](#taskview-eventview-타입-개선)
-    - [SSR 지원](#ssr-지원)
   - [변경](#변경)
     - [옵션 변경사항](#옵션-변경사항)
     - [인스턴스 메서드 변경사항](#인스턴스-메서드-변경사항)
@@ -53,7 +52,7 @@ import "tui-calendar/dist/tui-calendar.min.css";
 
 // v2
 import Calendar from '@toast-ui/calendar';
-import '@toast-ui/calendar/toastui-calendar.min.css';
+import '@toast-ui/calendar/dist/toastui-calendar.min.css';
 ```
 
 ```html
@@ -139,7 +138,7 @@ v1에서는 현재 시간선을 나타내는 용어로 `currentTimeIndicator`과
 
 v1에서는 캘린더의 렌더링을 직접적인 DOM 조작으로 처리했다. 이에 따라 캘린더를 조작할 때마다 불필요한 렌더링이 일어날 수 있었다.
 
-v2에서는 가상 DOM을 이용해 불필요한 렌더링을 줄여 렌더링 속도를 개선하고 서버 사이드 렌더링(SSR)을 지원하기 위해 [preact](https://preactjs.com/)를 도입하였다. 이에 따라 인스턴스 메서드 사용 시 렌더링을 제어하는 `force`, `silent` 등의 파라미터가 제거되었고 캘린더 내부의 상태에 따라 렌더링이 제어되어 인스턴스 메서드를 사용할 때 렌더링을 제어할 수 없게 되었다.
+v2에서는 가상 DOM을 이용해 불필요한 렌더링을 줄여 렌더링 속도를 개선하고 추후 서버 사이드 렌더링(SSR)을 지원하기 위해 [preact](https://preactjs.com/)를 도입하였다. 이에 따라 인스턴스 메서드 사용 시 렌더링을 제어하는 `force`, `silent` 등의 파라미터가 제거되었고 캘린더 내부의 상태에 따라 렌더링이 제어되어 인스턴스 메서드를 사용할 때 렌더링을 제어할 수 없게 되었다.
 
 #### 테마 개선
 
@@ -208,8 +207,8 @@ v1에서 사용하던 다음 프로퍼티들이 테마에서 제거되거나 이
 
 제거된 테마 값은 대신 CSS를 활용해 속성을 적용할 수 있다. 다음은 제거된 테마 값에 연관된 CSS 파일이다.
 
-| 제거된 테마 값                                           | 연관 파일 위치                                                                                                |
-| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| 제거된 테마 값                                           | 연관 파일 위치                                                   |
+| -------------------------------------------------------- | ---------------------------------------------------------------- |
 | <code>month.dayname</code> 관련                          | [dayNames.css](/apps/calendar/src/css/daygrid/dayNames.css)      |
 | <code>month.shedule</code> 관련                          | [dayGrid.css](/apps/calendar/src/css/daygrid/dayGrid.css)        |
 | <code>month.moreView</code> 관련                         | [seeMore.css](/apps/calendar/src/css/popup/seeMore.css)          |
@@ -242,28 +241,24 @@ const calendar = new Calendar('#calendar', {
 });
 ```
 
-#### SSR 지원
-
-(TODO 구현 및 문서 작성 예정)
-
 ### 변경
 
 #### 옵션 변경사항
 
 아래의 옵션이 옵션 객체 내에서 위치가 이동하거나 테마로 이동되었다.
 
-| 옵션                                | 변경사항                                          | 추가 설명                                            |
-|-----------------------------------|-----------------------------------------------|--------------------------------------------------|
-| options.taskView                  | options.week.taskView                         |                                                  |
-| options.eventView                 | options.week.eventView                        |                                                  |
-| options.disableDblClick           | options.gridSelection.enableDblClick          | 기본값이 <code>false</code>에서 <code>true</code>로 변경됨 |
-| options.disableClick              | options.gridSelection.enableClick             | 기본값이 <code>false</code>에서 <code>true</code>로 변경됨 |
-| options.timezone.offsetCalculator | options.timezone.customOffsetCalculator       |                                                  |
-| options.month.grid                | [테마](../apis/theme.md)로 이동                    |                                                  |
-| options.month.moreLayerSize       | [테마](../apis/theme.md)로 이동                    |                                                  |
-| options.month.isAlways6Week       | <code>options.month.isAlways6Weeks</code>로 변경 |                                                  |
-| options.month.daynames            | <code>options.month.dayNames</code>로 변경       |                                                  |
-| options.week.daynames             | <code>options.week.dayNames</code>로 변경        |                                                  |
+| 옵션                              | 변경사항                                         | 추가 설명                                                  |
+| --------------------------------- | ------------------------------------------------ | ---------------------------------------------------------- |
+| options.taskView                  | options.week.taskView                            |                                                            |
+| options.eventView                 | options.week.eventView                           |                                                            |
+| options.disableDblClick           | options.gridSelection.enableDblClick             | 기본값이 <code>false</code>에서 <code>true</code>로 변경됨 |
+| options.disableClick              | options.gridSelection.enableClick                | 기본값이 <code>false</code>에서 <code>true</code>로 변경됨 |
+| options.timezone.offsetCalculator | options.timezone.customOffsetCalculator          |                                                            |
+| options.month.grid                | [테마](../apis/theme.md)로 이동                  |                                                            |
+| options.month.moreLayerSize       | [테마](../apis/theme.md)로 이동                  |                                                            |
+| options.month.isAlways6Week       | <code>options.month.isAlways6Weeks</code>로 변경 |                                                            |
+| options.month.daynames            | <code>options.month.dayNames</code>로 변경       |                                                            |
+| options.week.daynames             | <code>options.week.dayNames</code>로 변경        |                                                            |
 
 #### 인스턴스 메서드 변경사항
 

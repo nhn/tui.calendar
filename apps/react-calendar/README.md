@@ -61,13 +61,13 @@ You can use Toast UI Calendar for React as moudule format or namespace.
 ```js
 /* ES6 module in Node.js environment */
 import Calendar from '@toast-ui/react-calendar';
-import '@toast-ui/calendar/toastui-calendar.css';
+import '@toast-ui/calendar/dist/toastui-calendar.min.css';
 ```
 
 ```js
 /* CommonJS in Node.js environment */
 const Calendar = require('@toast-ui/react-calendar');
-require('@toast-ui/calendar/toastui-calendar.css');
+require('@toast-ui/calendar/dist/toastui-calendar.min.css');
 ```
 
 ```js
@@ -82,7 +82,7 @@ Run npm scripts and develop yourself with the following process.
 
 ### Setup
 
-Fork `develop` branch into your personal repository.
+Fork `main` branch into your personal repository.
 Clone it to local computer. Install node modules.
 Before starting development, you should check to have any errors.
 

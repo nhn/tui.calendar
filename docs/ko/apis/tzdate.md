@@ -61,7 +61,7 @@ const now2 = new TZDate(new TZDate()); // TZDate 인스턴스
 | [toString](#tostring)                   | TZDate 인스턴스 일시를 문자열로 반환한다.                                                                 |
 | [toDate](#todate)                       | TZDate 인스턴스 일시를 Date 객체로 반환한다.                                                              |
 | [valueOf](#valueof)                     | 1970년 1월 1일 UTC 이후 TZDate 인스턴스 일시까지 경과 시간(밀리초)을 반환한다.                            |
-| [addFullYear](#addfullyear)             | 주어진 숫자 값만큼 duseh를 더한다.                                                                        |
+| [addFullYear](#addfullyear)             | 주어진 숫자 값만큼 연도를 더한다.                                                                         |
 | [addMonth](#addmonth)                   | 주어진 숫자 값만큼 월을 더한다.                                                                           |
 | [addDate](#adddate)                     | 주어진 숫자 값만큼 일자를 더한다.                                                                         |
 | [addHours](#addhours)                   | 주어진 숫자 값만큼 시를 더한다.                                                                           |

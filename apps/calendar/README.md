@@ -96,13 +96,13 @@ TOAST UI Calendar can be instantiated through the constructor function. There ar
 ```js
 /* ES6 module in Node.js environment */
 import Calendar from '@toast-ui/calendar';
-import '@toast-ui/calendar/toastui-calendar.css';
+import '@toast-ui/calendar/dist/toastui-calendar.min.css';
 ```
 
 ```js
 /* CommonJS in Node.js environment */
 const Calendar = require('@toast-ui/calendar');
-require('@toast-ui/calendar/toastui-calendar.css');
+require('@toast-ui/calendar/dist/toastui-calendar.min.css');
 ```
 
 ```js
@@ -151,7 +151,7 @@ Run npm scripts and develop yourself with the following process.
 
 ### Setup
 
-Fork `develop` branch into your personal repository.
+Fork `main` branch into your personal repository.
 Clone it to local computer. Install node modules.
 Before starting development, you should check to have any errors.
 

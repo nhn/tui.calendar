@@ -36,6 +36,13 @@ function getMargins(flat: boolean) {
   };
 }
 
+function getBorderRadius(exceedLeft: boolean, exceedRight: boolean): string {
+  const leftBorderRadius = exceedLeft ? 0 : '2px';
+  const rightBorderRadius = exceedRight ? 0 : '2px';
+
+  return `${leftBorderRadius} ${rightBorderRadius} ${rightBorderRadius} ${leftBorderRadius}`;
+}
+
 function getEventItemStyle({
   uiModel,
   flat,
@@ -56,7 +63,7 @@ function getEventItemStyle({
     color,
     backgroundColor: isDraggingTarget ? dragBackgroundColor : backgroundColor,
     borderLeft: exceedLeft ? 'none' : `3px solid ${borderColor}`,
-    borderRadius: exceedLeft ? 0 : 2,
+    borderRadius: getBorderRadius(exceedLeft, exceedRight),
     overflow: 'hidden',
     height: eventHeight,
     lineHeight: toPx(eventHeight),

@@ -79,7 +79,7 @@ TOAST UI Calendar is available through CDN.
 
 ### HTML
 
-Add a container element where TOAST UI Calendar will be created. **This element must have a height value of the appropriate height. (recommended at least 600px)**
+Add a container element where TOAST UI Calendar will be created. **This element must have a height value of the appropriate height. (at least 600px recommended)**
 
 ```html
 <div id="calendar" style="height: 600px;"></div>
@@ -108,7 +108,7 @@ const Calendar = tui.Calendar;
 
 #### Loading bundle files for legacy browsers
 
-TOAST UI Calendar provides a separate bundle file for legacy browsers. The basic bundle provides stable support for the latest two versions of the modern browser. However, the basic bundle does not include a polyfill for IE11, so to support IE11 or similar level of legacy browsers, you need to add the IE11 bundle that includes a polyfill as follows.
+TOAST UI Calendar provides a separate bundle file for legacy browsers. The default bundle provides stable support for the latest two versions of the modern browser. However, the default bundle does not include a polyfill for IE11, so to support IE11 or a legacy browser below a certain level, you need to add the IE11 bundle that includes a polyfill as follows.
 
 Since the bundle size of IE11 is about 30% larger than that of the default bundle, you must take care not to increase the bundle size unnecessarily by considering the range of support.
 
@@ -132,16 +132,16 @@ const Calendar = require('@toast-ui/calendar/ie11');
 
 ### CSS
 
-To use the calendar, you need to add a CSS file. You can import CSS files through import and require, or you can import them through CDN.
+To use the calendar, you need to add a CSS file. You can import the CSS file through import or require, or you can import them through CDN.
 
 ```js
 /* ES6 module in Node.js environment */
-import '@toast-ui/calendar/toastui-calendar.min.css'; // Stylesheet for calendar
+import '@toast-ui/calendar/dist/toastui-calendar.min.css'; // Stylesheet for calendar
 ```
 
 ```js
 /* CommonJS in Node.js environment */
-require('@toast-ui/calendar/toastui-calendar.min.css');
+require('@toast-ui/calendar/dist/toastui-calendar.min.css');
 ```
 
 ```html
@@ -153,7 +153,7 @@ require('@toast-ui/calendar/toastui-calendar.min.css');
 
 The constructor takes two arguments: `container` and `options`.
 
-- `container` : HTML element will have TOAST UI Calendar as child element or CSS selector string to get HTML element
+- `container` : HTML element that has TOAST UI Calendar as a child element or CSS selector string to get the HTML element
 - `options` : Options object that can customize TOAST UI Calendar, such as default view type, time zone, theme, and template. For more information, see the [Options documentation](../apis/options.md).
 
 ```js
@@ -243,9 +243,9 @@ calendar.createEvents([
 
 ### Using pop-ups
 
-TOAST UI Calendar provides an event creation popup and an event detail popup by default. To use it, the [`useFormPopup`](../apis/options.md#useformpopup) and [`useDetailPopup`](../apis/options.md#usedetailpopup) options must be set to `true`. Options can be set when creating an instance or changed using the [`setOptions`](../apis/calendar.md#setoptions) method after instance creation.
+TOAST UI Calendar provides an event form popup and an event details popup by default. To use the popups, the [`useFormPopup`](../apis/options.md#useformpopup) and [`useDetailPopup`](../apis/options.md#usedetailpopup) options must be set to `true`. Options can be set when creating an instance or changed using the [`setOptions`](../apis/calendar.md#setoptions) method after instance creation.
 
-When using the event creation popup, you must import CSS files of [`tui-date-picker`](https://github.com/nhn/tui.date-picker) and [`tui-time-picker`](https://github.com/nhn/tui.time-picker) for the style to be applied properly.
+When using the event form popup, you must import CSS files of [`tui-date-picker`](https://github.com/nhn/tui.date-picker) and [`tui-time-picker`](https://github.com/nhn/tui.time-picker) for the style to be applied properly.
 
 ```sh
 npm install tui-date-picker tui-time-picker
@@ -268,7 +268,7 @@ calendar.setOptions({
 
 ### Applying the theme
 
-Use themes when you want to change styles such as color and background color. The theme can be specified in [the `theme` property of the option object](../apis/options.md#theme) when an instance is created, or can be changed using the [`setTheme`](../apis/calendar.md#settheme) method after instance creation. For applicable themes, refer to the [theme documentation](../apis/theme.md).
+Use themes when you want to change styles such as color and background color. The theme can be specified in [the `theme` property of the options object](../apis/options.md#theme) when an instance is created, or can be changed using the [`setTheme`](../apis/calendar.md#settheme) method after instance creation. For available themes, refer to the [theme documentation](../apis/theme.md).
 
 ```js
 calendar.setTheme({
@@ -285,7 +285,7 @@ calendar.setTheme({
 
 ### Applying the template
 
-Templates are features that support custom rendering. It can be specified in [the `template` property of the option object](../apis/options.md#template) when creating an instance, or can be changed using the [`setOptions`](../apis/calendar.md#setoptions) method after instance creation. For applicable templates, refer to the [Templates document](../apis/template.md).
+Templates are features that support custom rendering. It can be specified in [the `template` property of the options object](../apis/options.md#template) when creating an instance, or can be changed using the [`setOptions`](../apis/calendar.md#setoptions) method after instance creation. For available templates, refer to the [Templates document](../apis/template.md).
 
 ```js
 function formatTime(time) {

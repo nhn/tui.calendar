@@ -34,7 +34,7 @@ v1에서는 `invoke`라는 함수를 이용하여 캘린더 인스턴스 메서�
 
 <script>
 import Calendar from '@toast-ui/vue-calendar';
-import '@toast-ui/calendar/toastui-calendar.min.css';
+import '@toast-ui/calendar/dist/toastui-calendar.min.css';
 
 export default {
   name: 'YourComponent',
