@@ -50,7 +50,7 @@ export function createDndDispatchers(set: SetState<CalendarStore>): DndDispatche
   return {
     initDrag: (initState) => {
       set(
-        produce((state: CalendarState) => {
+        produce<CalendarState>((state) => {
           state.dnd = {
             ...state.dnd,
             ...initState,
@@ -61,7 +61,7 @@ export function createDndDispatchers(set: SetState<CalendarStore>): DndDispatche
     },
     setDragging: (newState) => {
       set(
-        produce((state: CalendarState) => {
+        produce<CalendarState>((state) => {
           state.dnd = {
             ...state.dnd,
             ...newState,
@@ -72,7 +72,7 @@ export function createDndDispatchers(set: SetState<CalendarStore>): DndDispatche
     },
     cancelDrag: () => {
       set(
-        produce((state: CalendarState) => {
+        produce<CalendarState>((state) => {
           state.dnd = createDndSlice().dnd;
           state.dnd.draggingState = DraggingState.CANCELED;
         })
@@ -80,14 +80,14 @@ export function createDndDispatchers(set: SetState<CalendarStore>): DndDispatche
     },
     reset: () => {
       set(
-        produce((state: CalendarState) => {
+        produce<CalendarState>((state) => {
           state.dnd = createDndSlice().dnd;
         })
       );
     },
     setDraggingEventUIModel: (eventUIModel) => {
       set(
-        produce((state: CalendarState) => {
+        produce<CalendarState>((state) => {
           state.dnd.draggingEventUIModel = eventUIModel?.clone() ?? null;
         })
       );

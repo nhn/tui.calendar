@@ -65,7 +65,11 @@ function calculatePopupPosition(
     left = layoutRect.left + layoutRect.width - popupRect.width;
   }
 
-  return { top, left: Math.max(left, layoutRect.left), direction };
+  return {
+    top: top + window.scrollY,
+    left: Math.max(left, layoutRect.left) + window.scrollX,
+    direction,
+  };
 }
 
 function isBooleanKey(key: string): key is BooleanKeyOfEventObject {

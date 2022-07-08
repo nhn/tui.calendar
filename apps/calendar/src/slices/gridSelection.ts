@@ -41,14 +41,14 @@ export function createGridSelectionDispatchers(
   return {
     setGridSelection: (type, gridSelection) => {
       set(
-        produce((state: CalendarState) => {
+        produce<CalendarState>((state) => {
           state.gridSelection[type] = gridSelection;
         })
       );
     },
     addGridSelection: (type, gridSelection) => {
       set(
-        produce((state: CalendarState) => {
+        produce<CalendarState>((state) => {
           if (type === 'dayGridMonth' && gridSelection) {
             state.gridSelection.accumulated[type] = [
               ...state.gridSelection.accumulated[type],
@@ -61,7 +61,7 @@ export function createGridSelectionDispatchers(
     },
     clearAll: () =>
       set(
-        produce((state: CalendarState) => {
+        produce<CalendarState>((state) => {
           state.gridSelection = createGridSelectionSlice().gridSelection;
         })
       ),

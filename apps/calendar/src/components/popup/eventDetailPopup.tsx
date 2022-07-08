@@ -47,11 +47,14 @@ function calculatePopupPosition(eventRect: Rect, layoutRect: Rect, popupRect: Re
     left = eventRect.left - popupRect.width;
   }
 
-  return [Math.max(top, layoutRect.top), Math.max(left, layoutRect.left)];
+  return [
+    Math.max(top, layoutRect.top) + window.scrollY,
+    Math.max(left, layoutRect.left) + window.scrollX,
+  ];
 }
 
 function calculatePopupArrowPosition(eventRect: Rect, layoutRect: Rect, popupRect: Rect) {
-  const top = eventRect.top + eventRect.height / 2;
+  const top = eventRect.top + eventRect.height / 2 + window.scrollY;
   const popupLeft = eventRect.left + eventRect.width;
 
   const isOutOfLayout = popupLeft + popupRect.width > layoutRect.left + layoutRect.width;

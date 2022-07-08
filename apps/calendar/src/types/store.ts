@@ -16,17 +16,11 @@ import type { MonthOptions, WeekOptions } from '@t/options';
 export type CalendarMonthOptions = Required<MonthOptions>;
 export type CalendarWeekOptions = Required<WeekOptions>;
 
-export interface Rect {
-  top: number;
-  left: number;
-  width: number;
-  height: number;
-}
+export type Rect = Pick<DOMRect, 'top' | 'left' | 'width' | 'height'>;
 
 interface BasePopupParam {
   popupPosition?: PopupPosition;
   popupArrowPointPosition?: PopupArrowPointPosition;
-  eventRect?: Rect;
   close?: () => void;
 }
 
@@ -55,6 +49,7 @@ export interface EventFormPopupParam extends BasePopupParam {
 
 export interface EventDetailPopupParam extends BasePopupParam {
   event: EventModel;
+  eventRect: Rect;
 }
 
 export type PopupPosition = {

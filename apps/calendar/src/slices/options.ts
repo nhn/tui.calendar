@@ -112,7 +112,7 @@ export function createOptionsDispatchers(set: SetState<CalendarStore>): OptionsD
   return {
     setOptions: (newOptions: Partial<OptionsSlice['options']> = {}) =>
       set(
-        produce((state: CalendarState) => {
+        produce<CalendarState>((state) => {
           mergeObject(state.options, newOptions);
         })
       ),

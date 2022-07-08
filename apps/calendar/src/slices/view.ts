@@ -34,13 +34,13 @@ export function createViewDispatchers(set: SetState<CalendarStore>): ViewDispatc
   return {
     changeView: (nextView: ViewType) =>
       set(
-        produce((state: CalendarState) => {
+        produce<CalendarState>((state) => {
           state.view.currentView = nextView;
         })
       ),
     setRenderDate: (date: TZDate) =>
       set(
-        produce((state: CalendarState) => {
+        produce<CalendarState>((state) => {
           state.view.renderDate = toStartOfDay(date);
         })
       ),

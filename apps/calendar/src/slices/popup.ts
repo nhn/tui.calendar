@@ -43,7 +43,7 @@ export function createPopupDispatchers(set: SetState<CalendarStore>): PopupDispa
   return {
     showSeeMorePopup: (param: PopupParamMap[PopupType.SeeMore]) =>
       set(
-        produce((state: CalendarState) => {
+        produce<CalendarState>((state) => {
           state.popup[PopupType.SeeMore] = param;
           state.popup[PopupType.Form] = null;
           state.popup[PopupType.Detail] = null;
@@ -51,7 +51,7 @@ export function createPopupDispatchers(set: SetState<CalendarStore>): PopupDispa
       ),
     showFormPopup: (param: PopupParamMap[PopupType.Form]) =>
       set(
-        produce((state: CalendarState) => {
+        produce<CalendarState>((state) => {
           state.popup[PopupType.Form] = param;
           state.popup[PopupType.SeeMore] = null;
           state.popup[PopupType.Detail] = null;
@@ -59,7 +59,7 @@ export function createPopupDispatchers(set: SetState<CalendarStore>): PopupDispa
       ),
     showDetailPopup: (param: PopupParamMap[PopupType.Detail], isOpenedInSeeMorePopup) =>
       set(
-        produce((state: CalendarState) => {
+        produce<CalendarState>((state) => {
           state.popup[PopupType.Detail] = param;
           state.popup[PopupType.Form] = null;
           if (!isOpenedInSeeMorePopup) {
@@ -69,25 +69,25 @@ export function createPopupDispatchers(set: SetState<CalendarStore>): PopupDispa
       ),
     hideSeeMorePopup: () =>
       set(
-        produce((state: CalendarState) => {
+        produce<CalendarState>((state) => {
           state.popup[PopupType.SeeMore] = null;
         })
       ),
     hideFormPopup: () =>
       set(
-        produce((state: CalendarState) => {
+        produce<CalendarState>((state) => {
           state.popup[PopupType.Form] = null;
         })
       ),
     hideDetailPopup: () =>
       set(
-        produce((state: CalendarState) => {
+        produce<CalendarState>((state) => {
           state.popup[PopupType.Detail] = null;
         })
       ),
     hideAllPopup: () =>
       set(
-        produce((state: CalendarState) => {
+        produce<CalendarState>((state) => {
           state.popup[PopupType.SeeMore] = null;
           state.popup[PopupType.Form] = null;
           state.popup[PopupType.Detail] = null;

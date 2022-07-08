@@ -24,7 +24,7 @@ export function createTemplateDispatchers(set: SetState<CalendarStore>): Templat
   return {
     setTemplate: (template: TemplateConfig) =>
       set(
-        produce((state: CalendarState) => {
+        produce<CalendarState>((state) => {
           state.template = {
             ...state.template,
             ...template,
