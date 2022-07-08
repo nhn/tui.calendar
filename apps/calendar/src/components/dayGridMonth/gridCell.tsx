@@ -34,7 +34,6 @@ interface RectSize {
 
 type SeeMoreRectParam = {
   cell: HTMLDivElement;
-  grid: HTMLDivElement;
   layoutContainer: HTMLDivElement;
   popupSize: { width: number; height: number };
 };
@@ -95,45 +94,43 @@ function getSeeMorePopupPosition(popupSize: RectSize, appContainerSize: Rect, ce
   } = appContainerSize;
   const { width, height } = popupSize;
 
-  // console.group();
-  // console.log(containerLeft, containerTop, leftPos, topPos);
-  // console.groupEnd();
-  // const calendarWidth = (leftPos * containerWidth) / 100;
-  // const calendarHeight = (topPos * containerHeight) / 100;
-  // const isOverWidth = calendarWidth + width >= containerWidth;
-  // const isOverHeight = calendarHeight + height >= containerHeight;
-  //
-  // const left = toPercent(leftPos);
-  // const top = toPercent(topPos);
+  const containerRight = containerLeft + containerWidth;
+  const containerBottom = containerTop + containerHeight;
 
-  // if (isOverWidth) {
-  //   return isOverHeight ? { right: 0, bottom: 0 } : { right: 0, top };
-  // }
+  let left = cellRect.left + cellRect.width / 2 - width / 2;
+  let { top } = cellRect;
 
-  // return isOverHeight ? { left, bottom: 0 } : { left, top };
-  return { left: containerLeft, top: containerTop };
+  const isLeftOutOfContainer = left < containerLeft;
+  const isRightOutOfContainer = left + width > containerRight;
+  const isUpperOutOfContainer = top < containerTop;
+  const isLowerOutOfContainer = top + height > containerBottom;
+
+  if (isLeftOutOfContainer) {
+    left = containerLeft;
+  }
+
+  if (isRightOutOfContainer) {
+    left = containerRight - width;
+  }
+
+  if (isUpperOutOfContainer) {
+    top = containerTop;
+  }
+
+  if (isLowerOutOfContainer) {
+    top = containerBottom - height;
+  }
+
+  return { top: top + window.scrollY, left: left + window.scrollX };
 }
 
 function getSeeMorePopupRect({
   layoutContainer,
-  grid,
   cell,
   popupSize,
 }: SeeMoreRectParam): PopupPosition {
   const containerRect = layoutContainer.getBoundingClientRect();
   const cellRect = cell.getBoundingClientRect();
-
-  console.group();
-  console.log(cellRect.left, cellRect.top);
-  console.groupEnd();
-
-  // console.group();
-  // console.log(pos[0], pos[1]);
-  // console.log(left, top);
-  // left = ratio(containerRect.width, 100, left);
-  // top = ratio(containerRect.height, 100, top);
-  // console.log(left, top);
-  // console.groupEnd();
 
   const popupPosition = getSeeMorePopupPosition(popupSize, containerRect, cellRect);
 
@@ -164,7 +161,6 @@ function usePopupPosition(
 
       const rect = getSeeMorePopupRect({
         cell: container,
-        grid: parentContainer,
         layoutContainer,
         popupSize,
       });
