@@ -20,9 +20,8 @@ test.beforeEach(async ({ page }) => {
   await page.goto(WEEK_VIEW_PAGE_URL);
 });
 
-const [TWO_VIEW_EVENT, SHORT_TIME_EVENT, LONG_TIME_EVENT] = mockWeekViewEvents.filter(
-  ({ isAllday }) => !isAllday
-);
+const TIME_EVENTS = mockWeekViewEvents.filter(({ isAllday }) => !isAllday);
+const [TWO_VIEW_EVENT, SHORT_TIME_EVENT, LONG_TIME_EVENT] = TIME_EVENTS;
 
 const MOVE_EVENT_SELECTOR = '[class*="dragging--move-event"]';
 
@@ -243,7 +242,6 @@ test.describe('CSS class for a move event', () => {
 });
 
 test.describe(`Calibrate event's height while dragging`, () => {
-  let eventLocator: Locator;
   let lowerLongTimeEventLocator: Locator;
   let upperLongTimeEventLocator: Locator;
   let shadowLocator: Locator;
@@ -253,7 +251,6 @@ test.describe(`Calibrate event's height while dragging`, () => {
 
     lowerLongTimeEventLocator = page.locator(targetEventSelector).first();
     upperLongTimeEventLocator = page.locator(targetEventSelector).last();
-    eventLocator = page.locator(targetEventSelector);
     shadowLocator = page.locator(getTimeEventShadowSelector(LONG_TIME_EVENT.title));
   });
 

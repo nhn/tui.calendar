@@ -52,7 +52,7 @@ function getMovingEventPosition({
   const indexDiff = endIndex - (isStartAtPrevDate ? 0 : startIndex);
 
   const top = isStartAtPrevDate ? 0 : timeGridDataRows[startIndex].top;
-  const height = isEndAtNextDate ? maxHeight : indexDiff * rowHeight;
+  const height = isEndAtNextDate ? maxHeight : Math.max(indexDiff, 1) * rowHeight;
 
   return { top, height };
 }

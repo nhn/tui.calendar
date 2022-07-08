@@ -57,14 +57,24 @@ const classNames = {
 //   );
 // }
 
-function VerticalEvents({ eventUIModels }: { eventUIModels: EventUIModel[] }) {
+function VerticalEvents({
+  eventUIModels,
+  minEventHeight,
+}: {
+  eventUIModels: EventUIModel[];
+  minEventHeight: number;
+}) {
   // @TODO: use dynamic value
   const style = { marginRight: 8 };
 
   return (
     <div className={classNames.events} style={style}>
       {eventUIModels.map((eventUIModel) => (
-        <TimeEvent key={`${eventUIModel.valueOf()}-${eventUIModel.cid()}`} uiModel={eventUIModel} />
+        <TimeEvent
+          key={`${eventUIModel.valueOf()}-${eventUIModel.cid()}`}
+          uiModel={eventUIModel}
+          minHeight={minEventHeight}
+        />
       ))}
     </div>
   );
@@ -151,6 +161,8 @@ export const Column = memo(function Column({
 
   const uiModelsByColumn = totalUIModels[columnIndex];
 
+  const minEventHeight = timeGridRows[0].height;
+
   return (
     <div
       className={classNames.column}
@@ -158,7 +170,7 @@ export const Column = memo(function Column({
       data-testid={`timegrid-column-${columnDate.getDay()}`}
     >
       {/* <BackgroundEvents eventUIModels={uiModelsByColumn} startTime={startTime} endTime={endTime} /> */}
-      <VerticalEvents eventUIModels={uiModelsByColumn} />
+      <VerticalEvents eventUIModels={uiModelsByColumn} minEventHeight={minEventHeight} />
       <ResizingGuideByColumn
         gridPositionFinder={gridPositionFinder}
         totalUIModels={totalUIModels}
