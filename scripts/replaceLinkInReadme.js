@@ -25,7 +25,7 @@ packages.forEach((package) => {
   const readme = fs.readFileSync(README_PATH).toString();
 
   const newReadme = readme
-    .replaceAll('](/', `](${url}/blob/v${version}/`)
+    .replaceAll('](/', `](${url}/blob/${package}@${version}/`)
     .replaceAll('](.', `](${url}/blob/${package}@${version}/apps/${package}`);
 
   fs.writeFileSync(README_PATH, newReadme);
