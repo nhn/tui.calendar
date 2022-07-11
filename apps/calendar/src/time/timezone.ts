@@ -75,7 +75,7 @@ function isIntlDateTimeFormatSupported() {
    * Intl.DateTimeFormat & IANA Timezone Data should be supported.
    * also, hourCycle options should be supported.
    */
-  return isFunction(global?.Intl?.DateTimeFormat?.prototype?.formatToParts);
+  return isFunction(Intl?.DateTimeFormat?.prototype?.formatToParts);
 }
 
 function validateIANATimezoneName(timezoneName: string) {
