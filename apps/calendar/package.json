@@ -99,9 +99,9 @@
     "develop": "npm run storybook",
     "storybook": "start-storybook -p 6006",
     "storybook:build": "build-storybook",
-    "docs:prebuild": "tsc --outDir tmpdoc --sourceMap false",
-    "docs:dev": "rimraf tmpdoc/ && npm run docs:prebuild && nvm use 10 && tuidoc --serv",
-    "docs:build": "rimraf tmpdoc/ && npm run docs:prebuild && nvm use 10 && tuidoc",
+    "docs:prebuild": "npm run build && tsc --outDir tmpdoc --sourceMap false",
+    "docs:dev": "rimraf tmpdoc/ && npm run docs:prebuild && source ~/.nvm/nvm.sh && nvm use 10 && tuidoc --serv",
+    "docs:build": "rimraf tmpdoc/ && npm run docs:prebuild && source ~/.nvm/nvm.sh && nvm use 10 && tuidoc",
     "publish:cdn": "node scripts/publishToCDN.js",
     "update:wrapper": "node scripts/updateWrapper.js"
   }
