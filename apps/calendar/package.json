@@ -73,7 +73,6 @@
     "chance": "^1.1.8",
     "css-loader": "^6.7.1",
     "css-minimizer-webpack-plugin": "^3.4.1",
-    "esbuild": "^0.14.40",
     "eslint-webpack-plugin": "^3.1.1",
     "postcss": "^8.4.12",
     "postcss-loader": "^6.2.1",
