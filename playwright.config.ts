@@ -1,4 +1,5 @@
-import { PlaywrightTestConfig, devices } from '@playwright/test';
+import type { PlaywrightTestConfig } from '@playwright/test';
+import { devices } from '@playwright/test';
 
 const isCI = !!process.env.CI;
 
@@ -8,9 +9,10 @@ const config: PlaywrightTestConfig = {
   fullyParallel: !isCI,
   timeout: 30000,
   forbidOnly: isCI,
+  // eslint-disable-next-line no-undefined
   workers: isCI ? 2 : undefined,
   use: {
-    trace: isCI ? undefined : 'retain-on-failure',
+    trace: isCI ? 'off' : 'retain-on-failure',
     viewport: {
       width: 1600,
       height: 900,
@@ -43,7 +45,7 @@ const config: PlaywrightTestConfig = {
             use: { ...devices['Desktop Firefox'] },
           },
         ]
-      : ([] as any)
+      : []
   ),
 };
 
