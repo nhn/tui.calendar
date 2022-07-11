@@ -234,6 +234,6 @@ ONE_DAY_TIME_EVENTS.forEach(({ title }) => {
     // Then
     const guideLocator = page.locator(getGuideTimeEventSelector());
     const guideBoundingBox = await getBoundingBox(guideLocator);
-    expect(guideBoundingBox.height).toBe(eventBoundingBox.height);
+    expect(guideBoundingBox.height).toBeCloseTo(eventBoundingBox.height, 0);
   });
 });
