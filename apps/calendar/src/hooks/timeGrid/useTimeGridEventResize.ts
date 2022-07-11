@@ -70,7 +70,7 @@ export function useTimeGridEventResize({
     const resizingStartEventUIModel = resizeTargetUIModelColumns[
       eventStartDateColumnIndex
     ][0] as EventUIModel;
-    const { goingDuration = 0 } = resizingStartEventUIModel.valueOf();
+    const { goingDuration = 0 } = resizingStartEventUIModel.model;
     const renderStart = addMinutes(resizingStartEventUIModel.getStarts(), -goingDuration);
     const eventStartDateRowIndex = Math.max(
       rows.findIndex(findRowIndexOf(renderStart, eventStartDateColumnIndex)),
@@ -84,7 +84,7 @@ export function useTimeGridEventResize({
     const resizingEndEventUIModel = resizeTargetUIModelColumns[
       eventEndDateColumnIndex
     ][0] as EventUIModel;
-    const { comingDuration = 0 } = resizingEndEventUIModel.valueOf();
+    const { comingDuration = 0 } = resizingEndEventUIModel.model;
     const renderEnd = addMinutes(resizingEndEventUIModel.getStarts(), comingDuration);
     let eventEndDateRowIndex = rows.findIndex(findRowIndexOf(renderEnd, eventEndDateColumnIndex)); // when it is -1, the event ends after the current view.
     eventEndDateRowIndex = eventEndDateRowIndex >= 0 ? eventEndDateRowIndex : rows.length - 1;
@@ -189,7 +189,7 @@ export function useTimeGridEventResize({
       baseResizingInfo.eventEndDateColumnIndex === columnIndex;
 
     if (shouldUpdate) {
-      const { comingDuration = 0 } = resizingStartUIModel.valueOf();
+      const { comingDuration = 0 } = resizingStartUIModel.model;
 
       const targetEndDate = addMinutes(
         setTimeStrToDate(

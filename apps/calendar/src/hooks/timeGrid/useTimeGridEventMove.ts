@@ -39,7 +39,7 @@ function getMovingEventPosition({
   const maxHeight = rowHeight * timeGridDataRows.length;
   const millisecondsDiff = rowDiff * MS_PER_THIRTY_MINUTES + columnDiff * MS_PER_DAY;
 
-  const { goingDuration = 0, comingDuration = 0 } = draggingEvent.valueOf();
+  const { goingDuration = 0, comingDuration = 0 } = draggingEvent.model;
   const goingStart = addMinutes(draggingEvent.getStarts(), -goingDuration);
   const comingEnd = addMinutes(draggingEvent.getEnds(), comingDuration);
   const nextStart = addMilliseconds(goingStart, millisecondsDiff);

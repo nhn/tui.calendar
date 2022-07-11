@@ -122,7 +122,7 @@ export function getCollides(matrices: Matrix3d<EventUIModel>) {
           return;
         }
 
-        const { goingDuration, comingDuration } = uiModel.valueOf();
+        const { goingDuration, comingDuration } = uiModel.model;
         let startTime = uiModel.getStarts().getTime();
         let endTime = uiModel.getEnds().getTime();
 
