@@ -101,8 +101,8 @@
     "storybook": "start-storybook -p 6006",
     "storybook:build": "build-storybook",
     "docs:prebuild": "tsc --outDir tmpdoc --sourceMap false",
-    "docs:dev": "npm run docs:prebuild && tuidoc --serv",
-    "docs:build": "npm run docs:prebuild && tuidoc",
+    "docs:dev": "rimraf tmpdoc/ && npm run docs:prebuild && nvm use 10 && tuidoc --serv",
+    "docs:build": "rimraf tmpdoc/ && npm run docs:prebuild && nvm use 10 && tuidoc",
     "publish:cdn": "node scripts/publishToCDN.js",
     "update:wrapper": "node scripts/updateWrapper.js"
   }

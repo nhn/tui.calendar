@@ -1,4 +1,4 @@
-/* eslint-disable no-var,prefer-destructuring,prefer-template,no-undef,object-shorthand */
+/* eslint-disable no-var,prefer-destructuring,prefer-template,no-undef,object-shorthand,no-console */
 // for testing IE11 compatibility, this file doesn't use ES6 syntax.
 (function (Calendar) {
   var cal;
@@ -239,7 +239,7 @@
     eventFilter: function (event) {
       var currentView = cal.getViewName();
       if (currentView === 'month') {
-        return ['allday', 'time'].includes(event.category);
+        return ['allday', 'time'].includes(event.category) && event.isVisible;
       }
 
       return event.isVisible;
