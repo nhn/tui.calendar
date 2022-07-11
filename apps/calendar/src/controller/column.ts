@@ -9,7 +9,6 @@ import { addMinutes, max, min } from '@src/time/datetime';
 import array from '@src/utils/array';
 
 const MIN_HEIGHT_PERCENT = 1;
-const MIN_MODEL_HEIGHT_PERCENT = 20;
 
 interface RenderInfoOptions {
   baseWidth: number;
@@ -40,25 +39,13 @@ export function isBetween(startColumnTime: TZDate, endColumnTime: TZDate) {
   };
 }
 
-function hasGoingDuration(uiModel: EventUIModel, options: RenderInfoOptions) {
-  const { goingStart, startColumnTime } = options;
-  const { goingDuration = 0 } = uiModel.model;
-
-  return goingDuration && startColumnTime <= goingStart;
-}
-
-function hasComingDuration(uiModel: EventUIModel, options: RenderInfoOptions) {
-  const { comingEnd, endColumnTime } = options;
-  const { comingDuration = 0 } = uiModel.model;
-
-  return comingDuration && endColumnTime >= comingEnd;
-}
-
 function setInnerHeights(uiModel: EventUIModel, options: RenderInfoOptions) {
   const { renderStart, renderEnd, modelStart, modelEnd } = options;
+  const { goingDuration = 0, comingDuration = 0 } = uiModel.model;
+
   let modelDurationHeight = 100;
 
-  if (hasGoingDuration(uiModel, options)) {
+  if (goingDuration > 0) {
     const { height: goingDurationHeight } = getTopHeightByTime(
       renderStart,
       modelStart,
@@ -69,7 +56,7 @@ function setInnerHeights(uiModel: EventUIModel, options: RenderInfoOptions) {
     modelDurationHeight -= goingDurationHeight;
   }
 
-  if (hasComingDuration(uiModel, options)) {
+  if (comingDuration > 0) {
     const { height: comingDurationHeight } = getTopHeightByTime(
       modelEnd,
       renderEnd,
@@ -78,10 +65,6 @@ function setInnerHeights(uiModel: EventUIModel, options: RenderInfoOptions) {
     );
     uiModel.comingDurationHeight = comingDurationHeight;
     modelDurationHeight -= comingDurationHeight;
-  }
-
-  if (modelDurationHeight <= MIN_MODEL_HEIGHT_PERCENT && renderStart < modelEnd) {
-    modelDurationHeight = MIN_MODEL_HEIGHT_PERCENT;
   }
 
   uiModel.modelDurationHeight = modelDurationHeight;
