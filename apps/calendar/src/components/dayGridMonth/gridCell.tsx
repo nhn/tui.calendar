@@ -92,25 +92,25 @@ function getSeeMorePopupPosition(popupSize: RectSize, appContainerSize: Rect, ce
     left: containerLeft,
     top: containerTop,
   } = appContainerSize;
-  const { width, height } = popupSize;
+  const { width: popupWidth, height: popupHeight } = popupSize;
 
   const containerRight = containerLeft + containerWidth;
   const containerBottom = containerTop + containerHeight;
 
-  let left = cellRect.left + cellRect.width / 2 - width / 2;
+  let left = cellRect.left + cellRect.width / 2 - popupWidth / 2;
   let { top } = cellRect;
 
   const isLeftOutOfContainer = left < containerLeft;
-  const isRightOutOfContainer = left + width > containerRight;
+  const isRightOutOfContainer = left + popupWidth > containerRight;
   const isUpperOutOfContainer = top < containerTop;
-  const isLowerOutOfContainer = top + height > containerBottom;
+  const isLowerOutOfContainer = top + popupHeight > containerBottom;
 
   if (isLeftOutOfContainer) {
     left = containerLeft;
   }
 
   if (isRightOutOfContainer) {
-    left = containerRight - width;
+    left = containerRight - popupWidth;
   }
 
   if (isUpperOutOfContainer) {
@@ -118,7 +118,7 @@ function getSeeMorePopupPosition(popupSize: RectSize, appContainerSize: Rect, ce
   }
 
   if (isLowerOutOfContainer) {
-    top = containerBottom - height;
+    top = containerBottom - popupHeight;
   }
 
   return { top: top + window.scrollY, left: left + window.scrollX };
