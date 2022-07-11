@@ -38,7 +38,7 @@
     "tui-jsdoc-template": "^1.2.2"
   },
   "dependencies": {
-    "moment": "^2.29.3",
+    "moment": "^2.29.4",
     "moment-timezone": "^0.5.34"
   }
 }
