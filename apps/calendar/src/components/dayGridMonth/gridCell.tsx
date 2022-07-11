@@ -14,18 +14,17 @@ import {
 import { useDispatch } from '@src/contexts/calendarStore';
 import { useLayoutContainer } from '@src/contexts/layoutContainer';
 import { useTheme } from '@src/contexts/themeStore';
-import { cls, toPercent } from '@src/helpers/css';
+import { cls } from '@src/helpers/css';
 import { getExceedCount } from '@src/helpers/grid';
 import { useDOMNode } from '@src/hooks/common/useDOMNode';
 import type EventUIModel from '@src/model/eventUIModel';
 import { monthMoreViewSelector } from '@src/selectors/theme';
 import type TZDate from '@src/time/date';
 import { isWeekend } from '@src/time/datetime';
-import { getPosition, getRelativePosition, getSize } from '@src/utils/dom';
-import { ratio } from '@src/utils/math';
+import { getSize } from '@src/utils/dom';
 
 import type { StyleProp } from '@t/components/common';
-import type { PopupPosition } from '@t/store';
+import type { PopupPosition, Rect } from '@t/store';
 import type { ThemeState } from '@t/theme';
 
 interface RectSize {
@@ -35,7 +34,6 @@ interface RectSize {
 
 type SeeMoreRectParam = {
   cell: HTMLDivElement;
-  grid: HTMLDivElement;
   layoutContainer: HTMLDivElement;
   popupSize: { width: number; height: number };
 };
@@ -87,53 +85,54 @@ function getSeeMorePopupSize({
   return { width, height };
 }
 
-function getSeeMorePopupPosition(
-  position: [positionX: number, positionY: number],
-  popupSize: RectSize,
-  appContainerSize: RectSize
-) {
-  const { width: containerWidth, height: containerHeight } = appContainerSize;
-  const [leftPos, topPos] = position;
-  const { width, height } = popupSize;
+function getSeeMorePopupPosition(popupSize: RectSize, appContainerSize: Rect, cellRect: Rect) {
+  const {
+    width: containerWidth,
+    height: containerHeight,
+    left: containerLeft,
+    top: containerTop,
+  } = appContainerSize;
+  const { width: popupWidth, height: popupHeight } = popupSize;
 
-  const calendarWidth = (leftPos * containerWidth) / 100;
-  const calendarHeight = (topPos * containerHeight) / 100;
-  const isOverWidth = calendarWidth + width >= containerWidth;
-  const isOverHeight = calendarHeight + height >= containerHeight;
+  const containerRight = containerLeft + containerWidth;
+  const containerBottom = containerTop + containerHeight;
 
-  const left = toPercent(leftPos);
-  const top = toPercent(topPos);
+  let left = cellRect.left + cellRect.width / 2 - popupWidth / 2;
+  let { top } = cellRect;
 
-  if (isOverWidth) {
-    return isOverHeight ? { right: 0, bottom: 0 } : { right: 0, top };
+  const isLeftOutOfContainer = left < containerLeft;
+  const isRightOutOfContainer = left + popupWidth > containerRight;
+  const isUpperOutOfContainer = top < containerTop;
+  const isLowerOutOfContainer = top + popupHeight > containerBottom;
+
+  if (isLeftOutOfContainer) {
+    left = containerLeft;
   }
 
-  return isOverHeight ? { left, bottom: 0 } : { left, top };
+  if (isRightOutOfContainer) {
+    left = containerRight - popupWidth;
+  }
+
+  if (isUpperOutOfContainer) {
+    top = containerTop;
+  }
+
+  if (isLowerOutOfContainer) {
+    top = containerBottom - popupHeight;
+  }
+
+  return { top: top + window.scrollY, left: left + window.scrollX };
 }
 
 function getSeeMorePopupRect({
   layoutContainer,
-  grid,
   cell,
   popupSize,
 }: SeeMoreRectParam): PopupPosition {
-  const appContainerSize = getSize(layoutContainer);
+  const containerRect = layoutContainer.getBoundingClientRect();
+  const cellRect = cell.getBoundingClientRect();
 
-  const pos = getRelativePosition(
-    {
-      clientX: getPosition(cell).x,
-      clientY: getPosition(grid).y,
-    } as MouseEvent,
-    layoutContainer
-  );
-
-  let left = pos[0] - MONTH_MORE_VIEW_PADDING;
-  let top = pos[1] - MONTH_MORE_VIEW_PADDING;
-
-  left = ratio(appContainerSize.width, 100, left);
-  top = ratio(appContainerSize.height, 100, top);
-
-  const popupPosition = getSeeMorePopupPosition([left, top], popupSize, appContainerSize);
+  const popupPosition = getSeeMorePopupPosition(popupSize, containerRect, cellRect);
 
   return { ...popupSize, ...popupPosition };
 }
@@ -162,7 +161,6 @@ function usePopupPosition(
 
       const rect = getSeeMorePopupRect({
         cell: container,
-        grid: parentContainer,
         layoutContainer,
         popupSize,
       });
