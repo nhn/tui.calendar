@@ -296,7 +296,7 @@ test.describe('Resizing the event which has a going or coming duration', () => {
     const travelTimeLocator = eventLocator.locator('[class*="travel-time"]');
     const goingDurationLocator = travelTimeLocator.first();
     const goingDurationBoudingBoxBeforeResize = await getBoundingBox(goingDurationLocator);
-    const comingDurationLocator = travelTimeLocator.first();
+    const comingDurationLocator = travelTimeLocator.last();
     const comingDurationBoudingBoxBeforeResize = await getBoundingBox(comingDurationLocator);
 
     const eventTimeLocator = eventLocator.locator('[class*="event-time"]');
@@ -331,7 +331,7 @@ test.describe('Resizing the event which has a going or coming duration', () => {
       const draggingTravelTimeLocator = draggingEventLocator.locator('[class*="travel-time"]');
       const draggingGoingDurationLocator = draggingTravelTimeLocator.first();
       draggingGoingDurationBoudingBox = await getBoundingBox(draggingGoingDurationLocator);
-      const draggingComingDurationLocator = draggingTravelTimeLocator.first();
+      const draggingComingDurationLocator = draggingTravelTimeLocator.last();
       draggingComingDurationBoudingBox = await getBoundingBox(draggingComingDurationLocator);
 
       const draggingEventTimeLocator = draggingEventLocator.locator('[class*="event-time"]');
