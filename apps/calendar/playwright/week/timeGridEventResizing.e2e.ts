@@ -10,6 +10,7 @@ import { WEEK_VIEW_PAGE_URL } from '../configs';
 import {
   dragAndDrop,
   getBoundingBox,
+  getGuideTimeEventSelector,
   getTimeEventSelector,
   getTimeGridLineSelector,
   getTimeStrFromDate,
@@ -278,4 +279,164 @@ test.describe('CSS class for a resize event', () => {
     // Then
     expect(await resizeEventClassLocator.count()).toBe(0);
   });
+});
+
+test.describe('Resizing the event which has a going or coming duration', () => {
+  const [event] = mockWeekViewEvents.filter(
+    ({ isAllday, goingDuration, comingDuration }) => !isAllday && (goingDuration || comingDuration)
+  );
+
+  async function setupResizingGoingOrComingDuration(
+    page: Page,
+    targetEndTime: FormattedTimeString,
+    hold?: boolean
+  ) {
+    const eventLocator = queryLocatorByTestId(page, `time-event-${event.title}`).last();
+
+    const travelTimeLocator = eventLocator.locator('[class*="travel-time"]');
+    const goingDurationLocator = travelTimeLocator.first();
+    const goingDurationBoudingBoxBeforeResize = await getBoundingBox(goingDurationLocator);
+    const comingDurationLocator = travelTimeLocator.last();
+    const comingDurationBoudingBoxBeforeResize = await getBoundingBox(comingDurationLocator);
+
+    const eventTimeLocator = eventLocator.locator('[class*="event-time"]');
+    const modelDurationBoudingBoxBeforeResize = await getBoundingBox(eventTimeLocator);
+
+    const resizeHandlerLocator = eventLocator.locator(RESIZE_HANDLER_SELECTOR);
+    const targetRowLocator = page.locator(getTimeGridLineSelector(targetEndTime));
+    const targetRowBoundingBox = await getBoundingBox(targetRowLocator);
+
+    await dragAndDrop({
+      page,
+      sourceLocator: resizeHandlerLocator,
+      targetLocator: targetRowLocator,
+      options: {
+        sourcePosition: {
+          x: 1,
+          y: 1,
+        },
+        targetPosition: {
+          x: targetRowBoundingBox.width / 2,
+          y: targetRowBoundingBox.height / 2,
+        },
+      },
+      hold,
+    });
+
+    let draggingGoingDurationBoudingBox = null;
+    let draggingComingDurationBoudingBox = null;
+    let draggingModelDurationBoudingBox = null;
+    if (hold) {
+      const draggingEventLocator = page.locator(getGuideTimeEventSelector());
+      const draggingTravelTimeLocator = draggingEventLocator.locator('[class*="travel-time"]');
+      const draggingGoingDurationLocator = draggingTravelTimeLocator.first();
+      draggingGoingDurationBoudingBox = await getBoundingBox(draggingGoingDurationLocator);
+      const draggingComingDurationLocator = draggingTravelTimeLocator.last();
+      draggingComingDurationBoudingBox = await getBoundingBox(draggingComingDurationLocator);
+
+      const draggingEventTimeLocator = draggingEventLocator.locator('[class*="event-time"]');
+      draggingModelDurationBoudingBox = await getBoundingBox(draggingEventTimeLocator);
+    }
+
+    const goingDurationBoudingBoxAfterResize = await getBoundingBox(goingDurationLocator);
+    const comingDurationBoudingBoxAfterResize = await getBoundingBox(comingDurationLocator);
+    const modelDurationBoudingBoxAfterResize = await getBoundingBox(eventTimeLocator);
+
+    return {
+      goingDurationBoudingBoxBeforeResize,
+      goingDurationBoudingBoxAfterResize,
+      comingDurationBoudingBoxBeforeResize,
+      comingDurationBoudingBoxAfterResize,
+      modelDurationBoudingBoxBeforeResize,
+      modelDurationBoudingBoxAfterResize,
+      draggingGoingDurationBoudingBox,
+      draggingComingDurationBoudingBox,
+      draggingModelDurationBoudingBox,
+      rowHeight: targetRowBoundingBox.height,
+    };
+  }
+
+  test('should change only the end time.', async ({ page }) => {
+    // Given
+    const targetEndTime = '10:00';
+
+    // When
+    const {
+      goingDurationBoudingBoxBeforeResize,
+      goingDurationBoudingBoxAfterResize,
+      comingDurationBoudingBoxBeforeResize,
+      comingDurationBoudingBoxAfterResize,
+      modelDurationBoudingBoxBeforeResize,
+      modelDurationBoudingBoxAfterResize,
+    } = await setupResizingGoingOrComingDuration(page, targetEndTime);
+
+    // Then
+    expect(goingDurationBoudingBoxAfterResize.height).toBeCloseTo(
+      goingDurationBoudingBoxBeforeResize.height,
+      -1
+    );
+    expect(comingDurationBoudingBoxAfterResize.height).toBeCloseTo(
+      comingDurationBoudingBoxBeforeResize.height,
+      -1
+    );
+    expect(modelDurationBoudingBoxAfterResize.height).toBeGreaterThan(
+      modelDurationBoudingBoxBeforeResize.height
+    );
+  });
+
+  test('the dragging element should have a minimum height(=1 row) without going and coming durations.', async ({
+    page,
+  }) => {
+    // Given
+    const targetEndTime = '04:00';
+
+    // When
+    const {
+      goingDurationBoudingBoxBeforeResize,
+      comingDurationBoudingBoxBeforeResize,
+      draggingGoingDurationBoudingBox,
+      draggingComingDurationBoudingBox,
+      draggingModelDurationBoudingBox,
+      rowHeight,
+    } = await setupResizingGoingOrComingDuration(page, targetEndTime, true);
+
+    // Then
+    expect(draggingGoingDurationBoudingBox?.height).toBeCloseTo(
+      goingDurationBoudingBoxBeforeResize.height,
+      -1
+    );
+    expect(draggingComingDurationBoudingBox?.height).toBeCloseTo(
+      comingDurationBoudingBoxBeforeResize.height,
+      -1
+    );
+    expect(draggingModelDurationBoudingBox?.height).toBeCloseTo(rowHeight, -1);
+  });
+
+  // ! FIXME: wrong height for the event which is 30 minutes and has going and coming durations
+  test.fixme(
+    'the result of resizing should have a minimum height(=1 row) without going and coming durations.',
+    async ({ page }) => {
+      //     // Given
+      //     const targetEndTime = '04:00';
+      //     // When
+      //     const {
+      //       goingDurationBoudingBoxBeforeResize,
+      //       goingDurationBoudingBoxAfterResize,
+      //       comingDurationBoudingBoxBeforeResize,
+      //       comingDurationBoudingBoxAfterResize,
+      //       modelDurationBoudingBoxAfterResize,
+      //       rowHeight,
+      //     } = await setupResizingGoingOrComingDuration(page, targetEndTime);
+      //     // Then
+      //     expect(goingDurationBoudingBoxAfterResize.height).toBeCloseTo(
+      //       goingDurationBoudingBoxBeforeResize.height,
+      //       -1
+      //     );
+      //     expect(comingDurationBoudingBoxAfterResize.height).toBeCloseTo(
+      //       comingDurationBoudingBoxBeforeResize.height,
+      //       -1
+      //     );
+      //     expect(modelDurationBoudingBoxAfterResize.height).toBeCloseTo(rowHeight, -1);
+    }
+  );
 });

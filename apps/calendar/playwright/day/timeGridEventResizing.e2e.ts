@@ -87,7 +87,9 @@ async function setup({
   };
 }
 
-const timeEvents = mockDayViewEvents.filter(({ isAllday }) => !isAllday);
+const timeEvents = mockDayViewEvents.filter(
+  ({ isAllday, goingDuration, comingDuration }) => !isAllday && !goingDuration && !comingDuration
+);
 const [, SHORT_TIME_EVENT] = timeEvents;
 
 timeEvents.forEach(({ title: eventTitle, start, end }) => {

@@ -5,6 +5,7 @@ import type { MockedWeekViewEvents } from '@stories/mocks/types';
 
 const today = new TZDate();
 const sunday = addDate(today, -today.getDay());
+const monday = addDate(sunday, 1);
 const tuesday = addDate(sunday, 2);
 const wednesday = addDate(sunday, 3);
 const thursday = addDate(sunday, 4);
@@ -65,5 +66,25 @@ export const mockWeekViewEvents: MockedWeekViewEvents[] = [
     isAllday: false,
     start: setTimeStrToDate(friday, '10:00'),
     end: setTimeStrToDate(saturday, '06:00'),
+  },
+  {
+    id: '7',
+    calendarId: 'cal1',
+    title: 'short + duration',
+    category: 'time',
+    isAllday: false,
+    start: setTimeStrToDate(tuesday, '05:00'),
+    end: setTimeStrToDate(tuesday, '06:00'),
+    goingDuration: 60,
+    comingDuration: 120,
+  },
+  {
+    id: '8',
+    calendarId: 'cal1',
+    title: 'same start and end',
+    category: 'time',
+    isAllday: false,
+    start: setTimeStrToDate(monday, '05:00'),
+    end: setTimeStrToDate(monday, '05:00'),
   },
 ];

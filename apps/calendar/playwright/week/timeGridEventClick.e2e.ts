@@ -18,10 +18,7 @@ targetEvents.forEach(({ title }) => {
     const targetEventBoundingBox = await getBoundingBox(targetEventLocator);
 
     // When
-    await page.mouse.move(
-      targetEventBoundingBox.x + targetEventBoundingBox.width / 2,
-      targetEventBoundingBox.y + targetEventBoundingBox.height / 2
-    );
+    await page.mouse.move(targetEventBoundingBox.x + 2, targetEventBoundingBox.y + 2);
     await page.mouse.down();
     await page.mouse.up();
 

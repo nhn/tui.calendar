@@ -42,14 +42,14 @@ export function isBetween(startColumnTime: TZDate, endColumnTime: TZDate) {
 
 function hasGoingDuration(uiModel: EventUIModel, options: RenderInfoOptions) {
   const { goingStart, startColumnTime } = options;
-  const { goingDuration = 0 } = uiModel.valueOf();
+  const { goingDuration = 0 } = uiModel.model;
 
   return goingDuration && startColumnTime <= goingStart;
 }
 
 function hasComingDuration(uiModel: EventUIModel, options: RenderInfoOptions) {
   const { comingEnd, endColumnTime } = options;
-  const { comingDuration = 0 } = uiModel.valueOf();
+  const { comingDuration = 0 } = uiModel.model;
 
   return comingDuration && endColumnTime >= comingEnd;
 }
@@ -121,7 +121,7 @@ function setRenderInfo(
   startColumnTime: TZDate,
   endColumnTime: TZDate
 ) {
-  const { goingDuration = 0, comingDuration = 0 } = uiModel.valueOf();
+  const { goingDuration = 0, comingDuration = 0 } = uiModel.model;
   const modelStart = uiModel.getStarts();
   const modelEnd = uiModel.getEnds();
   const goingStart = addMinutes(modelStart, -goingDuration);

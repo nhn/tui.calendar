@@ -53,4 +53,15 @@ export const mockDayViewEvents: MockedWeekViewEvents[] = [
     start: setTimeStrToDate(today, '04:00'),
     end: setTimeStrToDate(today, '06:00'),
   },
+  {
+    id: '6',
+    calendarId: 'cal1',
+    title: 'short + duration',
+    category: 'time',
+    isAllday: false,
+    start: setTimeStrToDate(today, '04:00'),
+    end: setTimeStrToDate(today, '06:00'),
+    goingDuration: 60,
+    comingDuration: 120,
+  },
 ];
