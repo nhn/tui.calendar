@@ -33,20 +33,15 @@ const config: PlaywrightTestConfig = {
       name: 'Chromium',
       use: { ...devices['Desktop Chrome'] },
     },
-  ].concat(
-    isCI
-      ? [
-          {
-            name: 'Safari',
-            use: { ...devices['Desktop Safari'] },
-          },
-          {
-            name: 'Firefox',
-            use: { ...devices['Desktop Firefox'] },
-          },
-        ]
-      : []
-  ),
+    {
+      name: 'Safari',
+      use: { ...devices['Desktop Safari'] },
+    },
+    {
+      name: 'Firefox',
+      use: { ...devices['Desktop Firefox'] },
+    },
+  ],
 };
 
 export default config;
