@@ -191,8 +191,8 @@ test.describe(`Calibrate event's height while dragging`, () => {
       // Then
       await expect
         .poll(async () => {
-          const shadowEventBoundingBox = await getBoundingBox(eventLocator.first());
-          return shadowEventBoundingBox.height;
+          const guideBoundingBox = await getBoundingBox(eventLocator.first());
+          return guideBoundingBox.height;
         })
         [matcherToCompare](eventBoundingBoxBeforeMove.height);
     });
@@ -204,7 +204,7 @@ const ONE_DAY_TIME_EVENTS = mockDayViewEvents.filter(
 );
 
 ONE_DAY_TIME_EVENTS.forEach(({ title }) => {
-  test(`The height of shadow element should be same as the event element. - ${title}`, async ({
+  test(`The height of guide element should be same as the event element. - ${title}`, async ({
     page,
   }) => {
     // Given
@@ -232,8 +232,8 @@ ONE_DAY_TIME_EVENTS.forEach(({ title }) => {
     });
 
     // Then
-    const shadowLocator = page.locator(getGuideTimeEventSelector());
-    const shadowBoundingBox = await getBoundingBox(shadowLocator);
-    expect(shadowBoundingBox.height).toBe(eventBoundingBox.height);
+    const guideLocator = page.locator(getGuideTimeEventSelector());
+    const guideBoundingBox = await getBoundingBox(guideLocator);
+    expect(guideBoundingBox.height).toBe(eventBoundingBox.height);
   });
 });

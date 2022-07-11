@@ -244,14 +244,14 @@ test.describe('CSS class for a move event', () => {
 test.describe(`Calibrate event's height while dragging`, () => {
   let lowerLongTimeEventLocator: Locator;
   let upperLongTimeEventLocator: Locator;
-  let shadowLocator: Locator;
+  let guideLocator: Locator;
 
   test.beforeEach(({ page }) => {
     const targetEventSelector = getTimeEventSelector(LONG_TIME_EVENT.title);
 
     lowerLongTimeEventLocator = page.locator(targetEventSelector).first();
     upperLongTimeEventLocator = page.locator(targetEventSelector).last();
-    shadowLocator = page.locator(getGuideTimeEventSelector());
+    guideLocator = page.locator(getGuideTimeEventSelector());
   });
 
   test('lower long time event become longer while drag to upper side', async ({ page }) => {
@@ -271,9 +271,9 @@ test.describe(`Calibrate event's height while dragging`, () => {
     });
 
     // Then
-    const shadowEventBoundingBox = await getBoundingBox(shadowLocator);
-    expect(shadowEventBoundingBox.y).toBeLessThan(eventBoundingBox.y);
-    expect(shadowEventBoundingBox.height).toBeGreaterThan(eventBoundingBox.height);
+    const guideBoundingBox = await getBoundingBox(guideLocator);
+    expect(guideBoundingBox.y).toBeLessThan(eventBoundingBox.y);
+    expect(guideBoundingBox.height).toBeGreaterThan(eventBoundingBox.height);
   });
 
   test('lower long time event become shorter while drag to lower side', async ({ page }) => {
@@ -293,10 +293,10 @@ test.describe(`Calibrate event's height while dragging`, () => {
     });
 
     // Then
-    const shadowEventBoundingBox = await getBoundingBox(shadowLocator);
-    // NOTE: shadow event's height is greater than event's height, but it looks like it isn't.
+    const guideBoundingBox = await getBoundingBox(guideLocator);
+    // NOTE: the guide event's height is greater than event's height, but it looks like it isn't.
     //       height is truncated because of stacking context.
-    expect(shadowEventBoundingBox.y).toBeGreaterThan(eventBoundingBox.y);
+    expect(guideBoundingBox.y).toBeGreaterThan(eventBoundingBox.y);
   });
 
   test('upper long time event become longer while drag to lower side', async ({ page }) => {
@@ -316,8 +316,8 @@ test.describe(`Calibrate event's height while dragging`, () => {
     });
 
     // Then
-    const shadowEventBoundingBox = await getBoundingBox(shadowLocator);
-    expect(shadowEventBoundingBox.height).toBeGreaterThan(eventBoundingBox.height);
+    const guideBoundingBox = await getBoundingBox(guideLocator);
+    expect(guideBoundingBox.height).toBeGreaterThan(eventBoundingBox.height);
   });
 
   test('upper long time event become shorter while drag to upper side', async ({ page }) => {
@@ -337,8 +337,8 @@ test.describe(`Calibrate event's height while dragging`, () => {
     });
 
     // Then
-    const shadowEventBoundingBox = await getBoundingBox(shadowLocator);
-    expect(shadowEventBoundingBox.height).toBeLessThan(eventBoundingBox.height);
+    const guideBoundingBox = await getBoundingBox(guideLocator);
+    expect(guideBoundingBox.height).toBeLessThan(eventBoundingBox.height);
   });
 });
 
@@ -347,7 +347,7 @@ const ONE_DAY_TIME_EVENTS = mockWeekViewEvents.filter(
 );
 
 ONE_DAY_TIME_EVENTS.forEach(({ title }) => {
-  test(`The height of shadow element should be same as the event element. - ${title}`, async ({
+  test(`The height of guide element should be same as the event element. - ${title}`, async ({
     page,
   }) => {
     // Given
@@ -377,8 +377,8 @@ ONE_DAY_TIME_EVENTS.forEach(({ title }) => {
     });
 
     // Then
-    const shadowLocator = page.locator(getGuideTimeEventSelector());
-    const shadowBoundingBox = await getBoundingBox(shadowLocator);
-    expect(shadowBoundingBox.height).toBe(eventBoundingBox.height);
+    const guideLocator = page.locator(getGuideTimeEventSelector());
+    const guideBoundingBox = await getBoundingBox(guideLocator);
+    expect(guideBoundingBox.height).toBe(eventBoundingBox.height);
   });
 });
