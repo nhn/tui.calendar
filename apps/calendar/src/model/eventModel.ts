@@ -13,7 +13,7 @@ import type {
   EventState,
 } from '@t/events';
 
-export default class EventModel implements EventObjectWithDefaultValues {
+export default class EventModel implements Omit<EventObjectWithDefaultValues, '__cid'> {
   id = '';
 
   calendarId = '';
@@ -302,6 +302,7 @@ export default class EventModel implements EventObjectWithDefaultValues {
     return {
       id: this.id,
       calendarId: this.calendarId,
+      __cid: this.cid(),
       title: this.title,
       body: this.body,
       isAllday: this.isAllday,

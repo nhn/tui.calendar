@@ -15,6 +15,8 @@ interface EventUIProps {
   goingDurationHeight: number;
   modelDurationHeight: number;
   comingDurationHeight: number;
+  duplicateEvents: EventUIModel[];
+  collapse: boolean;
 }
 
 const eventUIPropsKey: (keyof EventUIProps)[] = [
@@ -29,6 +31,8 @@ const eventUIPropsKey: (keyof EventUIProps)[] = [
   'goingDurationHeight',
   'modelDurationHeight',
   'comingDurationHeight',
+  'duplicateEvents',
+  'collapse',
 ];
 
 /**
@@ -102,6 +106,18 @@ export default class EventUIModel implements EventUIProps {
    * @type {number} percent
    */
   comingDurationHeight = 0;
+
+  /**
+   * the sorted list of duplicate events.
+   * @type {EventUIModel[]}
+   */
+  duplicateEvents: EventUIModel[] = [];
+
+  /**
+   * whether the event is collapsed or not among the duplicate events.
+   * @type {boolean}
+   */
+  collapse = false;
 
   constructor(event: EventModel) {
     this.model = event;

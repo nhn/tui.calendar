@@ -72,6 +72,7 @@ function getStyles({
   );
   const containerStyle: StyleProp = {
     width: width >= 0 ? `calc(${toPercent(width)} - ${marginLeft}px)` : '',
+    minWidth: '9px',
     height: `calc(${toPercent(Math.max(height, minHeight))} - ${defaultMarginBottom}px)`,
     top: toPercent(top),
     left: toPercent(left),

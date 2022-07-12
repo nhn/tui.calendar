@@ -5,9 +5,26 @@ import { isTimeEvent } from '@src/model/eventModel';
 import type EventUIModel from '@src/model/eventUIModel';
 import type TZDate from '@src/time/date';
 import { addMinutes, max, min } from '@src/time/datetime';
+import type { EventObjectWithDefaultValues } from '@src/types/events';
 import array from '@src/utils/array';
 
 const MIN_HEIGHT_PERCENT = 1;
+
+const COLLAPSED_DUPLICATE_EVENT_WIDTH = 5;
+
+/**
+ * TODO @dotaitch
+ * remove temporary options
+ */
+const collapseDuplicateEvents = {
+  getDuplicateEvents: (
+    targetEvent: EventObjectWithDefaultValues,
+    events: EventObjectWithDefaultValues[]
+  ) => events.filter((event: EventObjectWithDefaultValues) => event.id === targetEvent.id),
+  sortDuplicateEvents: (events: EventObjectWithDefaultValues[]) =>
+    events.sort((a, b) => (a.calendarId > b.calendarId ? 1 : -1)),
+  getMainEvent: (events: EventObjectWithDefaultValues[]) => events[events.length - 1],
+};
 
 interface RenderInfoOptions {
   baseWidth: number;
@@ -80,23 +97,62 @@ function setCroppedEdges(uiModel: EventUIModel, options: RenderInfoOptions) {
   }
 }
 
-function setDimension(uiModel: EventUIModel, options: RenderInfoOptions) {
-  const { renderStart, renderEnd, startColumnTime, endColumnTime, baseWidth, columnIndex } =
-    options;
-  const { top, height } = getTopHeightByTime(
-    renderStart,
-    renderEnd,
-    startColumnTime,
-    endColumnTime
-  );
-  const left = baseWidth * columnIndex;
-  uiModel.top = top;
-  uiModel.left = left;
-  uiModel.width = baseWidth;
-  uiModel.height = height < MIN_HEIGHT_PERCENT ? MIN_HEIGHT_PERCENT : height;
+function setDimensionOfDuplicateEvent(uiModel: EventUIModel, options: RenderInfoOptions) {
+  const { startColumnTime, endColumnTime, baseWidth, columnIndex } = options;
+  const { duplicateEvents } = uiModel;
+  let cumulativeLeft = baseWidth * columnIndex;
+
+  duplicateEvents.forEach((event) => {
+    const { renderStart, renderEnd } = getRenderInfoOptions(
+      event,
+      columnIndex,
+      baseWidth,
+      startColumnTime,
+      endColumnTime
+    );
+    const { top, height } = getTopHeightByTime(
+      renderStart,
+      renderEnd,
+      startColumnTime,
+      endColumnTime
+    );
+    const width = event.collapse
+      ? COLLAPSED_DUPLICATE_EVENT_WIDTH
+      : baseWidth - COLLAPSED_DUPLICATE_EVENT_WIDTH * (duplicateEvents.length - 1);
+    event.setUIProps({
+      top,
+      height,
+      width,
+      left: cumulativeLeft,
+    });
+
+    cumulativeLeft += width;
+  });
 }
 
-function setRenderInfo(
+function setDimension(uiModel: EventUIModel, options: RenderInfoOptions) {
+  const { startColumnTime, endColumnTime, baseWidth, columnIndex } = options;
+
+  if (!uiModel.duplicateEvents.length) {
+    const { renderStart, renderEnd } = options;
+    const { top, height } = getTopHeightByTime(
+      renderStart,
+      renderEnd,
+      startColumnTime,
+      endColumnTime
+    );
+    uiModel.setUIProps({
+      top,
+      left: baseWidth * columnIndex,
+      width: baseWidth,
+      height: height < MIN_HEIGHT_PERCENT ? MIN_HEIGHT_PERCENT : height,
+    });
+  } else {
+    setDimensionOfDuplicateEvent(uiModel, options);
+  }
+}
+
+function getRenderInfoOptions(
   uiModel: EventUIModel,
   columnIndex: number,
   baseWidth: number,
@@ -110,7 +166,7 @@ function setRenderInfo(
   const comingEnd = addMinutes(modelEnd, comingDuration);
   const renderStart = max(goingStart, startColumnTime);
   const renderEnd = min(comingEnd, endColumnTime);
-  const renderInfoOptions = {
+  return {
     baseWidth,
     columnIndex,
     modelStart,
@@ -121,11 +177,61 @@ function setRenderInfo(
     comingEnd,
     startColumnTime,
     endColumnTime,
+    duplicateEvents: uiModel.duplicateEvents,
   };
+}
+
+function setRenderInfo(
+  uiModel: EventUIModel,
+  columnIndex: number,
+  baseWidth: number,
+  startColumnTime: TZDate,
+  endColumnTime: TZDate
+) {
+  const renderInfoOptions = getRenderInfoOptions(
+    uiModel,
+    columnIndex,
+    baseWidth,
+    startColumnTime,
+    endColumnTime
+  );
 
   setDimension(uiModel, renderInfoOptions);
   setInnerHeights(uiModel, renderInfoOptions);
   setCroppedEdges(uiModel, renderInfoOptions);
+}
+
+function setDuplicateEvents(uiModels: EventUIModel[], options: typeof collapseDuplicateEvents) {
+  const { getDuplicateEvents, sortDuplicateEvents, getMainEvent } = options;
+
+  const eventObjects = uiModels.map((uiModel) => uiModel.model.toEventObject());
+
+  uiModels.forEach((targetUIModel) => {
+    if (targetUIModel.collapse || targetUIModel.duplicateEvents.length) {
+      return;
+    }
+
+    const duplicateEvents = getDuplicateEvents(targetUIModel.model.toEventObject(), eventObjects);
+
+    if (duplicateEvents.length <= 1) {
+      return;
+    }
+
+    const sortedDuplicateEvents = sortDuplicateEvents(duplicateEvents);
+    const mainEvent = getMainEvent(sortedDuplicateEvents);
+
+    const sortDuplicateEventUIModel = sortedDuplicateEvents.map(
+      (event) => uiModels.find((uiModel) => uiModel.cid() === event.__cid) as EventUIModel
+    );
+    sortDuplicateEventUIModel.forEach((duplicateEventUIModel) => {
+      duplicateEventUIModel.setUIProps({
+        duplicateEvents: sortDuplicateEventUIModel,
+        collapse: duplicateEventUIModel.cid() !== mainEvent.__cid,
+      });
+    });
+  });
+
+  return uiModels;
 }
 
 /**
@@ -143,9 +249,15 @@ export function setRenderInfoOfUIModels(
     .filter(isTimeEvent)
     .filter(isBetween(startColumnTime, endColumnTime))
     .sort(array.compare.event.asc);
-  const uiModelColl = createEventCollection(...uiModels);
+
+  if (collapseDuplicateEvents) {
+    setDuplicateEvents(uiModels, collapseDuplicateEvents);
+  }
+  const expandedEvents = uiModels.filter((uiModel) => !uiModel.collapse);
+
+  const uiModelColl = createEventCollection(...expandedEvents);
   const usingTravelTime = true;
-  const collisionGroups = getCollisionGroup(uiModels, usingTravelTime);
+  const collisionGroups = getCollisionGroup(expandedEvents, usingTravelTime);
   const matrices = getMatrices(uiModelColl, collisionGroups, usingTravelTime);
 
   matrices.forEach((matrix) => {
