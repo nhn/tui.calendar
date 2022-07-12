@@ -417,6 +417,7 @@ test.describe('Resizing the event which has a going or coming duration', () => {
   }) => {
     // Given
     const targetEndTime = '04:00';
+
     // When
     const {
       goingDurationBoundingBoxBeforeResize,
@@ -426,6 +427,7 @@ test.describe('Resizing the event which has a going or coming duration', () => {
       modelDurationBoundingBoxAfterResize,
       rowHeight,
     } = await setupResizingGoingOrComingDuration(page, targetEndTime);
+
     // Then
     expect(goingDurationBoundingBoxAfterResize.height).toBeCloseTo(
       goingDurationBoundingBoxBeforeResize.height,
