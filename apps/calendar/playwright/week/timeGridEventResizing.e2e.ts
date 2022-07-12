@@ -295,12 +295,12 @@ test.describe('Resizing the event which has a going or coming duration', () => {
 
     const travelTimeLocator = eventLocator.locator('[class*="travel-time"]');
     const goingDurationLocator = travelTimeLocator.first();
-    const goingDurationBoudingBoxBeforeResize = await getBoundingBox(goingDurationLocator);
+    const goingDurationBoundingBoxBeforeResize = await getBoundingBox(goingDurationLocator);
     const comingDurationLocator = travelTimeLocator.last();
-    const comingDurationBoudingBoxBeforeResize = await getBoundingBox(comingDurationLocator);
+    const comingDurationBoundingBoxBeforeResize = await getBoundingBox(comingDurationLocator);
 
     const eventTimeLocator = eventLocator.locator('[class*="event-time"]');
-    const modelDurationBoudingBoxBeforeResize = await getBoundingBox(eventTimeLocator);
+    const modelDurationBoundingBoxBeforeResize = await getBoundingBox(eventTimeLocator);
 
     const resizeHandlerLocator = eventLocator.locator(RESIZE_HANDLER_SELECTOR);
     const targetRowLocator = page.locator(getTimeGridLineSelector(targetEndTime));
@@ -323,35 +323,35 @@ test.describe('Resizing the event which has a going or coming duration', () => {
       hold,
     });
 
-    let draggingGoingDurationBoudingBox = null;
-    let draggingComingDurationBoudingBox = null;
-    let draggingModelDurationBoudingBox = null;
+    let draggingGoingDurationBoundingBox = null;
+    let draggingComingDurationBoundingBox = null;
+    let draggingModelDurationBoundingBox = null;
     if (hold) {
       const draggingEventLocator = page.locator(getGuideTimeEventSelector());
       const draggingTravelTimeLocator = draggingEventLocator.locator('[class*="travel-time"]');
       const draggingGoingDurationLocator = draggingTravelTimeLocator.first();
-      draggingGoingDurationBoudingBox = await getBoundingBox(draggingGoingDurationLocator);
+      draggingGoingDurationBoundingBox = await getBoundingBox(draggingGoingDurationLocator);
       const draggingComingDurationLocator = draggingTravelTimeLocator.last();
-      draggingComingDurationBoudingBox = await getBoundingBox(draggingComingDurationLocator);
+      draggingComingDurationBoundingBox = await getBoundingBox(draggingComingDurationLocator);
 
       const draggingEventTimeLocator = draggingEventLocator.locator('[class*="event-time"]');
-      draggingModelDurationBoudingBox = await getBoundingBox(draggingEventTimeLocator);
+      draggingModelDurationBoundingBox = await getBoundingBox(draggingEventTimeLocator);
     }
 
-    const goingDurationBoudingBoxAfterResize = await getBoundingBox(goingDurationLocator);
-    const comingDurationBoudingBoxAfterResize = await getBoundingBox(comingDurationLocator);
-    const modelDurationBoudingBoxAfterResize = await getBoundingBox(eventTimeLocator);
+    const goingDurationBoundingBoxAfterResize = await getBoundingBox(goingDurationLocator);
+    const comingDurationBoundingBoxAfterResize = await getBoundingBox(comingDurationLocator);
+    const modelDurationBoundingBoxAfterResize = await getBoundingBox(eventTimeLocator);
 
     return {
-      goingDurationBoudingBoxBeforeResize,
-      goingDurationBoudingBoxAfterResize,
-      comingDurationBoudingBoxBeforeResize,
-      comingDurationBoudingBoxAfterResize,
-      modelDurationBoudingBoxBeforeResize,
-      modelDurationBoudingBoxAfterResize,
-      draggingGoingDurationBoudingBox,
-      draggingComingDurationBoudingBox,
-      draggingModelDurationBoudingBox,
+      goingDurationBoundingBoxBeforeResize,
+      goingDurationBoundingBoxAfterResize,
+      comingDurationBoundingBoxBeforeResize,
+      comingDurationBoundingBoxAfterResize,
+      modelDurationBoundingBoxBeforeResize,
+      modelDurationBoundingBoxAfterResize,
+      draggingGoingDurationBoundingBox,
+      draggingComingDurationBoundingBox,
+      draggingModelDurationBoundingBox,
       rowHeight: targetRowBoundingBox.height,
     };
   }
@@ -362,25 +362,25 @@ test.describe('Resizing the event which has a going or coming duration', () => {
 
     // When
     const {
-      goingDurationBoudingBoxBeforeResize,
-      goingDurationBoudingBoxAfterResize,
-      comingDurationBoudingBoxBeforeResize,
-      comingDurationBoudingBoxAfterResize,
-      modelDurationBoudingBoxBeforeResize,
-      modelDurationBoudingBoxAfterResize,
+      goingDurationBoundingBoxBeforeResize,
+      goingDurationBoundingBoxAfterResize,
+      comingDurationBoundingBoxBeforeResize,
+      comingDurationBoundingBoxAfterResize,
+      modelDurationBoundingBoxBeforeResize,
+      modelDurationBoundingBoxAfterResize,
     } = await setupResizingGoingOrComingDuration(page, targetEndTime);
 
     // Then
-    expect(goingDurationBoudingBoxAfterResize.height).toBeCloseTo(
-      goingDurationBoudingBoxBeforeResize.height,
+    expect(goingDurationBoundingBoxAfterResize.height).toBeCloseTo(
+      goingDurationBoundingBoxBeforeResize.height,
       -1
     );
-    expect(comingDurationBoudingBoxAfterResize.height).toBeCloseTo(
-      comingDurationBoudingBoxBeforeResize.height,
+    expect(comingDurationBoundingBoxAfterResize.height).toBeCloseTo(
+      comingDurationBoundingBoxBeforeResize.height,
       -1
     );
-    expect(modelDurationBoudingBoxAfterResize.height).toBeGreaterThan(
-      modelDurationBoudingBoxBeforeResize.height
+    expect(modelDurationBoundingBoxAfterResize.height).toBeGreaterThan(
+      modelDurationBoundingBoxBeforeResize.height
     );
   });
 
@@ -392,51 +392,49 @@ test.describe('Resizing the event which has a going or coming duration', () => {
 
     // When
     const {
-      goingDurationBoudingBoxBeforeResize,
-      comingDurationBoudingBoxBeforeResize,
-      draggingGoingDurationBoudingBox,
-      draggingComingDurationBoudingBox,
-      draggingModelDurationBoudingBox,
+      goingDurationBoundingBoxBeforeResize,
+      comingDurationBoundingBoxBeforeResize,
+      draggingGoingDurationBoundingBox,
+      draggingComingDurationBoundingBox,
+      draggingModelDurationBoundingBox,
       rowHeight,
     } = await setupResizingGoingOrComingDuration(page, targetEndTime, true);
 
     // Then
-    expect(draggingGoingDurationBoudingBox?.height).toBeCloseTo(
-      goingDurationBoudingBoxBeforeResize.height,
+    expect(draggingGoingDurationBoundingBox?.height).toBeCloseTo(
+      goingDurationBoundingBoxBeforeResize.height,
       -1
     );
-    expect(draggingComingDurationBoudingBox?.height).toBeCloseTo(
-      comingDurationBoudingBoxBeforeResize.height,
+    expect(draggingComingDurationBoundingBox?.height).toBeCloseTo(
+      comingDurationBoundingBoxBeforeResize.height,
       -1
     );
-    expect(draggingModelDurationBoudingBox?.height).toBeCloseTo(rowHeight, -1);
+    expect(draggingModelDurationBoundingBox?.height).toBeCloseTo(rowHeight, -1);
   });
 
-  // ! FIXME: wrong height for the event which is 30 minutes and has going and coming durations
-  test.fixme(
-    'the result of resizing should have a minimum height(=1 row) without going and coming durations.',
-    async ({ page }) => {
-      //     // Given
-      //     const targetEndTime = '04:00';
-      //     // When
-      //     const {
-      //       goingDurationBoudingBoxBeforeResize,
-      //       goingDurationBoudingBoxAfterResize,
-      //       comingDurationBoudingBoxBeforeResize,
-      //       comingDurationBoudingBoxAfterResize,
-      //       modelDurationBoudingBoxAfterResize,
-      //       rowHeight,
-      //     } = await setupResizingGoingOrComingDuration(page, targetEndTime);
-      //     // Then
-      //     expect(goingDurationBoudingBoxAfterResize.height).toBeCloseTo(
-      //       goingDurationBoudingBoxBeforeResize.height,
-      //       -1
-      //     );
-      //     expect(comingDurationBoudingBoxAfterResize.height).toBeCloseTo(
-      //       comingDurationBoudingBoxBeforeResize.height,
-      //       -1
-      //     );
-      //     expect(modelDurationBoudingBoxAfterResize.height).toBeCloseTo(rowHeight, -1);
-    }
-  );
+  test('the result of resizing should have a minimum height(=1 row) without going and coming durations.', async ({
+    page,
+  }) => {
+    // Given
+    const targetEndTime = '04:00';
+    // When
+    const {
+      goingDurationBoundingBoxBeforeResize,
+      goingDurationBoundingBoxAfterResize,
+      comingDurationBoundingBoxBeforeResize,
+      comingDurationBoundingBoxAfterResize,
+      modelDurationBoundingBoxAfterResize,
+      rowHeight,
+    } = await setupResizingGoingOrComingDuration(page, targetEndTime);
+    // Then
+    expect(goingDurationBoundingBoxAfterResize.height).toBeCloseTo(
+      goingDurationBoundingBoxBeforeResize.height,
+      -1
+    );
+    expect(comingDurationBoundingBoxAfterResize.height).toBeCloseTo(
+      comingDurationBoundingBoxBeforeResize.height,
+      -1
+    );
+    expect(modelDurationBoundingBoxAfterResize.height).toBeCloseTo(rowHeight, -1);
+  });
 });
