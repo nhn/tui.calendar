@@ -1,7 +1,6 @@
 import { createEventCollection } from '@src/controller/base';
 import { getCollisionGroup, getMatrices } from '@src/controller/core';
 import { getTopHeightByTime } from '@src/controller/times';
-import { getCollides } from '@src/controller/week';
 import { isTimeEvent } from '@src/model/eventModel';
 import type EventUIModel from '@src/model/eventUIModel';
 import type TZDate from '@src/time/date';
@@ -147,7 +146,7 @@ export function setRenderInfoOfUIModels(
   const uiModelColl = createEventCollection(...uiModels);
   const usingTravelTime = true;
   const collisionGroups = getCollisionGroup(uiModels, usingTravelTime);
-  const matrices = getCollides(getMatrices(uiModelColl, collisionGroups, usingTravelTime));
+  const matrices = getMatrices(uiModelColl, collisionGroups, usingTravelTime);
 
   matrices.forEach((matrix) => {
     const maxRowLength = Math.max(...matrix.map((row) => row.length));
