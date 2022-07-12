@@ -8,9 +8,6 @@ interface EventUIProps {
   left: number;
   width: number;
   height: number;
-  hasCollide: boolean;
-  extraSpace: number;
-  hidden: boolean;
   exceedLeft: boolean;
   exceedRight: boolean;
   croppedStart: boolean;
@@ -25,9 +22,6 @@ const eventUIPropsKey: (keyof EventUIProps)[] = [
   'left',
   'width',
   'height',
-  'hasCollide',
-  'extraSpace',
-  'hidden',
   'exceedLeft',
   'exceedRight',
   'croppedStart',
@@ -54,33 +48,12 @@ export default class EventUIModel implements EventUIProps {
   height = 0;
 
   /**
-   * Represent event has collide with other events when rendering.
-   * @type {boolean}
-   */
-  hasCollide = false;
-
-  /**
-   * Extra space at right side of this event.
-   * @type {number}
-   */
-  extraSpace = 0;
-
-  /**
-   * represent this event block is not visible after rendered.
-   *
-   * in month view, some ui models in date need to hide when already rendered before dates.
-   *
-   * set true then it just shows empty space.
-   * @type {boolean}
-   */
-  hidden = false;
-
-  /**
    * represent render start date used at rendering.
    *
    * if set null then use model's 'start' property.
    * @type {TZDate}
    */
+  // TODO: use for events which have durations
   renderStarts?: TZDate;
 
   /**
