@@ -199,6 +199,23 @@ export function TimeEvent({
 
       const isClick = draggingState <= DraggingState.INIT;
       if (isClick && useDetailPopup && eventContainerRef.current) {
+        if (uiModel.collapse) {
+          const { duplicateEvents } = uiModel;
+          const baseWidth = duplicateEvents.reduce((acc, event) => acc + event.width, 0);
+          let cumulativeLeft = duplicateEvents[0].left;
+
+          duplicateEvents.forEach((event) => {
+            const collapse = event.cid() !== uiModel.cid();
+            const width = collapse ? 5 : baseWidth - 5 * (duplicateEvents.length - 1);
+            event.setUIProps({
+              left: cumulativeLeft,
+              width,
+              collapse,
+            });
+
+            cumulativeLeft += width;
+          });
+        }
         showDetailPopup(
           {
             event: uiModel.model,
