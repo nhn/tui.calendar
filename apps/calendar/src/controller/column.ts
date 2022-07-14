@@ -166,6 +166,7 @@ function getRenderInfoOptions(
   const comingEnd = addMinutes(modelEnd, comingDuration);
   const renderStart = max(goingStart, startColumnTime);
   const renderEnd = min(comingEnd, endColumnTime);
+
   return {
     baseWidth,
     columnIndex,
@@ -220,12 +221,12 @@ function setDuplicateEvents(uiModels: EventUIModel[], options: typeof collapseDu
     const sortedDuplicateEvents = sortDuplicateEvents(duplicateEvents);
     const mainEvent = getMainEvent(sortedDuplicateEvents);
 
-    const sortDuplicateEventUIModel = sortedDuplicateEvents.map(
+    const sortedDuplicateEventUIModel = sortedDuplicateEvents.map(
       (event) => uiModels.find((uiModel) => uiModel.cid() === event.__cid) as EventUIModel
     );
-    sortDuplicateEventUIModel.forEach((duplicateEventUIModel) => {
+    sortedDuplicateEventUIModel.forEach((duplicateEventUIModel) => {
       duplicateEventUIModel.setUIProps({
-        duplicateEvents: sortDuplicateEventUIModel,
+        duplicateEvents: sortedDuplicateEventUIModel,
         collapse: duplicateEventUIModel.cid() !== mainEvent.__cid,
       });
     });
