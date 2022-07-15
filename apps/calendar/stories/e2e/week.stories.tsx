@@ -1,5 +1,6 @@
 import { h } from 'preact';
 
+import { mockCalendars } from '@stories/mocks/mockCalendars';
 import { mockWeekViewEvents } from '@stories/mocks/mockWeekViewEvents';
 import type { CalendarExampleStory } from '@stories/util/calendarExample';
 import { CalendarExample } from '@stories/util/calendarExample';
@@ -15,6 +16,7 @@ Template.args = {
     week: {
       showNowIndicator: false,
     },
+    calendars: mockCalendars,
   },
   containerHeight: '100vh',
   onInit: (cal) => {
