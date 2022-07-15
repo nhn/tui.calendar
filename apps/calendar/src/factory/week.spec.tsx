@@ -519,3 +519,216 @@ describe('Timezone Collapse Button', () => {
     expect(collapseButton).toHaveAttribute('aria-expanded', 'true');
   });
 });
+
+describe('Daylight Saving Time Transition', () => {
+  let eventResult: EventObject = {};
+  const resultSpy = jest.fn((event) => {
+    eventResult = event;
+  });
+
+  beforeEach(() => {
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    resultSpy.mockClear();
+  });
+
+  describe('Northern Hemisphere', () => {
+    const options = {
+      timezone: {
+        zones: [
+          {
+            timezoneName: 'US/Pacific',
+          },
+        ],
+      },
+    };
+
+    it('should render an event during forward transition (02:00 ~ 03:00)', () => {
+      // Given
+      const baseDate = new Date('2022-03-14T00:00:00Z');
+      jest.setSystemTime(baseDate);
+
+      const { instance } = setup(options, []);
+      instance.on('afterRenderEvent', resultSpy);
+
+      // When
+      act(() => {
+        instance.createEvents([
+          {
+            id: 'forward',
+            title: 'Forward Transition',
+            start: '2022-03-13T09:00:00Z', // 02:00 in UTC-7
+            end: '2022-03-13T10:00:00Z', // 03:00 in UTC-7
+            category: 'time',
+          },
+        ]);
+      });
+
+      // Then
+      expect(resultSpy).toHaveBeenCalled();
+      expect(toFormat(eventResult.start as TZDate, 'YYYYMMDD')).toBe('20220313');
+      expect(toFormat(eventResult.start as TZDate, 'HH:mm')).toBe('01:00');
+      expect(toFormat(eventResult.end as TZDate, 'YYYYMMDD')).toBe('20220313');
+      expect(toFormat(eventResult.end as TZDate, 'HH:mm')).toBe('03:00');
+    });
+
+    it('should render an event during forward transition (01:00 ~ 04:00)', () => {
+      // Given
+      const baseDate = new Date('2022-03-14T00:00:00Z');
+      jest.setSystemTime(baseDate);
+
+      const { instance } = setup(options, []);
+      instance.on('afterRenderEvent', resultSpy);
+
+      // When
+      act(() => {
+        instance.createEvents([
+          {
+            id: 'forward',
+            title: 'Forward Transition',
+            start: '2022-03-13T09:00:00Z', // 01:00 in UTC-8
+            end: '2022-03-13T11:00:00Z', // 04:00 in UTC-7
+            category: 'time',
+          },
+        ]);
+      });
+
+      // Then
+      expect(resultSpy).toHaveBeenCalled();
+      expect(toFormat(eventResult.start as TZDate, 'YYYYMMDD')).toBe('20220313');
+      expect(toFormat(eventResult.start as TZDate, 'HH:mm')).toBe('01:00');
+      expect(toFormat(eventResult.end as TZDate, 'YYYYMMDD')).toBe('20220313');
+      expect(toFormat(eventResult.end as TZDate, 'HH:mm')).toBe('04:00');
+    });
+
+    it('should render an event during fallback transition (01:00 ~ 02:00)', () => {
+      // Given
+      const baseDate = new Date('2022-11-07T00:00:00Z');
+      jest.setSystemTime(baseDate);
+
+      const { instance } = setup(options, []);
+      instance.on('afterRenderEvent', resultSpy);
+
+      // When
+      act(() => {
+        instance.createEvents([
+          {
+            id: 'fallback',
+            title: 'Fallback Transition',
+            start: '2022-11-06T08:00:00Z', // 01:00 in UTC-7
+            end: '2022-11-06T10:00:00Z', // 02:00 in UTC-7
+            category: 'time',
+          },
+        ]);
+      });
+
+      // Then
+      expect(resultSpy).toHaveBeenCalled();
+      expect(toFormat(eventResult.start as TZDate, 'YYYYMMDD')).toBe('20221106');
+      expect(toFormat(eventResult.start as TZDate, 'HH:mm')).toBe('01:00');
+      expect(toFormat(eventResult.end as TZDate, 'YYYYMMDD')).toBe('20221106');
+      expect(toFormat(eventResult.end as TZDate, 'HH:mm')).toBe('02:00');
+    });
+
+    it('should render an event during fallback transition (01:00 ~ 03:00)', () => {
+      // Given
+      const baseDate = new Date('2022-11-07T00:00:00Z');
+      jest.setSystemTime(baseDate);
+
+      const { instance } = setup(options, []);
+      instance.on('afterRenderEvent', resultSpy);
+
+      // When
+      act(() => {
+        instance.createEvents([
+          {
+            id: 'fallback',
+            title: 'Fallback Transition',
+            start: '2022-11-06T08:00:00Z', // 01:00 in UTC-7
+            end: '2022-11-06T11:00:00Z', // 03:00 in UTC-7
+            category: 'time',
+          },
+        ]);
+      });
+
+      // Then
+      expect(resultSpy).toHaveBeenCalled();
+      expect(toFormat(eventResult.start as TZDate, 'YYYYMMDD')).toBe('20221106');
+      expect(toFormat(eventResult.start as TZDate, 'HH:mm')).toBe('01:00');
+      expect(toFormat(eventResult.end as TZDate, 'YYYYMMDD')).toBe('20221106');
+      expect(toFormat(eventResult.end as TZDate, 'HH:mm')).toBe('03:00');
+    });
+  });
+
+  describe('Southern Hemisphere', () => {
+    const options: Options = {
+      timezone: {
+        zones: [
+          {
+            timezoneName: 'Pacific/Auckland',
+          },
+        ],
+      },
+    };
+
+    it('should render an event during forward transition (01:00 ~ 03:00)', () => {
+      // Given
+      const baseDate = new Date('2022-09-26T00:00:00Z');
+      jest.setSystemTime(baseDate);
+
+      const { instance } = setup(options, []);
+      instance.on('afterRenderEvent', resultSpy);
+
+      // When
+      act(() => {
+        instance.createEvents([
+          {
+            id: 'forward',
+            title: 'Forward Transition',
+            start: '2022-09-24T13:00:00Z', // 01:00 in UTC+12
+            end: '2022-09-24T14:00:00Z', // 03:00 in UTC+13 - Forward gap
+            category: 'time',
+          },
+        ]);
+      });
+
+      // Then
+      expect(resultSpy).toHaveBeenCalled();
+      expect(toFormat(eventResult.start as TZDate, 'YYYYMMDD')).toBe('20220925');
+      expect(toFormat(eventResult.start as TZDate, 'HH:mm')).toBe('01:00');
+      expect(toFormat(eventResult.end as TZDate, 'YYYYMMDD')).toBe('20220925');
+      expect(toFormat(eventResult.end as TZDate, 'HH:mm')).toBe('03:00');
+    });
+
+    it('should render an event during fallback transition', () => {
+      // Given
+      const baseDate = new Date('2022-04-04T00:00:00Z');
+      jest.setSystemTime(baseDate);
+
+      const { instance } = setup(options, []);
+      instance.on('afterRenderEvent', resultSpy);
+
+      // When
+      act(() => {
+        instance.createEvents([
+          {
+            id: 'fallback',
+            title: 'Fallback Transition',
+            category: 'time',
+            start: '2022-04-02T12:00:00Z', // 01:00 in UTC+13
+            end: '2022-04-02T14:00:00Z', // 02:00 in UTC+12 - Fallback gap
+          },
+        ]);
+      });
+
+      // Then
+      expect(resultSpy).toHaveBeenCalled();
+      expect(toFormat(eventResult.start as TZDate, 'YYYYMMDD')).toBe('20220403');
+      expect(toFormat(eventResult.start as TZDate, 'HH:mm')).toBe('01:00');
+      expect(toFormat(eventResult.end as TZDate, 'YYYYMMDD')).toBe('20220403');
+      expect(toFormat(eventResult.end as TZDate, 'HH:mm')).toBe('02:00');
+    });
+  });
+});

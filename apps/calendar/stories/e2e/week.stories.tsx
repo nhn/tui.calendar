@@ -100,6 +100,76 @@ MultipleTimezones.args = {
   },
 };
 
+export const DaylightSavingTimeTransition = Template.bind({});
+DaylightSavingTimeTransition.args = {
+  ...Template.args,
+  options: {
+    ...Template.args.options,
+    timezone: {
+      zones: [
+        {
+          timezoneName: 'America/Los_Angeles',
+        },
+      ],
+    },
+  },
+  onInit: (cal) => {
+    cal.setDate('2022-11-07T00:00:00Z');
+    cal.createEvents([
+      {
+        id: 'forward',
+        title: 'Forward Transition',
+        category: 'time',
+        start: '2022-03-13T09:00:00Z',
+        end: '2022-03-13T10:00:00Z',
+      },
+      {
+        id: 'fallback',
+        title: 'Fallback Transition',
+        category: 'time',
+        start: '2022-11-06T08:00:00Z',
+        end: '2022-11-06T09:00:00Z',
+      },
+    ]);
+    cal.on('afterRenderEvent', console.log);
+  },
+};
+
+export const DaylightSavingTimeTransitionSouthern = Template.bind({});
+DaylightSavingTimeTransitionSouthern.args = {
+  ...Template.args,
+  options: {
+    ...Template.args.options,
+    timezone: {
+      zones: [
+        {
+          timezoneName: 'Pacific/Auckland',
+        },
+      ],
+    },
+  },
+  onInit: (cal) => {
+    cal.setDate('2022-04-03T00:00:00Z');
+    cal.createEvents([
+      {
+        id: 'forward',
+        title: 'Forward Transition',
+        category: 'time',
+        start: '2022-09-25T01:00:00+12:00',
+        end: '2022-09-25T03:00:00+13:00',
+      },
+      {
+        id: 'fallback',
+        title: 'Fallback Transition',
+        category: 'time',
+        start: '2022-04-02T12:00:00Z',
+        end: '2022-04-02T14:00:00Z',
+      },
+    ]);
+    cal.on('afterRenderEvent', console.log);
+  },
+};
+
 export const CustomTemplate = Template.bind({});
 CustomTemplate.args = {
   ...Template.args,

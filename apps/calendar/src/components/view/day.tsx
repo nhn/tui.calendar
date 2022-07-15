@@ -13,7 +13,7 @@ import { useStore } from '@src/contexts/calendarStore';
 import { useTheme } from '@src/contexts/themeStore';
 import { cls } from '@src/helpers/css';
 import { getDayNames } from '@src/helpers/dayName';
-import { createTimeGridData, getDayGridEvents } from '@src/helpers/grid';
+import { createTimeGridData, getWeekViewEvents } from '@src/helpers/grid';
 import { getActivePanels } from '@src/helpers/view';
 import { useCalendarData } from '@src/hooks/calendar/useCalendarData';
 import { useDOMNode } from '@src/hooks/common/useDOMNode';
@@ -25,7 +25,10 @@ import {
   viewSelector,
   weekViewLayoutSelector,
 } from '@src/selectors';
-import { getRowStyleInfo } from '@src/time/datetime';
+import { primaryTimezoneSelector } from '@src/selectors/timezone';
+import type TZDate from '@src/time/date';
+import { getRowStyleInfo, toEndOfDay, toStartOfDay } from '@src/time/datetime';
+import { getTimezoneDifferenceFromLocal } from '@src/time/timezone';
 
 import type { WeekOptions } from '@t/options';
 import type { AlldayEventCategory } from '@t/panel';
@@ -50,6 +53,9 @@ function useDayViewState() {
 
 export function Day() {
   const { calendar, options, gridRowLayout, lastPanelType, renderDate } = useDayViewState();
+
+  const primaryTimezoneName = useStore(primaryTimezoneSelector);
+
   const gridHeaderMarginLeft = useTheme(useCallback((theme) => theme.week.dayGridLeft.width, []));
   const [timePanel, setTimePanelRef] = useDOMNode<HTMLDivElement>();
 
@@ -65,11 +71,26 @@ export function Day() {
     workweek
   );
   const calendarData = useCalendarData(calendar, options.eventFilter);
-  const dayGridEvents = getDayGridEvents(days, calendarData, {
-    narrowWeekend,
-    hourStart,
-    hourEnd,
-  });
+  const dayGridEvents = useMemo(() => {
+    const adjustByTimezoneOffset = (tzDate: TZDate, type: 'start' | 'end') => {
+      if (primaryTimezoneName === 'Local') {
+        return tzDate;
+      }
+
+      const offsetDiff = Math.abs(getTimezoneDifferenceFromLocal(primaryTimezoneName, tzDate));
+      tzDate.addMinutes(type === 'start' ? -offsetDiff : offsetDiff);
+
+      return tzDate;
+    };
+
+    return getWeekViewEvents(days, calendarData, {
+      narrowWeekend,
+      hourStart,
+      hourEnd,
+      weekStartDate: adjustByTimezoneOffset(toStartOfDay(days[0]), 'start'),
+      weekEndDate: adjustByTimezoneOffset(toEndOfDay(days[0]), 'end'),
+    });
+  }, [calendarData, days, hourEnd, hourStart, narrowWeekend, primaryTimezoneName]);
   const timeGridData = useMemo(
     () =>
       createTimeGridData(days, {

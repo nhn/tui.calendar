@@ -43,6 +43,21 @@ export function calculateTimezoneOffset(timezoneName: string, targetDate: TZDate
   return Math.round((utcDate.getTime() - targetDate.getTime()) / 60 / 1000);
 }
 
+/**
+ * Calculates timezone offset from local timezone.
+ *
+ * Target date is needed for the case when the timezone is applicable to DST.
+ */
+export function getTimezoneDifferenceFromLocal(
+  timezoneName: string,
+  targetDate: TZDate = new TZDate()
+) {
+  const systemTimezoneOffset = getLocalTimezoneOffset();
+  const primaryTimezoneOffset = calculateTimezoneOffset(timezoneName, targetDate);
+
+  return primaryTimezoneOffset - systemTimezoneOffset;
+}
+
 // Reference: https://stackoverflow.com/a/30280636/16702531
 // If there's no timezoneName, it handles Native OS timezone.
 export function isUsingDST(targetDate: TZDate, timezoneName?: string) {

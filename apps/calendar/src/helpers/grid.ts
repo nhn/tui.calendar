@@ -245,11 +245,19 @@ const getTimeGridEventModels = (eventMatrix: TimeGridEventMatrix): EventUIModel[
     )
   );
 
-// TODO: rename it. it is only used in the week & day view.
-export const getDayGridEvents = (
+export const getWeekViewEvents = (
   row: TZDate[],
   calendarData: CalendarData,
-  { narrowWeekend, hourStart, hourEnd }: WeekOptions
+  {
+    narrowWeekend,
+    hourStart,
+    hourEnd,
+    weekStartDate,
+    weekEndDate,
+  }: WeekOptions & {
+    weekStartDate: TZDate;
+    weekEndDate: TZDate;
+  }
 ): EventModelMap => {
   const panels: Panel[] = [
     {
@@ -274,8 +282,8 @@ export const getDayGridEvents = (
     },
   ];
   const eventModels = findByDateRangeForWeek(calendarData, {
-    start: toStartOfDay(row[0]),
-    end: toEndOfDay(row[row.length - 1]),
+    start: weekStartDate,
+    end: weekEndDate,
     panels,
     andFilters: [],
     options: {
