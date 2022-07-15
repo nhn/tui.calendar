@@ -475,7 +475,9 @@ export function createGridPositionFinder({
     return (() => null) as GridPositionFinder;
   }
 
-  const dayRange = range(startDayOfWeek, columnsCount);
+  const dayRange = range(startDayOfWeek, startDayOfWeek + columnsCount).map(
+    (day) => day % WEEK_DAYS
+  );
   const narrowColumnCount = narrowWeekend ? dayRange.filter((day) => isWeekend(day)).length : 0;
 
   return function gridPositionFinder(mousePosition) {
