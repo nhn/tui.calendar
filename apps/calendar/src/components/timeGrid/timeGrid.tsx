@@ -48,7 +48,10 @@ interface Props {
 }
 
 export function TimeGrid({ timeGridData, events }: Props) {
-  const { isReadOnly } = useStore(optionsSelector);
+  const {
+    isReadOnly,
+    week: { narrowWeekend, startDayOfWeek },
+  } = useStore(optionsSelector);
   const showNowIndicator = useStore(showNowIndicatorOptionSelector);
   const [, getNow] = usePrimaryTimezone();
 
@@ -111,8 +114,10 @@ export function TimeGrid({ timeGridData, events }: Props) {
         rowsCount: rows.length,
         columnsCount: columns.length,
         container: columnsContainer,
+        narrowWeekend,
+        startDayOfWeek,
       }),
-    [columns.length, columnsContainer, rows.length]
+    [columns.length, columnsContainer, narrowWeekend, rows.length, startDayOfWeek]
   );
 
   const onMouseDown = useGridSelection({
