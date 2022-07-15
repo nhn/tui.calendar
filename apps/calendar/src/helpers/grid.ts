@@ -499,18 +499,18 @@ export function createGridPositionFinder({
     const unitWidth = narrowWeekend
       ? containerWidth / (columnsCount - narrowColumnCount + 1)
       : containerWidth / columnsCount;
-    const columnWidthMap = dayRange.map((dayOfWeek) =>
+    const columnWidthList = dayRange.map((dayOfWeek) =>
       narrowWeekend && isWeekend(dayOfWeek) ? unitWidth / 2 : unitWidth
     );
-    const columnLeftMap: number[] = [];
-    columnWidthMap.forEach((width, index) => {
+    const columnLeftList: number[] = [];
+    columnWidthList.forEach((width, index) => {
       if (index === 0) {
-        columnLeftMap.push(0);
+        columnLeftList.push(0);
       } else {
-        columnLeftMap.push(columnLeftMap[index - 1] + columnWidthMap[index - 1]);
+        columnLeftList.push(columnLeftList[index - 1] + columnWidthList[index - 1]);
       }
     });
-    const columnIndex = findLastIndex(columnLeftMap, (columnLeft) => left >= columnLeft);
+    const columnIndex = findLastIndex(columnLeftList, (columnLeft) => left >= columnLeft);
 
     return {
       columnIndex,
