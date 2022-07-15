@@ -133,7 +133,7 @@ function setDimensionOfDuplicateEvent(uiModel: EventUIModel, options: RenderInfo
 function setDimension(uiModel: EventUIModel, options: RenderInfoOptions) {
   const { startColumnTime, endColumnTime, baseWidth, columnIndex } = options;
 
-  if (!uiModel.duplicateEvents.length) {
+  if (uiModel.duplicateEvents.length === 0) {
     const { renderStart, renderEnd } = options;
     const { top, height } = getTopHeightByTime(
       renderStart,
@@ -145,7 +145,7 @@ function setDimension(uiModel: EventUIModel, options: RenderInfoOptions) {
       top,
       left: baseWidth * columnIndex,
       width: baseWidth,
-      height: height < MIN_HEIGHT_PERCENT ? MIN_HEIGHT_PERCENT : height,
+      height: Math.max(MIN_HEIGHT_PERCENT, height),
     });
   } else {
     setDimensionOfDuplicateEvent(uiModel, options);
@@ -212,7 +212,7 @@ function setDuplicateEvents(
   const eventObjects = uiModels.map((uiModel) => uiModel.model.toEventObject());
 
   uiModels.forEach((targetUIModel) => {
-    if (targetUIModel.collapse || targetUIModel.duplicateEvents.length) {
+    if (targetUIModel.collapse || targetUIModel.duplicateEvents.length > 0) {
       return;
     }
 
