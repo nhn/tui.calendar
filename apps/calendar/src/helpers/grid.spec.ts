@@ -584,7 +584,7 @@ describe('createTimeGridData', () => {
 
 describe('createGridPositionFinder', () => {
   const container = document.createElement('div');
-  let finder: GridPositionFinder;
+  let gridPositionFinder: GridPositionFinder;
 
   function assertGridPosition(results: GridPosition[], expected: GridPosition[]) {
     expect(results.length).toBe(expected.length);
@@ -597,270 +597,607 @@ describe('createGridPositionFinder', () => {
     jest.clearAllMocks();
   });
 
-  it('should be null returning function if container is null', () => {
-    // Given
-    finder = createGridPositionFinder({
-      columnsCount: 7,
-      rowsCount: 6,
-      container: null,
+  describe('when narrowWeekend is false', () => {
+    const narrowWeekend = false;
+
+    it('should be null returning function if container is null', () => {
+      // Given
+      gridPositionFinder = createGridPositionFinder({
+        columnsCount: 7,
+        rowsCount: 6,
+        container: null,
+        narrowWeekend,
+      });
+
+      // When
+      const result = gridPositionFinder({ clientX: 100, clientY: 100 });
+
+      // Then
+      expect(result).toBeNull();
     });
 
-    // When
-    const result = finder({ clientX: 100, clientY: 100 });
+    it('should return null if mouse position is out of container', () => {
+      // Given
+      jest.spyOn(container, 'getBoundingClientRect').mockReturnValue({
+        x: 0,
+        y: 0,
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        width: 100,
+        height: 100,
+        toJSON: noop,
+      });
 
-    // Then
-    expect(result).toBeNull();
+      gridPositionFinder = createGridPositionFinder({
+        columnsCount: 7,
+        rowsCount: 6,
+        container,
+        narrowWeekend,
+      });
+
+      const wrongCases = [
+        { clientX: -1, clientY: -1 },
+        { clientX: -1, clientY: 50 },
+        { clientX: 50, clientY: -1 },
+        { clientX: 50, clientY: 101 },
+        { clientX: 101, clientY: 101 },
+        { clientX: 101, clientY: 50 },
+        { clientX: 101, clientY: -1 },
+        { clientX: 50, clientY: -1 },
+      ];
+
+      // When
+      const results = wrongCases.map(({ clientX, clientY }) =>
+        gridPositionFinder({ clientX, clientY })
+      );
+
+      // Then
+      results.forEach((result) => expect(result).toBeNull());
+    });
+
+    it('should calculate columnIndex & rowIndex of grid in month', () => {
+      // Given
+      jest.spyOn(container, 'getBoundingClientRect').mockReturnValue({
+        x: 0,
+        y: 0,
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        width: 70,
+        height: 100,
+        toJSON: noop,
+      });
+      gridPositionFinder = createGridPositionFinder({
+        columnsCount: 7,
+        rowsCount: 2,
+        container,
+        narrowWeekend,
+      });
+      const cases = [
+        {
+          clientX: 9,
+          clientY: 20,
+          expected: {
+            columnIndex: 0,
+            rowIndex: 0,
+          },
+        },
+        {
+          clientX: 55,
+          clientY: 60,
+          expected: {
+            columnIndex: 5,
+            rowIndex: 1,
+          },
+        },
+      ];
+
+      // When
+      const results = cases.map(({ clientX, clientY }) => gridPositionFinder({ clientX, clientY }));
+
+      // Then
+      assertGridPosition(
+        results as GridPosition[],
+        cases.map(({ expected }) => expected)
+      );
+    });
+
+    it('should calculate columnIndex & rowIndex of grid in week', () => {
+      // Given
+      jest.spyOn(container, 'getBoundingClientRect').mockReturnValue({
+        x: 0,
+        y: 0,
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        width: 560,
+        height: 100,
+        toJSON: noop,
+      });
+
+      gridPositionFinder = createGridPositionFinder({
+        columnsCount: 7,
+        rowsCount: 1,
+        container,
+        narrowWeekend,
+      });
+
+      const cases = [
+        {
+          clientX: 0,
+          clientY: 20,
+          expected: {
+            columnIndex: 0,
+            rowIndex: 0,
+          },
+        },
+        {
+          clientX: 100,
+          clientY: 40,
+          expected: {
+            columnIndex: 1,
+            rowIndex: 0,
+          },
+        },
+        {
+          clientX: 390,
+          clientY: 50,
+          expected: {
+            columnIndex: 4,
+            rowIndex: 0,
+          },
+        },
+        {
+          clientX: 500,
+          clientY: 60,
+          expected: {
+            columnIndex: 6,
+            rowIndex: 0,
+          },
+        },
+      ];
+
+      // When
+      const results = cases.map(({ clientX, clientY }) => gridPositionFinder({ clientX, clientY }));
+
+      // Then
+      assertGridPosition(
+        results as GridPosition[],
+        cases.map(({ expected }) => expected)
+      );
+    });
+
+    it('should calculate columnIndex & rowIndex of grid in time grid', () => {
+      // Given
+      jest.spyOn(container, 'getBoundingClientRect').mockReturnValue({
+        x: 0,
+        y: 0,
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        width: 700,
+        height: 960,
+        toJSON: noop,
+      });
+
+      gridPositionFinder = createGridPositionFinder({
+        columnsCount: 7,
+        rowsCount: 48,
+        container,
+        narrowWeekend,
+      });
+
+      const cases = [
+        {
+          clientX: 0,
+          clientY: 0,
+          expected: {
+            columnIndex: 0,
+            rowIndex: 0,
+          },
+        },
+        {
+          clientX: 250,
+          clientY: 130,
+          expected: {
+            columnIndex: 2,
+            rowIndex: 6,
+          },
+        },
+        {
+          clientX: 450,
+          clientY: 230,
+          expected: {
+            columnIndex: 4,
+            rowIndex: 11,
+          },
+        },
+        {
+          clientX: 650,
+          clientY: 450,
+          expected: {
+            columnIndex: 6,
+            rowIndex: 22,
+          },
+        },
+        {
+          clientX: 700,
+          clientY: 720,
+          expected: {
+            columnIndex: 6,
+            rowIndex: 36,
+          },
+        },
+        {
+          clientX: 700,
+          clientY: 730,
+          expected: {
+            columnIndex: 6,
+            rowIndex: 36,
+          },
+        },
+        {
+          clientX: 700,
+          clientY: 935,
+          expected: {
+            columnIndex: 6,
+            rowIndex: 46,
+          },
+        },
+        {
+          clientX: 700,
+          clientY: 960,
+          expected: {
+            columnIndex: 6,
+            rowIndex: 47,
+          },
+        },
+      ];
+
+      // When
+      const results = cases.map(({ clientX, clientY }) =>
+        gridPositionFinder({
+          clientX,
+          clientY,
+        })
+      );
+
+      // Then
+      assertGridPosition(
+        results as GridPosition[],
+        cases.map(({ expected }) => expected)
+      );
+    });
   });
 
-  it('should return null if mouse position is out of container', () => {
-    // Given
-    jest.spyOn(container, 'getBoundingClientRect').mockReturnValue({
-      x: 0,
-      y: 0,
-      top: 0,
-      bottom: 0,
-      left: 0,
-      right: 0,
-      width: 100,
-      height: 100,
-      toJSON: noop,
+  describe('when narrowWeekend is true', () => {
+    const narrowWeekend = true;
+
+    it('should be null returning function if container is null', () => {
+      // Given
+      gridPositionFinder = createGridPositionFinder({
+        columnsCount: 7,
+        rowsCount: 6,
+        container: null,
+        narrowWeekend,
+      });
+
+      // When
+      const result = gridPositionFinder({ clientX: 100, clientY: 100 });
+
+      // Then
+      expect(result).toBeNull();
     });
 
-    finder = createGridPositionFinder({
-      columnsCount: 7,
-      rowsCount: 6,
-      container,
+    it('should return null if mouse position is out of container', () => {
+      // Given
+      jest.spyOn(container, 'getBoundingClientRect').mockReturnValue({
+        x: 0,
+        y: 0,
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        width: 100,
+        height: 100,
+        toJSON: noop,
+      });
+
+      gridPositionFinder = createGridPositionFinder({
+        columnsCount: 7,
+        rowsCount: 6,
+        container,
+        narrowWeekend,
+      });
+
+      const wrongCases = [
+        { clientX: -1, clientY: -1 },
+        { clientX: -1, clientY: 50 },
+        { clientX: 50, clientY: -1 },
+        { clientX: 50, clientY: 101 },
+        { clientX: 101, clientY: 101 },
+        { clientX: 101, clientY: 50 },
+        { clientX: 101, clientY: -1 },
+        { clientX: 50, clientY: -1 },
+      ];
+
+      // When
+      const results = wrongCases.map(({ clientX, clientY }) =>
+        gridPositionFinder({ clientX, clientY })
+      );
+
+      // Then
+      results.forEach((result) => expect(result).toBeNull());
     });
 
-    const wrongCases = [
-      { clientX: -1, clientY: -1 },
-      { clientX: -1, clientY: 50 },
-      { clientX: 50, clientY: -1 },
-      { clientX: 50, clientY: 101 },
-      { clientX: 101, clientY: 101 },
-      { clientX: 101, clientY: 50 },
-      { clientX: 101, clientY: -1 },
-      { clientX: 50, clientY: -1 },
-    ];
-
-    // When
-    const results = wrongCases.map(({ clientX, clientY }) => finder({ clientX, clientY }));
-
-    // Then
-    results.forEach((result) => expect(result).toBeNull());
-  });
-
-  it('should calculate columnIndex & rowIndex of grid in month', () => {
-    // Given
-    jest.spyOn(container, 'getBoundingClientRect').mockReturnValue({
-      x: 0,
-      y: 0,
-      top: 0,
-      bottom: 0,
-      left: 0,
-      right: 0,
-      width: 70,
-      height: 100,
-      toJSON: noop,
-    });
-    finder = createGridPositionFinder({
-      columnsCount: 7,
-      rowsCount: 2,
-      container,
-    });
-    const cases = [
-      {
-        clientX: 9,
-        clientY: 20,
-        expected: {
-          columnIndex: 0,
-          rowIndex: 0,
+    it('should calculate columnIndex & rowIndex of grid in month', () => {
+      // Given
+      jest.spyOn(container, 'getBoundingClientRect').mockReturnValue({
+        x: 0,
+        y: 0,
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        width: 60,
+        height: 100,
+        toJSON: noop,
+      });
+      gridPositionFinder = createGridPositionFinder({
+        columnsCount: 7,
+        rowsCount: 2,
+        container,
+        narrowWeekend,
+      });
+      const cases = [
+        {
+          clientX: 4,
+          clientY: 20,
+          expected: {
+            columnIndex: 0,
+            rowIndex: 0,
+          },
         },
-      },
-      {
-        clientX: 55,
-        clientY: 60,
-        expected: {
-          columnIndex: 5,
-          rowIndex: 1,
+        {
+          clientX: 5,
+          clientY: 20,
+          expected: {
+            columnIndex: 1,
+            rowIndex: 0,
+          },
         },
-      },
-    ];
+        {
+          clientX: 54,
+          clientY: 60,
+          expected: {
+            columnIndex: 5,
+            rowIndex: 1,
+          },
+        },
+        {
+          clientX: 55,
+          clientY: 60,
+          expected: {
+            columnIndex: 6,
+            rowIndex: 1,
+          },
+        },
+      ];
 
-    // When
-    const results = cases.map(({ clientX, clientY }) => finder({ clientX, clientY }));
+      // When
+      const results = cases.map(({ clientX, clientY }) => gridPositionFinder({ clientX, clientY }));
 
-    // Then
-    assertGridPosition(
-      results as GridPosition[],
-      cases.map(({ expected }) => expected)
-    );
-  });
-
-  it('should calculate columnIndex & rowIndex of grid in week', () => {
-    // Given
-    jest.spyOn(container, 'getBoundingClientRect').mockReturnValue({
-      x: 0,
-      y: 0,
-      top: 0,
-      bottom: 0,
-      left: 0,
-      right: 0,
-      width: 560,
-      height: 100,
-      toJSON: noop,
+      // Then
+      assertGridPosition(
+        results as GridPosition[],
+        cases.map(({ expected }) => expected)
+      );
     });
 
-    finder = createGridPositionFinder({
-      columnsCount: 7,
-      rowsCount: 1,
-      container,
+    it('should calculate columnIndex & rowIndex of grid in week', () => {
+      // Given
+      jest.spyOn(container, 'getBoundingClientRect').mockReturnValue({
+        x: 0,
+        y: 0,
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        width: 600,
+        height: 100,
+        toJSON: noop,
+      });
+
+      gridPositionFinder = createGridPositionFinder({
+        columnsCount: 7,
+        rowsCount: 1,
+        container,
+        narrowWeekend,
+      });
+
+      const cases = [
+        {
+          clientX: 0,
+          clientY: 20,
+          expected: {
+            columnIndex: 0,
+            rowIndex: 0,
+          },
+        },
+        {
+          clientX: 50,
+          clientY: 30,
+          expected: {
+            columnIndex: 1,
+            rowIndex: 0,
+          },
+        },
+        {
+          clientX: 100,
+          clientY: 40,
+          expected: {
+            columnIndex: 1,
+            rowIndex: 0,
+          },
+        },
+        {
+          clientX: 400,
+          clientY: 50,
+          expected: {
+            columnIndex: 4,
+            rowIndex: 0,
+          },
+        },
+        {
+          clientX: 500,
+          clientY: 50,
+          expected: {
+            columnIndex: 5,
+            rowIndex: 0,
+          },
+        },
+        {
+          clientX: 550,
+          clientY: 60,
+          expected: {
+            columnIndex: 6,
+            rowIndex: 0,
+          },
+        },
+      ];
+
+      // When
+      const results = cases.map(({ clientX, clientY }) => gridPositionFinder({ clientX, clientY }));
+
+      // Then
+      assertGridPosition(
+        results as GridPosition[],
+        cases.map(({ expected }) => expected)
+      );
     });
 
-    const cases = [
-      {
-        clientX: 0,
-        clientY: 20,
-        expected: {
-          columnIndex: 0,
-          rowIndex: 0,
-        },
-      },
-      {
-        clientX: 100,
-        clientY: 40,
-        expected: {
-          columnIndex: 1,
-          rowIndex: 0,
-        },
-      },
-      {
-        clientX: 390,
-        clientY: 50,
-        expected: {
-          columnIndex: 4,
-          rowIndex: 0,
-        },
-      },
-      {
-        clientX: 500,
-        clientY: 60,
-        expected: {
-          columnIndex: 6,
-          rowIndex: 0,
-        },
-      },
-    ];
+    it('should calculate columnIndex & rowIndex of grid in time grid', () => {
+      // Given
+      jest.spyOn(container, 'getBoundingClientRect').mockReturnValue({
+        x: 0,
+        y: 0,
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        width: 600,
+        height: 960,
+        toJSON: noop,
+      });
 
-    // When
-    const results = cases.map(({ clientX, clientY }) => finder({ clientX, clientY }));
+      gridPositionFinder = createGridPositionFinder({
+        columnsCount: 7,
+        rowsCount: 48,
+        container,
+        narrowWeekend,
+      });
 
-    // Then
-    assertGridPosition(
-      results as GridPosition[],
-      cases.map(({ expected }) => expected)
-    );
-  });
+      const cases = [
+        {
+          clientX: 0,
+          clientY: 0,
+          expected: {
+            columnIndex: 0,
+            rowIndex: 0,
+          },
+        },
+        {
+          clientX: 50,
+          clientY: 130,
+          expected: {
+            columnIndex: 1,
+            rowIndex: 6,
+          },
+        },
+        {
+          clientX: 200,
+          clientY: 130,
+          expected: {
+            columnIndex: 2,
+            rowIndex: 6,
+          },
+        },
+        {
+          clientX: 400,
+          clientY: 230,
+          expected: {
+            columnIndex: 4,
+            rowIndex: 11,
+          },
+        },
+        {
+          clientX: 500,
+          clientY: 330,
+          expected: {
+            columnIndex: 5,
+            rowIndex: 16,
+          },
+        },
+        {
+          clientX: 550,
+          clientY: 450,
+          expected: {
+            columnIndex: 6,
+            rowIndex: 22,
+          },
+        },
+        {
+          clientX: 600,
+          clientY: 720,
+          expected: {
+            columnIndex: 6,
+            rowIndex: 36,
+          },
+        },
+        {
+          clientX: 600,
+          clientY: 730,
+          expected: {
+            columnIndex: 6,
+            rowIndex: 36,
+          },
+        },
+        {
+          clientX: 600,
+          clientY: 935,
+          expected: {
+            columnIndex: 6,
+            rowIndex: 46,
+          },
+        },
+        {
+          clientX: 600,
+          clientY: 960,
+          expected: {
+            columnIndex: 6,
+            rowIndex: 47,
+          },
+        },
+      ];
 
-  it('should calculate columnIndex & rowIndex of grid in time grid', () => {
-    // Given
-    jest.spyOn(container, 'getBoundingClientRect').mockReturnValue({
-      x: 0,
-      y: 0,
-      top: 0,
-      bottom: 0,
-      left: 0,
-      right: 0,
-      width: 700,
-      height: 960,
-      toJSON: noop,
+      // When
+      const results = cases.map(({ clientX, clientY }) =>
+        gridPositionFinder({
+          clientX,
+          clientY,
+        })
+      );
+
+      // Then
+      assertGridPosition(
+        results as GridPosition[],
+        cases.map(({ expected }) => expected)
+      );
     });
-
-    finder = createGridPositionFinder({
-      columnsCount: 7,
-      rowsCount: 48,
-      container,
-    });
-
-    const cases = [
-      {
-        clientX: 0,
-        clientY: 0,
-        expected: {
-          columnIndex: 0,
-          rowIndex: 0,
-        },
-      },
-      {
-        clientX: 250,
-        clientY: 130,
-        expected: {
-          columnIndex: 2,
-          rowIndex: 6,
-        },
-      },
-      {
-        clientX: 450,
-        clientY: 230,
-        expected: {
-          columnIndex: 4,
-          rowIndex: 11,
-        },
-      },
-      {
-        clientX: 650,
-        clientY: 450,
-        expected: {
-          columnIndex: 6,
-          rowIndex: 22,
-        },
-      },
-      {
-        clientX: 700,
-        clientY: 720,
-        expected: {
-          columnIndex: 6,
-          rowIndex: 36,
-        },
-      },
-      {
-        clientX: 700,
-        clientY: 730,
-        expected: {
-          columnIndex: 6,
-          rowIndex: 36,
-        },
-      },
-      {
-        clientX: 700,
-        clientY: 935,
-        expected: {
-          columnIndex: 6,
-          rowIndex: 46,
-        },
-      },
-      {
-        clientX: 700,
-        clientY: 960,
-        expected: {
-          columnIndex: 6,
-          rowIndex: 47,
-        },
-      },
-    ];
-
-    // When
-    const results = cases.map(({ clientX, clientY }) =>
-      finder({
-        clientX,
-        clientY,
-      })
-    );
-
-    // Then
-    assertGridPosition(
-      results as GridPosition[],
-      cases.map(({ expected }) => expected)
-    );
   });
 });
