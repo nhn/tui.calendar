@@ -50,6 +50,9 @@ interface Props {
 export function TimeGrid({ timeGridData, events }: Props) {
   const { isReadOnly } = useStore(optionsSelector);
   const showNowIndicator = useStore(showNowIndicatorOptionSelector);
+  const selectedDuplicateEventCid = useStore(
+    (state) => state.weekViewLayout.selectedDuplicateEventCid
+  );
   const [, getNow] = usePrimaryTimezone();
 
   const isMounted = useIsMounted();
@@ -76,10 +79,11 @@ export function TimeGrid({ timeGridData, events }: Props) {
           setRenderInfoOfUIModels(
             uiModelsByColumn,
             setTimeStrToDate(columns[columnIndex].date, first(rows).startTime),
-            setTimeStrToDate(columns[columnIndex].date, last(rows).endTime)
+            setTimeStrToDate(columns[columnIndex].date, last(rows).endTime),
+            selectedDuplicateEventCid
           )
         ),
-    [columns, rows, events]
+    [columns, rows, events, selectedDuplicateEventCid]
   );
 
   const currentDateData = useMemo(() => {

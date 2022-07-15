@@ -19,6 +19,12 @@ import { isPresent } from '@src/utils/type';
 import type { StyleProp } from '@t/components/common';
 import type { CalendarColor } from '@t/options';
 
+/**
+ * TODO @dotaitch
+ * remove temporary option
+ */
+const collapseDuplicateEvents = {};
+
 const classNames = {
   time: cls('event-time'),
   content: cls('event-time-content'),
@@ -142,6 +148,7 @@ export function TimeEvent({
   const layoutContainer = useLayoutContainer();
   const { showDetailPopup } = useDispatch('popup');
   const { setDraggingEventUIModel } = useDispatch('dnd');
+  const { setSelectedDuplicateEventCid } = useDispatch('weekViewLayout');
 
   const eventBus = useEventBus();
 
@@ -198,24 +205,12 @@ export function TimeEvent({
       endDragEvent(classNames.moveEvent);
 
       const isClick = draggingState <= DraggingState.INIT;
+      if (isClick && collapseDuplicateEvents) {
+        const selectedDuplicateEventCid = uiModel.duplicateEvents.length > 0 ? uiModel.cid() : -1;
+        setSelectedDuplicateEventCid(selectedDuplicateEventCid);
+      }
+
       if (isClick && useDetailPopup && eventContainerRef.current) {
-        if (uiModel.collapse) {
-          const { duplicateEvents } = uiModel;
-          const baseWidth = duplicateEvents.reduce((acc, event) => acc + event.width, 0);
-          let cumulativeLeft = duplicateEvents[0].left;
-
-          duplicateEvents.forEach((event) => {
-            const collapse = event.cid() !== uiModel.cid();
-            const width = collapse ? 5 : baseWidth - 5 * (duplicateEvents.length - 1);
-            event.setUIProps({
-              left: cumulativeLeft,
-              width,
-              collapse,
-            });
-
-            cumulativeLeft += width;
-          });
-        }
         showDetailPopup(
           {
             event: uiModel.model,

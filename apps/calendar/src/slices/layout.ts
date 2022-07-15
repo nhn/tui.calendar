@@ -17,6 +17,7 @@ export type WeekViewLayoutSlice = {
         height: number;
       };
     };
+    selectedDuplicateEventCid: number;
   };
 };
 
@@ -28,6 +29,7 @@ export type WeekViewLayoutDispatchers = {
   updateLayoutHeight: (height: number) => void;
   updateDayGridRowHeight: (params: UpdateGridRowHeightParams) => void;
   updateDayGridRowHeightByDiff: (params: UpdateGridRowHeightByDiffParams) => void;
+  setSelectedDuplicateEventCid: (cid?: number) => void;
 };
 
 function getRestPanelHeight(
@@ -50,6 +52,7 @@ export function createWeekViewLayoutSlice(): WeekViewLayoutSlice {
     weekViewLayout: {
       lastPanelType: null,
       dayGridRows: {} as WeekViewLayoutSlice['weekViewLayout']['dayGridRows'],
+      selectedDuplicateEventCid: -1,
     },
   };
 }
@@ -118,6 +121,12 @@ export function createWeekViewLayoutDispatchers(
               state.layout
             );
           }
+        })
+      ),
+    setSelectedDuplicateEventCid: (cid) =>
+      set(
+        produce<CalendarState>((state) => {
+          state.weekViewLayout.selectedDuplicateEventCid = cid ?? -1;
         })
       ),
   };

@@ -17,6 +17,7 @@ interface EventUIProps {
   comingDurationHeight: number;
   duplicateEvents: EventUIModel[];
   collapse: boolean;
+  isMain: boolean;
 }
 
 const eventUIPropsKey: (keyof EventUIProps)[] = [
@@ -33,6 +34,7 @@ const eventUIPropsKey: (keyof EventUIProps)[] = [
   'comingDurationHeight',
   'duplicateEvents',
   'collapse',
+  'isMain',
 ];
 
 /**
@@ -118,6 +120,13 @@ export default class EventUIModel implements EventUIProps {
    * @type {boolean}
    */
   collapse = false;
+
+  /**
+   * whether the event is main or not.
+   * The main event is expanded on the initial rendering.
+   * @type {boolean}
+   */
+  isMain = false;
 
   constructor(event: EventModel) {
     this.model = event;

@@ -202,7 +202,11 @@ function setRenderInfo(
   setCroppedEdges(uiModel, renderInfoOptions);
 }
 
-function setDuplicateEvents(uiModels: EventUIModel[], options: typeof collapseDuplicateEvents) {
+function setDuplicateEvents(
+  uiModels: EventUIModel[],
+  options: typeof collapseDuplicateEvents,
+  selectedDuplicateEventCid: number
+) {
   const { getDuplicateEvents, sortDuplicateEvents, getMainEvent } = options;
 
   const eventObjects = uiModels.map((uiModel) => uiModel.model.toEventObject());
@@ -224,10 +228,22 @@ function setDuplicateEvents(uiModels: EventUIModel[], options: typeof collapseDu
     const sortedDuplicateEventUIModel = sortedDuplicateEvents.map(
       (event) => uiModels.find((uiModel) => uiModel.cid() === event.__cid) as EventUIModel
     );
-    sortedDuplicateEventUIModel.forEach((duplicateEventUIModel) => {
-      duplicateEventUIModel.setUIProps({
+    const isSelectedGroup = !!(
+      selectedDuplicateEventCid > -1 &&
+      duplicateEvents.find((event) => event.__cid === selectedDuplicateEventCid)
+    );
+
+    sortedDuplicateEventUIModel.forEach((event) => {
+      const isMain = event.cid() === mainEvent.__cid;
+      const collapse = !(
+        (isSelectedGroup && event.cid() === selectedDuplicateEventCid) ||
+        (!isSelectedGroup && isMain)
+      );
+
+      event.setUIProps({
         duplicateEvents: sortedDuplicateEventUIModel,
-        collapse: duplicateEventUIModel.cid() !== mainEvent.__cid,
+        collapse,
+        isMain,
       });
     });
   });
@@ -244,7 +260,8 @@ function setDuplicateEvents(uiModels: EventUIModel[], options: typeof collapseDu
 export function setRenderInfoOfUIModels(
   events: EventUIModel[],
   startColumnTime: TZDate,
-  endColumnTime: TZDate
+  endColumnTime: TZDate,
+  selectedDuplicateEventCid: number
 ) {
   const uiModels: EventUIModel[] = events
     .filter(isTimeEvent)
@@ -252,7 +269,7 @@ export function setRenderInfoOfUIModels(
     .sort(array.compare.event.asc);
 
   if (collapseDuplicateEvents) {
-    setDuplicateEvents(uiModels, collapseDuplicateEvents);
+    setDuplicateEvents(uiModels, collapseDuplicateEvents, selectedDuplicateEventCid);
   }
   const expandedEvents = uiModels.filter((uiModel) => !uiModel.collapse);
 
