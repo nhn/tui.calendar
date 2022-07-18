@@ -864,3 +864,85 @@ describe('createGridPositionFinder', () => {
     );
   });
 });
+
+describe('getWeekDates', () => {
+  const todayList = [
+    new TZDate(2022, 6, 17),
+    new TZDate(2022, 6, 18),
+    new TZDate(2022, 6, 19),
+    new TZDate(2022, 6, 20),
+    new TZDate(2022, 6, 21),
+    new TZDate(2022, 6, 22),
+    new TZDate(2022, 6, 23),
+  ];
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test.concurrent.each([
+    [Day.SUN, Day.SUN, 0, 6],
+    [Day.SUN, Day.MON, 1, 5],
+    [Day.SUN, Day.TUE, 2, 4],
+    [Day.SUN, Day.WED, 3, 3],
+    [Day.SUN, Day.THU, 4, 2],
+    [Day.SUN, Day.FRI, 5, 1],
+    [Day.SUN, Day.SAT, 6, 0],
+    [Day.MON, Day.SUN, 6, 0],
+    [Day.MON, Day.MON, 0, 6],
+    [Day.MON, Day.TUE, 1, 5],
+    [Day.MON, Day.WED, 2, 4],
+    [Day.MON, Day.THU, 3, 3],
+    [Day.MON, Day.FRI, 4, 2],
+    [Day.MON, Day.SAT, 5, 1],
+    [Day.TUE, Day.SUN, 5, 1],
+    [Day.TUE, Day.MON, 6, 0],
+    [Day.TUE, Day.TUE, 0, 6],
+    [Day.TUE, Day.WED, 1, 5],
+    [Day.TUE, Day.THU, 2, 4],
+    [Day.TUE, Day.FRI, 3, 3],
+    [Day.TUE, Day.SAT, 4, 2],
+    [Day.WED, Day.SUN, 4, 2],
+    [Day.WED, Day.MON, 5, 1],
+    [Day.WED, Day.TUE, 6, 0],
+    [Day.WED, Day.WED, 0, 6],
+    [Day.WED, Day.THU, 1, 5],
+    [Day.WED, Day.FRI, 2, 4],
+    [Day.WED, Day.SAT, 3, 3],
+    [Day.THU, Day.SUN, 3, 3],
+    [Day.THU, Day.MON, 4, 2],
+    [Day.THU, Day.TUE, 5, 1],
+    [Day.THU, Day.WED, 6, 0],
+    [Day.THU, Day.THU, 0, 6],
+    [Day.THU, Day.FRI, 1, 5],
+    [Day.THU, Day.SAT, 2, 4],
+    [Day.FRI, Day.SUN, 2, 4],
+    [Day.FRI, Day.MON, 3, 3],
+    [Day.FRI, Day.TUE, 4, 2],
+    [Day.FRI, Day.WED, 5, 1],
+    [Day.FRI, Day.THU, 6, 0],
+    [Day.FRI, Day.FRI, 0, 6],
+    [Day.FRI, Day.SAT, 1, 5],
+    [Day.SAT, Day.SUN, 1, 5],
+    [Day.SAT, Day.MON, 2, 4],
+    [Day.SAT, Day.TUE, 3, 3],
+    [Day.SAT, Day.WED, 4, 2],
+    [Day.SAT, Day.THU, 5, 1],
+    [Day.SAT, Day.FRI, 6, 0],
+    [Day.SAT, Day.SAT, 0, 6],
+  ])(
+    'startDayOfWeek: %i, today: %i',
+    async (startDayOfWeek, dayOfToday, prevDateCount, nextDateCount) => {
+      // Given
+      const today = todayList[dayOfToday];
+      const prevDateList = range(-prevDateCount, 0).map((step) => addDate(today, step));
+      const nextDateList = range(1, nextDateCount + 1).map((step) => addDate(today, step));
+      const expected = [...prevDateList, today, ...nextDateList];
+
+      // When
+      const dates = getWeekDates(today, { startDayOfWeek, workweek: false });
+
+      // Then
+      expect(dates).toEqual(expected);
+    }
+  );
+});

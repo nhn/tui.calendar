@@ -101,6 +101,7 @@ module.exports = {
             assertFunctionNames: ['expect', 'assert*'],
           },
         ],
+        'require-await': 'off',
       },
     },
     {
