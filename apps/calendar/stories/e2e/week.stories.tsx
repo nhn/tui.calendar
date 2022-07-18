@@ -118,3 +118,22 @@ CustomTemplate.args = {
     },
   },
 };
+
+export const DuplicateEvents = Template.bind({});
+DuplicateEvents.args = {
+  ...Template.args,
+  options: {
+    ...Template.args.options,
+    week: {
+      ...Template.args.options?.week,
+      collapseDuplicateEvents: {
+        getDuplicateEvents: (targetEvent, events) =>
+          events
+            .filter((event) => event.id === targetEvent.id)
+            .sort((a, b) => (a.calendarId > b.calendarId ? 1 : -1)),
+        getMainEvent: (events) => events[events.length - 1],
+      },
+    },
+    useDetailPopup: false,
+  },
+};
