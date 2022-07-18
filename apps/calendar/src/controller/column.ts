@@ -5,26 +5,12 @@ import { isTimeEvent } from '@src/model/eventModel';
 import type EventUIModel from '@src/model/eventUIModel';
 import type TZDate from '@src/time/date';
 import { addMinutes, max, min } from '@src/time/datetime';
-import type { EventObjectWithDefaultValues } from '@src/types/events';
+import type { CollapseDuplicateEventsOptions } from '@src/types/options';
 import array from '@src/utils/array';
 
 const MIN_HEIGHT_PERCENT = 1;
 
 const COLLAPSED_DUPLICATE_EVENT_WIDTH = 5;
-
-/**
- * TODO @dotaitch
- * remove temporary options
- */
-const collapseDuplicateEvents = {
-  getDuplicateEvents: (
-    targetEvent: EventObjectWithDefaultValues,
-    events: EventObjectWithDefaultValues[]
-  ) => events.filter((event: EventObjectWithDefaultValues) => event.id === targetEvent.id),
-  sortDuplicateEvents: (events: EventObjectWithDefaultValues[]) =>
-    events.sort((a, b) => (a.calendarId > b.calendarId ? 1 : -1)),
-  getMainEvent: (events: EventObjectWithDefaultValues[]) => events[events.length - 1],
-};
 
 interface RenderInfoOptions {
   baseWidth: number;
@@ -204,10 +190,10 @@ function setRenderInfo(
 
 function setDuplicateEvents(
   uiModels: EventUIModel[],
-  options: typeof collapseDuplicateEvents,
+  options: CollapseDuplicateEventsOptions,
   selectedDuplicateEventCid: number
 ) {
-  const { getDuplicateEvents, sortDuplicateEvents, getMainEvent } = options;
+  const { getDuplicateEvents, getMainEvent } = options;
 
   const eventObjects = uiModels.map((uiModel) => uiModel.model.toEventObject());
 
@@ -222,10 +208,9 @@ function setDuplicateEvents(
       return;
     }
 
-    const sortedDuplicateEvents = sortDuplicateEvents(duplicateEvents);
-    const mainEvent = getMainEvent(sortedDuplicateEvents);
+    const mainEvent = getMainEvent(duplicateEvents);
 
-    const sortedDuplicateEventUIModel = sortedDuplicateEvents.map(
+    const duplicateEventUIModels = duplicateEvents.map(
       (event) => uiModels.find((uiModel) => uiModel.cid() === event.__cid) as EventUIModel
     );
     const isSelectedGroup = !!(
@@ -233,7 +218,7 @@ function setDuplicateEvents(
       duplicateEvents.find((event) => event.__cid === selectedDuplicateEventCid)
     );
 
-    sortedDuplicateEventUIModel.forEach((event) => {
+    duplicateEventUIModels.forEach((event) => {
       const isMain = event.cid() === mainEvent.__cid;
       const collapse = !(
         (isSelectedGroup && event.cid() === selectedDuplicateEventCid) ||
@@ -241,7 +226,7 @@ function setDuplicateEvents(
       );
 
       event.setUIProps({
-        duplicateEvents: sortedDuplicateEventUIModel,
+        duplicateEvents: duplicateEventUIModels,
         collapse,
         isMain,
       });
@@ -261,15 +246,16 @@ export function setRenderInfoOfUIModels(
   events: EventUIModel[],
   startColumnTime: TZDate,
   endColumnTime: TZDate,
-  selectedDuplicateEventCid: number
+  selectedDuplicateEventCid: number,
+  collapseDuplicateEventsOptions?: CollapseDuplicateEventsOptions
 ) {
   const uiModels: EventUIModel[] = events
     .filter(isTimeEvent)
     .filter(isBetween(startColumnTime, endColumnTime))
     .sort(array.compare.event.asc);
 
-  if (collapseDuplicateEvents) {
-    setDuplicateEvents(uiModels, collapseDuplicateEvents, selectedDuplicateEventCid);
+  if (collapseDuplicateEventsOptions) {
+    setDuplicateEvents(uiModels, collapseDuplicateEventsOptions, selectedDuplicateEventCid);
   }
   const expandedEvents = uiModels.filter((uiModel) => !uiModel.collapse);
 

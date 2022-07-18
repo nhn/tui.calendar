@@ -5,8 +5,13 @@ import { Day } from '@src/time/datetime';
 import { mergeObject } from '@src/utils/object';
 import { isBoolean } from '@src/utils/type';
 
-import type { EventObject } from '@t/events';
-import type { GridSelectionOptions, Options, TimezoneOptions } from '@t/options';
+import type { EventObject, EventObjectWithDefaultValues } from '@t/events';
+import type {
+  CollapseDuplicateEventsOptions,
+  GridSelectionOptions,
+  Options,
+  TimezoneOptions,
+} from '@t/options';
 import type {
   CalendarMonthOptions,
   CalendarState,
@@ -15,8 +20,33 @@ import type {
   SetState,
 } from '@t/store';
 
+function initializeCollapseDuplicateEvents(
+  options: boolean | Partial<CollapseDuplicateEventsOptions>
+): boolean | CollapseDuplicateEventsOptions {
+  if (!options) {
+    return false;
+  }
+
+  const initialCollapseDuplicateEvents = {
+    getDuplicateEvents: (
+      targetEvent: EventObjectWithDefaultValues,
+      events: EventObjectWithDefaultValues[]
+    ) =>
+      events
+        .filter((event: EventObjectWithDefaultValues) => event.id === targetEvent.id)
+        .sort((a, b) => (a.calendarId > b.calendarId ? 1 : -1)),
+    getMainEvent: (events: EventObjectWithDefaultValues[]) => events[events.length - 1],
+  };
+
+  if (isBoolean(options)) {
+    return initialCollapseDuplicateEvents;
+  }
+
+  return { ...initialCollapseDuplicateEvents, ...options };
+}
+
 function initializeWeekOptions(weekOptions: Options['week'] = {}): CalendarWeekOptions {
-  return {
+  const week: CalendarWeekOptions = {
     startDayOfWeek: Day.SUN,
     dayNames: [],
     narrowWeekend: false,
@@ -28,8 +58,13 @@ function initializeWeekOptions(weekOptions: Options['week'] = {}): CalendarWeekO
     hourEnd: 24,
     eventView: true,
     taskView: true,
+    collapseDuplicateEvents: false,
     ...weekOptions,
   };
+
+  week.collapseDuplicateEvents = initializeCollapseDuplicateEvents(week.collapseDuplicateEvents);
+
+  return week;
 }
 
 function initializeTimezoneOptions(timezoneOptions: Options['timezone'] = {}): TimezoneOptions {

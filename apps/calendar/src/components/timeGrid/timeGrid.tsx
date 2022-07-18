@@ -31,6 +31,7 @@ import {
   toEndOfDay,
   toStartOfDay,
 } from '@src/time/datetime';
+import type { CollapseDuplicateEventsOptions } from '@src/types/options';
 import { first, last } from '@src/utils/array';
 import { passConditionalProp } from '@src/utils/preact';
 import { isPresent } from '@src/utils/type';
@@ -48,7 +49,8 @@ interface Props {
 }
 
 export function TimeGrid({ timeGridData, events }: Props) {
-  const { isReadOnly } = useStore(optionsSelector);
+  const { isReadOnly, week: weekOptions } = useStore(optionsSelector);
+  const { collapseDuplicateEvents } = weekOptions;
   const showNowIndicator = useStore(showNowIndicatorOptionSelector);
   const selectedDuplicateEventCid = useStore(
     (state) => state.weekViewLayout.selectedDuplicateEventCid
@@ -80,10 +82,11 @@ export function TimeGrid({ timeGridData, events }: Props) {
             uiModelsByColumn,
             setTimeStrToDate(columns[columnIndex].date, first(rows).startTime),
             setTimeStrToDate(columns[columnIndex].date, last(rows).endTime),
-            selectedDuplicateEventCid
+            selectedDuplicateEventCid,
+            collapseDuplicateEvents as CollapseDuplicateEventsOptions
           )
         ),
-    [columns, rows, events, selectedDuplicateEventCid]
+    [columns, rows, events, selectedDuplicateEventCid, collapseDuplicateEvents]
   );
 
   const currentDateData = useMemo(() => {

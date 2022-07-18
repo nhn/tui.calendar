@@ -19,12 +19,6 @@ import { isPresent } from '@src/utils/type';
 import type { StyleProp } from '@t/components/common';
 import type { CalendarColor } from '@t/options';
 
-/**
- * TODO @dotaitch
- * remove temporary option
- */
-const collapseDuplicateEvents = {};
-
 const classNames = {
   time: cls('event-time'),
   content: cls('event-time-content'),
@@ -142,8 +136,13 @@ export function TimeEvent({
   isResizingGuide = false,
   minHeight = 0,
 }: Props) {
-  const { useDetailPopup, isReadOnly: isReadOnlyCalendar } = useStore(optionsSelector);
+  const {
+    useDetailPopup,
+    isReadOnly: isReadOnlyCalendar,
+    week: weekOptions,
+  } = useStore(optionsSelector);
   const calendarColor = useCalendarColor(uiModel.model);
+  const { collapseDuplicateEvents } = weekOptions;
 
   const layoutContainer = useLayoutContainer();
   const { showDetailPopup } = useDispatch('popup');
