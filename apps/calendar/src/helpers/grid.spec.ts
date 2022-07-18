@@ -866,6 +866,7 @@ describe('createGridPositionFinder', () => {
 });
 
 describe('getWeekDates', () => {
+  // 2022-07-17(Sun) ~ 2022-07-23(Sat)
   const todayList = [
     new TZDate(2022, 6, 17),
     new TZDate(2022, 6, 18),
@@ -879,6 +880,7 @@ describe('getWeekDates', () => {
     jest.clearAllMocks();
   });
 
+  // startDayOfWeek, dayOfToday, prevDateCountOfToday, nextDateCountOfToday
   test.concurrent.each([
     [Day.SUN, Day.SUN, 0, 6],
     [Day.SUN, Day.MON, 1, 5],
