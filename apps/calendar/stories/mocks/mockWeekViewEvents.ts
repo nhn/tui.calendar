@@ -132,7 +132,7 @@ export const mockWeekViewEvents: MockedWeekViewEvents[] = [
   {
     id: '10',
     calendarId: 'cal1',
-    title: 'duplicate event',
+    title: 'duplicate event 2',
     category: 'time',
     isAllday: false,
     start: setTimeStrToDate(monday, '09:00'),
@@ -142,7 +142,7 @@ export const mockWeekViewEvents: MockedWeekViewEvents[] = [
   {
     id: '10',
     calendarId: 'cal2',
-    title: 'duplicate event with attendee',
+    title: 'duplicate event 2 with attendee',
     category: 'time',
     isAllday: false,
     start: setTimeStrToDate(monday, '09:00'),
@@ -152,7 +152,7 @@ export const mockWeekViewEvents: MockedWeekViewEvents[] = [
   {
     id: '10',
     calendarId: 'cal3',
-    title: 'duplicate event with durations',
+    title: 'duplicate event 2 with durations',
     category: 'time',
     isAllday: false,
     start: setTimeStrToDate(monday, '09:00'),
