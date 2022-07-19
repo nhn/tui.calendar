@@ -445,7 +445,7 @@ calendar.setOptions({
 - 기본값: `false`
 
 ```ts
-interface GridSelectionOptions {
+interface CollapseDuplicateEventsOptions {
   getDuplicateEvents: (targetEvent: EventObject, events: EventObject[]) => EventObject[];
   getMainEvent: (events: EventObject[]) => EventObject;
 };
