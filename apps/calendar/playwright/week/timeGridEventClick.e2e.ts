@@ -38,10 +38,10 @@ test.describe('Collapse duplicate events', () => {
     ({ title }) => title === 'duplicate event'
   ) as MockedWeekViewEvents;
 
-  test('When click the collapsed duplicate event, it should be expanded.', async ({ page }) => {
+  test('When clicking the collapsed duplicate event, it should be expanded.', async ({ page }) => {
     // Given
     const collapsedEventLocator = page.locator(getTimeEventSelector(collapsedEvent.title));
-    const { x, y, width: widthBeforeclick } = await getBoundingBox(collapsedEventLocator);
+    const { x, y, width: widthBeforeClick } = await getBoundingBox(collapsedEventLocator);
 
     // When
     await page.mouse.move(x + 2, y + 2);
@@ -50,7 +50,7 @@ test.describe('Collapse duplicate events', () => {
 
     // Then
     const { width: widthAfterClick } = await getBoundingBox(collapsedEventLocator);
-    expect(widthAfterClick).toBeGreaterThan(widthBeforeclick);
+    expect(widthAfterClick).toBeGreaterThan(widthBeforeClick);
   });
 
   const otherEvents = mockWeekViewEvents.filter(({ title }) => {
@@ -61,12 +61,12 @@ test.describe('Collapse duplicate events', () => {
     );
   });
   otherEvents.forEach((otherEvent) => {
-    test(`When click the other event (title: ${otherEvent.title}), the previous expanded event should be collapsed.`, async ({
+    test(`When clicking the other event (title: ${otherEvent.title}), the previous expanded event should be collapsed.`, async ({
       page,
     }) => {
       // Given
       const collapsedEventLocator = page.locator(getTimeEventSelector(collapsedEvent.title));
-      const { x, y, width: widthBeforeclick } = await getBoundingBox(collapsedEventLocator);
+      const { x, y, width: widthBeforeClick } = await getBoundingBox(collapsedEventLocator);
 
       // When
       await page.mouse.move(x + 2, y + 2);
@@ -77,7 +77,7 @@ test.describe('Collapse duplicate events', () => {
       const {
         x: otherX,
         y: otherY,
-        width: otherWidthBeforeclick,
+        width: otherWidthBeforeClick,
       } = await getBoundingBox(otherEventLocator);
       await page.mouse.move(otherX + 2, otherY + 2);
       await page.mouse.down();
@@ -86,11 +86,11 @@ test.describe('Collapse duplicate events', () => {
       // Then
       const { width: widthAfterClick } = await getBoundingBox(collapsedEventLocator);
       const { width: otherWidthAfterClick } = await getBoundingBox(otherEventLocator);
-      expect(widthAfterClick).toBeCloseTo(widthBeforeclick, -1);
+      expect(widthAfterClick).toBeCloseTo(widthBeforeClick, -1);
 
       if (otherEvent.title.includes('duplicate')) {
         // if the next clicked event is duplicate, it should be expanded.
-        expect(otherWidthAfterClick).toBeGreaterThan(otherWidthBeforeclick);
+        expect(otherWidthAfterClick).toBeGreaterThan(otherWidthBeforeClick);
       }
     });
   });
