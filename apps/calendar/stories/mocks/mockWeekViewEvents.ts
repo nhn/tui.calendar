@@ -160,4 +160,23 @@ export const mockWeekViewEvents: MockedWeekViewEvents[] = [
     goingDuration: 30,
     comingDuration: 60,
   },
+  {
+    id: '11',
+    calendarId: 'cal1',
+    title: 'duplicate long event',
+    category: 'time',
+    isAllday: false,
+    start: setTimeStrToDate(wednesday, '07:00'),
+    end: setTimeStrToDate(thursday, '04:00'),
+  },
+  {
+    id: '11',
+    calendarId: 'cal2',
+    title: 'duplicate long event with attendee',
+    category: 'time',
+    isAllday: false,
+    start: setTimeStrToDate(wednesday, '07:00'),
+    end: setTimeStrToDate(thursday, '04:00'),
+    attendees: ['a', 'b', 'c'],
+  },
 ];

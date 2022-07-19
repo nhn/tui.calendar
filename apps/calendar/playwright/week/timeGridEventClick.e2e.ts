@@ -94,4 +94,26 @@ test.describe('Collapse duplicate events', () => {
       }
     });
   });
+
+  test('When clicking one day of a two-day duplicate event, the other day also should be expanded.', async ({
+    page,
+  }) => {
+    // Given
+    const longCollapsedEventTitle = 'duplicate long event';
+    const longCollaspedEventLocator = page.locator(getTimeEventSelector(longCollapsedEventTitle));
+    const firstDayLocator = longCollaspedEventLocator.first();
+    const lastDayLocator = longCollaspedEventLocator.last();
+    const { x, y, width: widthBeforeClick } = await getBoundingBox(firstDayLocator);
+
+    // When
+    await page.mouse.move(x + 2, y + 2);
+    await page.mouse.down();
+    await page.mouse.up();
+
+    // Then
+    const { width: widthAfterClick } = await getBoundingBox(firstDayLocator);
+    const { width: widthAfterClickOnLastDay } = await getBoundingBox(lastDayLocator);
+    expect(widthAfterClick).toBeGreaterThan(widthBeforeClick);
+    expect(widthAfterClickOnLastDay).toBeCloseTo(widthAfterClick);
+  });
 });
