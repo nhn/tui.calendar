@@ -53,10 +53,8 @@ export interface EventDetailPopupParam extends BasePopupParam {
 }
 
 export type PopupPosition = {
-  top?: number | string;
-  bottom?: number | string;
-  left?: number | string;
-  right?: number | string;
+  top: number;
+  left: number;
 };
 
 export type PopupArrowPointPosition = {

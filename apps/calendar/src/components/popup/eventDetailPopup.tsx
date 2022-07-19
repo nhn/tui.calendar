@@ -13,11 +13,11 @@ import { useLayoutContainer } from '@src/contexts/layoutContainer';
 import { cls } from '@src/helpers/css';
 import { isLeftOutOfLayout, isTopOutOfLayout } from '@src/helpers/popup';
 import { useCalendarColor } from '@src/hooks/calendar/useCalendarColor';
+import { usePopupScrollSync } from '@src/hooks/popup/usePopupScrollSync';
 import { eventDetailPopupParamSelector } from '@src/selectors/popup';
 import TZDate from '@src/time/date';
 import { isNil } from '@src/utils/type';
 
-import type { StyleProp } from '@t/components/common';
 import type { Rect } from '@t/store';
 
 const classNames = {
@@ -47,10 +47,7 @@ function calculatePopupPosition(eventRect: Rect, layoutRect: Rect, popupRect: Re
     left = eventRect.left - popupRect.width;
   }
 
-  return [
-    Math.max(top, layoutRect.top) + window.scrollY,
-    Math.max(left, layoutRect.left) + window.scrollX,
-  ];
+  return [Math.max(top, layoutRect.top), Math.max(left, layoutRect.left)];
 }
 
 function calculatePopupArrowPosition(eventRect: Rect, layoutRect: Rect, popupRect: Rect) {
@@ -77,7 +74,9 @@ export function EventDetailPopup() {
   const eventBus = useEventBus();
   const popupContainerRef = useRef<HTMLDivElement>(null);
 
-  const [style, setStyle] = useState<StyleProp>({});
+  const [scrollX, scrollY] = usePopupScrollSync();
+
+  const [style, setStyle] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
   const [arrowTop, setArrowTop] = useState<number>(0);
   const [arrowDirection, setArrowDirection] = useState<DetailPopupArrowDirection>(
     DetailPopupArrowDirection.left
@@ -148,7 +147,12 @@ export function EventDetailPopup() {
   };
 
   return createPortal(
-    <div role="dialog" className={classNames.popupContainer} ref={popupContainerRef} style={style}>
+    <div
+      role="dialog"
+      className={classNames.popupContainer}
+      ref={popupContainerRef}
+      style={{ top: style.top + scrollY, left: style.left + scrollX }}
+    >
       <div className={classNames.detailContainer}>
         <EventDetailSectionHeader event={event} />
         <EventDetailSectionDetail event={event} />

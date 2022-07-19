@@ -17,6 +17,7 @@ import { useEventBus } from '@src/contexts/eventBus';
 import { useFloatingLayer } from '@src/contexts/floatingLayer';
 import { useMonthTheme } from '@src/contexts/themeStore';
 import { cls } from '@src/helpers/css';
+import { usePopupScrollSync } from '@src/hooks/popup/usePopupScrollSync';
 import { seeMorePopupParamSelector } from '@src/selectors/popup';
 import { toFormat } from '@src/time/datetime';
 import { isNil } from '@src/utils/type';
@@ -32,8 +33,12 @@ export function SeeMoreEventsPopup() {
   const popupParams = useStore(seeMorePopupParamSelector);
   const { date, events = [], popupPosition } = popupParams ?? {};
   const { moreView, moreViewTitle } = useMonthTheme();
+
   const seeMorePopupSlot = useFloatingLayer('seeMorePopupSlot');
   const eventBus = useEventBus();
+
+  const [scrollX, scrollY] = usePopupScrollSync();
+
   const moreEventsPopupContainerRef = useRef(null);
   const isHidden = isNil(date) || isNil(popupPosition) || isNil(seeMorePopupSlot);
 
@@ -75,7 +80,11 @@ export function SeeMoreEventsPopup() {
     <div
       role="dialog"
       className={classNames.container}
-      style={popupPosition}
+      style={{
+        ...popupPosition,
+        top: popupPosition.top + scrollY,
+        left: popupPosition.left + scrollX,
+      }}
       ref={moreEventsPopupContainerRef}
     >
       <div className={classNames.seeMore} style={moreView}>

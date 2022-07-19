@@ -25,6 +25,7 @@ import { useLayoutContainer } from '@src/contexts/layoutContainer';
 import { cls } from '@src/helpers/css';
 import { isLeftOutOfLayout, isTopOutOfLayout } from '@src/helpers/popup';
 import { useFormState } from '@src/hooks/popup/useFormState';
+import { usePopupScrollSync } from '@src/hooks/popup/usePopupScrollSync';
 import type EventModel from '@src/model/eventModel';
 import { calendarSelector } from '@src/selectors';
 import { eventFormPopupParamSelector } from '@src/selectors/popup';
@@ -32,7 +33,7 @@ import TZDate from '@src/time/date';
 import { compare } from '@src/time/datetime';
 import { isNil } from '@src/utils/type';
 
-import type { FormEvent, StyleProp } from '@t/components/common';
+import type { FormEvent } from '@t/components/common';
 import type { BooleanKeyOfEventObject, EventObject } from '@t/events';
 import type { PopupArrowPointPosition, Rect } from '@t/store';
 
@@ -66,8 +67,8 @@ function calculatePopupPosition(
   }
 
   return {
-    top: top + window.scrollY,
-    left: Math.max(left, layoutRect.left) + window.scrollX,
+    top,
+    left: Math.max(left, layoutRect.left),
     direction,
   };
 }
@@ -124,13 +125,15 @@ export function EventFormPopup() {
   });
   const datePickerRef = useRef<DateRangePicker>(null);
   const popupContainerRef = useRef<HTMLDivElement>(null);
-  const [style, setStyle] = useState<StyleProp>({});
+  const [style, setStyle] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
   const [arrowLeft, setArrowLeft] = useState<number>(0);
   const [arrowDirection, setArrowDirection] = useState<FormPopupArrowDirection>(
     FormPopupArrowDirection.bottom
   );
 
   const layoutContainer = useLayoutContainer();
+
+  const [scrollX, scrollY] = usePopupScrollSync();
 
   const popupArrowClassName = useMemo(() => {
     const top = arrowDirection === FormPopupArrowDirection.top;
@@ -185,7 +188,12 @@ export function EventFormPopup() {
   };
 
   return createPortal(
-    <div role="dialog" className={classNames.popupContainer} ref={popupContainerRef} style={style}>
+    <div
+      role="dialog"
+      className={classNames.popupContainer}
+      ref={popupContainerRef}
+      style={{ top: style.top + scrollY, left: style.left + scrollX }}
+    >
       <form onSubmit={onSubmit}>
         <div className={classNames.formContainer}>
           {calendars?.length ? (
