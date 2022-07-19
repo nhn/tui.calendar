@@ -59,7 +59,6 @@ export default class EventUIModel implements EventUIProps {
    * if set null then use model's 'start' property.
    * @type {TZDate}
    */
-  // TODO: use for events which have durations
   renderStarts?: TZDate;
 
   /**
