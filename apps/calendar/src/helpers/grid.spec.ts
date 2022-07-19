@@ -933,6 +933,7 @@ describe('getWeekDates', () => {
     [Day.SAT, Day.SAT, 0, 6],
   ])(
     'startDayOfWeek: %i, today: %i',
+    // eslint-disable-next-line require-await
     async (startDayOfWeek, dayOfToday, prevDateCount, nextDateCount) => {
       // Given
       const today = todayList[dayOfToday];
