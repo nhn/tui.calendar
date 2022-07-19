@@ -155,6 +155,10 @@ const calendar = new Calendar('#container', {
 ```ts
 type EventView = 'allday' | 'time';
 type TaskView = 'milestone' | 'task';
+interface CollapseDuplicateEvents {
+  getDuplicateEvents: (targetEvent: EventObject, events: EventObject[]) => EventObject[];
+  getMainEvent: (events: EventObject[]) => EventObject;
+};
 
 interface WeekOptions {
   startDayOfWeek?: number;
@@ -168,6 +172,7 @@ interface WeekOptions {
   hourEnd?: number;
   eventView?: boolean | EventView[];
   taskView?: boolean | TaskView[];
+  collapseDuplicateEvents?: boolean | CollapseDuplicateEvents;
 }
 ```
 
@@ -184,6 +189,7 @@ const DEFAULT_WEEK_OPTIONS = {
   hourEnd: 24,
   eventView: true,
   taskView: true,
+  collapseDuplicateEvents: false,
 };
 ```
 
@@ -431,6 +437,46 @@ calendar.setOptions({
 | ![week-taskView-default](../../assets/options_week-taskView-before.png) | ![week-taskView-example](../../assets/options_week-taskView-after.png) |
 
 [⬆️ Back to the list](#week)
+
+#### week.collapseDuplicateEvents
+
+- Type: `boolean | CollapseDuplicateEventsOptions`
+- Default: `false`
+
+```ts
+interface GridSelectionOptions {
+  getDuplicateEvents: (targetEvent: EventObject, events: EventObject[]) => EventObject[];
+  getMainEvent: (events: EventObject[]) => EventObject;
+};
+```
+
+You can collapse duplicate events in the daily/weekly view. The default value is `false`, duplicate events are handled in the same way as normal events. When it is `true`, **events with the same `title`, `start`, and `end`** are classified as duplicate events, and **the last event** among them is expanded during initial rendering. If you want to filter duplicate events based on your criteria, set `getDuplicateEvents`. If you want to choose which event is expanded during initial rendering, set `getMainEvent`.
+
+`getDuplicateEvents` should return sorted duplicate events in the order you want them to appear. The return value of `getDuplicateEvents` is the parameter of `getMainEvent`.
+
+```js
+calendar.setOptions({
+  week: {
+    collapseDuplicateEvents: {
+      getDuplicateEvents: (targetEvent, events) =>
+        events
+          .filter((event) =>
+            event.title === targetEvent.title &&
+            event.start.getTime() === targetEvent.start.getTime() &&
+            event.end.getTime() === targetEvent.end.getTime()
+          )
+          .sort((a, b) => (a.calendarId > b.calendarId ? 1 : -1)),
+      getMainEvent: (events) => events[events.length - 1],
+    }
+  },
+});
+```
+
+| Default                                                             | Example                                                              |
+| ----------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| ![week-collapseDuplicateEvents-default](../../assets/options_week-collapseDuplicateEvents-before.png) | ![week-collapseDuplicateEvents-example](../../assets/options_week-collapseDuplicateEvents-after.png) |
+
+[⬆ Back to the list](#week)
 
 ### month
 

@@ -156,6 +156,10 @@ const calendar = new Calendar('#container', {
 ```ts
 type EventView = 'allday' | 'time';
 type TaskView = 'milestone' | 'task';
+interface CollapseDuplicateEvents {
+  getDuplicateEvents: (targetEvent: EventObject, events: EventObject[]) => EventObject[];
+  getMainEvent: (events: EventObject[]) => EventObject;
+};
 
 interface WeekOptions {
   startDayOfWeek?: number;
@@ -169,6 +173,7 @@ interface WeekOptions {
   hourEnd?: number;
   eventView?: boolean | EventView[];
   taskView?: boolean | TaskView[];
+  collapseDuplicateEvents?: boolean | CollapseDuplicateEvents;
 }
 ```
 
@@ -185,6 +190,7 @@ const DEFAULT_WEEK_OPTIONS = {
   hourEnd: 24,
   eventView: true,
   taskView: true,
+  collapseDuplicateEvents: false,
 };
 ```
 
@@ -430,6 +436,46 @@ calendar.setOptions({
 | 기본값 적용                                                             | 예제 적용                                                              |
 | ----------------------------------------------------------------------- | ---------------------------------------------------------------------- |
 | ![week-taskView-default](../../assets/options_week-taskView-before.png) | ![week-taskView-example](../../assets/options_week-taskView-after.png) |
+
+[⬆ 목록으로 돌아가기](#week)
+
+#### week.collapseDuplicateEvents
+
+- 타입: `boolean | CollapseDuplicateEventsOptions`
+- 기본값: `false`
+
+```ts
+interface GridSelectionOptions {
+  getDuplicateEvents: (targetEvent: EventObject, events: EventObject[]) => EventObject[];
+  getMainEvent: (events: EventObject[]) => EventObject;
+};
+```
+
+주간/일간뷰에서 중복된 일정을 겹치게 표시할 수 있다. 기본값은 `false`이며, 중복된 일정을 일반 일정과 동일하게 처리한다. `true`인 경우엔 **`title`, `start`, `end`가 같은 일정**을 중복된 일정으로 분류하고, 이 중 **마지막 일정**을 초기 렌더링 시 펼친다. 만약 자신만의 기준으로 중복된 일정을 필터링하고 싶다면 `getDuplicateEvents`를, 초기 렌더링 시 펼치고 싶은 일정을 정하고 싶다면 `getMainEvent`을 설정한다.
+
+`getDuplicateEvents`의 경우 **중복된 일정을 표시하고 싶은 순서대로 정렬하여 리턴**해야 한다. `getDuplicateEvents`의 리턴값이 `getMainEvent`의 파라미터로 사용된다.
+
+```js
+calendar.setOptions({
+  week: {
+    collapseDuplicateEvents: {
+      getDuplicateEvents: (targetEvent, events) =>
+        events
+          .filter((event) =>
+            event.title === targetEvent.title &&
+            event.start.getTime() === targetEvent.start.getTime() &&
+            event.end.getTime() === targetEvent.end.getTime()
+          )
+          .sort((a, b) => (a.calendarId > b.calendarId ? 1 : -1)),
+      getMainEvent: (events) => events[events.length - 1],
+    }
+  },
+});
+```
+
+| 기본값 적용                                                             | 예제 적용                                                              |
+| ----------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| ![week-collapseDuplicateEvents-default](../../assets/options_week-collapseDuplicateEvents-before.png) | ![week-collapseDuplicateEvents-example](../../assets/options_week-collapseDuplicateEvents-after.png) |
 
 [⬆ 목록으로 돌아가기](#week)
 
