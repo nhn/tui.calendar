@@ -148,6 +148,16 @@ export function createOptionsDispatchers(set: SetState<CalendarStore>): OptionsD
     setOptions: (newOptions: Partial<OptionsSlice['options']> = {}) =>
       set(
         produce<CalendarState>((state) => {
+          if (newOptions.gridSelection) {
+            newOptions.gridSelection = initializeGridSelectionOptions(newOptions.gridSelection);
+          }
+
+          if (newOptions.week?.collapseDuplicateEvents) {
+            newOptions.week.collapseDuplicateEvents = initializeCollapseDuplicateEvents(
+              newOptions.week.collapseDuplicateEvents
+            );
+          }
+
           mergeObject(state.options, newOptions);
         })
       ),
