@@ -3,6 +3,7 @@ import { getCollisionGroup, getMatrices } from '@src/controller/core';
 import { getTopHeightByTime } from '@src/controller/times';
 import { isTimeEvent } from '@src/model/eventModel';
 import type EventUIModel from '@src/model/eventUIModel';
+import { DEFAULT_DUPLICATE_EVENT_CID } from '@src/slices/layout';
 import type TZDate from '@src/time/date';
 import { addMinutes, max, min } from '@src/time/datetime';
 import type { CollapseDuplicateEventsOptions } from '@src/types/options';
@@ -10,7 +11,7 @@ import array from '@src/utils/array';
 
 const MIN_HEIGHT_PERCENT = 1;
 
-const COLLAPSED_DUPLICATE_EVENT_WIDTH = 5;
+export const COLLAPSED_DUPLICATE_EVENT_WIDTH = 5;
 
 interface RenderInfoOptions {
   baseWidth: number;
@@ -117,10 +118,10 @@ function setDimensionOfDuplicateEvent(uiModel: EventUIModel, options: RenderInfo
 }
 
 function setDimension(uiModel: EventUIModel, options: RenderInfoOptions) {
-  const { startColumnTime, endColumnTime, baseWidth, columnIndex } = options;
+  const { startColumnTime, endColumnTime, baseWidth, columnIndex, renderStart, renderEnd } =
+    options;
 
   if (uiModel.duplicateEvents.length === 0) {
-    const { renderStart, renderEnd } = options;
     const { top, height } = getTopHeightByTime(
       renderStart,
       renderEnd,
@@ -214,7 +215,7 @@ function setDuplicateEvents(
       (event) => uiModels.find((uiModel) => uiModel.cid() === event.__cid) as EventUIModel
     );
     const isSelectedGroup = !!(
-      selectedDuplicateEventCid > -1 &&
+      selectedDuplicateEventCid > DEFAULT_DUPLICATE_EVENT_CID &&
       duplicateEvents.find((event) => event.__cid === selectedDuplicateEventCid)
     );
 

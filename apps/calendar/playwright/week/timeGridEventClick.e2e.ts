@@ -67,12 +67,11 @@ test.describe('Collapse duplicate events', () => {
       // Given
       const collapsedEventLocator = page.locator(getTimeEventSelector(collapsedEvent.title));
       const { x, y, width: widthBeforeClick } = await getBoundingBox(collapsedEventLocator);
-
-      // When
       await page.mouse.move(x + 2, y + 2);
       await page.mouse.down();
       await page.mouse.up();
 
+      // When
       const otherEventLocator = page.locator(getTimeEventSelector(otherEvent.title));
       const {
         x: otherX,
@@ -100,9 +99,9 @@ test.describe('Collapse duplicate events', () => {
   }) => {
     // Given
     const longCollapsedEventTitle = 'duplicate long event';
-    const longCollaspedEventLocator = page.locator(getTimeEventSelector(longCollapsedEventTitle));
-    const firstDayLocator = longCollaspedEventLocator.first();
-    const lastDayLocator = longCollaspedEventLocator.last();
+    const longCollapsedEventLocator = page.locator(getTimeEventSelector(longCollapsedEventTitle));
+    const firstDayLocator = longCollapsedEventLocator.first();
+    const lastDayLocator = longCollapsedEventLocator.last();
     const { x, y, width: widthBeforeClick } = await getBoundingBox(firstDayLocator);
 
     // When

@@ -1,10 +1,10 @@
+import { COLLAPSED_DUPLICATE_EVENT_WIDTH, setRenderInfoOfUIModels } from '@src/controller/column';
 import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
+import { DEFAULT_DUPLICATE_EVENT_CID } from '@src/slices/layout';
 import TZDate from '@src/time/date';
 import type { EventObject, EventObjectWithDefaultValues } from '@src/types/events';
 import type { CollapseDuplicateEventsOptions } from '@src/types/options';
-
-import { setRenderInfoOfUIModels } from './column';
 
 function createEventUIModels(data: EventObject[]): EventUIModel[] {
   return data.map((datum) => new EventUIModel(new EventModel(datum)));
@@ -57,7 +57,12 @@ describe('collapseDuplicateEvents option', () => {
     // nothing
 
     // When
-    const result = setRenderInfoOfUIModels(eventUIModels, startColumnTime, endColumnTime, -1);
+    const result = setRenderInfoOfUIModels(
+      eventUIModels,
+      startColumnTime,
+      endColumnTime,
+      DEFAULT_DUPLICATE_EVENT_CID
+    );
 
     // Then
     result.forEach((uiModel) => {
@@ -84,16 +89,18 @@ describe('collapseDuplicateEvents option', () => {
       eventUIModels,
       startColumnTime,
       endColumnTime,
-      -1,
+      DEFAULT_DUPLICATE_EVENT_CID,
       collapseDuplicateEventsOptions
     );
 
     // Then
     result.forEach((uiModel) => {
       if (uiModel.model.id === mainEventId) {
-        expect(uiModel.width).toBeCloseTo(100 - (result.length - 1) * 5);
+        expect(uiModel.width).toBeCloseTo(
+          100 - (result.length - 1) * COLLAPSED_DUPLICATE_EVENT_WIDTH
+        );
       } else {
-        expect(uiModel.width).toBeCloseTo(5);
+        expect(uiModel.width).toBeCloseTo(COLLAPSED_DUPLICATE_EVENT_WIDTH);
       }
     });
   });
@@ -125,9 +132,11 @@ describe('collapseDuplicateEvents option', () => {
     // Then
     result.forEach((uiModel) => {
       if (uiModel.cid() === selectedDuplicateEventCid) {
-        expect(uiModel.width).toBeCloseTo(100 - (result.length - 1) * 5);
+        expect(uiModel.width).toBeCloseTo(
+          100 - (result.length - 1) * COLLAPSED_DUPLICATE_EVENT_WIDTH
+        );
       } else {
-        expect(uiModel.width).toBeCloseTo(5);
+        expect(uiModel.width).toBeCloseTo(COLLAPSED_DUPLICATE_EVENT_WIDTH);
       }
     });
   });

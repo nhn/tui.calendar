@@ -5,6 +5,8 @@ import { DEFAULT_PANEL_HEIGHT } from '@src/constants/style';
 
 import type { CalendarState, CalendarStore, SetState } from '@t/store';
 
+export const DEFAULT_DUPLICATE_EVENT_CID = -1;
+
 export type WeekGridRows = 'milestone' | 'task' | 'allday' | 'time' | string;
 
 // @TODO: Change name to layout & merge slice into layout
@@ -52,7 +54,7 @@ export function createWeekViewLayoutSlice(): WeekViewLayoutSlice {
     weekViewLayout: {
       lastPanelType: null,
       dayGridRows: {} as WeekViewLayoutSlice['weekViewLayout']['dayGridRows'],
-      selectedDuplicateEventCid: -1,
+      selectedDuplicateEventCid: DEFAULT_DUPLICATE_EVENT_CID,
     },
   };
 }
@@ -126,7 +128,7 @@ export function createWeekViewLayoutDispatchers(
     setSelectedDuplicateEventCid: (cid) =>
       set(
         produce<CalendarState>((state) => {
-          state.weekViewLayout.selectedDuplicateEventCid = cid ?? -1;
+          state.weekViewLayout.selectedDuplicateEventCid = cid ?? DEFAULT_DUPLICATE_EVENT_CID;
         })
       ),
   };

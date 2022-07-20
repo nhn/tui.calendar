@@ -13,6 +13,7 @@ import { useTransientUpdate } from '@src/hooks/common/useTransientUpdate';
 import type EventUIModel from '@src/model/eventUIModel';
 import { dndSelector, optionsSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
+import { DEFAULT_DUPLICATE_EVENT_CID } from '@src/slices/layout';
 import type TZDate from '@src/time/date';
 import { isPresent } from '@src/utils/type';
 
@@ -205,7 +206,8 @@ export function TimeEvent({
 
       const isClick = draggingState <= DraggingState.INIT;
       if (isClick && collapseDuplicateEvents) {
-        const selectedDuplicateEventCid = uiModel.duplicateEvents.length > 0 ? uiModel.cid() : -1;
+        const selectedDuplicateEventCid =
+          uiModel.duplicateEvents.length > 0 ? uiModel.cid() : DEFAULT_DUPLICATE_EVENT_CID;
         setSelectedDuplicateEventCid(selectedDuplicateEventCid);
       }
 

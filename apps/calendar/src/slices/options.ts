@@ -2,6 +2,7 @@ import produce from 'immer';
 
 import { DEFAULT_DAY_NAMES } from '@src/helpers/dayName';
 import { compare, Day } from '@src/time/datetime';
+import { last } from '@src/utils/array';
 import { mergeObject } from '@src/utils/object';
 import { isBoolean } from '@src/utils/type';
 
@@ -40,7 +41,7 @@ function initializeCollapseDuplicateEvents(
             compare(event.end, targetEvent.end) === 0
         )
         .sort((a, b) => (a.calendarId > b.calendarId ? 1 : -1)),
-    getMainEvent: (events: EventObjectWithDefaultValues[]) => events[events.length - 1],
+    getMainEvent: (events: EventObjectWithDefaultValues[]) => last(events),
   };
 
   if (isBoolean(options)) {
