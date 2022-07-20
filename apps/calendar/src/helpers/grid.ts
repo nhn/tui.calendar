@@ -351,13 +351,18 @@ export function getWeekDates(
   renderDate: TZDate,
   { startDayOfWeek = Day.SUN, workweek }: WeekOptions
 ): TZDate[] {
-  const renderDay = renderDate.getDay();
   const now = toStartOfDay(renderDate);
   const nowDay = now.getDay();
-  const prevWeekCount = startDayOfWeek - WEEK_DAYS;
+  const prevDateCount = nowDay - startDayOfWeek;
 
-  return range(startDayOfWeek, WEEK_DAYS + startDayOfWeek).reduce<TZDate[]>((acc, day) => {
-    const date = addDate(now, day - nowDay + (startDayOfWeek > renderDay ? prevWeekCount : 0));
+  const weekDayList =
+    prevDateCount >= 0
+      ? range(-prevDateCount, WEEK_DAYS - prevDateCount)
+      : range(-WEEK_DAYS - prevDateCount, -prevDateCount);
+
+  return weekDayList.reduce<TZDate[]>((acc, day) => {
+    const date = addDate(now, day);
+
     if (workweek && isWeekend(date.getDay())) {
       return acc;
     }
