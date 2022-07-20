@@ -450,9 +450,9 @@ interface CollapseDuplicateEventsOptions {
 };
 ```
 
-You can collapse duplicate events in the daily/weekly view. The default value is `false`, duplicate events are handled in the same way as normal events. When it is `true`, **events with the same `title`, `start`, and `end`** are classified as duplicate events, and **the last event** among them is expanded during initial rendering. If you want to filter duplicate events based on your criteria, set `getDuplicateEvents`. If you want to choose which event is expanded during initial rendering, set `getMainEvent`.
+You can collapse duplicate events in the daily/weekly view. The default value is `false`. The calendar handles duplicate events in the same way as normal events. When it is `true`, **events with the same `title`, `start`, and `end`** are classified as duplicate events, and **the last event** among them is expanded during initial rendering. If you want to filter duplicate events based on your requirements, set `getDuplicateEvents`. And if you want to choose which event is expanded during initial rendering, set `getMainEvent`.
 
-`getDuplicateEvents` should return sorted duplicate events in the order you want them to appear. The return value of `getDuplicateEvents` is the parameter of `getMainEvent`.
+`getDuplicateEvents` should **return sorted duplicate events in the order you want them to appear**. The return value of `getDuplicateEvents` is the parameter of `getMainEvent`.
 
 ```js
 calendar.setOptions({
@@ -466,7 +466,7 @@ calendar.setOptions({
             event.end.getTime() === targetEvent.end.getTime()
           )
           .sort((a, b) => (a.calendarId > b.calendarId ? 1 : -1)),
-      getMainEvent: (events) => events[events.length - 1],
+      getMainEvent: (events) => events[events.length - 1], // events are the return value of getDuplicateEvents()
     }
   },
 });

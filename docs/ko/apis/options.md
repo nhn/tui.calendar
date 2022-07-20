@@ -467,7 +467,7 @@ calendar.setOptions({
             event.end.getTime() === targetEvent.end.getTime()
           )
           .sort((a, b) => (a.calendarId > b.calendarId ? 1 : -1)),
-      getMainEvent: (events) => events[events.length - 1],
+      getMainEvent: (events) => events[events.length - 1], // events는 getDuplicateEvents()의 리턴값이다.
     }
   },
 });
