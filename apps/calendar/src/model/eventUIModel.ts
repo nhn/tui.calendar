@@ -16,6 +16,8 @@ interface EventUIProps {
   modelDurationHeight: number;
   comingDurationHeight: number;
   duplicateEvents: EventUIModel[];
+  duplicateStarts?: TZDate;
+  duplicateEnds?: TZDate;
   collapse: boolean;
   isMain: boolean;
 }
@@ -33,6 +35,8 @@ const eventUIPropsKey: (keyof EventUIProps)[] = [
   'modelDurationHeight',
   'comingDurationHeight',
   'duplicateEvents',
+  'duplicateStarts',
+  'duplicateEnds',
   'collapse',
   'isMain',
 ];
@@ -115,6 +119,22 @@ export default class EventUIModel implements EventUIProps {
   duplicateEvents: EventUIModel[] = [];
 
   /**
+   * represent the start date of a group of duplicate events.
+   *
+   * the earliest value among the duplicate events' starts and going durations.
+   * @type {TZDate}
+   */
+  duplicateStarts?: TZDate;
+
+  /**
+   * represent the end date of a group of duplicate events.
+   *
+   * the latest value among the duplicate events' ends and coming durations.
+   * @type {TZDate}
+   */
+  duplicateEnds?: TZDate;
+
+  /**
    * whether the event is collapsed or not among the duplicate events.
    * @type {boolean}
    */
@@ -188,15 +208,38 @@ export default class EventUIModel implements EventUIProps {
   }
 
   collidesWith(uiModel: EventModel | EventUIModel, usingTravelTime = true) {
+    const infos: { start: TZDate; end: TZDate; goingDuration: number; comingDuration: number }[] =
+      [];
+    [this, uiModel].forEach((event) => {
+      const isDuplicateEvent = event instanceof EventUIModel && event.duplicateEvents.length > 0;
+
+      if (isDuplicateEvent) {
+        infos.push({
+          start: event.duplicateStarts as TZDate,
+          end: event.duplicateEnds as TZDate,
+          goingDuration: 0,
+          comingDuration: 0,
+        });
+      } else {
+        infos.push({
+          start: event.getStarts(),
+          end: event.getEnds(),
+          goingDuration: event.valueOf().goingDuration,
+          comingDuration: event.valueOf().comingDuration,
+        });
+      }
+    });
+    const [thisInfo, targetInfo] = infos;
+
     return collidesWith({
-      start: this.getStarts().getTime(),
-      end: this.getEnds().getTime(),
-      targetStart: uiModel.getStarts().getTime(),
-      targetEnd: uiModel.getEnds().getTime(),
-      goingDuration: this.model.goingDuration,
-      comingDuration: this.model.comingDuration,
-      targetGoingDuration: uiModel.valueOf().goingDuration,
-      targetComingDuration: uiModel.valueOf().comingDuration,
+      start: thisInfo.start.getTime(),
+      end: thisInfo.end.getTime(),
+      targetStart: targetInfo.start.getTime(),
+      targetEnd: targetInfo.end.getTime(),
+      goingDuration: thisInfo.goingDuration,
+      comingDuration: thisInfo.comingDuration,
+      targetGoingDuration: targetInfo.goingDuration,
+      targetComingDuration: targetInfo.comingDuration,
       usingTravelTime, // Daygrid does not use travelTime, TimeGrid uses travelTime.
     });
   }

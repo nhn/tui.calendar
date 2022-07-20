@@ -1,6 +1,7 @@
 import { h } from 'preact';
 
 import moment from 'moment-timezone';
+import { last } from '@src/utils/array';
 
 import { mockCalendars } from '@stories/mocks/mockCalendars';
 import { mockWeekViewEvents } from '@stories/mocks/mockWeekViewEvents';
@@ -285,7 +286,8 @@ DuplicateEvents.args = {
           events
             .filter((event) => event.id === targetEvent.id)
             .sort((a, b) => (a.calendarId > b.calendarId ? 1 : -1)),
-        getMainEvent: (events) => events[events.length - 1],
+        getMainEvent: (events) =>
+          events.find(({ title }) => title.includes('- main')) || last(events),
       },
     },
     useDetailPopup: false,

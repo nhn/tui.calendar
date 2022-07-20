@@ -217,6 +217,14 @@ function setDuplicateEvents(
       selectedDuplicateEventCid > DEFAULT_DUPLICATE_EVENT_CID &&
       duplicateEvents.find((event) => event.__cid === selectedDuplicateEventCid)
     );
+    const duplicateStarts = duplicateEvents.reduce((acc, { start, goingDuration }) => {
+      const renderStart = addMinutes(start, -goingDuration);
+      return min(acc, renderStart);
+    }, duplicateEvents[0].start);
+    const duplicateEnds = duplicateEvents.reduce((acc, { end, comingDuration }) => {
+      const renderEnd = addMinutes(end, comingDuration);
+      return max(acc, renderEnd);
+    }, duplicateEvents[0].end);
 
     duplicateEventUIModels.forEach((event) => {
       const isMain = event.cid() === mainEvent.__cid;
@@ -229,6 +237,8 @@ function setDuplicateEvents(
         duplicateEvents: duplicateEventUIModels,
         collapse,
         isMain,
+        duplicateStarts,
+        duplicateEnds,
       });
     });
   });
