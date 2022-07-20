@@ -37,6 +37,29 @@ test.describe('Collapse duplicate events', () => {
   );
   const [collapsedEvent] = collapsedEvents;
 
+  test('The duplicate events are sorted according to the result of getDuplicateEvents option.', ({
+    page,
+  }) => {
+    // Given
+    // getDuplicateEvents: sort by calendarId in descending order
+    const sortedDuplicateEvents = mockWeekViewEvents
+      .filter(({ title }) => title.startsWith('duplicate event 2'))
+      .sort((a, b) => (b.calendarId > a.calendarId ? 1 : -1));
+    let prevX = -1;
+
+    // When
+    // Nothing
+
+    // Then
+    sortedDuplicateEvents.forEach(async (event) => {
+      const eventLocator = page.locator(getTimeEventSelector(event.title));
+      const { x } = await getBoundingBox(eventLocator);
+      expect(prevX).toBeLessThan(x);
+
+      prevX = x;
+    });
+  });
+
   collapsedEvents.forEach((event) => {
     test(`When clicking the collapsed duplicate event, it should be expanded. - ${event.title}`, async ({
       page,

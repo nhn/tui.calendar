@@ -285,7 +285,7 @@ DuplicateEvents.args = {
         getDuplicateEvents: (targetEvent, events) =>
           events
             .filter((event) => event.id === targetEvent.id)
-            .sort((a, b) => (a.calendarId > b.calendarId ? 1 : -1)),
+            .sort((a, b) => (b.calendarId > a.calendarId ? 1 : -1)), // descending order
         getMainEvent: (events) =>
           events.find(({ title }) => title.includes('- main')) || last(events),
       },

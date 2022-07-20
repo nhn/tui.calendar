@@ -89,7 +89,7 @@ export const mockWeekViewEvents: MockedWeekViewEvents[] = [
   },
   {
     id: '9',
-    calendarId: 'cal1',
+    calendarId: 'cal3',
     title: 'duplicate event',
     category: 'time',
     isAllday: false,
@@ -109,7 +109,7 @@ export const mockWeekViewEvents: MockedWeekViewEvents[] = [
   },
   {
     id: '9',
-    calendarId: 'cal3',
+    calendarId: 'cal1',
     title: 'duplicate event - main',
     category: 'time',
     isAllday: false,
