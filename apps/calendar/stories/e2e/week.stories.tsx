@@ -25,6 +25,12 @@ Template.args = {
   },
 };
 
+export const WithScroll = Template.bind({});
+WithScroll.args = {
+  ...Template.args,
+  containerHeight: '1300px',
+};
+
 export const FixedEvents = Template.bind({});
 FixedEvents.args = {
   ...Template.args,

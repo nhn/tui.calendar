@@ -15,3 +15,7 @@ export const MONTH_VIEW_PAGE_URL = generatePageUrl('e2e-month-view--fixed-events
 export const WEEK_VIEW_TIMEZONE_PAGE_URL = generatePageUrl(
   'e2e-week-view--different-primary-timezone'
 );
+
+export const WEEK_VIEW_SCROLL_PAGE_URL = generatePageUrl('e2e-week-view--with-scroll');
+
+export const MONTH_VIEW_SCROLL_PAGE_URL = generatePageUrl('e2e-month-view--with-scroll');

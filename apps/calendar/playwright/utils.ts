@@ -106,3 +106,9 @@ export function waitForSingleElement(locator: Locator) {
 export function queryLocatorByTestId(page: Page, testId: string) {
   return page.locator(`[data-testid*="${testId}"]`);
 }
+
+export function getPopupPositionRelativeToDocument(popup: Locator) {
+  return popup.evaluate(
+    (el) => el.getBoundingClientRect().top + document.documentElement.scrollTop
+  );
+}
