@@ -9,6 +9,71 @@ import { EventBusImpl } from '@src/utils/eventBus';
 
 import type { ExternalEventTypes } from '@t/eventBus';
 
+describe(`Firing 'clickEvent'`, () => {
+  const eventTitle = 'click-event';
+  function setup() {
+    const eventBus = new EventBusImpl<ExternalEventTypes>();
+    const handler = jest.fn();
+    eventBus.on('clickEvent', handler);
+    const uiModel = new EventUIModel(
+      new EventModel({
+        id: '1',
+        title: eventTitle,
+        start: new Date(2020, 0, 1, 10, 0),
+        end: new Date(2020, 0, 1, 12, 0),
+      })
+    );
+    const props = {
+      uiModel,
+      eventHeight: 30,
+      headerHeight: 0,
+    };
+
+    return {
+      props,
+      eventBus,
+      handler,
+    };
+  }
+
+  it('should fire event when clicked', () => {
+    // Given
+    const { props, eventBus, handler } = setup();
+    render(<HorizontalEvent {...props} />, { eventBus });
+
+    // When
+    const event = screen.getByText(eventTitle);
+    fireEvent.mouseDown(event);
+    fireEvent.mouseUp(event);
+
+    // Then
+    expect(handler).toBeCalledWith(
+      expect.objectContaining({
+        event: props.uiModel.model.toEventObject(),
+      })
+    );
+  });
+
+  it('should not fire when dragged', () => {
+    // Given
+    const { props, eventBus, handler } = setup();
+    render(<HorizontalEvent {...props} />, { eventBus });
+
+    // When
+    const event = screen.getByText(eventTitle);
+    dragAndDrop({
+      element: event,
+      targetPosition: {
+        clientX: 100,
+        clientY: 100,
+      },
+    });
+
+    // Then
+    expect(handler).not.toBeCalled();
+  });
+});
+
 describe(`Firing 'afterRenderEvent'`, () => {
   function setup() {
     const eventBus = new EventBusImpl<ExternalEventTypes>();
