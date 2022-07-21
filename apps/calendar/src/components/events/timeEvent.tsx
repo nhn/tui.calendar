@@ -207,7 +207,9 @@ export function TimeEvent({
         );
       }
 
-      eventBus.fire('clickEvent', { event: uiModel.model.toEventObject(), nativeEvent: e });
+      if (isClick) {
+        eventBus.fire('clickEvent', { event: uiModel.model.toEventObject(), nativeEvent: e });
+      }
     },
     onPressESCKey: () => endDragEvent(classNames.moveEvent),
   });
