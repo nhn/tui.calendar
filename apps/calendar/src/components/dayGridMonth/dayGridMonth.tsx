@@ -70,7 +70,7 @@ export function DayGridMonth({ dateMatrix = [], rowInfo = [], cellWidthMap = [] 
   const { ref, cellContentAreaHeight } = useCellContentAreaHeight(MONTH_EVENT_HEIGHT);
 
   const { eventFilter, month: monthOptions, isReadOnly } = useStore(optionsSelector);
-  const { narrowWeekend } = monthOptions as CalendarMonthOptions;
+  const { narrowWeekend, startDayOfWeek } = monthOptions as CalendarMonthOptions;
   const rowHeight = TOTAL_PERCENT_HEIGHT / dateMatrix.length;
 
   const gridPositionFinder = useMemo(
@@ -79,8 +79,10 @@ export function DayGridMonth({ dateMatrix = [], rowInfo = [], cellWidthMap = [] 
         container: gridContainer,
         rowsCount: dateMatrix.length,
         columnsCount: dateMatrix[0].length,
+        narrowWeekend,
+        startDayOfWeek,
       }),
-    [dateMatrix, gridContainer]
+    [dateMatrix, gridContainer, narrowWeekend, startDayOfWeek]
   );
 
   const calendarData = useCalendarData(calendar, eventFilter);

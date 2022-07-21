@@ -6,9 +6,10 @@ import { OtherGridRow } from '@src/components/dayGridWeek/otherGridRow';
 import { Layout } from '@src/components/layout';
 import { Panel } from '@src/components/panel';
 import { createEventCollection } from '@src/controller/base';
-import { getDayGridEvents, getWeekDates } from '@src/helpers/grid';
+import { getWeekDates, getWeekViewEvents } from '@src/helpers/grid';
 import TZDate from '@src/time/date';
 import { Day, getRowStyleInfo } from '@src/time/datetime';
+import { first, last } from '@src/utils/array';
 
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { createRandomEventModelsForMonth } from '@stories/util/randomEvents';
@@ -29,7 +30,11 @@ const calendarData: CalendarData = {
   events: createEventCollection(...events),
   idsOfDay: {},
 };
-const dayGridEvents = getDayGridEvents(weekDates, calendarData, { narrowWeekend: false });
+const dayGridEvents = getWeekViewEvents(weekDates, calendarData, {
+  narrowWeekend: false,
+  weekStartDate: first(weekDates),
+  weekEndDate: last(weekDates),
+});
 
 const Template: Story = (args) => {
   const { cellWidthMap } = getRowStyleInfo(weekDates.length, true, 0, true);
