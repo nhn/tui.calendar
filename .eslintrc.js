@@ -109,6 +109,7 @@ module.exports = {
         'dot-notation': ['error', { allowKeywords: true }],
         'jest/expect-expect': 'off',
         'jest/no-done-callback': 'off',
+        'jest/no-standalone-expect': ['error', { additionalTestBlockFunctions: ['test'] }],
       },
     },
   ],
