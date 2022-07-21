@@ -55,10 +55,10 @@
     "types/types/@(events|options|template|theme|eventBus).d.ts"
   ],
   "dependencies": {
-    "immer": "^9.0.12",
+    "immer": "^9.0.15",
     "isomorphic-dompurify": "^0.20.0",
-    "preact": "^10.8.2",
-    "preact-render-to-string": "^5.2.0",
+    "preact": "^10.10.0",
+    "preact-render-to-string": "^5.2.1",
     "tui-date-picker": "^4.0.1",
     "tui-time-picker": "^2.0.1"
   },
