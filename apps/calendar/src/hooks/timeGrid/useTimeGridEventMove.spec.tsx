@@ -9,7 +9,7 @@ import { useTimeGridEventMove } from '@src/hooks/timeGrid/useTimeGridEventMove';
 import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import { createDate } from '@src/test/helpers';
-import { dragAndDrop, fireEvent, renderHook, screen } from '@src/test/utils';
+import { dragAndDrop, renderHook, screen, userEvent } from '@src/test/utils';
 import { Day, setTimeStrToDate, toFormat } from '@src/time/datetime';
 import { EventBusImpl } from '@src/utils/eventBus';
 import { noop } from '@src/utils/noop';
@@ -119,11 +119,12 @@ describe('useTimeGridEventMove', () => {
 
   it('should return null when not dragging', () => {
     // Given
+    const user = userEvent.setup();
     const result = setup();
     const event = screen.getByText('Event 1');
 
     // When
-    fireEvent.click(event);
+    user.click(event);
 
     // Then
     expect(result.current?.movingEvent).toBeNull();

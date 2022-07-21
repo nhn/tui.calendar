@@ -6,6 +6,7 @@ import {
   render as ptlRender,
   renderHook as ptlRenderHook,
 } from '@testing-library/preact';
+import { default as userEvent } from '@testing-library/user-event';
 
 import { CalendarContainer } from '@src/calendarContainer';
 import { initCalendarStore } from '@src/contexts/calendarStore';
@@ -98,4 +99,5 @@ export function hasDesiredStartTime(el: HTMLElement, startTimeStr: FormattedTime
 }
 
 export * from '@testing-library/preact';
-export { render, renderHook };
+export * from '@testing-library/user-event';
+export { render, renderHook, userEvent };

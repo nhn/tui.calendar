@@ -9,6 +9,7 @@
     "@rollup/plugin-commonjs": "^22.0.1",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/preact": "^3.2.2",
+    "@testing-library/user-event": "^14.3.0",
     "@types/dompurify": "^2.3.3",
     "@types/jest": "^27.4.1",
     "@types/node": "^17.0.23",
