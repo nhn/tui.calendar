@@ -83,59 +83,50 @@ function setCroppedEdges(uiModel: EventUIModel, options: RenderInfoOptions) {
   }
 }
 
-function setDimensionOfDuplicateEvent(uiModel: EventUIModel, options: RenderInfoOptions) {
-  const { startColumnTime, endColumnTime, baseWidth, columnIndex } = options;
-  const { duplicateEvents } = uiModel;
-  let cumulativeLeft = baseWidth * columnIndex;
-
-  duplicateEvents.forEach((event) => {
-    const { renderStart, renderEnd } = getRenderInfoOptions(
-      event,
-      columnIndex,
-      baseWidth,
-      startColumnTime,
-      endColumnTime
-    );
-    const { top, height } = getTopHeightByTime(
-      renderStart,
-      renderEnd,
-      startColumnTime,
-      endColumnTime
-    );
-    const width = event.collapse
-      ? COLLAPSED_DUPLICATE_EVENT_WIDTH
-      : baseWidth - COLLAPSED_DUPLICATE_EVENT_WIDTH * (duplicateEvents.length - 1);
-    event.setUIProps({
-      top,
-      height,
-      width,
-      left: cumulativeLeft,
-    });
-
-    cumulativeLeft += width;
-  });
-}
-
 function setDimension(uiModel: EventUIModel, options: RenderInfoOptions) {
   const { startColumnTime, endColumnTime, baseWidth, columnIndex, renderStart, renderEnd } =
     options;
+  const { duplicateEvents } = uiModel;
+  const { top, height } = getTopHeightByTime(
+    renderStart,
+    renderEnd,
+    startColumnTime,
+    endColumnTime
+  );
 
-  if (uiModel.duplicateEvents.length === 0) {
-    const { top, height } = getTopHeightByTime(
-      renderStart,
-      renderEnd,
-      startColumnTime,
-      endColumnTime
-    );
-    uiModel.setUIProps({
+  let dimension;
+  if (duplicateEvents.length > 0) {
+    let isPrevDuplicateEvent = true;
+    const left = duplicateEvents.reduce((value, event) => {
+      if (event.cid() === uiModel.cid()) {
+        isPrevDuplicateEvent = false;
+      }
+
+      if (isPrevDuplicateEvent) {
+        return value + event.width;
+      }
+
+      return value;
+    }, baseWidth * columnIndex);
+
+    dimension = {
+      top,
+      height: Math.max(MIN_HEIGHT_PERCENT, height),
+      width: uiModel.collapse
+        ? COLLAPSED_DUPLICATE_EVENT_WIDTH
+        : baseWidth - COLLAPSED_DUPLICATE_EVENT_WIDTH * (uiModel.duplicateEvents.length - 1),
+      left,
+    };
+  } else {
+    dimension = {
       top,
       left: baseWidth * columnIndex,
       width: baseWidth,
       height: Math.max(MIN_HEIGHT_PERCENT, height),
-    });
-  } else {
-    setDimensionOfDuplicateEvent(uiModel, options);
+    };
   }
+
+  uiModel.setUIProps(dimension);
 }
 
 function getRenderInfoOptions(
@@ -168,13 +159,36 @@ function getRenderInfoOptions(
   };
 }
 
-function setRenderInfo(
-  uiModel: EventUIModel,
-  columnIndex: number,
-  baseWidth: number,
-  startColumnTime: TZDate,
-  endColumnTime: TZDate
-) {
+function setRenderInfo({
+  uiModel,
+  columnIndex,
+  baseWidth,
+  startColumnTime,
+  endColumnTime,
+  isDuplicateEvent = false,
+}: {
+  uiModel: EventUIModel;
+  columnIndex: number;
+  baseWidth: number;
+  startColumnTime: TZDate;
+  endColumnTime: TZDate;
+  isDuplicateEvent?: boolean;
+}) {
+  if (!isDuplicateEvent && uiModel.duplicateEvents.length > 0) {
+    uiModel.duplicateEvents.forEach((event) => {
+      setRenderInfo({
+        uiModel: event,
+        columnIndex,
+        baseWidth,
+        startColumnTime,
+        endColumnTime,
+        isDuplicateEvent: true,
+      });
+    });
+
+    return;
+  }
+
   const renderInfoOptions = getRenderInfoOptions(
     uiModel,
     columnIndex,
@@ -279,8 +293,8 @@ export function setRenderInfoOfUIModels(
     const baseWidth = 100 / maxRowLength;
 
     matrix.forEach((row) => {
-      row.forEach((uiModel, col) => {
-        setRenderInfo(uiModel, col, baseWidth, startColumnTime, endColumnTime);
+      row.forEach((uiModel, columnIndex) => {
+        setRenderInfo({ uiModel, columnIndex, baseWidth, startColumnTime, endColumnTime });
       });
     });
   });
