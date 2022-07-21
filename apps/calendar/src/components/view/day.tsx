@@ -26,9 +26,7 @@ import {
   weekViewLayoutSelector,
 } from '@src/selectors';
 import { primaryTimezoneSelector } from '@src/selectors/timezone';
-import type TZDate from '@src/time/date';
-import { getRowStyleInfo, toEndOfDay, toStartOfDay } from '@src/time/datetime';
-import { getTimezoneDifferenceFromLocal } from '@src/time/timezone';
+import { addDate, getRowStyleInfo, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 
 import type { WeekOptions } from '@t/options';
 import type { AlldayEventCategory } from '@t/panel';
@@ -72,23 +70,23 @@ export function Day() {
   );
   const calendarData = useCalendarData(calendar, options.eventFilter);
   const dayGridEvents = useMemo(() => {
-    const adjustByTimezoneOffset = (tzDate: TZDate, type: 'start' | 'end') => {
+    const getFilterRange = () => {
       if (primaryTimezoneName === 'Local') {
-        return tzDate;
+        return [toStartOfDay(days[0]), toEndOfDay(days[0])];
       }
 
-      const offsetDiff = Math.abs(getTimezoneDifferenceFromLocal(primaryTimezoneName, tzDate));
-      tzDate.addMinutes(type === 'start' ? -offsetDiff : offsetDiff);
-
-      return tzDate;
+      // NOTE: Extend filter range because of timezone offset differences
+      return [toStartOfDay(addDate(days[0], -1)), toEndOfDay(addDate(days[0], 1))];
     };
+
+    const [weekStartDate, weekEndDate] = getFilterRange();
 
     return getWeekViewEvents(days, calendarData, {
       narrowWeekend,
       hourStart,
       hourEnd,
-      weekStartDate: adjustByTimezoneOffset(toStartOfDay(days[0]), 'start'),
-      weekEndDate: adjustByTimezoneOffset(toEndOfDay(days[0]), 'end'),
+      weekStartDate,
+      weekEndDate,
     });
   }, [calendarData, days, hourEnd, hourStart, narrowWeekend, primaryTimezoneName]);
   const timeGridData = useMemo(

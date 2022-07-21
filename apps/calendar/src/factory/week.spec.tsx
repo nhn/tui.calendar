@@ -42,8 +42,10 @@ describe('Primary Timezone', () => {
 
   it('should create a zoned event with a string different from the primary timezone', () => {
     // Given
+    jest.useFakeTimers();
     const baseDate = new Date('2022-05-04T00:00:00+09:00');
-    jest.spyOn(Date, 'now').mockImplementationOnce(() => baseDate.getTime());
+    jest.setSystemTime(baseDate);
+
     const { instance } = setup(
       {
         timezone: {
@@ -74,8 +76,9 @@ describe('Primary Timezone', () => {
 
   it('should create zoned event with a string same as the primary timezone', () => {
     // Given
+    jest.useFakeTimers();
     const baseDate = new Date('2022-05-04T00:00:00+09:00');
-    jest.spyOn(Date, 'now').mockImplementationOnce(() => baseDate.getTime());
+    jest.setSystemTime(baseDate);
     const { instance } = setup(
       {
         timezone: {
@@ -149,7 +152,7 @@ describe('Primary Timezone', () => {
 
   it('should change start & end time of events when timezone option changes from another timezone', () => {
     // Given
-    // To avoid DST when changing timezone
+    // To avoid DST when changing timezone, mock the base date of mock events
     jest.spyOn(Date, 'now').mockImplementationOnce(() => new Date('2022-04-01T00:00:00').getTime());
     const { instance } = setup({
       timezone: {
@@ -181,6 +184,108 @@ describe('Primary Timezone', () => {
     targetEvent = screen.getByText(reTargetEvent);
 
     expect(hasDesiredStartTime(targetEvent, '05:00')).toBe(true);
+  });
+
+  it('should render zoned events between the end of week and the start of week properly (Small offset difference)', () => {
+    // Given
+    jest.useFakeTimers();
+    const baseDate = new Date('2022-07-20'); // Wednesday
+    jest.setSystemTime(baseDate);
+
+    const startOfWeekEventTitle = 'start';
+    const endOfWeekEventTitle = 'end';
+
+    // When
+    const { instance } = setup(
+      {
+        timezone: {
+          zones: [
+            {
+              timezoneName: 'Pacific/Auckland', // UTC+12
+            },
+          ],
+        },
+      },
+      [
+        {
+          id: startOfWeekEventTitle,
+          title: startOfWeekEventTitle,
+          start: '2022-07-16T12:00:00Z', // Expected 2022-07-17 00:00:00 in UTC+12
+          end: '2022-07-16T13:00:00Z', // Expected 2022-07-17 01:00:00 in UTC+12
+        },
+        {
+          id: endOfWeekEventTitle,
+          title: endOfWeekEventTitle,
+          start: '2022-07-16T11:00:00Z', // Expected 2022-07-16 23:00:00 in UTC+12
+          end: '2022-07-16T11:59:00Z', // Expected 2022-07-16 23:59:00 in UTC+12
+        },
+      ]
+    );
+
+    // Then
+    const startOfWeekEvent = screen.getByText(startOfWeekEventTitle);
+    expect(startOfWeekEvent).toBeInTheDocument();
+
+    // When
+    // Move to previous week
+    act(() => {
+      instance.prev();
+    });
+
+    // Then
+    const endOfWeekEvent = screen.getByText(endOfWeekEventTitle);
+    expect(endOfWeekEvent).toBeInTheDocument();
+  });
+
+  it('should render zoned events between the end of week and the start of week properly (Large offset difference)', () => {
+    // Given
+    jest.useFakeTimers();
+    const baseDate = new Date('2022-07-20'); // Wednesday
+    jest.setSystemTime(baseDate);
+
+    const startOfWeekEventTitle = 'start';
+    const endOfWeekEventTitle = 'end';
+
+    // When
+    const { instance } = setup(
+      {
+        timezone: {
+          zones: [
+            {
+              timezoneName: 'US/Pacific', // UTC-7 at this time
+            },
+          ],
+        },
+      },
+      [
+        {
+          id: startOfWeekEventTitle,
+          title: startOfWeekEventTitle,
+          start: '2022-07-17T07:00:00Z', // Expected 2022-07-17 00:00:00 in UTC-07
+          end: '2022-07-17T08:00:00Z', // Expected 2022-07-17 01:00:00 in UTC-07
+        },
+        {
+          id: endOfWeekEventTitle,
+          title: endOfWeekEventTitle,
+          start: '2022-07-17T06:00:00Z', // Expected 2022-07-16 23:00:00 in UTC-07
+          end: '2022-07-17T06:59:00Z', // Expected 2022-07-16 23:59:00 in UTC-07
+        },
+      ]
+    );
+
+    // Then
+    const startOfWeekEvent = screen.getByText(startOfWeekEventTitle);
+    expect(startOfWeekEvent).toBeInTheDocument();
+
+    // When
+    // Move to previous week
+    act(() => {
+      instance.prev();
+    });
+
+    // Then
+    const endOfWeekEvent = screen.getByText(endOfWeekEventTitle);
+    expect(endOfWeekEvent).toBeInTheDocument();
   });
 });
 
