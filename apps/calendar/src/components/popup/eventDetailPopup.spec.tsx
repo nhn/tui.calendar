@@ -1,12 +1,11 @@
 import { h } from 'preact';
 
-import { render, screen } from '@testing-library/preact';
-
 import { EventDetailPopup } from '@src/components/popup/eventDetailPopup';
 import { initCalendarStore, StoreProvider, useDispatch } from '@src/contexts/calendarStore';
 import { EventBusProvider } from '@src/contexts/eventBus';
 import { FloatingLayerProvider } from '@src/contexts/floatingLayer';
 import EventModel from '@src/model/eventModel';
+import { render, screen } from '@src/test/utils';
 import TZDate from '@src/time/date';
 import { EventBusImpl } from '@src/utils/eventBus';
 

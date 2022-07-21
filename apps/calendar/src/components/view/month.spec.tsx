@@ -1,12 +1,10 @@
 import { h } from 'preact';
 
-import { screen } from '@testing-library/preact';
-
 import { Month } from '@src/components/view/month';
 import { initCalendarStore } from '@src/contexts/calendarStore';
 import { initThemeStore } from '@src/contexts/themeStore';
 import EventModel from '@src/model/eventModel';
-import { render } from '@src/test/utils';
+import { render, screen } from '@src/test/utils';
 import TZDate from '@src/time/date';
 import { noop } from '@src/utils/noop';
 

@@ -1,9 +1,7 @@
 import { h } from 'preact';
 
-import { fireEvent } from '@testing-library/preact';
-
 import { TimezoneCollapseButton } from '@src/components/timeGrid/timezoneCollapseButton';
-import { render } from '@src/test/utils';
+import { fireEvent, render } from '@src/test/utils';
 import { EventBusImpl } from '@src/utils/eventBus';
 
 import type { ExternalEventTypes } from '@t/eventBus';

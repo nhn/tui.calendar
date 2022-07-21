@@ -1,9 +1,11 @@
 import { h } from 'preact';
 
-import { fireEvent, render as ptlRender } from '@testing-library/preact';
-import { renderHook as ptlRenderHook } from '@testing-library/preact-hooks';
-import type { Callback } from '@testing-library/preact-hooks/lib/_types';
-import type { RenderHookOptions } from '@testing-library/preact-hooks/lib/renderHook';
+import type { RenderHookOptions } from '@testing-library/preact';
+import {
+  fireEvent,
+  render as ptlRender,
+  renderHook as ptlRenderHook,
+} from '@testing-library/preact';
 
 import { CalendarContainer } from '@src/calendarContainer';
 import { initCalendarStore } from '@src/contexts/calendarStore';
@@ -41,8 +43,8 @@ function render(
   return ptlRender(component, { wrapper: Wrapper, ...options });
 }
 
-function renderHook<P, R>(
-  hook: Callback<P, R>,
+function renderHook<R, P>(
+  hook: (initialProp: P) => R,
   {
     eventBus = new EventBusImpl<any>(),
     store = initCalendarStore(),
@@ -61,7 +63,7 @@ function renderHook<P, R>(
     </CalendarContainer>
   );
 
-  return ptlRenderHook(hook, { wrapper: Wrapper, ...options });
+  return ptlRenderHook<R, P>(hook, { wrapper: Wrapper, ...options });
 }
 
 export function dragAndDrop({

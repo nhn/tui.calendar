@@ -1,7 +1,5 @@
 import { h } from 'preact';
 
-import userEvent from '@testing-library/user-event';
-
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
 import { EventBusProvider } from '@src/contexts/eventBus';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
@@ -11,7 +9,7 @@ import { useTimeGridEventMove } from '@src/hooks/timeGrid/useTimeGridEventMove';
 import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import { createDate } from '@src/test/helpers';
-import { dragAndDrop, renderHook, screen } from '@src/test/utils';
+import { dragAndDrop, fireEvent, renderHook, screen } from '@src/test/utils';
 import { Day, setTimeStrToDate, toFormat } from '@src/time/datetime';
 import { EventBusImpl } from '@src/utils/eventBus';
 import { noop } from '@src/utils/noop';
@@ -125,7 +123,7 @@ describe('useTimeGridEventMove', () => {
     const event = screen.getByText('Event 1');
 
     // When
-    userEvent.click(event);
+    fireEvent.click(event);
 
     // Then
     expect(result.current?.movingEvent).toBeNull();
