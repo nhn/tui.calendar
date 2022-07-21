@@ -20,6 +20,7 @@ import type EventUIModel from '@src/model/eventUIModel';
 import { optionsSelector } from '@src/selectors';
 import { weekDayGridLeftSelector } from '@src/selectors/theme';
 import type TZDate from '@src/time/date';
+import { Day } from '@src/time/datetime';
 
 import type { WeekOptions } from '@t/options';
 import type { CellStyle } from '@t/time/datetime';
@@ -50,7 +51,7 @@ export function AlldayGridRow({
   const dayGridLeftTheme = useTheme(weekDayGridLeftSelector);
   const [panelContainer, setPanelContainerRef] = useDOMNode<HTMLDivElement>();
 
-  const { narrowWeekend = false } = options;
+  const { narrowWeekend = false, startDayOfWeek = Day.SUN } = options;
 
   const maxTop = useMemo(() => Math.max(0, ...events.map(({ top }) => top)), [events]);
   const gridPositionFinder = useMemo(
@@ -59,8 +60,10 @@ export function AlldayGridRow({
         container: panelContainer,
         rowsCount: 1,
         columnsCount: weekDates.length,
+        narrowWeekend,
+        startDayOfWeek,
       }),
-    [weekDates, panelContainer]
+    [panelContainer, weekDates.length, narrowWeekend, startDayOfWeek]
   );
 
   const { clickedIndex, isClickedCount, onClickExceedCount, onClickCollapseButton } =

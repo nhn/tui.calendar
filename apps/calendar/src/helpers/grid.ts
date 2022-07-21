@@ -17,6 +17,7 @@ import {
   toStartOfMonth,
   WEEK_DAYS,
 } from '@src/time/datetime';
+import { findLastIndex } from '@src/utils/array';
 import { limit, ratio } from '@src/utils/math';
 import { isNil } from '@src/utils/type';
 
@@ -462,27 +463,34 @@ function getIndexFromPosition(arrayLength: number, maxRange: number, currentPosi
   return limit(calculatedIndex, [0], [arrayLength - 1]);
 }
 
-// FIXME: It doesn't work when `narrowWeekend` option is on.
-// It should consider the width of the column.
 export function createGridPositionFinder({
   rowsCount,
   columnsCount,
   container,
+  narrowWeekend = false,
+  startDayOfWeek = Day.SUN,
 }: {
   rowsCount: number;
   columnsCount: number;
   container: HTMLElement | null;
+  narrowWeekend?: boolean;
+  startDayOfWeek?: Day;
 }): GridPositionFinder {
   if (isNil(container)) {
     return (() => null) as GridPositionFinder;
   }
 
+  const dayRange = range(startDayOfWeek, startDayOfWeek + columnsCount).map(
+    (day) => day % WEEK_DAYS
+  );
+  const narrowColumnCount = narrowWeekend ? dayRange.filter((day) => isWeekend(day)).length : 0;
+
   return function gridPositionFinder(mousePosition) {
     const {
       left: containerLeft,
       top: containerTop,
-      width,
-      height,
+      width: containerWidth,
+      height: containerHeight,
     } = container.getBoundingClientRect();
     const [left, top] = getRelativeMousePosition(mousePosition, {
       left: containerLeft,
@@ -491,13 +499,29 @@ export function createGridPositionFinder({
       clientTop: container.clientTop,
     });
 
-    if (left < 0 || top < 0 || left > width || top > height) {
+    if (left < 0 || top < 0 || left > containerWidth || top > containerHeight) {
       return null;
     }
 
+    const unitWidth = narrowWeekend
+      ? containerWidth / (columnsCount - narrowColumnCount + 1)
+      : containerWidth / columnsCount;
+    const columnWidthList = dayRange.map((dayOfWeek) =>
+      narrowWeekend && isWeekend(dayOfWeek) ? unitWidth / 2 : unitWidth
+    );
+    const columnLeftList: number[] = [];
+    columnWidthList.forEach((width, index) => {
+      if (index === 0) {
+        columnLeftList.push(0);
+      } else {
+        columnLeftList.push(columnLeftList[index - 1] + columnWidthList[index - 1]);
+      }
+    });
+    const columnIndex = findLastIndex(columnLeftList, (columnLeft) => left >= columnLeft);
+
     return {
-      columnIndex: getIndexFromPosition(columnsCount, width, left),
-      rowIndex: getIndexFromPosition(rowsCount, height, top),
+      columnIndex,
+      rowIndex: getIndexFromPosition(rowsCount, containerHeight, top),
     };
   };
 }
