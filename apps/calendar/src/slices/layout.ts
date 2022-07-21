@@ -1,11 +1,9 @@
 import produce from 'immer';
 
-import { DEFAULT_RESIZER_LENGTH } from '@src/constants/layout';
+import { DEFAULT_DUPLICATE_EVENT_CID, DEFAULT_RESIZER_LENGTH } from '@src/constants/layout';
 import { DEFAULT_PANEL_HEIGHT } from '@src/constants/style';
 
 import type { CalendarState, CalendarStore, SetState } from '@t/store';
-
-export const DEFAULT_DUPLICATE_EVENT_CID = -1;
 
 export type WeekGridRows = 'milestone' | 'task' | 'allday' | 'time' | string;
 

@@ -2,6 +2,7 @@ import { h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 
 import { Template } from '@src/components/template';
+import { DEFAULT_DUPLICATE_EVENT_CID } from '@src/constants/layout';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
 import { useLayoutContainer } from '@src/contexts/layoutContainer';
@@ -13,7 +14,6 @@ import { useTransientUpdate } from '@src/hooks/common/useTransientUpdate';
 import type EventUIModel from '@src/model/eventUIModel';
 import { dndSelector, optionsSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
-import { DEFAULT_DUPLICATE_EVENT_CID } from '@src/slices/layout';
 import type TZDate from '@src/time/date';
 import { isPresent } from '@src/utils/type';
 

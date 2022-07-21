@@ -1,7 +1,8 @@
-import { COLLAPSED_DUPLICATE_EVENT_WIDTH, setRenderInfoOfUIModels } from '@src/controller/column';
+import { DEFAULT_DUPLICATE_EVENT_CID } from '@src/constants/layout';
+import { COLLAPSED_DUPLICATE_EVENT_WIDTH } from '@src/constants/style';
+import { setRenderInfoOfUIModels } from '@src/controller/column';
 import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
-import { DEFAULT_DUPLICATE_EVENT_CID } from '@src/slices/layout';
 import TZDate from '@src/time/date';
 import type { EventObject, EventObjectWithDefaultValues } from '@src/types/events';
 import type { CollapseDuplicateEventsOptions } from '@src/types/options';

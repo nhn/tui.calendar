@@ -1,17 +1,16 @@
+import { DEFAULT_DUPLICATE_EVENT_CID } from '@src/constants/layout';
+import { COLLAPSED_DUPLICATE_EVENT_WIDTH } from '@src/constants/style';
 import { createEventCollection } from '@src/controller/base';
 import { getCollisionGroup, getMatrices } from '@src/controller/core';
 import { getTopHeightByTime } from '@src/controller/times';
 import { isTimeEvent } from '@src/model/eventModel';
 import type EventUIModel from '@src/model/eventUIModel';
-import { DEFAULT_DUPLICATE_EVENT_CID } from '@src/slices/layout';
 import type TZDate from '@src/time/date';
 import { addMinutes, max, min } from '@src/time/datetime';
 import type { CollapseDuplicateEventsOptions } from '@src/types/options';
 import array from '@src/utils/array';
 
 const MIN_HEIGHT_PERCENT = 1;
-
-export const COLLAPSED_DUPLICATE_EVENT_WIDTH = 5;
 
 interface RenderInfoOptions {
   baseWidth: number;
