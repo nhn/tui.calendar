@@ -13,7 +13,7 @@ import { useStore } from '@src/contexts/calendarStore';
 import { useTheme } from '@src/contexts/themeStore';
 import { cls } from '@src/helpers/css';
 import { getDayNames } from '@src/helpers/dayName';
-import { createTimeGridData, getDayGridEvents } from '@src/helpers/grid';
+import { createTimeGridData, getWeekViewEvents } from '@src/helpers/grid';
 import { getActivePanels } from '@src/helpers/view';
 import { useCalendarData } from '@src/hooks/calendar/useCalendarData';
 import { useDOMNode } from '@src/hooks/common/useDOMNode';
@@ -25,7 +25,8 @@ import {
   viewSelector,
   weekViewLayoutSelector,
 } from '@src/selectors';
-import { getRowStyleInfo } from '@src/time/datetime';
+import { primaryTimezoneSelector } from '@src/selectors/timezone';
+import { addDate, getRowStyleInfo, toEndOfDay, toStartOfDay } from '@src/time/datetime';
 
 import type { WeekOptions } from '@t/options';
 import type { AlldayEventCategory } from '@t/panel';
@@ -50,6 +51,9 @@ function useDayViewState() {
 
 export function Day() {
   const { calendar, options, gridRowLayout, lastPanelType, renderDate } = useDayViewState();
+
+  const primaryTimezoneName = useStore(primaryTimezoneSelector);
+
   const gridHeaderMarginLeft = useTheme(useCallback((theme) => theme.week.dayGridLeft.width, []));
   const [timePanel, setTimePanelRef] = useDOMNode<HTMLDivElement>();
 
@@ -65,11 +69,26 @@ export function Day() {
     workweek
   );
   const calendarData = useCalendarData(calendar, options.eventFilter);
-  const dayGridEvents = getDayGridEvents(days, calendarData, {
-    narrowWeekend,
-    hourStart,
-    hourEnd,
-  });
+  const dayGridEvents = useMemo(() => {
+    const getFilterRange = () => {
+      if (primaryTimezoneName === 'Local') {
+        return [toStartOfDay(days[0]), toEndOfDay(days[0])];
+      }
+
+      // NOTE: Extend filter range because of timezone offset differences
+      return [toStartOfDay(addDate(days[0], -1)), toEndOfDay(addDate(days[0], 1))];
+    };
+
+    const [weekStartDate, weekEndDate] = getFilterRange();
+
+    return getWeekViewEvents(days, calendarData, {
+      narrowWeekend,
+      hourStart,
+      hourEnd,
+      weekStartDate,
+      weekEndDate,
+    });
+  }, [calendarData, days, hourEnd, hourStart, narrowWeekend, primaryTimezoneName]);
   const timeGridData = useMemo(
     () =>
       createTimeGridData(days, {
