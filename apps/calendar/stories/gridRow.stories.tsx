@@ -9,6 +9,7 @@ import { createEventCollection } from '@src/controller/base';
 import { getWeekDates, getWeekViewEvents } from '@src/helpers/grid';
 import TZDate from '@src/time/date';
 import { Day, getRowStyleInfo } from '@src/time/datetime';
+import { first, last } from '@src/utils/array';
 
 import { ProviderWrapper } from '@stories/util/providerWrapper';
 import { createRandomEventModelsForMonth } from '@stories/util/randomEvents';
@@ -31,8 +32,8 @@ const calendarData: CalendarData = {
 };
 const dayGridEvents = getWeekViewEvents(weekDates, calendarData, {
   narrowWeekend: false,
-  weekStartDate: weekDates[0],
-  weekEndDate: weekDates[weekDates.length - 1],
+  weekStartDate: first(weekDates),
+  weekEndDate: last(weekDates),
 });
 
 const Template: Story = (args) => {
