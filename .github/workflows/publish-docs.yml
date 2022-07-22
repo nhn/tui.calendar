@@ -59,6 +59,9 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: gh-pages
+      - name: Back to main branch
+        run: |
+          git switch main
       - name: Restore Node.js version to 16
         uses: actions/setup-node@v3
         with:
