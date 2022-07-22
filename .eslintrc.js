@@ -1,3 +1,11 @@
+const defaultExtends = [
+  'tui',
+  'prettier',
+  'plugin:@typescript-eslint/recommended',
+  'plugin:react/recommended',
+  'plugin:prettier/recommended',
+];
+
 module.exports = {
   root: true,
   env: {
@@ -20,14 +28,7 @@ module.exports = {
     '@typescript-eslint',
     'jest',
   ],
-  extends: [
-    'tui',
-    'prettier',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:jest/recommended',
-    'plugin:react/recommended',
-    'plugin:prettier/recommended',
-  ],
+  extends: defaultExtends,
   settings: {
     react: {
       pragma: 'h',
@@ -92,7 +93,8 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['*.spec.ts', '*.spec.tsx', '*.e2e.ts'],
+      files: ['*.spec.ts', '*.spec.tsx'],
+      extends: ['plugin:jest/recommended'],
       rules: {
         'max-nested-callbacks': ['error', { max: 5 }],
         'jest/expect-expect': [
@@ -101,15 +103,15 @@ module.exports = {
             assertFunctionNames: ['expect', 'assert*'],
           },
         ],
+        'jest/no-conditional-expect': 'warn',
       },
     },
     {
       files: ['apps/calendar/playwright/**/*.ts'],
+      extends: ['plugin:playwright/playwright-test'],
       rules: {
+        'max-nested-callbacks': ['error', { max: 5 }],
         'dot-notation': ['error', { allowKeywords: true }],
-        'jest/expect-expect': 'off',
-        'jest/no-done-callback': 'off',
-        'jest/no-standalone-expect': ['error', { additionalTestBlockFunctions: ['test'] }],
       },
     },
   ],
