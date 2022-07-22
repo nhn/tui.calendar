@@ -1,7 +1,6 @@
 import { h } from 'preact';
 import { useEffect } from 'preact/hooks';
 
-import { waitFor } from '@testing-library/preact';
 import sendHostname from 'tui-code-snippet/request/sendHostname';
 
 import { HorizontalEvent } from '@src/components/events/horizontalEvent';
@@ -16,7 +15,7 @@ import { createDateMatrixOfMonth, getWeekDates } from '@src/helpers/grid';
 import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
 import type { GridSelectionType } from '@src/slices/gridSelection';
-import { act, screen } from '@src/test/utils';
+import { act, screen, waitFor } from '@src/test/utils';
 import TZDate from '@src/time/date';
 import { addDate, subtractDate } from '@src/time/datetime';
 

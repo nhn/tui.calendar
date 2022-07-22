@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-process-env
 const PORT = process.env.CI ? 8080 : 6006;
 
 const generatePageUrl = (viewId: string) =>
