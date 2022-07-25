@@ -147,14 +147,25 @@ function generateRandomEvent(calendar, renderStart, renderEnd) {
 }
 
 function generateRandomEvents(viewName, renderStart, renderEnd) {
-  var i;
-  var event;
+  var i, j;
+  var event, duplicateEvent;
   var events = [];
 
   MOCK_CALENDARS.forEach(function(calendar) {
     for (i = 0; i < chance.integer({ min: 20, max: 50 }); i += 1) {
       event = generateRandomEvent(calendar, renderStart, renderEnd);
       events.push(event);
+
+      if (i % 5 === 0) {
+        for (j = 0; j < chance.integer({min: 0, max: 2}); j+= 1) {
+          duplicateEvent = JSON.parse(JSON.stringify(event));
+          duplicateEvent.id += `-${j}`;
+          duplicateEvent.calendarId = chance.integer({min: 1, max: 5}).toString();
+          duplicateEvent.goingDuration = 30 * chance.integer({min: 0, max: 4});
+          duplicateEvent.comingDuration = 30 * chance.integer({min: 0, max: 4});
+          events.push(duplicateEvent);
+        }
+      }
     }
   });
 
