@@ -147,6 +147,7 @@ import type { ThemeState, ThemeStore } from '@t/theme';
  *     @param {boolean} [options.week.narrowWeekend=false] - Whether to narrow down width of weekends to half.
  *     @param {boolean|Array.<string>} [options.week.eventView=true] - Determine which view to display events. Available values are 'allday' and 'time'. set to `false` to disable event view.
  *     @param {boolean|Array.<string>} [options.week.taskView=true] - Determine which view to display tasks. Available values are 'milestone' and 'task'. set to `false` to disable task view.
+ *     @param {boolean|object} [options.week.collapseDuplicateEvents=false] - Whether to collapse duplicate events. If you want to filter duplicate events and choose the main event based on your requirements, set `getDuplicateEvents` and `getMainEvent`. For more information, see {@link https://github.com/nhn/tui.calendar/blob/feat/duplicate-events/docs/en/apis/options.md#weekcollapseduplicateevents|Options} in guide.
  *   @param {object} options.month - Month option of the calendar instance.
  *     @param {number} [options.month.startDayOfWeek=0] - Start day of the week. Available values are 0 (Sunday) to 6 (Saturday).
  *     @param {Array.<string>} [options.month.dayNames] - Names of days of the week. Should be 7 items starting from Sunday to Saturday. If not specified, the default names are used.
