@@ -74,7 +74,7 @@ describe('collapseDuplicateEvents option', () => {
     });
   });
 
-  it('when it sets, the main event is expanded and the others are collasped.', () => {
+  it('when it sets, the main event is expanded and the others are collapsed.', () => {
     // Given
     const mainEventId = eventUIModels[0].model.id;
     const collapseDuplicateEventsOptions: CollapseDuplicateEventsOptions = {

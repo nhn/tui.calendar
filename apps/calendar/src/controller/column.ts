@@ -115,7 +115,7 @@ function getDuplicateLeft(uiModel: EventUIModel, baseLeft: number) {
 function getDuplicateWidth(uiModel: EventUIModel, baseWidth: number) {
   const { collapse } = uiModel;
 
-  // if it is collasped, (COLLAPSED_DUPLICATE_EVENT_WIDTH_PX)px
+  // if it is collapsed, (COLLAPSED_DUPLICATE_EVENT_WIDTH_PX)px
   // if it is expanded, (baseWidth)% - (other duplicate events' width + marginLeft)px - (its marginLeft)px
   return collapse
     ? `${COLLAPSED_DUPLICATE_EVENT_WIDTH_PX}px`
