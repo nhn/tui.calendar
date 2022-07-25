@@ -32,7 +32,7 @@ export function calculateTimezoneOffset(timezoneName: string, targetDate: TZDate
       'Intl.DateTimeFormat is not fully supported. So It will return the local timezone offset only.\nYou can use a polyfill to fix this issue.'
     );
 
-    return -targetDate.getTimezoneOffset();
+    return -targetDate.toDate().getTimezoneOffset();
   }
 
   validateIANATimezoneName(timezoneName);
@@ -63,7 +63,8 @@ export function isUsingDST(targetDate: TZDate, timezoneName?: string) {
   }
 
   return (
-    Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset()) !== targetDate.getTimezoneOffset()
+    Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset()) !==
+    targetDate.toDate().getTimezoneOffset()
   );
 }
 

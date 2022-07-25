@@ -1,9 +1,8 @@
 import { h } from 'preact';
 import { useLayoutEffect } from 'preact/hooks';
 
-import { fireEvent, render, screen } from '@testing-library/preact';
-
 import { EventBusProvider, useEventBus } from '@src/contexts/eventBus';
+import { fireEvent, render, screen } from '@src/test/utils';
 import type { EventBus } from '@src/utils/eventBus';
 import { EventBusImpl } from '@src/utils/eventBus';
 

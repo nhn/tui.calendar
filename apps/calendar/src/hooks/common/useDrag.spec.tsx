@@ -1,13 +1,11 @@
 import { h } from 'preact';
 
-import { fireEvent, render, screen } from '@testing-library/preact';
-
 import { MINIMUM_DRAG_MOUSE_DISTANCE } from '@src/constants/mouse';
 import { initCalendarStore, StoreProvider } from '@src/contexts/calendarStore';
 import type { DragListeners } from '@src/hooks/common/useDrag';
 import { useDrag } from '@src/hooks/common/useDrag';
 import { DraggingState } from '@src/slices/dnd';
-import { dragAndDrop } from '@src/test/utils';
+import { dragAndDrop, fireEvent, render, screen } from '@src/test/utils';
 
 import type { PropsWithChildren } from '@t/components/common';
 import type { DraggingTypes } from '@t/drag';

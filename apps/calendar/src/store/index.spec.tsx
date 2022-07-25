@@ -1,10 +1,9 @@
 import { h } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 
-import { fireEvent, render, screen } from '@testing-library/preact';
-
 import { createStoreContext } from '@src/store/index';
 import { createStore } from '@src/store/internal';
+import { fireEvent, render, screen } from '@src/test/utils';
 
 import type { InternalStoreAPI } from '@t/store';
 

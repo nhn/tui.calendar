@@ -1,8 +1,7 @@
 import { h } from 'preact';
 
-import { fireEvent, render, screen } from '@testing-library/preact';
-
 import { useClickPrevention } from '@src/hooks/common/useClickPrevention';
+import { fireEvent, render, screen } from '@src/test/utils';
 
 describe('useClickPrevention', () => {
   const onClick = jest.fn();

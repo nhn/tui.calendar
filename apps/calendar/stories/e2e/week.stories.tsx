@@ -1,9 +1,13 @@
 import { h } from 'preact';
 
+import moment from 'moment-timezone';
+
 import { mockCalendars } from '@stories/mocks/mockCalendars';
 import { mockWeekViewEvents } from '@stories/mocks/mockWeekViewEvents';
 import type { CalendarExampleStory } from '@stories/util/calendarExample';
 import { CalendarExample } from '@stories/util/calendarExample';
+
+import type { EventObject } from '@t/events';
 
 export default { title: 'E2E/Week View' };
 
@@ -169,6 +173,86 @@ DaylightSavingTimeTransitionSouthern.args = {
       },
     ]);
     cal.on('afterRenderEvent', console.log);
+  },
+};
+
+// NOTE: For manual testing purposes
+const timezoneNameForSystemTimezoneTest = 'US/Pacific';
+// const timezoneNameForSystemTimezoneTest = 'Asia/Seoul';
+export const SystemTimezoneTest = Template.bind({});
+SystemTimezoneTest.args = {
+  ...Template.args,
+  options: {
+    ...Template.args.options,
+    useFormPopup: false,
+    timezone: {
+      zones: [
+        {
+          timezoneName: timezoneNameForSystemTimezoneTest,
+        },
+      ],
+    },
+  },
+  onInit: (cal) => {
+    const convert = (d: Date) =>
+      moment
+        .tz(
+          moment([
+            d.getFullYear(),
+            d.getMonth(),
+            d.getDate(),
+            d.getHours(),
+            d.getMinutes(),
+            d.getSeconds(),
+          ]).format('YYYY-MM-DD HH:mm:ss'),
+          timezoneNameForSystemTimezoneTest
+        )
+        .toISOString();
+
+    cal.setDate('2022-03-09T00:00:00Z');
+
+    cal.createEvents([
+      {
+        id: 'pst',
+        title: 'PST',
+        start: '2022-03-09T09:00:00Z', // 01:00 UTC-08, 18:00 UTC+09
+        end: '2022-03-09T10:00:00Z', // 02:00 UTC-08, 19:00 UTC+09
+      },
+      {
+        id: 'pdt',
+        title: 'PDT',
+        start: '2022-03-16T08:00:00Z', // 01:00 UTC-07, 17:00 UTC+09
+        end: '2022-03-16T09:00:00Z', // 02:00 UTC-07, 18:00 UTC+09
+      },
+    ]);
+
+    cal.on('selectDateTime', (info) => {
+      const startDate = info.start;
+      const endDate = info.end;
+
+      cal.createEvents([
+        {
+          id: Date.now().toString(32).slice(0, 8),
+          title: 'New Event',
+          start: convert(startDate),
+          end: convert(endDate),
+          category: 'time',
+        },
+      ]);
+
+      cal.clearGridSelections();
+    });
+
+    cal.on('beforeUpdateEvent', ({ event, changes }) => {
+      const zonedChanges = Object.keys(changes).reduce<EventObject>((acc, _k) => {
+        const key = _k as keyof EventObject;
+        acc[key] = convert(changes[key]);
+
+        return acc;
+      }, {});
+
+      cal.updateEvent(event.id, event.calendarId, zonedChanges);
+    });
   },
 };
 
