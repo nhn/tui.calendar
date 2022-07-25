@@ -42,6 +42,18 @@ export function toPx(value: number) {
   return `${value}px`;
 }
 
+export function extractPercentPx(value: string) {
+  const percentRegexp = /(\d+)%/;
+  const percentResult = value.match(percentRegexp);
+  const pxRegexp = /(-?)\s?(\d+)px/;
+  const pxResult = value.match(pxRegexp);
+
+  return {
+    percent: percentResult ? parseInt(percentResult[1], 10) : 0,
+    px: pxResult ? parseInt(`${pxResult[1]}${pxResult[2]}`, 10) : 0,
+  };
+}
+
 export function getEventColors(uiModel: EventUIModel, calendarColor: CalendarColor) {
   const eventColors = uiModel.model.getColors();
 

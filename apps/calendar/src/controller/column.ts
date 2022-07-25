@@ -1,8 +1,12 @@
 import { DEFAULT_DUPLICATE_EVENT_CID } from '@src/constants/layout';
-import { COLLAPSED_DUPLICATE_EVENT_WIDTH } from '@src/constants/style';
+import {
+  COLLAPSED_DUPLICATE_EVENT_WIDTH_PX,
+  TIME_EVENT_CONTAINER_MARGIN_LEFT,
+} from '@src/constants/style';
 import { createEventCollection } from '@src/controller/base';
 import { getCollisionGroup, getMatrices } from '@src/controller/core';
 import { getTopHeightByTime } from '@src/controller/times';
+import { extractPercentPx, toPercent, toPx } from '@src/helpers/css';
 import { isTimeEvent } from '@src/model/eventModel';
 import type EventUIModel from '@src/model/eventUIModel';
 import type TZDate from '@src/time/date';
@@ -83,6 +87,45 @@ function setCroppedEdges(uiModel: EventUIModel, options: RenderInfoOptions) {
   }
 }
 
+function getDuplicateLeft(uiModel: EventUIModel, baseLeft: number) {
+  const { duplicateEvents } = uiModel;
+
+  const currEventIndex = duplicateEvents.findIndex((event) => event.cid() === uiModel.cid());
+  const prevEvent = duplicateEvents[currEventIndex - 1];
+  let left: number | string = baseLeft;
+  if (prevEvent) {
+    // duplicateLeft = prevEvent.duplicateLeft + prevEvent.duplicateWidth + marginLeft
+    const { percent: leftPercent, px: leftPx } = extractPercentPx(`${prevEvent.duplicateLeft}`);
+    const { percent: widthPercent, px: widthPx } = extractPercentPx(`${prevEvent.duplicateWidth}`);
+    const percent = leftPercent + widthPercent;
+    const px = leftPx + widthPx + TIME_EVENT_CONTAINER_MARGIN_LEFT;
+
+    if (percent) {
+      left = `calc(${toPercent(percent)} ${px > 0 ? '+' : '-'} ${toPx(Math.abs(px))})`;
+    } else {
+      left = toPx(px);
+    }
+  } else {
+    left = `calc(${toPercent(left)})`;
+  }
+
+  return left;
+}
+
+function getDuplicateWidth(uiModel: EventUIModel, baseWidth: number) {
+  const { collapse } = uiModel;
+
+  // if it is collasped, (COLLAPSED_DUPLICATE_EVENT_WIDTH_PX)px
+  // if it is expanded, (baseWidth)% - (other duplicate events' width + marginLeft)px - (its marginLeft)px
+  return collapse
+    ? `${COLLAPSED_DUPLICATE_EVENT_WIDTH_PX}px`
+    : `calc(${toPercent(baseWidth)} - ${
+        (COLLAPSED_DUPLICATE_EVENT_WIDTH_PX + TIME_EVENT_CONTAINER_MARGIN_LEFT) *
+          (uiModel.duplicateEvents.length - 1) +
+        TIME_EVENT_CONTAINER_MARGIN_LEFT
+      }px)`;
+}
+
 function setDimension(uiModel: EventUIModel, options: RenderInfoOptions) {
   const { startColumnTime, endColumnTime, baseWidth, columnIndex, renderStart, renderEnd } =
     options;
@@ -93,37 +136,18 @@ function setDimension(uiModel: EventUIModel, options: RenderInfoOptions) {
     startColumnTime,
     endColumnTime
   );
+  const dimension = {
+    top,
+    left: baseWidth * columnIndex,
+    width: baseWidth,
+    height: Math.max(MIN_HEIGHT_PERCENT, height),
+    duplicateLeft: '',
+    duplicateWidth: '',
+  };
 
-  let dimension;
   if (duplicateEvents.length > 0) {
-    let isPrevDuplicateEvent = true;
-    const left = duplicateEvents.reduce((value, event) => {
-      if (event.cid() === uiModel.cid()) {
-        isPrevDuplicateEvent = false;
-      }
-
-      if (isPrevDuplicateEvent) {
-        return value + event.width;
-      }
-
-      return value;
-    }, baseWidth * columnIndex);
-
-    dimension = {
-      top,
-      height: Math.max(MIN_HEIGHT_PERCENT, height),
-      width: uiModel.collapse
-        ? COLLAPSED_DUPLICATE_EVENT_WIDTH
-        : baseWidth - COLLAPSED_DUPLICATE_EVENT_WIDTH * (uiModel.duplicateEvents.length - 1),
-      left,
-    };
-  } else {
-    dimension = {
-      top,
-      left: baseWidth * columnIndex,
-      width: baseWidth,
-      height: Math.max(MIN_HEIGHT_PERCENT, height),
-    };
+    dimension.duplicateLeft = getDuplicateLeft(uiModel, dimension.left);
+    dimension.duplicateWidth = getDuplicateWidth(uiModel, dimension.width);
   }
 
   uiModel.setUIProps(dimension);

@@ -124,8 +124,8 @@ export const mockWeekViewEvents: MockedWeekViewEvents[] = [
     title: 'normal event',
     category: 'time',
     isAllday: false,
-    start: setTimeStrToDate(monday, '07:30'),
-    end: setTimeStrToDate(monday, '08:30'),
+    start: setTimeStrToDate(monday, '08:00'),
+    end: setTimeStrToDate(monday, '09:00'),
   },
   {
     id: '10',

@@ -18,6 +18,8 @@ interface EventUIProps {
   duplicateEvents: EventUIModel[];
   duplicateStarts?: TZDate;
   duplicateEnds?: TZDate;
+  duplicateLeft: string;
+  duplicateWidth: string;
   collapse: boolean;
   isMain: boolean;
 }
@@ -37,6 +39,8 @@ const eventUIPropsKey: (keyof EventUIProps)[] = [
   'duplicateEvents',
   'duplicateStarts',
   'duplicateEnds',
+  'duplicateLeft',
+  'duplicateWidth',
   'collapse',
   'isMain',
 ];
@@ -51,8 +55,10 @@ export default class EventUIModel implements EventUIProps {
 
   top = 0;
 
+  // If it is one of duplicate events, represents the left value of a group of duplicate events.
   left = 0;
 
+  // If it is one of duplicate events, represents the width value of a group of duplicate events.
   width = 0;
 
   height = 0;
@@ -133,6 +139,22 @@ export default class EventUIModel implements EventUIProps {
    * @type {TZDate}
    */
   duplicateEnds?: TZDate;
+
+  /**
+   * represent the left value of a duplicate event.
+   * ex) calc(50% - 24px), calc(50%), ...
+   *
+   * @type {string}
+   */
+  duplicateLeft = '';
+
+  /**
+   * represent the width value of a duplicate event.
+   * ex) calc(50% - 24px), 9px, ...
+   *
+   * @type {string}
+   */
+  duplicateWidth = '';
 
   /**
    * whether the event is collapsed or not among the duplicate events.
