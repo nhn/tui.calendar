@@ -70,7 +70,7 @@ describe('collapseDuplicateEvents option', () => {
 
     // Then
     result.forEach((uiModel) => {
-      expect(uiModel.width).toBeCloseTo(100 / result.length);
+      expect(uiModel.width).toBeCloseTo(100 / result.length, 0);
     });
   });
 

@@ -314,7 +314,7 @@ export function setRenderInfoOfUIModels(
 
   matrices.forEach((matrix) => {
     const maxRowLength = Math.max(...matrix.map((row) => row.length));
-    const baseWidth = 100 / maxRowLength;
+    const baseWidth = Math.round(100 / maxRowLength);
 
     matrix.forEach((row) => {
       row.forEach((uiModel, columnIndex) => {
