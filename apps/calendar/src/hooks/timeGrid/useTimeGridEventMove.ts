@@ -15,8 +15,8 @@ import type { CalendarState } from '@t/store';
 
 const THIRTY_MINUTES = 30;
 
-function getCurrentIndexByTime(time: TZDate) {
-  const hour = time.getHours();
+function getCurrentIndexByTime(time: TZDate, hourStart: number) {
+  const hour = time.getHours() - hourStart;
   const minutes = time.getMinutes();
 
   return hour * 2 + Math.floor(minutes / THIRTY_MINUTES);
@@ -38,14 +38,15 @@ function getMovingEventPosition({
   const rowHeight = timeGridDataRows[0].height;
   const maxHeight = rowHeight * timeGridDataRows.length;
   const millisecondsDiff = rowDiff * MS_PER_THIRTY_MINUTES + columnDiff * MS_PER_DAY;
+  const hourStart = Number(timeGridDataRows[0].startTime.split(':')[0]);
 
   const { goingDuration = 0, comingDuration = 0 } = draggingEvent.model;
   const goingStart = addMinutes(draggingEvent.getStarts(), -goingDuration);
   const comingEnd = addMinutes(draggingEvent.getEnds(), comingDuration);
   const nextStart = addMilliseconds(goingStart, millisecondsDiff);
   const nextEnd = addMilliseconds(comingEnd, millisecondsDiff);
-  const startIndex = getCurrentIndexByTime(nextStart);
-  const endIndex = getCurrentIndexByTime(nextEnd);
+  const startIndex = Math.max(getCurrentIndexByTime(nextStart, hourStart), 0);
+  const endIndex = Math.min(getCurrentIndexByTime(nextEnd, hourStart), timeGridDataRows.length - 1);
 
   const isStartAtPrevDate = nextStart.getDate() < currentDate.getDate();
   const isEndAtNextDate = nextEnd.getDate() > currentDate.getDate();

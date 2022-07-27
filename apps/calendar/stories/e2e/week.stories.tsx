@@ -43,6 +43,18 @@ ReadOnly.args = {
   },
 };
 
+export const HourStartOption = Template.bind({});
+HourStartOption.args = {
+  ...Template.args,
+  options: {
+    ...Template.args.options,
+    week: {
+      hourStart: 6,
+      showNowIndicator: false,
+    },
+  },
+};
+
 export const DifferentPrimaryTimezone = Template.bind({});
 DifferentPrimaryTimezone.args = {
   ...Template.args,
