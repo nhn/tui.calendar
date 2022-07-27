@@ -42,6 +42,12 @@ export function toPx(value: number) {
   return `${value}px`;
 }
 
+/**
+ * ex)
+ * extractPercentPx('calc(100% - 22px)') // { percent: 100, px: -22 }
+ * extractPercentPx('100%') // { percent: 100, px: 0 }
+ * extractPercentPx('-22px') // { percent: 0, px: -22 }
+ */
 export function extractPercentPx(value: string) {
   const percentRegexp = /(\d+)%/;
   const percentResult = value.match(percentRegexp);

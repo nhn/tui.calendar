@@ -16,6 +16,7 @@ interface EventUIProps {
   modelDurationHeight: number;
   comingDurationHeight: number;
   duplicateEvents: EventUIModel[];
+  duplicateEventIndex: number;
   duplicateStarts?: TZDate;
   duplicateEnds?: TZDate;
   duplicateLeft: string;
@@ -37,6 +38,7 @@ const eventUIPropsKey: (keyof EventUIProps)[] = [
   'modelDurationHeight',
   'comingDurationHeight',
   'duplicateEvents',
+  'duplicateEventIndex',
   'duplicateStarts',
   'duplicateEnds',
   'duplicateLeft',
@@ -123,6 +125,12 @@ export default class EventUIModel implements EventUIProps {
    * @type {EventUIModel[]}
    */
   duplicateEvents: EventUIModel[] = [];
+
+  /**
+   * the index of this event among the duplicate events.
+   * @type {number}
+   */
+  duplicateEventIndex = -1;
 
   /**
    * represent the start date of a group of duplicate events.

@@ -88,10 +88,9 @@ function setCroppedEdges(uiModel: EventUIModel, options: RenderInfoOptions) {
 }
 
 function getDuplicateLeft(uiModel: EventUIModel, baseLeft: number) {
-  const { duplicateEvents } = uiModel;
+  const { duplicateEvents, duplicateEventIndex } = uiModel;
 
-  const currEventIndex = duplicateEvents.findIndex((event) => event.cid() === uiModel.cid());
-  const prevEvent = duplicateEvents[currEventIndex - 1];
+  const prevEvent = duplicateEvents[duplicateEventIndex - 1];
   let left: number | string = baseLeft;
   if (prevEvent) {
     // duplicateLeft = prevEvent.duplicateLeft + prevEvent.duplicateWidth + marginLeft
@@ -100,13 +99,13 @@ function getDuplicateLeft(uiModel: EventUIModel, baseLeft: number) {
     const percent = leftPercent + widthPercent;
     const px = leftPx + widthPx + TIME_EVENT_CONTAINER_MARGIN_LEFT;
 
-    if (percent) {
+    if (percent !== 0) {
       left = `calc(${toPercent(percent)} ${px > 0 ? '+' : '-'} ${toPx(Math.abs(px))})`;
     } else {
       left = toPx(px);
     }
   } else {
-    left = `calc(${toPercent(left)})`;
+    left = toPercent(left);
   }
 
   return left;
@@ -119,11 +118,11 @@ function getDuplicateWidth(uiModel: EventUIModel, baseWidth: number) {
   // if it is expanded, (baseWidth)% - (other duplicate events' width + marginLeft)px - (its marginLeft)px
   return collapse
     ? `${COLLAPSED_DUPLICATE_EVENT_WIDTH_PX}px`
-    : `calc(${toPercent(baseWidth)} - ${
+    : `calc(${toPercent(baseWidth)} - ${toPx(
         (COLLAPSED_DUPLICATE_EVENT_WIDTH_PX + TIME_EVENT_CONTAINER_MARGIN_LEFT) *
           (uiModel.duplicateEvents.length - 1) +
-        TIME_EVENT_CONTAINER_MARGIN_LEFT
-      }px)`;
+          TIME_EVENT_CONTAINER_MARGIN_LEFT
+      )})`;
 }
 
 function setDimension(uiModel: EventUIModel, options: RenderInfoOptions) {
@@ -264,7 +263,7 @@ function setDuplicateEvents(
       return max(acc, renderEnd);
     }, duplicateEvents[0].end);
 
-    duplicateEventUIModels.forEach((event) => {
+    duplicateEventUIModels.forEach((event, index) => {
       const isMain = event.cid() === mainEvent.__cid;
       const collapse = !(
         (isSelectedGroup && event.cid() === selectedDuplicateEventCid) ||
@@ -273,6 +272,7 @@ function setDuplicateEvents(
 
       event.setUIProps({
         duplicateEvents: duplicateEventUIModels,
+        duplicateEventIndex: index,
         collapse,
         isMain,
         duplicateStarts,

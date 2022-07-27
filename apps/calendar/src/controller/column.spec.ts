@@ -99,17 +99,16 @@ describe('collapseDuplicateEvents option', () => {
 
     // Then
     result.forEach((uiModel) => {
-      if (uiModel.model.id === mainEventId) {
-        expect(uiModel.duplicateWidth).toBe(
-          `calc(100% - ${
-            (COLLAPSED_DUPLICATE_EVENT_WIDTH_PX + TIME_EVENT_CONTAINER_MARGIN_LEFT) *
-              (result.length - 1) +
-            TIME_EVENT_CONTAINER_MARGIN_LEFT
-          }px)`
-        );
-      } else {
-        expect(uiModel.duplicateWidth).toBe(`${COLLAPSED_DUPLICATE_EVENT_WIDTH_PX}px`);
-      }
+      const expected =
+        uiModel.model.id === mainEventId
+          ? `calc(100% - ${
+              (COLLAPSED_DUPLICATE_EVENT_WIDTH_PX + TIME_EVENT_CONTAINER_MARGIN_LEFT) *
+                (result.length - 1) +
+              TIME_EVENT_CONTAINER_MARGIN_LEFT
+            }px)`
+          : `${COLLAPSED_DUPLICATE_EVENT_WIDTH_PX}px`;
+
+      expect(uiModel.duplicateWidth).toBe(expected);
     });
   });
 
@@ -139,17 +138,16 @@ describe('collapseDuplicateEvents option', () => {
 
     // Then
     result.forEach((uiModel) => {
-      if (uiModel.cid() === selectedDuplicateEventCid) {
-        expect(uiModel.duplicateWidth).toBe(
-          `calc(100% - ${
-            (COLLAPSED_DUPLICATE_EVENT_WIDTH_PX + TIME_EVENT_CONTAINER_MARGIN_LEFT) *
-              (result.length - 1) +
-            TIME_EVENT_CONTAINER_MARGIN_LEFT
-          }px)`
-        );
-      } else {
-        expect(uiModel.duplicateWidth).toBe(`${COLLAPSED_DUPLICATE_EVENT_WIDTH_PX}px`);
-      }
+      const expected =
+        uiModel.cid() === selectedDuplicateEventCid
+          ? `calc(100% - ${
+              (COLLAPSED_DUPLICATE_EVENT_WIDTH_PX + TIME_EVENT_CONTAINER_MARGIN_LEFT) *
+                (result.length - 1) +
+              TIME_EVENT_CONTAINER_MARGIN_LEFT
+            }px)`
+          : `${COLLAPSED_DUPLICATE_EVENT_WIDTH_PX}px`;
+
+      expect(uiModel.duplicateWidth).toBe(expected);
     });
   });
 });
