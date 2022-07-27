@@ -16,7 +16,7 @@ type ReactCalendarExternalEvents = {
 
 type Props = ReactCalendarOptions & {
   height: string;
-  events?: EventObject[];
+  events?: Partial<EventObject>[];
   view?: CalendarView;
 } & ReactCalendarExternalEvents;
 
@@ -125,7 +125,7 @@ export default class ToastUIReactCalendar extends React.Component<Props> {
     }
   }
 
-  setEvents(events?: EventObject[]) {
+  setEvents(events?: Partial<EventObject>[]) {
     if (events) {
       this.calendarInstance?.createEvents(events);
     }

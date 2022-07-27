@@ -120,104 +120,42 @@ TOAST UI 캘린더의 [옵션](/docs/ko/apis/options.md)은 React 컴포넌트�
 
 ```jsx
 export function MyComponent() {
+  const calendars = [{ id: 'cal1', name: 'Personal' }];
+  const initialEvents = [
+    {
+      id: '1',
+      calendarId: 'cal1',
+      title: 'Lunch',
+      category: 'time',
+      start: '2022-06-28T12:00:00',
+      end: '2022-06-28T13:30:00',
+    },
+    {
+      id: '2',
+      calendarId: 'cal1',
+      title: 'Coffee Break',
+      category: 'time',
+      start: '2022-06-28T15:00:00',
+      end: '2022-06-28T15:30:00',
+    },
+  ];
+
+  const onAfterRenderEvent = (event) => {
+    console.log(event.title);
+  };
+
   return (
     <div>
       <Calendar
         height="900px"
-        calendars={[
-          {
-            id: '0',
-            name: 'Private',
-            bgColor: '#9e5fff',
-            borderColor: '#9e5fff',
-          },
-          {
-            id: '1',
-            name: 'Company',
-            bgColor: '#00a9ff',
-            borderColor: '#00a9ff',
-          },
-        ]}
-        disableDblClick={true}
-        disableClick={false}
-        isReadOnly={false}
-        month={{ startDayOfWeek: 0 }}
-        events={[
-          {
-            id: '1',
-            calendarId: '0',
-            title: 'TOAST UI Calendar Study',
-            category: 'time',
-            dueDateClass: '',
-            start: today.toISOString(),
-            end: getDate('hours', today, 3, '+').toISOString(),
-          },
-          {
-            id: '2',
-            calendarId: '0',
-            title: 'Practice',
-            category: 'milestone',
-            dueDateClass: '',
-            start: getDate('date', today, 1, '+').toISOString(),
-            end: getDate('date', today, 1, '+').toISOString(),
-            isReadOnly: true,
-          },
-          {
-            id: '3',
-            calendarId: '0',
-            title: 'FE Workshop',
-            category: 'allday',
-            dueDateClass: '',
-            start: getDate('date', today, 2, '-').toISOString(),
-            end: getDate('date', today, 1, '-').toISOString(),
-            isReadOnly: true,
-          },
-          {
-            id: '4',
-            calendarId: '0',
-            title: 'Report',
-            category: 'time',
-            dueDateClass: '',
-            start: today.toISOString(),
-            end: getDate('hours', today, 1, '+').toISOString(),
-          },
-        ]}
-        template={{
-          milestone(event) {
-            return `<span style="color:#fff;background-color: ${event.backgroundColor};">${event.title}</span>`;
-          },
-          milestoneTitle() {
-            return 'Milestone';
-          },
-          allday(event) {
-            return `${event.title}<i class="fa fa-refresh"></i>`;
-          },
-          alldayTitle() {
-            return 'All Day';
-          },
+        view="month"
+        month={{
+          dayNames: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
+          visibleWeeksCount: 3,
         }}
-        theme={myTheme}
-        timezones={[
-          {
-            timezoneOffset: 540,
-            displayLabel: 'GMT+09:00',
-            tooltip: 'Seoul',
-          },
-          {
-            timezoneOffset: -420,
-            displayLabel: 'GMT-08:00',
-            tooltip: 'Los Angeles',
-          },
-        ]}
-        useDetailPopup={true}
-        useFormPopup={true}
-        view={selectedView} // You can also set the `defaultView` option.
-        week={{
-          showTimezoneCollapseButton: true,
-          timezonesCollapsed: true,
-          eventView: true,
-          taskView: true,
-        }}
+        calendars={calendars}
+        events={initialEvents}
+        onAfterRenderEvent={onAfterRenderEvent}
       />
     </div>
   );
@@ -278,7 +216,7 @@ export function MyCalendar() {
 
 ### ⚠️ Props를 넘길 때 주의할 점
 
-캘린더 React Wrapper 컴포넌트는 다시 렌더링할 때 `props`를 깊게 비교한다. 불필요한 재렌더링을 피하고 더 나은 성능을 위해서 props를 컴포넌트 밖에서 선언하거나, props가 컴포넌트 상태 변경에 영향을 받을 필요가 없는 경우 `usememo`를 사용하는 것을 추천한다.
+캘린더 React Wrapper 컴포넌트는 다시 렌더링할 때 `props`를 깊게 비교한다. 불필요한 재렌더링을 피하고 더 나은 성능을 위해서 props를 컴포넌트 밖에서 선언하거나, props가 컴포넌트 상태 변경에 영향을 받을 필요가 없는 경우 `useMemo`를 사용하는 것을 추천한다.
 
 ```jsx
 const calendars = [
@@ -299,16 +237,10 @@ const calendars = [
 // 특히 컴포넌트 내에서 `template` prop을 선언하지 않는다.
 const template = {
   milestone(event) {
-    return `<span style="color:#fff;background-color: ${event.backgroundColor};">${event.title}</span>`;
-  },
-  milestoneTitle() {
-    return 'Milestone';
+    return `<span style="color: #fff; background-color: ${event.backgroundColor};">${event.title}</span>`;
   },
   allday(event) {
-    return `${event.title}<i class="fa fa-refresh"></i>`;
-  },
-  alldayTitle() {
-    return 'All Day';
+    return `[All day] ${event.title}`;
   },
 };
 

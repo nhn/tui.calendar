@@ -1,16 +1,16 @@
 /* eslint-disable no-console */
 import './app.css';
 
+import type { EventObject, ExternalEventTypes, Options } from '@toast-ui/calendar';
 import { TZDate } from '@toast-ui/calendar';
-import type { ExternalEventTypes } from '@toast-ui/calendar/types/types/eventBus';
-import type { EventObject } from '@toast-ui/calendar/types/types/events';
-import type { CalendarInfo, ViewType } from '@toast-ui/calendar/types/types/options';
 import type { ChangeEvent, MouseEvent } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import Calendar from '../src';
 import { theme } from './theme';
 import { addDate, addHours, subtractDate } from './utils';
+
+type ViewType = 'month' | 'week' | 'day';
 
 const today = new TZDate();
 const viewModeOptions = [
@@ -32,7 +32,7 @@ export function App({ view }: { view: ViewType }) {
   const calendarRef = useRef<typeof Calendar>(null);
   const [selectedDateRangeText, setSelectedDateRangeText] = useState('');
   const [selectedView, setSelectedView] = useState(view);
-  const initialCalendars: CalendarInfo[] = [
+  const initialCalendars: Options['calendars'] = [
     {
       id: '0',
       name: 'Private',
@@ -48,7 +48,7 @@ export function App({ view }: { view: ViewType }) {
       dragBackgroundColor: '#00a9ff',
     },
   ];
-  const initialEvents: EventObject[] = [
+  const initialEvents: Partial<EventObject>[] = [
     {
       id: '1',
       calendarId: '0',
@@ -208,7 +208,7 @@ export function App({ view }: { view: ViewType }) {
   };
 
   const onBeforeCreateEvent: ExternalEventTypes['beforeCreateEvent'] = (eventData) => {
-    const event: EventObject = {
+    const event = {
       calendarId: eventData.calendarId || '',
       id: String(Math.random()),
       title: eventData.title,
@@ -265,40 +265,33 @@ export function App({ view }: { view: ViewType }) {
         <span className="render-range">{selectedDateRangeText}</span>
       </div>
       <Calendar
-        usageStatistics={false}
-        calendars={initialCalendars}
-        disableDblClick={true}
         height="900px"
-        isReadOnly={false}
+        calendars={initialCalendars}
         month={{ startDayOfWeek: 1 }}
         events={initialEvents}
         template={{
           milestone(event) {
-            return `<span style="color:#fff;background-color: ${event.backgroundColor};">${event.title}</span>`;
-          },
-          milestoneTitle() {
-            return 'Milestone';
+            return `<span style="color: #fff; background-color: ${event.backgroundColor};">${event.title}</span>`;
           },
           allday(event) {
-            return `${event.title}<i class="fa fa-refresh"></i>`;
-          },
-          alldayTitle() {
-            return 'All Day';
+            return `[All day] ${event.title}`;
           },
         }}
         theme={theme}
-        timezones={[
-          {
-            timezoneOffset: 540,
-            displayLabel: 'GMT+09:00',
-            tooltip: 'Seoul',
-          },
-          {
-            timezoneOffset: -420,
-            displayLabel: 'GMT-08:00',
-            tooltip: 'Los Angeles',
-          },
-        ]}
+        timezone={{
+          zones: [
+            {
+              timezoneName: 'Asia/Seoul',
+              displayLabel: 'Seoul',
+              tooltip: 'UTC+09:00',
+            },
+            {
+              timezoneName: 'Pacific/Guam',
+              displayLabel: 'Guam',
+              tooltip: 'UTC+10:00',
+            },
+          ],
+        }}
         useDetailPopup={true}
         useFormPopup={true}
         view={selectedView}

@@ -1,7 +1,6 @@
-import type { ThemeState } from '@toast-ui/calendar/types/types/theme';
-import type { DeepPartial } from 'ts-essentials';
+import type { Options } from '@toast-ui/calendar';
 
-export const theme: DeepPartial<ThemeState> = {
+export const theme: Options['theme'] = {
   common: {
     border: '1px solid #ddd',
     backgroundColor: 'white',
