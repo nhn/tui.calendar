@@ -49,7 +49,7 @@ HourStartOption.args = {
   options: {
     ...Template.args.options,
     week: {
-      hourStart: 6,
+      hourStart: 4,
       showNowIndicator: false,
     },
   },
