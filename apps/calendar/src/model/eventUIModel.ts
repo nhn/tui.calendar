@@ -16,6 +16,11 @@ interface EventUIProps {
   modelDurationHeight: number;
   comingDurationHeight: number;
   duplicateEvents: EventUIModel[];
+  duplicateEventIndex: number;
+  duplicateStarts?: TZDate;
+  duplicateEnds?: TZDate;
+  duplicateLeft: string;
+  duplicateWidth: string;
   collapse: boolean;
   isMain: boolean;
 }
@@ -33,6 +38,11 @@ const eventUIPropsKey: (keyof EventUIProps)[] = [
   'modelDurationHeight',
   'comingDurationHeight',
   'duplicateEvents',
+  'duplicateEventIndex',
+  'duplicateStarts',
+  'duplicateEnds',
+  'duplicateLeft',
+  'duplicateWidth',
   'collapse',
   'isMain',
 ];
@@ -47,8 +57,10 @@ export default class EventUIModel implements EventUIProps {
 
   top = 0;
 
+  // If it is one of duplicate events, represents the left value of a group of duplicate events.
   left = 0;
 
+  // If it is one of duplicate events, represents the width value of a group of duplicate events.
   width = 0;
 
   height = 0;
@@ -113,6 +125,44 @@ export default class EventUIModel implements EventUIProps {
    * @type {EventUIModel[]}
    */
   duplicateEvents: EventUIModel[] = [];
+
+  /**
+   * the index of this event among the duplicate events.
+   * @type {number}
+   */
+  duplicateEventIndex = -1;
+
+  /**
+   * represent the start date of a group of duplicate events.
+   *
+   * the earliest value among the duplicate events' starts and going durations.
+   * @type {TZDate}
+   */
+  duplicateStarts?: TZDate;
+
+  /**
+   * represent the end date of a group of duplicate events.
+   *
+   * the latest value among the duplicate events' ends and coming durations.
+   * @type {TZDate}
+   */
+  duplicateEnds?: TZDate;
+
+  /**
+   * represent the left value of a duplicate event.
+   * ex) calc(50% - 24px), calc(50%), ...
+   *
+   * @type {string}
+   */
+  duplicateLeft = '';
+
+  /**
+   * represent the width value of a duplicate event.
+   * ex) calc(50% - 24px), 9px, ...
+   *
+   * @type {string}
+   */
+  duplicateWidth = '';
 
   /**
    * whether the event is collapsed or not among the duplicate events.
@@ -188,15 +238,38 @@ export default class EventUIModel implements EventUIProps {
   }
 
   collidesWith(uiModel: EventModel | EventUIModel, usingTravelTime = true) {
+    const infos: { start: TZDate; end: TZDate; goingDuration: number; comingDuration: number }[] =
+      [];
+    [this, uiModel].forEach((event) => {
+      const isDuplicateEvent = event instanceof EventUIModel && event.duplicateEvents.length > 0;
+
+      if (isDuplicateEvent) {
+        infos.push({
+          start: event.duplicateStarts as TZDate,
+          end: event.duplicateEnds as TZDate,
+          goingDuration: 0,
+          comingDuration: 0,
+        });
+      } else {
+        infos.push({
+          start: event.getStarts(),
+          end: event.getEnds(),
+          goingDuration: event.valueOf().goingDuration,
+          comingDuration: event.valueOf().comingDuration,
+        });
+      }
+    });
+    const [thisInfo, targetInfo] = infos;
+
     return collidesWith({
-      start: this.getStarts().getTime(),
-      end: this.getEnds().getTime(),
-      targetStart: uiModel.getStarts().getTime(),
-      targetEnd: uiModel.getEnds().getTime(),
-      goingDuration: this.model.goingDuration,
-      comingDuration: this.model.comingDuration,
-      targetGoingDuration: uiModel.valueOf().goingDuration,
-      targetComingDuration: uiModel.valueOf().comingDuration,
+      start: thisInfo.start.getTime(),
+      end: thisInfo.end.getTime(),
+      targetStart: targetInfo.start.getTime(),
+      targetEnd: targetInfo.end.getTime(),
+      goingDuration: thisInfo.goingDuration,
+      comingDuration: thisInfo.comingDuration,
+      targetGoingDuration: targetInfo.goingDuration,
+      targetComingDuration: targetInfo.comingDuration,
       usingTravelTime, // Daygrid does not use travelTime, TimeGrid uses travelTime.
     });
   }

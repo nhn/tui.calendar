@@ -81,6 +81,15 @@
     font-size: 1.25rem;
 }
 
+.navbar .nav-checkbox {
+    margin-left: auto;
+}
+
+input:disabled + label {
+    color: #ccc;
+    cursor: not-allowed;
+}
+
 .toastui-calendar-template-time strong {
     color: inherit;
 }
@@ -93,7 +102,7 @@
     position: relative;
 }
 
-.checkbox:not(.checkbox-all)::before {
+.checkbox-calendar::before {
     content: "";
     position: absolute;
     left: -1.5rem;

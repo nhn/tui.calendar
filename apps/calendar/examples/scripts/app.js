@@ -17,6 +17,7 @@
   var dropdownTrigger = $('.dropdown-trigger');
   var dropdownTriggerIcon = $('.dropdown-icon');
   var dropdownContent = $('.dropdown-content');
+  var checkboxCollapse = $('.checkbox-collapse');
   var sidebar = $('.sidebar');
 
   // App State
@@ -73,7 +74,7 @@
   }
 
   function setAllCheckboxes(checked) {
-    var checkboxes = $$('input[type="checkbox"]');
+    var checkboxes = $$('.sidebar-item > input[type="checkbox"]');
 
     checkboxes.forEach(function (checkbox) {
       checkbox.checked = checked;
@@ -125,10 +126,25 @@
     });
 
     dropdownContent.addEventListener('click', function (e) {
+      var targetViewName;
+
       if ('viewName' in e.target.dataset) {
-        cal.changeView(e.target.dataset.viewName);
+        targetViewName = e.target.dataset.viewName;
+        cal.changeView(targetViewName);
+        checkboxCollapse.disabled = targetViewName === 'month';
         toggleDropdownState();
         update();
+      }
+    });
+
+    checkboxCollapse.addEventListener('change', function (e) {
+      if ('checked' in e.target) {
+        cal.setOptions({
+          week: {
+            collapseDuplicateEvents: !!e.target.checked,
+          },
+          useDetailPopup: !e.target.checked,
+        });
       }
     });
 

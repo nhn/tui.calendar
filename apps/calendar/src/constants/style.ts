@@ -47,4 +47,6 @@ export const DEFAULT_EVENT_COLORS = {
   borderColor: '#000',
 };
 
-export const COLLAPSED_DUPLICATE_EVENT_WIDTH = 5;
+export const TIME_EVENT_CONTAINER_MARGIN_LEFT = 2;
+
+export const COLLAPSED_DUPLICATE_EVENT_WIDTH_PX = 9;

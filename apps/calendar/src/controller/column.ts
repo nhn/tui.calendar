@@ -1,8 +1,12 @@
 import { DEFAULT_DUPLICATE_EVENT_CID } from '@src/constants/layout';
-import { COLLAPSED_DUPLICATE_EVENT_WIDTH } from '@src/constants/style';
+import {
+  COLLAPSED_DUPLICATE_EVENT_WIDTH_PX,
+  TIME_EVENT_CONTAINER_MARGIN_LEFT,
+} from '@src/constants/style';
 import { createEventCollection } from '@src/controller/base';
 import { getCollisionGroup, getMatrices } from '@src/controller/core';
 import { getTopHeightByTime } from '@src/controller/times';
+import { extractPercentPx, toPercent, toPx } from '@src/helpers/css';
 import { isTimeEvent } from '@src/model/eventModel';
 import type EventUIModel from '@src/model/eventUIModel';
 import type TZDate from '@src/time/date';
@@ -83,59 +87,69 @@ function setCroppedEdges(uiModel: EventUIModel, options: RenderInfoOptions) {
   }
 }
 
-function setDimensionOfDuplicateEvent(uiModel: EventUIModel, options: RenderInfoOptions) {
-  const { startColumnTime, endColumnTime, baseWidth, columnIndex } = options;
-  const { duplicateEvents } = uiModel;
-  let cumulativeLeft = baseWidth * columnIndex;
+function getDuplicateLeft(uiModel: EventUIModel, baseLeft: number) {
+  const { duplicateEvents, duplicateEventIndex } = uiModel;
 
-  duplicateEvents.forEach((event) => {
-    const { renderStart, renderEnd } = getRenderInfoOptions(
-      event,
-      columnIndex,
-      baseWidth,
-      startColumnTime,
-      endColumnTime
-    );
-    const { top, height } = getTopHeightByTime(
-      renderStart,
-      renderEnd,
-      startColumnTime,
-      endColumnTime
-    );
-    const width = event.collapse
-      ? COLLAPSED_DUPLICATE_EVENT_WIDTH
-      : baseWidth - COLLAPSED_DUPLICATE_EVENT_WIDTH * (duplicateEvents.length - 1);
-    event.setUIProps({
-      top,
-      height,
-      width,
-      left: cumulativeLeft,
-    });
+  const prevEvent = duplicateEvents[duplicateEventIndex - 1];
+  let left: number | string = baseLeft;
+  if (prevEvent) {
+    // duplicateLeft = prevEvent.duplicateLeft + prevEvent.duplicateWidth + marginLeft
+    const { percent: leftPercent, px: leftPx } = extractPercentPx(`${prevEvent.duplicateLeft}`);
+    const { percent: widthPercent, px: widthPx } = extractPercentPx(`${prevEvent.duplicateWidth}`);
+    const percent = leftPercent + widthPercent;
+    const px = leftPx + widthPx + TIME_EVENT_CONTAINER_MARGIN_LEFT;
 
-    cumulativeLeft += width;
-  });
+    if (percent !== 0) {
+      left = `calc(${toPercent(percent)} ${px > 0 ? '+' : '-'} ${toPx(Math.abs(px))})`;
+    } else {
+      left = toPx(px);
+    }
+  } else {
+    left = toPercent(left);
+  }
+
+  return left;
+}
+
+function getDuplicateWidth(uiModel: EventUIModel, baseWidth: number) {
+  const { collapse } = uiModel;
+
+  // if it is collapsed, (COLLAPSED_DUPLICATE_EVENT_WIDTH_PX)px
+  // if it is expanded, (baseWidth)% - (other duplicate events' width + marginLeft)px - (its marginLeft)px
+  return collapse
+    ? `${COLLAPSED_DUPLICATE_EVENT_WIDTH_PX}px`
+    : `calc(${toPercent(baseWidth)} - ${toPx(
+        (COLLAPSED_DUPLICATE_EVENT_WIDTH_PX + TIME_EVENT_CONTAINER_MARGIN_LEFT) *
+          (uiModel.duplicateEvents.length - 1) +
+          TIME_EVENT_CONTAINER_MARGIN_LEFT
+      )})`;
 }
 
 function setDimension(uiModel: EventUIModel, options: RenderInfoOptions) {
   const { startColumnTime, endColumnTime, baseWidth, columnIndex, renderStart, renderEnd } =
     options;
+  const { duplicateEvents } = uiModel;
+  const { top, height } = getTopHeightByTime(
+    renderStart,
+    renderEnd,
+    startColumnTime,
+    endColumnTime
+  );
+  const dimension = {
+    top,
+    left: baseWidth * columnIndex,
+    width: baseWidth,
+    height: Math.max(MIN_HEIGHT_PERCENT, height),
+    duplicateLeft: '',
+    duplicateWidth: '',
+  };
 
-  if (uiModel.duplicateEvents.length === 0) {
-    const { top, height } = getTopHeightByTime(
-      renderStart,
-      renderEnd,
-      startColumnTime,
-      endColumnTime
-    );
-    uiModel.setUIProps({
-      top,
-      left: baseWidth * columnIndex,
-      width: baseWidth,
-      height: Math.max(MIN_HEIGHT_PERCENT, height),
-    });
-  } else {
-    setDimensionOfDuplicateEvent(uiModel, options);
+  if (duplicateEvents.length > 0) {
+    dimension.duplicateLeft = getDuplicateLeft(uiModel, dimension.left);
+    dimension.duplicateWidth = getDuplicateWidth(uiModel, dimension.width);
   }
+
+  uiModel.setUIProps(dimension);
 }
 
 function getRenderInfoOptions(
@@ -168,13 +182,36 @@ function getRenderInfoOptions(
   };
 }
 
-function setRenderInfo(
-  uiModel: EventUIModel,
-  columnIndex: number,
-  baseWidth: number,
-  startColumnTime: TZDate,
-  endColumnTime: TZDate
-) {
+function setRenderInfo({
+  uiModel,
+  columnIndex,
+  baseWidth,
+  startColumnTime,
+  endColumnTime,
+  isDuplicateEvent = false,
+}: {
+  uiModel: EventUIModel;
+  columnIndex: number;
+  baseWidth: number;
+  startColumnTime: TZDate;
+  endColumnTime: TZDate;
+  isDuplicateEvent?: boolean;
+}) {
+  if (!isDuplicateEvent && uiModel.duplicateEvents.length > 0) {
+    uiModel.duplicateEvents.forEach((event) => {
+      setRenderInfo({
+        uiModel: event,
+        columnIndex,
+        baseWidth,
+        startColumnTime,
+        endColumnTime,
+        isDuplicateEvent: true,
+      });
+    });
+
+    return;
+  }
+
   const renderInfoOptions = getRenderInfoOptions(
     uiModel,
     columnIndex,
@@ -217,8 +254,16 @@ function setDuplicateEvents(
       selectedDuplicateEventCid > DEFAULT_DUPLICATE_EVENT_CID &&
       duplicateEvents.find((event) => event.__cid === selectedDuplicateEventCid)
     );
+    const duplicateStarts = duplicateEvents.reduce((acc, { start, goingDuration }) => {
+      const renderStart = addMinutes(start, -goingDuration);
+      return min(acc, renderStart);
+    }, duplicateEvents[0].start);
+    const duplicateEnds = duplicateEvents.reduce((acc, { end, comingDuration }) => {
+      const renderEnd = addMinutes(end, comingDuration);
+      return max(acc, renderEnd);
+    }, duplicateEvents[0].end);
 
-    duplicateEventUIModels.forEach((event) => {
+    duplicateEventUIModels.forEach((event, index) => {
       const isMain = event.cid() === mainEvent.__cid;
       const collapse = !(
         (isSelectedGroup && event.cid() === selectedDuplicateEventCid) ||
@@ -227,8 +272,11 @@ function setDuplicateEvents(
 
       event.setUIProps({
         duplicateEvents: duplicateEventUIModels,
+        duplicateEventIndex: index,
         collapse,
         isMain,
+        duplicateStarts,
+        duplicateEnds,
       });
     });
   });
@@ -266,11 +314,11 @@ export function setRenderInfoOfUIModels(
 
   matrices.forEach((matrix) => {
     const maxRowLength = Math.max(...matrix.map((row) => row.length));
-    const baseWidth = 100 / maxRowLength;
+    const baseWidth = Math.round(100 / maxRowLength);
 
     matrix.forEach((row) => {
-      row.forEach((uiModel, col) => {
-        setRenderInfo(uiModel, col, baseWidth, startColumnTime, endColumnTime);
+      row.forEach((uiModel, columnIndex) => {
+        setRenderInfo({ uiModel, columnIndex, baseWidth, startColumnTime, endColumnTime });
       });
     });
   });

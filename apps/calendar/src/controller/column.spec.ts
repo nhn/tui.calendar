@@ -1,5 +1,8 @@
 import { DEFAULT_DUPLICATE_EVENT_CID } from '@src/constants/layout';
-import { COLLAPSED_DUPLICATE_EVENT_WIDTH } from '@src/constants/style';
+import {
+  COLLAPSED_DUPLICATE_EVENT_WIDTH_PX,
+  TIME_EVENT_CONTAINER_MARGIN_LEFT,
+} from '@src/constants/style';
 import { setRenderInfoOfUIModels } from '@src/controller/column';
 import EventModel from '@src/model/eventModel';
 import EventUIModel from '@src/model/eventUIModel';
@@ -67,11 +70,11 @@ describe('collapseDuplicateEvents option', () => {
 
     // Then
     result.forEach((uiModel) => {
-      expect(uiModel.width).toBeCloseTo(100 / result.length);
+      expect(uiModel.width).toBeCloseTo(100 / result.length, 0);
     });
   });
 
-  it('when it sets, the main event is expanded and the others are collasped.', () => {
+  it('when it sets, the main event is expanded and the others are collapsed.', () => {
     // Given
     const mainEventId = eventUIModels[0].model.id;
     const collapseDuplicateEventsOptions: CollapseDuplicateEventsOptions = {
@@ -96,13 +99,16 @@ describe('collapseDuplicateEvents option', () => {
 
     // Then
     result.forEach((uiModel) => {
-      if (uiModel.model.id === mainEventId) {
-        expect(uiModel.width).toBeCloseTo(
-          100 - (result.length - 1) * COLLAPSED_DUPLICATE_EVENT_WIDTH
-        );
-      } else {
-        expect(uiModel.width).toBeCloseTo(COLLAPSED_DUPLICATE_EVENT_WIDTH);
-      }
+      const expected =
+        uiModel.model.id === mainEventId
+          ? `calc(100% - ${
+              (COLLAPSED_DUPLICATE_EVENT_WIDTH_PX + TIME_EVENT_CONTAINER_MARGIN_LEFT) *
+                (result.length - 1) +
+              TIME_EVENT_CONTAINER_MARGIN_LEFT
+            }px)`
+          : `${COLLAPSED_DUPLICATE_EVENT_WIDTH_PX}px`;
+
+      expect(uiModel.duplicateWidth).toBe(expected);
     });
   });
 
@@ -132,13 +138,16 @@ describe('collapseDuplicateEvents option', () => {
 
     // Then
     result.forEach((uiModel) => {
-      if (uiModel.cid() === selectedDuplicateEventCid) {
-        expect(uiModel.width).toBeCloseTo(
-          100 - (result.length - 1) * COLLAPSED_DUPLICATE_EVENT_WIDTH
-        );
-      } else {
-        expect(uiModel.width).toBeCloseTo(COLLAPSED_DUPLICATE_EVENT_WIDTH);
-      }
+      const expected =
+        uiModel.cid() === selectedDuplicateEventCid
+          ? `calc(100% - ${
+              (COLLAPSED_DUPLICATE_EVENT_WIDTH_PX + TIME_EVENT_CONTAINER_MARGIN_LEFT) *
+                (result.length - 1) +
+              TIME_EVENT_CONTAINER_MARGIN_LEFT
+            }px)`
+          : `${COLLAPSED_DUPLICATE_EVENT_WIDTH_PX}px`;
+
+      expect(uiModel.duplicateWidth).toBe(expected);
     });
   });
 });

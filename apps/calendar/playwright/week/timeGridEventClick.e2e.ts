@@ -1,7 +1,5 @@
 import { expect, test } from '@playwright/test';
 
-import type { MockedWeekViewEvents } from '@stories/mocks/types';
-
 import { mockWeekViewEvents } from '../../stories/mocks/mockWeekViewEvents';
 import { WEEK_VIEW_DUPLICATE_EVENTS_PAGE_URL, WEEK_VIEW_PAGE_URL } from '../configs';
 import { getBoundingBox, getTimeEventSelector } from '../utils';
@@ -34,23 +32,54 @@ test.describe('Collapse duplicate events', () => {
     await page.goto(WEEK_VIEW_DUPLICATE_EVENTS_PAGE_URL);
   });
 
-  const collapsedEvent = mockWeekViewEvents.find(
-    ({ title }) => title === 'duplicate event'
-  ) as MockedWeekViewEvents;
+  const collapsedEvents = mockWeekViewEvents.filter(({ title }) =>
+    title.match(/duplicate event(\s\d)?$/)
+  );
+  const [collapsedEvent] = collapsedEvents;
 
-  test('When clicking the collapsed duplicate event, it should be expanded.', async ({ page }) => {
+  test('The duplicate events are sorted according to the result of getDuplicateEvents option.', ({
+    page,
+  }) => {
     // Given
-    const collapsedEventLocator = page.locator(getTimeEventSelector(collapsedEvent.title));
-    const { x, y, width: widthBeforeClick } = await getBoundingBox(collapsedEventLocator);
+    // getDuplicateEvents: sort by calendarId in descending order
+    const sortedDuplicateEvents = mockWeekViewEvents
+      .filter(({ title }) => title.startsWith('duplicate event 2'))
+      .sort((a, b) => (b.calendarId > a.calendarId ? 1 : -1));
+    let prevX = -1;
 
     // When
-    await page.mouse.move(x + 2, y + 2);
-    await page.mouse.down();
-    await page.mouse.up();
+    // Nothing
 
     // Then
-    const { width: widthAfterClick } = await getBoundingBox(collapsedEventLocator);
-    expect(widthAfterClick).toBeGreaterThan(widthBeforeClick);
+    sortedDuplicateEvents.forEach(async (event) => {
+      const eventLocator = page.locator(getTimeEventSelector(event.title));
+      const { x } = await getBoundingBox(eventLocator);
+      expect(prevX).toBeLessThan(x);
+
+      prevX = x;
+    });
+  });
+
+  collapsedEvents.forEach((event) => {
+    test(`When clicking the collapsed duplicate event, it should be expanded. - ${event.title}`, async ({
+      page,
+    }) => {
+      // Given
+      const collapsedEventLocator = page.locator(getTimeEventSelector(event.title));
+      const { x, y, width: widthBeforeClick } = await getBoundingBox(collapsedEventLocator);
+      const mainEventLocator = page.locator(getTimeEventSelector(`${event.title} - main`));
+      const { width: mainEventWidth } = await getBoundingBox(mainEventLocator);
+
+      // When
+      await page.mouse.move(x + 2, y + 2);
+      await page.mouse.down();
+      await page.mouse.up();
+
+      // Then
+      const { width: widthAfterClick } = await getBoundingBox(collapsedEventLocator);
+      expect(widthAfterClick).toBeGreaterThan(widthBeforeClick);
+      expect(widthAfterClick).toBeCloseTo(mainEventWidth, -1);
+    });
   });
 
   const otherEvents = mockWeekViewEvents.filter(({ title }) => {

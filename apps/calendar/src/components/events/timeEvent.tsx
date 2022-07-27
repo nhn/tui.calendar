@@ -3,10 +3,11 @@ import { useEffect, useRef, useState } from 'preact/hooks';
 
 import { Template } from '@src/components/template';
 import { DEFAULT_DUPLICATE_EVENT_CID } from '@src/constants/layout';
+import { TIME_EVENT_CONTAINER_MARGIN_LEFT } from '@src/constants/style';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
 import { useLayoutContainer } from '@src/contexts/layoutContainer';
-import { cls, getEventColors, toPercent } from '@src/helpers/css';
+import { cls, extractPercentPx, getEventColors, toPercent } from '@src/helpers/css';
 import { DRAGGING_TYPE_CREATORS } from '@src/helpers/drag';
 import { useCalendarColor } from '@src/hooks/calendar/useCalendarColor';
 import { useDrag } from '@src/hooks/common/useDrag';
@@ -15,7 +16,7 @@ import type EventUIModel from '@src/model/eventUIModel';
 import { dndSelector, optionsSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import type TZDate from '@src/time/date';
-import { isPresent } from '@src/utils/type';
+import { isPresent, isString } from '@src/utils/type';
 
 import type { StyleProp } from '@t/components/common';
 import type { CalendarColor } from '@t/options';
@@ -36,6 +37,23 @@ interface Props {
   minHeight?: number;
 }
 
+function getMarginLeft(left: number | string) {
+  const { percent, px } = extractPercentPx(`${left}`);
+
+  return left > 0 || percent > 0 || px > 0 ? TIME_EVENT_CONTAINER_MARGIN_LEFT : 0;
+}
+
+function getContainerWidth(width: number | string, marginLeft: number) {
+  if (isString(width)) {
+    return width;
+  }
+  if (width >= 0) {
+    return `calc(${toPercent(width)} - ${marginLeft}px)`;
+  }
+
+  return '';
+}
+
 function getStyles({
   uiModel,
   isDraggingTarget,
@@ -54,6 +72,8 @@ function getStyles({
     left,
     height,
     width,
+    duplicateLeft,
+    duplicateWidth,
     goingDurationHeight,
     modelDurationHeight,
     comingDurationHeight,
@@ -63,20 +83,18 @@ function getStyles({
   // TODO: check and get theme values
   const travelBorderColor = 'white';
   const borderRadius = 2;
-  const paddingLeft = 2;
   const defaultMarginBottom = 2;
-  const marginLeft = left > 0 ? paddingLeft : 0;
+  const marginLeft = getMarginLeft(left);
 
   const { color, backgroundColor, borderColor, dragBackgroundColor } = getEventColors(
     uiModel,
     calendarColor
   );
   const containerStyle: StyleProp = {
-    width: width >= 0 ? `calc(${toPercent(width)} - ${marginLeft}px)` : '',
-    minWidth: '9px',
+    width: getContainerWidth(duplicateWidth || width, marginLeft),
     height: `calc(${toPercent(Math.max(height, minHeight))} - ${defaultMarginBottom}px)`,
     top: toPercent(top),
-    left: toPercent(left),
+    left: duplicateLeft || toPercent(left),
     borderRadius,
     borderLeft: `3px solid ${borderColor}`,
     marginLeft,
@@ -85,6 +103,7 @@ function getStyles({
     opacity: isDraggingTarget ? 0.5 : 1,
     zIndex: hasNextStartTime ? 1 : 0,
   };
+
   const goingDurationStyle = {
     height: toPercent(goingDurationHeight),
     borderBottom: `1px dashed ${travelBorderColor}`,

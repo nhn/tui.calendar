@@ -53,7 +53,7 @@ import type { ThemeState, ThemeStore } from '@t/theme';
 /**
  * Timezone options of the calendar instance.
  *
- * For more information, see {@link https://github.com/nhn/tui.calendar/blob/main/docs/ko/apis/options.md#timezone|Timezone options} in guide.
+ * For more information, see {@link https://github.com/nhn/tui.calendar/blob/main/docs/en/apis/options.md#timezone|Timezone options} in guide.
  *
  * @typedef {object} TimezoneOptions
  * @example
@@ -127,7 +127,7 @@ import type { ThemeState, ThemeStore } from '@t/theme';
  * @class CalendarCore
  * @mixes CustomEvents
  * @param {string|Element} container - container element or selector.
- * @param {object} options - calendar options. For more information, see {@link https://github.com/nhn/tui.calendar/blob/main/docs/ko/apis/calendar.md|Calendar options} in guide.
+ * @param {object} options - calendar options. For more information, see {@link https://github.com/nhn/tui.calendar/blob/main/docs/en/apis/calendar.md|Calendar options} in guide.
  *   @param {string} [options.defaultView="week"] - Initial view type. Available values are: 'day', 'week', 'month'.
  *   @param {boolean} [options.useFormPopup=false] - Whether to use the default form popup when creating/modifying events.
  *   @param {boolean} [options.useDetailPopup=false] - Whether to use the default detail popup when clicking events.
@@ -147,6 +147,7 @@ import type { ThemeState, ThemeStore } from '@t/theme';
  *     @param {boolean} [options.week.narrowWeekend=false] - Whether to narrow down width of weekends to half.
  *     @param {boolean|Array.<string>} [options.week.eventView=true] - Determine which view to display events. Available values are 'allday' and 'time'. set to `false` to disable event view.
  *     @param {boolean|Array.<string>} [options.week.taskView=true] - Determine which view to display tasks. Available values are 'milestone' and 'task'. set to `false` to disable task view.
+ *     @param {boolean|object} [options.week.collapseDuplicateEvents=false] - Whether to collapse duplicate events. If you want to filter duplicate events and choose the main event based on your requirements, set `getDuplicateEvents` and `getMainEvent`. For more information, see {@link https://github.com/nhn/tui.calendar/blob/main/docs/en/apis/options.md#weekcollapseduplicateevents|Options} in guide.
  *   @param {object} options.month - Month option of the calendar instance.
  *     @param {number} [options.month.startDayOfWeek=0] - Start day of the week. Available values are 0 (Sunday) to 6 (Saturday).
  *     @param {Array.<string>} [options.month.dayNames] - Names of days of the week. Should be 7 items starting from Sunday to Saturday. If not specified, the default names are used.
@@ -158,9 +159,9 @@ import type { ThemeState, ThemeStore } from '@t/theme';
  *   @param {boolean|object} [options.gridSelection=true] - Whether to enable grid selection. or it's option. it's enabled when the value is `true` and object and will be disabled when `isReadOnly` is true.
  *     @param {boolean} options.gridSelection.enableDbClick - Whether to enable double click to select area.
  *     @param {boolean} options.gridSelection.enableClick - Whether to enable click to select area.
- *   @param {TimezoneOptions} options.timezone - Timezone option of the calendar instance. For more information about timezone, check out the {@link https://github.com/nhn/tui.calendar/blob/main/docs/ko/apis/options.md|Options} in guide.
- *   @param {Theme} options.theme - Theme option of the calendar instance. For more information, see {@link https://github.com/nhn/tui.calendar/blob/main/docs/ko/apis/theme.md|Theme} in guide.
- *   @param {TemplateConfig} options.template - Template option of the calendar instance. For more information, see {@link https://github.com/nhn/tui.calendar/blob/main/docs/ko/apis/template.md|Template} in guide.
+ *   @param {TimezoneOptions} options.timezone - Timezone option of the calendar instance. For more information about timezone, check out the {@link https://github.com/nhn/tui.calendar/blob/main/docs/en/apis/options.md|Options} in guide.
+ *   @param {Theme} options.theme - Theme option of the calendar instance. For more information, see {@link https://github.com/nhn/tui.calendar/blob/main/docs/en/apis/theme.md|Theme} in guide.
+ *   @param {TemplateConfig} options.template - Template option of the calendar instance. For more information, see {@link https://github.com/nhn/tui.calendar/blob/main/docs/en/apis/template.md|Template} in guide.
  */
 export default abstract class CalendarCore
   implements EventBus<ExternalEventTypes & InternalEventTypes>
@@ -723,7 +724,7 @@ export default abstract class CalendarCore
   /**
    * Set the theme of the calendar.
    *
-   * @param {Theme} theme - The theme object to apply. For more information, see {@link https://github.com/nhn/tui.calendar/blob/main/docs/ko/apis/theme.md|Theme} in guide.
+   * @param {Theme} theme - The theme object to apply. For more information, see {@link https://github.com/nhn/tui.calendar/blob/main/docs/en/apis/theme.md|Theme} in guide.
    *
    * @example
    * calendar.setTheme({
@@ -767,7 +768,7 @@ export default abstract class CalendarCore
   }
 
   /**
-   * Set options of calendar. For more information, see {@link https://github.com/nhn/tui.calendar/blob/main/docs/ko/apis/options.md|Options} in guide.
+   * Set options of calendar. For more information, see {@link https://github.com/nhn/tui.calendar/blob/main/docs/en/apis/options.md|Options} in guide.
    *
    * @param {Options} options - The options to set
    */
