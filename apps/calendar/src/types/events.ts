@@ -44,6 +44,7 @@ export type EventObjectWithDefaultValues = MarkOptional<
 > & {
   start: TZDate;
   end: TZDate;
+  __cid: number;
 };
 
 export interface EventObject {

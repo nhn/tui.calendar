@@ -8,9 +8,6 @@ interface EventUIProps {
   left: number;
   width: number;
   height: number;
-  hasCollide: boolean;
-  extraSpace: number;
-  hidden: boolean;
   exceedLeft: boolean;
   exceedRight: boolean;
   croppedStart: boolean;
@@ -18,6 +15,14 @@ interface EventUIProps {
   goingDurationHeight: number;
   modelDurationHeight: number;
   comingDurationHeight: number;
+  duplicateEvents: EventUIModel[];
+  duplicateEventIndex: number;
+  duplicateStarts?: TZDate;
+  duplicateEnds?: TZDate;
+  duplicateLeft: string;
+  duplicateWidth: string;
+  collapse: boolean;
+  isMain: boolean;
 }
 
 const eventUIPropsKey: (keyof EventUIProps)[] = [
@@ -25,9 +30,6 @@ const eventUIPropsKey: (keyof EventUIProps)[] = [
   'left',
   'width',
   'height',
-  'hasCollide',
-  'extraSpace',
-  'hidden',
   'exceedLeft',
   'exceedRight',
   'croppedStart',
@@ -35,6 +37,14 @@ const eventUIPropsKey: (keyof EventUIProps)[] = [
   'goingDurationHeight',
   'modelDurationHeight',
   'comingDurationHeight',
+  'duplicateEvents',
+  'duplicateEventIndex',
+  'duplicateStarts',
+  'duplicateEnds',
+  'duplicateLeft',
+  'duplicateWidth',
+  'collapse',
+  'isMain',
 ];
 
 /**
@@ -47,33 +57,13 @@ export default class EventUIModel implements EventUIProps {
 
   top = 0;
 
+  // If it is one of duplicate events, represents the left value of a group of duplicate events.
   left = 0;
 
+  // If it is one of duplicate events, represents the width value of a group of duplicate events.
   width = 0;
 
   height = 0;
-
-  /**
-   * Represent event has collide with other events when rendering.
-   * @type {boolean}
-   */
-  hasCollide = false;
-
-  /**
-   * Extra space at right side of this event.
-   * @type {number}
-   */
-  extraSpace = 0;
-
-  /**
-   * represent this event block is not visible after rendered.
-   *
-   * in month view, some ui models in date need to hide when already rendered before dates.
-   *
-   * set true then it just shows empty space.
-   * @type {boolean}
-   */
-  hidden = false;
 
   /**
    * represent render start date used at rendering.
@@ -129,6 +119,63 @@ export default class EventUIModel implements EventUIProps {
    * @type {number} percent
    */
   comingDurationHeight = 0;
+
+  /**
+   * the sorted list of duplicate events.
+   * @type {EventUIModel[]}
+   */
+  duplicateEvents: EventUIModel[] = [];
+
+  /**
+   * the index of this event among the duplicate events.
+   * @type {number}
+   */
+  duplicateEventIndex = -1;
+
+  /**
+   * represent the start date of a group of duplicate events.
+   *
+   * the earliest value among the duplicate events' starts and going durations.
+   * @type {TZDate}
+   */
+  duplicateStarts?: TZDate;
+
+  /**
+   * represent the end date of a group of duplicate events.
+   *
+   * the latest value among the duplicate events' ends and coming durations.
+   * @type {TZDate}
+   */
+  duplicateEnds?: TZDate;
+
+  /**
+   * represent the left value of a duplicate event.
+   * ex) calc(50% - 24px), calc(50%), ...
+   *
+   * @type {string}
+   */
+  duplicateLeft = '';
+
+  /**
+   * represent the width value of a duplicate event.
+   * ex) calc(50% - 24px), 9px, ...
+   *
+   * @type {string}
+   */
+  duplicateWidth = '';
+
+  /**
+   * whether the event is collapsed or not among the duplicate events.
+   * @type {boolean}
+   */
+  collapse = false;
+
+  /**
+   * whether the event is main or not.
+   * The main event is expanded on the initial rendering.
+   * @type {boolean}
+   */
+  isMain = false;
 
   constructor(event: EventModel) {
     this.model = event;
@@ -191,15 +238,38 @@ export default class EventUIModel implements EventUIProps {
   }
 
   collidesWith(uiModel: EventModel | EventUIModel, usingTravelTime = true) {
+    const infos: { start: TZDate; end: TZDate; goingDuration: number; comingDuration: number }[] =
+      [];
+    [this, uiModel].forEach((event) => {
+      const isDuplicateEvent = event instanceof EventUIModel && event.duplicateEvents.length > 0;
+
+      if (isDuplicateEvent) {
+        infos.push({
+          start: event.duplicateStarts as TZDate,
+          end: event.duplicateEnds as TZDate,
+          goingDuration: 0,
+          comingDuration: 0,
+        });
+      } else {
+        infos.push({
+          start: event.getStarts(),
+          end: event.getEnds(),
+          goingDuration: event.valueOf().goingDuration,
+          comingDuration: event.valueOf().comingDuration,
+        });
+      }
+    });
+    const [thisInfo, targetInfo] = infos;
+
     return collidesWith({
-      start: this.getStarts().getTime(),
-      end: this.getEnds().getTime(),
-      targetStart: uiModel.getStarts().getTime(),
-      targetEnd: uiModel.getEnds().getTime(),
-      goingDuration: this.model.goingDuration,
-      comingDuration: this.model.comingDuration,
-      targetGoingDuration: uiModel.valueOf().goingDuration,
-      targetComingDuration: uiModel.valueOf().comingDuration,
+      start: thisInfo.start.getTime(),
+      end: thisInfo.end.getTime(),
+      targetStart: targetInfo.start.getTime(),
+      targetEnd: targetInfo.end.getTime(),
+      goingDuration: thisInfo.goingDuration,
+      comingDuration: thisInfo.comingDuration,
+      targetGoingDuration: targetInfo.goingDuration,
+      targetComingDuration: targetInfo.comingDuration,
       usingTravelTime, // Daygrid does not use travelTime, TimeGrid uses travelTime.
     });
   }

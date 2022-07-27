@@ -1,7 +1,9 @@
 import { h } from 'preact';
 
 import moment from 'moment-timezone';
+import { last } from '@src/utils/array';
 
+import { mockCalendars } from '@stories/mocks/mockCalendars';
 import { mockWeekViewEvents } from '@stories/mocks/mockWeekViewEvents';
 import type { CalendarExampleStory } from '@stories/util/calendarExample';
 import { CalendarExample } from '@stories/util/calendarExample';
@@ -19,6 +21,7 @@ Template.args = {
     week: {
       showNowIndicator: false,
     },
+    calendars: mockCalendars,
   },
   containerHeight: '100vh',
   onInit: (cal) => {
@@ -280,5 +283,25 @@ CustomTemplate.args = {
         return '<span>CUSTOM TASK</span>';
       },
     },
+  },
+};
+
+export const DuplicateEvents = Template.bind({});
+DuplicateEvents.args = {
+  ...Template.args,
+  options: {
+    ...Template.args.options,
+    week: {
+      ...Template.args.options?.week,
+      collapseDuplicateEvents: {
+        getDuplicateEvents: (targetEvent, events) =>
+          events
+            .filter((event) => event.id === targetEvent.id)
+            .sort((a, b) => (b.calendarId > a.calendarId ? 1 : -1)), // descending order
+        getMainEvent: (events) =>
+          events.find(({ title }) => title.includes('- main')) || last(events),
+      },
+    },
+    useDetailPopup: false,
   },
 };

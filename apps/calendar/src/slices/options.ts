@@ -1,12 +1,18 @@
 import produce from 'immer';
 
 import { DEFAULT_DAY_NAMES } from '@src/helpers/dayName';
-import { Day } from '@src/time/datetime';
+import { compare, Day } from '@src/time/datetime';
+import { last } from '@src/utils/array';
 import { mergeObject } from '@src/utils/object';
 import { isBoolean } from '@src/utils/type';
 
-import type { EventObject } from '@t/events';
-import type { GridSelectionOptions, Options, TimezoneOptions } from '@t/options';
+import type { EventObject, EventObjectWithDefaultValues } from '@t/events';
+import type {
+  CollapseDuplicateEventsOptions,
+  GridSelectionOptions,
+  Options,
+  TimezoneOptions,
+} from '@t/options';
 import type {
   CalendarMonthOptions,
   CalendarState,
@@ -15,8 +21,38 @@ import type {
   SetState,
 } from '@t/store';
 
+function initializeCollapseDuplicateEvents(
+  options: boolean | Partial<CollapseDuplicateEventsOptions>
+): boolean | CollapseDuplicateEventsOptions {
+  if (!options) {
+    return false;
+  }
+
+  const initialCollapseDuplicateEvents = {
+    getDuplicateEvents: (
+      targetEvent: EventObjectWithDefaultValues,
+      events: EventObjectWithDefaultValues[]
+    ) =>
+      events
+        .filter(
+          (event: EventObjectWithDefaultValues) =>
+            event.title === targetEvent.title &&
+            compare(event.start, targetEvent.start) === 0 &&
+            compare(event.end, targetEvent.end) === 0
+        )
+        .sort((a, b) => (a.calendarId > b.calendarId ? 1 : -1)),
+    getMainEvent: (events: EventObjectWithDefaultValues[]) => last(events),
+  };
+
+  if (isBoolean(options)) {
+    return initialCollapseDuplicateEvents;
+  }
+
+  return { ...initialCollapseDuplicateEvents, ...options };
+}
+
 function initializeWeekOptions(weekOptions: Options['week'] = {}): CalendarWeekOptions {
-  return {
+  const week: CalendarWeekOptions = {
     startDayOfWeek: Day.SUN,
     dayNames: [],
     narrowWeekend: false,
@@ -28,8 +64,13 @@ function initializeWeekOptions(weekOptions: Options['week'] = {}): CalendarWeekO
     hourEnd: 24,
     eventView: true,
     taskView: true,
+    collapseDuplicateEvents: false,
     ...weekOptions,
   };
+
+  week.collapseDuplicateEvents = initializeCollapseDuplicateEvents(week.collapseDuplicateEvents);
+
+  return week;
 }
 
 function initializeTimezoneOptions(timezoneOptions: Options['timezone'] = {}): TimezoneOptions {
@@ -113,6 +154,16 @@ export function createOptionsDispatchers(set: SetState<CalendarStore>): OptionsD
     setOptions: (newOptions: Partial<OptionsSlice['options']> = {}) =>
       set(
         produce<CalendarState>((state) => {
+          if (newOptions.gridSelection) {
+            newOptions.gridSelection = initializeGridSelectionOptions(newOptions.gridSelection);
+          }
+
+          if (newOptions.week?.collapseDuplicateEvents) {
+            newOptions.week.collapseDuplicateEvents = initializeCollapseDuplicateEvents(
+              newOptions.week.collapseDuplicateEvents
+            );
+          }
+
           mergeObject(state.options, newOptions);
         })
       ),
