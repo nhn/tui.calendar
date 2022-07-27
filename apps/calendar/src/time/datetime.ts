@@ -376,7 +376,7 @@ export function getRowStyleInfo(
   const uniformWidth = 100 / days;
   const wideWidth = days > limitDaysToApplyNarrowWeekend ? 100 / (days - 1) : uniformWidth;
   let accumulatedWidth = 0;
-  const dates = range(startDayOfWeek, 7).concat(range(days)).slice(0, 7);
+  const dates = range(startDayOfWeek, WEEK_DAYS).concat(range(days)).slice(0, WEEK_DAYS);
 
   narrowWeekend = workweek ? false : narrowWeekend;
 
