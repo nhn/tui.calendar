@@ -1,4 +1,4 @@
-import type Calendar from '@src/factory/calendar';
+import type Calendar from '../src/factory/calendar';
 
 declare global {
   interface Window {
