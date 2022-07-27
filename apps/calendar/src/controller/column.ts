@@ -1,11 +1,13 @@
+import { DEFAULT_DUPLICATE_EVENT_CID } from '@src/constants/layout';
+import { COLLAPSED_DUPLICATE_EVENT_WIDTH } from '@src/constants/style';
 import { createEventCollection } from '@src/controller/base';
 import { getCollisionGroup, getMatrices } from '@src/controller/core';
 import { getTopHeightByTime } from '@src/controller/times';
-import { getCollides } from '@src/controller/week';
 import { isTimeEvent } from '@src/model/eventModel';
 import type EventUIModel from '@src/model/eventUIModel';
 import type TZDate from '@src/time/date';
 import { addMinutes, max, min } from '@src/time/datetime';
+import type { CollapseDuplicateEventsOptions } from '@src/types/options';
 import array from '@src/utils/array';
 
 const MIN_HEIGHT_PERCENT = 1;
@@ -81,23 +83,62 @@ function setCroppedEdges(uiModel: EventUIModel, options: RenderInfoOptions) {
   }
 }
 
-function setDimension(uiModel: EventUIModel, options: RenderInfoOptions) {
-  const { renderStart, renderEnd, startColumnTime, endColumnTime, baseWidth, columnIndex } =
-    options;
-  const { top, height } = getTopHeightByTime(
-    renderStart,
-    renderEnd,
-    startColumnTime,
-    endColumnTime
-  );
-  const left = baseWidth * columnIndex;
-  uiModel.top = top;
-  uiModel.left = left;
-  uiModel.width = baseWidth;
-  uiModel.height = height < MIN_HEIGHT_PERCENT ? MIN_HEIGHT_PERCENT : height;
+function setDimensionOfDuplicateEvent(uiModel: EventUIModel, options: RenderInfoOptions) {
+  const { startColumnTime, endColumnTime, baseWidth, columnIndex } = options;
+  const { duplicateEvents } = uiModel;
+  let cumulativeLeft = baseWidth * columnIndex;
+
+  duplicateEvents.forEach((event) => {
+    const { renderStart, renderEnd } = getRenderInfoOptions(
+      event,
+      columnIndex,
+      baseWidth,
+      startColumnTime,
+      endColumnTime
+    );
+    const { top, height } = getTopHeightByTime(
+      renderStart,
+      renderEnd,
+      startColumnTime,
+      endColumnTime
+    );
+    const width = event.collapse
+      ? COLLAPSED_DUPLICATE_EVENT_WIDTH
+      : baseWidth - COLLAPSED_DUPLICATE_EVENT_WIDTH * (duplicateEvents.length - 1);
+    event.setUIProps({
+      top,
+      height,
+      width,
+      left: cumulativeLeft,
+    });
+
+    cumulativeLeft += width;
+  });
 }
 
-function setRenderInfo(
+function setDimension(uiModel: EventUIModel, options: RenderInfoOptions) {
+  const { startColumnTime, endColumnTime, baseWidth, columnIndex, renderStart, renderEnd } =
+    options;
+
+  if (uiModel.duplicateEvents.length === 0) {
+    const { top, height } = getTopHeightByTime(
+      renderStart,
+      renderEnd,
+      startColumnTime,
+      endColumnTime
+    );
+    uiModel.setUIProps({
+      top,
+      left: baseWidth * columnIndex,
+      width: baseWidth,
+      height: Math.max(MIN_HEIGHT_PERCENT, height),
+    });
+  } else {
+    setDimensionOfDuplicateEvent(uiModel, options);
+  }
+}
+
+function getRenderInfoOptions(
   uiModel: EventUIModel,
   columnIndex: number,
   baseWidth: number,
@@ -111,7 +152,8 @@ function setRenderInfo(
   const comingEnd = addMinutes(modelEnd, comingDuration);
   const renderStart = max(goingStart, startColumnTime);
   const renderEnd = min(comingEnd, endColumnTime);
-  const renderInfoOptions = {
+
+  return {
     baseWidth,
     columnIndex,
     modelStart,
@@ -122,11 +164,76 @@ function setRenderInfo(
     comingEnd,
     startColumnTime,
     endColumnTime,
+    duplicateEvents: uiModel.duplicateEvents,
   };
+}
+
+function setRenderInfo(
+  uiModel: EventUIModel,
+  columnIndex: number,
+  baseWidth: number,
+  startColumnTime: TZDate,
+  endColumnTime: TZDate
+) {
+  const renderInfoOptions = getRenderInfoOptions(
+    uiModel,
+    columnIndex,
+    baseWidth,
+    startColumnTime,
+    endColumnTime
+  );
 
   setDimension(uiModel, renderInfoOptions);
   setInnerHeights(uiModel, renderInfoOptions);
   setCroppedEdges(uiModel, renderInfoOptions);
+}
+
+function setDuplicateEvents(
+  uiModels: EventUIModel[],
+  options: CollapseDuplicateEventsOptions,
+  selectedDuplicateEventCid: number
+) {
+  const { getDuplicateEvents, getMainEvent } = options;
+
+  const eventObjects = uiModels.map((uiModel) => uiModel.model.toEventObject());
+
+  uiModels.forEach((targetUIModel) => {
+    if (targetUIModel.collapse || targetUIModel.duplicateEvents.length > 0) {
+      return;
+    }
+
+    const duplicateEvents = getDuplicateEvents(targetUIModel.model.toEventObject(), eventObjects);
+
+    if (duplicateEvents.length <= 1) {
+      return;
+    }
+
+    const mainEvent = getMainEvent(duplicateEvents);
+
+    const duplicateEventUIModels = duplicateEvents.map(
+      (event) => uiModels.find((uiModel) => uiModel.cid() === event.__cid) as EventUIModel
+    );
+    const isSelectedGroup = !!(
+      selectedDuplicateEventCid > DEFAULT_DUPLICATE_EVENT_CID &&
+      duplicateEvents.find((event) => event.__cid === selectedDuplicateEventCid)
+    );
+
+    duplicateEventUIModels.forEach((event) => {
+      const isMain = event.cid() === mainEvent.__cid;
+      const collapse = !(
+        (isSelectedGroup && event.cid() === selectedDuplicateEventCid) ||
+        (!isSelectedGroup && isMain)
+      );
+
+      event.setUIProps({
+        duplicateEvents: duplicateEventUIModels,
+        collapse,
+        isMain,
+      });
+    });
+  });
+
+  return uiModels;
 }
 
 /**
@@ -138,16 +245,24 @@ function setRenderInfo(
 export function setRenderInfoOfUIModels(
   events: EventUIModel[],
   startColumnTime: TZDate,
-  endColumnTime: TZDate
+  endColumnTime: TZDate,
+  selectedDuplicateEventCid: number,
+  collapseDuplicateEventsOptions?: CollapseDuplicateEventsOptions
 ) {
   const uiModels: EventUIModel[] = events
     .filter(isTimeEvent)
     .filter(isBetween(startColumnTime, endColumnTime))
     .sort(array.compare.event.asc);
-  const uiModelColl = createEventCollection(...uiModels);
+
+  if (collapseDuplicateEventsOptions) {
+    setDuplicateEvents(uiModels, collapseDuplicateEventsOptions, selectedDuplicateEventCid);
+  }
+  const expandedEvents = uiModels.filter((uiModel) => !uiModel.collapse);
+
+  const uiModelColl = createEventCollection(...expandedEvents);
   const usingTravelTime = true;
-  const collisionGroups = getCollisionGroup(uiModels, usingTravelTime);
-  const matrices = getCollides(getMatrices(uiModelColl, collisionGroups, usingTravelTime));
+  const collisionGroups = getCollisionGroup(expandedEvents, usingTravelTime);
+  const matrices = getMatrices(uiModelColl, collisionGroups, usingTravelTime);
 
   matrices.forEach((matrix) => {
     const maxRowLength = Math.max(...matrix.map((row) => row.length));

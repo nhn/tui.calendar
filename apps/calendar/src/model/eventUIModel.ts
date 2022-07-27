@@ -8,9 +8,6 @@ interface EventUIProps {
   left: number;
   width: number;
   height: number;
-  hasCollide: boolean;
-  extraSpace: number;
-  hidden: boolean;
   exceedLeft: boolean;
   exceedRight: boolean;
   croppedStart: boolean;
@@ -18,6 +15,9 @@ interface EventUIProps {
   goingDurationHeight: number;
   modelDurationHeight: number;
   comingDurationHeight: number;
+  duplicateEvents: EventUIModel[];
+  collapse: boolean;
+  isMain: boolean;
 }
 
 const eventUIPropsKey: (keyof EventUIProps)[] = [
@@ -25,9 +25,6 @@ const eventUIPropsKey: (keyof EventUIProps)[] = [
   'left',
   'width',
   'height',
-  'hasCollide',
-  'extraSpace',
-  'hidden',
   'exceedLeft',
   'exceedRight',
   'croppedStart',
@@ -35,6 +32,9 @@ const eventUIPropsKey: (keyof EventUIProps)[] = [
   'goingDurationHeight',
   'modelDurationHeight',
   'comingDurationHeight',
+  'duplicateEvents',
+  'collapse',
+  'isMain',
 ];
 
 /**
@@ -52,28 +52,6 @@ export default class EventUIModel implements EventUIProps {
   width = 0;
 
   height = 0;
-
-  /**
-   * Represent event has collide with other events when rendering.
-   * @type {boolean}
-   */
-  hasCollide = false;
-
-  /**
-   * Extra space at right side of this event.
-   * @type {number}
-   */
-  extraSpace = 0;
-
-  /**
-   * represent this event block is not visible after rendered.
-   *
-   * in month view, some ui models in date need to hide when already rendered before dates.
-   *
-   * set true then it just shows empty space.
-   * @type {boolean}
-   */
-  hidden = false;
 
   /**
    * represent render start date used at rendering.
@@ -129,6 +107,25 @@ export default class EventUIModel implements EventUIProps {
    * @type {number} percent
    */
   comingDurationHeight = 0;
+
+  /**
+   * the sorted list of duplicate events.
+   * @type {EventUIModel[]}
+   */
+  duplicateEvents: EventUIModel[] = [];
+
+  /**
+   * whether the event is collapsed or not among the duplicate events.
+   * @type {boolean}
+   */
+  collapse = false;
+
+  /**
+   * whether the event is main or not.
+   * The main event is expanded on the initial rendering.
+   * @type {boolean}
+   */
+  isMain = false;
 
   constructor(event: EventModel) {
     this.model = event;

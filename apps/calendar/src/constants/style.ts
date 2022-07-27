@@ -46,3 +46,5 @@ export const DEFAULT_EVENT_COLORS = {
   dragBackgroundColor: '#a1b56c',
   borderColor: '#000',
 };
+
+export const COLLAPSED_DUPLICATE_EVENT_WIDTH = 5;

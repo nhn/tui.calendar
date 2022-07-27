@@ -198,6 +198,7 @@ Object {
   "useDetailPopup": false,
   "useFormPopup": false,
   "week": Object {
+    "collapseDuplicateEvents": false,
     "dayNames": Array [],
     "eventView": true,
     "hourEnd": 24,

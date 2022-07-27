@@ -9,6 +9,7 @@ export type MockedWeekViewEvents = Required<
   end: TZDate;
   goingDuration?: number;
   comingDuration?: number;
+  attendees?: string[];
 };
 
 export type MockedMonthViewEvents = Omit<MockedWeekViewEvents, 'isAllday' | 'category'>;

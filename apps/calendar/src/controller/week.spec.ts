@@ -1,21 +1,12 @@
 import { addToMatrix, createEvent, createEventCollection } from '@src/controller/base';
-import {
-  _makeHourRangeFilter,
-  findByDateRange,
-  generateTimeArrayInRow,
-  hasCollision,
-  splitEventByDateRange,
-} from '@src/controller/week';
+import { _makeHourRangeFilter, findByDateRange, splitEventByDateRange } from '@src/controller/week';
 import EventModel from '@src/model/eventModel';
 import type EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
-import { MS_EVENT_MIN_DURATION } from '@src/time/datetime';
 import Collection from '@src/utils/collection';
 
 import type { CalendarData, EventObject, Matrix3d, TimeGridEventMatrix } from '@t/events';
 import type { Panel } from '@t/panel';
-
-const SCHEDULE_MIN_DURATION = MS_EVENT_MIN_DURATION;
 
 describe('Base.Week', () => {
   let calendarData: CalendarData;
@@ -106,66 +97,6 @@ describe('Base.Week', () => {
         category: 'time',
       },
     ];
-  });
-
-  describe('hasCollision()', () => {
-    let supplied: Array<number[]>;
-
-    beforeEach(() => {
-      supplied = [
-        [2, 5],
-        [8, 11],
-        [14, 17],
-      ];
-    });
-
-    it('return false when supplied empty array', () => {
-      expect(hasCollision([], 3, 4)).toBe(false);
-    });
-
-    it('calculate collision information properly.', () => {
-      expect(hasCollision(supplied, 6, 7)).toBe(false);
-    });
-  });
-
-  describe('generateTimeArrayInRow()', () => {
-    /**
-     * |---|---|
-     * | 1 | 2 |
-     * |---|---|
-     * | 3 | 5 |
-     * |---|---|
-     * | 4 |   |
-     * |---|---|
-     *
-     * to
-     *
-     * [
-     *     [[2.start, 2.end], [5.start, 5.end]]
-     * ]
-     */
-
-    let supplied: Array<EventModel[]>;
-    let expected: Array<Array<number[]>>;
-
-    function getTime(start: number, end: number) {
-      return new EventModel({ start, end });
-    }
-
-    beforeEach(() => {
-      supplied = [[getTime(1, 2), getTime(1, 2)], [getTime(4, 5), getTime(5, 6)], [getTime(7, 8)]];
-
-      expected = [
-        [
-          [1, 2 + SCHEDULE_MIN_DURATION],
-          [5, 6 + SCHEDULE_MIN_DURATION],
-        ],
-      ];
-    });
-
-    it('get rowmap properly.', () => {
-      expect(generateTimeArrayInRow(supplied)).toEqual(expected);
-    });
   });
 
   describe('findByDateRange', () => {

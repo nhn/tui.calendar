@@ -2,6 +2,7 @@ import { h } from 'preact';
 import { useEffect, useRef, useState } from 'preact/hooks';
 
 import { Template } from '@src/components/template';
+import { DEFAULT_DUPLICATE_EVENT_CID } from '@src/constants/layout';
 import { useDispatch, useStore } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
 import { useLayoutContainer } from '@src/contexts/layoutContainer';
@@ -72,6 +73,7 @@ function getStyles({
   );
   const containerStyle: StyleProp = {
     width: width >= 0 ? `calc(${toPercent(width)} - ${marginLeft}px)` : '',
+    minWidth: '9px',
     height: `calc(${toPercent(Math.max(height, minHeight))} - ${defaultMarginBottom}px)`,
     top: toPercent(top),
     left: toPercent(left),
@@ -135,12 +137,18 @@ export function TimeEvent({
   isResizingGuide = false,
   minHeight = 0,
 }: Props) {
-  const { useDetailPopup, isReadOnly: isReadOnlyCalendar } = useStore(optionsSelector);
+  const {
+    useDetailPopup,
+    isReadOnly: isReadOnlyCalendar,
+    week: weekOptions,
+  } = useStore(optionsSelector);
   const calendarColor = useCalendarColor(uiModel.model);
+  const { collapseDuplicateEvents } = weekOptions;
 
   const layoutContainer = useLayoutContainer();
   const { showDetailPopup } = useDispatch('popup');
   const { setDraggingEventUIModel } = useDispatch('dnd');
+  const { setSelectedDuplicateEventCid } = useDispatch('weekViewLayout');
 
   const eventBus = useEventBus();
 
@@ -197,6 +205,12 @@ export function TimeEvent({
       endDragEvent(classNames.moveEvent);
 
       const isClick = draggingState <= DraggingState.INIT;
+      if (isClick && collapseDuplicateEvents) {
+        const selectedDuplicateEventCid =
+          uiModel.duplicateEvents.length > 0 ? uiModel.cid() : DEFAULT_DUPLICATE_EVENT_CID;
+        setSelectedDuplicateEventCid(selectedDuplicateEventCid);
+      }
+
       if (isClick && useDetailPopup && eventContainerRef.current) {
         showDetailPopup(
           {

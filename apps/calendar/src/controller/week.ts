@@ -10,15 +10,7 @@ import {
 import type EventModel from '@src/model/eventModel';
 import type EventUIModel from '@src/model/eventUIModel';
 import TZDate from '@src/time/date';
-import {
-  makeDateRange,
-  millisecondsFrom,
-  MS_EVENT_MIN_DURATION,
-  MS_PER_DAY,
-  toEndOfDay,
-  toFormat,
-  toStartOfDay,
-} from '@src/time/datetime';
+import { toEndOfDay, toFormat, toStartOfDay } from '@src/time/datetime';
 import array from '@src/utils/array';
 import type { Filter } from '@src/utils/collection';
 import Collection from '@src/utils/collection';
@@ -29,7 +21,6 @@ import type {
   DayGridEventMatrix,
   EventGroupMap,
   IDS_OF_DAY,
-  Matrix,
   Matrix3d,
 } from '@t/events';
 import type { WeekOptions } from '@t/options';
@@ -38,119 +29,6 @@ import type { Panel } from '@t/panel';
 /**********
  * TIME GRID VIEW
  **********/
-
-/**
- * Make array with start and end times on events.
- * @param {Matrix} matrix - matrix from controller.
- * @returns {Matrix3d} starttime, endtime array (exclude first row's events)
- */
-export function generateTimeArrayInRow(matrix: Matrix<EventModel | EventUIModel>) {
-  const map: Matrix3d<number> = [];
-  const maxColLen = Math.max(...matrix.map((col) => col.length));
-  let cursor = [];
-  let row;
-  let col;
-  let event;
-  let start;
-  let end;
-
-  for (col = 1; col < maxColLen; col += 1) {
-    row = 0;
-    event = matrix?.[row]?.[col];
-
-    while (event) {
-      const { goingDuration, comingDuration } = event.valueOf();
-      start = event.getStarts().getTime() - millisecondsFrom('minute', goingDuration);
-      end = event.getEnds().getTime() + millisecondsFrom('minute', comingDuration);
-
-      if (Math.abs(end - start) < MS_EVENT_MIN_DURATION) {
-        end += MS_EVENT_MIN_DURATION;
-      }
-
-      cursor.push([start, end]);
-
-      row += 1;
-      event = matrix?.[row]?.[col];
-    }
-
-    map.push(cursor);
-    cursor = [];
-  }
-
-  return map;
-}
-
-function searchFunc(index: number) {
-  return (block: any[]) => block[index];
-}
-
-/**
- * Get collision information from list
- * @param {array.<number[]>} arr - list to detecting collision. [[start, end], [start, end]]
- * @param {number} start - event start time that want to detect collisions.
- * @param {number} end - event end time that want to detect collisions.
- * @returns {boolean} target has collide in supplied array?
- */
-export function hasCollision(arr: Array<number[]>, start: number, end: number) {
-  if (!arr?.length) {
-    return false;
-  }
-
-  const compare = array.compare.num.asc;
-
-  const startStart = Math.abs(array.bsearch(arr, start, searchFunc(0), compare));
-  const startEnd = Math.abs(array.bsearch(arr, start, searchFunc(1), compare));
-  const endStart = Math.abs(array.bsearch(arr, end, searchFunc(0), compare));
-  const endEnd = Math.abs(array.bsearch(arr, end, searchFunc(1), compare));
-
-  return !(startStart === startEnd && startEnd === endStart && endStart === endEnd);
-}
-
-/**
- * Initialize values to ui models for detect real collision at rendering phase.
- * @param {array[]} matrices - Matrix data.
- * @returns {array[]} matrices - Matrix data with collision information
- */
-export function getCollides(matrices: Matrix3d<EventUIModel>) {
-  matrices.forEach((matrix) => {
-    const binaryMap = generateTimeArrayInRow(matrix);
-    const maxRowLength = Math.max(...matrix.map((row) => row.length));
-
-    matrix.forEach((row) => {
-      row.forEach((uiModel, col) => {
-        if (!uiModel) {
-          return;
-        }
-
-        const { goingDuration, comingDuration } = uiModel.model;
-        let startTime = uiModel.getStarts().getTime();
-        let endTime = uiModel.getEnds().getTime();
-
-        if (Math.abs(endTime - startTime) < MS_EVENT_MIN_DURATION) {
-          endTime += MS_EVENT_MIN_DURATION;
-        }
-
-        startTime -= millisecondsFrom('minute', goingDuration);
-        endTime += millisecondsFrom('minute', comingDuration);
-
-        endTime -= 1;
-
-        for (let i = col + 1; i < maxRowLength; i += 1) {
-          const collided = hasCollision(binaryMap[i - 1], startTime, endTime);
-
-          if (collided) {
-            uiModel.hasCollide = true;
-            break;
-          }
-
-          uiModel.extraSpace += 1;
-        }
-      });
-    });
-  });
-
-  return matrices;
-}
 
 /**
  * make a filter function that is not included range of start, end hour
@@ -275,7 +153,7 @@ export function getUIModelForTimeView(
     const collisionGroups = getCollisionGroup(uiModels, usingTravelTime);
     const matrices = getMatrices(uiModelColl, collisionGroups, usingTravelTime);
 
-    result[ymd] = getCollides(matrices as Matrix3d<EventUIModel>);
+    result[ymd] = matrices as Matrix3d<EventUIModel>;
   });
 
   return result;
@@ -392,66 +270,4 @@ export function findByDateRange(
       time: {},
     }
   );
-}
-
-function getYMD(date: TZDate, format = 'YYYYMMDD') {
-  return toFormat(date, format);
-}
-
-/* eslint max-nested-callbacks: 0 */
-/**
- * Make exceed date information
- * @param {number} maxCount - exceed event count
- * @param {Matrix3d} eventsInDateRange  - matrix of EventUIModel
- * @param {Array.<TZDate>} range - date range of one week
- * @returns {object} exceedDate
- */
-export function getExceedDate(
-  maxCount: number,
-  eventsInDateRange: Matrix3d<EventUIModel>,
-  range: TZDate[]
-) {
-  const exceedDate: Record<string, number> = {};
-
-  range.forEach((date) => {
-    const ymd = getYMD(date);
-    exceedDate[ymd] = 0;
-  });
-
-  eventsInDateRange.forEach((matrix) => {
-    matrix.forEach((column) => {
-      column.forEach((uiModel) => {
-        if (!uiModel || uiModel.top < maxCount) {
-          return;
-        }
-
-        const period = makeDateRange(uiModel.getStarts(), uiModel.getEnds(), MS_PER_DAY);
-
-        period.forEach((date) => {
-          const ymd = getYMD(date);
-          exceedDate[ymd] += 1;
-        });
-      });
-    });
-  });
-
-  return exceedDate;
-}
-
-/**
- * Exclude overflow events from matrices
- * @param {Matrix3d} matrices - The matrices for event placing.
- * @param {number} visibleEventCount - maximum visible count on panel
- * @returns {array} - The matrices for event placing except overflowed events.
- */
-export function excludeExceedEvents(matrices: Matrix3d<EventUIModel>, visibleEventCount: number) {
-  return matrices.map((matrix) => {
-    return matrix.map((row) => {
-      if (row.length > visibleEventCount) {
-        return row.filter((item) => item.top < visibleEventCount);
-      }
-
-      return row;
-    });
-  });
 }
