@@ -410,7 +410,7 @@ calendar.changeView('day');
 
 ### setTheme
 
-- 타입: `setTheme(theme: DeepPartial<ThemeStore>): void`
+- 타입: `setTheme(theme: DeepPartial<ThemeState>): void`
 - 파라미터: `theme` - 테마 설정이 담긴 객체
 
 캘린더 인스턴스의 테마를 변경한다. 적용 가능한 테마는 [테마 문서](./theme.md)를 참고한다.

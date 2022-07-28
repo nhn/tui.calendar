@@ -405,7 +405,7 @@ If no event is found, `null` is returned.
 
 ### setTheme
 
-- Type: `setTheme(theme: DeepPartial<ThemeStore>): void`
+- Type: `setTheme(theme: DeepPartial<ThemeState>): void`
 - Parameters: `theme` - object containing theme settings
 
 Changes the theme of the calendar instance. For available themes, refer to the [theme documentation](./theme.md).

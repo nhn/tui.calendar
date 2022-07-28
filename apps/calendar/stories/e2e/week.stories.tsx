@@ -1,6 +1,7 @@
 import { h } from 'preact';
 
 import moment from 'moment-timezone';
+
 import { last } from '@src/utils/array';
 
 import { mockCalendars } from '@stories/mocks/mockCalendars';
@@ -150,7 +151,6 @@ DaylightSavingTimeTransition.args = {
         end: '2022-11-06T09:00:00Z',
       },
     ]);
-    cal.on('afterRenderEvent', console.log);
   },
 };
 
@@ -185,7 +185,6 @@ DaylightSavingTimeTransitionSouthern.args = {
         end: '2022-04-02T14:00:00Z',
       },
     ]);
-    cal.on('afterRenderEvent', console.log);
   },
 };
 
