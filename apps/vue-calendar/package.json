@@ -2,7 +2,7 @@
   "name": "@toast-ui/vue-calendar",
   "description": "TOAST UI Calendar for Vue",
   "author": "NHN Cloud FE Development Lab <dl_javascript@nhn.com>",
-  "version": "2.0.5",
+  "version": "2.1.0",
   "main": "./dist/toastui-vue-calendar.js",
   "types": "./index.d.ts",
   "module": "./dist/toastui-vue-calendar.mjs",
@@ -55,7 +55,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@toast-ui/calendar": "^2.0.5"
+    "@toast-ui/calendar": "^2.1.0"
   },
   "devDependencies": {
     "@vue/cli": "^5.0.6",
