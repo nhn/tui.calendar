@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import type { BoundingBox } from 'playwright/types';
 
 import { mockWeekViewEvents } from '../../stories/mocks/mockWeekViewEvents';
 import { WEEK_VIEW_DUPLICATE_EVENTS_PAGE_URL, WEEK_VIEW_PAGE_URL } from '../configs';
@@ -37,7 +38,7 @@ test.describe('Collapse duplicate events', () => {
   );
   const [collapsedEvent] = collapsedEvents;
 
-  test('The duplicate events are sorted according to the result of getDuplicateEvents option.', ({
+  test('The duplicate events are sorted according to the result of getDuplicateEvents option.', async ({
     page,
   }) => {
     // Given
@@ -45,18 +46,23 @@ test.describe('Collapse duplicate events', () => {
     const sortedDuplicateEvents = mockWeekViewEvents
       .filter(({ title }) => title.startsWith('duplicate event 2'))
       .sort((a, b) => (b.calendarId > a.calendarId ? 1 : -1));
-    let prevX = -1;
 
     // When
     // Nothing
 
     // Then
-    sortedDuplicateEvents.forEach(async (event) => {
+    const promiseBoundingBoxes: Promise<BoundingBox>[] = [];
+    sortedDuplicateEvents.forEach((event) => {
       const eventLocator = page.locator(getTimeEventSelector(event.title));
-      const { x } = await getBoundingBox(eventLocator);
-      expect(prevX).toBeLessThan(x);
+      promiseBoundingBoxes.push(getBoundingBox(eventLocator));
+    });
 
-      prevX = x;
+    await Promise.all(promiseBoundingBoxes).then((eventBoundingBoxes) => {
+      let prevX = -1;
+      eventBoundingBoxes.forEach(({ x }) => {
+        expect(prevX).toBeLessThan(x);
+        prevX = x;
+      });
     });
   });
 
