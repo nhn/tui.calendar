@@ -1,4 +1,5 @@
 import { h } from 'preact';
+import type { ChangeEventHandler } from 'preact/compat';
 
 import { PopupSection } from '@src/components/popup/popupSection';
 import { cls } from '@src/helpers/css';
@@ -7,7 +8,7 @@ import { FormStateActionType } from '@src/hooks/popup/useFormState';
 import { useStringOnlyTemplate } from '@src/hooks/template/useStringOnlyTemplate';
 
 interface Props {
-  title: string;
+  title?: string;
   isPrivate?: boolean;
   formStateDispatch: FormStateDispatcher;
 }
@@ -28,6 +29,10 @@ export function TitleInputBox({ title, isPrivate = false, formStateDispatch }: P
   const togglePrivate = () =>
     formStateDispatch({ type: FormStateActionType.setPrivate, isPrivate: !isPrivate });
 
+  const handleInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    formStateDispatch({ type: FormStateActionType.setTitle, title: e.currentTarget.value });
+  };
+
   return (
     <PopupSection>
       <div className={classNames.popupSectionItem}>
@@ -37,6 +42,7 @@ export function TitleInputBox({ title, isPrivate = false, formStateDispatch }: P
           className={classNames.content}
           placeholder={titlePlaceholder}
           value={title}
+          onChange={handleInputChange}
           required
         />
       </div>

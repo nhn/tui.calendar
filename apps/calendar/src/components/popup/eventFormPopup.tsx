@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { createPortal } from 'preact/compat';
-import { useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
 
 import type { DateRangePicker } from 'tui-date-picker';
 
@@ -24,7 +24,7 @@ import { useFloatingLayer } from '@src/contexts/floatingLayer';
 import { useLayoutContainer } from '@src/contexts/layoutContainer';
 import { cls } from '@src/helpers/css';
 import { isLeftOutOfLayout, isTopOutOfLayout } from '@src/helpers/popup';
-import { useFormState } from '@src/hooks/popup/useFormState';
+import { FormStateActionType, useFormState } from '@src/hooks/popup/useFormState';
 import type EventModel from '@src/model/eventModel';
 import { calendarSelector } from '@src/selectors';
 import { eventFormPopupParamSelector } from '@src/selectors/popup';
@@ -115,8 +115,6 @@ export function EventFormPopup() {
   const [formState, formStateDispatch] = useFormState({
     title,
     location,
-    start,
-    end,
     isAllday,
     isPrivate,
     calendarId: event?.calendarId ?? calendars[0]?.id,
@@ -156,6 +154,22 @@ export function EventFormPopup() {
       setArrowDirection(direction);
     }
   }, [layoutContainer, popupArrowPointPosition]);
+
+  // Reset form states when closing the popup
+  useEffect(() => {
+    if (isNil(popupParams)) {
+      formStateDispatch({
+        type: FormStateActionType.reset,
+        event: {
+          title: '',
+          location: '',
+          isAllday: false,
+          isPrivate: false,
+          state: 'Busy',
+        },
+      });
+    }
+  }, [formStateDispatch, popupParams]);
 
   if (isNil(start) || isNil(end) || isNil(formPopupSlot)) {
     return null;
@@ -198,11 +212,11 @@ export function EventFormPopup() {
             <PopupSection />
           )}
           <TitleInputBox
-            title={title}
+            title={formState.title}
             isPrivate={formState.isPrivate}
             formStateDispatch={formStateDispatch}
           />
-          <LocationInputBox location={location} />
+          <LocationInputBox location={formState.location} formStateDispatch={formStateDispatch} />
           <DateSelector
             start={start}
             end={end}
