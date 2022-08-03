@@ -5,7 +5,7 @@ import { EventFormPopup } from '@src/components/popup/eventFormPopup';
 import { initCalendarStore, useDispatch } from '@src/contexts/calendarStore';
 import { useEventBus } from '@src/contexts/eventBus';
 import { cls } from '@src/helpers/css';
-import { fireEvent, render, screen } from '@src/test/utils';
+import { fireEvent, render, screen, userEvent } from '@src/test/utils';
 import TZDate from '@src/time/date';
 
 import type { Options } from '@t/options';
@@ -186,5 +186,82 @@ describe('event form popup', () => {
       title: changedTitle,
       location: changedLocation,
     });
+  });
+
+  // Regression tests for #1233
+  it('should preserve input values when "All day" checkbox is toggled', async () => {
+    // Given
+    setup();
+    const user = userEvent.setup();
+    const getTitleInput = (): HTMLInputElement => screen.getByPlaceholderText('Subject');
+    const getLocationInput = (): HTMLInputElement => screen.getByPlaceholderText('Location');
+    const allDayCheckbox = screen.getByText('All day');
+
+    const givenTitle = 'title';
+    const givenLocation = 'location';
+
+    await user.type(getTitleInput(), givenTitle);
+    await user.type(getLocationInput(), givenLocation);
+
+    // When
+    await user.click(allDayCheckbox);
+
+    // Then
+    expect(getTitleInput().value).toBe(givenTitle);
+    expect(getLocationInput().value).toBe(givenLocation);
+
+    // When change input and toggle again
+    const concatStr = ' changed';
+    await user.type(getTitleInput(), concatStr);
+    await user.type(getLocationInput(), concatStr);
+    await user.click(allDayCheckbox);
+
+    // Then
+    expect(getTitleInput().value).toBe(`${givenTitle}${concatStr}`);
+    expect(getLocationInput().value).toBe(`${givenLocation}${concatStr}`);
+  });
+
+  it('should preserve input values when selecting calendar', async () => {
+    // Given
+    const calendars = [
+      {
+        id: '1',
+        name: 'Personal',
+      },
+      {
+        id: '2',
+        name: 'Work',
+      },
+    ];
+    setup(calendars);
+
+    const user = userEvent.setup();
+    const getTitleInput = (): HTMLInputElement => screen.getByPlaceholderText('Subject');
+    const getLocationInput = (): HTMLInputElement => screen.getByPlaceholderText('Location');
+
+    const givenTitle = 'title';
+    const givenLocation = 'location';
+
+    await user.type(getTitleInput(), givenTitle);
+    await user.type(getLocationInput(), givenLocation);
+
+    // When
+    await user.click(screen.getByRole('button', { name: calendars[0].name }));
+    await user.click(screen.getByText(calendars[1].name));
+
+    // Then
+    expect(getTitleInput().value).toBe(givenTitle);
+    expect(getLocationInput().value).toBe(givenLocation);
+
+    // When change input and toggle again
+    const concatStr = ' changed';
+    await user.type(getTitleInput(), concatStr);
+    await user.type(getLocationInput(), concatStr);
+    await user.click(screen.getByRole('button', { name: calendars[1].name }));
+    await user.click(screen.getByText(calendars[0].name));
+
+    // Then
+    expect(getTitleInput().value).toBe(`${givenTitle}${concatStr}`);
+    expect(getLocationInput().value).toBe(`${givenLocation}${concatStr}`);
   });
 });

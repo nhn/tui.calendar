@@ -1,6 +1,6 @@
 import { h } from 'preact';
 import { createPortal } from 'preact/compat';
-import { useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'preact/hooks';
 
 import type { DateRangePicker } from 'tui-date-picker';
 
@@ -24,13 +24,13 @@ import { useFloatingLayer } from '@src/contexts/floatingLayer';
 import { useLayoutContainer } from '@src/contexts/layoutContainer';
 import { cls } from '@src/helpers/css';
 import { isLeftOutOfLayout, isTopOutOfLayout } from '@src/helpers/popup';
-import { useFormState } from '@src/hooks/popup/useFormState';
+import { FormStateActionType, useFormState } from '@src/hooks/popup/useFormState';
 import type EventModel from '@src/model/eventModel';
 import { calendarSelector } from '@src/selectors';
 import { eventFormPopupParamSelector } from '@src/selectors/popup';
 import TZDate from '@src/time/date';
 import { compare } from '@src/time/datetime';
-import { isNil } from '@src/utils/type';
+import { isNil, isPresent } from '@src/utils/type';
 
 import type { FormEvent, StyleProp } from '@t/components/common';
 import type { BooleanKeyOfEventObject, EventObject } from '@t/events';
@@ -97,31 +97,11 @@ export function EventFormPopup() {
   const { calendars } = useStore(calendarSelector);
   const { hideAllPopup } = useDispatch('popup');
   const popupParams = useStore(eventFormPopupParamSelector);
-  const {
-    title,
-    location,
-    start,
-    end,
-    isAllday = false,
-    isPrivate = false,
-    eventState = 'Busy',
-    popupArrowPointPosition,
-    close,
-    isCreationPopup,
-    event,
-  } = popupParams ?? {};
+  const { start, end, popupArrowPointPosition, close, isCreationPopup, event } = popupParams ?? {};
   const eventBus = useEventBus();
   const formPopupSlot = useFloatingLayer('formPopupSlot');
-  const [formState, formStateDispatch] = useFormState({
-    title,
-    location,
-    start,
-    end,
-    isAllday,
-    isPrivate,
-    calendarId: event?.calendarId ?? calendars[0]?.id,
-    state: eventState,
-  });
+  const [formState, formStateDispatch] = useFormState(calendars[0]?.id);
+
   const datePickerRef = useRef<DateRangePicker>(null);
   const popupContainerRef = useRef<HTMLDivElement>(null);
   const [style, setStyle] = useState<StyleProp>({});
@@ -156,6 +136,30 @@ export function EventFormPopup() {
       setArrowDirection(direction);
     }
   }, [layoutContainer, popupArrowPointPosition]);
+
+  // Sync store's popupParams with formState when editing event
+  useEffect(() => {
+    if (isPresent(popupParams) && isPresent(event)) {
+      formStateDispatch({
+        type: FormStateActionType.init,
+        event: {
+          title: popupParams.title,
+          location: popupParams.location,
+          isAllday: popupParams.isAllday,
+          isPrivate: popupParams.isPrivate,
+          calendarId: event.calendarId,
+          state: popupParams.eventState,
+        },
+      });
+    }
+  }, [calendars, event, formStateDispatch, popupParams]);
+
+  // Reset form states when closing the popup
+  useEffect(() => {
+    if (isNil(popupParams)) {
+      formStateDispatch({ type: FormStateActionType.reset });
+    }
+  }, [formStateDispatch, popupParams]);
 
   if (isNil(start) || isNil(end) || isNil(formPopupSlot)) {
     return null;
@@ -198,11 +202,11 @@ export function EventFormPopup() {
             <PopupSection />
           )}
           <TitleInputBox
-            title={title}
+            title={formState.title}
             isPrivate={formState.isPrivate}
             formStateDispatch={formStateDispatch}
           />
-          <LocationInputBox location={location} />
+          <LocationInputBox location={formState.location} formStateDispatch={formStateDispatch} />
           <DateSelector
             start={start}
             end={end}
