@@ -1,6 +1,6 @@
 {
   "name": "@toast-ui/react-calendar",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "license": "MIT",
   "description": "TOAST UI Calendar for React",
   "author": "NHN Cloud FE Development Lab <dl_javascript@nhn.com>",
@@ -57,7 +57,7 @@
     "build:types": "rimraf types/ && tsc -p ./tsconfig.declaration.json"
   },
   "dependencies": {
-    "@toast-ui/calendar": "^2.1.0"
+    "@toast-ui/calendar": "^2.1.1"
   },
   "devDependencies": {
     "@types/react": "^17.0.2",
