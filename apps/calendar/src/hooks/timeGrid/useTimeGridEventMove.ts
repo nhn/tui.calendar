@@ -48,8 +48,14 @@ function getMovingEventPosition({
   const startIndex = Math.max(getCurrentIndexByTime(nextStart, hourStart), 0);
   const endIndex = Math.min(getCurrentIndexByTime(nextEnd, hourStart), timeGridDataRows.length - 1);
 
-  const isStartAtPrevDate = nextStart.getDate() < currentDate.getDate();
-  const isEndAtNextDate = nextEnd.getDate() > currentDate.getDate();
+  const isStartAtPrevDate =
+    nextStart.getFullYear() < currentDate.getFullYear() ||
+    nextStart.getMonth() < currentDate.getMonth() ||
+    nextStart.getDate() < currentDate.getDate();
+  const isEndAtNextDate =
+    nextEnd.getFullYear() > currentDate.getFullYear() ||
+    nextEnd.getMonth() > currentDate.getMonth() ||
+    nextEnd.getDate() > currentDate.getDate();
   const indexDiff = endIndex - (isStartAtPrevDate ? 0 : startIndex);
 
   const top = isStartAtPrevDate ? 0 : timeGridDataRows[startIndex].top;
