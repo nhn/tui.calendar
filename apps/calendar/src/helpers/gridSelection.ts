@@ -41,7 +41,8 @@ function createSortedGridSelection(
 
 function calculateTimeGridSelectionByCurrentIndex(
   timeGridSelection: GridSelectionData | null,
-  columnIndex: number
+  columnIndex: number,
+  maxRowIndex: number // maxRowIndex is the last row index of the `timeGridData.row`
 ) {
   if (isNil(timeGridSelection)) {
     return null;
@@ -64,10 +65,10 @@ function calculateTimeGridSelectionByCurrentIndex(
 
   if (startColumnIndex < columnIndex && columnIndex < endColumnIndex) {
     resultGridSelection.startRowIndex = 0;
-    resultGridSelection.endRowIndex = 47;
+    resultGridSelection.endRowIndex = maxRowIndex;
   } else if (startColumnIndex !== endColumnIndex) {
     if (startColumnIndex === columnIndex) {
-      resultGridSelection.endRowIndex = 47;
+      resultGridSelection.endRowIndex = maxRowIndex;
     } else if (endColumnIndex === columnIndex) {
       resultGridSelection.startRowIndex = 0;
     }
