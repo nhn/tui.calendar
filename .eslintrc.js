@@ -110,6 +110,7 @@ module.exports = {
       files: ['apps/calendar/playwright/**/*.ts'],
       extends: ['plugin:playwright/playwright-test'],
       rules: {
+        'playwright/no-force-option': 'off',
         'max-nested-callbacks': ['error', { max: 5 }],
         'dot-notation': ['error', { allowKeywords: true }],
       },
