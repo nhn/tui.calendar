@@ -1,0 +1,133 @@
+@import "https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css";
+
+.header {
+    padding: 1rem;
+    border-bottom: 1px solid #bbb;
+}
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    height: 100%;
+}
+
+.content {
+    display: flex;
+    height: 100%;
+}
+
+.sidebar {
+    display: flex;
+    flex: 0 1 12rem;
+    flex-direction: column;
+    padding: 1.25rem;
+    background-color: #fafafa;
+    border-right: 1px solid #d5d5d5;
+}
+
+.sidebar hr {
+    margin: 1rem 0;
+}
+
+.sidebar-item + .sidebar-item {
+    margin-top: 0.75rem;
+}
+
+.sidebar .app-footer {
+    margin-top: auto;
+    font-size: 0.75rem;
+}
+
+.app-column {
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 auto;
+}
+
+.app-column nav {
+    flex: 0 1 4rem;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+#app {
+    flex: 1 0 auto;
+}
+
+.navbar {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+}
+
+.navbar .dropdown {
+    margin-right: 1rem;
+}
+
+.navbar .dropdown .toastui-calendar-icon {
+    margin-left: 0.5rem;
+}
+
+.button.prev, .button.next {
+    padding: 0.8rem;
+}
+
+.navbar .button + .button {
+    margin-left: 0.25rem;
+}
+
+.navbar .navbar--range {
+    margin-left: 1rem;
+    font-size: 1.25rem;
+}
+
+.navbar .nav-checkbox {
+    margin-left: auto;
+}
+
+input:disabled + label {
+    color: #ccc;
+    cursor: not-allowed;
+}
+
+.toastui-calendar-template-time strong {
+    color: inherit;
+}
+
+.sidebar-item input[type="checkbox"]:not(.checkbox-all) {
+    visibility: hidden;
+}
+
+.checkbox {
+    position: relative;
+}
+
+.checkbox-calendar::before {
+    content: "";
+    position: absolute;
+    left: -1.5rem;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+}
+
+.checkbox.checkbox-1::before {
+    background-color: var(--checkbox-1);
+}
+
+.checkbox.checkbox-2::before {
+    background-color: var(--checkbox-2);
+}
+
+.checkbox.checkbox-3::before {
+    background-color: var(--checkbox-3);
+}
+
+.checkbox.checkbox-4::before {
+    background-color: var(--checkbox-4);
+}
+
+.checkbox.checkbox-5::before {
+    background-color: var(--checkbox-5);
+}
