@@ -47,8 +47,12 @@ export function GridSelectionByColumn({ columnIndex, timeGridRows }: Props) {
   const gridSelectionData = useStore(
     useCallback(
       (state: CalendarState) =>
-        timeGridSelectionHelper.calculateSelection(state.gridSelection.timeGrid, columnIndex),
-      [columnIndex]
+        timeGridSelectionHelper.calculateSelection(
+          state.gridSelection.timeGrid,
+          columnIndex,
+          timeGridRows.length - 1
+        ),
+      [columnIndex, timeGridRows]
     )
   );
 

@@ -1,7 +1,6 @@
-import type { Locator } from '@playwright/test';
 import { expect, test } from '@playwright/test';
 
-import type { FormattedTimeString } from '../../src/types/time/datetime';
+import { assertTimeGridSelection } from '../assertions';
 import { DAY_VIEW_PAGE_URL } from '../configs';
 import { ClickDelay } from '../constants';
 import {
@@ -16,30 +15,6 @@ test.beforeEach(async ({ page }) => {
 });
 
 const GRID_SELECTION_SELECTOR = '[data-testid*="time-grid-selection"]';
-
-async function assertTimeGridSelection(
-  selectionLocator: Locator,
-  expected: {
-    startTop: number;
-    endBottom: number;
-    formattedTimes: FormattedTimeString[];
-  }
-) {
-  await waitForSingleElement(selectionLocator);
-
-  const expectedFormattedTime = expected.formattedTimes.join(' - ');
-
-  await expect(selectionLocator.first()).toHaveText(expectedFormattedTime);
-
-  const firstElementBoundingBox = await getBoundingBox(selectionLocator.first());
-  expect(firstElementBoundingBox.y).toBeCloseTo(expected.startTop, 0);
-
-  const lastElementBoundingBox = await getBoundingBox(selectionLocator.last());
-  expect(lastElementBoundingBox.y + lastElementBoundingBox.height).toBeCloseTo(
-    expected.endBottom,
-    0
-  );
-}
 
 // NOTE: Only firefox automatically scrolls into view at some random tests, so narrowing the range of movement.
 // Maybe `scrollIntoViewIfNeeded` is not supported in the firefox?

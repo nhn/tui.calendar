@@ -1,5 +1,7 @@
-import type { Page } from '@playwright/test';
+import type { Locator, Page } from '@playwright/test';
 import { expect } from '@playwright/test';
+
+import type { FormattedTimeString } from '@t/time/datetime';
 
 import type { BoundingBox } from './types';
 import { getBoundingBox } from './utils';
@@ -117,4 +119,34 @@ export function assertBoundingBoxIncluded(targetBox: BoundingBox, wrappingBox: B
   expect(targetBox.y).toBeGreaterThanOrEqual(wrappingBox.y);
   expect(targetBox.x + targetBox.width).toBeLessThanOrEqual(wrappingBox.x + wrappingBox.width);
   expect(targetBox.y + targetBox.height).toBeLessThanOrEqual(wrappingBox.y + wrappingBox.height);
+}
+
+export async function assertTimeGridSelection(
+  selectionLocator: Locator,
+  expected: {
+    startTop: number;
+    endBottom: number;
+    totalElements?: number; // not used in day view tests
+    formattedTimes: FormattedTimeString[];
+  }
+) {
+  const timeGridSelectionElements = (await selectionLocator.evaluateAll(
+    (selection) => selection
+  )) as HTMLElement[];
+  const expectedFormattedTime = expected.formattedTimes.join(' - ');
+
+  if (expected.totalElements) {
+    expect(timeGridSelectionElements).toHaveLength(expected.totalElements);
+  }
+
+  await expect(selectionLocator.first()).toHaveText(expectedFormattedTime);
+
+  const firstElementBoundingBox = await getBoundingBox(selectionLocator.first());
+  expect(firstElementBoundingBox.y).toBeCloseTo(expected.startTop, 0);
+
+  const lastElementBoundingBox = await getBoundingBox(selectionLocator.last());
+  expect(lastElementBoundingBox.y + lastElementBoundingBox.height).toBeCloseTo(
+    expected.endBottom,
+    0
+  );
 }
