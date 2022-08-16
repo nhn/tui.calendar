@@ -13,6 +13,7 @@ import { useLayoutContainer } from '@src/contexts/layoutContainer';
 import { cls } from '@src/helpers/css';
 import { isLeftOutOfLayout, isTopOutOfLayout } from '@src/helpers/popup';
 import { useCalendarColor } from '@src/hooks/calendar/useCalendarColor';
+import { optionsSelector } from '@src/selectors';
 import { eventDetailPopupParamSelector } from '@src/selectors/popup';
 import TZDate from '@src/time/date';
 import { isNil } from '@src/utils/type';
@@ -66,6 +67,7 @@ function calculatePopupArrowPosition(eventRect: Rect, layoutRect: Rect, popupRec
 }
 
 export function EventDetailPopup() {
+  const { useFormPopup } = useStore(optionsSelector);
   const popupParams = useStore(eventDetailPopupParamSelector);
   const { event, eventRect } = popupParams ?? {};
 
@@ -128,19 +130,24 @@ export function EventDetailPopup() {
     left: eventRect.left + eventRect.width / 2,
   };
 
-  const onClickEditButton = () =>
-    showFormPopup({
-      isCreationPopup: false,
-      event,
-      title,
-      location,
-      start,
-      end,
-      isAllday,
-      isPrivate,
-      eventState: state,
-      popupArrowPointPosition,
-    });
+  const onClickEditButton = () => {
+    if (useFormPopup) {
+      showFormPopup({
+        isCreationPopup: false,
+        event,
+        title,
+        location,
+        start,
+        end,
+        isAllday,
+        isPrivate,
+        eventState: state,
+        popupArrowPointPosition,
+      });
+    } else {
+      eventBus.fire('beforeUpdateEvent', { event: event.toEventObject(), changes: {} });
+    }
+  };
 
   const onClickDeleteButton = () => {
     eventBus.fire('beforeDeleteEvent', event.toEventObject());

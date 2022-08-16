@@ -815,8 +815,9 @@ interface UpdatedEventInfo {
 
 다음의 경우 `beforeUpdateEvent` 가 실행된다.
 
-- 캘린더 인스턴스 옵션 중 `useFormPopup` 와 `useDetailPopup` 가 모두 `true` 이고, 이벤트 상세 팝업을 통해 이벤트를 수정 후 Update 버튼을 누를 때
+- 캘린더 인스턴스 옵션 중 `useFormPopup` 와 `useDetailPopup` 가 모두 `true` 이고, 이벤트 상세 팝업에서 Edit 버튼을 누른 후 표시되는 이벤트 폼 팝업에서 Update 버튼을 누를 때
   - ![팝업을 통한 이벤트 실행](../../assets/before-update-event-1.gif)
+- 캘린더의 인스턴스 옵션 중 `useDetailPopup` 이 `true` 이고, `useFormPopup` 이 `false` 일 때, 이벤트 상세 팝업에서 Edit 버튼을 누른 경우
 - 캘린더 인스턴스 옵션 중 `isReadOnly` 가 `true` 가 아니며, 개별 이벤트의 속성에 `isReadOnly` 가 `true` 가 아닌 상태에서 드래그 앤 드랍으로 일정을 이동하거나 리사이징할 때
   - ![드래그 앤 드랍을 통한 이벤트 실행](../../assets/before-update-event-2.gif)
 

@@ -809,8 +809,9 @@ The `event` property is information of the existing event, and the `changes` pro
 
 In the following cases, `beforeUpdateEvent` is executed.
 
-- `When useFormPopup` and `useDetailPopup` of the calendar instance options are both `true` and the ‘Update’ button is pressed after modifying the event through the event details popup
+- When `useFormPopup` and `useDetailPopup` of the calendar instance options are both `true` and the ‘Update’ button is pressed after modifying the event through the event details popup
   - ![Event execution through popup](../../assets/before-update-event-1.gif)
+- When the `useDetailPopup` option is `true` and the `useFormPopup` is `false`, the 'Edit' button inside the event details popup is pressed. 
 - When moving or resizing events by drag and drop, while `isReadOnly` is not `true` among calendar instance options and also `isReadOnly` is not `true` in the properties of individual events.
   - ![Event execution via drag and drop](../../assets/before-update-event-2.gif)
 
