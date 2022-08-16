@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>TOAST UI Calendar Example - Weekly View</title>
+    <link rel="stylesheet" href="../dist/toastui-calendar.css" />
+    <link rel="stylesheet" href="./styles/reset.css" />
+    <link rel="stylesheet" href="./styles/app.css" />
+    <link rel="stylesheet" href="./styles/icons.css" />
+    <style>
+      .navbar {
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-container code-html">
+      <header class="header">
+        <nav class="navbar">
+          <button class="button is-rounded today">Today</button>
+          <button class="button is-rounded prev">
+            <img
+              alt="prev"
+              src="./images/ic-arrow-line-left.png"
+              srcset="./images/ic-arrow-line-left@2x.png 2x, ./images/ic-arrow-line-left@3x.png 3x"
+            />
+          </button>
+          <button class="button is-rounded next">
+            <img
+              alt="prev"
+              src="./images/ic-arrow-line-right.png"
+              srcset="
+                ./images/ic-arrow-line-right@2x.png 2x,
+                ./images/ic-arrow-line-right@3x.png 3x
+              "
+            />
+          </button>
+          <span class="navbar--range"></span>
+        </nav>
+      </header>
+      <main id="app"></main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.3/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chance/1.1.8/chance.min.js"></script>
+    <script src="../dist/toastui-calendar.ie11.min.js"></script>
+    <script src="./scripts/mock-data.js"></script>
+    <script src="./scripts/utils.js"></script>
+    <script type="text/javascript" class="code-js">
+      var Calendar = window.tui.Calendar;
+      var cal = new Calendar('#app', {
+        defaultView: 'week',
+        calendars: MOCK_CALENDARS,
+      });
+    </script>
+    <script type="text/javascript">
+      var todayButton = $('.today');
+      var prevButton = $('.prev');
+      var nextButton = $('.next');
+      var range = $('.navbar--range');
+
+      function displayEvents() {
+        var events = generateRandomEvents(
+          cal.getViewName(),
+          cal.getDateRangeStart(),
+          cal.getDateRangeEnd()
+        );
+        cal.clear();
+        cal.createEvents(events);
+      }
+
+      function displayRenderRange() {
+        var viewName = cal.getViewName();
+
+        range.textContent = getNavbarRange(
+          cal.getDateRangeStart(),
+          cal.getDateRangeEnd(),
+          viewName
+        );
+      }
+
+      todayButton.addEventListener('click', function () {
+        cal.today();
+        displayEvents();
+        displayRenderRange();
+      });
+      prevButton.addEventListener('click', function () {
+        cal.prev();
+        displayEvents();
+        displayRenderRange();
+      });
+      nextButton.addEventListener('click', function () {
+        cal.next();
+        displayEvents();
+        displayRenderRange();
+      });
+
+      displayEvents();
+      displayRenderRange();
+    </script>
+  </body>
+</html>
