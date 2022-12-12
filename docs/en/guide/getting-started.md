@@ -46,13 +46,13 @@ TOAST UI Calendar is available through CDN.
 
 ```html
 <link rel="stylesheet" href="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.css" />
-<script src="https://uicdn.toast.com/calendar /latest/toastui-calendar.min.js"></script>
+<script src="https://uicdn.toast.com/calendar/latest/toastui-calendar.min.js"></script>
 
 <!-- To get bundle file for legacy browser -->
-<!-- <script src="https://uicdn.toast.com/calendar /latest/toastui-calendar.ie11.min.js"></script> -->
+<!-- <script src="https://uicdn.toast.com/calendar/latest/toastui-calendar.ie11.min.js"></script> -->
 
 <!-- Import as es module -->
-<!-- <script type="module" src="https:// uicdn.toast.com/calendar/latest/toastui-calendar.mjs"></script> -->
+<!-- <script type="module" src="https://uicdn.toast.com/calendar/latest/toastui-calendar.mjs"></script> -->
 ```
 
 - CDN consists of the following directory structure.
