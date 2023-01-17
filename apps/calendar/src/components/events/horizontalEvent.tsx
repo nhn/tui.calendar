@@ -170,7 +170,7 @@ export function HorizontalEvent({
   });
 
   useEffect(() => {
-    if (isDraggableEvent) {
+    if (isNil(resizingWidth) && isNil(movingLeft)) {
       eventBus.fire('afterRenderEvent', uiModel.model.toEventObject());
     }
     // This effect is only for the first render.
