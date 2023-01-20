@@ -141,6 +141,31 @@ describe(`Firing 'afterRenderEvent'`, () => {
     // Then
     expect(handler).not.toBeCalled();
   });
+
+  it(`should fire 'afterRenderEvent' when it is in readonly mode`, () => {
+    // Given
+    const { eventBus, handler } = setup();
+    const uiModel = new EventUIModel(
+      new EventModel({
+        id: '1',
+        start: new Date(2020, 0, 1, 10, 0),
+        end: new Date(2020, 0, 1, 12, 0),
+        isReadOnly: true,
+      })
+    );
+
+    const props = {
+      uiModel,
+      eventHeight: 30,
+      headerHeight: 0,
+    };
+
+    // When
+    render(<HorizontalEvent {...props} />, { eventBus });
+
+    // Then
+    expect(handler).toHaveBeenCalledTimes(1);
+  });
 });
 
 describe('Apply customStyle', () => {
@@ -365,19 +390,5 @@ describe('isReadOnly', () => {
     fireEvent.mouseUp(event);
 
     expect(showDetailPopupSpy).toHaveBeenCalled();
-  });
-
-  it(`should fire 'afterRenderEvent' when it is in readonly mode`, () => {
-    // Given
-    const eventBus = new EventBusImpl<ExternalEventTypes>();
-    const handler = jest.fn();
-    eventBus.on('afterRenderEvent', handler);
-    const { props } = setup();
-
-    // When (resizingWidth)
-    render(<HorizontalEvent {...props} />, { eventBus });
-
-    // Then
-    expect(handler).toBeCalled();
   });
 });
