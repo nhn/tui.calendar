@@ -16,7 +16,7 @@ import { dndSelector, optionsSelector, viewSelector } from '@src/selectors';
 import { DraggingState } from '@src/slices/dnd';
 import { isSameDate } from '@src/time/datetime';
 import { passConditionalProp } from '@src/utils/preact';
-import { isNil } from '@src/utils/type';
+import { isPresent } from '@src/utils/type';
 
 import type { CalendarColor } from '@t/options';
 
@@ -144,8 +144,9 @@ export function HorizontalEvent({
   const eventContainerRef = useRef<HTMLDivElement>(null);
 
   const { isReadOnly, id, calendarId } = uiModel.model;
-  const isDraggableEvent =
-    !isReadOnlyCalendar && !isReadOnly && isNil(resizingWidth) && isNil(movingLeft);
+
+  const isDraggingGuideEvent = isPresent(resizingWidth) || isPresent(movingLeft);
+  const isDraggableEvent = !isReadOnlyCalendar && !isReadOnly && !isDraggingGuideEvent;
 
   const startDragEvent = (className: string) => {
     setDraggingEventUIModel(uiModel);
@@ -160,8 +161,7 @@ export function HorizontalEvent({
     if (
       draggingState === DraggingState.DRAGGING &&
       draggingEventUIModel?.cid() === uiModel.cid() &&
-      isNil(resizingWidth) &&
-      isNil(movingLeft)
+      !isDraggingGuideEvent
     ) {
       setIsDraggingTarget(true);
     } else {
@@ -170,7 +170,7 @@ export function HorizontalEvent({
   });
 
   useEffect(() => {
-    if (isDraggableEvent) {
+    if (!isDraggingGuideEvent) {
       eventBus.fire('afterRenderEvent', uiModel.model.toEventObject());
     }
     // This effect is only for the first render.
