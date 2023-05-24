@@ -503,11 +503,11 @@ calendar.setOptions({
 
 ```ts
 interface CalendarInfo {
-  id: string;
-  name: string;
-  color?: string;
-  bgColor?: string;
-  dragBgColor?: string;
+  id: string; 
+  name: string; 
+  color?: string; 
+  backgroundColor?: string; 
+  dragBackgroundColor?: string; 
   borderColor?: string;
 }
 ```
