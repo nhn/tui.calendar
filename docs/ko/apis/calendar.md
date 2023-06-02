@@ -741,17 +741,17 @@ calendar.fire('myCustomEvent', calendar.getViewName());
 
 사전에 정의된 인스턴스 이벤트의 목록은 다음과 같다.
 
-| 이벤트 이름                                           | 설명                                                                                        |
-| ----------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| [selectDateTime](#selectdatetime)                     | 특정 날짜 혹은 시간을 드래그 앤 드랍했을 때 발생                                            |
-| [beforeCreateEvent](#beforecreateevent)               | 기본 일정 생성/수정 팝업에서 저장(Save) 버튼을 눌렀을 때 발생                               |
-| [beforeUpdateEvent](#beforeupdateevent)               | 기본 일정 생성/수정 팝업에서 저장(Save) 버튼을 누르거나 이벤트를 드래그 앤 드랍했을 때 발생 |
-| [beforeDeleteEvent](#beforedeleteevent)               | 기본 일정 상세 팝업에서 삭제(Delete) 버튼을 눌렀을 때 발생                                  |
-| [afterRenderEvent](#afterrenderevent)                 | 모든 이벤트가 렌더링 될 때 한 번씩 발생                                                     |
-| [clickDayName](#clickdayname)                         | 캘린더 상단의 요일을 클릭할 때 발생                                                         |
-| [clickEvent](#clickevent)                             | 이벤트를 클릭할 때 발생                                                                     |
-| [clickMoreEventsBtn](#clickmoreeventsbtn)             | 월간 뷰의 각 셀마다 이벤트 갯수가 초과되어 나타난 'More' 버튼을 클릭할 때 발생              |
-| [clickTimezoneCollapseBtn](#clicktimezonecollapsebtn) | 주간 뷰 혹은 일간 뷰에서 여러 개의 타임존을 표시한 경우 나타나는 접기 버튼을 클릭할 때 발생 |
+| 이벤트 이름                                             | 설명                                                                                        |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| [selectDateTime](#selectdatetime)                       | 특정 날짜 혹은 시간을 드래그 앤 드랍했을 때 발생                                            |
+| [beforeCreateEvent](#beforecreateevent)                 | 기본 일정 생성/수정 팝업에서 저장(Save) 버튼을 눌렀을 때 발생                               |
+| [beforeUpdateEvent](#beforeupdateevent)                 | 기본 일정 생성/수정 팝업에서 저장(Save) 버튼을 누르거나 이벤트를 드래그 앤 드랍했을 때 발생 |
+| [beforeDeleteEvent](#beforedeleteevent)                 | 기본 일정 상세 팝업에서 삭제(Delete) 버튼을 눌렀을 때 발생                                  |
+| [afterRenderEvent](#afterrenderevent)                   | 모든 이벤트가 렌더링 될 때 한 번씩 발생                                                     |
+| [clickDayName](#clickdayname)                           | 캘린더 상단의 요일을 클릭할 때 발생                                                         |
+| [clickEvent](#clickevent)                               | 이벤트를 클릭할 때 발생                                                                     |
+| [clickMoreEventsBtn](#clickmoreeventsbtn)               | 월간 뷰의 각 셀마다 이벤트 갯수가 초과되어 나타난 'More' 버튼을 클릭할 때 발생              |
+| [clickTimezonesCollapseBtn](#clicktimezonescollapsebtn) | 주간 뷰 혹은 일간 뷰에서 여러 개의 타임존을 표시한 경우 나타나는 접기 버튼을 클릭할 때 발생 |
 
 각각의 이벤트는 실행될 때 이벤트 핸들러 함수에 특정 파라미터를 전달한다.
 

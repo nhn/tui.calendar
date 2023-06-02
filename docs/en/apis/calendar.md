@@ -735,17 +735,17 @@ calendar.fire('myCustomEvent', calendar.getViewName());
 
 The list of predefined instance events is as follows.
 
-| Event name                                            | Description                                                                                                                    |
-| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| [selectDateTime](#selectdatetime)                     | Occurs when dragging and dropping a specific date or time then dropping                                                        |
-| [beforeCreateEvent](#beforecreateevent)               | Occurs when the ‘Save’ button is pressed in the default event creation/modification popup                                      |
-| [beforeUpdateEvent](#beforeupdateevent)               | Occurs when the ‘Save’ button is pressed in the default event creation/modification popup or an event is dragged and dropped   |
-| [beforeDeleteEvent](#beforedeleteevent)               | Occurs when the ‘Delete’ button is pressed in the default event details popup                                                   |
-| [afterRenderEvent](#afterrenderevent)                 | Occurs when each event is rendered                                                                                             |
-| [clickDayName](#clickdayname)                         | Occurs when a day of the week at the top of the calendar is clicked                                                            |
-| [clickEvent](#clickevent)                             | Occurs when an event is clicked                                                                                                |
-| [clickMoreEventsBtn](#clickmoreeventsbtn)             | Occurs when you click the 'More' button that appears because the number of events in each cell of the monthly view is exceeded |
-| [clickTimezoneCollapseBtn](#clicktimezonecollapsebtn) | Occurs when you click the collapse button that appears when multiple time zones are displayed in the weekly or daily view      |
+| Event name                                              | Description                                                                                                                    |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| [selectDateTime](#selectdatetime)                       | Occurs when dragging and dropping a specific date or time then dropping                                                        |
+| [beforeCreateEvent](#beforecreateevent)                 | Occurs when the ‘Save’ button is pressed in the default event creation/modification popup                                      |
+| [beforeUpdateEvent](#beforeupdateevent)                 | Occurs when the ‘Save’ button is pressed in the default event creation/modification popup or an event is dragged and dropped   |
+| [beforeDeleteEvent](#beforedeleteevent)                 | Occurs when the ‘Delete’ button is pressed in the default event details popup                                                  |
+| [afterRenderEvent](#afterrenderevent)                   | Occurs when each event is rendered                                                                                             |
+| [clickDayName](#clickdayname)                           | Occurs when a day of the week at the top of the calendar is clicked                                                            |
+| [clickEvent](#clickevent)                               | Occurs when an event is clicked                                                                                                |
+| [clickMoreEventsBtn](#clickmoreeventsbtn)               | Occurs when you click the 'More' button that appears because the number of events in each cell of the monthly view is exceeded |
+| [clickTimezonesCollapseBtn](#clicktimezonescollapsebtn) | Occurs when you click the collapse button that appears when multiple time zones are displayed in the weekly or daily view      |
 
 Each event passes specific parameters to the event handler function when it is executed.
 
