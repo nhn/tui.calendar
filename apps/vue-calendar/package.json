@@ -8,8 +8,14 @@
   "module": "./dist/toastui-vue-calendar.mjs",
   "exports": {
     ".": {
-      "import": "./dist/toastui-vue-calendar.mjs",
-      "require": "./dist/toastui-vue-calendar.js"
+      "import": {
+        "types": "./index.d.ts",
+        "default": "./dist/toastui-vue-calendar.mjs"
+      },
+      "require": {
+        "types": "./index.d.ts",
+        "default": "./dist/toastui-vue-calendar.js"
+      }
     },
     "./ie11": "./dist/toastui-vue-calendar.ie11.js",
     "./esm": "./dist/toastui-vue-calendar.mjs"

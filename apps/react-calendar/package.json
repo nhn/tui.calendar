@@ -16,8 +16,14 @@
   "types": "./types/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/toastui-react-calendar.mjs",
-      "require": "./dist/toastui-react-calendar.js"
+      "import": {
+        "types": "./types/index.d.ts",
+        "default": "./dist/toastui-react-calendar.mjs"
+      },
+      "require": {
+        "types": "./types/index.d.ts",
+        "default": "./dist/toastui-react-calendar.js"
+      }
     },
     "./ie11": "./dist/toastui-react-calendar.ie11.js",
     "./esm": "./dist/toastui-react-calendar.mjs"
