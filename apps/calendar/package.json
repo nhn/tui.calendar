@@ -10,8 +10,14 @@
   "module": "./dist/toastui-calendar.mjs",
   "exports": {
     ".": {
-      "import": "./dist/toastui-calendar.mjs",
-      "require": "./dist/toastui-calendar.js"
+      "import": {
+        "types": "./types/index.d.ts",
+        "default": "./dist/toastui-calendar.mjs"
+      },
+      "require": {
+        "types": "./types/index.d.ts",
+        "default": "./dist/toastui-calendar.js"
+      }
     },
     "./ie11": "./dist/toastui-calendar.ie11.js",
     "./esm": "./dist/toastui-calendar.mjs",
