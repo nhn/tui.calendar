@@ -62,7 +62,7 @@ TOAST UI products are available over the CDN powered by [NHN Cloud](https://www.
 <!-- <script src="https://uicdn.toast.com/calendar /latest/toastui-calendar.ie11.min.js"></script> -->
 
 <!-- Import as es module -->
-<!-- <script type="module" src="https:// uicdn.toast.com/calendar/latest/toastui-calendar.mjs"></script> -->
+<!-- <script type="module" src="https://uicdn.toast.com/calendar/latest/toastui-calendar.mjs"></script> -->
 ```
 
 If you want to use a specific version, use the tag name instead of `latest` in the url's path.
