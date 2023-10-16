@@ -173,6 +173,7 @@ interface WeekOptions {
   eventView?: boolean | EventView[];
   taskView?: boolean | TaskView[];
   collapseDuplicateEvents?: boolean | CollapseDuplicateEvents;
+  timeStep?: number[];
 }
 ```
 
@@ -190,6 +191,7 @@ const DEFAULT_WEEK_OPTIONS = {
   eventView: true,
   taskView: true,
   collapseDuplicateEvents: false,
+  timeStep: [0,30],
 };
 ```
 
@@ -477,6 +479,26 @@ calendar.setOptions({
 | ![week-collapseDuplicateEvents-default](../../assets/options_week-collapseDuplicateEvents-before.png) | ![week-collapseDuplicateEvents-example](../../assets/options_week-collapseDuplicateEvents-after.png) |
 
 [⬆ Back to the list](#week)
+
+### week.timeStep
+
+- Type: `number[]`
+- Default: `[0,30]`
+
+You can specify in increments of how many minutes the selection in the calendar (weekly and daily view) will be allowed, as well as the movement and adjustment of event times.
+
+```js
+calendar.setOptions({
+  week: {
+    timeStep: [0,15,30,45],
+  },
+});
+```
+| Default                                                             | Example                                                              |
+| ----------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| ![week-timeStep-default](../../assets/options_week-timeStep-before.png) | ![week-timeStep-example](../../assets/options_week-timeStep-after.png) |
+
+[⬆️ Back to the list](#week)
 
 ### month
 
