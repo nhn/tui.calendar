@@ -8,7 +8,7 @@ import { useCurrentPointerPositionInGrid } from '@src/hooks/event/useCurrentPoin
 import { useDraggingEvent } from '@src/hooks/event/useDraggingEvent';
 import type EventUIModel from '@src/model/eventUIModel';
 import type TZDate from '@src/time/date';
-import { addMinutes, max, setTimeStrToDate } from '@src/time/datetime';
+import { addMinutes, getTimeSteps, max, setTimeStrToDate } from '@src/time/datetime';
 import { findLastIndex } from '@src/utils/array';
 import { isNil, isPresent } from '@src/utils/type';
 
@@ -198,7 +198,8 @@ export function useTimeGridEventResize({
         ),
         -comingDuration
       );
-      const minEndDate = addMinutes(resizingStartUIModel.getStarts(), 30);
+      const { STEP_MINUTES } = getTimeSteps(timeGridData.rows);
+      const minEndDate = addMinutes(resizingStartUIModel.getStarts(), STEP_MINUTES);
 
       eventBus.fire('beforeUpdateEvent', {
         event: resizingStartUIModel.model.toEventObject(),
