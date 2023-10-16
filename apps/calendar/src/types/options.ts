@@ -30,6 +30,7 @@ export interface WeekOptions {
   eventView?: boolean | EventView[];
   taskView?: boolean | TaskView[];
   collapseDuplicateEvents?: boolean | Partial<CollapseDuplicateEventsOptions>;
+  timeStep?: number[];
 }
 
 export interface MonthOptions {
