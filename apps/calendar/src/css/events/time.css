@@ -2,6 +2,7 @@
   position: absolute;
   overflow: hidden;
   cursor: pointer;
+  min-height: 17px;
 }
 
 .event-time .travel-time,

@@ -12,6 +12,7 @@
   right: 10px;
   left: 1px;
   padding: 3px;
+  min-height: 26px;
 }
 
 .column .grid-selection .grid-selection-label {
