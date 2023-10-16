@@ -7,19 +7,17 @@ import { useCurrentPointerPositionInGrid } from '@src/hooks/event/useCurrentPoin
 import { useDraggingEvent } from '@src/hooks/event/useDraggingEvent';
 import type EventUIModel from '@src/model/eventUIModel';
 import type TZDate from '@src/time/date';
-import { addMilliseconds, addMinutes, MS_PER_DAY, MS_PER_THIRTY_MINUTES } from '@src/time/datetime';
+import { addMilliseconds, addMinutes, getTimeSteps, MS_PER_DAY } from '@src/time/datetime';
 import { isNil, isPresent } from '@src/utils/type';
 
 import type { GridPosition, GridPositionFinder, TimeGridData } from '@t/grid';
 import type { CalendarState } from '@t/store';
 
-const THIRTY_MINUTES = 30;
-
-function getCurrentIndexByTime(time: TZDate, hourStart: number) {
+function getCurrentIndexByTime(time: TZDate, hourStart: number, STEP_MINUTES: number) {
   const hour = time.getHours() - hourStart;
   const minutes = time.getMinutes();
 
-  return hour * 2 + Math.floor(minutes / THIRTY_MINUTES);
+  return hour * (60 / STEP_MINUTES) + Math.floor(minutes / STEP_MINUTES);
 }
 
 function getMovingEventPosition({
@@ -35,9 +33,10 @@ function getMovingEventPosition({
   timeGridDataRows: TimeGridData['rows'];
   currentDate: TZDate;
 }) {
+  const { STEP_MINUTES, MS_PER_STEP_MINUTES } = getTimeSteps(timeGridDataRows);
   const rowHeight = timeGridDataRows[0].height;
   const maxHeight = rowHeight * timeGridDataRows.length;
-  const millisecondsDiff = rowDiff * MS_PER_THIRTY_MINUTES + columnDiff * MS_PER_DAY;
+  const millisecondsDiff = rowDiff * MS_PER_STEP_MINUTES + columnDiff * MS_PER_DAY;
   const hourStart = Number(timeGridDataRows[0].startTime.split(':')[0]);
 
   const { goingDuration = 0, comingDuration = 0 } = draggingEvent.model;
@@ -45,8 +44,11 @@ function getMovingEventPosition({
   const comingEnd = addMinutes(draggingEvent.getEnds(), comingDuration);
   const nextStart = addMilliseconds(goingStart, millisecondsDiff);
   const nextEnd = addMilliseconds(comingEnd, millisecondsDiff);
-  const startIndex = Math.max(getCurrentIndexByTime(nextStart, hourStart), 0);
-  const endIndex = Math.min(getCurrentIndexByTime(nextEnd, hourStart), timeGridDataRows.length - 1);
+  const startIndex = Math.max(getCurrentIndexByTime(nextStart, hourStart, STEP_MINUTES), 0);
+  const endIndex = Math.min(
+    getCurrentIndexByTime(nextEnd, hourStart, STEP_MINUTES),
+    timeGridDataRows.length - 1
+  );
 
   const isStartAtPrevDate =
     nextStart.getFullYear() < currentDate.getFullYear() ||
@@ -74,6 +76,7 @@ export function useTimeGridEventMove({
   gridPositionFinder: GridPositionFinder;
   timeGridData: TimeGridData;
 }) {
+  const { MS_PER_STEP_MINUTES } = getTimeSteps(timeGridData.rows);
   const initX = useStore(initXSelector);
   const initY = useStore(initYSelector);
 
@@ -126,9 +129,9 @@ export function useTimeGridEventMove({
 
     return addMilliseconds(
       startDateTime,
-      gridDiff.rowDiff * MS_PER_THIRTY_MINUTES + gridDiff.columnDiff * MS_PER_DAY
+      gridDiff.rowDiff * MS_PER_STEP_MINUTES + gridDiff.columnDiff * MS_PER_DAY
     );
-  }, [gridDiff, startDateTime]);
+  }, [gridDiff, startDateTime, MS_PER_STEP_MINUTES]);
 
   const movingEvent = useMemo(() => {
     if (isNil(draggingEvent) || isNil(currentGridPos) || isNil(gridDiff)) {

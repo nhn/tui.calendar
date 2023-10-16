@@ -6,6 +6,7 @@ import { fill } from '@src/utils/array';
 import { InvalidDateTimeFormatError } from '@src/utils/error';
 
 import type { TimeUnit } from '@t/events';
+import type { TimeGridRow } from '@t/grid';
 import type { CellStyle, FormattedTimeString } from '@t/time/datetime';
 
 export enum Day {
@@ -117,8 +118,24 @@ export const MS_PER_MINUTES = 60000;
  * The number of milliseconds 20 minutes for event min duration
  */
 export const MS_EVENT_MIN_DURATION = 20 * MS_PER_MINUTES;
-export const MS_PER_THIRTY_MINUTES = 30 * 60 * 1000;
 export const SIXTY_SECONDS = 60;
+
+/**
+ * Returns the minutes, milliseconds, and step count from the timeGridRow
+ * @param timeGridRows
+ * @returns Object
+ */
+export function getTimeSteps(timeGridRows: TimeGridRow[]) {
+  const hourStart = Number(timeGridRows[0].startTime.split(':', 1));
+  const hourEnd = Number(timeGridRows[timeGridRows.length - 1].endTime.split(':', 1));
+  const STEPS = timeGridRows.length / (hourEnd - hourStart);
+  const STEP_MINUTES = 60 / STEPS;
+  return {
+    STEPS,
+    STEP_MINUTES,
+    MS_PER_STEP_MINUTES: STEP_MINUTES * 60 * 1000,
+  };
+}
 
 /**
  * Return formatted string as basis of supplied string.

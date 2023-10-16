@@ -422,20 +422,25 @@ export function createTimeGridData(
     hourStart: number;
     hourEnd: number;
     narrowWeekend?: boolean;
+    timeStep: number[];
   }
 ): TimeGridData {
   const columns = getColumnsData(datesOfWeek, options.narrowWeekend ?? false);
-
-  const steps = (options.hourEnd - options.hourStart) * 2;
+  const { timeStep } = options;
+  const steps = (options.hourEnd - options.hourStart) * timeStep.length;
   const baseHeight = 100 / steps;
+  let count = 0;
   const rows = range(steps).map((step, index) => {
-    const isOdd = index % 2 === 1;
-    const hour = options.hourStart + Math.floor(step / 2);
-    const startTime = `${hour}:${isOdd ? '30' : '00'}`.padStart(5, '0') as FormattedTimeString;
-    const endTime = (isOdd ? `${hour + 1}:00` : `${hour}:30`).padStart(
+    count = count === timeStep.length ? 0 : count;
+    const hour = options.hourStart + Math.floor(step / timeStep.length);
+    const startTime = `${hour}:${timeStep[count] !== 0 ? timeStep[count] : '00'}`.padStart(
       5,
       '0'
     ) as FormattedTimeString;
+    const endTime = (
+      count === timeStep.length - 1 ? `${hour + 1}:00` : `${hour}:${timeStep[count + 1]}`
+    ).padStart(5, '0') as FormattedTimeString;
+    count += 1;
 
     return {
       top: baseHeight * index,

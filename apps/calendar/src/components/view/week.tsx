@@ -59,8 +59,16 @@ export function Week() {
   const [timePanel, setTimePanelRef] = useDOMNode<HTMLDivElement>();
 
   const weekOptions = options.week as Required<WeekOptions>;
-  const { narrowWeekend, startDayOfWeek, workweek, hourStart, hourEnd, eventView, taskView } =
-    weekOptions;
+  const {
+    narrowWeekend,
+    startDayOfWeek,
+    workweek,
+    hourStart,
+    hourEnd,
+    eventView,
+    taskView,
+    timeStep,
+  } = weekOptions;
   const weekDates = useMemo(() => getWeekDates(renderDate, weekOptions), [renderDate, weekOptions]);
   const dayNames = getDayNames(weekDates, options.week?.dayNames ?? []);
   const { rowStyleInfo, cellWidthMap } = getRowStyleInfo(
@@ -96,8 +104,9 @@ export function Week() {
         hourStart,
         hourEnd,
         narrowWeekend,
+        timeStep,
       }),
-    [hourEnd, hourStart, narrowWeekend, weekDates]
+    [hourEnd, hourStart, narrowWeekend, weekDates, timeStep]
   );
 
   const activePanels = getActivePanels(taskView, eventView);
