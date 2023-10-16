@@ -59,6 +59,18 @@ HourStartOption.args = {
   },
 };
 
+export const TimeStepOption = Template.bind({});
+TimeStepOption.args = {
+  ...Template.args,
+  options: {
+    ...Template.args.options,
+    week: {
+      timeStep: [0,15,30,45],
+      showNowIndicator: false,
+    }
+  }
+}
+
 export const DifferentPrimaryTimezone = Template.bind({});
 DifferentPrimaryTimezone.args = {
   ...Template.args,

@@ -502,22 +502,25 @@ describe('getColumnStyles', () => {
 describe('createTimeGridData', () => {
   function assertTimeGridDataRows(
     expectedRows: TimeGridRow[],
-    options: { hourStart: number; hourEnd: number }
+    options: { hourStart: number; hourEnd: number, timeStep: number[] }
   ) {
-    const steps = (options.hourEnd - options.hourStart) * 2;
+    const timeStep = options.timeStep;
+    const steps = (options.hourEnd - options.hourStart) * timeStep.length;
     const expectedRowHeight = 100 / steps;
+    let count = 0;
 
     expect(expectedRows).toHaveLength(steps);
     range(steps).forEach((step, index) => {
-      const isOdd = index % 2 === 1;
-      const hour = options.hourStart + Math.floor(step / 2);
+      count = count === timeStep.length ? 0 : count;
+      const hour = options.hourStart + Math.floor(step / timeStep.length);
 
       expect(expectedRows[index]).toEqual({
         top: expectedRowHeight * index,
         height: expectedRowHeight,
-        startTime: `${hour}:${isOdd ? '30' : '00'}`.padStart(5, '0'),
-        endTime: (isOdd ? `${hour + 1}:00` : `${hour}:30`).padStart(5, '0'),
+        startTime: `${hour}:${timeStep[count] != 0 ? timeStep[count] : '00'}`.padStart(5, '0'),
+        endTime: (count === (timeStep.length - 1) ? `${hour + 1}:00` : `${hour}:` + timeStep[count+1]).padStart(5, '0'),
       });
+      count++;
     });
   }
 
@@ -526,7 +529,7 @@ describe('createTimeGridData', () => {
     const rows = getWeekDates(new TZDate('2021-01-28T00:00:00'), {
       startDayOfWeek: Day.SUN,
     });
-    const options = { hourStart: 0, hourEnd: 24 };
+    const options = { hourStart: 0, hourEnd: 24, timeStep: [0,30] };
 
     // When
     const result = createTimeGridData(rows, options);
@@ -541,7 +544,7 @@ describe('createTimeGridData', () => {
     const rows = getWeekDates(new TZDate('2021-01-28T00:00:00'), {
       startDayOfWeek: Day.SUN,
     });
-    const options = { hourStart: 0, hourEnd: 12 };
+    const options = { hourStart: 0, hourEnd: 12, timeStep: [0,30] };
 
     // When
     const result = createTimeGridData(rows, options);
@@ -556,7 +559,7 @@ describe('createTimeGridData', () => {
     const rows = getWeekDates(new TZDate('2021-01-28T00:00:00'), {
       startDayOfWeek: Day.SUN,
     });
-    const options = { hourStart: 12, hourEnd: 24 };
+    const options = { hourStart: 12, hourEnd: 24, timeStep: [0,30] };
 
     // When
     const result = createTimeGridData(rows, options);
@@ -572,7 +575,7 @@ describe('createTimeGridData', () => {
     const rows = getWeekDates(new TZDate('2021-01-28T00:00:00'), {
       startDayOfWeek: Day.SUN,
     });
-    const options = { hourStart: 0, hourEnd: 24, narrowWeekend };
+    const options = { hourStart: 0, hourEnd: 24, narrowWeekend, timeStep: [0,30] };
 
     // When
     const result = createTimeGridData(rows, options);

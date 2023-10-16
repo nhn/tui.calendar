@@ -208,6 +208,10 @@ Object {
     "showTimezoneCollapseButton": false,
     "startDayOfWeek": 0,
     "taskView": true,
+    "timeStep": Array [
+      0,
+      30,
+    ],
     "timezonesCollapsed": false,
     "workweek": false,
   },

@@ -34,6 +34,7 @@ describe('Showing Current Time Indicator', () => {
     const timeGridData = createTimeGridData(weekDatesIncludingBaseDate, {
       hourStart: 0,
       hourEnd: 24,
+      timeStep: [0,30]
     });
 
     // When
@@ -50,7 +51,7 @@ describe('Showing Current Time Indicator', () => {
       startDayOfWeek: 0,
       workweek: false,
     });
-    const timeGridData = createTimeGridData(weekDatesBeforeBaseDate, { hourStart: 0, hourEnd: 24 });
+    const timeGridData = createTimeGridData(weekDatesBeforeBaseDate, { hourStart: 0, hourEnd: 24, timeStep: [0,30] });
 
     // When
     render(<TimeGrid timeGridData={timeGridData} events={[]} />);
@@ -69,6 +70,7 @@ describe('Showing Current Time Indicator', () => {
     const timeGridData = createTimeGridData(weekDatesIncludingBaseDate, {
       hourStart: 0,
       hourEnd: 24,
+      timeStep: [0,30]
     });
 
     // When
@@ -88,6 +90,7 @@ describe('Showing Current Time Indicator', () => {
     const timeGridData = createTimeGridData(weekDatesIncludingBaseDate, {
       hourStart: 0,
       hourEnd: 24,
+      timeStep: [0,30]
     });
 
     // When
@@ -113,6 +116,7 @@ describe('Showing Current Time Indicator', () => {
     const timeGridData = createTimeGridData(weekDatesIncludingBaseDate, {
       hourStart: 0,
       hourEnd: 24,
+      timeStep: [0,30]
     });
     const oneHourHeightPercent = timeGridData.rows[0].height * 2;
     const initialTop = 50;

@@ -372,7 +372,7 @@ describe('useGridSelection', () => {
     workweek: false,
   });
 
-  const timeGridData = createTimeGridData(weekDates, { hourStart: 0, hourEnd: 24 });
+  const timeGridData = createTimeGridData(weekDates, { hourStart: 0, hourEnd: 24, timeStep: [0,30] });
 
   describe('Opening popup', () => {
     it('should open event form popup after dragging when the `useFormPopup` option is enabled', () => {
