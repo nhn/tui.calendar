@@ -182,6 +182,7 @@ export function useGridSelection<DateCollection>({
       const gridPosition = gridPositionFinder(e);
 
       if (isPresent(gridPosition)) {
+        clearAll();
         setInitGridPosition(gridPosition);
       }
 
