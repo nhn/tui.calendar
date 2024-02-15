@@ -817,8 +817,8 @@ In the following cases, `beforeUpdateEvent` is executed.
 
 ```js
 // Basic example of updating an event
-calendar.on('beforeUpdateEvent', ({ event, change }) => {
-  calendar.updateEvent(event.id, event.calendarId, change);
+calendar.on('beforeUpdateEvent', ({ event, changes }) => {
+  calendar.updateEvent(event.id, event.calendarId, changes);
 });
 ```
 
