@@ -17,7 +17,10 @@
   "exports": {
     ".": {
       "import": "./dist/toastui-react-calendar.mjs",
-      "require": "./dist/toastui-react-calendar.js"
+      "require": "./dist/toastui-react-calendar.js",
+      "types": {
+        "default": "./types/index.d.ts"
+      }
     },
     "./ie11": "./dist/toastui-react-calendar.ie11.js",
     "./esm": "./dist/toastui-react-calendar.mjs"

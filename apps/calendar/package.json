@@ -11,7 +11,10 @@
   "exports": {
     ".": {
       "import": "./dist/toastui-calendar.mjs",
-      "require": "./dist/toastui-calendar.js"
+      "require": "./dist/toastui-calendar.js",
+       "types": {
+        "default": "./types/index.d.ts"
+       }
     },
     "./ie11": "./dist/toastui-calendar.ie11.js",
     "./esm": "./dist/toastui-calendar.mjs",
